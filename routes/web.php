@@ -12,7 +12,12 @@
 */
 
 // User Controller Routes
+
+// User Controller Auth Routes
+Route::GET('check_email/{email}/{client_id}', 'UserController@check_email');
+Route::GET('check_phone/{phono_no}/{client_id}', 'UserController@check_phone');
 Route::get('/login', 'UserController@login');
+Route::POST('/register-user', 'UserController@register_user');
 
 // Home Controller Routes
 Route::get('/', 'HomeController@index');

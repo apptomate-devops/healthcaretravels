@@ -11,4 +11,8 @@
 |
 */
 
+// User Controller Routes
+Route::get('/login', 'UserController@login');
+
+// Home Controller Routes
 Route::get('/', 'HomeController@index');

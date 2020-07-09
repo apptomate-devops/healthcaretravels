@@ -11,6 +11,8 @@
         "prettier": "prettier --write 'resources/**/*.php' 'routes/**/*.php' 'app/**/*.php'"
     },
     "devDependencies": {
+        "@commitlint/cli": "^9.0.1",
+        "@commitlint/config-conventional": "^9.0.1",
         "@prettier/plugin-php": "^0.14.2",
         "axios": "^0.16.2",
         "bootstrap-sass": "^3.3.7",
@@ -25,6 +27,7 @@
     },
     "husky": {
         "hooks": {
+            "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS",
             "pre-commit": "lint-staged"
         }
     },

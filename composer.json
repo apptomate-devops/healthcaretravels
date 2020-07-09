@@ -45,7 +45,7 @@
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
             "php artisan optimize"
         ],
-        "clear-cache": [
+        "app-clear-cache": [
             "php artisan cache:clear",
             "php artisan route:clear",
             "php artisan config:clear",

@@ -11,6 +11,10 @@
 |
 */
 
+// Logout Controller Routes
+Route::GET('/logout', 'LogoutController@logout');
+Route::GET('/is_user_active', 'LogoutController@is_user_active');
+
 // User Controller Routes
 
 // User Controller Auth Routes

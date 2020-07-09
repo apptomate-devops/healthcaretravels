@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
-use App\BecomeScout;
-use App\RequestRoommate;
-use App\PropertyList;
-use App\EmailConfig;
+use App\Models\BecomeScout;
+use App\Models\RequestRoommate;
+use App\Models\PropertyList;
+use App\Models\EmailConfig;
 use DB;
 use Mail;
-class HomeController extends Controller
+
+class HomeController extends BaseController
 {
     public function index(Request $request)
     {

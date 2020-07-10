@@ -35,6 +35,16 @@ class HomeController extends BaseController
         return view('policies.copyright-policy');
     }
 
+    public function dear_host()
+    {
+        return view('statics.dear_host');
+    }
+
+    public function dear_travelers()
+    {
+        return view('statics.dear_travelers');
+    }
+
     public function Extenuating_Circ_policy()
     {
         return view('policies.Extenuating-Circ-policy');
@@ -49,10 +59,18 @@ class HomeController extends BaseController
     {
         return view('statics.eye-catching-photo');
     }
+
+    public function faq()
+    {
+        $data = DB::table('faq')->get();
+        return view('faq', ['data' => $data]);
+    }
+
     public function fees_explained()
     {
         return view('statics.fees-explained');
     }
+
     public function how_its_works()
     {
         return view('statics.how_its_works');
@@ -150,6 +168,11 @@ class HomeController extends BaseController
     public function privacy_policy()
     {
         return view('policies.privacy-policy');
+    }
+
+    public function rv_professional()
+    {
+        return view('statics.rv_professional');
     }
 
     public function standards()

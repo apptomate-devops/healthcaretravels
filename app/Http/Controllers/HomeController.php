@@ -15,7 +15,47 @@ class HomeController extends BaseController
 {
     public function about_us()
     {
-        return view('about_us');
+        return view('statics.about_us');
+    }
+    public function cancellation_policy()
+    {
+        return view('policies.cancellationpolicy');
+    }
+    public function content()
+    {
+        return view('policies.content-policy');
+    }
+    public function cookies_policy()
+    {
+        return view('policies.cookies-policy');
+    }
+
+    public function copyright_policy()
+    {
+        return view('policies.copyright-policy');
+    }
+
+    public function Extenuating_Circ_policy()
+    {
+        return view('policies.Extenuating-Circ-policy');
+    }
+
+    public function exortion_policy()
+    {
+        return view('policies.exortion-policy');
+    }
+
+    public function eye_catching_photo()
+    {
+        return view('statics.eye-catching-photo');
+    }
+    public function fees_explained()
+    {
+        return view('statics.fees-explained');
+    }
+    public function how_its_works()
+    {
+        return view('statics.how_its_works');
     }
 
     public function index(Request $request)
@@ -92,5 +132,38 @@ class HomeController extends BaseController
             'latest_properties' => $latest_properties,
             'categories' => $categories,
         ]);
+    }
+
+    public function non_discrimination_policy()
+    {
+        return view('policies.non-discrimination-policy');
+    }
+    public function payment_terms()
+    {
+        return view('policies.payment-terms');
+    }
+    public function policies()
+    {
+        return view('policies.policies');
+    }
+
+    public function privacy_policy()
+    {
+        return view('policies.privacy-policy');
+    }
+
+    public function standards()
+    {
+        return view('statics.standards');
+    }
+
+    public function terms_of_use()
+    {
+        return view('statics.terms-of-use');
+    }
+
+    public function travellers_refund_policy()
+    {
+        return view('policies.travellers-refund-policy');
     }
 }

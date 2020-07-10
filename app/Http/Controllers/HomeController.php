@@ -13,6 +13,11 @@ use Mail;
 
 class HomeController extends BaseController
 {
+    public function about_us()
+    {
+        return view('about_us');
+    }
+
     public function index(Request $request)
     {
         $latest_properties = DB::table('property_list')

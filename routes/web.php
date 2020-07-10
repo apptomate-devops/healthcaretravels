@@ -25,3 +25,4 @@ Route::POST('/register-user', 'UserController@register_user');
 
 // Home Controller Routes
 Route::get('/', 'HomeController@index');
+Route::get('/about_us', 'HomeController@about_us');

@@ -30,6 +30,23 @@ class HomeController extends BaseController
     {
         return view('policies.cancellationpolicy');
     }
+    public function contact()
+    {
+        return view('contact');
+    }
+    public function contact_mail(Request $request)
+    {
+        $name = $request->name;
+        $mail_data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'text' => $request->message,
+        ];
+        $subject = $request->subject;
+        $this->send_email_contact($request->email, $subject, 'mail.contact', $mail_data, $name);
+
+        return back();
+    }
     public function content()
     {
         return view('policies.content-policy');
@@ -164,6 +181,10 @@ class HomeController extends BaseController
     public function non_discrimination_policy()
     {
         return view('policies.non-discrimination-policy');
+    }
+    public function partner()
+    {
+        return view('statics.partner');
     }
     public function payment_terms()
     {

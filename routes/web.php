@@ -30,6 +30,9 @@ Route::get('/become-a-ambassador', 'HomeController@become_a_ambassador');
 Route::get('/become-a-scout', 'HomeController@become_a_scout');
 Route::post('/become-a-scout-save', 'HomeController@save_become_a_scout');
 Route::get('/cancellationpolicy', 'HomeController@cancellation_policy');
+Route::get('/contact', 'HomeController@contact');
+// TODO: confirm if only logged in user can use contact us form.
+Route::POST('/contact_mail', 'HomeController@contact_mail');
 Route::get('/content', 'HomeController@content');
 Route::get('/cookies-policy', 'HomeController@cookies_policy');
 Route::get('/copyright-policy', 'HomeController@copyright_policy');
@@ -42,6 +45,7 @@ Route::get('/faq', 'HomeController@faq');
 Route::get('/fees-explained', 'HomeController@fees_explained');
 Route::get('/how_its_works', 'HomeController@how_its_works');
 Route::get('/non-discrimination-policy', 'HomeController@non_discrimination_policy');
+Route::get('/partner', 'HomeController@partner');
 Route::get('/payment-terms', 'HomeController@payment_terms');
 Route::get('/policies', 'HomeController@policies');
 Route::get('/privacy-policy', 'HomeController@privacy_policy');

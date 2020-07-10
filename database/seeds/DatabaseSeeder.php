@@ -11,6 +11,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+        Eloquent::unguard();
+        $path = 'database/healthcare.sql';
+        DB::unprepared(file_get_contents($path));
+        $this->command->info('Healthcare database seeded!');
     }
 }

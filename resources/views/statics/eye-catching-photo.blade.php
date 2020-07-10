@@ -18,7 +18,7 @@
 			<h4>Photos of Listings</h4>
 		</div>
 		<div class="col-md-6">
-	           <img src="{{URL::asset('/public/Marianne Beristain-1.JPG')}}" height="370"  alt="">
+            <img src="{{URL::asset('/Marianne Beristain-1.JPG')}}" height="370"  alt="">
 		</div>
 	</div>
 	<div class="row">

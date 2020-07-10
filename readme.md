@@ -1,51 +1,54 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# HCT
+Health Care Travels
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+## Notes
+1. When any values in `.env` files are changed, a restart will be required to reflect the updated values.
+2. Commit messages are validated by [this](https://www.conventionalcommits.org/en/v1.0.0/) convention.
 
-## About Laravel
+### Project setup
+1. Install Node dependencies by running `npm i`
+2. Install composer dependencies by running `composer install`
+3. Create an environment file named `.env` by copying the `.env.example` file and add respective values.
+4. Create database "healthcare" and user "hctuser" with password "t3cLZYyfgxCB".
+5. Seed database with database dump using command `php artisan db:seed`
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+### Get started
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+```bash
+php artisan serve
+```
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
+This project is built using [Laravel](https://laravel.com/).
+Laravel generates it's own readme file which can be accessed [here](https://gitlab.com/healthcaretravels/hct/-/blob/master/laravel_readme.md)
 
-## Learning Laravel
+## Database migration notes:
 
-Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
+#### For creating database migrations
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+```sh
+TODO: add migration command
+```
 
-## Laravel Sponsors
+## Git Workflow
+We have multiple environments:
+1. Production - *Production Live server*
+2. Staging - *Testing server with stable code*
+3. Test - *Testing server with all the code to be tested*
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](http://patreon.com/taylorotwell):
+#### make use of git feature branch with following steps:
+1. Create a branch from develop branch for your ticket/feature.
+2. Add all the related commits to that branch.
+3. Raise a RP against develop branch and merge it.
+4. QA the ticket on testing server when testing server is updated.
+5. QA the ticket on staging server when staging server is updated.
+6. Failed tickets should be fixed again in the same branch and pushed to develop and if the ticket failed on staging it should also be pushed to staging branch.
+7. If any issue or bug arises in the code, we can create hot-fix branch and merge it directly in staging, but also to be merged in develop branch.
 
-- **[Vehikl](http://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Styde](https://styde.net)**
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
+#### Commit convention:
+1. Follow conventional commits. [More info](https://www.conventionalcommits.org/en/v1.0.0/).
+2. Add ticket id to each commit message in scope. (Optional)
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+##### Commit message examples:
+1. feat: added github integration
+2. docs(#437861042): added commit message convention and examples
+3. fix: login bug when user is not verified

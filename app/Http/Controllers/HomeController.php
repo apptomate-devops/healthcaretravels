@@ -221,6 +221,172 @@ class HomeController extends BaseController
 
         return back()->with('success', 'Your information has been saved.');
     }
+    public function search_property(Request $request)
+    {
+        $request_data = $request->all();
+        $room_types = DB::table('property_room_types')->get();
+        $lat_lng = [];
+        $lat_lng_url = urlencode(serialize($lat_lng));
+
+        if ($request->formatted_address) {
+            $request->place = $request->formatted_address;
+        }
+        // if ($request->place) {
+        //     $prepAddr = str_replace(' ','+',$request->place);
+        //     $geocode=file_get_contents('https://maps.google.com/maps/api/geocode/json?key=AIzaSyB-rD5XU_5kd1vcx_EiOg4syU_honD2XIg&address='.$prepAddr.'&sensor=false');
+        //     $output= json_decode($geocode);
+        //     // print_r($output);exit;
+        //     $request->lat = $output->results[0]->geometry->location->lat;
+        //     $request->lng = $output->results[0]->geometry->location->lng;
+        //     $request_data['lat'] = $output->results[0]->geometry->location->lat;
+        //     $request_data['lng'] = $output->results[0]->geometry->location->lng;
+        // }
+        $source_lat = $request->lat;
+        $source_lng = $request->lng;
+        $page = $request->page ?: 1;
+        $items_per_page = 100;
+        $offset = ($page - 1) * $items_per_page;
+        $property_list_obj = new PropertyList();
+        $query = $property_list_obj
+            ->join('users', 'users.id', '=', 'property_list.user_id')
+            ->join('property_room', 'property_room.property_id', '=', 'property_list.id')
+            ->join('property_short_term_pricing', 'property_short_term_pricing.property_id', '=', 'property_list.id')
+            ->select('property_list.*', 'property_room.*', 'property_short_term_pricing.*')
+            ->where('property_list.is_complete', '=', ACTIVE)
+            ->where('property_list.status', '=', 1)
+            ->where('property_list.property_status', '=', 1)
+            ->selectRaw(
+                "(6371 * acos(cos(radians(" .
+                    $source_lat .
+                    "))* cos(radians(`lat`))
+                            * cos(radians(`lng`) - radians(" .
+                    $source_lng .
+                    ")) + sin(radians(" .
+                    $source_lat .
+                    "))
+                            * sin(radians(`lat`)))) as distance",
+            )
+            ->having('distance', '<=', RADIUS)
+            ->orderBy('distance');
+
+        $where = [];
+        // if filter applied
+
+        if (Session::get('role_id') == 3) {
+            $where[] = 'property_list.property_type_rv_or_home = 1';
+            // ->where('property_list.property_type_rv_or_home', '=', 1)
+        } else {
+            $where[] = 'property_list.property_type_rv_or_home = 2';
+            // ->where('property_list.property_type_rv_or_home', '=', 2)
+        }
+        if ($request->guests != "") {
+            $where[] = 'property_list.total_guests >= "' . $request->guests . '" ';
+        }
+        if ($request->roomtype != "") {
+            $where[] = 'property_list.room_type = "' . $request->roomtype . '" ';
+        }
+        if ($request->bookingmode != "") {
+            $where[] = 'property_list.is_instant = "' . $request->bookingmode . '" ';
+        }
+        if ($request->minprice != "" && $request->maxprice != "") {
+            $where[] =
+                'property_short_term_pricing.price_per_night BETWEEN "' .
+                $request->minprice .
+                '" and "' .
+                $request->maxprice .
+                '" ';
+        }
+
+        if ($request->minprice != "" && $request->maxprice == "") {
+            $where[] = 'property_short_term_pricing.price_per_night <= "' . $request->minprice . '" ';
+        }
+        if ($request->minprice == "" && $request->maxprice != "") {
+            $where[] = 'property_short_term_pricing.price_per_night <= "' . $request->maxprice . '" ';
+        }
+
+        $dataWhere = implode(" and ", $where);
+        //dd($dataWhere);
+
+        if ($dataWhere != "") {
+            $query->whereRaw($dataWhere);
+        }
+
+        $total_count = count($query->get());
+
+        $query = $query->skip($offset)->take($items_per_page);
+
+        $nearby_properties = $query->get();
+
+        $total_properties = count($nearby_properties);
+
+        foreach ($nearby_properties as $key => $value) {
+            $image = DB::table('property_images')
+                ->where('property_id', $value->property_id)
+                ->first();
+            $value->image_url = isset($image->image_url) ? $image->image_url : '';
+        }
+        return view('short_term')
+            ->with('properties', $nearby_properties)
+            ->with('total_count', $total_count)
+            ->with('location_url', $lat_lng_url)
+            ->with('request_data', $request_data)
+            ->with('request_data1', $request_data)
+            ->with('total_properties', $total_properties)
+            ->with('next', $page)
+            ->with('room_types', $room_types);
+    }
+    public function short_term(Request $request)
+    {
+        $request_data = $request->all();
+        $room_types = DB::table('property_room_types')->get();
+        $lat_lng = [];
+        $lat_lng_url = urlencode(serialize($lat_lng));
+        $page = $request->page ?: 1;
+        $items_per_page = 100;
+        $offset = ($page - 1) * $items_per_page;
+
+        $property_list_obj = new PropertyList();
+        $query = $property_list_obj
+            ->join('users', 'users.id', '=', 'property_list.user_id')
+            ->join('property_room', 'property_room.property_id', '=', 'property_list.id')
+            ->join('property_short_term_pricing', 'property_short_term_pricing.property_id', '=', 'property_list.id')
+            ->where('property_list.is_complete', '=', ACTIVE)
+            ->where('property_list.status', '=', 1)
+            ->where('property_list.property_status', '=', 1)
+            ->select('property_list.*', 'property_room.*', 'property_short_term_pricing.*');
+
+        $where = [];
+
+        $dataWhere = implode(" and ", $where);
+        // dd($dataWhere);
+
+        $total_count = count($query->get());
+
+        $query = $query->skip($offset)->take($items_per_page);
+
+        $nearby_properties = $query->get();
+
+        $total_properties = count($nearby_properties);
+
+        foreach ($nearby_properties as $key => $value) {
+            $image = DB::table('property_images')
+                ->where('property_id', $value->property_id)
+                ->first();
+            $value->image_url = isset($image->image_url) ? $image->image_url : '';
+        }
+
+        // print_r($request_data); exit;
+        return view('short_term')
+            ->with('properties', $nearby_properties)
+            ->with('total_count', $total_count)
+            ->with('location_url', $lat_lng_url)
+            ->with('request_data', $request_data)
+            ->with('request_data1', $request_data)
+            ->with('total_properties', $total_properties)
+            ->with('next', $page)
+            ->with('room_types', $room_types);
+    }
+
     public function standards()
     {
         return view('statics.standards');

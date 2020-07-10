@@ -51,6 +51,8 @@ Route::get('/policies', 'HomeController@policies');
 Route::get('/privacy-policy', 'HomeController@privacy_policy');
 Route::get('/privacy-policy', 'HomeController@privacy_policy');
 Route::get('/rv_professional', 'HomeController@rv_professional');
+Route::get('/short-term', 'HomeController@short_term');
+Route::post('/short-term', 'HomeController@search_property');
 Route::get('/standards', 'HomeController@standards');
 Route::get('/terms-of-use', 'HomeController@terms_of_use');
 Route::get('/travellers-refund-policy', 'HomeController@travellers_refund_policy');

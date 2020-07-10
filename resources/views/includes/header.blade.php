@@ -211,29 +211,11 @@
                 </a>
               </li>
               @endif
-              @if(Session::has('user_id'))
-
-              @else
-               <li class="right-side-menu-item">
-                <!-- <a href="{{url('/')}}/rv-register" class="sign-in"> -->
-              {{--   <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAqkiqDWb4SVrS9ySxpGTVRFDTqX2noe3ItyKiGFBYwFmqeg/viewform?fbclid=IwAR2t27UuX3zLHL3fAl3gAgL_qEdDgZv4vF3U_mzCvdHAs4dEOuZGunsVJHA" class="sign-in"> --}}
-                  <a href="{{url('/')}}/login" target="_blank" class="sign-in">
-                <i class="fa fa-user"></i>
-                RV Register
-                </a>
-              </li>
-              @endif
-
-
-
-
-
             </ul>
           </div>
         </nav>
 
         <!-- User Menu -->
-
         @if(Session::has('user_id'))
             <div class="container">
           <div class="row">

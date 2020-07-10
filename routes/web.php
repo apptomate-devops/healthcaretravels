@@ -26,6 +26,9 @@ Route::POST('/register-user', 'UserController@register_user');
 // Home Controller Routes
 Route::get('/', 'HomeController@index');
 Route::get('/about_us', 'HomeController@about_us');
+Route::get('/become-a-ambassador', 'HomeController@become_a_ambassador');
+Route::get('/become-a-scout', 'HomeController@become_a_scout');
+Route::post('/become-a-scout-save', 'HomeController@save_become_a_scout');
 Route::get('/cancellationpolicy', 'HomeController@cancellation_policy');
 Route::get('/content', 'HomeController@content');
 Route::get('/cookies-policy', 'HomeController@cookies_policy');

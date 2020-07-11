@@ -6,7 +6,7 @@
 		<div class="col-md-6" style="font-size: 20px;">
 			About Us
 			<br><br><br>
-	           <img src="https://healthcaretravels.com/public/Health Care Travel - Logo.gif" alt="">
+	           <img src="{{BASE_URL}}Health Care Travel - Logo.gif" alt="">
 		</div>
 		<div class="col-md-6">
 			<p>
@@ -40,7 +40,7 @@
 			</p>
 			<h4>What More?</h4>
 			<p>Health Care Travels also will provide a list of RV camping websites and resources that are affordable and recommended to healthcare travelers traveling by RV.
-            We look forward to providing services globally; we open the door to working with professional healthcare travelers, property owners, and agencies as we continue to grow. Health Care Travels focuses on value and trust, and we believe that all users can get the best results as long as we provide the appropriate resources in one centralized location. 
+            We look forward to providing services globally; we open the door to working with professional healthcare travelers, property owners, and agencies as we continue to grow. Health Care Travels focuses on value and trust, and we believe that all users can get the best results as long as we provide the appropriate resources in one centralized location.
             </p>
 
 			<h4>Meet Us</h4>

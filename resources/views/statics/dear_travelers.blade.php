@@ -21,13 +21,10 @@
 			</p>
 
 		</div>
-	</div>	
+	</div>
 	<div class="row">
-		{{--<center><div class="col-md-12">
-			<img src="https://healthcaretravels.com/public/image1.jpg">
-		</div>--}}
 	</center>
-		
+
 	</div><br>
 	<div class="row">
 		<div class="col-md-12">
@@ -43,7 +40,7 @@
 
 			<h4>Damages</h4><br>
 			<p>On the rare chance, any damages occur, please inform the host right away. Keep in mind, that depending on the nature of the damage, some security deposits can be used to compensate the host for the damages after Health Care Travels reviews the damage claim. Again, take pictures to submit to us on your behalf in the event damages happen. At check-in, there will be a form under the help tab or emailed to you that must be signed and completed electronically before releasing the appropriate funds to the host for your stay. At check-in time before you sign, you have 24-hours to make sure the listing is the same as shown on our platform.  Make a note of any items that are broken or not working properly in the notes section. After 24 hours, funds will be released on your behalf to the homeowner for your stay regardless if the check-in form is signed or not. If any damages occur after the form is signed and submitted to us or not submitted to us, you may be responsible for any additional damages submitted by the host that was not written on the form before both (Host and Traveler) signed and dated.</p>
-			
+
 			<h4>Services</h4><br>
 			<p>We encourage you to utilize our services such as finding a roommate, becoming a scout and/or requesting a scout to verify listings. These tools are made available to you. The more they are utilized the more you, as the traveler, can save money and possibly make money.</p>
 			<br><br>
@@ -54,4 +51,4 @@
 	</div>
 	</div>
 
-	@endsection 
+	@endsection

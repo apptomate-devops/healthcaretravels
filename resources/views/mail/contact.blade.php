@@ -6,7 +6,7 @@
                 <div class="navbar-header">
                    <div style="text-align: center;">
                         <a href="" title="" style="margin-top:0px">
-                            <img src="https://healthcaretravels.com/public/uploads/keepers_logo.png"  class="img-responsive logo-new" width="100px" height="100px" ></a>
+                            <img src="{{BASE_URL}}uploads/keepers_logo.png"  class="img-responsive logo-new" width="100px" height="100px" ></a>
                     </div>
                     <?php  ?>
                     <span style="float:right; text-align:right;">

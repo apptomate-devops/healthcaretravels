@@ -15,13 +15,10 @@
 	<div class="row">
 		<div class="col-md-12">
 			<center><p style="font-size: 20px;">Become an Ambassador</p></center><br><br>
-			
+
 <div class="row">
-		{{--<center><div class="col-md-12">
-			<img src="https://healthcaretravels.com/public/image3.jpg">
-		</div>--}}
 	</center>
-		
+
 	</div>
 	<br>
 			<p>Interested in becoming a Health Care Travels Ambassador? Are you fun to be around and a peoples person? Well you may have what it takes. Below you can find the requirements and perks of becoming an Ambassador for Health Care Travels. </p>
@@ -94,4 +91,4 @@
 	</div>
 </div>
 
-	@endsection 
+	@endsection

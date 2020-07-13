@@ -4,13 +4,15 @@ Health Care Travels
 ## Notes
 1. When any values in `.env` files are changed, a restart will be required to reflect the updated values.
 2. Commit messages are validated by [this](https://www.conventionalcommits.org/en/v1.0.0/) convention.
+3. Seeding step from project setup steps should only be executed if the database is fresh/empty.
 
 ### Project setup
 1. Install Node dependencies by running `npm i`
 2. Install composer dependencies by running `composer install`
 3. Create an environment file named `.env` by copying the `.env.example` file and add respective values.
-4. Create database "healthcare" and user "hctuser" with password "t3cLZYyfgxCB".
-5. Seed database with database dump using command `php artisan db:seed`
+4. Create database and database user as per env file.
+5. Seed database with database dump using command `php artisan db:seed --class=InitialDBSeeder`
+6. Seed database with all other data seeder file required for project using command `php artisan db:seed`
 
 ### Get started
 
@@ -26,20 +28,36 @@ Laravel generates it's own readme file which can be accessed [here](https://gitl
 #### For creating database migrations
 
 To create new table, add migration with following command:
-```
+```bash
 php artisan make:migration create_tablename_table --create=tablename
 ```
 
 To create new column in existing table, add migration with following command:
-```
+```bash
 php artisan make:migration add_columnname_to_tablename_table --table=tablename
 ```
 
-To run migration use command:
+To run migrations use command:
 
-```$xslt
+```bash
 php artisan migrate
 ```
+
+## Database seeder notes:
+
+#### For creating database seeder
+
+To create new seeder for a table, use following command:
+```bash
+php artisan make:seeder <table_name>TableSeeder
+```
+
+To run seeders use command:
+
+```bash
+php artisan db:seed
+```
+
 ## Git Workflow
 We have multiple environments:
 1. Production - *Production Live server*

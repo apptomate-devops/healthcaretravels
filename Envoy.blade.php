@@ -1,4 +1,4 @@
-@servers(['web' => 'deployer@192.168.2.2'])
+@servers(['web' => 'deployer@127.31.11.179'])
 
 @setup
     $repository = 'git@gitlab.com:healthcaretravels/hct.git';
@@ -17,7 +17,7 @@
 @task('clone_repository')
     echo 'Cloning repository'
     [ -d {{ $releases_dir }} ] || mkdir {{ $releases_dir }}
-    git clone --depth 1 --branch develop {{ $repository }} {{ $new_release_dir }}
+    git clone --depth 1 --branch feat/cicd {{ $repository }} {{ $new_release_dir }}
     cd {{ $new_release_dir }}
     git reset --hard {{ $commit }}
 @endtask

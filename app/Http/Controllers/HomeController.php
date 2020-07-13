@@ -200,6 +200,11 @@ class HomeController extends BaseController
         return view('policies.privacy-policy');
     }
 
+    public function request_roommate()
+    {
+        return view('request-roommate');
+    }
+
     public function rv_professional()
     {
         return view('statics.rv_professional');
@@ -385,6 +390,39 @@ class HomeController extends BaseController
             ->with('total_properties', $total_properties)
             ->with('next', $page)
             ->with('room_types', $room_types);
+    }
+
+    public function save_request_roommate(Request $request)
+    {
+        $new = new RequestRoommate();
+        $new->email = $request->email;
+        $new->phone = $request->phone;
+        $new->firstname = $request->firstname;
+        $new->lastname = $request->lastname;
+        $new->startdate = $request->startdate;
+        $new->enddate = $request->enddate;
+        $new->city = $request->city;
+        $new->state = $request->state;
+
+        $new->gender = $request->gender;
+        $new->age = $request->age;
+
+        $new->save();
+        return view('request_roommate2')->with('id', $new->id);
+    }
+
+    public function save_request_roommate2(Request $request)
+    {
+        // print_r($request->all());exit;
+        $new = RequestRoommate::find($request->id);
+        $new->rent = $request->rent;
+        $new->occupation = $request->occupation;
+        $new->is_house_on_healthcare = $request->is_house_on_healthcare;
+        $new->prefer_gender = $request->prefer_gender;
+        $new->prefer_age = $request->prefer_age;
+        $new->request_details = $request->request_details;
+        $new->save();
+        return redirect('/');
     }
 
     public function standards()

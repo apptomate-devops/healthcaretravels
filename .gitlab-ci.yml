@@ -11,7 +11,7 @@ deploy_production:
   stage: deploy
   script:
     - cp .env.example .env
-    - composer install
+    - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --ignore-platform-reqs
     - php artisan key:generate
     - php artisan migrate
     - php artisan db:seed

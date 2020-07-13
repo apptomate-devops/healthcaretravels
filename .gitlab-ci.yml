@@ -1,0 +1,30 @@
+image: registry.gitlab.com/healthcaretravels/hct:latest
+
+variables:
+  DB_HOST: host.docker.internal
+
+stages:
+  - setup
+  - deploy
+
+deploy_production:
+  stage: deploy
+  script:
+    - cp .env.example .env
+    - composer install
+    - php artisan key:generate
+    - php artisan migrate
+    - php artisan db:seed
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+    - ~/.composer/vendor/bin/envoy run deploy --commit="$CI_COMMIT_SHA"
+  environment:
+    name: test
+    url: http://127.31.11.179
+  when: manual
+  only:
+    - develop

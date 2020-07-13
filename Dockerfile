@@ -1,5 +1,5 @@
 # Set the base image for subsequent instructions
-FROM php:7.3
+FROM php:7.1
 
 # Update packages
 RUN apt-get update
@@ -18,4 +18,4 @@ RUN docker-php-ext-install mcrypt pdo_mysql zip
 RUN curl --silent --show-error https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install Laravel Envoy
-RUN composer global require "laravel/envoy"
+RUN composer global require "laravel/envoy=~1.0"

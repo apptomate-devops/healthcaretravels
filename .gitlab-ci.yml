@@ -4,7 +4,7 @@ variables:
   APP_KEY: base64:DvLP8LnFXioKjzhy7xijNeYN44lRg0DjCmJYagUZAgM=
   DB_DATABASE: healthcare
   DB_USERNAME: hctuser
-  DB_PASSWORD: t3cLZYyfgxCB
+  DB_PASSWORD: 5y7rM$ER*V6$nwZF
   MAIL_USERNAME: info@healthcaretravels.com
   MAIL_PASSWORD: mmsbjvgnpfqvgjpi
   GOOGLE_MAPS_API_KEY: AIzaSyB-rD5XU_5kd1vcx_EiOg4syU_honD2XIg

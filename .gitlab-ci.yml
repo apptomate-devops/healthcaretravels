@@ -23,7 +23,6 @@ deploy_production:
     - cp .env.example .env
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --ignore-platform-reqs
     - php artisan key:generate
-    - sed -i "s/$var1/ZZ/g" "$file" sed -i 's/old-text/new-text/g' input.txt
     - php artisan migrate
     - php artisan db:seed
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'

@@ -63,7 +63,6 @@ class UserController extends BaseController
         $mail = $request->email;
         $phone = $request->phone_no;
         $type = $request->user_type;
-        $tax_home = isset($request->tax_home) ? $request->tax_home : '0';
 
         $messages = [
             'required' => 'Please complete this field',
@@ -197,7 +196,7 @@ class UserController extends BaseController
             'occupation' => $request->occupation,
             'occupation_desc' => $request->occupation_desc,
             'name_of_agency' => $request->name_of_agency,
-            'tax_home' => $tax_home,
+            'tax_home' => $request->tax_home,
             'status' => 1,
             'address' => $request->address,
             'auth_token' => $token,

@@ -25,10 +25,21 @@ Laravel generates it's own readme file which can be accessed [here](https://gitl
 
 #### For creating database migrations
 
-```sh
-TODO: add migration command
+To create new table, add migration with following command:
+```
+php artisan make:migration create_tablename_table --create=tablename
 ```
 
+To create new column in existing table, add migration with following command:
+```
+php artisan make:migration add_columnname_to_tablename_table --table=tablename
+```
+
+To run migration use command:
+
+```$xslt
+php artisan migrate
+```
 ## Git Workflow
 We have multiple environments:
 1. Production - *Production Live server*

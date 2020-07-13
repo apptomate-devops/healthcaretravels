@@ -181,7 +181,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="email_field" style="display: none;">
-                                    <label for="email2">Email Address:
+                                    <label for="email2"><label id="email-label">Email Address:</label>
                                         <i class="im im-icon-Mail"></i>
                                         <input type="text" class="input-text validate {{ $errors->has('email') ? 'form-error' : ''}}" value="{{Session::get('mail')}}" name="email" id="email2" autocomplete="off"  />
                                     </label>
@@ -340,7 +340,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="address_field" style="display: none;">
-                                    <label for="address" id="address_label">Address:
+                                    <label for="address"><label id="address_label">Address:</label>
                                         <input type="text" class="input-text validate {{ $errors->has('address') ? 'form-error' : ''}}" value="{{Session::get('address')}}" name="address" id="address" placeholder="Address" autocomplete="off" style="padding-left: 20px;" />
                                     </label>
                                     {!! $errors->first('address', '<p class="error-text">:message</p>') !!}
@@ -434,6 +434,10 @@
                 $('#work_number_field').hide();
                 $('#website_field').hide();
 
+                $('#email-label').text('Email Address:');
+                $('#address_label').text('Address:');
+                $("#address").attr('placeholder', "Address");
+
                 break;
             case "1": // Property Owner
                 $('#username2_field').show();
@@ -459,6 +463,10 @@
                 $('#work_title_field').hide();
                 $('#work_number_field').hide();
                 $('#website_field').hide();
+
+                $('#email-label').text('Email Address:');
+                $('#address_label').text('Mailing Address:');
+                $("#address").attr('placeholder', "Mailing Address");
 
                 break;
             case "2": // Travel Agent
@@ -488,6 +496,11 @@
                 $('#work_number_field').show();
                 $('#website_field').show();
 
+                $('#email-label').text('Business Email Address:');
+                $('#email2').val('');
+                $('#address_label').text('Address:');
+                $("#address").attr('placeholder', "Address");
+
                 break;
 
             default:
@@ -515,6 +528,11 @@
                 $('#work_title_field').hide();
                 $('#work_number_field').hide();
                 $('#website_field').hide();
+
+                $('#email-label').text('Email Address:');
+                $('#address_label').text('Address:');
+                $("#address").attr('placeholder', "Address");
+
                 break;
         }
     }

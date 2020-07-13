@@ -244,8 +244,7 @@ class UserController extends BaseController
 
         $OTP = rand(1111, 9999);
 
-        return $this->sendTwilioMessage($d->phone, $OTP);
-        exit();
+        $this->sendTwilioMessage($d->phone, $OTP);
         $update = DB::table('users')
             ->where('client_id', '=', CLIENT_ID)
             ->where('phone', '=', $d->phone)
@@ -256,5 +255,10 @@ class UserController extends BaseController
         return redirect($url)
             ->with('mobile', $d->phone)
             ->with('OTP', $OTP);
+    }
+
+    public function view_otp_screen(Request $request)
+    {
+        return view('otp-verify-register');
     }
 }

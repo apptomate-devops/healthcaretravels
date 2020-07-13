@@ -57,7 +57,7 @@ define("SOFA_BED", $BASE_URL . "/bedicons/Sofa.png");
 define("BUNK_BED", $BASE_URL . "/bedicons/Bunk-Bed.png");
 define("COMMON_SPACE_BED", $BASE_URL . "/bedicons/Couch.png");
 
-define("GOOGLE_MAPS_API_KEY", "AIzaSyByI8gik-nps54DdqY81oqS1GCFJK8mko4");
+define("GOOGLE_MAPS_API_KEY", "AIzaSyDWKKHxv24EJ-xOUUBiKmfoR0C2tSDceSo");
 
 define("INSTANT_CHAT", "instant_chat");
 define("REQUEST_CHAT", "request_chat");

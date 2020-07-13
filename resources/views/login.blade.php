@@ -391,9 +391,33 @@
 </div>
 <!-- Wrapper / End -->
 
+<script src="https://maps.google.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}=places&callback=initAutocomplete" type="text/javascript"></script>
+<script>
+    google.maps.event.addDomListener(window, 'load', initialize);
+    function initialize() {
+        let options = {
+            types: ['(cities)'],
+            componentRestrictions: {country: 'us'}
+        };
+        let addressFields = ['address', 'tax_home', 'listing_address'];
+        let autocompletes = [];
+
+        for (field in addressFields) {
+            let element = document.getElementById(addressFields[field]);
+            let autocomplete = new google.maps.places.Autocomplete(element, options);
+            autocomplete.addListener('place_changed', on_place_change);
+            autocompletes.push(autocomplete);
+        }
+        function on_place_change(e) {
+            console.log('place ====', e);
+        }
+    }
+</script>
+
 <script type="text/javascript">
 
     $(document).ready(() => {
+
         get_form("{{ Session::get('type') }}", true);
 
         set_max_date();

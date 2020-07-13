@@ -1,7 +1,17 @@
 image: registry.gitlab.com/healthcaretravels/hct:latest
 
 variables:
-  DB_HOST: host.docker.internal
+  APP_KEY: base64:DvLP8LnFXioKjzhy7xijNeYN44lRg0DjCmJYagUZAgM=
+  DB_DATABASE: healthcare
+  DB_USERNAME: hctuser
+  DB_HOST: localhost
+  DB_PASSWORD: t3cLZYyfgxCB
+  MAIL_USERNAME: info@healthcaretravels.com
+  MAIL_PASSWORD: mmsbjvgnpfqvgjpi
+  GOOGLE_MAPS_API_KEY: AIzaSyB-rD5XU_5kd1vcx_EiOg4syU_honD2XIg
+  TWILIO_ACCOUNT_SID: AC3b5a19f4a401c9f3ca6c2c3c752f062f
+  TWILIO_AUTH_TOKEN: 972d8905e785326e337d2d83b066836c
+  TWILIO_MESSAGING_SERVICE_SID: MGb88f1274f4e7f8812b4b0b8b0db6688f
 
 stages:
   - setup
@@ -13,6 +23,7 @@ deploy_production:
     - cp .env.example .env
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --ignore-platform-reqs
     - php artisan key:generate
+    - sed -i "s/$var1/ZZ/g" "$file" sed -i 's/old-text/new-text/g' input.txt
     - php artisan migrate
     - php artisan db:seed
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'

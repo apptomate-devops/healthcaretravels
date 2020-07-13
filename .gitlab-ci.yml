@@ -4,6 +4,7 @@ variables:
   APP_KEY: base64:DvLP8LnFXioKjzhy7xijNeYN44lRg0DjCmJYagUZAgM=
   DB_DATABASE: healthcare
   DB_USERNAME: hctuser
+  DB_HOST: localhost
   DB_PASSWORD: 5y7rM$ER*V6$nwZF
   MAIL_USERNAME: info@healthcaretravels.com
   MAIL_PASSWORD: mmsbjvgnpfqvgjpi

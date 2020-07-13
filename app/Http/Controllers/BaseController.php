@@ -21,6 +21,8 @@ use App\Models\BecomeScout;
 use App\Models\PropertyBookingPrice;
 use App\Models\EmailConfig;
 
+use App\Services\Twilio;
+
 use Image;
 use DB;
 use Log;
@@ -76,7 +78,7 @@ class BaseController extends ConstantsController
         $this->PropertyImage = $PropertyImage;
         // $this->Couponecode=$Couponecode;
         $this->request = $request;
-
+        $this->twilio = new Twilio();
         //
     }
 
@@ -471,6 +473,15 @@ class BaseController extends ConstantsController
         } else {
             return 1;
         }
+    }
+
+    /** sendTwilioMessage - Sends message to the specified number using twilio.
+     * @param Number $number string phone number of recipient
+     * @param String $body Body/Message of sms
+     */
+    public function sendTwilioMessage($number, $body)
+    {
+        return $this->twilio->sendMessage($number, $body);
     }
 
     public function sendSms($NUMBER, $OTP)

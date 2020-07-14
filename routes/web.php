@@ -18,16 +18,17 @@ Route::GET('/is_user_active', 'LogoutController@is_user_active');
 // User Controller Routes
 
 // User Controller Auth Routes
-Route::GET('check_email/{email}/{client_id}', 'UserController@check_email');
-Route::GET('check_phone/{phono_no}/{client_id}', 'UserController@check_phone');
+Route::GET('/check_email/{email}/{client_id}', 'UserController@check_email');
+Route::GET('/check_phone/{phono_no}/{client_id}', 'UserController@check_phone');
+Route::GET('/email-send', 'UserController@email_send');
+Route::GET('/get_phone_number/{user_id}', 'UserController@get_phone_number');
 Route::get('/login', 'UserController@login');
 Route::POST('/login-user', 'UserController@login_user');
-Route::POST('/register-user', 'UserController@register_user');
 Route::GET('/otp-verify-register', 'UserController@view_otp_screen');
+Route::POST('/register-user', 'UserController@register_user');
+Route::GET('/sent_otp/{phone_no}/{user_id}', 'UserController@sent_otp');
 Route::POST('/verify_otp', 'UserController@verify_otp');
-Route::GET('/email-send', 'UserController@email_send');
-Route::GET('sent_otp/{phone_no}/{user_id}', 'UserController@sent_otp');
-Route::GET('get_phone_number/{user_id}', 'UserController@get_phone_number');
+Route::GET('/verify/{id}/{token}', 'UserController@email_verify');
 
 // Home Controller Routes
 Route::get('/', 'HomeController@index');

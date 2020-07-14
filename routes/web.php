@@ -21,6 +21,7 @@ Route::GET('/is_user_active', 'LogoutController@is_user_active');
 Route::GET('check_email/{email}/{client_id}', 'UserController@check_email');
 Route::GET('check_phone/{phono_no}/{client_id}', 'UserController@check_phone');
 Route::get('/login', 'UserController@login');
+Route::POST('/login-user', 'UserController@login_user');
 Route::POST('/register-user', 'UserController@register_user');
 Route::GET('/otp-verify-register', 'UserController@view_otp_screen');
 Route::POST('/verify_otp', 'UserController@verify_otp');

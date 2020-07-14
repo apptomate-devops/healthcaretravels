@@ -65,6 +65,135 @@ class UserController extends BaseController
             'occupation' => $occupation,
         ]);
     }
+    public function login_user(Request $request)
+    {
+        if ($request->phone_no) {
+            $request->username = $request->username;
+
+            $check = DB::table('users')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('email', '=', $request->username)
+                ->first();
+
+            if ($check) {
+                if ($check->otp_verified != 1) {
+                    $OTP = rand(1111, 9999);
+                    // send otp
+                    $this->sendOTPMessage($request->phone, $OTP);
+                    $update = DB::table('users')
+                        ->where('client_id', '=', CLIENT_ID)
+                        ->where('phone', '=', $check->phone)
+                        ->update(['otp' => $OTP]);
+
+                    $check = DB::table('users')
+                        ->where('client_id', '=', CLIENT_ID)
+                        ->where('phone', '=', $check->phone)
+                        ->first();
+
+                    $url = $this->get_base_url() . 'otp-verify-register';
+
+                    return redirect($url)->with('mobile', $check->phone);
+                }
+            } else {
+                return back()->with('error', 'This Email is not registered');
+            }
+        }
+        Log::info("Login with user hitted at :" . date('d-m-Y H:i:s'));
+        $this->validate($request, [
+            'username' => 'required',
+            'password' => 'required|min:4',
+        ]);
+
+        $password = $this->encrypt_password($request->password);
+
+        $check = DB::table('users')
+            ->where('client_id', '=', $request->client_id)
+            ->where('email', '=', $request->username)
+            ->where('password', '=', $password)
+            ->first();
+
+        if (!$check) {
+            $check = DB::table('users')
+                ->where('client_id', '=', $request->client_id)
+                ->where('email', '=', $request->username)
+                ->where('password', '=', $password)
+                ->first();
+        }
+
+        if ($check) {
+            if ($check->profile_image) {
+                $request->session()->put('profile_image', $check->profile_image);
+            }
+            $request->session()->put('user_id', $check->id);
+            $request->session()->put('role_id', $check->role_id);
+            $request->session()->put('username', $check->first_name . " " . $check->last_name);
+            $request->session()->put('name_of_agency', $check->name_of_agency);
+            $request->session()->put('phone', $check->phone);
+            $request->session()->put('profile_image', BASE_URL . 'user_profile_default.png');
+
+            if ($check->otp_verified != 1) {
+                $OTP = rand(1111, 9999);
+                // send otp
+                $this->sendOTPMessage($check->phone, $OTP);
+
+                $update = DB::table('users')
+                    ->where('client_id', '=', CLIENT_ID)
+                    ->where('phone', '=', $check->phone)
+                    ->update(['otp' => $OTP]);
+
+                $check = DB::table('users')
+                    ->where('client_id', '=', CLIENT_ID)
+                    ->where('phone', '=', $check->phone)
+                    ->first();
+
+                $url = $this->get_base_url() . 'otp-verify-register';
+                return redirect($url)->with('phone', $check->phone);
+            }
+            // return redirect($url)->with('mobile',$check->phone);
+            // }else{
+            //     $url = $this->get_base_url() . 'owner/profile';
+            // }
+
+            if ($check->email_verified != 1) {
+                $d = DB::table('users')
+                    ->where('client_id', '=', $request->client_id)
+                    ->where('email', '=', $check->email)
+                    ->first();
+                $token = $check->auth_token;
+
+                $verify_url = BASE_URL . 'verify/' . $d->id . '/' . $token;
+
+                $reg = EmailConfig::where('type', 2)->first();
+
+                $mail_data = [
+                    'token' => $token,
+                    'name' => $check->first_name . ' ' . $check->last_name,
+                    'email' => $check->email,
+                    'url' => $verify_url,
+                    'text' => isset($reg->message) ? $reg->message : '',
+                ];
+
+                $title = isset($reg->title) ? $reg->title : 'Message from ' . APP_BASE_NAME;
+                $subject = isset($reg->subject) ? $reg->subject : "Email verification from " . APP_BASE_NAME;
+                $this->send_custom_email($check->email, $subject, 'mail.email-verify', $mail_data, $title);
+                $request->session()->flush();
+                $url = $this->get_base_url() . 'email-send';
+                return redirect($url)->with('phone', $check->phone);
+            }
+
+            $request->session()->put('profile_image', $check->profile_image);
+
+            $url = $this->get_base_url() . 'owner/profile';
+            if ($request->session()->get('propertyId')) {
+                $property_id = $request->session()->get('propertyId');
+                $url = $this->get_base_url() . 'property/' . $property_id;
+            }
+
+            return redirect($url)->with('phone', $check->phone);
+        } else {
+            return back()->with('error', 'You have entered the wrong email or password. Please Try again.');
+        }
+    }
 
     public function register_user(Request $request)
     {

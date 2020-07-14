@@ -58,7 +58,7 @@ class UserController extends BaseController
                 ->where('auth_token', $token)
                 ->update(['email_verified' => ONE]);
             $url = $this->get_base_url() . 'login';
-            return redirect($url);
+            return redirect($url)->with('success', 'Your email is verified, please login to continue');
         } else {
             $url = $this->get_base_url() . 'login';
             return redirect($url);
@@ -131,23 +131,15 @@ class UserController extends BaseController
             'password' => 'required|min:4',
         ]);
 
-        $password = $this->encrypt_password($request->password);
-
         $check = DB::table('users')
             ->where('client_id', '=', $request->client_id)
             ->where('email', '=', $request->username)
-            ->where('password', '=', $password)
             ->first();
-
-        if (!$check) {
-            $check = DB::table('users')
-                ->where('client_id', '=', $request->client_id)
-                ->where('email', '=', $request->username)
-                ->where('password', '=', $password)
-                ->first();
-        }
-
         if ($check) {
+            $password = $this->encrypt_password($request->password);
+            if ($check->password !== $password) {
+                return back()->with('error', 'You have entered the wrong email or password. Please Try again.');
+            }
             if ($check->profile_image) {
                 $request->session()->put('profile_image', $check->profile_image);
             }
@@ -218,7 +210,7 @@ class UserController extends BaseController
 
             return redirect($url)->with('phone', $check->phone);
         } else {
-            return back()->with('error', 'You have entered the wrong email or password. Please Try again.');
+            return back()->with('error', 'This email is not registered.');
         }
     }
 

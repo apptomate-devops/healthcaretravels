@@ -66,3 +66,6 @@ Route::post('/short-term', 'HomeController@search_property');
 Route::get('/standards', 'HomeController@standards');
 Route::get('/terms-of-use', 'HomeController@terms_of_use');
 Route::get('/travellers-refund-policy', 'HomeController@travellers_refund_policy');
+
+// Owner controller routes
+Route::get('/owner/profile', 'OwnerController@owner_profile');

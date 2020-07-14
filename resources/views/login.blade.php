@@ -94,7 +94,7 @@
 {{--                    </div>--}}
 {{--                @endif--}}
                 @if (count($errors) > 0)
-                    <div class = "alert alert-success">
+                    <div class = "alert alert-danger">
                         <h4>Something went wrong. Please review the form and correct the required fields.</h4>
                     </div>
             @endif
@@ -144,7 +144,7 @@
 
                                 <p class="form-row form-row-wide">
                                     <label for="user_type">Account Type:
-                                        <select type="text" class="input-text validate {{ $errors->has('user_type') ? 'form-error' : ''}}" onchange="get_form(this.value)" name="user_type" id="user_type" requiredautocomplete="off" >
+                                        <select type="text" class="input-text validate {{ $errors->has('user_type') ? 'form-error' : ''}}" onchange="get_form(this.value)" name="user_type" id="user_type" autocomplete="off" >
                                             <option label="" selected>Select Account Type</option>
                                             @if(Session::get('type')==="0")
                                                 <option value="0" selected>Traveler</option>
@@ -175,7 +175,7 @@
                                 <p class="form-row form-row-wide" id="username2_field" style="display: none;">
                                     <label for="username2">Username:
                                         <i class="im im-icon-Male"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('username') ? 'form-error' : ''}}" name="username" id="username2" value="{{Session::get('username')}}" requiredautocomplete="off" />
+                                        <input type="text" class="input-text validate {{ $errors->has('username') ? 'form-error' : ''}}" name="username" id="username2" value="{{Session::get('username')}}" autocomplete="off" />
                                     </label>
                                     {!! $errors->first('username', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -207,7 +207,7 @@
                                 <p class="form-row form-row-wide" id="first_name_field" style="display: none;">
                                     <label for="username2">First Name:
                                         <i class="im im-icon-Male"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('first_name') ? 'form-error' : ''}}" value="{{Session::get('fname')}}" name="first_name" id="first_name" requiredautocomplete="off" />
+                                        <input type="text" class="input-text validate {{ $errors->has('first_name') ? 'form-error' : ''}}" value="{{Session::get('fname')}}" name="first_name" id="first_name" autocomplete="off" />
                                     </label>
                                     {!! $errors->first('first_name', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -215,7 +215,7 @@
                                 <p class="form-row form-row-wide" id="last_name_field" style="display: none;">
                                     <label for="username2">Last Name:
                                         <i class="im im-icon-Male"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('last_name') ? 'form-error' : ''}}" value="{{Session::get('lname')}}" name="last_name" id="last_name" requiredautocomplete="off" />
+                                        <input type="text" class="input-text validate {{ $errors->has('last_name') ? 'form-error' : ''}}" value="{{Session::get('lname')}}" name="last_name" id="last_name" autocomplete="off" />
                                     </label>
                                     {!! $errors->first('last_name', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -264,7 +264,7 @@
 
                                 <p class="form-row form-row-wide" id="gender_field" style="display: none;">
                                     <label for="gender">Gender:
-                                        <select type="text" class="input-text validate {{ $errors->has('gender') ? 'form-error' : ''}}" name="gender" id="gender" requiredautocomplete="off" >
+                                        <select type="text" class="input-text validate {{ $errors->has('gender') ? 'form-error' : ''}}" name="gender" id="gender" autocomplete="off" >
                                             @if(Session::get('gender')=='Male')
                                                 <option value="Male" selected>Male</option>
                                             @else
@@ -288,7 +288,7 @@
                                 <p class="form-row form-row-wide" id="languages_field" style="display: none;">
                                     <label for="languages_known">Languages Known:
                                         <i class="im im-icon-Globe"></i>
-                                        <input type="text" class="input-text validate" value="{{Session::get('languages_known')}}" name="languages_known" id="languages_known" requiredautocomplete="off" />
+                                        <input type="text" class="input-text validate" value="{{Session::get('languages_known')}}" name="languages_known" id="languages_known" autocomplete="off" />
                                     </label>
                                     {!! $errors->first('languages_known', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -392,27 +392,6 @@
 <!-- Wrapper / End -->
 
 <script src="https://maps.google.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}=places&callback=initAutocomplete" type="text/javascript"></script>
-<script>
-    google.maps.event.addDomListener(window, 'load', initialize);
-    function initialize() {
-        let options = {
-            types: ['(cities)'],
-            componentRestrictions: {country: 'us'}
-        };
-        let addressFields = ['address', 'tax_home', 'listing_address'];
-        let autocompletes = [];
-
-        for (field in addressFields) {
-            let element = document.getElementById(addressFields[field]);
-            let autocomplete = new google.maps.places.Autocomplete(element, options);
-            autocomplete.addListener('place_changed', on_place_change);
-            autocompletes.push(autocomplete);
-        }
-        function on_place_change(e) {
-            console.log('place ====', e);
-        }
-    }
-</script>
 
 <script type="text/javascript">
 
@@ -559,8 +538,28 @@
 
                 break;
         }
+        if(!isInitial) { initialize(); }
     }
 
+    function initialize() {
+        let options = {
+            types: ['(cities)'],
+            componentRestrictions: {country: 'us'}
+        };
+            // let addressFields = ['address', 'tax_home', 'listing_address'];
+            let element_address = document.getElementById("address");
+            let autocomplete_address = new google.maps.places.Autocomplete(element_address, options);
+            autocomplete_address.addListener('place_changed_address', (e) => console.log('place ====', e));
+
+            let element_tax_home = document.getElementById("tax_home");
+            let autocomplete_tax_home = new google.maps.places.Autocomplete(element_tax_home, options);
+            autocomplete_tax_home.addListener('place_changed_tax_home', (e) => console.log('place ====', e));
+
+            let element_listing_address = document.getElementById("listing_address");
+            let autocomplete_listing_address = new google.maps.places.Autocomplete(element_listing_address, options);
+            autocomplete_listing_address.addListener('place_changed_listing_address', (e) => console.log('place ====', e));
+
+    }
     function clear_errors () {
         $(".form-error").removeClass('form-error');
         $(".error-text").hide();

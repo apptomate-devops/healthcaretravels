@@ -25,15 +25,16 @@
                 <div style="float: left;">Hi {{$name}},</div>
                 <br>
                 <br>
-                <div style="float: left;">
-                    {{$email}}
-                </div>
-                <br>
+{{--                <div style="float: left;">--}}
+{{--                    {{$email}}--}}
+{{--                </div>--}}
+{{--                <br>--}}
 
-                <br><br>
+{{--                <br><br>--}}
                 <div style="float: left;">
                     {{$text}}
                 </div>
+                <br>
                 <br>
 
                 <div style="float: left;">

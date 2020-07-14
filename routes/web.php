@@ -23,6 +23,10 @@ Route::GET('check_phone/{phono_no}/{client_id}', 'UserController@check_phone');
 Route::get('/login', 'UserController@login');
 Route::POST('/register-user', 'UserController@register_user');
 Route::GET('/otp-verify-register', 'UserController@view_otp_screen');
+Route::POST('/verify_otp', 'UserController@verify_otp');
+Route::GET('/email-send', 'UserController@email_send');
+Route::GET('sent_otp/{phone_no}/{user_id}', 'UserController@sent_otp');
+Route::GET('get_phone_number/{user_id}', 'UserController@get_phone_number');
 
 // Home Controller Routes
 Route::get('/', 'HomeController@index');

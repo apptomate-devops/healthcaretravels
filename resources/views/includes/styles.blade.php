@@ -80,6 +80,11 @@
 
     .alert-success {
         color: #ffffff;
+        /*background-color: #e78016 !important;*/
+        border-color: #ffffff;
+    }
+    .alert-danger {
+        color: #ffffff;
         background-color: #e78016 !important;
         border-color: #ffffff;
     }

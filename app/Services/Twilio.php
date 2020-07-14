@@ -37,16 +37,34 @@ class Twilio
         return $client;
     }
 
+    public function isValidNumber($phone)
+    {
+        try {
+            $res = $this->client->lookups->v1->phoneNumbers($phone)->fetch();
+            return $res;
+        } catch (\Exception $ex) {
+            return false;
+        }
+    }
+
     /** sendMessage - Sends message to the specified number.
      * @param Number $number string phone number of recipient
      * @param String $body Body/Message of sms
      */
     public function sendMessage($number, $body)
     {
-        $message = $this->client->messages->create($number, [
-            'body' => $body,
-            'messagingServiceSid' => $this->messagingServiceSid,
-        ]);
-        return $message;
+        $isValid = $this->isValidNumber($number);
+        if ($isValid) {
+            try {
+                $message = $this->client->messages->create($number, [
+                    'body' => $body,
+                    'messagingServiceSid' => $this->messagingServiceSid,
+                ]);
+                return $message;
+            } catch (\Exception $ex) {
+                return false;
+            }
+        }
+        return false;
     }
 }

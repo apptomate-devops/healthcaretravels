@@ -244,7 +244,7 @@ class UserController extends BaseController
 
         $OTP = rand(1111, 9999);
 
-        $this->sendTwilioMessage($d->phone, $OTP);
+        $isOTPSent = $this->sendOTPMessage($d->phone, $OTP);
         $update = DB::table('users')
             ->where('client_id', '=', CLIENT_ID)
             ->where('phone', '=', $d->phone)

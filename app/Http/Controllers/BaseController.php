@@ -484,6 +484,17 @@ class BaseController extends ConstantsController
         return $this->twilio->sendMessage($number, $body);
     }
 
+    /** sendOTPMessage - Sends otp message to the specified number using twilio.
+     * @param Number $number string phone number of recipient
+     * @param $otp
+     * @return \Twilio\Rest\Api\V2010\Account\MessageInstance
+     */
+    public function sendOTPMessage($number, $otp)
+    {
+        $body = $otp . " is your Health Care Travels verification code";
+        return $this->twilio->sendMessage('+91' . $number, $body);
+    }
+
     public function sendSms($NUMBER, $OTP)
     {
         $NAME = "User ";

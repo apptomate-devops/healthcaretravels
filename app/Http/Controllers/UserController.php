@@ -38,6 +38,19 @@ class UserController extends BaseController
         }
     }
 
+    public function get_phone_number($user_id)
+    {
+        $check = DB::table('users')
+            ->where('client_id', '=', CLIENT_ID)
+            ->where('id', '=', $user_id)
+            ->first();
+        if ($check && isset($check->phone)) {
+            return response()->json(['status' => 'Success', 'phone_number' => $check->phone]);
+        } else {
+            return response()->json(['status' => 'Failure']);
+        }
+    }
+
     public function login(Request $request)
     {
         $constants = $this->constants();
@@ -72,6 +85,8 @@ class UserController extends BaseController
                 'Password should be at least 7 characters long and should contain at least 1 uppercase, 1 lowercase, 1 number, no special characters allowed',
             'email.regex' => 'This should be your business email',
             'website.regex' => 'Please enter valid URL',
+            'numeric' => 'Please enter valid phone number',
+            'digits' => 'Please enter valid phone number',
         ];
 
         if ($request->user_type === "1") {
@@ -83,7 +98,7 @@ class UserController extends BaseController
                 'password2' => 'required|same:password1',
                 'first_name' => 'required',
                 'last_name' => 'required',
-                'phone_no' => 'required',
+                'phone_no' => 'required|numeric|digits:10',
                 'dob' => 'required',
                 'gender' => 'required',
                 'occupation' => 'required',
@@ -101,7 +116,7 @@ class UserController extends BaseController
                 'password2' => 'required|same:password1',
                 'first_name' => 'required',
                 'last_name' => 'required',
-                'phone_no' => 'required',
+                'phone_no' => 'required|numeric|digits:10',
                 'gender' => 'required',
                 'occupation' => 'required',
                 'work' => 'required',
@@ -118,7 +133,7 @@ class UserController extends BaseController
                 'password2' => 'required|same:password1',
                 'first_name' => 'required',
                 'last_name' => 'required',
-                'phone_no' => 'required',
+                'phone_no' => 'required|numeric|digits:10',
                 'dob' => 'required',
                 'gender' => 'required',
                 'occupation' => 'required',
@@ -135,7 +150,7 @@ class UserController extends BaseController
                 'password2' => 'required|same:password1',
                 'first_name' => 'required',
                 'last_name' => 'required',
-                'phone_no' => 'required',
+                'phone_no' => 'required|numeric|digits:10',
                 'dob' => 'required',
                 'gender' => 'required',
                 'tax_home' => 'required',
@@ -205,26 +220,10 @@ class UserController extends BaseController
             ->where('client_id', '=', $request->client_id)
             ->where('email', '=', $request->email)
             ->first();
-        $request->session()->put('phone', $d->phone);
+        //        $request->session()->put('phone', $d->phone);
+        //        $request->session()->put('role_id', $d->role_id);
+        //        $request->session()->put('username', $d->username);
         $request->session()->put('user_id', $d->id);
-        $request->session()->put('role_id', $d->role_id);
-        $request->session()->put('username', $d->username);
-
-        $verify_url = BASE_URL . 'verify/' . $d->id . '/' . $token;
-
-        $reg = EmailConfig::where('type', 2)->first();
-
-        $mail_data = [
-            'token' => $token,
-            'name' => $request->first_name . ' ' . $request->last_name,
-            'email' => $request->email,
-            'url' => $verify_url,
-            'text' => isset($reg->message) ? $reg->message : '',
-        ];
-
-        $title = isset($reg->title) ? $reg->title : 'Message from ' . APP_BASE_NAME;
-        $subject = isset($reg->subject) ? $reg->subject : "Email verification from " . APP_BASE_NAME;
-        $this->send_custom_email($request->email, $subject, 'mail.email-verify', $mail_data, $title);
 
         //  Send Welcome mail
 
@@ -247,18 +246,115 @@ class UserController extends BaseController
         $isOTPSent = $this->sendOTPMessage($d->phone, $OTP);
         $update = DB::table('users')
             ->where('client_id', '=', CLIENT_ID)
+            ->where('id', '=', $d->id)
             ->where('phone', '=', $d->phone)
             ->update(['otp' => $OTP]);
 
         $url = $this->get_base_url() . 'otp-verify-register';
 
-        return redirect($url)
-            ->with('mobile', $d->phone)
-            ->with('OTP', $OTP);
+        return redirect($url)->with('phone', $d->phone);
+        //            ->with('user_id', $d->id)
+        //            ->with('OTP', $OTP);
     }
 
     public function view_otp_screen(Request $request)
     {
         return view('otp-verify-register');
+    }
+
+    public function verify_otp(Request $request)
+    {
+        if (!$request->phone_no || !$request->user_id) {
+            return back()->with('error', 'Please Login to Continue');
+        }
+        $attempts = isset($request->attempts) ? $request->attempts : 0;
+        if ($attempts) {
+            $attempts = $attempts + 1;
+        } else {
+            $attempts = 1;
+        }
+
+        $check = DB::table('users')
+            ->where('client_id', CLIENT_ID)
+            ->where('id', $request->user_id)
+            ->where('phone', $request->phone_no)
+            ->where('otp', $request->otp)
+            ->first();
+        if (!$check) {
+            return back()
+                ->with('phone_number', $request->phone_no)
+                ->with('error', 'Wrong code. Please try again.')
+                ->with('attempts', $attempts);
+        } else {
+            $update_status = DB::table('users')
+                ->where('client_id', CLIENT_ID)
+                ->where('id', $request->user_id)
+                ->where('phone', $request->phone_no)
+                ->update(['otp_verified' => 1]);
+
+            if ($check->email_verified == 1) {
+                if ($check->role_id == 1 || $check->role_id == 2) {
+                    // 1: Property Owner || 2: Travel Agent
+                    $url = $this->get_base_url() . 'owner/profile';
+                }
+                //                else if($check->role_id==3) {
+                //                    $url = $this->get_base_url() . '/rv-traveller';
+                //                }
+                else {
+                    // 0: Traveler || 3: RV Traveler
+                    $url = $this->get_base_url() . 'traveler/profile';
+                }
+            } else {
+                // Send Verification mail
+                $verify_url = BASE_URL . 'verify/' . $check->id . '/' . $check->auth_token;
+
+                $reg = EmailConfig::where('type', 2)->first();
+
+                $mail_data = [
+                    'token' => $check->auth_token,
+                    'name' => $check->first_name . ' ' . $check->last_name,
+                    'email' => $check->email,
+                    'url' => $verify_url,
+                    'text' => isset($reg->message) ? $reg->message : '',
+                ];
+
+                $title = isset($reg->title) ? $reg->title : 'Message from ' . APP_BASE_NAME;
+                $subject = isset($reg->subject) ? $reg->subject : "Email verification from " . APP_BASE_NAME;
+                $this->send_custom_email($check->email, $subject, 'mail.email-verify', $mail_data, $title);
+
+                // Redirect to email verification screen
+
+                $request->session()->flush();
+                //                $url = $this->get_base_url() . 'email-send';
+            }
+            return redirect()
+                ->back()
+                ->with('success', 'Verified Successfully!');
+        }
+    }
+    public function email_send()
+    {
+        return view('email-send');
+    }
+
+    public function sent_otp($phone_no, $user_id)
+    {
+        $check = DB::table('users')
+            ->where('id', $user_id)
+            ->where('client_id', '=', CLIENT_ID)
+            ->first();
+
+        if ($check) {
+            $OTP = rand(1111, 9999);
+            $this->sendTwilioMessage($check->phone, $OTP);
+
+            $update = DB::table('users')
+                ->where('id', $user_id)
+                ->where('client_id', '=', CLIENT_ID)
+                ->update(['otp' => $OTP, 'phone' => $phone_no]);
+
+            return response()->json(['status' => 'Success', 'message' => 'Otp Sent successfully', 'otp' => $OTP]);
+        }
+        return response()->json(['status' => 'Failure']);
     }
 }

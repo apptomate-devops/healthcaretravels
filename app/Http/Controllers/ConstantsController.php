@@ -36,6 +36,9 @@ define("UPLOAD_SECURE_DELIVERY_URL", "https://res.cloudinary.com/dazx7zpzb");
 
 define("UPLOAD_API_BASE_URL", "https://api.cloudinary.com/v1_1/dazx7zpzb");
 
+// TODO: change this to +1 when we deploy it
+define("COUNTRY_CODE", '+91');
+
 define("ZERO", 0);
 define("ONE", 1);
 define("TWO", 2);

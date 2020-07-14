@@ -5,13 +5,13 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
 use Carbon\Carbon;
 use Session;
-use App\BecomeScout;
-use App\RequestRoommate;
-use App\PropertyRating;
-use App\PropertyBookingPrice;
 use DB;
-use App\EmailConfig;
-use App\HomeListing;
+use App\Models\BecomeScout;
+use App\Models\RequestRoommate;
+use App\Models\PropertyRating;
+use App\Models\PropertyBookingPrice;
+use App\Models\EmailConfig;
+use App\Models\HomeListing;
 
 class HomeController extends BaseController
 {

@@ -20,11 +20,12 @@ Route::group(['prefix' => 'admin'], function () {
         Route::GET('/index', 'Admin\HomeController@dashboard')->name('admin.home');
         Route::GET('/settings', 'Admin\SettingsController@index');
         Route::POST('/settings', 'Admin\SettingsController@update');
-        //
+
+        //  User management routes
         Route::GET('/admin-users', 'Admin\UsersController@index');
         Route::GET('/admin-user/add', 'Admin\UsersController@add');
 
-        // property
+        // Property management routes
         Route::GET('/property', 'Admin\PropertyController@index');
         Route::GET('/property-status-update', 'Admin\PropertyController@status_update');
 
@@ -88,7 +89,7 @@ Route::group(['prefix' => 'admin'], function () {
 
         Route::GET('/property_details/{id}', 'Admin\HomeController@property_details');
 
-        //email Config
+        //email Configuration routes
         Route::GET('/register_mail', 'Admin\HomeController@register_mail');
         Route::GET('/verification_mail', 'Admin\HomeController@verification_mail');
         Route::GET('/booking_confirm_mail', 'Admin\HomeController@booking_confirm_mail');

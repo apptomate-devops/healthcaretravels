@@ -38,6 +38,33 @@ class UserController extends BaseController
         }
     }
 
+    public function email_send()
+    {
+        return view('email-send');
+    }
+
+    public function email_verify($id, $token, Request $request)
+    {
+        $count = DB::table('users')
+            ->where('id', $id)
+            ->count();
+        if ($count != 0) {
+            $d = DB::table('users')
+                ->where('id', $id)
+                ->where('auth_token', $token)
+                ->first();
+            DB::table('users')
+                ->where('id', $id)
+                ->where('auth_token', $token)
+                ->update(['email_verified' => ONE]);
+            $url = $this->get_base_url() . 'login';
+            return redirect($url);
+        } else {
+            $url = $this->get_base_url() . 'login';
+            return redirect($url);
+        }
+    }
+
     public function get_phone_number($user_id)
     {
         $check = DB::table('users')
@@ -461,10 +488,6 @@ class UserController extends BaseController
                 ->with('success', 'Verified Successfully!');
         }
     }
-    public function email_send()
-    {
-        return view('email-send');
-    }
 
     public function sent_otp($phone_no, $user_id)
     {
@@ -475,7 +498,7 @@ class UserController extends BaseController
 
         if ($check) {
             $OTP = rand(1111, 9999);
-            $this->sendTwilioMessage($check->phone, $OTP);
+            $this->sendOTPMessage($check->phone, $OTP);
 
             $update = DB::table('users')
                 ->where('id', $user_id)

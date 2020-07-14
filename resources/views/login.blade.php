@@ -82,22 +82,21 @@
     <div class="container" style="margin-top: 40px;">
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
-{{--                @if(Session::has('success'))--}}
-{{--                    <div class="alert alert-success">--}}
-{{--                        <h4>{{ Session::get('success') }}</h4>--}}
-{{--                    </div>--}}
-{{--                @endif--}}
-
-{{--                @if(Session::has('error'))--}}
-{{--                    <div class="alert alert-success">--}}
-{{--                        <h4>{{ Session::get('error') }}</h4>--}}
-{{--                    </div>--}}
-{{--                @endif--}}
+                @if(Session::has('success'))
+                    <div class = "alert alert-success">
+                        <h4>{{Session::get('success')}}</h4>
+                    </div>
+                @endif
+                @if(Session::has('error'))
+                    <div class="alert alert-danger">
+                        <h4>{{ Session::get('error') }}</h4>
+                    </div>
+                @endif
                 @if (count($errors) > 0)
                     <div class = "alert alert-danger">
                         <h4>Something went wrong. Please review the form and correct the required fields.</h4>
                     </div>
-            @endif
+                @endif
 
 	<!--Tab -->
 	<div class="my-account style-1 margin-top-5 margin-bottom-40" id="login_form">

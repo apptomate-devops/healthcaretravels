@@ -16,26 +16,20 @@
 
     </style>
     <div class="content-header row">
-        <div class="content-header-left col-md-6 col-12 mb-2 breadcrumb-new">
-            <h3 class="content-header-title mb-0 d-inline-block">Traveler Agency Management </h3>
-            <div class="row breadcrumbs-top d-inline-block" style="float: right;margin-right: -105%;">
-                <div class="breadcrumb-wrapper col-12">
-                    <div id="dynButton">
-                        <!-- <button class="btn btn-primary btn-sm" type="button" id="btnMap">
-                          Show on Map
-                        </button> -->
-                    </div>
+        <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
+            <h3 class="content-header-title mb-0 d-inline-block">Traveller Agency <small>Management</small></h3>
+            <div class="row breadcrumbs-top d-inline-block float-md-right">
+                <div class="breadcrumb-wrapper  col-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{URL('/')}}/admin">Dashboard</a>
+                        </li>
+                    </ol>
                 </div>
             </div>
         </div>
-
     </div>
-
+    <div style="margin-bottom: 20px;"></div>
     <input type="hidden" name="current" id="current" value="1">
-
-    <div id="map_wrapper" style="margin-bottom: 20px;">
-        <div id="map_canvas" class="mapping"></div>
-    </div>
 
     <div class="content-body">
         <!-- Basic form layout section start -->
@@ -62,6 +56,7 @@
 
                                             <th>Verify</th>
                                             <th>Status</th>
+                                            <th>View</th>
                                             <th>Action &nbsp;</th>
                                         </tr>
                                         </thead>
@@ -106,14 +101,17 @@
                                                     @endif
                                                 </td>
                                                 <td>
+                                                <a href="{{BASE_URL}}admin/single_user?id={{$agency->id}}"><span
+                                                        class="btn btn-success btn-default">View </span> </a>
+                                            </td>
+                                                <td>
                                                     <fieldset class="form-group">
                                                         <select class="form-control"
                                                                 onchange="status_update(this.value,{{$agency->id}})"
                                                                 id="basicSelect" style="cursor: pointer;">
                                                             <option selected="selected">Make..</option>
-                                                            <option value="5">View</option>
-                                                            <option value="0">Block</option>
-                                                            <option value="1">Active</option>
+                                                            <option value="1">Approve</option>
+                                                            <option value="0">Deny</option>
                                                             <option value="2">Delete</option>
                                                         </select>
                                                     </fieldset>

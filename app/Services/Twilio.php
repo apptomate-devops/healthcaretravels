@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Services;
-
+use App\Services\Logger;
 use Twilio\Rest\Client;
 
 class Twilio
@@ -43,6 +43,7 @@ class Twilio
             $res = $this->client->lookups->v1->phoneNumbers($phone)->fetch();
             return $res;
         } catch (\Exception $ex) {
+            Logger::error('Error validating phone number. EX: ' . $ex->getMessage());
             return false;
         }
     }
@@ -60,8 +61,10 @@ class Twilio
                     'body' => $body,
                     'messagingServiceSid' => $this->messagingServiceSid,
                 ]);
+                Logger::info('message has been sent');
                 return $message;
             } catch (\Exception $ex) {
+                Logger::error('Error sending message to phone number. EX: ' . $ex->getMessage());
                 return false;
             }
         }

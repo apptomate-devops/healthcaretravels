@@ -25,6 +25,10 @@
             bottom: 27px;
             font-weight: bolder;
         }
+        .required {
+            content:"*";
+            color: #e78016;
+        }
         .my-account label input {
             margin-top: 8px;
             padding-left: 50px;
@@ -114,13 +118,13 @@
                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                                 <input type="hidden" name="client_id" value="{{$constants['client_id']}}">
                                 <p class="form-row form-row-wide">
-                                    <label for="username">Email Address:
+                                    <label for="username">Email Address:<span class="required">*</span>
                                         <i class="im im-icon-Male"></i>
                                         <input type="text" class="input-text" name="username" id="username" placeholder="Email Address">
                                     </label>
                                 </p>
                                 <p class="form-row form-row-wide">
-                                    <label for="password">Password:
+                                    <label for="password">Password:<span class="required">*</span>
                                         <i class="im im-icon-Lock-2"></i>
                                         <input class="input-text" type="password" name="password" id="password" placeholder="Password" />
                                     </label>
@@ -142,7 +146,7 @@
                                 <input type="hidden" name="client_id" id="client_id" value="{{$constants['client_id']}}">
 
                                 <p class="form-row form-row-wide">
-                                    <label for="user_type">Account Type:
+                                    <label for="user_type required">Account Type:<span class="required">*</span>
                                         <select type="text" class="input-text validate {{ $errors->has('user_type') ? 'form-error' : ''}}" onchange="get_form(this.value)" name="user_type" id="user_type" autocomplete="off" >
                                             <option label="" selected>Select Account Type</option>
                                             @if(Session::get('type')==="0")
@@ -172,7 +176,7 @@
 
 
                                 <p class="form-row form-row-wide" id="username2_field" style="display: none;">
-                                    <label for="username2">Username:
+                                    <label for="username2 required">Username:<span class="required">*</span>
                                         <i class="im im-icon-Male"></i>
                                         <input type="text" class="input-text validate {{ $errors->has('username') ? 'form-error' : ''}}" name="username" id="username2" value="{{Session::get('username')}}" autocomplete="off" />
                                     </label>
@@ -180,7 +184,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="email_field" style="display: none;">
-                                    <label for="email2"><label id="email-label">Email Address:</label>
+                                    <label for="email2"><label id="email-label">Email Address:</label><span class="required">*</span>
                                         <i class="im im-icon-Mail"></i>
                                         <input type="text" class="input-text validate {{ $errors->has('email') ? 'form-error' : ''}}" value="{{Session::get('mail')}}" name="email" id="email2" autocomplete="off"  />
                                     </label>
@@ -188,7 +192,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="password_field" style="display: none;">
-                                    <label for="password1">Password:
+                                    <label for="password1">Password:<span class="required">*</span>
                                         <i class="im im-icon-Lock-2" ></i>
                                         <input class="input-text validate {{ $errors->has('password1') ? 'form-error' : ''}}" type="password" autocomplete="off" name="password1" id="password1"/>
                                     </label>
@@ -196,7 +200,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="password2_field" style="display: none;" >
-                                    <label for="password2">Repeat Password:
+                                    <label for="password2">Repeat Password:<span class="required">*</span>
                                         <i class="im im-icon-Lock-2" ></i>
                                         <input class="input-text validate {{ $errors->has('password2') ? 'form-error' : ''}}" autocomplete="off" type="password" name="password2" id="password2"/>
                                     </label>
@@ -204,7 +208,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="first_name_field" style="display: none;">
-                                    <label for="username2">First Name:
+                                    <label for="username2">First Name:<span class="required">*</span>
                                         <i class="im im-icon-Male"></i>
                                         <input type="text" class="input-text validate {{ $errors->has('first_name') ? 'form-error' : ''}}" value="{{Session::get('fname')}}" name="first_name" id="first_name" autocomplete="off" />
                                     </label>
@@ -212,7 +216,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="last_name_field" style="display: none;">
-                                    <label for="username2">Last Name:
+                                    <label for="username2">Last Name:<span class="required">*</span>
                                         <i class="im im-icon-Male"></i>
                                         <input type="text" class="input-text validate {{ $errors->has('last_name') ? 'form-error' : ''}}" value="{{Session::get('lname')}}" name="last_name" id="last_name" autocomplete="off" />
                                     </label>
@@ -222,7 +226,7 @@
                                 <div class="info-text" id="name-caption">Your name will not appear in your listing.</div>
 
                                 <p class="form-row form-row-wide" id="phone_number_field" style="display: none;">
-                                    <label for="phone_no">Mobile Number:
+                                    <label for="phone_no">Mobile Number:<span class="required">*</span>
                                         <i class="im im-icon-Phone-2"></i>
                                         <input type="text" class="input-text validate {{ $errors->has('phone_no') ? 'form-error' : ''}}" value="{{Session::get('phone')}}" name="phone_no" id="phone_no" maxlength="10" />
                                     </label>
@@ -230,7 +234,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="work_number_field" style="display: none;">
-                                    <label for="work">Office Number:
+                                    <label for="work">Office Number:<span class="required">*</span>
                                         <i class="im im-icon-Phone"></i>
                                         <input type="text" class="input-text validate {{ $errors->has('work') ? 'form-error' : ''}}" value="{{Session::get('work')}}" name="work" id="work" maxlength="10" />
                                     </label>
@@ -238,7 +242,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="work_title_field" style="display: none;">
-                                    <label for="work_title">Work Title:
+                                    <label for="work_title">Work Title:<span class="required">*</span>
                                         <i class="im im-icon-Consulting"></i>
                                         <input type="text" class="input-text validate {{ $errors->has('work_title') ? 'form-error' : ''}}" value="{{Session::get('work_title')}}" name="work_title" id="work_title"/>
                                     </label>
@@ -246,7 +250,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="website_field" style="display: none;">
-                                    <label for="website">Agency URL:
+                                    <label for="website">Agency URL:<span class="required">*</span>
                                         <i class="im im-icon-Ustream"></i>
                                         <input type="text" class="input-text validate {{ $errors->has('website') ? 'form-error' : ''}}" value="{{Session::get('website')}}" name="website" id="website" />
                                     </label>
@@ -254,7 +258,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide label-margin" id="dob_field" style="display: none;">
-                                    <label for="dob">Date of Birth:
+                                    <label for="dob">Date of Birth:<span class="required">*</span>
                                         <i class="im im-icon-Calendar" style="bottom: 10px;"></i>
                                         <input type="date" class="input-text validate {{ $errors->has('dob') ? 'form-error' : ''}}" value="{{Session::get('dob')}}" name="dob" id="dob" autocomplete="off"  />
                                     </label>
@@ -262,23 +266,11 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="gender_field" style="display: none;">
-                                    <label for="gender">Gender:
+                                    <label for="gender">Gender:<span class="required">*</span>
                                         <select type="text" class="input-text validate {{ $errors->has('gender') ? 'form-error' : ''}}" name="gender" id="gender" autocomplete="off" >
-                                            @if(Session::get('gender')=='Male')
-                                                <option value="Male" selected>Male</option>
-                                            @else
-                                                <option value="Male">Male</option>
-                                            @endif
-                                            @if(Session::get('gender')=='Female')
-                                                <option value="Female" selected>Female</option>
-                                            @else
-                                                <option value="Female">Female</option>
-                                            @endif
-                                            @if(Session::get('gender')=='Neutral')
-                                                <option value="Neutral" selected>Neutral</option>
-                                            @else
-                                                <option value="Neutral">Neutral</option>
-                                            @endif
+                                            <option value="Male" @if(Session::get('gender')=='Male') selected @endif>Male</option>
+                                            <option value="Female" @if(Session::get('gender')=='Female') selected @endif>Female</option>
+                                            <option value="Neutral" @if(Session::get('gender')=='Neutral') selected @endif>Neutral</option>
                                         </select>
                                     </label>
                                     {!! $errors->first('gender', '<p class="error-text">:message</p>') !!}
@@ -293,25 +285,20 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="occupation_field" style="display: none;">
-                                    <label for="occupation">Occupation:
+                                    <label for="occupation">Occupation:<span class="required">*</span>
                                         <select class="input-text validate" onchange="on_occupation_change(this.value)" autocomplete="off" name="occupation" id="occupation">
                                             <option label="" value="" >Select Occupation</option>
                                             @foreach($occupation as $a)
-                                                <option value="{{$a->name}}">{{$a->name}}</option>
+                                                <option value="{{$a->name}}" @if(Session::get('occupation')===$a->name) selected @endif>{{$a->name}}</option>
                                             @endforeach
-                                            <option value="Others">Others</option>
+                                            <option value="Others" @if(Session::get('occupation')==="Others") selected @endif>Others</option>
                                         </select>
                                     </label>
                                     {!! $errors->first('occupation', '<p class="error-text">:message</p>') !!}
                                 </p>
 
                                 <p class="form-row form-row-wide" >
-                                    <input class="input-text validate label-margin" autocomplete="off" style="display: none; width: 350px;" id="occupation_desc" placeholder="Occupation Description" type="text" name="occupation_desc" />
-                                    {!! $errors->first('occupation_desc', '<p class="error-text">:message</p>') !!}
-                                </p>
-
-                                <p class="form-row form-row-wide" >
-                                    <input class="input-text validate label-margin" autocomplete="off" style="display: none; width: 350px;" id="others_occupation" placeholder="Occupation" type="text" name="" />
+                                    <input class="input-text validate label-margin" autocomplete="off" style="@if(Session::get('occupation')!=="Others") display: none; @endif width: 350px;" id="others_occupation" placeholder="Occupation" type="text" name="" />
                                 </p>
 
                                 <p class="form-row form-row-wide" id="agency_show" style="display: none;">
@@ -319,35 +306,35 @@
                                         <select class="input-text validate" onchange="on_agency_change(this.value)" autocomplete="off" name="name_of_agency" id="agency_name">
                                             <option label="" value="" >Select Agency</option>
                                             @foreach($agency as $a)
-                                                <option value="{{$a->name}}">{{$a->name}}</option>
+                                                <option value="{{$a->name}}" @if(Session::get('name_of_agency')===$a->name) selected @endif>{{$a->name}}</option>
                                             @endforeach
-                                            <option value="Others">Others</option>
+                                            <option value="Others" @if(Session::get('name_of_agency')==="Others") selected @endif>Others</option>
                                         </select>
                                     </label>
                                     {!! $errors->first('name_of_agency', '<p class="error-text">:message</p>') !!}
                                 </p>
 
                                 <p class="form-row form-row-wide">
-                                    <input class="input-text validate label-margin" autocomplete="off" id="others_show" type="text" style="display: none; width: 350px;" name="others_show" placeholder="Agency" />
+                                    <input class="input-text validate label-margin" autocomplete="off" id="others_show" type="text" style="@if(Session::get('name_of_agency')!=="Others") display: none; @endif width: 350px;" name="others_show" placeholder="Agency" />
                                 </p>
 
                                 <p class="form-row form-row-wide" id="tax_home_field" style="display: none;">
-                                    <label for="tax_home">Tax Home:
-                                        <input type="text" class="input-text validate {{ $errors->has('tax_home') ? 'form-error' : ''}}" value="{{Session::get('tax_home')}}" name="tax_home" id="tax_home" placeholder="Tax Home" autocomplete="off" style="padding-left: 20px;" />
+                                    <label for="tax_home">Tax Home:<span class="required">*</span>
+                                        <input type="text" class="input-text validate {{ $errors->has('tax_home') ? 'form-error' : ''}}" value="{{Session::get('tax_home')}}" name="tax_home" id="tax_home" placeholder="State, Country" autocomplete="off" style="padding-left: 20px;" />
                                     </label>
                                     {!! $errors->first('tax_home', '<p class="error-text">:message</p>') !!}
                                 </p>
 
                                 <p class="form-row form-row-wide" id="address_field" style="display: none;">
-                                    <label for="address"><label id="address_label">Address:</label>
-                                        <input type="text" class="input-text validate {{ $errors->has('address') ? 'form-error' : ''}}" value="{{Session::get('address')}}" name="address" id="address" placeholder="Address" autocomplete="off" style="padding-left: 20px;" />
+                                    <label for="address"><label id="address_label">Address:</label><span class="required">*</span>
+                                        <input type="text" class="input-text validate {{ $errors->has('address') ? 'form-error' : ''}}" value="{{Session::get('address')}}" name="address" id="address" placeholder="Full Street Address" autocomplete="off" style="padding-left: 20px;" />
                                     </label>
                                     {!! $errors->first('address', '<p class="error-text">:message</p>') !!}
                                 </p>
 
                                 <p class="form-row form-row-wide" id="listing_address_field" style="display: none;">
-                                    <label for="listing_address">Listing Address:
-                                        <input type="text" class="input-text validate {{ $errors->has('listing_address') ? 'form-error' : ''}}" value="{{Session::get('listing_address')}}" name="listing_address" id="listing_address" placeholder="Listing Address" autocomplete="off" style="padding-left: 20px;" />
+                                    <label for="listing_address">Listing Address:<span class="required">*</span>
+                                        <input type="text" class="input-text validate {{ $errors->has('listing_address') ? 'form-error' : ''}}" value="{{Session::get('listing_address')}}" name="listing_address" id="listing_address" placeholder="Full Street Address" autocomplete="off" style="padding-left: 20px;" />
                                     </label>
                                     {!! $errors->first('listing_address', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -359,7 +346,7 @@
                                         <input id="terms_accept" type="checkbox" name="terms_accept" >
                                     @endif
 
-                                    <label for="terms_accept"> I agree to the <a href="{{URL('/')}}/terms-of-use">Terms of Use</a> and <a href="{{URL('/')}}/policies">Policies</a> </label>
+                                    <label for="terms_accept"> I agree to the <a href="{{URL('/')}}/terms-of-use">Terms of Use</a> and <a href="{{URL('/')}}/policies">Policies</a></label>
                                         {!! $errors->first('terms_accept', '<p class="error-text" style="margin-top: 15px;">:message</p>') !!}
                                 </div>
 
@@ -438,7 +425,7 @@
 
                 $('#email-label').text('Email Address:');
                 $('#address_label').text('Address:');
-                $("#address").attr('placeholder', "Address");
+                $("#address").attr('placeholder', "Full Street Address");
 
                 break;
             case "1": // Property Owner
@@ -468,7 +455,6 @@
 
                 $('#email-label').text('Email Address:');
                 $('#address_label').text('Mailing Address:');
-                $("#address").attr('placeholder', "Mailing Address");
 
                 break;
             case "2": // Travel Agent
@@ -501,7 +487,6 @@
                 $('#email-label').text('Business Email Address:');
                 $('#email2').val('');
                 $('#address_label').text('Address:');
-                $("#address").attr('placeholder', "Address");
 
                 break;
 
@@ -533,15 +518,27 @@
 
                 $('#email-label').text('Email Address:');
                 $('#address_label').text('Address:');
-                $("#address").attr('placeholder', "Address");
 
                 break;
         }
         if(!isInitial) { initialize(); }
+        hide_required(data);
+    }
+
+    function hide_required(type) {
+        let occupation_span = $('#occupation_field > label > span');
+        if(type === "0") {
+            occupation_span.hide();
+        } else {
+            occupation_span.show();
+        }
     }
 
     function initialize() {
         let options = {
+            componentRestrictions: {country: 'us'}
+        };
+        let options_tax_home = {
             types: ['(cities)'],
             componentRestrictions: {country: 'us'}
         };
@@ -551,7 +548,7 @@
             autocomplete_address.addListener('place_changed_address', (e) => console.log('place ====', e));
 
             let element_tax_home = document.getElementById("tax_home");
-            let autocomplete_tax_home = new google.maps.places.Autocomplete(element_tax_home, options);
+            let autocomplete_tax_home = new google.maps.places.Autocomplete(element_tax_home, options_tax_home);
             autocomplete_tax_home.addListener('place_changed_tax_home', (e) => console.log('place ====', e));
 
             let element_listing_address = document.getElementById("listing_address");

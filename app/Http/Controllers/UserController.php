@@ -321,6 +321,8 @@ class UserController extends BaseController
                 ->with('terms_accept', $request->terms_accept)
                 ->with('dob', $request->dob)
                 ->with('gender', $request->gender)
+                ->with('occupation', $request->occupation)
+                ->with('name_of_agency', $request->name_of_agency)
                 ->with('languages_known', $request->languages_known)
                 ->with('tax_home', $request->tax_home)
                 ->with('address', $request->address)
@@ -357,7 +359,6 @@ class UserController extends BaseController
             'gender' => $request->gender,
             'languages_known' => $request->languages_known,
             'occupation' => $request->occupation,
-            'occupation_desc' => $request->occupation_desc,
             'name_of_agency' => $request->name_of_agency,
             'tax_home' => $request->tax_home,
             'status' => 1,

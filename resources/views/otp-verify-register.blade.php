@@ -88,8 +88,8 @@
                         <input type="hidden" name="user_id" value="{{Session::get('user_id')}}">
                         <input type="hidden" name="attempts" value="{{Session::get('attempts')}}">
                         <p class="form-row form-row-wide" id="otp_sent" >
-                            <label for="phone_no">One Time Password
-                                <input type="text" class="input-text validate" placeholder="Otp" name="otp" id="otp" value="" required="" />
+                            <label for="phone_no">
+                                <input type="text" class="input-text validate" placeholder="Enter your code here" name="otp" id="otp" value="" required="" />
                             </label>
                         </p>
                         <div id="otp_buttons">

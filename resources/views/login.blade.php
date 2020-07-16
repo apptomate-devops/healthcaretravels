@@ -100,17 +100,17 @@
                     <div class = "alert alert-danger">
                         <h4>Something went wrong. Please review the form and correct the required fields.</h4>
                     </div>
-                @endif
+            @endif
 
-	<!--Tab -->
-	<div class="my-account style-1 margin-top-5 margin-bottom-40" id="login_form">
+            <!--Tab -->
+                <div class="my-account style-1 margin-top-5 margin-bottom-40" id="login_form">
 
-		<ul class="tabs-nav">
-			<li id="login_tab"><a href="#tab1">Log In</a></li>
-			<li id="register_tab"><a href="#tab2">Register</a></li>
-		</ul>
+                    <ul class="tabs-nav">
+                        <li id="login_tab"><a href="#tab1">Log In</a></li>
+                        <li id="register_tab"><a href="#tab2">Register</a></li>
+                    </ul>
 
-		<div class="tabs-container alt">
+                    <div class="tabs-container alt">
 
                         <!-- Login -->
                         <div class="tab-content" id="tab1" style="display: none;">
@@ -347,7 +347,7 @@
                                     @endif
 
                                     <label for="terms_accept"> I agree to the <a href="{{URL('/')}}/terms-of-use">Terms of Use</a> and <a href="{{URL('/')}}/policies">Policies</a></label>
-                                        {!! $errors->first('terms_accept', '<p class="error-text" style="margin-top: 15px;">:message</p>') !!}
+                                    {!! $errors->first('terms_accept', '<p class="error-text" style="margin-top: 15px;">:message</p>') !!}
                                 </div>
 
                                 <p class="form-row"  id="register_button_field" style="display: none; margin-top: 10px;">
@@ -520,6 +520,7 @@
         }
         if(!isInitial) { initialize(); }
         hide_required(data);
+        if(!isInitial) {initialize();}
     }
 
     function hide_required(type) {
@@ -539,27 +540,21 @@
             types: ['(cities)'],
             componentRestrictions: {country: 'us'}
         };
-            // let addressFields = ['address', 'tax_home', 'listing_address'];
-           try {
-               let element_address = document.getElementById("address");
-               if(element_address) {
-                   let autocomplete_address = new google.maps.places.Autocomplete(element_address, options);
-                   autocomplete_address.addListener('place_changed_address', (e) => console.log('place ====', e));
-               }
-
-               let element_tax_home = document.getElementById("tax_home");
-               if(element_tax_home) {
-                   let autocomplete_tax_home = new google.maps.places.Autocomplete(element_tax_home, options_tax_home);
-                   autocomplete_tax_home.addListener('place_changed_tax_home', (e) => console.log('place ====', e));
-               }
-
-               let element_listing_address = document.getElementById("listing_address");
-               if(element_listing_address) {
-                   let autocomplete_listing_address = new google.maps.places.Autocomplete(element_listing_address, options);
-                   autocomplete_listing_address.addListener('place_changed_listing_address', (e) => console.log('place ====', e));
-               }
-           } catch (e) {
-           }
+        try {
+            let addressFields = ['address', 'tax_home', 'listing_address'];
+            for (field in addressFields) {
+                let element_address = document.getElementById(addressFields[field]);
+                if(element_address) {
+                    google.maps.event.addDomListener(element_address, 'keydown', (event) => {
+                        if (event.keyCode === 13) {
+                            event.preventDefault();
+                        }
+                    });
+                    let autocomplete_address = new google.maps.places.Autocomplete(element_address, (addressFields[field] === 'tax_home') ? options_tax_home : options);
+                    autocomplete_address.addListener('place_changed', (e) => console.log('place ====', e));
+                }
+            }
+        } catch (e) {}
     }
     function clear_errors () {
         $(".form-error").removeClass('form-error');

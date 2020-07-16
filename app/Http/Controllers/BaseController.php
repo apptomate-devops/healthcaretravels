@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Logger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -156,48 +157,73 @@ class BaseController extends ConstantsController
 
     public function send_email($email, $view_name, $data)
     {
-        Mail::send($view_name, $data, function ($message) use ($email) {
-            $message->from('gotocva@gmail.com', 'Mail from ' . APP_BASE_NAME);
-            $message->to($email);
-            $message->subject('Mail from ' . APP_BASE_NAME);
-        });
+        try {
+            Mail::send($view_name, $data, function ($message) use ($email) {
+                $message->from('gotocva@gmail.com', 'Mail from ' . APP_BASE_NAME);
+                $message->to($email);
+                $message->subject('Mail from ' . APP_BASE_NAME);
+            });
+        } catch (\Exception $ex) {
+            Logger::error('Error sending email to: ' . $email);
+            return false;
+        }
     }
     public function send_email_listing($email, $view_name, $data)
     {
-        Mail::send($view_name, $data, function ($message) use ($email) {
-            $message->from('gotocva@gmail.com', 'Mail from ' . APP_BASE_NAME);
-            $message->to($email);
-            $message->subject('Your Property listed successfully - ' . APP_BASE_NAME);
-        });
+        try {
+            Mail::send($view_name, $data, function ($message) use ($email) {
+                $message->from('gotocva@gmail.com', 'Mail from ' . APP_BASE_NAME);
+                $message->to($email);
+                $message->subject('Your Property listed successfully - ' . APP_BASE_NAME);
+            });
+        } catch (\Exception $ex) {
+            Logger::error('Error sending email to: ' . $email);
+            return false;
+        }
     }
 
     public function send_email_contact($email, $subject, $view_name, $data, $name)
     {
-        Mail::send($view_name, $data, function ($message) use ($email, $subject, $name) {
-            $message->from($email, 'Mail from ' . $name);
-            $message->replyTo($email, $name);
-            $message->to(CLIENT_MAIL);
-            // $message->to('guru@sparkouttech.com');
-            $message->subject($subject);
-        });
+        try {
+            Mail::send($view_name, $data, function ($message) use ($email, $subject, $name) {
+                $message->from($email, 'Mail from ' . $name);
+                $message->replyTo($email, $name);
+                $message->to(CLIENT_MAIL);
+                // $message->to('guru@sparkouttech.com');
+                $message->subject($subject);
+            });
+        } catch (\Exception $ex) {
+            Logger::error('Error sending email to: ' . $email);
+            return false;
+        }
     }
 
     public function send_custom_email($email, $subject, $view_name, $data, $title)
     {
         $mail_title = $title;
-        Mail::send($view_name, $data, function ($message) use ($email, $mail_title, $subject) {
-            $message->from('gotocva@gmail.com', $mail_title);
-            $message->to($email);
-            $message->subject($subject);
-        });
+        try {
+            Mail::send($view_name, $data, function ($message) use ($email, $mail_title, $subject) {
+                $message->from('gotocva@gmail.com', $mail_title);
+                $message->to($email);
+                $message->subject($subject);
+            });
+        } catch (\Exception $ex) {
+            Logger::error('Error sending email to: ' . $email);
+            return false;
+        }
     }
     public function send_custom_email_admin($email, $subject, $view_name, $data)
     {
-        Mail::send($view_name, $data, function ($message) use ($email, $subject) {
-            $message->from('gotocva@gmail.com', "Mail from " . APP_BASE_NAME);
-            $message->to($email);
-            $message->subject($subject);
-        });
+        try {
+            Mail::send($view_name, $data, function ($message) use ($email, $subject) {
+                $message->from('gotocva@gmail.com', "Mail from " . APP_BASE_NAME);
+                $message->to($email);
+                $message->subject($subject);
+            });
+        } catch (\Exception $ex) {
+            Logger::error('Error sending email to: ' . $email);
+            return false;
+        }
     }
 
     public static function null_safe_obj($arr)

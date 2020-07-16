@@ -182,6 +182,14 @@
                 </span>
                         </a>
                     </li>
+                    <li {{{ (Request::is('admin/approval_mail') ? 'class=active' : '') }}}>
+                        <a href="{{url('admin/approval_mail')}}">
+                            <i class="la la-envelope"></i>
+                            <span class="menu-title" data-i18n="nav.dash.main">
+                    Approval
+                </span>
+                        </a>
+                    </li>
                     <li {{{ (Request::is('admin/password_reset') ? 'class=active' : '') }}}>
                         <a href="{{url('admin/password_reset')}}">
                             <i class="la la-envelope"></i>

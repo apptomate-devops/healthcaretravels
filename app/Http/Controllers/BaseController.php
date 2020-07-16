@@ -58,6 +58,7 @@ class BaseController extends ConstantsController
         Propertyamenties $property_amenities,
         ShortTermPricing $shor_term_pricing,
         BecomeScout $BecomeScout,
+        EmailConfig $emailConfig,
         Request $request
     ) {
         $this->CONSTANTS = ['client_id' => CLIENT_ID, 'MOST_POPULAR' => 1, 'base_url' => $this->get_base_url()];
@@ -75,6 +76,7 @@ class BaseController extends ConstantsController
         $this->propertyRoom = $propertyRoom;
         $this->propertyBedRooms = $propertyBedRooms;
         $this->BecomeScout = $BecomeScout;
+        $this->emailConfig = $emailConfig;
         $this->PropertyImage = $PropertyImage;
         // $this->Couponecode=$Couponecode;
         $this->request = $request;

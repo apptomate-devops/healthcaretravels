@@ -503,6 +503,11 @@ class HomeController extends BaseController
         $verification = EmailConfig::where('type', 2)->first();
         return view('Admin.mail-verification', ['verification' => $verification]);
     }
+    public function approval_mail(Request $request)
+    {
+        $approval = EmailConfig::where('type', 6)->first();
+        return view('Admin.mail-approval', ['approval' => $approval]);
+    }
     public function booking_confirm_mail(Request $request)
     {
         $confirm = EmailConfig::where('type', 3)->first();
@@ -551,11 +556,27 @@ class HomeController extends BaseController
     }
     public function verify_profile($id)
     {
+        $user = $this->user
+            ->where('id', $id)
+            ->where('is_verified', '<>', ONE)
+            ->first();
         $this->user->where('id', $id)->update(['is_verified' => ONE]);
         DB::table('verify_mobile')
             ->where('user_id', $id)
             ->update(['status' => ONE]);
+        if ($user) {
+            // Accept Email flow
+            $reg = $this->emailConfig->where('type', 6)->first();
+            $mail_data = [
+                'name' => $user->first_name . ' ' . $user->last_name,
+                'email' => $user->email,
+                'text' => isset($reg->message) ? $reg->message : '',
+            ];
 
+            $title = isset($reg->title) ? $reg->title : 'Message from ' . APP_BASE_NAME;
+            $subject = isset($reg->subject) ? $reg->subject : "Email verification from " . APP_BASE_NAME;
+            $this->send_custom_email($user->email, $subject, 'mail.account-approved', $mail_data, $title);
+        }
         return back()->with('success', 'User has been verified');
     }
 

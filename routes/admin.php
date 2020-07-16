@@ -92,6 +92,7 @@ Route::group(['prefix' => 'admin'], function () {
         //email Configuration routes
         Route::GET('/register_mail', 'Admin\HomeController@register_mail');
         Route::GET('/verification_mail', 'Admin\HomeController@verification_mail');
+        Route::GET('/approval_mail', 'Admin\HomeController@approval_mail');
         Route::GET('/booking_confirm_mail', 'Admin\HomeController@booking_confirm_mail');
         Route::GET('/booking_cancel_mail', 'Admin\HomeController@booking_cancel_mail');
         Route::GET('/password_reset', 'Admin\HomeController@password_reset');

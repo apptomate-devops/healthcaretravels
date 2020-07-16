@@ -114,7 +114,7 @@
 
                         <!-- Login -->
                         <div class="tab-content" id="tab1" style="display: none;">
-                            <form method="post" class="login" action="{{url('/')}}/login-user"  >
+                            <form method="post" class="login" action="{{url('/')}}/login-user" onkeydown="return event.key != 'Enter';" >
                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                                 <input type="hidden" name="client_id" value="{{$constants['client_id']}}">
                                 <p class="form-row form-row-wide">
@@ -141,7 +141,7 @@
                         <!-- Register -->
                         <div class="tab-content" id="tab2" style="display: none;">
                             <div style="margin-bottom: 30px;">After registering your account, you will be required to submit information to verify your account within seven days. Please have documents and identification available for upload.</div>
-                            <form method="post" class="register" action="{{url('/')}}/register-user" autocomplete="off">
+                            <form method="post" class="register" action="{{url('/')}}/register-user" autocomplete="off" onkeydown="return event.key != 'Enter';">
                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                                 <input type="hidden" name="client_id" id="client_id" value="{{$constants['client_id']}}">
 

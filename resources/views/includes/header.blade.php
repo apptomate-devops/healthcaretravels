@@ -114,10 +114,6 @@
                         RV Traveller
                         </a>
                       </li>
-                      <li class="center">
-                        {{-- <a href="https://docs.google.com/forms/d/e/1FAIpQLSfWnft5cRSmWcyZ23q63C6onr1W0HifZqULU4fej3y9qc2hWw/viewform?usp=sf_link" target="_blank" class="sign-in">Click here for Covid-19 Assistance</a> --}}
-                          <a href="{{url('/')}}/login" target="_blank" class="sign-in">
-                      </li>
                      @endif
                 	</ul>
 

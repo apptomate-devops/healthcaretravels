@@ -188,7 +188,8 @@ class BaseController extends ConstantsController
     {
         $mail_title = $title;
         Mail::send($view_name, $data, function ($message) use ($email, $mail_title, $subject) {
-            $message->from('gotocva@gmail.com', $mail_title);
+            // From configurations are used from config file
+            // $message->from('gotocva@gmail.com', $mail_title);
             $message->to($email);
             $message->subject($subject);
         });

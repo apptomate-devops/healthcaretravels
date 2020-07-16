@@ -380,13 +380,10 @@
 <script src="https://maps.google.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}=places&callback=initAutocomplete" type="text/javascript"></script>
 
 <script type="text/javascript">
-
     $(document).ready(() => {
 
         get_form("{{ Session::get('type') }}", true);
-
         set_max_date();
-
         if("{{ Session::get('selectedTab'), 'tab1' }}" === 'tab2') {
             $('#login_tab').removeClass('active');
             $('#register_tab').addClass('active');
@@ -533,7 +530,7 @@
             occupation_span.show();
         }
     }
-
+    google.maps.event.addDomListener(window, 'load', initialize);
     function initialize() {
         let options = {
             componentRestrictions: {country: 'us'}
@@ -543,18 +540,26 @@
             componentRestrictions: {country: 'us'}
         };
             // let addressFields = ['address', 'tax_home', 'listing_address'];
-            let element_address = document.getElementById("address");
-            let autocomplete_address = new google.maps.places.Autocomplete(element_address, options);
-            autocomplete_address.addListener('place_changed_address', (e) => console.log('place ====', e));
+           try {
+               let element_address = document.getElementById("address");
+               if(element_address) {
+                   let autocomplete_address = new google.maps.places.Autocomplete(element_address, options);
+                   autocomplete_address.addListener('place_changed_address', (e) => console.log('place ====', e));
+               }
 
-            let element_tax_home = document.getElementById("tax_home");
-            let autocomplete_tax_home = new google.maps.places.Autocomplete(element_tax_home, options_tax_home);
-            autocomplete_tax_home.addListener('place_changed_tax_home', (e) => console.log('place ====', e));
+               let element_tax_home = document.getElementById("tax_home");
+               if(element_tax_home) {
+                   let autocomplete_tax_home = new google.maps.places.Autocomplete(element_tax_home, options_tax_home);
+                   autocomplete_tax_home.addListener('place_changed_tax_home', (e) => console.log('place ====', e));
+               }
 
-            let element_listing_address = document.getElementById("listing_address");
-            let autocomplete_listing_address = new google.maps.places.Autocomplete(element_listing_address, options);
-            autocomplete_listing_address.addListener('place_changed_listing_address', (e) => console.log('place ====', e));
-
+               let element_listing_address = document.getElementById("listing_address");
+               if(element_listing_address) {
+                   let autocomplete_listing_address = new google.maps.places.Autocomplete(element_listing_address, options);
+                   autocomplete_listing_address.addListener('place_changed_listing_address', (e) => console.log('place ====', e));
+               }
+           } catch (e) {
+           }
     }
     function clear_errors () {
         $(".form-error").removeClass('form-error');

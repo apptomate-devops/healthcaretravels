@@ -1,4 +1,4 @@
-image: registry.gitlab.com/healthcaretravels/hct:latest
+image: edbizarro/gitlab-ci-pipeline-php:7.3
 
 variables:
   DB_DATABASE: healthcare
@@ -29,11 +29,10 @@ deploy_production:
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-
     - ~/.composer/vendor/bin/envoy run deploy --commit="$CI_COMMIT_SHA"
   environment:
     name: test
-    url: http://127.31.11.179
+    url: http://3.136.233.168
   when: manual
   only:
     - develop

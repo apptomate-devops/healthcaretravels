@@ -120,13 +120,13 @@
                                 <p class="form-row form-row-wide">
                                     <label for="username">Email Address:<span class="required">*</span>
                                         <i class="im im-icon-Male"></i>
-                                        <input type="text" class="input-text" name="username" id="username" placeholder="Email Address">
+                                        <input type="email" class="input-text" name="username" id="username" placeholder="Email Address" required />
                                     </label>
                                 </p>
                                 <p class="form-row form-row-wide">
                                     <label for="password">Password:<span class="required">*</span>
                                         <i class="im im-icon-Lock-2"></i>
-                                        <input class="input-text" type="password" name="password" id="password" placeholder="Password" />
+                                        <input class="input-text" type="password" name="password" id="password" placeholder="Password" required />
                                     </label>
                                 </p>
                                 <p class="form-row">
@@ -173,12 +173,10 @@
                                     </label>
                                     {!! $errors->first('user_type', '<p class="error-text">:message</p>') !!}
                                 </p>
-
-
                                 <p class="form-row form-row-wide" id="username2_field" style="display: none;">
                                     <label for="username2 required">Username:<span class="required">*</span>
                                         <i class="im im-icon-Male"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('username') ? 'form-error' : ''}}" name="username" id="username2" value="{{Session::get('username')}}" autocomplete="off" />
+                                        <input type="text" class="input-text validate {{ $errors->has('username') ? 'form-error' : ''}}" name="username" id="username2" value="{{Session::get('username')}}" autocomplete="off" required />
                                     </label>
                                     {!! $errors->first('username', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -186,7 +184,7 @@
                                 <p class="form-row form-row-wide" id="email_field" style="display: none;">
                                     <label for="email2"><label id="email-label">Email Address:</label><span class="required">*</span>
                                         <i class="im im-icon-Mail"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('email') ? 'form-error' : ''}}" value="{{Session::get('mail')}}" name="email" id="email2" autocomplete="off"  />
+                                        <input type="email" class="input-text validate {{ $errors->has('email') ? 'form-error' : ''}}" value="{{Session::get('mail')}}" name="email" id="email2" autocomplete="off" required />
                                     </label>
                                     {!! $errors->first('email', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -194,7 +192,7 @@
                                 <p class="form-row form-row-wide" id="password_field" style="display: none;">
                                     <label for="password1">Password:<span class="required">*</span>
                                         <i class="im im-icon-Lock-2" ></i>
-                                        <input class="input-text validate {{ $errors->has('password1') ? 'form-error' : ''}}" type="password" autocomplete="off" name="password1" id="password1"/>
+                                        <input class="input-text validate {{ $errors->has('password1') ? 'form-error' : ''}}" type="password" autocomplete="off" name="password1" id="password1" required />
                                     </label>
                                     {!! $errors->first('password1', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -202,7 +200,7 @@
                                 <p class="form-row form-row-wide" id="password2_field" style="display: none;" >
                                     <label for="password2">Repeat Password:<span class="required">*</span>
                                         <i class="im im-icon-Lock-2" ></i>
-                                        <input class="input-text validate {{ $errors->has('password2') ? 'form-error' : ''}}" autocomplete="off" type="password" name="password2" id="password2"/>
+                                        <input class="input-text validate {{ $errors->has('password2') ? 'form-error' : ''}}" autocomplete="off" type="password" name="password2" id="password2" required />
                                     </label>
                                     {!! $errors->first('password2', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -210,7 +208,7 @@
                                 <p class="form-row form-row-wide" id="first_name_field" style="display: none;">
                                     <label for="username2">First Name:<span class="required">*</span>
                                         <i class="im im-icon-Male"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('first_name') ? 'form-error' : ''}}" value="{{Session::get('fname')}}" name="first_name" id="first_name" autocomplete="off" />
+                                        <input type="text" class="input-text validate {{ $errors->has('first_name') ? 'form-error' : ''}}" value="{{Session::get('fname')}}" name="first_name" id="first_name" autocomplete="off" required />
                                     </label>
                                     {!! $errors->first('first_name', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -218,7 +216,7 @@
                                 <p class="form-row form-row-wide" id="last_name_field" style="display: none;">
                                     <label for="username2">Last Name:<span class="required">*</span>
                                         <i class="im im-icon-Male"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('last_name') ? 'form-error' : ''}}" value="{{Session::get('lname')}}" name="last_name" id="last_name" autocomplete="off" />
+                                        <input type="text" class="input-text validate {{ $errors->has('last_name') ? 'form-error' : ''}}" value="{{Session::get('lname')}}" name="last_name" id="last_name" autocomplete="off" required />
                                     </label>
                                     {!! $errors->first('last_name', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -228,7 +226,7 @@
                                 <p class="form-row form-row-wide" id="phone_number_field" style="display: none;">
                                     <label for="phone_no">Mobile Number:<span class="required">*</span>
                                         <i class="im im-icon-Phone-2"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('phone_no') ? 'form-error' : ''}}" value="{{Session::get('phone')}}" name="phone_no" id="phone_no" maxlength="10" />
+                                        <input type="text" class="input-text validate {{ $errors->has('phone_no') ? 'form-error' : ''}}" value="{{Session::get('phone')}}" name="phone_no" id="phone_no" maxlength="10" required />
                                     </label>
                                     {!! $errors->first('phone_no', '<p class="error-text">:message</p>') !!}
                                 </p>

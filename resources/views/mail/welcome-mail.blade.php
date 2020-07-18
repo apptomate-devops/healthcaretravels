@@ -31,18 +31,7 @@
             </div>
             <br/>
         </div>
-        <br/>
-        <hr width="100%"/>
-        <footer class="navbar-inverse">
-            <div class="row">
-                <!--'.$sign.'-->
-                Thank you<br>{{APP_BASE_NAME}} Team<br><br>
-                � 2018 {{APP_BASE_NAME}}. All Rights Reserved.
-                <br>
-                @include('mail.footer')
-                <div class="collapse navbar-collapse"></div>
-            </div>
-        </footer>
+        @include('mail.signed-footer')
     </div>
 </body>
 </html>

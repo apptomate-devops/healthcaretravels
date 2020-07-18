@@ -1,4 +1,4 @@
-@servers(['web' => 'deployer@127.31.11.179'])
+@servers(['web' => 'deployer@3.136.233.168'])
 
 @setup
     $repository = 'git@gitlab.com:healthcaretravels/hct.git';

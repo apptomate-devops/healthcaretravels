@@ -246,6 +246,7 @@ class UserController extends BaseController
                 'password2' => 'required|same:password1',
                 'first_name' => 'required',
                 'last_name' => 'required',
+                'ethnicity' => 'required',
                 'phone_no' => 'required|numeric|digits:10',
                 'dob' => 'required',
                 'gender' => 'required',
@@ -264,6 +265,7 @@ class UserController extends BaseController
                 'password2' => 'required|same:password1',
                 'first_name' => 'required',
                 'last_name' => 'required',
+                'ethnicity' => 'required',
                 'phone_no' => 'required|numeric|digits:10',
                 'gender' => 'required',
                 'dob' => 'required',
@@ -281,6 +283,7 @@ class UserController extends BaseController
                 'password2' => 'required|same:password1',
                 'first_name' => 'required',
                 'last_name' => 'required',
+                'ethnicity' => 'required',
                 'phone_no' => 'required|numeric|digits:10',
                 'dob' => 'required',
                 'gender' => 'required',
@@ -298,6 +301,7 @@ class UserController extends BaseController
                 'password2' => 'required|same:password1',
                 'first_name' => 'required',
                 'last_name' => 'required',
+                'ethnicity' => 'required',
                 'phone_no' => 'required|numeric|digits:10',
                 'dob' => 'required',
                 'gender' => 'required',
@@ -314,6 +318,7 @@ class UserController extends BaseController
                 ->with('username', $name)
                 ->with('fname', $fname)
                 ->with('lname', $lname)
+                ->with('ethnicity', $request->ethnicity)
                 ->with('mail', $mail)
                 ->with('phone', $phone)
                 ->with('type', $type)
@@ -354,6 +359,7 @@ class UserController extends BaseController
             'password' => $password,
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
+            'ethnicity' => $request->ethnicity,
             'phone' => $request->phone_no,
             'date_of_birth' => $request->dob,
             'gender' => $request->gender,

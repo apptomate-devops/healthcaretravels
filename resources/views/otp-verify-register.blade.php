@@ -25,6 +25,13 @@
             width: 150px;
             margin-top: 30px;
         }
+        a.change-phone-link {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        a.change-phone-link:hover {
+            color: #ffa74a;
+        }
     </style>
 
 </head>
@@ -91,6 +98,7 @@
                             <label for="phone_no">
                                 <input type="text" class="input-text validate" placeholder="Enter your code here" name="otp" id="otp" value="" required="" />
                             </label>
+                            <a id="change-phone" class="change-phone-link">Change phone number</a>
                         </p>
                         <div id="otp_buttons">
                             <input type="submit" name="button border fw" value="Submit">
@@ -157,54 +165,56 @@
         }
     });
 
+    $('#change-phone').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $('#mobile_chk').show();
+        $('#phone_no').val($('#phone_number').text());
+        $('#otp_sent').hide();
+        $('#otp_buttons').hide();
+        $('#phone_no').removeAttr('readonly');
+    });
+
     $('#get_help').click((e) => {
         e.preventDefault();
         e.stopPropagation();
         alert('Please contact support: {{SUPPORT_MAIL}}');
     });
 
-    $('#send_otp').click(() => {
+    $('#send_otp').click(function() {
         $('#mobile_chk').show();
         $('#phone_no').val($('#phone_number').text());
         $('#otp_sent').hide();
         $('#otp_buttons').hide();
+        $('#phone_no').attr('readonly', true);
     });
 
     $('#get_otp').click(() => {
 
-        let phone_no=$('#phone_no').val();
-        let user_id="{{Session::get('user_id')}}";
-
+        var phone_no = $('#phone_no').val();
+        var user_id = "{{Session::get('user_id')}}";
         if(!phone_no || !user_id) {
             alert('Please Login to continue.');
             return;
         }
-
-        let url = '{{url("/")}}/sent_otp/'+phone_no+'/'+user_id;
-
+        var url = '/sent_otp/' + phone_no + '/' + user_id;
         $.ajax({
             type:'GET',
             url,
-            success:(status) => {
-                if(status.status === "Failure"){
-
-                    // $('#alert_phone').css('color','red');
-                    // $('#alert_phone').html("Otp Sent Failed");
-                    alert('Something went wrong. Please check.');
-
-                }else{
-
-                    console.log("OTP == ", status.otp);
-
+            success: function (response) {
+                if(response.status === "Failure") {
+                    alert(response.message || 'Something went wrong. Please check.');
+                } else {
+                    $('#phone_number').text(phone_no);
                     $('#alert_phone').css('color','green');
-                    $('#alert_phone').html(status.message);
+                    $('#alert_phone').html(response.message);
                     $('#mobile_chk').hide();
                     $('#otp').val('');
                     $('#otp_sent').show();
                     $('#otp_buttons').show();
                 }
             },
-            error:(err) => {
+            error: function (err) {
                 alert('Something went wrong. Please check.')
             }
         })

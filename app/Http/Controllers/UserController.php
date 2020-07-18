@@ -489,10 +489,22 @@ class UserController extends BaseController
             ->where('id', $user_id)
             ->where('client_id', '=', CLIENT_ID)
             ->first();
-
         if ($check) {
+            $isPhoneUpdate = $phone_no != $check->phone;
+            if ($isPhoneUpdate) {
+                $checkPhoneNumber = DB::table('users')
+                    ->where('phone', $phone_no)
+                    ->where('client_id', '=', CLIENT_ID)
+                    ->first();
+                if ($checkPhoneNumber) {
+                    return response()->json([
+                        'status' => 'Failure',
+                        'message' => 'Phone number is linked to another account. Try another phone number',
+                    ]);
+                }
+            }
             $OTP = rand(1111, 9999);
-            $this->sendOTPMessage($check->phone, $OTP);
+            $this->sendOTPMessage($phone_no, $OTP);
 
             $update = DB::table('users')
                 ->where('id', $user_id)

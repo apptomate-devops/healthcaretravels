@@ -141,7 +141,7 @@
                         <!-- Register -->
                         <div class="tab-content" id="tab2" style="display: none;">
                             <div style="margin-bottom: 30px;">After registering your account, you will be required to submit information to verify your account within seven days. Please have documents and identification available for upload.</div>
-                            <form method="post" class="register" action="{{url('/')}}/register-user" autocomplete="off" onkeydown="return event.key != 'Enter';">
+                            <form method="post" class="register" action="{{url('/')}}/register-user" onsubmit="return validate_registration()" autocomplete="off" onkeydown="return event.key != 'Enter';">
                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                                 <input type="hidden" name="client_id" id="client_id" value="{{$constants['client_id']}}">
 
@@ -262,9 +262,10 @@
                                 <p class="form-row form-row-wide label-margin" id="dob_field" style="display: none;">
                                     <label for="dob">Date of Birth:<span class="required">*</span>
                                         <i class="im im-icon-Calendar" style="bottom: 10px;"></i>
-                                        <input type="date" class="input-text validate {{ $errors->has('dob') ? 'form-error' : ''}}" value="{{Session::get('dob')}}" name="dob" id="dob" autocomplete="off"  />
+                                        <input type="date" onchange="on_dob_change(this.value)" class="input-text validate {{ $errors->has('dob') ? 'form-error' : ''}}" value="{{Session::get('dob')}}" name="dob" id="dob" autocomplete="off"  />
                                     </label>
                                     {!! $errors->first('dob', '<p class="error-text">:message</p>') !!}
+                                <p id="dob_validation_error"></p>
                                 </p>
 
                                 <p class="form-row form-row-wide" id="gender_field" style="display: none;">
@@ -383,6 +384,8 @@
 
 <script type="text/javascript">
     $(document).ready(() => {
+        let dob_value = "{{Session::get('dob')}}";
+        if(dob_value) { on_dob_change(dob_value); }
 
         get_form("{{ Session::get('type') }}", true);
         set_max_date();
@@ -595,6 +598,29 @@
         }
     }
 
+    function on_dob_change(value) {
+        const dateString = value;
+        let today = new Date();
+        let birthDate = new Date(dateString);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        let m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        if(age < 18) {
+            $('#dob_validation_error').html('You must be 18 or older to register online. Contact <br>​<a href="mailto:{{VERIFY_MAIL}}">{{VERIFY_MAIL}}</a> to create a minor account.')
+        } else {
+            $('#dob_validation_error').html('');
+        }
+    }
+
+    function validate_registration() {
+        let dob_error = $('#dob_validation_error').html();
+        if(dob_error) {
+            $(window).scrollTop($('#dob').offset().top-100);
+        }
+        return !dob_error;
+    }
     $('#phone_no, #work_number_field').on('keypress', function (event) {
         var regex = new RegExp("^[0-9+]$");
         var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);

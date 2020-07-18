@@ -98,7 +98,7 @@
                             <label for="phone_no">
                                 <input type="text" class="input-text validate" placeholder="Enter your code here" name="otp" id="otp" value="" required="" />
                             </label>
-                            <a id="change-phone" class="change-phone-link">Change phone number</a>
+                            <a id="change-phone" class="change-phone-link">Change number</a>
                         </p>
                         <div id="otp_buttons">
                             <input type="submit" name="button border fw" value="Submit">

@@ -211,6 +211,22 @@
 
                                 <div class="info-text" id="name-caption">Your name will not appear in your listing.</div>
 
+                                <p class="form-row form-row-wide" id="ethnicity_filed" style="display: none;">
+                                    <label for="ethnicity">Ethnicity:<span class="required">*</span>
+                                        <select type="text" class="input-text validate {{ $errors->has('ethnicity') ? 'form-error' : ''}}" name="ethnicity" id="ethnicity" autocomplete="off" >
+                                            <option label="" selected>Select Ethnicity</option>
+                                            <option value="American Indian" @if(Session::get('ethnicity')=='American Indian') selected @endif>American Indian</option>
+                                            <option value="Black" @if(Session::get('ethnicity')=='Black') selected @endif>Black</option>
+                                            <option value="Hispanic / Latino" @if(Session::get('ethnicity')=='Hispanic / Latino') selected @endif>Hispanic / Latino</option>
+                                            <option value="Pacific Islander" @if(Session::get('ethnicity')=='Pacific Islander') selected @endif>Pacific Islander</option>
+                                            <option value="Other" @if(Session::get('ethnicity')=='Other') selected @endif>Other</option>
+                                            <option value="Rather Not Say" @if(Session::get('ethnicity')=='Rather Not Say') selected @endif>Rather Not Say</option>
+                                        </select>
+                                    </label>
+                                    {!! $errors->first('ethnicity', '<p class="error-text">:message</p>') !!}
+                                </p>
+                                <div class="info-text" id="ethnicity-caption">We use this information for identity verification. It will not appear on your public profile.</div>
+
                                 <p class="form-row form-row-wide" id="phone_number_field" style="display: none;">
                                     <label for="phone_no">Mobile Number:<span class="required">*</span>
                                         <i class="im im-icon-Phone-2"></i>
@@ -265,7 +281,7 @@
                                 <p class="form-row form-row-wide" id="languages_field" style="display: none;">
                                     <label for="languages_known">Languages Known:
                                         <i class="im im-icon-Globe"></i>
-                                        <input type="text" class="input-text validate" value="{{Session::get('languages_known')}}" name="languages_known" id="languages_known" autocomplete="off" />
+                                        <input type="text" class="input-text validate" value="{{Session::get('languages_known')}}" name="languages_known" id="languages_known" placeholder="English, Spanish" autocomplete="off" />
                                     </label>
                                     {!! $errors->first('languages_known', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -389,6 +405,8 @@
                 $('#password2_field').show();
                 $('#first_name_field').show();
                 $('#last_name_field').show();
+                $('#ethnicity_filed').show();
+                $('#ethnicity-caption').show();
                 $('#phone_number_field').show();
                 $('#dob_field').show();
                 $('#gender_field').show();
@@ -417,6 +435,8 @@
                 $('#password2_field').show();
                 $('#first_name_field').show();
                 $('#last_name_field').show();
+                $('#ethnicity_filed').show();
+                $('#ethnicity-caption').show();
                 $('#phone_number_field').show();
                 $('#dob_field').show();
                 $('#gender_field').show();
@@ -446,6 +466,8 @@
                 $('#password2_field').show();
                 $('#first_name_field').show();
                 $('#last_name_field').show();
+                $('#ethnicity_filed').show();
+                $('#ethnicity-caption').show();
                 $('#phone_number_field').show();
                 $('#dob_field').show();
                 $('#gender_field').show();
@@ -477,6 +499,8 @@
                 $('#password2_field').hide();
                 $('#first_name_field').hide();
                 $('#last_name_field').hide();
+                $('#ethnicity_filed').hide();
+                $('#ethnicity-caption').hide();
                 $('#phone_number_field').hide();
                 $('#dob_field').hide();
                 $('#gender_field').hide();

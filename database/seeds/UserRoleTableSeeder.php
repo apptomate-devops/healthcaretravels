@@ -13,10 +13,43 @@ class UserRoleTableSeeder extends Seeder
     {
         \App\Models\UserRole::updateOrCreate(
             [
-                'role' => 'RV TRAVELLER',
+                'id' => 0,
             ],
             [
-                'role' => 'RV TRAVELLER',
+                'role' => 'HEALTHCARE TRAVELER',
+                'client_id' => 15465793,
+                'status' => 1,
+                'updated_at' => date("Y-m-d H:i:s"),
+            ],
+        );
+        \App\Models\UserRole::updateOrCreate(
+            [
+                'id' => 1,
+            ],
+            [
+                'role' => 'PROPERTY OWNER',
+                'client_id' => 15465793,
+                'status' => 1,
+                'updated_at' => date("Y-m-d H:i:s"),
+            ],
+        );
+        \App\Models\UserRole::updateOrCreate(
+            [
+                'id' => 2,
+            ],
+            [
+                'role' => 'AGENCY',
+                'client_id' => 15465793,
+                'status' => 1,
+                'updated_at' => date("Y-m-d H:i:s"),
+            ],
+        );
+        \App\Models\UserRole::updateOrCreate(
+            [
+                'id' => 3,
+            ],
+            [
+                'role' => 'RV HEALTHCARE TRAVELER',
                 'client_id' => 15465793,
                 'status' => 1,
                 'updated_at' => date("Y-m-d H:i:s"),

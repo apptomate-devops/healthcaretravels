@@ -520,7 +520,7 @@ class BaseController extends ConstantsController
      */
     public function sendOTPMessage($number, $otp)
     {
-        $body = $otp . " is your Health Care Travels verification code";
+        $body = "Your Health Care Travels verification code is: " . $otp;
         return $this->twilio->sendMessage(COUNTRY_CODE . $number, $body);
     }
 

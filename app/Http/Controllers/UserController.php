@@ -266,7 +266,7 @@ class UserController extends BaseController
                 'last_name' => 'required',
                 'phone_no' => 'required|numeric|digits:10',
                 'gender' => 'required',
-                'occupation' => 'required',
+                'dob' => 'required',
                 'work' => 'required',
                 'work_title' => 'required',
                 'website' => 'required|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/',
@@ -453,14 +453,14 @@ class UserController extends BaseController
 
             if ($check->email_verified == 1) {
                 if ($check->role_id == 1 || $check->role_id == 2) {
-                    // 1: Property Owner || 2: Travel Agent
+                    // 1: Property Owner || 2: Agency
                     $url = $this->get_base_url() . 'owner/profile';
                 }
                 //                else if($check->role_id==3) {
                 //                    $url = $this->get_base_url() . '/rv-traveller';
                 //                }
                 else {
-                    // 0: Traveler || 3: RV Traveler
+                    // 0: Healthcare Traveler || 3: RV Healthcare Traveler
                     $url = $this->get_base_url() . 'traveler/profile';
                 }
             } else {

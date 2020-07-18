@@ -361,8 +361,12 @@ class UserController extends BaseController
             'occupation' => $request->occupation,
             'name_of_agency' => $request->name_of_agency,
             'tax_home' => $request->tax_home,
-            'status' => 1,
             'address' => $request->address,
+            'listing_address' => $request->listing_address,
+            'status' => 1,
+            'work' => $request->work,
+            'work_title' => $request->work_title,
+            'website' => $request->website,
             'auth_token' => $token,
         ]);
         $d = DB::table('users')
@@ -538,266 +542,139 @@ class UserController extends BaseController
 
     // Account Verification
 
-    public function traveller_verify_account(Request $request)
+    public function verify_account(Request $request)
     {
         $user_id = $request->session()->get('user_id');
-        $GOVERNMENT_ID = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'GOVERNMENT_ID')
-            ->first();
-
-        $EMAIL = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'EMAIL')
-            ->first();
-
-        // $PHONE = DB::table('documents')->where('user_id',$user_id)
-        // ->where('document_type','PHONE')->first();
-        $PHONE = DB::table('verify_mobile')
-            ->where('user_id', $user_id)
-            ->first();
-
         $user = DB::table('users')
             ->where('id', $user_id)
             ->first();
-        return view('traveller.verify-account', compact('user', 'GOVERNMENT_ID', 'EMAIL', 'PHONE'));
-    }
-
-    public function agency_verify_account(Request $request)
-    {
-        $user_id = $request->session()->get('user_id');
-        $GOVERNMENT_ID = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'GOVERNMENT_ID')
-            ->first();
-        $AGENCY_CHECK = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'AGENCY_CHECK')
-            ->first();
-        $WORK_BADGE = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'WORK_BADGE')
-            ->first();
-        $AGENCY_DRUG = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'AGENCY_DRUG')
-            ->first();
-        $MEDICAL_LICENSE = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'MEDICAL_LICENSE')
-            ->first();
-        $EMAIL = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'EMAIL')
-            ->first();
-        $WORK_EMAIL = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'WORK_EMAIL')
-            ->first();
-        // $PHONE = DB::table('documents')->where('user_id',$user_id)
-        //                 ->where('document_type','PHONE')->first();
-        $PHONE = DB::table('verify_mobile')
-            ->where('user_id', $user_id)
-            ->first();
-
-        $user = DB::table('users')
-            ->where('id', $user_id)
-            ->first();
-        return view(
-            'agency.verify-account',
-            compact(
-                'user',
-                'MEDICAL_LICENSE',
-                'GOVERNMENT_ID',
-                'AGENCY_CHECK',
-                'WORK_BADGE',
-                'AGENCY_DRUG',
-                'EMAIL',
-                'WORK_EMAIL',
-                'PHONE',
-            ),
-        );
-    }
-
-    public function owner_verify_account(Request $request)
-    {
-        $user_id = $request->session()->get('user_id');
-
-        $GOVERNMENT_ID = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'GOVERNMENT_ID')
-            ->first();
-        $PROPERTY_TAX = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'PROPERTY_TAX')
-            ->first();
-        $EMAIL = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'EMAIL')
-            ->first();
-        $WORK_EMAIL = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'WORK_EMAIL')
-            ->first();
-        // $PHONE = DB::table('documents')->where('user_id',$user_id)
-        //                 ->where('document_type','PHONE')->first();
-        $MEDICAL_LICENSE = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'MEDICAL_LICENSE')
-            ->first();
-        $AGENCY_DRUG = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'AGENCY_DRUG')
-            ->first();
-        $AGENCY_CHECK = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'AGENCY_CHECK')
-            ->first();
-        $PHONE = DB::table('verify_mobile')
-            ->where('user_id', $user_id)
-            ->first();
-
-        $user = DB::table('users')
-            ->where('id', $user_id)
-            ->first();
-        return view(
-            'owner.verify-account',
-            compact(
-                'user',
-                'GOVERNMENT_ID',
-                'PROPERTY_TAX',
-                'EMAIL',
-                'WORK_EMAIL',
-                'PHONE',
-                'MEDICAL_LICENSE',
-                'AGENCY_DRUG',
-                'AGENCY_CHECK',
-            ),
-        );
+        //        print_r($user);exit();
+        return view('verify-account', compact('user'));
     }
 
     public function upload_document(Request $request)
     {
-        // upload_document
+        // upload_documents
         $user_id = $request->session()->get('user_id');
-        $type = "";
-        if ($request->facebook) {
-            DB::table('users')
-                ->where('id', $user_id)
-                ->update(['facebook_url' => $request->facebook, 'is_verified' => 0]);
-        }
-        if ($request->linkedin) {
-            DB::table('users')
-                ->where('id', $user_id)
-                ->update(['linkedin_url' => $request->linkedin, 'is_verified' => 0]);
-        }
-        if ($request->home_away_link) {
-            DB::table('users')
-                ->where('id', $user_id)
-                ->update(['home_away_link' => $request->home_away_link, 'is_verified' => 0]);
-        }
-        if ($request->airbnb_link) {
-            DB::table('users')
-                ->where('id', $user_id)
-                ->update(['airbnb_link' => $request->airbnb_link, 'is_verified' => 0]);
-        }
-        if ($request->recruiter_name) {
-            DB::table('users')
-                ->where('id', $user_id)
-                ->update(['recruiter_name' => $request->recruiter_name, 'is_verified' => 0]);
-        }
-        if ($request->recruiter_phone) {
-            DB::table('users')
-                ->where('id', $user_id)
-                ->update(['recruiter_phone' => $request->recruiter_phone, 'is_verified' => 0]);
-        }
 
+        $all_documents = [];
+        if ($request->work_badge_id) {
+            array_push(
+                $all_documents,
+                (object) [
+                    'image' => $this->base_image_upload_with_key($request, 'work_badge_id'),
+                    'type' => 'WORK_BADGE_ID',
+                ],
+            );
+        }
+        if ($request->travel_contract_id) {
+            array_push(
+                $all_documents,
+                (object) [
+                    'image' => $this->base_image_upload_with_key($request, 'travel_contract_id'),
+                    'type' => 'TRAVEL_CONTRACT_ID',
+                ],
+            );
+        }
         if ($request->government_id) {
-            $image = $this->base_image_upload_with_key($request, 'government_id');
-            $type = 'GOVERNMENT_ID';
+            array_push(
+                $all_documents,
+                (object) [
+                    'image' => $this->base_image_upload_with_key($request, 'government_id'),
+                    'type' => 'GOVERNMENT_ID',
+                ],
+            );
         }
-        //        print_r($image);exit();
-
-        if ($request->medical_license) {
-            $image = $this->base_image_upload_with_key($request, 'medical_license');
-            $type = 'MEDICAL_LICENSE';
-        }
-
-        if ($request->agency_drug) {
-            $image = $this->base_image_upload_with_key($request, 'agency_drug');
-            $type = 'AGENCY_DRUG';
-        }
-
-        if ($request->agency_check) {
-            $image = $this->base_image_upload_with_key($request, 'agency_check');
-            $type = 'AGENCY_CHECK';
+        if ($request->driver_license_id) {
+            array_push(
+                $all_documents,
+                (object) [
+                    'image' => $this->base_image_upload_with_key($request, 'driver_license_id'),
+                    'type' => 'DRIVER_LICENSE_ID',
+                ],
+            );
         }
 
-        if ($request->work_badge) {
-            $image = $this->base_image_upload_with_key($request, 'work_badge');
-            $type = 'WORK_BADGE';
-        }
-        if ($request->email) {
-            $image = $request->email;
-            $type = 'EMAIL';
-        }
-        if ($request->work_email) {
-            $image = $request->work_email;
-            $type = 'WORK_EMAIL';
-        }
-        // if($request->phone){
-        //     $image = $request->phone;
-        //     $type = 'PHONE';
-        // }
-
-        if ($request->property_tax) {
-            $image = $this->base_image_upload_with_key($request, 'property_tax');
-            $type = 'PROPERTY_TAX';
+        if ($request->property_tax_document) {
+            array_push(
+                $all_documents,
+                (object) [
+                    'image' => $this->base_image_upload_with_key($request, 'property_tax_document'),
+                    'type' => 'PROPERTY_TAX_DOCUMENT',
+                ],
+            );
         }
 
-        if ($type != "") {
-            $check = DB::table('documents')
-                ->where('document_type', $type)
-                ->where('user_id', $user_id)
-                ->count();
-            $user = DB::table('users')
-                ->where('id', $user_id)
-                ->first();
-            $doc_name = ucfirst(str_replace("_", " ", $type));
-
-            $data = ['username' => $user->first_name . ' ' . $user->last_name, 'type' => $doc_name];
-
-            $subject = "Verification documents Uploads";
-            $title = $user->username . " uploaded his Verification documents";
-            $usermail = $user->email;
-
-            Mail::send('mail.document-upload', $data, function ($message) use ($usermail, $title, $subject) {
-                $message->from($usermail, $title);
-                $message->to(VERIFY_MAIL);
-                $message->replyTo($usermail);
-                $message->subject($subject);
-            });
-            if ($check == 0) {
-                if (isset($type)) {
-                    $ins = [];
-                    $ins['user_id'] = $user_id;
-                    $ins['document_type'] = $type;
-                    $ins['document_url'] = $image;
-                    $ins['status'] = 0;
-
-                    $insert = DB::table('documents')->insert($ins);
-                }
-            } else {
-                DB::table('users')
-                    ->where('id', $user_id)
-                    ->update(['is_verified' => 0]);
-                $update = DB::table('documents')
-                    ->where('user_id', $user_id)
-                    ->where('document_type', $type)
-                    ->update(['document_url' => $image]);
-            }
+        if ($request->utility_bill) {
+            array_push(
+                $all_documents,
+                (object) [
+                    'image' => $this->base_image_upload_with_key($request, 'utility_bill'),
+                    'type' => 'UTILITY_BILL',
+                ],
+            );
         }
 
-        return back()->with('success_message', 'Document uploaded successfully');
+        if ($request->traveler_contract_id) {
+            array_push(
+                $all_documents,
+                (object) [
+                    'image' => $this->base_image_upload_with_key($request, 'traveler_contract_id'),
+                    'type' => 'TRAVELER_CONTRACT_ID',
+                ],
+            );
+        }
+
+        foreach ($all_documents as $doc) {
+            DB::table('documents')->updateOrInsert(
+                [
+                    'user_id' => $user_id,
+                    'document_type' => $doc->type,
+                ],
+                [
+                    'user_id' => $user_id,
+                    'document_type' => $doc->type,
+                    'document_url' => $doc->image,
+                    'status' => 0,
+                ],
+            );
+        }
+
+        $user = DB::table('users')
+            ->where('id', $user_id)
+            ->first();
+
+        DB::table('users')
+            ->where('id', $user_id)
+            ->update([
+                'is_verified' => 0,
+                'is_submitted_documents' => 1,
+                'facebook_url' => isset($request->facebook) ? $request->facebook : null,
+                'linkedin_url' => isset($request->linkedin) ? $request->linkedin : null,
+                'instagram_url' => isset($request->instagram) ? $request->instagram : null,
+                'traveler_license' => isset($request->traveler_license) ? $request->traveler_license : null,
+                'airbnb_link' => isset($request->airbnb_link) ? $request->airbnb_link : null,
+                'home_away_link' => isset($request->home_away_link) ? $request->home_away_link : null,
+                'vrbo_link' => isset($request->vrbo_link) ? $request->vrbo_link : null,
+                'agency_hr_email' => isset($request->agency_hr_email) ? $request->agency_hr_email : null,
+                'agency_hr_phone' => isset($request->agency_hr_phone) ? $request->agency_hr_phone : null,
+            ]);
+
+        $doc_name = 'Document name';
+        //        $doc_name = ucfirst(str_replace("_", " ", $type));
+
+        $data = ['username' => $user->first_name . ' ' . $user->last_name, 'type' => $doc_name];
+
+        $subject = "Verification documents Uploads";
+        $title = $user->username . " uploaded his Verification documents";
+        $usermail = $user->email;
+
+        Mail::send('mail.document-upload', $data, function ($message) use ($usermail, $title, $subject) {
+            $message->from($usermail, $title);
+            $message->to(VERIFY_MAIL);
+            $message->replyTo($usermail);
+            $message->subject($subject);
+        });
+        return back()->with('success', 'Documents uploaded successfully');
     }
 }

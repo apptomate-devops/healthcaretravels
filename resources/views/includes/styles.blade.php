@@ -88,4 +88,7 @@
         background-color: #e78016 !important;
         border-color: #ffffff;
     }
+    button[disabled], html input[disabled] {
+        opacity: 0.7;
+    }
 </style>

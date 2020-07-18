@@ -2,9 +2,9 @@ image: registry.gitlab.com/healthcaretravels/hct:latest
 
 variables:
   DB_DATABASE: healthcare
-  DB_USERNAME: hctuser
+  DB_USERNAME: gitlabcicd
   DB_HOST: 3.136.233.168
-  DB_PASSWORD: "5y7rM$ER*V6$nwZF"
+  DB_PASSWORD: nhN2gJhzLmdFhS8C
   MAIL_USERNAME: info@healthcaretravels.com
   MAIL_PASSWORD: mmsbjvgnpfqvgjpi
   GOOGLE_MAPS_API_KEY: AIzaSyB-rD5XU_5kd1vcx_EiOg4syU_honD2XIg

@@ -323,21 +323,21 @@
 
                                 <p class="form-row form-row-wide" id="tax_home_field" style="display: none;">
                                     <label for="tax_home">Tax Home:<span class="required">*</span>
-                                        <input type="text" class="input-text validate {{ $errors->has('tax_home') ? 'form-error' : ''}}" value="{{Session::get('tax_home')}}" name="tax_home" id="tax_home" placeholder="State, Country" autocomplete="off" style="padding-left: 20px;" />
+                                        <input type="text" class="input-text validate {{ $errors->has('tax_home') ? 'form-error' : ''}}" value="{{Session::get('tax_home')}}" name="tax_home" id="tax_home" placeholder="State, Country" autocomplete="off" style="padding-left: 20px;" @if(Session::has('tax_home')) data-is-valid="true" @endif />
                                     </label>
                                     {!! $errors->first('tax_home', '<p class="error-text">:message</p>') !!}
                                 </p>
 
                                 <p class="form-row form-row-wide" id="address_field" style="display: none;">
                                     <label for="address"><label id="address_label">Address:</label><span class="required">*</span>
-                                        <input type="text" class="input-text validate {{ $errors->has('address') ? 'form-error' : ''}}" value="{{Session::get('address')}}" name="address" id="address" placeholder="Full Street Address" autocomplete="off" style="padding-left: 20px;" />
+                                        <input type="text" class="input-text validate {{ $errors->has('address') ? 'form-error' : ''}}" value="{{Session::get('address')}}" name="address" id="address" placeholder="Full Street Address" autocomplete="off" style="padding-left: 20px;" @if(Session::has('address')) data-is-valid="true" @endif />
                                     </label>
                                     {!! $errors->first('address', '<p class="error-text">:message</p>') !!}
                                 </p>
 
                                 <p class="form-row form-row-wide" id="listing_address_field" style="display: none;">
                                     <label for="listing_address">Listing Address:<span class="required">*</span>
-                                        <input type="text" class="input-text validate {{ $errors->has('listing_address') ? 'form-error' : ''}}" value="{{Session::get('listing_address')}}" name="listing_address" id="listing_address" placeholder="Full Street Address" autocomplete="off" style="padding-left: 20px;" />
+                                        <input type="text" class="input-text validate {{ $errors->has('listing_address') ? 'form-error' : ''}}" value="{{Session::get('listing_address')}}" name="listing_address" id="listing_address" placeholder="Full Street Address" autocomplete="off" style="padding-left: 20px;" @if(Session::has('listing_address')) data-is-valid="true" @endif />
                                     </label>
                                     {!! $errors->first('listing_address', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -397,6 +397,8 @@
         }
     })
 
+    let addressFields = [];
+
     function get_form(data, isInitial = false){
         if(!isInitial) { clear_errors(); }
         switch (data) {
@@ -430,7 +432,11 @@
                 $('#address_label').text('Address:');
                 $("#address").attr('placeholder', "Full Street Address");
 
+                addressFields = ['tax_home', 'address']
+
                 break;
+
+
             case "1": // Property Owner
                 $('#username2_field').show();
                 $('#email_field').show();
@@ -460,7 +466,10 @@
                 $('#email-label').text('Email Address:');
                 $('#address_label').text('Mailing Address:');
 
+                addressFields = ['address', 'listing_address']
+
                 break;
+
             case "2": // Agency
 
                 $('#username2_field').show();
@@ -550,17 +559,21 @@
             componentRestrictions: {country: 'us'}
         };
         try {
-            let addressFields = ['address', 'tax_home', 'listing_address'];
             for (field in addressFields) {
                 let element_address = document.getElementById(addressFields[field]);
                 if(element_address) {
                     google.maps.event.addDomListener(element_address, 'keydown', (event) => {
                         if (event.keyCode === 13) {
                             event.preventDefault();
+                        } else {
+                            delete element_address.dataset.isValid;
                         }
                     });
                     let autocomplete_address = new google.maps.places.Autocomplete(element_address, (addressFields[field] === 'tax_home') ? options_tax_home : options);
-                    autocomplete_address.addListener('place_changed', (e) => console.log('place ====', e));
+                    autocomplete_address.addListener('place_changed', (e) => {
+                        element_address.style.borderColor = '#e0e0e0';
+                        element_address.dataset.isValid = true;
+                    });
                 }
             }
         } catch (e) {}
@@ -614,13 +627,6 @@
         }
     }
 
-    function validate_registration() {
-        let dob_error = $('#dob_validation_error').html();
-        if(dob_error) {
-            $(window).scrollTop($('#dob').offset().top-100);
-        }
-        return !dob_error;
-    }
     $('#phone_no, #work_number_field').on('keypress', function (event) {
         var regex = new RegExp("^[0-9+]$");
         var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
@@ -629,6 +635,27 @@
             return false;
         }
     });
+
+    function validate_registration() {
+        let dob_error = $('#dob_validation_error').html();
+        if(dob_error) {
+            $(window).scrollTop($('#dob').offset().top-100);
+            return false;
+        }
+        let allFields = addressFields.filter(e => {
+            let element_address = document.getElementById(e);
+            let invalidAddress = !element_address.value || (element_address.value && !element_address.dataset.isValid);
+            if(invalidAddress) {
+                $(`#${e}`).css('border-color', '#e78016');
+            }
+            return invalidAddress;
+        })
+        if(allFields.length) {
+            $(window).scrollTop($(`#${allFields[0]}`).offset().top-100);
+            return false;
+        }
+        return true;
+    }
 </script>
 
 </body>

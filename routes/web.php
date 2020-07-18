@@ -71,9 +71,7 @@ Route::get('/travellers-refund-policy', 'HomeController@travellers_refund_policy
 Route::get('/owner/profile', 'OwnerController@owner_profile');
 
 // Account Verification routes
-Route::GET('/traveler/verify-account', 'UserController@traveller_verify_account');
-Route::GET('/agency/verify-account', 'UserController@agency_verify_account');
-Route::GET('/owner/verify-account', 'UserController@owner_verify_account');
+Route::GET('/verify-account', 'UserController@verify_account');
 Route::POST('/upload-document', 'UserController@upload_document');
 
 // Logged in routes

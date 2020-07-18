@@ -149,26 +149,14 @@
                                     <label for="user_type required">Account Type:<span class="required">*</span>
                                         <select type="text" class="input-text validate {{ $errors->has('user_type') ? 'form-error' : ''}}" onchange="get_form(this.value)" name="user_type" id="user_type" autocomplete="off" >
                                             <option label="" selected>Select Account Type</option>
-                                            @if(Session::get('type')==="0")
-                                                <option value="0" selected>Traveler</option>
-                                            @else
-                                                <option value="0">Traveler</option>
-                                            @endif
-                                            @if(Session::get('type')==="1")
-                                                <option value="1" selected>Property Owner</option>
-                                            @else
-                                                <option value="1">Property Owner</option>
-                                            @endif
-                                            @if(Session::get('type')==="2")
-                                                <option value="2" selected>Travel Agent</option>
-                                            @else
-                                                <option value="2">Travel Agent</option>
-                                            @endif
-                                            @if(Session::get('type')==="3")
-                                                <option value="3" selected>RV Traveler</option>
-                                            @else
-                                                <option value="3">RV Traveler</option>
-                                            @endif
+
+                                            <option value="0" @if(Session::get('type')=="0") selected @endif>Healthcare Traveler</option>
+
+                                            <option value="1" @if(Session::get('type')=="1") selected @endif>Property Owner</option>
+
+                                            <option value="2" @if(Session::get('type')=="2") selected @endif>Agency</option>
+
+                                            <option value="3" @if(Session::get('type')=="3") selected @endif>RV Healthcare Traveler</option>
                                         </select>
                                     </label>
                                     {!! $errors->first('user_type', '<p class="error-text">:message</p>') !!}
@@ -393,8 +381,8 @@
     function get_form(data, isInitial = false){
         if(!isInitial) { clear_errors(); }
         switch (data) {
-            case "0": // Traveler
-            case "3": // RV Traveler
+            case "0": // Healthcare Traveler
+            case "3": // RV Healthcare Traveler
                 $('#username2_field').show();
                 $('#email_field').show();
                 $('#password_field').show();
@@ -406,7 +394,6 @@
                 $('#gender_field').show();
                 $('#languages_field').show();
                 $('#occupation_field').show();
-                $('#occupation_desc').show();
                 $('#agency_show').show();
                 $('#tax_home_field').show();
                 $('#address_field').show();
@@ -435,7 +422,6 @@
                 $('#gender_field').show();
                 $('#languages_field').show();
                 $('#occupation_field').show();
-                $('#occupation_desc').show();
                 $('#agency_show').hide();
                 $('#others_show').hide();
                 $('#tax_home_field').hide();
@@ -452,7 +438,7 @@
                 $('#address_label').text('Mailing Address:');
 
                 break;
-            case "2": // Travel Agent
+            case "2": // Agency
 
                 $('#username2_field').show();
                 $('#email_field').show();
@@ -461,11 +447,10 @@
                 $('#first_name_field').show();
                 $('#last_name_field').show();
                 $('#phone_number_field').show();
-                $('#dob_field').hide();
+                $('#dob_field').show();
                 $('#gender_field').show();
-                $('#languages_field').hide();
-                $('#occupation_field').show();
-                $('#occupation_desc').show();
+                $('#languages_field').show();
+                $('#occupation_field').hide();
                 $('#others_occupation').hide();
                 $('#agency_show').hide();
                 $('#others_show').hide();
@@ -479,7 +464,7 @@
                 $('#work_number_field').show();
                 $('#website_field').show();
 
-                $('#email-label').text('Business Email Address:');
+                $('#email-label').text('Work Email Address:');
                 $('#email2').val('');
                 $('#address_label').text('Address:');
 
@@ -497,7 +482,6 @@
                 $('#gender_field').hide();
                 $('#languages_field').hide();
                 $('#occupation_field').hide();
-                $('#occupation_desc').hide();
                 $('#others_occupation').hide();
                 $('#agency_show').hide();
                 $('#others_show').hide();
@@ -580,12 +564,10 @@
             $('#others_occupation').show();
             $('#others_occupation').attr('name','occupation');
             $('#occupation').attr('name','');
-            $('#occupation_desc').hide();
         }else{
             $('#others_occupation').hide();
             $('#others_occupation').attr('name','');
             $('#occupation').attr('name','occupation');
-            $('#occupation_desc').show();
         }
     }
 

@@ -384,12 +384,17 @@ class UserController extends BaseController
         $mail_data = [
             'username' => $request->first_name . ' ' . $request->last_name,
             'text' => isset($welcome->message) ? $welcome->message : '',
+            'email' => $request->email,
+            'phone' => $d->phone,
         ];
 
         $title = isset($welcome->title) ? $welcome->title : 'Welcome to ' . APP_BASE_NAME;
         $subject = isset($welcome->subject) ? $welcome->subject : "Welcome to " . APP_BASE_NAME;
 
         $this->send_custom_email($request->email, $subject, 'mail.welcome-mail', $mail_data, $title);
+
+        // Sending new registration email to admin
+        $this->send_custom_email(CLIENT_MAIL, 'New user registered', 'mail.new-registration', $mail_data, $title);
 
         $OTP = rand(1111, 9999);
 

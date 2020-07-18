@@ -211,7 +211,7 @@ class BaseController extends ConstantsController
                 $message->subject($subject);
             });
         } catch (\Exception $ex) {
-            Logger::error('Error sending email to: ' . $email);
+            Logger::error('Error sending email to: ' . $email . ' : Error: ' . $ex->getMessage());
             return false;
         }
     }

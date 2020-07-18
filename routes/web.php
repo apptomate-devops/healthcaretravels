@@ -75,3 +75,12 @@ Route::GET('/traveler/verify-account', 'UserController@traveller_verify_account'
 Route::GET('/agency/verify-account', 'UserController@agency_verify_account');
 Route::GET('/owner/verify-account', 'UserController@owner_verify_account');
 Route::POST('/upload-document', 'UserController@upload_document');
+
+// Logged in routes
+Route::middleware(['LoginCheck'])->group(function () {
+    Route::GET('/traveler/profile', 'OwnerController@owner_profile');
+    Route::GET('/traveler/favorites', 'PropertyController@favorites');
+    Route::get('/owner/favorites', 'PropertyController@favorites');
+    Route::GET('/cancel-booking/{id}', 'PropertyController@cancel_booking');
+    Route::GET('/owner-update-booking', 'PropertyController@owner_update_booking');
+});

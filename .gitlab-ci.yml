@@ -19,6 +19,7 @@ stages:
 deploy_production:
   stage: deploy
   script:
+    - composer global require "hirak/prestissimo:^0.3" "laravel/envoy"
     - cp .env.example .env
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --ignore-platform-reqs
     - php artisan key:generate

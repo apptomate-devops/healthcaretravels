@@ -490,6 +490,21 @@ class UserController extends BaseController
 
     public function sent_otp($phone_no, $user_id)
     {
+        $messages = [
+            'required' => 'Please complete this field',
+            'numeric' => 'Please enter valid phone number',
+            'digits' => 'Please enter valid phone number',
+        ];
+        $rules = ['phone_no' => 'required|numeric|digits:10'];
+        $reqData = ['phone_no' => $phone_no];
+        $validator = Validator::make($reqData, $rules, $messages);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return response()->json([
+                'status' => 'Failure',
+                'message' => $errors->get('phone_no'),
+            ]);
+        }
         $check = DB::table('users')
             ->where('id', $user_id)
             ->where('client_id', '=', CLIENT_ID)

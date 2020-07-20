@@ -673,6 +673,8 @@ class UserController extends BaseController
                 'vrbo_link' => isset($request->vrbo_link) ? $request->vrbo_link : null,
                 'agency_hr_email' => isset($request->agency_hr_email) ? $request->agency_hr_email : null,
                 'agency_hr_phone' => isset($request->agency_hr_phone) ? $request->agency_hr_phone : null,
+                'agency_website' => isset($request->agency_website) ? $request->agency_website : null,
+                'agency_office_number' => isset($request->agency_office_number) ? $request->agency_office_number : null,
             ]);
 
         $doc_name = 'Document name';

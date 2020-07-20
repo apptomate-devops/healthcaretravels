@@ -27,6 +27,11 @@
             background-color: red;
             color: white;
         }
+        .info-text {
+            color: red;
+            font-size: 14px;
+            margin: 0;
+        }
     </style>
     <div class="container verify-traveler" style="margin-top: 35px;">
         @if(Session::has('success'))
@@ -81,20 +86,20 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label>Government ID </label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control" accept="image/*" />
+                                        <input type="file" name="government_id" id="government_id" class="form-control"  />
                                     </div>
                                     <div class="col-md-6">
                                         <label>Driver's license </label>
-                                        <input type="file" name="driver_license_id" id="driver_license_id" class="form-control" accept="image/*"/>
+                                        <input type="file" name="driver_license_id" id="driver_license_id" class="form-control" />
                                     </div>
                                     <div class="col-md-6">
                                         <label>Property Tax Document</label>
-                                        <input type="file" name="property_tax_document" id="property_tax_document" class="form-control" accept="image/*" />
+                                        <input type="file" name="property_tax_document" id="property_tax_document" class="form-control"  />
                                         <div class="info-text">With proof of name and listing address</div>
                                     </div>
                                     <div class="col-md-6">
                                         <label>Utility Bill</label>
-                                        <input type="file" name="utility_bill" id="utility_bill" class="form-control" accept="image/*" />
+                                        <input type="file" name="utility_bill" id="utility_bill" class="form-control"  />
                                         <div class="info-text">With proof of name and listing address</div>
                                     </div>
 
@@ -114,18 +119,19 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label>Traveler's Contract</label>
-                                        <input type="file" name="traveler_contract_id" id="traveler_contract_id" class="form-control" accept="image/*" />
+                                        <input type="file" name="traveler_contract_id" id="traveler_contract_id" class="form-control"  />
                                     </div>
                                     <div class="col-md-6">
                                         <label>Work Badge Picture </label>
-                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept="image/*" />
+                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control"  />
                                     </div>
                                     <div class="col-md-12" style="margin-top: 40px;">
                                         <div class="card col-md-12" style="padding: 15px;">
                                             <h4>Agency Details</h4>
 
                                             <label>Proof of Employment on agency website </label>
-                                            <input value="@if($user->website == '0' || $user->website == null)@else{{$user->website}}@endif" disabled type="text" placeholder="Agency Website" name="website" class="form-control" />
+                                            <input value="@if($user->agency_website == '0' || $user->agency_website == null)@else{{$user->agency_website}}@endif" type="text" placeholder="Agency Website" name="agency_website" class="form-control" />
+                                            <p class="info-text">If your agency has a page with your name on it, share it here.</p>
 
                                             <label>Agency HR Business Email</label>
                                             <input value="@if($user->agency_hr_email == '0' || $user->agency_hr_email == null)@else{{$user->agency_hr_email}}@endif" type="text" placeholder="Agency HR Email Address" name="agency_hr_email" class="form-control" />
@@ -134,7 +140,8 @@
                                             <input value="@if($user->agency_hr_phone == '0' || $user->agency_hr_phone == null)@else{{$user->agency_hr_phone}}@endif" type="text" placeholder="Agency HR Phone Number" name="agency_hr_phone" class="form-control" />
 
                                             <label>Agency Office Phone Number</label>
-                                            <input value="@if($user->work == '0' || $user->work == null)@else{{$user->work}}@endif" disabled type="text" placeholder="Agency Office Number" name="work" class="form-control" />
+                                            <input value="@if($user->agency_office_number == '0' || $user->agency_office_number == null)@else{{$user->agency_office_number}}@endif" type="text" placeholder="Agency Office Number" name="agency_office_number" class="form-control" />
+                                            <p class="info-text">Provide your agency's main office phone number.</p>
 
                                         </div>
                                     </div>
@@ -155,28 +162,28 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label>Work Badge Picture </label>
-                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept="image/*" />
+                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control"  />
                                         @if(isset($WORK_BADGE_ID->document_type))
                                             <a href="{{$WORK_BADGE_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                     </div>
                                     <div class="col-md-6">
                                         <label>Travel Contract </label>
-                                        <input type="file" name="travel_contract_id" id="travel_contract_id" class="form-control" accept="image/*" />
+                                        <input type="file" name="travel_contract_id" id="travel_contract_id" class="form-control"  />
                                         @if(isset($TRAVEL_CONTRACT_ID->document_type))
                                             <a href="{{$TRAVEL_CONTRACT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                     </div>
                                     <div class="col-md-6">
                                         <label>Government ID </label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control" accept="image/*" />
+                                        <input type="file" name="government_id" id="government_id" class="form-control"  />
                                         @if(isset($GOVERNMENT_ID->document_type))
                                             <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                     </div>
                                     <div class="col-md-6">
                                         <label>Driver's license </label>
-                                        <input type="file" name="driver_license_id" id="driver_license_id" class="form-control" accept="image/*"/>
+                                        <input type="file" name="driver_license_id" id="driver_license_id" class="form-control" />
                                         @if(isset($DRIVER_LICENSE_ID->document_type))
                                             <a href="{{$DRIVER_LICENSE_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
@@ -262,13 +269,13 @@
                             if(this.name === 'instagram') {
                                 regex = /(https?)?:?(www)?instagram\.com\/[a-z].{3}/;
                             }
-                            if(this.name === 'agency_hr_phone') {
+                            if(['agency_hr_phone', 'agency_office_number'].includes(this.name)) {
                                 regex = /(\+\d{1,3}[- ]?)?\d{10}$/;
                             }
                             if(this.name === 'agency_hr_email') {
                                 regex = /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                             }
-                            if(['airbnb_link', 'home_away_link', 'vrbo_link'].includes(this.name)) {
+                            if(['airbnb_link', 'home_away_link', 'vrbo_link', 'agency_website'].includes(this.name)) {
                                 regex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/
                             }
                             return regex.test(input_value);

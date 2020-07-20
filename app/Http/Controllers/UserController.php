@@ -166,7 +166,9 @@ class UserController extends BaseController
                     ->first();
 
                 $url = $this->get_base_url() . 'otp-verify-register';
-                return redirect($url)->with('phone', $check->phone);
+                return redirect($url)
+                    ->with('phone', $check->phone)
+                    ->with('user_id', $check->id);
             }
             // return redirect($url)->with('mobile',$check->phone);
             // }else{

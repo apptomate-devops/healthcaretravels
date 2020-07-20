@@ -28,6 +28,8 @@
         a.change-phone-link {
             text-decoration: underline;
             cursor: pointer;
+            display: block;
+            float: right;
         }
         a.change-phone-link:hover {
             color: #ffa74a;
@@ -98,11 +100,11 @@
                             <label for="phone_no">
                                 <input type="text" class="input-text validate" placeholder="Enter your code here" name="otp" id="otp" value="" required="" />
                             </label>
-                            <a id="change-phone" class="change-phone-link">Change number</a>
                         </p>
                         <div id="otp_buttons">
                             <input type="submit" name="button border fw" value="Submit">
                             <span style="float:right;margin-top: 10px;background-color: #e78016;border-color: #e78016;" class="btn btn-danger btn-default" id="send_otp">Send me another code</span>
+                            <a id="change-phone" class="change-phone-link">Change number</a>
                         </div>
                         @if(Session::has('attempts') && Session::get('attempts') > 1)
                             <center><input type="button" class="btn_get_help" onclick="get_help()" id="get_help" value="Get Help"></center>

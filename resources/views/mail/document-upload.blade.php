@@ -24,9 +24,13 @@
                 <br>
                 <div style="float: left;">
 
-                    Hi Admin, {{$username}} has uploaded documents to their account to be reviewed for the the verification account process. Please go review the documents to see if these are acceptable documents to verify the users account.
+                    A new user just submitted their registration information. Please review their uploads and approve/deny their profile in the admin portal.
 
-{{--                    <br>Document Name: {{$type}} (or whatever document was uploaded)--}}
+                    <br>
+                    <br>
+                    Name: {{$username}}
+                    <br>
+                    User Type: {{$type}}
 
                 </div><br>
 

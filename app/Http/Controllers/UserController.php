@@ -650,6 +650,10 @@ class UserController extends BaseController
             ->where('id', $user_id)
             ->first();
 
+        $user_role = DB::table('user_role')
+            ->where('id', $user->role_id)
+            ->first();
+
         DB::table('users')
             ->where('id', $user_id)
             ->update([
@@ -669,7 +673,7 @@ class UserController extends BaseController
         $doc_name = 'Document name';
         //        $doc_name = ucfirst(str_replace("_", " ", $type));
 
-        $data = ['username' => $user->first_name . ' ' . $user->last_name, 'type' => $doc_name];
+        $data = ['username' => $user->first_name . ' ' . $user->last_name, 'type' => $user_role->role];
 
         $subject = "Verification documents Uploads";
         $title = $user->username . " uploaded his Verification documents";

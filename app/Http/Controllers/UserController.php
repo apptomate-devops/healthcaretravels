@@ -343,14 +343,17 @@ class UserController extends BaseController
         $password = $this->encrypt_password($request->password1);
 
         $role_id = $request->user_type;
-        if ($request->name_of_agency != "") {
-            $chk = DB::table('agency')
-                ->where('name', $request->name_of_agency)
-                ->count();
-            if ($chk == 0) {
-                DB::table('agency')->insert(['name' => $request->name_of_agency]);
-            }
-        }
+
+        DB::table('agency')->updateOrInsert(
+            [
+                'name' => $request->name_of_agency,
+            ],
+            [
+                'name' => $request->name_of_agency,
+                'status' => 0,
+            ],
+        );
+
         $token = $this->generate_random_string();
         $mobile = $request->phone_no;
         $insert = DB::table('users')->insert([

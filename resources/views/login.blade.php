@@ -294,32 +294,24 @@
                                             @foreach($occupation as $a)
                                                 <option value="{{$a->name}}" @if(Session::get('occupation')===$a->name) selected @endif>{{$a->name}}</option>
                                             @endforeach
-                                            <option value="Others" @if(Session::get('occupation')==="Others") selected @endif>Others</option>
                                         </select>
                                     </label>
                                     {!! $errors->first('occupation', '<p class="error-text">:message</p>') !!}
                                 </p>
 
-                                <p class="form-row form-row-wide" >
-                                    <input class="input-text validate label-margin" autocomplete="off" style="@if(Session::get('occupation')!=="Others") display: none; @endif width: 350px;" id="others_occupation" placeholder="Occupation" type="text" name="" />
-                                </p>
-
                                 <p class="form-row form-row-wide" id="agency_show" style="display: none;">
-                                    <label for="agency_name">Name of the Agency:
+                                    <label for="agency_name">Agency you work for:
                                         <select class="input-text validate" onchange="on_agency_change(this.value)" autocomplete="off" name="name_of_agency" id="agency_name">
                                             <option label="" value="" >Select Agency</option>
                                             @foreach($agency as $a)
                                                 <option value="{{$a->name}}" @if(Session::get('name_of_agency')===$a->name) selected @endif>{{$a->name}}</option>
                                             @endforeach
-                                            <option value="Others" @if(Session::get('name_of_agency')==="Others") selected @endif>Others</option>
+                                            <option value="Other" @if(Session::get('name_of_agency')==="Other") selected @endif>Other</option>
                                         </select>
                                     </label>
                                     {!! $errors->first('name_of_agency', '<p class="error-text">:message</p>') !!}
                                 </p>
-
-                                <p class="form-row form-row-wide">
-                                    <input class="input-text validate label-margin" autocomplete="off" id="others_show" type="text" style="@if(Session::get('name_of_agency')!=="Others") display: none; @endif width: 350px;" name="others_show" placeholder="Agency" />
-                                </p>
+                                <div class="info-text" id="agency-caption">Only list agencies that you have worked for in the last 12 months.</div>
 
                                 <p class="form-row form-row-wide" id="tax_home_field" style="display: none;">
                                     <label for="tax_home">Tax Home:<span class="required">*</span>
@@ -418,6 +410,7 @@
                 $('#languages_field').show();
                 $('#occupation_field').show();
                 $('#agency_show').show();
+                $('#agency-caption').show();
                 $('#tax_home_field').show();
                 $('#address_field').show();
                 $('#listing_address_field').hide();
@@ -452,7 +445,7 @@
                 $('#languages_field').show();
                 $('#occupation_field').show();
                 $('#agency_show').hide();
-                $('#others_show').hide();
+                $('#agency-caption').hide();
                 $('#tax_home_field').hide();
                 $('#address_field').show();
                 $('#listing_address_field').show();
@@ -485,9 +478,8 @@
                 $('#gender_field').show();
                 $('#languages_field').show();
                 $('#occupation_field').hide();
-                $('#others_occupation').hide();
                 $('#agency_show').hide();
-                $('#others_show').hide();
+                $('#agency-caption').hide();
                 $('#tax_home_field').hide();
                 $('#address_field').hide();
                 $('#listing_address_field').hide();
@@ -518,9 +510,8 @@
                 $('#gender_field').hide();
                 $('#languages_field').hide();
                 $('#occupation_field').hide();
-                $('#others_occupation').hide();
                 $('#agency_show').hide();
-                $('#others_show').hide();
+                $('#agency-caption').hide();
                 $('#tax_home_field').hide();
                 $('#address_field').hide();
                 $('#listing_address_field').hide();
@@ -590,24 +581,13 @@
     }
 
     function on_agency_change(value) {
-        if(value === "Others"){
-            $('#others_show').show();
-            $('#others_show').attr('name','name_of_agency');
-            $('#agency_name').attr('name','');
-        }else{
-            $('#agency_name').attr('name','name_of_agency');
-            $('#others_show').hide();
+        if(["other", "others"].includes(value.toLowerCase())){
+            get_input_from_prompt("Agency you work for:", 'agency_name');
         }
     }
     function on_occupation_change(value) {
-        if(value === "Others"){
-            $('#others_occupation').show();
-            $('#others_occupation').attr('name','occupation');
-            $('#occupation').attr('name','');
-        }else{
-            $('#others_occupation').hide();
-            $('#others_occupation').attr('name','');
-            $('#occupation').attr('name','occupation');
+        if(["other", "others"].includes(value.toLowerCase())){
+            get_input_from_prompt("Occupation:", 'occupation');
         }
     }
 
@@ -625,6 +605,18 @@
         } else {
             $('#dob_validation_error').html('');
         }
+    }
+
+    function get_input_from_prompt(title, id) {
+        let value = prompt(title, '');
+        if (value && !["other", "others"].includes(value.toLowerCase())) {
+            let newOption = $('<option>');
+            newOption.attr('value', value).text(value);
+            $(`#${id}`).append(newOption);
+            $(`#${id}  > [value="${value}"]`).attr("selected", "true");
+        } else {
+            $(`#${id}`).val($(`#${id} option:first`).val());
+        };
     }
 
     $('#phone_no, #work_number_field').on('keypress', function (event) {

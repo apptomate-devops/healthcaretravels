@@ -81,7 +81,7 @@ class Handler extends ExceptionHandler
             $e = FlattenException::create($exception);
             $handler = new SymfonyExceptionHandler();
             $html = $handler->getHtml($e);
-            if (APP_ENV !== 'local') {
+            if (env("APP_ENV", "local") !== "local") {
                 Mail::to('brijeshbhakta30@gmail.com')->send(new ExceptionOccurred($html));
             }
         } catch (Exception $ex) {

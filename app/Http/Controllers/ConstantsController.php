@@ -7,7 +7,6 @@ use App\Models\Settings;
 
 $BASE_URL = env("APP_URL", "http://localhost:8000");
 
-define("APP_ENV", env("APP_ENV", "local"));
 define("MAP_MARKER_ICON", "http://api.estatevue2.com/cdn/img/marker-green.png");
 define("PROFILE_IMAGE", "https://demo.rentalslew.com/public/user_profile_default.png");
 define("STATIC_IMAGE", "http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg");

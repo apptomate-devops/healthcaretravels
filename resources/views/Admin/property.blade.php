@@ -50,7 +50,7 @@
                                         <th>Viewed Count</th>
                                         <th>Featured</th>
                                         <th>Status</th>
-                                        <th>View</th>
+                                        <th>View Documents</th>
                                         <th style="min-width: 110px;">Action</th>
                                     </tr>
                                     </thead>

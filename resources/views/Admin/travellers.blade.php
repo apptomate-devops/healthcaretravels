@@ -68,7 +68,7 @@
                                             <th>Date of birth</th>
                                             <th>Status</th>
                                             <th>Verify</th>
-                                            <th>View</th>
+                                            <th>View Documents</th>
                                             <th>Action &nbsp;</th>
                                         </tr>
                                         </thead>

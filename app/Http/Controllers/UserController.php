@@ -584,79 +584,37 @@ class UserController extends BaseController
         return view('verify-account', compact('user'));
     }
 
+    public function map_documents(Request $request)
+    {
+        $keys = [
+            "work_badge_id",
+            "travel_contract_id",
+            "government_id",
+            "driver_license_id",
+            "property_tax_document",
+            "utility_bill",
+            "traveler_contract_id",
+        ];
+        $all_documents = [];
+        foreach ($keys as $key) {
+            if ($request->$key) {
+                array_push(
+                    $all_documents,
+                    (object) [
+                        'image' => $this->base_document_upload_with_key($request, $key),
+                        'type' => strtoupper($key),
+                    ],
+                );
+            }
+        }
+        return $all_documents;
+    }
+
     public function upload_document(Request $request)
     {
         // upload_documents
         $user_id = $request->session()->get('user_id');
-
-        $all_documents = [];
-        if ($request->work_badge_id) {
-            array_push(
-                $all_documents,
-                (object) [
-                    'image' => $this->base_image_upload_with_key($request, 'work_badge_id'),
-                    'type' => 'WORK_BADGE_ID',
-                ],
-            );
-        }
-        if ($request->travel_contract_id) {
-            array_push(
-                $all_documents,
-                (object) [
-                    'image' => $this->base_image_upload_with_key($request, 'travel_contract_id'),
-                    'type' => 'TRAVEL_CONTRACT_ID',
-                ],
-            );
-        }
-        if ($request->government_id) {
-            array_push(
-                $all_documents,
-                (object) [
-                    'image' => $this->base_image_upload_with_key($request, 'government_id'),
-                    'type' => 'GOVERNMENT_ID',
-                ],
-            );
-        }
-        if ($request->driver_license_id) {
-            array_push(
-                $all_documents,
-                (object) [
-                    'image' => $this->base_image_upload_with_key($request, 'driver_license_id'),
-                    'type' => 'DRIVER_LICENSE_ID',
-                ],
-            );
-        }
-
-        if ($request->property_tax_document) {
-            array_push(
-                $all_documents,
-                (object) [
-                    'image' => $this->base_image_upload_with_key($request, 'property_tax_document'),
-                    'type' => 'PROPERTY_TAX_DOCUMENT',
-                ],
-            );
-        }
-
-        if ($request->utility_bill) {
-            array_push(
-                $all_documents,
-                (object) [
-                    'image' => $this->base_image_upload_with_key($request, 'utility_bill'),
-                    'type' => 'UTILITY_BILL',
-                ],
-            );
-        }
-
-        if ($request->traveler_contract_id) {
-            array_push(
-                $all_documents,
-                (object) [
-                    'image' => $this->base_image_upload_with_key($request, 'traveler_contract_id'),
-                    'type' => 'TRAVELER_CONTRACT_ID',
-                ],
-            );
-        }
-
+        $all_documents = $this->map_documents($request);
         foreach ($all_documents as $doc) {
             DB::table('documents')->updateOrInsert(
                 [

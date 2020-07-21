@@ -126,6 +126,15 @@ class BaseController extends ConstantsController
         return $image_url = BASE_URL . "public/uploads/" . $imageName;
     }
 
+    public function base_document_upload_with_key($request, $key)
+    {
+        $image = $request->$key;
+        $ext = $image->getClientOriginalExtension();
+        $imageName = self::generate_random_string() . '.' . $ext;
+        $request->file($key)->move('documents/', $imageName);
+        return $image_url = BASE_URL . "documents/" . $imageName;
+    }
+
     public function base_image_upload_with_key($request, $key)
     {
         // var_dump($request->$key);exit; keepers_logo.png

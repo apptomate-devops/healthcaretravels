@@ -60,8 +60,8 @@ define("BUNK_BED", $BASE_URL . "/bedicons/Bunk-Bed.png");
 define("COMMON_SPACE_BED", $BASE_URL . "/bedicons/Couch.png");
 
 define("GOOGLE_MAPS_API_KEY", env("GOOGLE_MAPS_API_KEY", "AIzaSyDWKKHxv24EJ-xOUUBiKmfoR0C2tSDceSo"));
-define("RECAPTCHA_SITE_KEY", env("RECAPTCHA_SITE_KEY"));
-define("RECAPTCHA_SECRET_KEY", env("RECAPTCHA_SECRET_KEY"));
+define("RECAPTCHA_SITE_KEY", env("RECAPTCHA_SITE_KEY", "6LcdUVMUAAAAAHf1NDwJ5VG7s3AemNQbXuMHZBsR"));
+define("RECAPTCHA_SECRET_KEY", env("RECAPTCHA_SECRET_KEY", "6LcdUVMUAAAAABjB_DldChticg66WclweVoUsjHU"));
 
 define("INSTANT_CHAT", "instant_chat");
 define("REQUEST_CHAT", "request_chat");

@@ -84,7 +84,11 @@
             margin-top: 3px;
             margin-bottom: 25px;
         }
+        #recaptcha-block {
+            margin-top: 10px;
+        }
     </style>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 
 <body>
@@ -363,9 +367,17 @@
                                     <label for="terms_accept"> I agree to the <a href="{{URL('/')}}/terms-of-use">Terms of Use</a> and <a href="{{URL('/')}}/policies">Policies</a></label>
                                     {!! $errors->first('terms_accept', '<p class="error-text" style="margin-top: 15px;">:message</p>') !!}
                                 </div>
-
+                                <div
+                                    id="recaptcha-block"
+                                    class="g-recaptcha"
+                                    style="display: none"
+                                    data-sitekey="{{RECAPTCHA_SITE_KEY}}"
+                                    data-expired-callback="recaptcha_expired_callback"
+                                    data-callback="recaptcha_callback"
+                                    >
+                                </div>
                                 <p class="form-row"  id="register_button_field" style="display: none; margin-top: 10px;">
-                                    <input type="submit" id="reg_button"  class="button border fw margin-top-10" name="register" value="Register" />
+                                    <input type="submit" id="reg_button" class="button border fw margin-top-10" name="register" value="Register" disabled />
                                 </p>
 
                             </form>
@@ -394,6 +406,37 @@
 <script src="https://maps.google.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}=places&callback=initAutocomplete" type="text/javascript"></script>
 
 <script type="text/javascript">
+    function recaptcha_expired_callback(data) {
+        $('#reg_button').prop("disabled", true);
+    }
+    function recaptcha_callback(data) {
+        verifyServerSide(data, function(error, data) {
+            if (!error) {
+                $('#reg_button').prop("disabled", false);
+            } else {
+                alert('failed to verify recaptcha: ', error);
+            }
+        });
+    }
+    function verifyServerSide(token, cb) {
+        var formData = { token: token, _token: '{{ csrf_token() }}' };
+        $.ajax({
+            url : "/verify_recaptcha",
+            type: "POST",
+            data : formData,
+            json: true,
+            success: function(data, textStatus, jqXHR) {
+                if (data.success) {
+                    cb(null, data);
+                } else {
+                    cb(data);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                cb(errorThrown);
+            }
+        });
+    }
     $(document).ready(() => {
         let dob_value = "{{Session::get('dob')}}";
         if(dob_value) { on_dob_change(dob_value); }
@@ -415,6 +458,7 @@
         switch (data) {
             case "0": // Healthcare Traveler
             case "3": // RV Healthcare Traveler
+                $('#recaptcha-block').show();
                 $('#username2_field').show();
                 $('#email_field').show();
                 $('#password_field').show();
@@ -449,6 +493,7 @@
                 break;
 
             case "1": // Property Owner
+                $('#recaptcha-block').show();
                 $('#username2_field').show();
                 $('#email_field').show();
                 $('#password_field').show();
@@ -482,7 +527,7 @@
                 break;
 
             case "2": // Agency
-
+                $('#recaptcha-block').show();
                 $('#username2_field').show();
                 $('#email_field').show();
                 $('#password_field').show();

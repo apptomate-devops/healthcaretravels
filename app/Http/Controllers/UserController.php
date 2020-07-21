@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\EmailConfig;
@@ -214,6 +215,22 @@ class UserController extends BaseController
         } else {
             return back()->with('error', 'This email is not registered.');
         }
+    }
+
+    public function verify_recaptcha(Request $request)
+    {
+        $client = new Client();
+        $res = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
+            'form_params' => [
+                'secret' => RECAPTCHA_SECRET_KEY,
+                'response' => $request->token,
+            ],
+            'headers' => [
+                'Accept' => 'application/json',
+            ],
+        ]);
+        $response = json_decode($res->getBody()->getContents());
+        return response()->json($response);
     }
 
     public function register_user(Request $request)

@@ -25,6 +25,7 @@ Route::GET('/get_phone_number/{user_id}', 'UserController@get_phone_number');
 Route::get('/login', 'UserController@login');
 Route::POST('/login-user', 'UserController@login_user');
 Route::GET('/otp-verify-register', 'UserController@view_otp_screen');
+Route::POST('/verify_recaptcha', 'UserController@verify_recaptcha');
 Route::POST('/register-user', 'UserController@register_user');
 Route::GET('/sent_otp/{phone_no}/{user_id}', 'UserController@sent_otp');
 Route::POST('/verify_otp', 'UserController@verify_otp');

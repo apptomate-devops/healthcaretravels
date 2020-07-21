@@ -68,6 +68,22 @@
         .label-margin {
             margin-bottom: 25px !important;
         }
+        .strength{
+            height: 7px;
+            width: 350px;
+            background: #dedede;
+            transition: height 0.3s;
+        }
+        .strength-span {
+            width: 0;
+            height: 7px;
+            display: block;
+            transition: width 0.3s;
+        }
+        .strength-text {
+            margin-top: 3px;
+            margin-bottom: 25px;
+        }
     </style>
 </head>
 
@@ -180,10 +196,13 @@
                                 <p class="form-row form-row-wide" id="password_field" style="display: none;">
                                     <label for="password1">Password:<span class="required">*</span>
                                         <i class="im im-icon-Lock-2" ></i>
-                                        <input class="input-text validate {{ $errors->has('password1') ? 'form-error' : ''}}" type="password" autocomplete="off" name="password1" id="password1" required />
+                                        <input class="input-text validate {{ $errors->has('password1') ? 'form-error' : ''}}" type="password" data-strength autocomplete="off" name="password1" id="password1" required />
                                     </label>
                                     {!! $errors->first('password1', '<p class="error-text">:message</p>') !!}
                                 </p>
+
+                                <div id="password-strength" class="strength" style="display: none;"><span class="strength-span"></span></div>
+                                <div id="password-strength-text" class="strength-text" style="display: none;">Passsword is weak</div>
 
                                 <p class="form-row form-row-wide" id="password2_field" style="display: none;" >
                                     <label for="password2">Repeat Password:<span class="required">*</span>
@@ -429,7 +448,6 @@
 
                 break;
 
-
             case "1": // Property Owner
                 $('#username2_field').show();
                 $('#email_field').show();
@@ -494,6 +512,8 @@
                 $('#email2').val('');
                 $('#address_label').text('Address:');
 
+                addressFields = [];
+
                 break;
 
             default:
@@ -525,6 +545,7 @@
                 $('#email-label').text('Email Address:');
                 $('#address_label').text('Address:');
 
+                addressFields = [];
                 break;
         }
         if(!isInitial) { initialize(); }
@@ -649,6 +670,101 @@
         return true;
     }
 </script>
+<script>
+    let strength = 0;
+    function passwordCheck(password) {
+        if (password.match(/(?=.*[a-z])/))
+            strength += 1;
 
+        if (password.match(/(?=.*[A-Z])/))
+            strength += 1;
+
+        if (password.match(/(?=.*[0-9])/))
+            strength += 1;
+
+        if (password.length >= 8)
+            strength += 1;
+
+        if (password.match(/(?=.*[!,%,&,@,#,$,^,*,?,_,~,<,>,])/))
+            strength += 1;
+
+        displayBar(strength);
+    }
+
+    function displayBar(strength) {
+        switch (strength) {
+            case 1:
+                $("#password-strength span").css({
+                    "width": "20%",
+                    "background": "#de1616"
+                });
+                $("#password-strength-text").text('Password is too weak').css({
+                    "color": "#de1616"
+                });
+                break;
+
+            case 2:
+                $("#password-strength span").css({
+                    "width": "40%",
+                    "background": "#f86564"
+                });
+                $("#password-strength-text").text('Password is weak').css({
+                    "color": "#f86564"
+                });
+                break;
+
+            case 3:
+                $("#password-strength span").css({
+                    "width": "60%",
+                    "background": "#ffca00"
+                });
+                $("#password-strength-text").text('Password is not so good').css({
+                    "color": "#ffca00"
+                });
+                break;
+
+            case 4:
+                $("#password-strength span").css({
+                    "width": "80%",
+                    "background": "#FFA200"
+                });
+                $("#password-strength-text").text('Password is good').css({
+                    "color": "#FFA200"
+                });
+                break;
+
+            case 5:
+                $("#password-strength span").css({
+                    "width": "100%",
+                    "background": "#68b300"
+                });
+                $("#password-strength-text").text('Password is great!').css({
+                    "color": "#68b300"
+                });
+                break;
+
+            default:
+                $("#password-strength span").css({
+                    "width": "0",
+                    "background": "#de1616"
+                });
+                $("#password-strength-text").text('').css({
+                    "color": "#de1616"
+                });
+        }
+    }
+
+    $("[data-strength]").focus(function() {
+        $("#password-strength, #password-strength-text").show();
+    }).blur(function() {
+        $("#password-strength, #password-strength-text").hide();
+    });
+
+    $("[data-strength]").keyup(function() {
+        strength = 0;
+        var password = $(this).val();
+        passwordCheck(password);
+    });
+</script>
 </body>
 </html>

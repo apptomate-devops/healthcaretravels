@@ -233,9 +233,32 @@ class UserController extends BaseController
         return response()->json($response);
     }
 
+    public function add_another_agency($agency_name)
+    {
+        $added = DB::table('agency')->updateOrInsert(
+            [
+                'name' => $agency_name,
+            ],
+            [
+                'name' => $agency_name,
+                'status' => 0,
+            ],
+        );
+
+        if ($added) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Agency listed successfully!!!',
+                'agency_name' => $agency_name,
+            ]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Error while listing agency!!!']);
+        }
+    }
+
     public function register_user(Request $request)
     {
-        //         print_r($request->terms_accept);exit;
+        //                 print_r($request->all());exit;
 
         $name = $request->username;
         $fname = $request->first_name;
@@ -364,16 +387,6 @@ class UserController extends BaseController
         $password = $this->encrypt_password($request->password1);
 
         $role_id = $request->user_type;
-
-        DB::table('agency')->updateOrInsert(
-            [
-                'name' => $request->name_of_agency,
-            ],
-            [
-                'name' => $request->name_of_agency,
-                'status' => 0,
-            ],
-        );
 
         $token = $this->generate_random_string();
         $mobile = $request->phone_no;

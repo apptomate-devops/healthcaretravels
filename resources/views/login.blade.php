@@ -11,6 +11,9 @@
     <meta name="google-signin-client_id" content="33727337346-hv0qqjv7ivi3osmkutnnv9hae0n6g82i.apps.googleusercontent.com">
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <script src="https://unpkg.com/select-pure@latest/dist/bundle.min.js"></script>
 
     <!-- CSS
     ================================================== -->
@@ -84,8 +87,136 @@
             margin-top: 3px;
             margin-bottom: 25px;
         }
+        .add-another {
+            font-size: 12px;
+            color: #e78016;
+            text-align: right;
+            margin: -10px 10px 20px 0;
+        }
         #recaptcha-block {
             margin-top: 10px;
+        }
+        .select-wrapper {
+            margin: auto;
+            max-width: 600px;
+            width: calc(100% - 40px);
+        }
+
+        .select-pure__select {
+            margin-top: 8px;
+            margin-bottom: 16px;
+            min-height: 53px;
+            width: 350px;
+            border: 1px solid #e0e0e0;
+            border-radius: 3px;
+            background: #fcfcfc;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            box-sizing: border-box;
+            color: #363b3e;
+            cursor: pointer;
+            display: flex;
+            font-size: 14px;
+            font-weight: 500;
+            justify-content: left;
+            padding: 5px 18px 10px;
+            position: relative;
+            transition: 0.2s;
+        }
+
+        .select-pure__options {
+            background-color: white;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            box-sizing: border-box;
+            color: #363b3e;
+            display: none;
+            left: 0;
+            max-height: 270px;
+            overflow-y: scroll;
+            position: absolute;
+            top: 50px;
+            width: 100%;
+            z-index: 5;
+        }
+
+        .select-pure__select--opened .select-pure__options {
+            display: block;
+        }
+
+        .select-pure__option {
+            background: #fff;
+            border-bottom: 1px solid #e4e4e4;
+            box-sizing: border-box;
+            height: 30px;
+            line-height: 30px;
+            padding: 0 10px;
+        }
+
+        .select-pure__option--disabled {
+            color: #e4e4e4;
+        }
+
+        .select-pure__option--selected {
+            color: #e4e4e4;
+            cursor: initial;
+            pointer-events: none;
+        }
+
+        .select-pure__option--hidden {
+            display: none;
+        }
+
+        .select-pure__selected-label {
+            align-items: 'center';
+            background: #5e6264;
+            border-radius: 3px;
+            color: #fff;
+            cursor: initial;
+            display: inline-flex;
+            justify-content: 'center';
+            margin: 5px 3px 5px 0;
+            padding: 3px 5px;
+        }
+
+        .select-pure__selected-label:last-of-type {
+            margin-right: 0;
+        }
+
+        .select-pure__selected-label i {
+            cursor: pointer;
+            display: inline-block;
+            margin-left: 7px;
+            margin-top: 3px;
+        }
+
+        .select-pure__selected-label img {
+            cursor: pointer;
+            display: inline-block;
+            height: 18px;
+            margin-left: 7px;
+            width: 14px;
+        }
+
+        .select-pure__selected-label i:hover {
+            color: #e4e4e4;
+        }
+
+        .select-pure__autocomplete {
+            margin: 7px auto !important;
+            width: 96% !important;
+            background: #f9f9f8;
+            height: 35px !important;
+            line-height: 30px !important;
+        }
+
+        .select-pure__placeholder {
+            font-size: 15px;
+            color: #808080;
+            margin-top: 8px;
+        }
+        .select-pure__placeholder--hidden {
+            display: none;
         }
     </style>
     <script src='https://www.google.com/recaptcha/api.js'></script>
@@ -287,7 +418,7 @@
                                         <i class="im im-icon-Calendar" style="bottom: 10px;"></i>
                                         <input type="date" onchange="on_dob_change(this.value)" class="input-text validate {{ $errors->has('dob') ? 'form-error' : ''}}" value="{{Session::get('dob')}}" name="dob" id="dob" autocomplete="off"  />
                                     </label>
-                                    {!! $errors->first('dob', '<p class="error-text">:message</p>') !!}
+                                {!! $errors->first('dob', '<p class="error-text">:message</p>') !!}
                                 <p id="dob_validation_error"></p>
                                 </p>
 
@@ -323,15 +454,10 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="agency_show" style="display: none;">
-                                    <label for="agency_name">Agency you work for:
-                                        <select class="input-text validate" onchange="on_agency_change(this.value)" autocomplete="off" name="name_of_agency" id="agency_name">
-                                            <option label="" value="" >Select Agency</option>
-                                            @foreach($agency as $a)
-                                                <option value="{{$a->name}}" @if(Session::get('name_of_agency')===$a->name) selected @endif>{{$a->name}}</option>
-                                            @endforeach
-                                            <option value="Other" @if(Session::get('name_of_agency')==="Other") selected @endif>Other</option>
-                                        </select>
-                                    </label>
+                                    <label for="agency_name" style="margin-bottom: 0;">Agency you work for:</label>
+                                    <span class="autocomplete-select"></span>
+                                    <div id="add_another_agency" class="add-another" onclick="add_another_agency()">Add another</div>
+                                    <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
                                     {!! $errors->first('name_of_agency', '<p class="error-text">:message</p>') !!}
                                 </p>
                                 <div class="info-text" id="agency-caption">Only list agencies that you have worked for in the last 12 months.</div>
@@ -374,7 +500,7 @@
                                     data-sitekey="{{RECAPTCHA_SITE_KEY}}"
                                     data-expired-callback="recaptcha_expired_callback"
                                     data-callback="recaptcha_callback"
-                                    >
+                                >
                                 </div>
                                 <p class="form-row"  id="register_button_field" style="display: none; margin-top: 10px;">
                                     <input type="submit" id="reg_button" class="button border fw margin-top-10" name="register" value="Register" disabled />
@@ -411,6 +537,7 @@
     }
     function recaptcha_callback(data) {
         verifyServerSide(data, function(error, data) {
+            debugger
             if (!error) {
                 $('#reg_button').prop("disabled", false);
             } else {
@@ -449,6 +576,8 @@
             $('#tab1').hide();
             $('#tab2').show();
         }
+
+        load_agencies();
     })
 
     let addressFields = [];
@@ -473,6 +602,7 @@
                 $('#languages_field').show();
                 $('#occupation_field').show();
                 $('#agency_show').show();
+                $('#add_another_agency').show();
                 $('#agency-caption').show();
                 $('#tax_home_field').show();
                 $('#address_field').show();
@@ -508,6 +638,7 @@
                 $('#languages_field').show();
                 $('#occupation_field').show();
                 $('#agency_show').hide();
+                $('#add_another_agency').hide();
                 $('#agency-caption').hide();
                 $('#tax_home_field').hide();
                 $('#address_field').show();
@@ -542,6 +673,7 @@
                 $('#languages_field').show();
                 $('#occupation_field').hide();
                 $('#agency_show').hide();
+                $('#add_another_agency').hide();
                 $('#agency-caption').hide();
                 $('#tax_home_field').hide();
                 $('#address_field').hide();
@@ -576,6 +708,7 @@
                 $('#languages_field').hide();
                 $('#occupation_field').hide();
                 $('#agency_show').hide();
+                $('#add_another_agency').hide();
                 $('#agency-caption').hide();
                 $('#tax_home_field').hide();
                 $('#address_field').hide();
@@ -606,6 +739,7 @@
             occupation_span.show();
         }
     }
+
     google.maps.event.addDomListener(window, 'load', initialize);
     function initialize() {
         let options = {
@@ -635,10 +769,12 @@
             }
         } catch (e) {}
     }
+
     function clear_errors () {
         $(".form-error").removeClass('form-error');
         $(".error-text").hide();
     }
+
     function set_max_date() {
         let dd = new Date().getDate();
         let mm = new Date().getMonth()+1;
@@ -646,11 +782,6 @@
         document.getElementById("dob").max = `${yyyy}-${ mm<10 ? '0'+mm : mm }-${ dd<10 ? '0'+dd : dd }`;
     }
 
-    function on_agency_change(value) {
-        if(["other", "others"].includes(value.toLowerCase())){
-            get_input_from_prompt("Agency you work for:", 'agency_name');
-        }
-    }
     function on_occupation_change(value) {
         if(["other", "others"].includes(value.toLowerCase())){
             get_input_from_prompt("Occupation:", 'occupation');
@@ -694,6 +825,48 @@
         }
     });
 
+    function add_another_agency() {
+        let value = prompt('Agency:', '');
+        let regex = /^[_A-z0-9]*((-|\s)*[_A-z0-9])*$/;
+
+        if(!value) { return false; }
+        else if (["other", "others"].includes(value.toLowerCase()) || !regex.test(value)) {
+            alert('enter valid name of agency and try again');
+        }
+        else {
+            $.ajax({
+                url : `add-another-agency/${value}`,
+                type: "GET",
+                success: function(data) {
+                    debugger
+                    if (data.success) {
+                        alert(data.message);
+                        // TODO: update agency options
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function (errorThrown) {
+                    debugger
+                    console.log(errorThrown);
+                }
+            });
+        };
+    }
+    function load_agencies() {
+        let agencies = <?php echo json_encode($agency); ?>;
+        let allAgencies = agencies.map(a => ({label: a.name, value: a.name}));
+        let selected_agencies = "{{Session::get('name_of_agency')}}";
+        let autocomplete = new SelectPure(".autocomplete-select", {
+            options: allAgencies,
+            value: selected_agencies ? selected_agencies.split(',') : [],
+            multiple: true,
+            autocomplete: true,
+            icon: "fa fa-times",
+            placeholder: "Select Agencies",
+        });
+    }
+
     function validate_registration() {
         let dob_error = $('#dob_validation_error').html();
         if(dob_error) {
@@ -712,6 +885,7 @@
             $(window).scrollTop($(`#${allFields[0]}`).offset().top-100);
             return false;
         }
+        $('#name_of_agency').val(autocomplete.value());
         return true;
     }
 </script>

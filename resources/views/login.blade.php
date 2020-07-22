@@ -532,6 +532,8 @@
 <script src="https://maps.google.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}=places&callback=initAutocomplete" type="text/javascript"></script>
 
 <script type="text/javascript">
+    var allAgencies = [];
+    var agencyAutoComplete;
     function recaptcha_expired_callback(data) {
         $('#reg_button').prop("disabled", true);
     }
@@ -838,10 +840,10 @@
                 url : `add-another-agency/${value}`,
                 type: "GET",
                 success: function(data) {
-                    debugger
                     if (data.success) {
                         alert(data.message);
-                        // TODO: update agency options
+                        allAgencies.push({ name: value });
+                        initPureSelect(allAgencies, agencyAutoComplete.value());
                     } else {
                         alert(data.message);
                     }
@@ -854,17 +856,27 @@
         };
     }
     function load_agencies() {
-        let agencies = <?php echo json_encode($agency); ?>;
-        let allAgencies = agencies.map(a => ({label: a.name, value: a.name}));
-        let selected_agencies = "{{Session::get('name_of_agency')}}";
-        let autocomplete = new SelectPure(".autocomplete-select", {
-            options: allAgencies,
-            value: selected_agencies ? selected_agencies.split(',') : [],
+        var agencies = <?php echo json_encode($agency); ?>;
+        allAgencies = agencies;
+        initPureSelect(agencies);
+    }
+    function initPureSelect(agencies, selected) {
+        var selected_agencies = "{{Session::get('name_of_agency')}}";
+        selected_agencies = selected_agencies ? selected_agencies.split(',') : [];
+        if (selected) {
+            selected_agencies = selected;
+        }
+        var mappedData = agencies.map(a => ({label: a.name, value: a.name}));
+        $('.autocomplete-select').empty();
+        var autocomplete = new SelectPure(".autocomplete-select", {
+            options: mappedData,
+            value: selected,
             multiple: true,
             autocomplete: true,
             icon: "fa fa-times",
             placeholder: "Select Agencies",
         });
+        agencyAutoComplete = autocomplete;
     }
 
     function validate_registration() {

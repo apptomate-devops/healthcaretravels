@@ -116,7 +116,7 @@
                                                 </td>
                                             <td>
                                                 <a href="{{BASE_URL}}admin/single_user?id={{$traveller->id}}"><span
-                                                        class="btn btn-success btn-default">View </span> </a>
+                                                        class="btn btn-success btn-default btn-block">View </span> </a>
                                             </td>
                                                 <td>
                                                     <fieldset class="form-group">

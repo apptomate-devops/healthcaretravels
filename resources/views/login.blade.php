@@ -539,7 +539,6 @@
     }
     function recaptcha_callback(data) {
         verifyServerSide(data, function(error, data) {
-            debugger
             if (!error) {
                 $('#reg_button').prop("disabled", false);
             } else {
@@ -849,7 +848,6 @@
                     }
                 },
                 error: function (errorThrown) {
-                    debugger
                     console.log(errorThrown);
                 }
             });
@@ -897,7 +895,7 @@
             $(window).scrollTop($(`#${allFields[0]}`).offset().top-100);
             return false;
         }
-        $('#name_of_agency').val(autocomplete.value());
+        $('#name_of_agency').val(agencyAutoComplete.value());
         return true;
     }
 </script>

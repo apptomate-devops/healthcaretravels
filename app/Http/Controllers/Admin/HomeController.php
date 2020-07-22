@@ -33,10 +33,19 @@ class HomeController extends BaseController
     public function make_login(Request $request)
     {
         $this->validate($request, [
-            'password' => 'required|exists:ad_users,password',
             'email' => 'required|exists:ad_users,email',
+            'password' =>
+                'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#^_+=:;><~$!%*?&])[A-Za-z\d@#^_+=:;><~$!%*?&]{8,}$/i',
         ]);
-
+        $check = DB::table('ad_users')
+            ->where('email', '=', $request->email)
+            ->first();
+        if ($check) {
+            $password = $this->encrypt_password($request->password);
+            if ($check->password !== $password) {
+                return back()->with('error_message', 'You have entered the wrong email or password. Please Try again.');
+            }
+        }
         $request->session()->put('admin_email', $request->email);
         return redirect('/admin/index');
     }

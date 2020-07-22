@@ -56,7 +56,9 @@
                         @endif
                         @if(Session::has('error_message'))
                             <div class="alert alert-danger">
-                                <h4>{{ Session::get('error_message') }}</h4>
+                                <ul>
+                                    <li>{{ Session::get('error_message') }}</li>
+                                </ul>
                             </div>
                         @endif
 

@@ -67,7 +67,6 @@
                                             <th>Gender</th>
                                             <th>Date of birth</th>
                                             <th>Status</th>
-                                            <th>Verify</th>
                                             <th>View Documents</th>
                                             <th>Action &nbsp;</th>
                                         </tr>
@@ -103,22 +102,18 @@
                                                         <center>-</center>@endif
                                                 </td>
                                                 <td>
-                                                    @if($traveller->is_verified==0)
-                                                        <span
-                                                            class="btn btn-default btn-danger btn-block">Not Verified </span></a>
+                                                    @if($traveller->status == 0)
+                                                        <span class="btn btn-danger btn-default">Disabled</span>
+                                                    @elseif($traveller->is_verified==0 && $traveller->is_submitted_documents == 1)
+                                                        <span class="btn btn-default btn-danger btn-block">Pending Verification </span></a>
+                                                    @elseif($traveller->is_verified==0)
+                                                        <span class="btn btn-default btn-danger btn-block">Not Verified </span></a>
+                                                    @elseif($traveller->is_verified==-1)
+                                                        <span class="btn btn-default btn-danger btn-block">Denied</span></a>
                                                     @else
-                                                        <span
-                                                            class="btn btn-default btn-success btn-block">Verified</span>
+                                                        <span class="btn btn-default btn-success btn-block">Verified</span>
                                                     @endif
                                                 </td>
-                                                <td>
-                                                    @if($traveller->status == 1)
-                                                        <span class="btn btn-success btn-default"> Active</span>
-                                                    @else
-                                                        <span class="btn btn-danger btn-default"> Blocked</span>
-                                                    @endif
-                                                </td>
-
                                             <td>
                                                 <a href="{{BASE_URL}}admin/single_user?id={{$traveller->id}}"><span
                                                         class="btn btn-success btn-default">View </span> </a>
@@ -126,11 +121,13 @@
                                                 <td>
                                                     <fieldset class="form-group">
                                                         <select class="form-control"
-                                                                onchange="status_update(this.value,{{$traveller->id}})"
+                                                                onchange="status_update(this.value,{{$traveller->id}},this)"
                                                                 id="basicSelect" style="cursor: pointer;">
                                                             <option selected="selected">Make..</option>
-                                                            <option value="1">Approve</option>
-                                                            <option value="0">Deny</option>
+                                                            <option value="approve" data-approve="1">Approve</option>
+                                                            <option value="deny" data-approve="0">Deny</option>
+                                                            <option value="1">Enable</option>
+                                                            <option value="0">Disable</option>
                                                             <option value="2">Delete</option>
                                                         </select>
                                                     </fieldset>
@@ -159,7 +156,12 @@
 
     <script type="text/javascript">
         function status_update(status, id) {
-            if (status != 5) {
+            if (node.selectedOptions[0].dataset.approve) {
+                var url = "{{BASE_URL}}" + "admin/verify_profile/" + id;
+                if (node.selectedOptions[0].dataset.approve == "0") {
+                    url += "/true";
+                }
+            } else if (status != 5) {
                 var url = "{{BASE_URL}}" + "admin/user-status-update?id=" + id + "&status=" + status;
             } else {
                 var url = "{{BASE_URL}}" + "admin/single_user?id=" + id;

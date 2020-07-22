@@ -36,17 +36,30 @@
                         </a>
                     @endif
                 </div>
-                @if($data->is_verified==0)
+                @if ($data->is_verified==1)
+                        <span class="btn btn-default btn-success btn-block" style="background-color: green">Verified</span>
+                    @elseif ($data->is_verified==-1)
+                        <span class="btn btn-default btn-danger btn-block">Denied</span>
+                    @endif
+                @if($data->is_verified!=1)
                     <a
-                        style="float:right" class="btn btn-default btn-danger btn-block"
+                        style="float:right" class="btn btn-default btn-primary btn-block"
                         href="{{BASE_URL}}admin/verify_profile/{{$data->id}}"
                         >
                         <span style="height:29px">
                             Click here to Verify This @if($data->role_id==0) Traveler @elseif($data->role_id==1) Owner @else  Travel Agency @endif
                         </span>
                     </a>
-                @else
-                    <span class="btn btn-default btn-success btn-block" style="background-color: green">Verified</span>
+                @endif
+                @if($data->is_verified!=-1)
+                    <a
+                        style="float:right" class="btn btn-default btn-danger btn-block"
+                        href="{{BASE_URL}}admin/verify_profile/{{$data->id}}/true"
+                        >
+                        <span style="height:29px">
+                            Click here to Deny This @if($data->role_id==0) Traveler @elseif($data->role_id==1) Owner @else  Travel Agency @endif
+                        </span>
+                    </a>
                 @endif
                 <br>
             </div>

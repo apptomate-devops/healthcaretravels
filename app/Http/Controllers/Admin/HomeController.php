@@ -554,17 +554,18 @@ class HomeController extends BaseController
         }
         return back()->with('success', 'Property has been verified');
     }
-    public function verify_profile($id)
+    public function verify_profile($id, $deny = false)
     {
+        $updateStatus = $deny == "true" ? -1 : ONE;
         $user = $this->user
             ->where('id', $id)
-            ->where('is_verified', '<>', ONE)
+            ->where('is_verified', '<>', $updateStatus)
             ->first();
-        $this->user->where('id', $id)->update(['is_verified' => ONE]);
+        $this->user->where('id', $id)->update(['is_verified' => $updateStatus]);
         DB::table('verify_mobile')
             ->where('user_id', $id)
-            ->update(['status' => ONE]);
-        if ($user) {
+            ->update(['status' => $updateStatus]);
+        if ($user && $updateStatus == 1) {
             // Accept Email flow
             $reg = $this->emailConfig->where('type', 6)->first();
             $mail_data = [

@@ -558,26 +558,31 @@ class HomeController extends BaseController
     }
     public function verify_profile($id, $deny = false)
     {
-        $updateStatus = $deny == "true" ? -1 : ONE;
+        $isDenied = $deny == "true";
+        $updateStatus = $isDenied ? -1 : ONE;
         $user = $this->user
             ->where('id', $id)
             ->where('is_verified', '<>', $updateStatus)
             ->first();
-        $this->user->where('id', $id)->update(['is_verified' => $updateStatus]);
+        $updateData = ['is_verified' => $updateStatus];
+        if ($isDenied) {
+            $updateData['denied_count'] = DB::raw('denied_count+1');
+            $updateData['is_submitted_documents'] = 0;
+        }
+        $this->user->where('id', $id)->update($updateData);
         DB::table('verify_mobile')
             ->where('user_id', $id)
             ->update(['status' => $updateStatus]);
         if ($user) {
             // Accept/Denied Email flow
-            $emailType = $updateStatus == 1 ? 6 : 7;
-            $emailTemplate = $updateStatus == 1 ? 'mail.account-approved' : 'mail.account-denied';
+            $emailType = $isDenied ? 7 : 6;
+            $emailTemplate = $isDenied ? 'mail.account-denied' : 'mail.account-approved';
             $reg = $this->emailConfig->where('type', $emailType)->first();
             $mail_data = [
                 'name' => $user->first_name . ' ' . $user->last_name,
                 'email' => $user->email,
                 'text' => isset($reg->message) ? $reg->message : '',
             ];
-
             $title = isset($reg->title) ? $reg->title : 'Message from ' . APP_BASE_NAME;
             $subject = isset($reg->subject) ? $reg->subject : "Email verification from " . APP_BASE_NAME;
             $this->send_custom_email($user->email, $subject, $emailTemplate, $mail_data, $title);

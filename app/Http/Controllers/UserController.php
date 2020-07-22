@@ -580,7 +580,6 @@ class UserController extends BaseController
         $user = DB::table('users')
             ->where('id', $user_id)
             ->first();
-        //        print_r($user);exit();
         return view('verify-account', compact('user'));
     }
 

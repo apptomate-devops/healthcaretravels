@@ -10,6 +10,9 @@
         .verify-traveler .info-text {
             color: #e78016;
         }
+        .info-text.text-error {
+            color: red;
+        }
 
         ul.my-account-nav li a {
             font-size: 14px;
@@ -68,6 +71,8 @@
                 <b class="info-text" style="color: forestgreen; font-size: 18px;">Your account has been verified.</b>
             @elseif($user->is_submitted_documents == 1)
                 <b class="info-text" style="font-size: 18px;">Your verification information has been submitted. Please allow up to 24 hours for approval.</b>
+            @elseif($user->denied_count >= 3)
+                <b class="info-text" style="color: red; font-size: 18px;">We were unable to verify your account and cannot grant your access to our features. Please contact support for more information.</b>
             @else
                 <div class="col-md-8">
                     <div class="row">
@@ -84,6 +89,11 @@
                                         You must complete 3 of 5 verification methods in order to submit your profile for verification.
                                         Please submit within seven days to be granted full access to all of Health Care Travels' features.
                                     </div>
+                                    @if ($user->is_verified == -1)
+                                        <div class="info-text text-error padding-top-10">
+                                            We were unable to verify your account. Please resubmit your information or contact support for more information. Attempts remaining: {{3 - $user->denied_count}}
+                                        </div>
+                                    @endif
                                     <div class="col-md-6">
                                         <label>Government ID </label>
                                         <input type="file" name="government_id" id="government_id" class="form-control"  />
@@ -117,6 +127,11 @@
                                         You must complete 3 of 7 verification methods in order to submit your profile for verification.
                                         Please submit within seven days to be granted full access to all of Health Care Travels' features.
                                     </div>
+                                    @if ($user->is_verified == -1)
+                                        <div class="info-text text-error padding-top-10">
+                                            We were unable to verify your account. Please resubmit your information or contact support for more information. Attempts remaining: {{3 - $user->denied_count}}
+                                        </div>
+                                    @endif
                                     <div class="col-md-6">
                                         <label>Traveler's Contract</label>
                                         <input type="file" name="traveler_contract_id" id="traveler_contract_id" class="form-control"  />
@@ -160,6 +175,11 @@
                                         You must complete 3 of 6 verification methods in order to submit your profile for verification.
                                         Please submit within seven days to be granted full access to all of Health Care Travels' features.
                                     </div>
+                                    @if ($user->is_verified == -1)
+                                        <div class="info-text text-error padding-top-10">
+                                            We were unable to verify your account. Please resubmit your information or contact support for more information. Attempts remaining: {{3 - $user->denied_count}}
+                                        </div>
+                                    @endif
                                     <div class="col-md-6">
                                         <label>Work Badge Picture </label>
                                         <input type="file" name="work_badge_id" id="work_badge_id" class="form-control"  />

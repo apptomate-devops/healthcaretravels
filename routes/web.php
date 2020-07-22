@@ -72,7 +72,6 @@ Route::get('/travellers-refund-policy', 'HomeController@travellers_refund_policy
 Route::get('/owner/profile', 'OwnerController@owner_profile');
 
 // Account Verification routes
-Route::GET('/verify-account', 'UserController@verify_account');
 Route::POST('/upload-document', 'UserController@upload_document');
 
 // Logged in routes
@@ -82,4 +81,5 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::get('/owner/favorites', 'PropertyController@favorites');
     Route::GET('/cancel-booking/{id}', 'PropertyController@cancel_booking');
     Route::GET('/owner-update-booking', 'PropertyController@owner_update_booking');
+    Route::GET('/verify-account', 'UserController@verify_account');
 });

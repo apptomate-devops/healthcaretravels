@@ -103,7 +103,7 @@
                                                         <center>-</center>@endif
                                                 </td>
                                                 <td>
-                                                    @if($traveller->status == 0)                                              @if($traveller->status == 0)
+                                                    @if($traveller->status == 0)
                                                         <span class="btn btn-danger btn-default">Disabled</span>
                                                     @elseif($traveller->is_verified==0 && $traveller->is_submitted_documents == 1)
                                                         <span class="btn btn-default btn-danger btn-block">Pending Verification </span></a>
@@ -157,7 +157,7 @@
 
     <script type="text/javascript">
 
-        function status_update(status, id) {
+        function status_update(status, id, node) {
             if (node.selectedOptions[0].dataset.approve) {
                 var url = "{{BASE_URL}}" + "admin/verify_profile/" + id;
                 if (node.selectedOptions[0].dataset.approve == "0") {
@@ -169,7 +169,6 @@
                 var url = "{{BASE_URL}}" + "admin/single_user?id=" + id;
             }
             window.location = url;
-
         }
 
 

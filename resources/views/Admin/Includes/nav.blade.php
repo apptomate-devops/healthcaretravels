@@ -186,7 +186,7 @@
                         <a href="{{url('admin/approval_mail')}}">
                             <i class="la la-envelope"></i>
                             <span class="menu-title" data-i18n="nav.dash.main">
-                    Approval
+                    Approval/Denial
                 </span>
                         </a>
                     </li>

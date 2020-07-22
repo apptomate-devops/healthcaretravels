@@ -155,7 +155,7 @@
 @section('scripts')
 
     <script type="text/javascript">
-        function status_update(status, id) {
+        function status_update(status, id, node) {
             if (node.selectedOptions[0].dataset.approve) {
                 var url = "{{BASE_URL}}" + "admin/verify_profile/" + id;
                 if (node.selectedOptions[0].dataset.approve == "0") {

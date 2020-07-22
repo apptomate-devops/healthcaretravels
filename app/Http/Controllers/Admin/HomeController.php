@@ -506,7 +506,9 @@ class HomeController extends BaseController
     public function approval_mail(Request $request)
     {
         $approval = EmailConfig::where('type', 6)->first();
-        return view('Admin.mail-approval', ['approval' => $approval]);
+        $denial = EmailConfig::where('type', 7)->first();
+        $data = ['approval' => $approval, 'denial' => $denial];
+        return view('Admin.mail-approval', $data);
     }
     public function booking_confirm_mail(Request $request)
     {
@@ -565,9 +567,11 @@ class HomeController extends BaseController
         DB::table('verify_mobile')
             ->where('user_id', $id)
             ->update(['status' => $updateStatus]);
-        if ($user && $updateStatus == 1) {
-            // Accept Email flow
-            $reg = $this->emailConfig->where('type', 6)->first();
+        if ($user) {
+            // Accept/Denied Email flow
+            $emailType = $updateStatus == 1 ? 6 : 7;
+            $emailTemplate = $updateStatus == 1 ? 'mail.account-approved' : 'mail.account-denied';
+            $reg = $this->emailConfig->where('type', $emailType)->first();
             $mail_data = [
                 'name' => $user->first_name . ' ' . $user->last_name,
                 'email' => $user->email,
@@ -576,7 +580,7 @@ class HomeController extends BaseController
 
             $title = isset($reg->title) ? $reg->title : 'Message from ' . APP_BASE_NAME;
             $subject = isset($reg->subject) ? $reg->subject : "Email verification from " . APP_BASE_NAME;
-            $this->send_custom_email($user->email, $subject, 'mail.account-approved', $mail_data, $title);
+            $this->send_custom_email($user->email, $subject, $emailTemplate, $mail_data, $title);
         }
         return back()->with('success', 'User has been verified');
     }

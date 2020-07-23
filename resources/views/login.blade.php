@@ -369,11 +369,11 @@
                                     <label for="ethnicity">Ethnicity:<span class="required">*</span>
                                         <select type="text" class="input-text validate {{ $errors->has('ethnicity') ? 'form-error' : ''}}" name="ethnicity" id="ethnicity" autocomplete="off" >
                                             <option label="" selected>Select Ethnicity</option>
-                                            <option value="American Indian" @if(Session::get('ethnicity')=='American Indian') selected @endif>American Indian</option>
+                                            <option value="American Indian or Alaskan Native" @if(Session::get('ethnicity')=='American Indian or Alaskan Native') selected @endif>American Indian or Alaskan Native</option>
+                                            <option value="Asian" @if(Session::get('ethnicity')=='Asian') selected @endif>Asian</option>
+                                            <option value="Black or African American" @if(Session::get('ethnicity')=='Black or African American') selected @endif>Black or African American</option>
+                                            <option value="Native Hawaiian or Pacific Islander" @if(Session::get('ethnicity')=='Native Hawaiian or Pacific Islander') selected @endif>Native Hawaiian or Pacific Islander</option>
                                             <option value="White" @if(Session::get('ethnicity')=='White') selected @endif>White</option>
-                                            <option value="Black" @if(Session::get('ethnicity')=='Black') selected @endif>Black</option>
-                                            <option value="Hispanic / Latino" @if(Session::get('ethnicity')=='Hispanic / Latino') selected @endif>Hispanic / Latino</option>
-                                            <option value="Pacific Islander" @if(Session::get('ethnicity')=='Pacific Islander') selected @endif>Pacific Islander</option>
                                             <option value="Other" @if(Session::get('ethnicity')=='Other') selected @endif>Other</option>
                                         </select>
                                     </label>

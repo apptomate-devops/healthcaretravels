@@ -370,11 +370,11 @@
                                         <select type="text" class="input-text validate {{ $errors->has('ethnicity') ? 'form-error' : ''}}" name="ethnicity" id="ethnicity" autocomplete="off" >
                                             <option label="" selected>Select Ethnicity</option>
                                             <option value="American Indian" @if(Session::get('ethnicity')=='American Indian') selected @endif>American Indian</option>
+                                            <option value="White" @if(Session::get('ethnicity')=='White') selected @endif>White</option>
                                             <option value="Black" @if(Session::get('ethnicity')=='Black') selected @endif>Black</option>
                                             <option value="Hispanic / Latino" @if(Session::get('ethnicity')=='Hispanic / Latino') selected @endif>Hispanic / Latino</option>
                                             <option value="Pacific Islander" @if(Session::get('ethnicity')=='Pacific Islander') selected @endif>Pacific Islander</option>
                                             <option value="Other" @if(Session::get('ethnicity')=='Other') selected @endif>Other</option>
-                                            <option value="Rather Not Say" @if(Session::get('ethnicity')=='Rather Not Say') selected @endif>Rather Not Say</option>
                                         </select>
                                     </label>
                                     {!! $errors->first('ethnicity', '<p class="error-text">:message</p>') !!}

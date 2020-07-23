@@ -90,7 +90,7 @@
                         <p class="form-row form-row-wide" id="mobile_chk" style="display: none;">
                             <label for="phone_no">Mobile Number:
                                 <input type="text" class="input-text validate" readonly value="" placeholder="Mobile Number" name="phone_no" id="phone_no" maxlength="10" minlength="10" />
-                                <input type="button" name="button border fw" value="Get Otp" id="get_otp">
+                                <input type="button" name="button border fw" value="Submit" id="get_otp">
                             </label>
                         </p>
                         <input type="hidden" name="_token" value="{{csrf_token()}}">

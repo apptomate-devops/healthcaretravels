@@ -205,7 +205,11 @@ class UserController extends BaseController
 
             $request->session()->put('profile_image', $check->profile_image);
 
-            $url = $this->get_base_url() . 'owner/profile';
+            if ($check->is_submitted_documents == 0) {
+                $url = $this->get_base_url() . 'verify-account';
+            } else {
+                $url = $this->get_base_url() . 'owner/profile';
+            }
             if ($request->session()->get('propertyId')) {
                 $property_id = $request->session()->get('propertyId');
                 $url = $this->get_base_url() . 'property/' . $property_id;

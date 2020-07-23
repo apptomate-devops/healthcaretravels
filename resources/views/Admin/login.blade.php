@@ -66,7 +66,7 @@
                             <div class="card-header border-0">
                                 <div class="card-title text-center">
                                     <div class="p-1">
-                                        <img src="/keepers_logo.png" alt="branding logo" style="width: 232px;">
+                                        <img src="/uploads/keepers_logo.png" alt="branding logo" style="width: 232px;">
                                     </div>
                                 </div>
                                 <h6 class="card-subtitle line-on-side text-muted text-center font-small-3 pt-2">

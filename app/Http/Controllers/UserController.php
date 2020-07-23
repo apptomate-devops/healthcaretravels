@@ -482,11 +482,12 @@ class UserController extends BaseController
             ->where('client_id', CLIENT_ID)
             ->where('id', $request->user_id)
             ->where('phone', $request->phone_no)
-            ->where('otp', $request->otp)
             ->first();
-        if (!$check) {
+        if (!$check || $check->otp != $request->otp) {
             return back()
                 ->with('phone_number', $request->phone_no)
+                ->with('phone', $request->phone_no)
+                ->with('user_id', $check->id)
                 ->with('error', 'Wrong code. Please try again.')
                 ->with('attempts', $attempts);
         } else {
@@ -508,6 +509,16 @@ class UserController extends BaseController
                     // 0: Healthcare Traveler || 3: RV Healthcare Traveler
                     $url = $this->get_base_url() . 'traveler/profile';
                 }
+                $request->session()->put('user_id', $check->id);
+                $request->session()->put('role_id', $check->role_id);
+                $request->session()->put('username', $check->username);
+                $request->session()->put('name_of_agency', $check->name_of_agency);
+                $request->session()->put('phone', $check->phone);
+                $userProfileImage = $check->profile_image
+                    ? $check->profile_image
+                    : BASE_URL . 'user_profile_default.png';
+                $request->session()->put('profile_image', $userProfileImage);
+                return redirect($url)->with('phone', $check->phone);
             } else {
                 // Send Verification mail
                 $verify_url = BASE_URL . 'verify/' . $check->id . '/' . $check->auth_token;

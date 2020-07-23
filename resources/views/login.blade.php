@@ -55,18 +55,18 @@
             font-weight:normal;
         }
         .info-text {
-            color: red;
+            color: #e78016;
             font-size: 14px;
             margin-bottom: 20px;
             margin-top: -10px;
         }
         .form-error {
-            border-color: #e78016 !important;
+            border-color: #ff0000 !important;
         }
         .error-text {
             margin-top: -25px;
             margin-bottom: 25px;
-            color: #e78016;
+            color: #ff0000;
         }
         .label-margin {
             margin-bottom: 25px !important;
@@ -468,6 +468,7 @@
                                     </label>
                                     {!! $errors->first('tax_home', '<p class="error-text">:message</p>') !!}
                                 </p>
+                                <div class="error-text" id="tax_home_error" style="display: none;">Please select a valid address from the suggestions.</div>
 
                                 <p class="form-row form-row-wide" id="address_field" style="display: none;">
                                     <label for="address"><label id="address_label">Address:</label><span class="required">*</span>
@@ -475,6 +476,7 @@
                                     </label>
                                     {!! $errors->first('address', '<p class="error-text">:message</p>') !!}
                                 </p>
+                                <div class="error-text" id="address_error" style="display: none;">Please select a valid address from the suggestions.</div>
 
                                 <p class="form-row form-row-wide" id="listing_address_field" style="display: none;">
                                     <label for="listing_address">Listing Address:<span class="required">*</span>
@@ -482,6 +484,7 @@
                                     </label>
                                     {!! $errors->first('listing_address', '<p class="error-text">:message</p>') !!}
                                 </p>
+                                <div class="error-text" id="listing_address_error" style="display: none;">Please select a valid address from the suggestions.</div>
 
                                 <div class="checkboxes" id="terms_accept_field" style="display: none;">
                                     @if(Session::has('terms_accept'))
@@ -764,6 +767,7 @@
                     let autocomplete_address = new google.maps.places.Autocomplete(element_address, (addressFields[field] === 'tax_home') ? options_tax_home : options);
                     autocomplete_address.addListener('place_changed', (e) => {
                         element_address.style.borderColor = '#e0e0e0';
+                        document.getElementById(`${addressFields[field]}_error`).style.display = "none";
                         element_address.dataset.isValid = true;
                     });
                 }
@@ -887,7 +891,8 @@
             let element_address = document.getElementById(e);
             let invalidAddress = !element_address.value || (element_address.value && !element_address.dataset.isValid);
             if(invalidAddress) {
-                $(`#${e}`).css('border-color', '#e78016');
+                $(`#${e}`).css('border-color', '#ff0000');
+                $(`#${e}_error`).show();
             }
             return invalidAddress;
         })

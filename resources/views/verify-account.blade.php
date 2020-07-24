@@ -70,7 +70,7 @@
             @if($user->is_verified == 1)
                 <b class="info-text" style="color: forestgreen; font-size: 18px;">Your account has been verified.</b>
             @elseif($user->is_submitted_documents == 1)
-                <b class="info-text" style="font-size: 18px;">Your verification information has been submitted. Please allow up to 24 hours for approval.</b>
+                <b class="info-text" style="font-size: 18px;">Your account has been submitted for verification. Please allow up to 24 hours for your information to be reviewed.</b>
             @elseif($user->denied_count >= 3)
                 <b class="info-text" style="color: red; font-size: 18px;">We were unable to verify your account and cannot grant your access to our features. Please contact support for more information.</b>
             @else

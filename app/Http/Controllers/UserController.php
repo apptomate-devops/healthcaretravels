@@ -683,9 +683,6 @@ class UserController extends BaseController
                 'agency_office_number' => isset($request->agency_office_number) ? $request->agency_office_number : null,
             ]);
 
-        $doc_name = 'Document name';
-        //        $doc_name = ucfirst(str_replace("_", " ", $type));
-
         $data = ['username' => $user->first_name . ' ' . $user->last_name, 'type' => $user_role->role];
 
         $subject = "Verification documents Uploads";
@@ -698,6 +695,12 @@ class UserController extends BaseController
             $message->replyTo($usermail);
             $message->subject($subject);
         });
+
+        $title = "Profile Verification Pending";
+        $subject = "Profile Verification Pending";
+
+        $this->send_custom_email($user->email, $subject, 'mail.document-uploaded-user', $data, $title);
+
         return back()->with('success', 'Documents uploaded successfully');
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
 use App\Mail\ExceptionOccurred;
+use App\Services\Logger;
 
 class Handler extends ExceptionHandler
 {
@@ -82,9 +83,19 @@ class Handler extends ExceptionHandler
             $handler = new SymfonyExceptionHandler();
             $html = $handler->getHtml($e);
             if (env("APP_ENV", "local") !== "local") {
-                Mail::to('brijeshbhakta30@gmail.com')->send(new ExceptionOccurred($html));
+                $emails = [
+                    'brijeshbhakta30@gmail.com',
+                    'info@healthcaretravels.com',
+                    'ldavis@healthcaretravels.com',
+                    'pashiofu@healthcaretravels.com',
+                    'dylan@arborvita.io',
+                    'garrethdottin1@gmail.com',
+                ];
+                Mail::to($emails)->send(new ExceptionOccurred($html));
+                Logger::info('Error emails sent');
             }
         } catch (Exception $ex) {
+            Logger::error('Error sending error emails');
             dd($ex);
         }
     }

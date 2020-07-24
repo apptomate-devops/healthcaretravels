@@ -495,17 +495,8 @@ class HomeController extends BaseController
 
     public function register_mail(Request $request)
     {
-        $traveler = EmailConfig::where('role_id', 0)
-            ->where('type', 1)
-            ->first();
-        $owner = EmailConfig::where('role_id', 1)
-            ->where('type', 1)
-            ->first();
-        $agency = EmailConfig::where('role_id', 2)
-            ->where('type', 1)
-            ->first();
-        // print_r($owner);exit;
-        return view('Admin.mail-register', ['traveler' => $traveler, 'agency' => $agency, 'owner' => $owner]);
+        $register = EmailConfig::where('type', 1)->first();
+        return view('Admin.mail-register', ['register' => $register]);
     }
     public function verification_mail(Request $request)
     {

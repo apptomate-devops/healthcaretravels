@@ -430,9 +430,7 @@ class UserController extends BaseController
 
         //  Send Welcome mail
 
-        $welcome = EmailConfig::where('type', 1)
-            ->where('role_id', $d->role_id)
-            ->first();
+        $welcome = EmailConfig::where('type', 1)->first();
 
         $mail_data = [
             'username' => $request->first_name . ' ' . $request->last_name,

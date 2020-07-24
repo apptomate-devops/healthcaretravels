@@ -1,0 +1,39 @@
+﻿.top-notification-overlay {
+    height: 0;
+    width: 100%;
+    position: fixed;
+    z-index: 1450;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    text-align: center;
+    transition: 0.5s;
+}
+.overlay-content {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    z-index: 1451;
+}
+.notification-message-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.white-link.bold-link {
+    color: white !important;
+    font-weight: bold !important;
+}
+#notification-close {
+    font-size: 25px;
+    padding-left: 5px;
+    cursor: pointer;
+}
+.bg-orange {
+    background-color: #e78016;
+    color: white;
+    width: 100%;
+}
+.padding-5 {
+    padding: 5px 0;
+}

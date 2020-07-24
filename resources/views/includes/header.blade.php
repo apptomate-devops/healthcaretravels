@@ -14,6 +14,17 @@
     }
   }
 </style>
+<!-- Modal Notification -->
+<div class="top-notification-overlay" id="verification-pending-modal">
+    <div class="overlay-content">
+        <div class="bg-orange padding-5">
+            <div class="notification-message-wrapper">
+                <span class="notification-message">You must verify your identity before using this feature. Upload documents <a class="white-link bold-link" href="/verify-account">here</a></span>
+                <span id="notification-close">&times;</span>
+            </div>
+        </div>
+    </div>
+</div>
 <header id="header-container" class="header-style-2">
       <!-- Header -->
       <div id="header">
@@ -99,7 +110,7 @@
 			                </a>
                 		</li>
                     <li class="center">
-                      <a href="{{url('/')}}/request-roommate">
+                      <a class="not-verified-block" href="{{url('/')}}/request-roommate">
                       Request a Roommate
                       </a>
                     </li>
@@ -255,12 +266,12 @@
                           <li><a href="{{url('/')}}/owner/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
                           <li><a href="{{url('/')}}/owner/verify-account"><i class="sl sl-icon-user"></i> Verify Account</a></li>
                           <li><a href="{{url('/')}}/owner/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
-                          <li><a href="{{url('/')}}/owner/my-properties"><i class="sl sl-icon-home"></i> My Properties</a></li>
-                          <li><a href="{{url('/')}}/owner/add-property"><i class="sl sl-icon-plus"></i> Add Property</a></li>
+                          <li><a href="{{url('/')}}/owner/my-properties" class="not-verified-block"><i class="sl sl-icon-home"></i> My Properties</a></li>
+                          <li><a href="{{url('/')}}/owner/add-property" class="not-verified-block"><i class="sl sl-icon-plus"></i> Add Property</a></li>
                           <li><a href="{{url('/')}}/owner/bookings"><i class="sl sl-icon-basket"></i> Bookings</a></li>
                           {{-- <li><a href="{{url('/')}}/owner/reservations"><i class="sl sl-icon-credit-card"></i> My Trips</a></li> --}}
                           <li><a href="{{url('/')}}/owner/calender"><i class="sl sl-icon-credit-card"></i> Calender</a></li>
-                          <li><a href="{{url('/')}}/owner/inbox"><i class="fa fa-inbox"></i> Inbox</a></li>
+                          <li><a href="{{url('/')}}/owner/inbox" class="not-verified-block"><i class="fa fa-inbox"></i> Inbox</a></li>
                           <li><a href="{{url('/')}}/owner/invoices"><i class="sl sl-icon-note"></i> Transaction History </a></li>
                           <li><a href="{{url('/')}}/owner/special_price"><i class="sl sl-icon-star"></i> Special Pricing </a></li>
                           {{-- <li><a href="{{url('/')}}/delete_account/"><i class="sl sl-icon-trash"></i> Delete Account </a></li> --}}
@@ -272,8 +283,8 @@
                       <ul>
                           <li><a href="{{url('/')}}/traveler/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
                           <li><a href="{{url('/')}}/traveler/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
-                          <li><a href="{{url('/')}}/traveler/my-reservations"><i class="sl sl-icon-credit-card"></i> My Trips</a></li>
-                          <li><a href="{{url('/')}}/traveler/inbox"><i class="fa fa-inbox"></i> Inbox</a></li>
+                          <li><a href="{{url('/')}}/traveler/my-reservations" class="not-verified-block"><i class="sl sl-icon-credit-card"></i> My Trips</a></li>
+                          <li><a href="{{url('/')}}/traveler/inbox" class="not-verified-block"><i class="fa fa-inbox"></i> Inbox</a></li>
                          {{--  <li><a href="{{url('/')}}/delete_account/"><i class="sl sl-icon-trash"></i> Delete Account </a></li> --}}
                           <li><a href="{{url('/')}}/logout" onclick="signOut();"  id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
                       </ul>
@@ -283,8 +294,8 @@
                       <ul>
                           <li><a href="{{url('/')}}/traveler/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
                           <li><a href="{{url('/')}}/traveler/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
-                          <li><a href="{{url('/')}}/traveler/my-reservations"><i class="sl sl-icon-credit-card"></i> My Trips</a></li>
-                          <li><a href="{{url('/')}}/traveler/inbox"><i class="fa fa-inbox"></i> Inbox</a></li>
+                          <li><a href="{{url('/')}}/traveler/my-reservations" class="not-verified-block"><i class="sl sl-icon-credit-card"></i> My Trips</a></li>
+                          <li><a href="{{url('/')}}/traveler/inbox" class="not-verified-block"><i class="fa fa-inbox"></i> Inbox</a></li>
                          {{--  <li><a href="{{url('/')}}/delete_account/"><i class="sl sl-icon-trash"></i> Delete Account </a></li> --}}
                           <li><a href="{{url('/')}}/logout" onclick="signOut();"  id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
                       </ul>
@@ -308,6 +319,27 @@
         <!-- Main Navigation / End -->
       </div>
       <!-- Header / End -->
+      <script type="text/javascript">
+            $(document).on('click', '.not-verified-block', function(event) {
+                var isVerified = "{{Session::get('is_verified')}}";
+                if (isVerified != 1) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    openVerificationModal();
+                }
+            });
+            $(document).on('click', '#notification-close', function(evennt) {
+                event.preventDefault();
+                event.stopPropagation();
+                closeVerificationModal();
+            });
+        function openVerificationModal() {
+            document.getElementById("verification-pending-modal").style.height = "100%";
+        }
+        function closeVerificationModal() {
+            document.getElementById("verification-pending-modal").style.height = "0%";
+        }
+        </script>
     </header>
 
 <!-- The actual snackbar -->

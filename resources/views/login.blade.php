@@ -748,7 +748,7 @@
             componentRestrictions: {country: 'us'}
         };
         let options_tax_home = {
-            types: ['(cities)'],
+            types: ['(regions)'],
             componentRestrictions: {country: 'us'}
         };
         try {

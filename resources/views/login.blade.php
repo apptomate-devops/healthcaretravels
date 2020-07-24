@@ -460,7 +460,7 @@
                                     <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
                                     {!! $errors->first('name_of_agency', '<p class="error-text">:message</p>') !!}
                                 </p>
-                                <div class="info-text" id="agency-caption">Select one or more agencies you work for.</div>
+                                <div class="info-text" id="agency-caption">Select as many agencies that you have worked for in the last 12 months.</div>
 
                                 <p class="form-row form-row-wide" id="tax_home_field" style="display: none;">
                                     <label for="tax_home">Tax Home:<span class="required">*</span>

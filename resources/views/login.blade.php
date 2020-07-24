@@ -464,7 +464,7 @@
 
                                 <p class="form-row form-row-wide" id="tax_home_field" style="display: none;">
                                     <label for="tax_home">Tax Home:<span class="required">*</span>
-                                        <input type="text" class="input-text validate {{ $errors->has('tax_home') ? 'form-error' : ''}}" value="{{Session::get('tax_home')}}" name="tax_home" id="tax_home" placeholder="State, Country" autocomplete="off" style="padding-left: 20px;" @if(Session::has('tax_home')) data-is-valid="true" @endif />
+                                        <input type="text" class="input-text validate {{ $errors->has('tax_home') ? 'form-error' : ''}}" value="{{Session::get('tax_home')}}" name="tax_home" id="tax_home" placeholder="City, State" autocomplete="off" style="padding-left: 20px;" @if(Session::has('tax_home')) data-is-valid="true" @endif />
                                     </label>
                                     {!! $errors->first('tax_home', '<p class="error-text">:message</p>') !!}
                                 </p>

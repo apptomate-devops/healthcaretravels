@@ -34,6 +34,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::POST('/cancellation-policy', 'Admin\CancellationController@update');
 
         Route::GET('/travellers', 'Admin\TravellerController@index');
+        Route::GET('/rv_travellers', 'Admin\TravellerController@rv_travellers');
         Route::GET('/owner', 'Admin\OwnerController@index');
         Route::GET('/user-status-update', 'Admin\OwnerController@status_update');
         Route::GET('/single_user', 'Admin\OwnerController@single_user');

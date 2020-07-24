@@ -82,7 +82,7 @@ class Handler extends ExceptionHandler
             $e = FlattenException::create($exception);
             $handler = new SymfonyExceptionHandler();
             $html = $handler->getHtml($e);
-            if (env("APP_ENV", "local") !== "local") {
+            if (config("app.env") !== "local") {
                 $emails = [
                     'brijeshbhakta30@gmail.com',
                     'info@healthcaretravels.com',

@@ -104,7 +104,7 @@
                                                         <select class="form-control"
                                                                 onchange="status_update(this.value,{{$agency->id}},this)"
                                                                 id="basicSelect" style="cursor: pointer;">
-                                                            <option selected="selected">Make..</option>
+                                                            <option selected="selected" disabled>Select</option>
                                                             <option value="approve" data-approve="1">Approve</option>
                                                             <option value="deny" data-approve="0">Deny</option>
                                                             <option value="1">Enable</option>

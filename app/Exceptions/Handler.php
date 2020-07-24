@@ -2,9 +2,14 @@
 
 namespace App\Exceptions;
 
+use Mail;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\Debug\Exception\FlattenException;
+use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
+use App\Mail\ExceptionOccurred;
+use App\Services\Logger;
 
 class Handler extends ExceptionHandler
 {
@@ -32,6 +37,9 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+        if ($this->shouldReport($exception)) {
+            $this->sendEmail($exception);
+        }
         parent::report($exception);
     }
 
@@ -61,5 +69,34 @@ class Handler extends ExceptionHandler
         }
 
         return redirect()->guest(route('login'));
+    }
+    /**
+     * Sends an email to the developer about the exception.
+     *
+     * @param  \Exception  $exception
+     * @return void
+     */
+    public function sendEmail(Exception $exception)
+    {
+        try {
+            $e = FlattenException::create($exception);
+            $handler = new SymfonyExceptionHandler();
+            $html = $handler->getHtml($e);
+            if (config("app.env") !== "local") {
+                $emails = [
+                    'brijeshbhakta30@gmail.com',
+                    'info@healthcaretravels.com',
+                    'ldavis@healthcaretravels.com',
+                    'pashiofu@healthcaretravels.com',
+                    'dylan@arborvita.io',
+                    'garrethdottin1@gmail.com',
+                ];
+                Mail::to($emails)->send(new ExceptionOccurred($html));
+                Logger::info('Error emails sent');
+            }
+        } catch (Exception $ex) {
+            Logger::error('Error sending error emails');
+            dd($ex);
+        }
     }
 }

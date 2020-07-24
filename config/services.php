@@ -13,6 +13,12 @@ return [
     |
     */
 
+    'google' => [
+        'captcha_site_key' => env('RECAPTCHA_SITE_KEY', '6LcdUVMUAAAAAHf1NDwJ5VG7s3AemNQbXuMHZBsR'),
+        'captcha_secret_key' => env('RECAPTCHA_SECRET_KEY', '6LcdUVMUAAAAABjB_DldChticg66WclweVoUsjHU'),
+        'maps_api_key' => env('GOOGLE_MAPS_API_KEY', 'AIzaSyDWKKHxv24EJ-xOUUBiKmfoR0C2tSDceSo'),
+    ],
+
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),

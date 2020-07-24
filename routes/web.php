@@ -25,6 +25,8 @@ Route::GET('/get_phone_number/{user_id}', 'UserController@get_phone_number');
 Route::get('/login', 'UserController@login');
 Route::POST('/login-user', 'UserController@login_user');
 Route::GET('/otp-verify-register', 'UserController@view_otp_screen');
+Route::POST('/verify_recaptcha', 'UserController@verify_recaptcha');
+Route::GET('/add-another-agency/{agency_name}', 'UserController@add_another_agency');
 Route::POST('/register-user', 'UserController@register_user');
 Route::GET('/sent_otp/{phone_no}/{user_id}', 'UserController@sent_otp');
 Route::POST('/verify_otp', 'UserController@verify_otp');
@@ -71,7 +73,14 @@ Route::get('/travellers-refund-policy', 'HomeController@travellers_refund_policy
 Route::get('/owner/profile', 'OwnerController@owner_profile');
 
 // Account Verification routes
-Route::GET('/traveler/verify-account', 'UserController@traveller_verify_account');
-Route::GET('/agency/verify-account', 'UserController@agency_verify_account');
-Route::GET('/owner/verify-account', 'UserController@owner_verify_account');
 Route::POST('/upload-document', 'UserController@upload_document');
+
+// Logged in routes
+Route::middleware(['LoginCheck'])->group(function () {
+    Route::GET('/traveler/profile', 'OwnerController@owner_profile');
+    Route::GET('/traveler/favorites', 'PropertyController@favorites');
+    Route::get('/owner/favorites', 'PropertyController@favorites');
+    Route::GET('/cancel-booking/{id}', 'PropertyController@cancel_booking');
+    Route::GET('/owner-update-booking', 'PropertyController@owner_update_booking');
+    Route::GET('/verify-account', 'UserController@verify_account');
+});

@@ -126,6 +126,15 @@ class BaseController extends ConstantsController
         return $image_url = BASE_URL . "public/uploads/" . $imageName;
     }
 
+    public function base_document_upload_with_key($request, $key)
+    {
+        $image = $request->$key;
+        $ext = $image->getClientOriginalExtension();
+        $imageName = self::generate_random_string() . '.' . $ext;
+        $request->file($key)->move('documents/', $imageName);
+        return $image_url = BASE_URL . "documents/" . $imageName;
+    }
+
     public function base_image_upload_with_key($request, $key)
     {
         // var_dump($request->$key);exit; keepers_logo.png
@@ -211,7 +220,7 @@ class BaseController extends ConstantsController
                 $message->subject($subject);
             });
         } catch (\Exception $ex) {
-            Logger::error('Error sending email to: ' . $email);
+            Logger::error('Error sending email to: ' . $email . ' : Error: ' . $ex->getMessage());
             return false;
         }
     }
@@ -520,7 +529,7 @@ class BaseController extends ConstantsController
      */
     public function sendOTPMessage($number, $otp)
     {
-        $body = $otp . " is your Health Care Travels verification code";
+        $body = "Your Health Care Travels verification code is: " . $otp;
         return $this->twilio->sendMessage(COUNTRY_CODE . $number, $body);
     }
 

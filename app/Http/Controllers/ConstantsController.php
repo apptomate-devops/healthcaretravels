@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Settings;
 
-$BASE_URL = env("APP_URL", "http://localhost:8000");
+$BASE_URL = config("app.url");
 
 define("MAP_MARKER_ICON", "http://api.estatevue2.com/cdn/img/marker-green.png");
 define("PROFILE_IMAGE", "https://demo.rentalslew.com/public/user_profile_default.png");
@@ -36,7 +36,7 @@ define("UPLOAD_SECURE_DELIVERY_URL", "https://res.cloudinary.com/dazx7zpzb");
 
 define("UPLOAD_API_BASE_URL", "https://api.cloudinary.com/v1_1/dazx7zpzb");
 
-define("COUNTRY_CODE", env("COUNTRY_CODE", "+91"));
+define("COUNTRY_CODE", config("app.country_code"));
 
 define("ZERO", 0);
 define("ONE", 1);
@@ -59,7 +59,9 @@ define("SOFA_BED", $BASE_URL . "/bedicons/Sofa.png");
 define("BUNK_BED", $BASE_URL . "/bedicons/Bunk-Bed.png");
 define("COMMON_SPACE_BED", $BASE_URL . "/bedicons/Couch.png");
 
-define("GOOGLE_MAPS_API_KEY", "AIzaSyDWKKHxv24EJ-xOUUBiKmfoR0C2tSDceSo");
+define("GOOGLE_MAPS_API_KEY", config("services.google.maps_api_key"));
+define("RECAPTCHA_SITE_KEY", config("services.google.captcha_site_key"));
+define("RECAPTCHA_SECRET_KEY", config("services.google.captcha_secret_key"));
 
 define("INSTANT_CHAT", "instant_chat");
 define("REQUEST_CHAT", "request_chat");

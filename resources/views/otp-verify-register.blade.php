@@ -25,6 +25,15 @@
             width: 150px;
             margin-top: 30px;
         }
+        a.change-phone-link {
+            text-decoration: underline;
+            cursor: pointer;
+            display: block;
+            float: right;
+        }
+        a.change-phone-link:hover {
+            color: #ffa74a;
+        }
     </style>
 
 </head>
@@ -80,8 +89,8 @@
                         <br>
                         <p class="form-row form-row-wide" id="mobile_chk" style="display: none;">
                             <label for="phone_no">Mobile Number:
-                                <input type="text" class="input-text validate" readonly value="" placeholder="Mobile Number" name="phone_no" id="phone_no"/>
-                                <input type="button" name="button border fw" value="Get Otp" id="get_otp">
+                                <input type="text" class="input-text validate" readonly value="" placeholder="Mobile Number" name="phone_no" id="phone_no" maxlength="10" minlength="10" />
+                                <input type="button" name="button border fw" value="Submit" id="get_otp">
                             </label>
                         </p>
                         <input type="hidden" name="_token" value="{{csrf_token()}}">
@@ -95,6 +104,7 @@
                         <div id="otp_buttons">
                             <input type="submit" name="button border fw" value="Submit">
                             <span style="float:right;margin-top: 10px;background-color: #e78016;border-color: #e78016;" class="btn btn-danger btn-default" id="send_otp">Send me another code</span>
+                            <a id="change-phone" class="change-phone-link">Change number</a>
                         </div>
                         @if(Session::has('attempts') && Session::get('attempts') > 1)
                             <center><input type="button" class="btn_get_help" onclick="get_help()" id="get_help" value="Get Help"></center>
@@ -157,54 +167,56 @@
         }
     });
 
+    $('#change-phone').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $('#mobile_chk').show();
+        $('#phone_no').val($('#phone_number').text());
+        $('#otp_sent').hide();
+        $('#otp_buttons').hide();
+        $('#phone_no').removeAttr('readonly');
+    });
+
     $('#get_help').click((e) => {
         e.preventDefault();
         e.stopPropagation();
         alert('Please contact support: {{SUPPORT_MAIL}}');
     });
 
-    $('#send_otp').click(() => {
+    $('#send_otp').click(function() {
         $('#mobile_chk').show();
         $('#phone_no').val($('#phone_number').text());
         $('#otp_sent').hide();
         $('#otp_buttons').hide();
+        $('#phone_no').attr('readonly', true);
     });
 
     $('#get_otp').click(() => {
 
-        let phone_no=$('#phone_no').val();
-        let user_id="{{Session::get('user_id')}}";
-
+        var phone_no = $('#phone_no').val();
+        var user_id = "{{Session::get('user_id')}}";
         if(!phone_no || !user_id) {
             alert('Please Login to continue.');
             return;
         }
-
-        let url = '{{url("/")}}/sent_otp/'+phone_no+'/'+user_id;
-
+        var url = '/sent_otp/' + phone_no + '/' + user_id;
         $.ajax({
             type:'GET',
             url,
-            success:(status) => {
-                if(status.status === "Failure"){
-
-                    // $('#alert_phone').css('color','red');
-                    // $('#alert_phone').html("Otp Sent Failed");
-                    alert('Something went wrong. Please check.');
-
-                }else{
-
-                    console.log("OTP == ", status.otp);
-
+            success: function (response) {
+                if(response.status === "Failure") {
+                    alert(response.message || 'Something went wrong. Please check.');
+                } else {
+                    $('#phone_number').text(phone_no);
                     $('#alert_phone').css('color','green');
-                    $('#alert_phone').html(status.message);
+                    $('#alert_phone').html(response.message);
                     $('#mobile_chk').hide();
                     $('#otp').val('');
                     $('#otp_sent').show();
                     $('#otp_buttons').show();
                 }
             },
-            error:(err) => {
+            error: function (err) {
                 alert('Something went wrong. Please check.')
             }
         })

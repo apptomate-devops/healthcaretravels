@@ -15,12 +15,12 @@
         </a>
     </li>
     <li>
-        <a href="{{url('/')}}/owner/verify-account" {{{ (Request::is('owner/verify-account') ? 'class=current' : '') }}}>
+        <a href="{{url('/')}}/verify-account" {{{ (Request::is('verify-account') ? 'class=current' : '') }}}>
            <i class="sl sl-icon-user"></i>Verify Account
         </a>
     </li>
 
-</ul> 
+</ul>
 
 <ul class="my-account-nav">
 
@@ -40,13 +40,13 @@
 
     <li>
         <a href="{{url('/')}}/owner/favorites" {{{ (Request::is('owner/favorites') ? 'class=current' : '') }}}>
-           <i class="sl sl-icon-star"></i> Favorites 
+           <i class="sl sl-icon-star"></i> Favorites
         </a>
     </li>
 
     <li>
-        <a href="{{url('/')}}/owner/my-bookings" {{{ (Request::is('owner/my-bookings') ? 'class=current' : '') }}}>
-           <i class="sl sl-icon-basket"></i> My Bookings 
+        <a href="{{url('/')}}/owner/my-bookings" {{{ (Request::is('owner/my-bookings') ? 'class=current not-verified-block' : 'class=not-verified-block') }}}>
+           <i class="sl sl-icon-basket"></i> My Bookings
         </a><i class="fa fa-bell" id="owner_booking"></i>
     </li>
 
@@ -63,7 +63,7 @@
     </li>
 
     <li>
-        <a href="{{url('/')}}/owner/inbox" {{{ (Request::is('owner/inbox') ? 'class=current' : '') }}}>
+        <a href="{{url('/')}}/owner/inbox" {{{ (Request::is('owner/inbox') ? 'class=current not-verified-block' : 'class=not-verified-block') }}}>
            <i class="fa fa-inbox"></i> My Inbox
         </a>
     </li>
@@ -75,7 +75,7 @@
     </li>
  <li>
         <a href="{{url('/')}}/owner/special_price" {{{ (Request::is('/owner/special_price') ? 'class=current' : '') }}}>
-           <i class="sl sl-icon-star"></i>  Special Pricing 
+           <i class="sl sl-icon-star"></i>  Special Pricing
         </a>
     </li>
 
@@ -120,7 +120,7 @@
     </li>
 
     <li>
-        <a href="{{url('/')}}/traveler/verify-account" {{{ (Request::is('traveler/verify-account') ? 'class=current' : '') }}}>
+        <a href="{{url('/')}}/verify-account" {{{ (Request::is('verify-account') ? 'class=current' : '') }}}>
             <i class="sl sl-icon-user"></i>Verify Account
         </a>
     </li>
@@ -131,7 +131,7 @@
     <li><a href="{{url('/')}}/traveler/my-reservations" {{{ (Request::is('traveler/my-reservations') ? 'class=current' : '') }}}>
            <i class="sl sl-icon-credit-card"></i> My Trips</a><i class="fa fa-bell" id="traveler_trips"></i></li>
 
-    <li><a href="{{url('/')}}/traveler/inbox" {{{ (Request::is('traveler/inbox') ? 'class=current' : '') }}}>
+    <li><a href="{{url('/')}}/traveler/inbox" {{{ (Request::is('traveler/inbox') ? 'class=current not-verified-block' : 'class=not-verified-block') }}}>
            <i class="fa fa-inbox"></i> Inbox</a></li>
 <li>
         <a href="{{url('/')}}/owner/delete_account" {{{ (Request::is('delete_account') ? 'class=current' : '') }}}>
@@ -158,7 +158,7 @@
     </li>
 
     <li>
-        <a href="{{url('/')}}/agency/verify-account" {{{ (Request::is('agency/verify-account') ? 'class=current' : '') }}}>
+        <a href="{{url('/')}}/verify-account" {{{ (Request::is('verify-account') ? 'class=current' : '') }}}>
             <i class="sl sl-icon-user"></i>Verify Account
         </a>
     </li>
@@ -169,7 +169,7 @@
     <li><a href="{{url('/')}}/traveler/my-reservations" {{{ (Request::is('traveler/my-reservations') ? 'class=current' : '') }}}>
            <i class="sl sl-icon-credit-card"></i> My Trips</a><i class="fa fa-bell" id="agency_trips"></i></li>
 
-    <li><a href="{{url('/')}}/traveler/inbox" {{{ (Request::is('traveler/inbox') ? 'class=current' : '') }}}>
+    <li><a href="{{url('/')}}/traveler/inbox" {{{ (Request::is('traveler/inbox') ? 'class=current not-verified-block' : 'class=not-verified-block') }}}>
            <i class="fa fa-inbox"></i> Inbox</a></li>
 <li>
         <a href="{{url('/')}}/delete_account" {{{ (Request::is('delete_account') ? 'class=current' : '') }}}>
@@ -209,5 +209,5 @@
               }
             }
         });
-    });      
+    });
 </script>

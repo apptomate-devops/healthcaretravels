@@ -50,7 +50,7 @@
                                         <th>Viewed Count</th>
                                         <th>Featured</th>
                                         <th>Status</th>
-                                        <th>View</th>
+                                        <th>View Documents</th>
                                         <th style="min-width: 110px;">Action</th>
                                     </tr>
                                     </thead>
@@ -97,14 +97,14 @@
                                             </td>
                                             <td>
                                                 <a href="{{BASE_URL}}admin/property_details/{{$property->id}}"><span
-                                                        class="btn btn-success btn-default">View </span> </a>
+                                                        class="btn btn-success btn-default btn-block">View </span> </a>
                                             </td>
                                             <td style="min-width: 110px;">
                                                 <fieldset class="form-group">
                                                     <select class="form-control"
                                                             onchange="status_update({{$property->id}},this)"
                                                             id="basicSelect" style="cursor: pointer;">
-                                                        <option selected="selected">Make..</option>
+                                                        <option selected="selected" disabled>Select</option>
                                                         <option value="1">Publish</option>
                                                         <option value="3">Unpublish</option>
                                                         <!-- <option value="0">Pending</option> -->

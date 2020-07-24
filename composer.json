@@ -10,6 +10,7 @@
     "require": {
         "php": ">=5.6.4",
         "doctrine/dbal": "^2.10",
+        "guzzlehttp/guzzle": "^7.0",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "twilio/sdk": "^6.9"
@@ -48,9 +49,10 @@
             "php artisan optimize"
         ],
         "app-clear-cache": [
+            "php artisan config:cache",
+            "php artisan config:clear",
             "php artisan cache:clear",
             "php artisan route:clear",
-            "php artisan config:clear",
             "php artisan view:clear"
         ]
     },

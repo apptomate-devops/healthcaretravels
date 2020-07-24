@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\EmailConfig;
@@ -144,6 +145,7 @@ class UserController extends BaseController
                 $request->session()->put('profile_image', $check->profile_image);
             }
             $request->session()->put('user_id', $check->id);
+            $request->session()->put('is_verified', $check->is_verified);
             $request->session()->put('role_id', $check->role_id);
             $request->session()->put('username', $check->username);
             $request->session()->put('name_of_agency', $check->name_of_agency);
@@ -166,7 +168,9 @@ class UserController extends BaseController
                     ->first();
 
                 $url = $this->get_base_url() . 'otp-verify-register';
-                return redirect($url)->with('phone', $check->phone);
+                return redirect($url)
+                    ->with('phone', $check->phone)
+                    ->with('user_id', $check->id);
             }
             // return redirect($url)->with('mobile',$check->phone);
             // }else{
@@ -202,7 +206,11 @@ class UserController extends BaseController
 
             $request->session()->put('profile_image', $check->profile_image);
 
-            $url = $this->get_base_url() . 'owner/profile';
+            if ($check->is_submitted_documents == 0) {
+                $url = $this->get_base_url() . 'verify-account';
+            } else {
+                $url = $this->get_base_url() . 'owner/profile';
+            }
             if ($request->session()->get('propertyId')) {
                 $property_id = $request->session()->get('propertyId');
                 $url = $this->get_base_url() . 'property/' . $property_id;
@@ -214,9 +222,48 @@ class UserController extends BaseController
         }
     }
 
+    public function verify_recaptcha(Request $request)
+    {
+        $client = new Client();
+        $res = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
+            'form_params' => [
+                'secret' => RECAPTCHA_SECRET_KEY,
+                'response' => $request->token,
+            ],
+            'headers' => [
+                'Accept' => 'application/json',
+            ],
+        ]);
+        $response = json_decode($res->getBody()->getContents());
+        return response()->json($response);
+    }
+
+    public function add_another_agency($agency_name)
+    {
+        $added = DB::table('agency')->updateOrInsert(
+            [
+                'name' => $agency_name,
+            ],
+            [
+                'name' => $agency_name,
+                'status' => 0,
+            ],
+        );
+
+        if ($added) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Agency listed successfully!!!',
+                'agency_name' => $agency_name,
+            ]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Error while listing agency!!!']);
+        }
+    }
+
     public function register_user(Request $request)
     {
-        //         print_r($request->terms_accept);exit;
+        //                 print_r($request->all());exit;
 
         $name = $request->username;
         $fname = $request->first_name;
@@ -230,7 +277,7 @@ class UserController extends BaseController
             'accepted' => 'Terms and Policy must be agreed',
             'same' => 'Password must match repeat password',
             'password1.regex' =>
-                'Password should be at least 7 characters long and should contain at least 1 uppercase, 1 lowercase, 1 number, no special characters allowed',
+                'Password should be at least 8 characters long and should contain at least 1 uppercase, 1 lowercase, 1 number and 1 special character',
             'email.regex' => 'This should be your business email',
             'website.regex' => 'Please enter valid URL',
             'numeric' => 'Please enter valid phone number',
@@ -242,10 +289,12 @@ class UserController extends BaseController
             $rules = [
                 'username' => 'required|unique:users,username',
                 'email' => 'required|email:rfc,dns|unique:users,email',
-                'password1' => 'required|regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{7,}$/i',
+                'password1' =>
+                    'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#^_+=:;><~$!%*?&])[A-Za-z\d@#^_+=:;><~$!%*?&]{8,}$/i',
                 'password2' => 'required|same:password1',
                 'first_name' => 'required',
                 'last_name' => 'required',
+                'ethnicity' => 'required',
                 'phone_no' => 'required|numeric|digits:10',
                 'dob' => 'required',
                 'gender' => 'required',
@@ -260,13 +309,15 @@ class UserController extends BaseController
                 'username' => 'required|unique:users,username',
                 'email' =>
                     'required|email:rfc,dns|unique:users,email|regex:/^([\w\-.]+@(?!gmail.com)(?!yahoo.com)(?!hotmail.com)(?!yahoo.co.in)(?!aol.com)(?!abc.com)(?!xyz.com)(?!pqr.com)(?!rediffmail.com)(?!live.com)(?!outlook.com)(?!me.com)(?!msn.com)(?!ymail.com)([\w-]+\.)+[\w-]{2,4})?$/i',
-                'password1' => 'required|regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{7,}$/i',
+                'password1' =>
+                    'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#^_+=:><~$!%*?&])[A-Za-z\d@#^_+=:><~$!%*?&]{8,}$/i',
                 'password2' => 'required|same:password1',
                 'first_name' => 'required',
                 'last_name' => 'required',
+                'ethnicity' => 'required',
                 'phone_no' => 'required|numeric|digits:10',
                 'gender' => 'required',
-                'occupation' => 'required',
+                'dob' => 'required',
                 'work' => 'required',
                 'work_title' => 'required',
                 'website' => 'required|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/',
@@ -277,10 +328,12 @@ class UserController extends BaseController
             $rules = [
                 'username' => 'required|unique:users,username',
                 'email' => 'required|email:rfc,dns|unique:users,email',
-                'password1' => 'required|regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{7,}$/i',
+                'password1' =>
+                    'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#^_+=:><~$!%*?&])[A-Za-z\d@#^_+=:><~$!%*?&]{8,}$/i',
                 'password2' => 'required|same:password1',
                 'first_name' => 'required',
                 'last_name' => 'required',
+                'ethnicity' => 'required',
                 'phone_no' => 'required|numeric|digits:10',
                 'dob' => 'required',
                 'gender' => 'required',
@@ -294,10 +347,12 @@ class UserController extends BaseController
             $rules = [
                 'username' => 'required|unique:users,username',
                 'email' => 'required|email:rfc,dns|unique:users,email',
-                'password1' => 'required|regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{7,}$/i',
+                'password1' =>
+                    'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#^_+=:><~$!%*?&])[A-Za-z\d@#^_+=:><~$!%*?&]{8,}$/i',
                 'password2' => 'required|same:password1',
                 'first_name' => 'required',
                 'last_name' => 'required',
+                'ethnicity' => 'required',
                 'phone_no' => 'required|numeric|digits:10',
                 'dob' => 'required',
                 'gender' => 'required',
@@ -314,6 +369,7 @@ class UserController extends BaseController
                 ->with('username', $name)
                 ->with('fname', $fname)
                 ->with('lname', $lname)
+                ->with('ethnicity', $request->ethnicity)
                 ->with('mail', $mail)
                 ->with('phone', $phone)
                 ->with('type', $type)
@@ -336,14 +392,7 @@ class UserController extends BaseController
         $password = $this->encrypt_password($request->password1);
 
         $role_id = $request->user_type;
-        if ($request->name_of_agency != "") {
-            $chk = DB::table('agency')
-                ->where('name', $request->name_of_agency)
-                ->count();
-            if ($chk == 0) {
-                DB::table('agency')->insert(['name' => $request->name_of_agency]);
-            }
-        }
+
         $token = $this->generate_random_string();
         $mobile = $request->phone_no;
         $insert = DB::table('users')->insert([
@@ -354,6 +403,7 @@ class UserController extends BaseController
             'password' => $password,
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
+            'ethnicity' => $request->ethnicity,
             'phone' => $request->phone_no,
             'date_of_birth' => $request->dob,
             'gender' => $request->gender,
@@ -361,8 +411,12 @@ class UserController extends BaseController
             'occupation' => $request->occupation,
             'name_of_agency' => $request->name_of_agency,
             'tax_home' => $request->tax_home,
-            'status' => 1,
             'address' => $request->address,
+            'listing_address' => $request->listing_address,
+            'status' => 1,
+            'work' => $request->work,
+            'work_title' => $request->work_title,
+            'website' => $request->website,
             'auth_token' => $token,
         ]);
         $d = DB::table('users')
@@ -374,22 +428,26 @@ class UserController extends BaseController
         //        $request->session()->put('role_id', $d->role_id);
         $request->session()->put('username', $d->username);
         $request->session()->put('user_id', $d->id);
+        $request->session()->put('is_verified', $d->is_verified);
 
         //  Send Welcome mail
 
-        $welcome = EmailConfig::where('type', 1)
-            ->where('role_id', $d->role_id)
-            ->first();
+        $welcome = EmailConfig::where('type', 1)->first();
 
         $mail_data = [
             'username' => $request->first_name . ' ' . $request->last_name,
             'text' => isset($welcome->message) ? $welcome->message : '',
+            'email' => $request->email,
+            'phone' => $d->phone,
         ];
 
         $title = isset($welcome->title) ? $welcome->title : 'Welcome to ' . APP_BASE_NAME;
         $subject = isset($welcome->subject) ? $welcome->subject : "Welcome to " . APP_BASE_NAME;
 
         $this->send_custom_email($request->email, $subject, 'mail.welcome-mail', $mail_data, $title);
+
+        // Sending new registration email to admin
+        $this->send_custom_email(CLIENT_MAIL, 'New user registered', 'mail.new-registration', $mail_data, $title);
 
         $OTP = rand(1111, 9999);
 
@@ -428,11 +486,12 @@ class UserController extends BaseController
             ->where('client_id', CLIENT_ID)
             ->where('id', $request->user_id)
             ->where('phone', $request->phone_no)
-            ->where('otp', $request->otp)
             ->first();
-        if (!$check) {
+        if (!$check || $check->otp != $request->otp) {
             return back()
                 ->with('phone_number', $request->phone_no)
+                ->with('phone', $request->phone_no)
+                ->with('user_id', $check->id)
                 ->with('error', 'Wrong code. Please try again.')
                 ->with('attempts', $attempts);
         } else {
@@ -444,16 +503,27 @@ class UserController extends BaseController
 
             if ($check->email_verified == 1) {
                 if ($check->role_id == 1 || $check->role_id == 2) {
-                    // 1: Property Owner || 2: Travel Agent
+                    // 1: Property Owner || 2: Agency
                     $url = $this->get_base_url() . 'owner/profile';
                 }
                 //                else if($check->role_id==3) {
                 //                    $url = $this->get_base_url() . '/rv-traveller';
                 //                }
                 else {
-                    // 0: Traveler || 3: RV Traveler
+                    // 0: Healthcare Traveler || 3: RV Healthcare Traveler
                     $url = $this->get_base_url() . 'traveler/profile';
                 }
+                $request->session()->put('user_id', $check->id);
+                $request->session()->put('is_verified', $check->is_verified);
+                $request->session()->put('role_id', $check->role_id);
+                $request->session()->put('username', $check->username);
+                $request->session()->put('name_of_agency', $check->name_of_agency);
+                $request->session()->put('phone', $check->phone);
+                $userProfileImage = $check->profile_image
+                    ? $check->profile_image
+                    : BASE_URL . 'user_profile_default.png';
+                $request->session()->put('profile_image', $userProfileImage);
+                return redirect($url)->with('phone', $check->phone);
             } else {
                 // Send Verification mail
                 $verify_url = BASE_URL . 'verify/' . $check->id . '/' . $check->auth_token;
@@ -485,14 +555,41 @@ class UserController extends BaseController
 
     public function sent_otp($phone_no, $user_id)
     {
+        $messages = [
+            'required' => 'Please complete this field',
+            'numeric' => 'Please enter valid phone number',
+            'digits' => 'Please enter valid phone number',
+        ];
+        $rules = ['phone_no' => 'required|numeric|digits:10'];
+        $reqData = ['phone_no' => $phone_no];
+        $validator = Validator::make($reqData, $rules, $messages);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return response()->json([
+                'status' => 'Failure',
+                'message' => $errors->get('phone_no'),
+            ]);
+        }
         $check = DB::table('users')
             ->where('id', $user_id)
             ->where('client_id', '=', CLIENT_ID)
             ->first();
-
         if ($check) {
+            $isPhoneUpdate = $phone_no != $check->phone;
+            if ($isPhoneUpdate) {
+                $checkPhoneNumber = DB::table('users')
+                    ->where('phone', $phone_no)
+                    ->where('client_id', '=', CLIENT_ID)
+                    ->first();
+                if ($checkPhoneNumber) {
+                    return response()->json([
+                        'status' => 'Failure',
+                        'message' => 'Phone number is linked to another account. Try another phone number',
+                    ]);
+                }
+            }
             $OTP = rand(1111, 9999);
-            $this->sendOTPMessage($check->phone, $OTP);
+            $this->sendOTPMessage($phone_no, $OTP);
 
             $update = DB::table('users')
                 ->where('id', $user_id)
@@ -506,266 +603,105 @@ class UserController extends BaseController
 
     // Account Verification
 
-    public function traveller_verify_account(Request $request)
+    public function verify_account(Request $request)
     {
         $user_id = $request->session()->get('user_id');
-        $GOVERNMENT_ID = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'GOVERNMENT_ID')
-            ->first();
-
-        $EMAIL = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'EMAIL')
-            ->first();
-
-        // $PHONE = DB::table('documents')->where('user_id',$user_id)
-        // ->where('document_type','PHONE')->first();
-        $PHONE = DB::table('verify_mobile')
-            ->where('user_id', $user_id)
-            ->first();
-
         $user = DB::table('users')
             ->where('id', $user_id)
             ->first();
-        return view('traveller.verify-account', compact('user', 'GOVERNMENT_ID', 'EMAIL', 'PHONE'));
+        return view('verify-account', compact('user'));
     }
 
-    public function agency_verify_account(Request $request)
+    public function map_documents(Request $request)
     {
-        $user_id = $request->session()->get('user_id');
-        $GOVERNMENT_ID = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'GOVERNMENT_ID')
-            ->first();
-        $AGENCY_CHECK = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'AGENCY_CHECK')
-            ->first();
-        $WORK_BADGE = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'WORK_BADGE')
-            ->first();
-        $AGENCY_DRUG = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'AGENCY_DRUG')
-            ->first();
-        $MEDICAL_LICENSE = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'MEDICAL_LICENSE')
-            ->first();
-        $EMAIL = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'EMAIL')
-            ->first();
-        $WORK_EMAIL = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'WORK_EMAIL')
-            ->first();
-        // $PHONE = DB::table('documents')->where('user_id',$user_id)
-        //                 ->where('document_type','PHONE')->first();
-        $PHONE = DB::table('verify_mobile')
-            ->where('user_id', $user_id)
-            ->first();
-
-        $user = DB::table('users')
-            ->where('id', $user_id)
-            ->first();
-        return view(
-            'agency.verify-account',
-            compact(
-                'user',
-                'MEDICAL_LICENSE',
-                'GOVERNMENT_ID',
-                'AGENCY_CHECK',
-                'WORK_BADGE',
-                'AGENCY_DRUG',
-                'EMAIL',
-                'WORK_EMAIL',
-                'PHONE',
-            ),
-        );
-    }
-
-    public function owner_verify_account(Request $request)
-    {
-        $user_id = $request->session()->get('user_id');
-
-        $GOVERNMENT_ID = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'GOVERNMENT_ID')
-            ->first();
-        $PROPERTY_TAX = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'PROPERTY_TAX')
-            ->first();
-        $EMAIL = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'EMAIL')
-            ->first();
-        $WORK_EMAIL = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'WORK_EMAIL')
-            ->first();
-        // $PHONE = DB::table('documents')->where('user_id',$user_id)
-        //                 ->where('document_type','PHONE')->first();
-        $MEDICAL_LICENSE = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'MEDICAL_LICENSE')
-            ->first();
-        $AGENCY_DRUG = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'AGENCY_DRUG')
-            ->first();
-        $AGENCY_CHECK = DB::table('documents')
-            ->where('user_id', $user_id)
-            ->where('document_type', 'AGENCY_CHECK')
-            ->first();
-        $PHONE = DB::table('verify_mobile')
-            ->where('user_id', $user_id)
-            ->first();
-
-        $user = DB::table('users')
-            ->where('id', $user_id)
-            ->first();
-        return view(
-            'owner.verify-account',
-            compact(
-                'user',
-                'GOVERNMENT_ID',
-                'PROPERTY_TAX',
-                'EMAIL',
-                'WORK_EMAIL',
-                'PHONE',
-                'MEDICAL_LICENSE',
-                'AGENCY_DRUG',
-                'AGENCY_CHECK',
-            ),
-        );
+        $keys = [
+            "work_badge_id",
+            "travel_contract_id",
+            "government_id",
+            "driver_license_id",
+            "property_tax_document",
+            "utility_bill",
+            "traveler_contract_id",
+        ];
+        $all_documents = [];
+        foreach ($keys as $key) {
+            if ($request->$key) {
+                array_push(
+                    $all_documents,
+                    (object) [
+                        'image' => $this->base_document_upload_with_key($request, $key),
+                        'type' => strtoupper($key),
+                    ],
+                );
+            }
+        }
+        return $all_documents;
     }
 
     public function upload_document(Request $request)
     {
-        // upload_document
+        // upload_documents
         $user_id = $request->session()->get('user_id');
-        $type = "";
-        if ($request->facebook) {
-            DB::table('users')
-                ->where('id', $user_id)
-                ->update(['facebook_url' => $request->facebook, 'is_verified' => 0]);
-        }
-        if ($request->linkedin) {
-            DB::table('users')
-                ->where('id', $user_id)
-                ->update(['linkedin_url' => $request->linkedin, 'is_verified' => 0]);
-        }
-        if ($request->home_away_link) {
-            DB::table('users')
-                ->where('id', $user_id)
-                ->update(['home_away_link' => $request->home_away_link, 'is_verified' => 0]);
-        }
-        if ($request->airbnb_link) {
-            DB::table('users')
-                ->where('id', $user_id)
-                ->update(['airbnb_link' => $request->airbnb_link, 'is_verified' => 0]);
-        }
-        if ($request->recruiter_name) {
-            DB::table('users')
-                ->where('id', $user_id)
-                ->update(['recruiter_name' => $request->recruiter_name, 'is_verified' => 0]);
-        }
-        if ($request->recruiter_phone) {
-            DB::table('users')
-                ->where('id', $user_id)
-                ->update(['recruiter_phone' => $request->recruiter_phone, 'is_verified' => 0]);
+        $all_documents = $this->map_documents($request);
+        foreach ($all_documents as $doc) {
+            DB::table('documents')->updateOrInsert(
+                [
+                    'user_id' => $user_id,
+                    'document_type' => $doc->type,
+                ],
+                [
+                    'user_id' => $user_id,
+                    'document_type' => $doc->type,
+                    'document_url' => $doc->image,
+                    'status' => 0,
+                ],
+            );
         }
 
-        if ($request->government_id) {
-            $image = $this->base_image_upload_with_key($request, 'government_id');
-            $type = 'GOVERNMENT_ID';
-        }
-        //        print_r($image);exit();
+        $user = DB::table('users')
+            ->where('id', $user_id)
+            ->first();
 
-        if ($request->medical_license) {
-            $image = $this->base_image_upload_with_key($request, 'medical_license');
-            $type = 'MEDICAL_LICENSE';
-        }
+        $user_role = DB::table('user_role')
+            ->where('id', $user->role_id)
+            ->first();
 
-        if ($request->agency_drug) {
-            $image = $this->base_image_upload_with_key($request, 'agency_drug');
-            $type = 'AGENCY_DRUG';
-        }
+        DB::table('users')
+            ->where('id', $user_id)
+            ->update([
+                'is_verified' => 0,
+                'is_submitted_documents' => 1,
+                'facebook_url' => isset($request->facebook) ? $request->facebook : null,
+                'linkedin_url' => isset($request->linkedin) ? $request->linkedin : null,
+                'instagram_url' => isset($request->instagram) ? $request->instagram : null,
+                'traveler_license' => isset($request->traveler_license) ? $request->traveler_license : null,
+                'airbnb_link' => isset($request->airbnb_link) ? $request->airbnb_link : null,
+                'home_away_link' => isset($request->home_away_link) ? $request->home_away_link : null,
+                'vrbo_link' => isset($request->vrbo_link) ? $request->vrbo_link : null,
+                'agency_hr_email' => isset($request->agency_hr_email) ? $request->agency_hr_email : null,
+                'agency_hr_phone' => isset($request->agency_hr_phone) ? $request->agency_hr_phone : null,
+                'agency_website' => isset($request->agency_website) ? $request->agency_website : null,
+                'agency_office_number' => isset($request->agency_office_number) ? $request->agency_office_number : null,
+            ]);
 
-        if ($request->agency_check) {
-            $image = $this->base_image_upload_with_key($request, 'agency_check');
-            $type = 'AGENCY_CHECK';
-        }
+        $data = ['username' => $user->first_name . ' ' . $user->last_name, 'type' => $user_role->role];
 
-        if ($request->work_badge) {
-            $image = $this->base_image_upload_with_key($request, 'work_badge');
-            $type = 'WORK_BADGE';
-        }
-        if ($request->email) {
-            $image = $request->email;
-            $type = 'EMAIL';
-        }
-        if ($request->work_email) {
-            $image = $request->work_email;
-            $type = 'WORK_EMAIL';
-        }
-        // if($request->phone){
-        //     $image = $request->phone;
-        //     $type = 'PHONE';
-        // }
+        $subject = "Verification documents Uploads";
+        $title = $user->username . " uploaded his Verification documents";
+        $usermail = $user->email;
 
-        if ($request->property_tax) {
-            $image = $this->base_image_upload_with_key($request, 'property_tax');
-            $type = 'PROPERTY_TAX';
-        }
+        Mail::send('mail.document-upload', $data, function ($message) use ($usermail, $title, $subject) {
+            $message->from($usermail, $title);
+            $message->to(VERIFY_MAIL);
+            $message->replyTo($usermail);
+            $message->subject($subject);
+        });
 
-        if ($type != "") {
-            $check = DB::table('documents')
-                ->where('document_type', $type)
-                ->where('user_id', $user_id)
-                ->count();
-            $user = DB::table('users')
-                ->where('id', $user_id)
-                ->first();
-            $doc_name = ucfirst(str_replace("_", " ", $type));
+        $title = "Profile Verification Pending";
+        $subject = "Profile Verification Pending";
 
-            $data = ['username' => $user->first_name . ' ' . $user->last_name, 'type' => $doc_name];
+        $this->send_custom_email($user->email, $subject, 'mail.document-uploaded-user', $data, $title);
 
-            $subject = "Verification documents Uploads";
-            $title = $user->username . " uploaded his Verification documents";
-            $usermail = $user->email;
-
-            Mail::send('mail.document-upload', $data, function ($message) use ($usermail, $title, $subject) {
-                $message->from($usermail, $title);
-                $message->to(VERIFY_MAIL);
-                $message->replyTo($usermail);
-                $message->subject($subject);
-            });
-            if ($check == 0) {
-                if (isset($type)) {
-                    $ins = [];
-                    $ins['user_id'] = $user_id;
-                    $ins['document_type'] = $type;
-                    $ins['document_url'] = $image;
-                    $ins['status'] = 0;
-
-                    $insert = DB::table('documents')->insert($ins);
-                }
-            } else {
-                DB::table('users')
-                    ->where('id', $user_id)
-                    ->update(['is_verified' => 0]);
-                $update = DB::table('documents')
-                    ->where('user_id', $user_id)
-                    ->where('document_type', $type)
-                    ->update(['document_url' => $image]);
-            }
-        }
-
-        return back()->with('success_message', 'Document uploaded successfully');
+        return back()->with('success', 'Documents uploaded successfully');
     }
 }

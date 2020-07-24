@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -51,7 +50,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://localhost:8000'),
 
     /*
     |--------------------------------------------------------------------------
@@ -64,7 +63,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'UTC'),
 
     /*
     |--------------------------------------------------------------------------
@@ -124,6 +123,8 @@ return [
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
+    'country_code' => env("COUNTRY_CODE", "+91"),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -136,7 +137,6 @@ return [
     */
 
     'providers' => [
-
         /*
          * Laravel Framework Service Providers...
          */
@@ -176,7 +176,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
     ],
 
     /*
@@ -191,7 +190,6 @@ return [
     */
 
     'aliases' => [
-
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
@@ -225,7 +223,5 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
     ],
-
 ];

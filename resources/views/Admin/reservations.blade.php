@@ -137,7 +137,7 @@
                                                         <select class="form-control"
                                                                 onchange="status_update('{{$booking->booking_id}}',this.value)"
                                                                 id="basicSelect" style="cursor: pointer;">
-                                                            <option selected="selected">Make..</option>
+                                                            <option selected="selected" disabled>Select</option>
                                                             <option value="1">Paid</option>
                                                             <option value="0">Unpaid</option>
                                                         </select>

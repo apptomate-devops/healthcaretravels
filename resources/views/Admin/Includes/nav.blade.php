@@ -29,6 +29,15 @@
                 </a>
             </li>
 
+            <li {{{ (Request::is('admin/rv_travellers*') ? 'class=active' : '') }}}>
+                <a href="{{url('admin/rv_travellers')}}">
+                    <i class="la la-user"></i>
+                    <span class="menu-title" data-i18n="nav.dash.main">
+                    Manage RV Travelers
+                </span>
+                </a>
+            </li>
+
             <li {{{ (Request::is('admin/owner*') ? 'class=active' : '') }}}>
                 <a href="{{url('admin/owner')}}">
                     <i class="la la-user-plus"></i>
@@ -186,7 +195,7 @@
                         <a href="{{url('admin/approval_mail')}}">
                             <i class="la la-envelope"></i>
                             <span class="menu-title" data-i18n="nav.dash.main">
-                    Approval
+                    Approval/Denial
                 </span>
                         </a>
                     </li>

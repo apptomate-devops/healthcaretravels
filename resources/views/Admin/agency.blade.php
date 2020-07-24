@@ -53,10 +53,8 @@
                                             <th>Agency Name</th>
                                             <th>Email</th>
                                             <th>Phone</th>
-
-                                            <th>Verify</th>
                                             <th>Status</th>
-                                            <th>View</th>
+                                            <th>View Documents</th>
                                             <th>Action &nbsp;</th>
                                         </tr>
                                         </thead>
@@ -85,33 +83,32 @@
 
 
                                                 <td>
-                                                    @if($agency->is_verified==0)
-                                                        <span
-                                                            class="btn btn-default btn-danger btn-block">Not Verified </span></a>
+                                                    @if($agency->status == 0)
+                                                        <span class="btn btn-danger btn-default">Disabled</span>
+                                                    @elseif($agency->is_verified==0 && $agency->is_submitted_documents == 1)
+                                                        <span class="btn btn-default btn-danger btn-block">Pending Verification </span></a>
+                                                    @elseif($agency->is_verified==0)
+                                                        <span class="btn btn-default btn-danger btn-block">Not Verified </span></a>
+                                                    @elseif($agency->is_verified==-1)
+                                                        <span class="btn btn-default btn-danger btn-block">Denied</span></a>
                                                     @else
-                                                        <span
-                                                            class="btn btn-default btn-success btn-block">Verified</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if($agency->status == 1)
-                                                        <span class="btn btn-success btn-default">  Active</span>
-                                                    @else
-                                                        <span class="btn btn-danger btn-default"> Blocked</span>
+                                                        <span class="btn btn-default btn-success btn-block">Verified</span>
                                                     @endif
                                                 </td>
                                                 <td>
                                                 <a href="{{BASE_URL}}admin/single_user?id={{$agency->id}}"><span
-                                                        class="btn btn-success btn-default">View </span> </a>
+                                                        class="btn btn-success btn-default btn-block">View </span> </a>
                                             </td>
                                                 <td>
                                                     <fieldset class="form-group">
                                                         <select class="form-control"
-                                                                onchange="status_update(this.value,{{$agency->id}})"
+                                                                onchange="status_update(this.value,{{$agency->id}},this)"
                                                                 id="basicSelect" style="cursor: pointer;">
-                                                            <option selected="selected">Make..</option>
-                                                            <option value="1">Approve</option>
-                                                            <option value="0">Deny</option>
+                                                            <option selected="selected" disabled>Select</option>
+                                                            <option value="approve" data-approve="1">Approve</option>
+                                                            <option value="deny" data-approve="0">Deny</option>
+                                                            <option value="1">Enable</option>
+                                                            <option value="0">Disable</option>
                                                             <option value="2">Delete</option>
                                                         </select>
                                                     </fieldset>
@@ -140,8 +137,13 @@
 
     <script type="text/javascript">
 
-        function status_update(status, id) {
-            if (status != 5) {
+        function status_update(status, id, node) {
+            if (node.selectedOptions[0].dataset.approve) {
+                var url = "{{BASE_URL}}" + "admin/verify_profile/" + id;
+                if (node.selectedOptions[0].dataset.approve == "0") {
+                    url += "/true";
+                }
+            } else if (status != 5) {
                 var url = "{{BASE_URL}}" + "admin/user-status-update?id=" + id + "&status=" + status;
             } else {
                 var url = "{{BASE_URL}}" + "admin/single_user?id=" + id;

@@ -394,6 +394,7 @@ function delete_file() {
 <script>
 
     function onLoad() {
+        debugger
         gapi.load('auth2', function() {
             gapi.auth2.init();
         });
@@ -412,14 +413,10 @@ function delete_file() {
         x.className = "";
 
     }
-    //myFunction("Loading...");
 
 </script>
 
-
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByI8gik-nps54DdqY81oqS1GCFJK8mko4&sensor=false&libraries=places&callback=initMap" async defer></script>
-
+<script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}&libraries=places" async defer></script>
 
 <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
 

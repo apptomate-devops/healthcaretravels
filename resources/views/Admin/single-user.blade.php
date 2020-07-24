@@ -3,8 +3,6 @@
 @section('title')  Rentals Slew Admin @endsection
 
 @section('content')
-
-
     <div class="card">
         <div class="text-center">
             <div class="card-body">
@@ -26,24 +24,42 @@
 
                 <div class="text-center">
                     @if($data->facebook_url!='0')
-                        <a href="https://{{$data->facebook_url}}" target="_blank"
+                        <a href="{{$data->facebook_url}}" target="_blank"
                            class="btn btn-social-icon mr-1 mb-1 btn-outline-facebook">
                             <span class="la la-facebook"></span>
                         </a>
                     @endif
                     @if($data->linkedin_url!='0')
-                        <a href="https://{{$data->linkedin_url}}" target="_blank"
+                        <a href="{{$data->linkedin_url}}" target="_blank"
                            class="btn btn-social-icon mb-1 btn-outline-linkedin">
                             <span class="la la-linkedin font-medium-4"></span>
                         </a>
                     @endif
                 </div>
-                @if($data->is_verified==0)
-                    <a style="float:right" class="btn btn-default btn-danger btn-block"
-                       href="{{BASE_URL}}admin/verify_profile/{{$data->id}}"><span style="height:29px">Click here to Verify This @if($data->role_id==0)
-                                Traveler @elseif($data->role_id==1) Owner @else  Travel Agency @endif </span></a>
-                @else
-                    <span class="btn btn-default btn-success btn-block" style="background-color: green">Verified</span>
+                @if ($data->is_verified==1)
+                        <span class="btn btn-default btn-success btn-block" style="background-color: green">Verified</span>
+                    @elseif ($data->is_verified==-1)
+                        <span class="btn btn-default btn-danger btn-block">Denied</span>
+                    @endif
+                @if($data->is_verified!=1)
+                    <a
+                        style="float:right" class="btn btn-default btn-primary btn-block"
+                        href="{{BASE_URL}}admin/verify_profile/{{$data->id}}"
+                        >
+                        <span style="height:29px">
+                            Click here to Verify This @if($data->role_id==0) Traveler @elseif($data->role_id==1) Owner @else  Travel Agency @endif
+                        </span>
+                    </a>
+                @endif
+                @if($data->is_verified!=-1)
+                    <a
+                        style="float:right" class="btn btn-default btn-danger btn-block"
+                        href="{{BASE_URL}}admin/verify_profile/{{$data->id}}/true"
+                        >
+                        <span style="height:29px">
+                            Click here to Deny This @if($data->role_id==0) Traveler @elseif($data->role_id==1) Owner @else  Travel Agency @endif
+                        </span>
+                    </a>
                 @endif
                 <br>
             </div>
@@ -52,7 +68,6 @@
 
     <div class="card">
         <div class="card-header">
-            {{-- <p>Tax Home : {{$data->tax_home}}</p> --}}
             <h4 class="card-title">Tax Home</h4>
             <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
             <div class="heading-elements">
@@ -86,10 +101,8 @@
                 </ul>
             </div>
         </div>
-
         <div class="card-content">
             <div class="card-body">
-
                 @if($data->languages_known!='0')
                     <h4> {{$data->about_me}}</h4>
                     <br>
@@ -100,10 +113,8 @@
                 @endif
                 <h3 class="card-title">Languages Known</h3>
                 @if($data->languages_known!='0')
-
                     <br>
                     <h4>{{$data->languages_known}}</h4>
-
                 @else
                     -
                 @endif
@@ -111,8 +122,6 @@
 
         </div>
     </div>
-
-
     <div class="card">
         <div class="card-header">
             <h4 class="card-title">Property Details</h4>
@@ -126,19 +135,13 @@
                 </ul>
             </div>
         </div>
-
         <div class="card-content">
-
             <div class="card-body">
                 <h3>Total Property Published : {{$total_posted}} </h3> <br><br>
                 <h3>Total Property Booked : {{$total_booking}} </h3><br>
-
-
             </div>
-
         </div>
     </div>
-
     <div class="card">
         <div class="card-header">
             <h4 class="card-title">Verification Documents</h4>
@@ -153,7 +156,6 @@
             </div>
         </div>
         <div class="card-content">
-
             <div class="card-body">
                 @if($data->role_id==0)
                     <h4 class="card-title"> Recuriter Name
@@ -186,14 +188,11 @@
                                 <center><h4>No Documents Uploaded yet.</h4></center>
                             </div>
                         @else
-
                             @foreach($document as $d)
                                 <div class="col-md-4">
                                     <figure class="card card-img-top border-grey border-lighten-2"
                                             itemprop="associatedMedia" itemscope=""
                                             itemtype="http://schema.org/ImageObject">
-
-
                                         <div class="card-body px-0">
                                             <h4 class="card-title">   {{ucfirst(str_replace("_"," ",$d->document_type))}}</h4>
                                         </div>
@@ -221,18 +220,37 @@
                                     </figure>
                                 </div><br>
                             @endforeach
-
-
-
                         @endif
-
-
                     </div>
                 </div>
-
             </div>
             <!-- Root element of PhotoSwipe. Must have class pswp. -->
         </div>
         <!--/ PhotoSwipe -->
     </div>
+@endsection
+
+@section('scripts')
+    <script type="text/javascript">
+        function parseUrl(url) {
+            if (isValidUrl(url)) {
+                return url;
+            }
+            return 'https://' + url;
+        }
+        function isValidUrl(string) {
+            try {
+                new URL(string);
+            } catch (_) {
+                return false;
+            }
+            return true;
+        }
+        $(document).on('click', 'a.btn-social-icon', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var URL = parseUrl(event.currentTarget.href);
+            window.open(URL, '_blank');
+        });
+    </script>
 @endsection

@@ -379,7 +379,7 @@ li.sub-nav-title {
 						<input value="@if($user_detail->tax_home) {{$user_detail->tax_home}} @endif" type="text" name="tax_home" >
 					@endif
 					<label>Languages Known</label>
-						<input value="{{$user_detail->languages_known!=""?$user_detail->languages_known:""}}" type="text" name="languages_known" placeholder="English,Tamil">
+						<input value="{{$user_detail->languages_known!=""?$user_detail->languages_known:""}}" type="text" name="languages_known" placeholder="English, Spanish">
 
 					<input value="0" type="hidden" name="twitter_url">
 

@@ -33,10 +33,19 @@ class HomeController extends BaseController
     public function make_login(Request $request)
     {
         $this->validate($request, [
-            'password' => 'required|exists:ad_users,password',
             'email' => 'required|exists:ad_users,email',
+            'password' =>
+                'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#^_+=:;><~$!%*?&])[A-Za-z\d@#^_+=:;><~$!%*?&]{8,}$/i',
         ]);
-
+        $check = DB::table('ad_users')
+            ->where('email', '=', $request->email)
+            ->first();
+        if ($check) {
+            $password = $this->encrypt_password($request->password);
+            if ($check->password !== $password) {
+                return back()->with('error_message', 'You have entered the wrong email or password. Please Try again.');
+            }
+        }
         $request->session()->put('admin_email', $request->email);
         return redirect('/admin/index');
     }
@@ -486,27 +495,24 @@ class HomeController extends BaseController
 
     public function register_mail(Request $request)
     {
-        $traveler = EmailConfig::where('role_id', 0)
-            ->where('type', 1)
-            ->first();
-        $owner = EmailConfig::where('role_id', 1)
-            ->where('type', 1)
-            ->first();
-        $agency = EmailConfig::where('role_id', 2)
-            ->where('type', 1)
-            ->first();
-        // print_r($owner);exit;
-        return view('Admin.mail-register', ['traveler' => $traveler, 'agency' => $agency, 'owner' => $owner]);
+        $register = EmailConfig::where('type', 1)->first();
+        return view('Admin.mail-register', ['register' => $register]);
     }
     public function verification_mail(Request $request)
     {
         $verification = EmailConfig::where('type', 2)->first();
-        return view('Admin.mail-verification', ['verification' => $verification]);
+        $reminder = EmailConfig::where('type', 8)->first();
+        return view('Admin.mail-verification', [
+            'verification' => $verification,
+            'reminder' => $reminder,
+        ]);
     }
     public function approval_mail(Request $request)
     {
         $approval = EmailConfig::where('type', 6)->first();
-        return view('Admin.mail-approval', ['approval' => $approval]);
+        $denial = EmailConfig::where('type', 7)->first();
+        $data = ['approval' => $approval, 'denial' => $denial];
+        return view('Admin.mail-approval', $data);
     }
     public function booking_confirm_mail(Request $request)
     {
@@ -554,28 +560,36 @@ class HomeController extends BaseController
         }
         return back()->with('success', 'Property has been verified');
     }
-    public function verify_profile($id)
+    public function verify_profile($id, $deny = false)
     {
+        $isDenied = $deny == "true";
+        $updateStatus = $isDenied ? -1 : ONE;
         $user = $this->user
             ->where('id', $id)
-            ->where('is_verified', '<>', ONE)
+            ->where('is_verified', '<>', $updateStatus)
             ->first();
-        $this->user->where('id', $id)->update(['is_verified' => ONE]);
+        $updateData = ['is_verified' => $updateStatus];
+        if ($isDenied) {
+            $updateData['denied_count'] = DB::raw('denied_count+1');
+            $updateData['is_submitted_documents'] = 0;
+        }
+        $this->user->where('id', $id)->update($updateData);
         DB::table('verify_mobile')
             ->where('user_id', $id)
-            ->update(['status' => ONE]);
+            ->update(['status' => $updateStatus]);
         if ($user) {
-            // Accept Email flow
-            $reg = $this->emailConfig->where('type', 6)->first();
+            // Accept/Denied Email flow
+            $emailType = $isDenied ? 7 : 6;
+            $emailTemplate = $isDenied ? 'mail.account-denied' : 'mail.account-approved';
+            $reg = $this->emailConfig->where('type', $emailType)->first();
             $mail_data = [
                 'name' => $user->first_name . ' ' . $user->last_name,
                 'email' => $user->email,
                 'text' => isset($reg->message) ? $reg->message : '',
             ];
-
             $title = isset($reg->title) ? $reg->title : 'Message from ' . APP_BASE_NAME;
             $subject = isset($reg->subject) ? $reg->subject : "Email verification from " . APP_BASE_NAME;
-            $this->send_custom_email($user->email, $subject, 'mail.account-approved', $mail_data, $title);
+            $this->send_custom_email($user->email, $subject, $emailTemplate, $mail_data, $title);
         }
         return back()->with('success', 'User has been verified');
     }

@@ -532,7 +532,7 @@
 </div>
 <!-- Wrapper / End -->
 
-<script src="https://maps.google.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}=places&callback=initAutocomplete" type="text/javascript"></script>
+{{--<script src="https://maps.google.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}=places" type="text/javascript"></script>--}}
 
 <script type="text/javascript">
     var allAgencies = [];
@@ -733,9 +733,8 @@
                 addressFields = [];
                 break;
         }
-        if(!isInitial) { initialize(); }
         hide_required(data);
-        if(!isInitial) {initialize();}
+        initialize();
     }
 
     function hide_required(type) {
@@ -747,7 +746,6 @@
         }
     }
 
-    google.maps.event.addDomListener(window, 'load', initialize);
     function initialize() {
         let options = {
             componentRestrictions: {country: 'us'}

@@ -12,6 +12,7 @@
 <link rel="stylesheet" type="text/css"
       href="{{ URL::asset('/app-assets/vendors/css/pickers/pickadate/pickadate.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ URL::asset('/app-assets/css/app.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ URL::asset('/app-assets/css/style-override.css') }}">
 <!-- END MODERN CSS-->
 <!-- BEGIN Page Level CSS-->
 <link rel="stylesheet" type="text/css"

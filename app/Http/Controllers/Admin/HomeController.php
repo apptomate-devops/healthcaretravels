@@ -501,7 +501,11 @@ class HomeController extends BaseController
     public function verification_mail(Request $request)
     {
         $verification = EmailConfig::where('type', 2)->first();
-        return view('Admin.mail-verification', ['verification' => $verification]);
+        $reminder = EmailConfig::where('type', 8)->first();
+        return view('Admin.mail-verification', [
+            'verification' => $verification,
+            'reminder' => $reminder,
+        ]);
     }
     public function approval_mail(Request $request)
     {

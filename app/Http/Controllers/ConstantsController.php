@@ -37,7 +37,6 @@ define("UPLOAD_SECURE_DELIVERY_URL", "https://res.cloudinary.com/dazx7zpzb");
 define("UPLOAD_API_BASE_URL", "https://api.cloudinary.com/v1_1/dazx7zpzb");
 
 define("COUNTRY_CODE", config("app.country_code"));
-dd(COUNTRY_CODE);
 
 define("ZERO", 0);
 define("ONE", 1);

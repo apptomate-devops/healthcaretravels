@@ -537,6 +537,9 @@
 <script type="text/javascript">
     var allAgencies = [];
     var agencyAutoComplete;
+    var isLocalHost = window.location.origin.indexOf('localhost') !== -1;
+    var isLocalIP = window.location.origin.indexOf('127.0.0.1') !== -1;
+    var isLocal = isLocalHost || isLocalIP;
     function recaptcha_expired_callback(data) {
         $('#reg_button').prop("disabled", true);
     }
@@ -896,7 +899,7 @@
             }
             return invalidAddress;
         })
-        if(allFields.length) {
+        if(allFields.length && !isLocal) {
             $(window).scrollTop($(`#${allFields[0]}`).offset().top-100);
             return false;
         }

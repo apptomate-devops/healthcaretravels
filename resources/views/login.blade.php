@@ -218,6 +218,45 @@
         .select-pure__placeholder--hidden {
             display: none;
         }
+        .password-checkbox {
+            margin-top: -20px;
+            margin-bottom: 20px;
+        }
+        .password-checkbox input[type="checkbox"] {
+            height: 12px;
+            width: 12px;
+            margin-right: 5px;
+        }
+
+        .password-checkbox input[type="checkbox"]:checked {
+            background-color: orangered !important;
+        }
+
+        #password_message {
+            margin-bottom: 30px;
+        }
+
+        .valid-password {
+            color: green;
+            margin-left: 20px;
+        }
+
+        .valid-password:before {
+            position: relative;
+            left: -15px;
+            content: "✔";
+        }
+
+        .invalid-password {
+            color: red;
+            margin-left: 20px;
+        }
+
+        .invalid-password:before {
+            position: relative;
+            left: -15px;
+            content: "✖";
+        }
     </style>
     <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
@@ -280,6 +319,10 @@
                                         <input class="input-text" type="password" name="password" id="password" placeholder="Password" required />
                                     </label>
                                 </p>
+                                <div class="password-checkbox">
+                                    <input type="checkbox" onclick="togglePassword('password')">
+                                    <span>Show Password</span>
+                                </div>
                                 <p class="form-row">
                                     <input id="button1" type="submit" class="button border margin-top-10" name="login" value="Login" />
                                 </p>
@@ -333,18 +376,35 @@
                                         <i class="im im-icon-Lock-2" ></i>
                                         <input class="input-text validate {{ $errors->has('password1') ? 'form-error' : ''}}" type="password" data-strength autocomplete="off" name="password1" id="password1" required />
                                     </label>
-                                    {!! $errors->first('password1', '<p class="error-text">:message</p>') !!}
+                                <div class="password-checkbox">
+                                    <input type="checkbox" onclick="togglePassword('password1')">
+                                    <span>Show Password</span>
+                                </div>
+                                {!! $errors->first('password1', '<p class="error-text">:message</p>') !!}
                                 </p>
 
                                 <div id="password-strength" class="strength" style="display: none;"><span class="strength-span"></span></div>
                                 <div id="password-strength-text" class="strength-text" style="display: none;">Passsword is weak</div>
+
+                                <div id="password_message" style="display: none;">
+                                    <p><b>Your password must meet the below requirements:</b></p>
+                                    <p id="letter" class="invalid-password">At least one lowercase letter</p>
+                                    <p id="capital" class="invalid-password">At least one uppercase letter</p>
+                                    <p id="number" class="invalid-password">At least one number</p>
+                                    <p id="special_character" class="invalid-password">At least one special character</p>
+                                    <p id="length" class="invalid-password">At least 8 characters long</b></p>
+                                </div>
 
                                 <p class="form-row form-row-wide" id="password2_field" style="display: none;" >
                                     <label for="password2">Repeat Password:<span class="required">*</span>
                                         <i class="im im-icon-Lock-2" ></i>
                                         <input class="input-text validate {{ $errors->has('password2') ? 'form-error' : ''}}" autocomplete="off" type="password" name="password2" id="password2" required />
                                     </label>
-                                    {!! $errors->first('password2', '<p class="error-text">:message</p>') !!}
+                                <div class="password-checkbox">
+                                    <input type="checkbox" onclick="togglePassword('password2')">
+                                    <span>Show Password</span>
+                                </div>
+                                {!! $errors->first('password2', '<p class="error-text">:message</p>') !!}
                                 </p>
 
                                 <p class="form-row form-row-wide" id="first_name_field" style="display: none;">
@@ -456,7 +516,7 @@
                                 <p class="form-row form-row-wide" id="agency_show" style="display: none;">
                                     <label for="agency_name" style="margin-bottom: 0;">Agency you work for:</label>
                                     <span class="autocomplete-select"></span>
-{{--                                    <div id="add_another_agency" class="add-another" onclick="add_another_agency()">Add another</div>--}}
+                                    {{--                                    <div id="add_another_agency" class="add-another" onclick="add_another_agency()">Add another</div>--}}
                                     <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
                                     {!! $errors->first('name_of_agency', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -596,6 +656,7 @@
                 $('#email_field').show();
                 $('#password_field').show();
                 $('#password2_field').show();
+                $('#tab2 .password-checkbox').show();
                 $('#first_name_field').show();
                 $('#last_name_field').show();
                 $('#ethnicity_filed').show();
@@ -632,6 +693,7 @@
                 $('#email_field').show();
                 $('#password_field').show();
                 $('#password2_field').show();
+                $('#tab2 .password-checkbox').show();
                 $('#first_name_field').show();
                 $('#last_name_field').show();
                 $('#ethnicity_filed').show();
@@ -667,6 +729,7 @@
                 $('#email_field').show();
                 $('#password_field').show();
                 $('#password2_field').show();
+                $('#tab2 .password-checkbox').show();
                 $('#first_name_field').show();
                 $('#last_name_field').show();
                 $('#ethnicity_filed').show();
@@ -702,6 +765,7 @@
                 $('#email_field').hide();
                 $('#password_field').hide();
                 $('#password2_field').hide();
+                $('#tab2 .password-checkbox').hide();
                 $('#first_name_field').hide();
                 $('#last_name_field').hide();
                 $('#ethnicity_filed').hide();
@@ -748,7 +812,7 @@
             componentRestrictions: {country: 'us'}
         };
         let options_tax_home = {
-            types: ['(regions)'],
+            types: ['(cities)'],
             componentRestrictions: {country: 'us'}
         };
         try {
@@ -904,21 +968,42 @@
 </script>
 <script>
     let strength = 0;
+
     function passwordCheck(password) {
-        if (password.match(/(?=.*[a-z])/))
+        if (password.match(/(?=.*[a-z])/)) {
             strength += 1;
+            $('#letter').removeClass('invalid-password').addClass('valid-password');
+        } else {
+            $('#letter').removeClass('valid-password').addClass('invalid-password');
+        }
 
-        if (password.match(/(?=.*[A-Z])/))
+        if (password.match(/(?=.*[A-Z])/)) {
             strength += 1;
+            $('#capital').removeClass('invalid-password').addClass('valid-password');
+        } else {
+            $('#capital').removeClass('valid-password').addClass('invalid-password');
+        }
 
-        if (password.match(/(?=.*[0-9])/))
+        if (password.match(/(?=.*[0-9])/)) {
             strength += 1;
+            $('#number').removeClass('invalid-password').addClass('valid-password');
+        } else {
+            $('#number').removeClass('valid-password').addClass('invalid-password');
+        }
 
-        if (password.length >= 8)
+        if (password.length >= 8) {
             strength += 1;
+            $('#length').removeClass('invalid-password').addClass('valid-password');
+        } else {
+            $('#length').removeClass('valid-password').addClass('invalid-password');
+        }
 
-        if (password.match(/(?=.*[!,%,&,@,#,$,^,*,?,_,~,<,>,])/))
+        if (password.match(/(?=.*[!,%,&,@,#,$,^,*,?,_,~,<,>,])/)) {
             strength += 1;
+            $('#special_character').removeClass('invalid-password').addClass('valid-password');
+        } else {
+            $('#special_character').removeClass('valid-password').addClass('invalid-password');
+        }
 
         displayBar(strength);
     }
@@ -987,9 +1072,9 @@
     }
 
     $("[data-strength]").focus(function() {
-        $("#password-strength, #password-strength-text").show();
+        $("#password-strength, #password-strength-text, #password_message").show();
     }).blur(function() {
-        $("#password-strength, #password-strength-text").hide();
+        // $("#password-strength, #password-strength-text, #password_message").hide();
     });
 
     $("[data-strength]").keyup(function() {
@@ -997,6 +1082,17 @@
         var password = $(this).val();
         passwordCheck(password);
     });
+</script>
+<script>
+    function togglePassword(id) {
+        debugger
+        var x = document.getElementById(id);
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+    }
 </script>
 </body>
 </html>

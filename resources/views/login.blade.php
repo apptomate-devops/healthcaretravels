@@ -94,7 +94,7 @@
             margin: -10px 10px 20px 0;
         }
         #recaptcha-block {
-            margin-top: 10px;
+            margin-top: 25px;
         }
         .select-wrapper {
             margin: auto;
@@ -334,7 +334,8 @@
 
                         <!-- Register -->
                         <div class="tab-content" id="tab2" style="display: none;">
-                            <div style="margin-bottom: 30px;">After registering your account, you will be required to submit information to verify your account within seven days. Please have documents and identification available for upload.</div>
+                            <div style="margin-bottom: 10px;">After registering your account, you will be required to submit information to verify your account within seven days. Please have documents and identification available for upload.</div>
+                            <div style="margin-bottom: 30px;"><span class="required">*</span>All fields are required.</div>
                             <form method="post" class="register" action="{{url('/')}}/register-user" onsubmit="return validate_registration()" autocomplete="off" onkeydown="return event.key != 'Enter';">
                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                                 <input type="hidden" name="client_id" id="client_id" value="{{$constants['client_id']}}">
@@ -427,7 +428,7 @@
 
                                 <p class="form-row form-row-wide" id="ethnicity_filed" style="display: none;">
                                     <label for="ethnicity">Ethnicity:<span class="required">*</span>
-                                        <select type="text" class="input-text validate {{ $errors->has('ethnicity') ? 'form-error' : ''}}" name="ethnicity" id="ethnicity" autocomplete="off" >
+                                        <select type="text" class="input-text validate {{ $errors->has('ethnicity') ? 'form-error' : ''}}" name="ethnicity" id="ethnicity" autocomplete="off" required >
                                             <option label="" selected>Select Ethnicity</option>
                                             <option value="American Indian or Alaskan Native" @if(Session::get('ethnicity')=='American Indian or Alaskan Native') selected @endif>American Indian or Alaskan Native</option>
                                             <option value="Asian" @if(Session::get('ethnicity')=='Asian') selected @endif>Asian</option>
@@ -452,7 +453,7 @@
                                 <p class="form-row form-row-wide" id="work_number_field" style="display: none;">
                                     <label for="work">Office Number:<span class="required">*</span>
                                         <i class="im im-icon-Phone"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('work') ? 'form-error' : ''}}" value="{{Session::get('work')}}" name="work" id="work" maxlength="10" />
+                                        <input type="text" class="input-text validate {{ $errors->has('work') ? 'form-error' : ''}}" value="{{Session::get('work')}}" name="work" id="work" maxlength="10" required />
                                     </label>
                                     {!! $errors->first('work', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -460,7 +461,7 @@
                                 <p class="form-row form-row-wide" id="work_title_field" style="display: none;">
                                     <label for="work_title">Work Title:<span class="required">*</span>
                                         <i class="im im-icon-Consulting"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('work_title') ? 'form-error' : ''}}" value="{{Session::get('work_title')}}" name="work_title" id="work_title"/>
+                                        <input type="text" class="input-text validate {{ $errors->has('work_title') ? 'form-error' : ''}}" value="{{Session::get('work_title')}}" name="work_title" id="work_title" required />
                                     </label>
                                     {!! $errors->first('work_title', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -468,7 +469,7 @@
                                 <p class="form-row form-row-wide" id="website_field" style="display: none;">
                                     <label for="website">Agency URL:<span class="required">*</span>
                                         <i class="im im-icon-Ustream"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('website') ? 'form-error' : ''}}" value="{{Session::get('website')}}" name="website" id="website" />
+                                        <input type="text" class="input-text validate {{ $errors->has('website') ? 'form-error' : ''}}" value="{{Session::get('website')}}" name="website" id="website" required />
                                     </label>
                                     {!! $errors->first('website', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -476,7 +477,7 @@
                                 <p class="form-row form-row-wide label-margin" id="dob_field" style="display: none;">
                                     <label for="dob">Date of Birth:<span class="required">*</span>
                                         <i class="im im-icon-Calendar" style="bottom: 10px;"></i>
-                                        <input type="date" onchange="on_dob_change(this.value)" class="input-text validate {{ $errors->has('dob') ? 'form-error' : ''}}" value="{{Session::get('dob')}}" name="dob" id="dob" autocomplete="off"  />
+                                        <input type="date" onchange="on_dob_change(this.value)" class="input-text validate {{ $errors->has('dob') ? 'form-error' : ''}}" value="{{Session::get('dob')}}" name="dob" id="dob" autocomplete="off" required />
                                     </label>
                                 {!! $errors->first('dob', '<p class="error-text">:message</p>') !!}
                                 <p id="dob_validation_error"></p>
@@ -484,7 +485,7 @@
 
                                 <p class="form-row form-row-wide" id="gender_field" style="display: none;">
                                     <label for="gender">Gender:<span class="required">*</span>
-                                        <select type="text" class="input-text validate {{ $errors->has('gender') ? 'form-error' : ''}}" name="gender" id="gender" autocomplete="off" >
+                                        <select type="text" class="input-text validate {{ $errors->has('gender') ? 'form-error' : ''}}" name="gender" id="gender" autocomplete="off" required >
                                             <option value="Male" @if(Session::get('gender')=='Male') selected @endif>Male</option>
                                             <option value="Female" @if(Session::get('gender')=='Female') selected @endif>Female</option>
                                             <option value="Neutral" @if(Session::get('gender')=='Neutral') selected @endif>Neutral</option>
@@ -494,16 +495,16 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="languages_field" style="display: none;">
-                                    <label for="languages_known">Languages Known:
+                                    <label for="languages_known">Languages Known:<span class="required">*</span>
                                         <i class="im im-icon-Globe"></i>
-                                        <input type="text" class="input-text validate" value="{{Session::get('languages_known')}}" name="languages_known" id="languages_known" placeholder="English, Spanish" autocomplete="off" />
+                                        <input type="text" class="input-text validate" value="{{Session::get('languages_known')}}" name="languages_known" id="languages_known" placeholder="English, Spanish" autocomplete="off" required />
                                     </label>
                                     {!! $errors->first('languages_known', '<p class="error-text">:message</p>') !!}
                                 </p>
 
                                 <p class="form-row form-row-wide" id="occupation_field" style="display: none;">
                                     <label for="occupation">Occupation:<span class="required">*</span>
-                                        <select class="input-text validate" onchange="on_occupation_change(this.value)" autocomplete="off" name="occupation" id="occupation">
+                                        <select class="input-text validate" onchange="on_occupation_change(this.value)" autocomplete="off" name="occupation" id="occupation" required>
                                             <option label="" value="" >Select Occupation</option>
                                             @foreach($occupation as $a)
                                                 <option value="{{$a->name}}" @if(Session::get('occupation')===$a->name) selected @endif>{{$a->name}}</option>
@@ -514,10 +515,10 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="agency_show" style="display: none;">
-                                    <label for="agency_name" style="margin-bottom: 0;">Agency you work for:</label>
+                                    <label for="agency_name" style="margin-bottom: 0;">Agency you work for:<span class="required">*</span></label>
                                     <span class="autocomplete-select"></span>
                                     {{--                                    <div id="add_another_agency" class="add-another" onclick="add_another_agency()">Add another</div>--}}
-                                    <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
+                                    <input type="hidden" name="name_of_agency" id="name_of_agency" value="" required>
                                     {!! $errors->first('name_of_agency', '<p class="error-text">:message</p>') !!}
                                 </p>
                                 <div class="info-text" id="agency-caption">Select as many agencies that you have worked for in the last 12 months.</div>
@@ -553,7 +554,11 @@
                                         <input id="terms_accept" type="checkbox" name="terms_accept" >
                                     @endif
 
-                                    <label for="terms_accept"> I agree to the <a href="{{URL('/')}}/terms-of-use">Terms of Use</a> and <a href="{{URL('/')}}/policies">Policies</a></label>
+                                    <label for="terms_accept">I don’t want to receive marketing messages from Health Care Travels. I can also opt out of receiving these at any time by emailing
+                                        <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com.</a>
+                                        <br>
+                                        <br>
+                                        By selecting Agree and Register below, I agree to Health Care Travels <a href="{{URL('/')}}/terms-of-use">Terms of Service</a>, <a href="{{URL('/')}}/payment-terms">Payments Terms of Service</a>, <a href="{{URL('/')}}/policies">Privacy Policy</a>, and <a href="{{URL('/')}}/non-discrimination-policy">Nondiscrimination Policy.</a></p></label>
                                     {!! $errors->first('terms_accept', '<p class="error-text" style="margin-top: 15px;">:message</p>') !!}
                                 </div>
                                 <div
@@ -566,7 +571,7 @@
                                 >
                                 </div>
                                 <p class="form-row"  id="register_button_field" style="display: none; margin-top: 10px;">
-                                    <input type="submit" id="reg_button" class="button border fw margin-top-10" name="register" value="Register" disabled />
+                                    <input type="submit" id="reg_button" class="button border fw margin-top-10" name="register" value="Agree and Register" disabled />
                                 </p>
 
                             </form>
@@ -702,7 +707,7 @@
                 $('#dob_field').show();
                 $('#gender_field').show();
                 $('#languages_field').show();
-                $('#occupation_field').show();
+                $('#occupation_field').hide();
                 $('#agency_show').hide();
                 $('#add_another_agency').hide();
                 $('#agency-caption').hide();
@@ -794,18 +799,9 @@
                 addressFields = [];
                 break;
         }
-        hide_required(data);
         initialize();
     }
 
-    function hide_required(type) {
-        let occupation_span = $('#occupation_field > label > span');
-        if(type === "0") {
-            occupation_span.hide();
-        } else {
-            occupation_span.show();
-        }
-    }
 
     function initialize() {
         let options = {

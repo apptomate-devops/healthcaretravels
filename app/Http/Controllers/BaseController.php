@@ -199,8 +199,7 @@ class BaseController extends ConstantsController
             Mail::send($view_name, $data, function ($message) use ($email, $subject, $name) {
                 $message->from($email, 'Mail from ' . $name);
                 $message->replyTo($email, $name);
-                $message->to(CLIENT_MAIL);
-                // $message->to('guru@sparkouttech.com');
+                $message->to(SUPPORT_MAIL);
                 $message->subject($subject);
             });
         } catch (\Exception $ex) {
@@ -209,13 +208,14 @@ class BaseController extends ConstantsController
         }
     }
 
-    public function send_custom_email($email, $subject, $view_name, $data, $title)
+    public function send_custom_email($email, $subject, $view_name, $data, $title, $from = GENERAL_MAIL)
     {
         $mail_title = $title;
+        $mail_from = $from ? $from : GENERAL_MAIL;
         try {
-            Mail::send($view_name, $data, function ($message) use ($email, $mail_title, $subject) {
-                // From configurations are used from config file
-                // $message->from('gotocva@gmail.com', $mail_title);
+            Mail::send($view_name, $data, function ($message) use ($email, $mail_title, $subject, $mail_from) {
+                Logger::info('Sending Mail From: ' . $mail_from . ' To: ' . $email);
+                $message->from($mail_from, config('mail.from.name'));
                 $message->to($email);
                 $message->subject($subject);
             });

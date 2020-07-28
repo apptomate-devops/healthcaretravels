@@ -298,7 +298,7 @@ class UserController extends BaseController
                 'phone_no' => 'required|numeric|digits:10',
                 'dob' => 'required',
                 'gender' => 'required',
-                'occupation' => 'required',
+                'languages_known' => 'required',
                 'address' => 'required',
                 'listing_address' => 'required',
                 'terms_accept' => 'accepted',
@@ -316,34 +316,16 @@ class UserController extends BaseController
                 'last_name' => 'required',
                 'ethnicity' => 'required',
                 'phone_no' => 'required|numeric|digits:10',
-                'gender' => 'required',
-                'dob' => 'required',
                 'work' => 'required',
                 'work_title' => 'required',
                 'website' => 'required|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/',
-                'terms_accept' => 'accepted',
-            ];
-        } elseif ($request->user_type === "3") {
-            // RV Traveler
-            $rules = [
-                'username' => 'required|unique:users,username',
-                'email' => 'required|email:rfc,dns|unique:users,email',
-                'password1' =>
-                    'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#^_+=:><~$!%*?&])[A-Za-z\d@#^_+=:><~$!%*?&]{8,}$/i',
-                'password2' => 'required|same:password1',
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'ethnicity' => 'required',
-                'phone_no' => 'required|numeric|digits:10',
                 'dob' => 'required',
                 'gender' => 'required',
-                'occupation' => 'required',
-                'tax_home' => 'required',
-                'address' => 'required',
+                'languages_known' => 'required',
                 'terms_accept' => 'accepted',
             ];
         } else {
-            // Traveler
+            // Traveler or RV traveler
             $rules = [
                 'username' => 'required|unique:users,username',
                 'email' => 'required|email:rfc,dns|unique:users,email',
@@ -356,6 +338,9 @@ class UserController extends BaseController
                 'phone_no' => 'required|numeric|digits:10',
                 'dob' => 'required',
                 'gender' => 'required',
+                'languages_known' => 'required',
+                'occupation' => 'required',
+                'name_of_agency' => 'required',
                 'tax_home' => 'required',
                 'address' => 'required',
                 'terms_accept' => 'accepted',

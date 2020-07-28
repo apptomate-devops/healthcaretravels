@@ -283,7 +283,7 @@ class UserController extends BaseController
             'digits' => 'Please enter valid phone number',
         ];
 
-        if ($request->user_type === "1") {
+        if ($request->user_type === "1" || $request->user_type === "4") {
             // Owner
             $rules = [
                 'username' => 'required|unique:users,username',
@@ -487,8 +487,8 @@ class UserController extends BaseController
                 ->update(['otp_verified' => 1]);
 
             if ($check->email_verified == 1) {
-                if ($check->role_id == 1 || $check->role_id == 2) {
-                    // 1: Property Owner || 2: Agency
+                if ($check->role_id == 1 || $check->role_id == 4 || $check->role_id == 2) {
+                    // 1: Property Owner || 4: Cohost || 2: Agency
                     $url = $this->get_base_url() . 'owner/profile';
                 }
                 //                else if($check->role_id==3) {

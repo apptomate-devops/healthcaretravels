@@ -186,7 +186,7 @@ class UserController extends BaseController
 
                 $verify_url = BASE_URL . 'verify/' . $d->id . '/' . $token;
 
-                $reg = EmailConfig::where('type', 2)->first();
+                $reg = EmailConfig::where('type', TEMPLATE_VERIFICATION)->first();
 
                 $mail_data = [
                     'token' => $token,
@@ -436,7 +436,7 @@ class UserController extends BaseController
 
         //  Send Welcome mail
 
-        $welcome = EmailConfig::where('type', 1)->first();
+        $welcome = EmailConfig::where('type', TEMPLATE_REGISTER)->first();
 
         $mail_data = [
             'username' => $request->first_name . ' ' . $request->last_name,
@@ -444,10 +444,8 @@ class UserController extends BaseController
             'email' => $request->email,
             'phone' => $d->phone,
         ];
-
         $title = isset($welcome->title) ? $welcome->title : 'Welcome to ' . APP_BASE_NAME;
         $subject = isset($welcome->subject) ? $welcome->subject : "Welcome to " . APP_BASE_NAME;
-
         $this->send_custom_email($request->email, $subject, 'mail.welcome-mail', $mail_data, $title);
 
         // Sending new registration email to admin
@@ -532,7 +530,7 @@ class UserController extends BaseController
                 // Send Verification mail
                 $verify_url = BASE_URL . 'verify/' . $check->id . '/' . $check->auth_token;
 
-                $reg = EmailConfig::where('type', 2)->first();
+                $reg = EmailConfig::where('type', TEMPLATE_VERIFICATION)->first();
 
                 $mail_data = [
                     'token' => $check->auth_token,
@@ -704,8 +702,7 @@ class UserController extends BaseController
 
         $title = "Profile Verification Pending";
         $subject = "Profile Verification Pending";
-
-        $this->send_custom_email($user->email, $subject, 'mail.document-uploaded-user', $data, $title);
+        $this->send_custom_email($user->email, $subject, 'mail.document-uploaded-user', $data, $title, VERIFY_MAIL);
 
         return back()->with('success', 'Documents uploaded successfully');
     }

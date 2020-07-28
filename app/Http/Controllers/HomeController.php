@@ -178,6 +178,25 @@ class HomeController extends BaseController
         ]);
     }
 
+    public function new_password($token, Request $request)
+    {
+        $cur_date = date('Y-m-d');
+        $check = DB::table('users')
+            ->where('client_id', CLIENT_ID)
+            ->where('reset_password_token', $token)
+            ->where('reset_date', $cur_date)
+            ->first();
+        if (!$check) {
+            return view('set-new-password')
+                ->with('error', 1)
+                ->with('email', $check->email);
+        } else {
+            return view('set-new-password')
+                ->with('error', 0)
+                ->with('email', $check->email);
+        }
+    }
+
     public function non_discrimination_policy()
     {
         return view('policies.non-discrimination-policy');
@@ -205,10 +224,54 @@ class HomeController extends BaseController
         return view('request-roommate');
     }
 
+    public function reset_email(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'required|exists:users,email',
+        ]);
+
+        $token = $this->generate_hash($request->email);
+        $date = date('Y-m-d');
+        DB::table('users')
+            ->where('email', $request->email)
+            ->update(['reset_password_token' => $token, 'reset_date' => $date]);
+        $user = DB::table('users')
+            ->where('email', $request->email)
+            ->first();
+        $mail_data = EmailConfig::where('type', 5)->first();
+        $email = $request->email;
+        if ($user->role_id == 2) {
+            $username = $user->name_of_agency;
+        } else {
+            $username = $user->first_name . " " . $user->last_name;
+        }
+        $data = [
+            'token' => $token,
+            'text' => isset($mail_data->message) ? $mail_data->message : '',
+            'username' => $username,
+        ];
+        $title = isset($mail_data->title) ? $mail_data->title : 'Mail from - ' . APP_BASE_NAME;
+        $subject = isset($mail_data->subject) ? $mail_data->subject : "Mail from - " . APP_BASE_NAME;
+
+        Mail::send('mail.password-reset', $data, function ($message) use ($email, $subject, $title) {
+            $message->from('gotocva@gmail.com', $title);
+            $message->to($email);
+            $message->subject($subject);
+        });
+
+        return back()->with('success', 'Password reset link sent to your email');
+    }
+
+    public function reset_password()
+    {
+        return view('reset_password');
+    }
+
     public function rv_professional()
     {
         return view('statics.rv_professional');
     }
+
     public function save_become_a_scout(Request $request)
     {
         $new = new BecomeScout();
@@ -226,6 +289,7 @@ class HomeController extends BaseController
 
         return back()->with('success', 'Your information has been saved.');
     }
+
     public function search_property(Request $request)
     {
         $request_data = $request->all();
@@ -340,6 +404,7 @@ class HomeController extends BaseController
             ->with('next', $page)
             ->with('room_types', $room_types);
     }
+
     public function short_term(Request $request)
     {
         $request_data = $request->all();
@@ -438,5 +503,46 @@ class HomeController extends BaseController
     public function travellers_refund_policy()
     {
         return view('policies.travellers-refund-policy');
+    }
+
+    public function update_password(Request $request)
+    {
+        $this->validate($request, [
+            'password' => 'required|min:4',
+            'confirm_password' => 'required|same:password',
+        ]);
+
+        $password = $this->encrypt_password($request->password);
+        DB::table('users')
+            ->where('email', $request->email)
+            ->update(['password' => $password]);
+        $user = DB::table('users')
+            ->where('email', $request->email)
+            ->first();
+        if ($user->role_id == 2) {
+            $username = $user->name_of_agency;
+        } else {
+            $username = $user->first_name . " " . $user->last_name;
+        }
+        $data = [
+            'content' =>
+                'You have successfully changed your password. If you feel this message is in error and you did not request a password change email ​' .
+                SUPPORT_MAIL .
+                ' or call us at ' .
+                CLIENT_PHONE,
+            'username' => $username,
+        ];
+
+        $title = 'Your Password Changed Successfully';
+        $subject = 'Your Password Changed Successfully';
+        $email = $request->email;
+        Mail::send('mail.custom-email', $data, function ($message) use ($email, $subject, $title) {
+            $message->from('gotocva@gmail.com', $title);
+            $message->to($email);
+            $message->subject($subject);
+        });
+
+        $url = BASE_URL . 'login';
+        return redirect($url);
     }
 }

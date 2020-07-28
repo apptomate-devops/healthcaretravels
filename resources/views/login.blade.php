@@ -352,6 +352,8 @@
                                             <option value="2" @if(Session::get('type')=="2") selected @endif>Agency</option>
 
                                             <option value="3" @if(Session::get('type')=="3") selected @endif>RV Healthcare Traveler</option>
+
+                                            <option value="4" @if(Session::get('type')=="4") selected @endif>Cohost</option>
                                         </select>
                                     </label>
                                     {!! $errors->first('user_type', '<p class="error-text">:message</p>') !!}
@@ -428,8 +430,8 @@
 
                                 <p class="form-row form-row-wide" id="ethnicity_filed" style="display: none;">
                                     <label for="ethnicity">Ethnicity:<span class="required">*</span>
-                                        <select type="text" class="input-text validate {{ $errors->has('ethnicity') ? 'form-error' : ''}}" name="ethnicity" id="ethnicity" autocomplete="off" required >
-                                            <option label="" selected>Select Ethnicity</option>
+                                        <select type="text" class="input-text validate {{ $errors->has('ethnicity') ? 'form-error' : ''}}" name="ethnicity" id="ethnicity" autocomplete="off" required>
+                                            <option value="" selected>Select Ethnicity</option>
                                             <option value="American Indian or Alaskan Native" @if(Session::get('ethnicity')=='American Indian or Alaskan Native') selected @endif>American Indian or Alaskan Native</option>
                                             <option value="Asian" @if(Session::get('ethnicity')=='Asian') selected @endif>Asian</option>
                                             <option value="Black or African American" @if(Session::get('ethnicity')=='Black or African American') selected @endif>Black or African American</option>
@@ -453,7 +455,7 @@
                                 <p class="form-row form-row-wide" id="work_number_field" style="display: none;">
                                     <label for="work">Office Number:<span class="required">*</span>
                                         <i class="im im-icon-Phone"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('work') ? 'form-error' : ''}}" value="{{Session::get('work')}}" name="work" id="work" maxlength="10" required />
+                                        <input type="text" class="input-text validate {{ $errors->has('work') ? 'form-error' : ''}}" value="{{Session::get('work')}}" name="work" id="work" maxlength="10" />
                                     </label>
                                     {!! $errors->first('work', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -461,7 +463,7 @@
                                 <p class="form-row form-row-wide" id="work_title_field" style="display: none;">
                                     <label for="work_title">Work Title:<span class="required">*</span>
                                         <i class="im im-icon-Consulting"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('work_title') ? 'form-error' : ''}}" value="{{Session::get('work_title')}}" name="work_title" id="work_title" required />
+                                        <input type="text" class="input-text validate {{ $errors->has('work_title') ? 'form-error' : ''}}" value="{{Session::get('work_title')}}" name="work_title" id="work_title" />
                                     </label>
                                     {!! $errors->first('work_title', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -469,7 +471,7 @@
                                 <p class="form-row form-row-wide" id="website_field" style="display: none;">
                                     <label for="website">Agency URL:<span class="required">*</span>
                                         <i class="im im-icon-Ustream"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('website') ? 'form-error' : ''}}" value="{{Session::get('website')}}" name="website" id="website" required />
+                                        <input type="text" class="input-text validate {{ $errors->has('website') ? 'form-error' : ''}}" value="{{Session::get('website')}}" name="website" id="website" />
                                     </label>
                                     {!! $errors->first('website', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -504,7 +506,7 @@
 
                                 <p class="form-row form-row-wide" id="occupation_field" style="display: none;">
                                     <label for="occupation">Occupation:<span class="required">*</span>
-                                        <select class="input-text validate" onchange="on_occupation_change(this.value)" autocomplete="off" name="occupation" id="occupation" required>
+                                        <select class="input-text validate" onchange="on_occupation_change(this.value)" autocomplete="off" name="occupation" id="occupation">
                                             <option label="" value="" >Select Occupation</option>
                                             @foreach($occupation as $a)
                                                 <option value="{{$a->name}}" @if(Session::get('occupation')===$a->name) selected @endif>{{$a->name}}</option>
@@ -518,10 +520,10 @@
                                     <label for="agency_name" style="margin-bottom: 0;">Agency you work for:<span class="required">*</span></label>
                                     <span class="autocomplete-select"></span>
                                     {{--                                    <div id="add_another_agency" class="add-another" onclick="add_another_agency()">Add another</div>--}}
-                                    <input type="hidden" name="name_of_agency" id="name_of_agency" value="" required>
-                                    {!! $errors->first('name_of_agency', '<p class="error-text">:message</p>') !!}
-                                </p>
+                                    <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
                                 <div class="info-text" id="agency-caption">Select as many agencies that you have worked for in the last 12 months.</div>
+                                {!! $errors->first('name_of_agency', '<p class="error-text">:message</p>') !!}
+                                </p>
 
                                 <p class="form-row form-row-wide" id="tax_home_field" style="display: none;">
                                     <label for="tax_home">Tax Home:<span class="required">*</span>
@@ -696,6 +698,7 @@
                 break;
 
             case "1": // Property Owner
+            case "4": // Cohost
                 $('#recaptcha-block').show();
                 $('#username2_field').show();
                 $('#email_field').show();
@@ -817,6 +820,7 @@
         try {
             for (field in addressFields) {
                 let element_address = document.getElementById(addressFields[field]);
+                let element_address_error = document.getElementById(`${addressFields[field]}_error`);
                 if(element_address) {
                     google.maps.event.addDomListener(element_address, 'keydown', (event) => {
                         if (event.keyCode === 13) {
@@ -828,7 +832,7 @@
                     let autocomplete_address = new google.maps.places.Autocomplete(element_address, (addressFields[field] === 'tax_home') ? options_tax_home : options);
                     autocomplete_address.addListener('place_changed', (e) => {
                         element_address.style.borderColor = '#e0e0e0';
-                        document.getElementById(`${addressFields[field]}_error`).style.display = "none";
+                        element_address_error.style.display = "none";
                         element_address.dataset.isValid = true;
                     });
                 }
@@ -1084,7 +1088,6 @@
 </script>
 <script>
     function togglePassword(id) {
-        debugger
         var x = document.getElementById(id);
         if (x.type === "password") {
             x.type = "text";

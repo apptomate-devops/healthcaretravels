@@ -804,7 +804,7 @@
             age--;
         }
         if(age < 18) {
-            $('#dob_validation_error').html('You must be 18 or older to register online. Contact <br>​<a href="mailto:{{VERIFY_MAIL}}">{{VERIFY_MAIL}}</a> to create a minor account.')
+            $('#dob_validation_error').html('You must be 18 or older to register online. Contact <br>​<a href="mailto:{{CLIENT_MAIL}}">{{CLIENT_MAIL}}</a> to create a minor account.')
         } else {
             $('#dob_validation_error').html('');
         }

@@ -541,6 +541,23 @@
                                 </p>
                                 <div class="error-text" id="address_error" style="display: none;">Please select a valid address from the suggestions.</div>
 
+                                <div>
+                                    <input class="field" type="hidden" id="street_number" name="street_number" value="{{Session::get('street_number')}}" />
+                                    <input class="field" type="hidden" id="route" name="route" value="{{Session::get('route')}}" />
+                                    <input class="field" type="hidden" id="locality" name="city" value="{{Session::get('city')}}" />
+                                    <input class="field" type="hidden" id="administrative_area_level_1" name="state" value="{{Session::get('state')}}" />
+                                    <input class="field" type="hidden" id="postal_code" name="pin_code" value="{{Session::get('pin_code')}}" />
+                                    <input class="field" type="hidden" id="country" name="country" value="{{Session::get('country')}}" />
+                                </div>
+
+                                <div id="add_apt_number_field" style="display: none;">
+                                    <label for="add_apt">Add Apartment Number:
+                                        <input type="text" class="input-text validate {{ $errors->has('address_line_2') ? 'form-error' : ''}}" value="{{Session::get('address_line_2')}}" name="address_line_2" id="address_line_2" placeholder="Apt, Unit, Suite, or Floor #" style="padding-left: 20px;" />
+                                    </label>
+                                    <button id="remove_add_apt_number" onclick="on_remove_address_line_2(event)" class="button" style="float: right; margin-bottom: 25px;" >Don't Add</button>
+                                </div>
+                                <button id="btn_add_apt_number" onclick="on_add_address_line_2(event)" class="button border fw" style="width: 100%; margin-bottom: 25px; margin-top: -15px; display: none;">Add an Apt or Floor #</button>
+
                                 <p class="form-row form-row-wide" id="listing_address_field" style="display: none;">
                                     <label for="listing_address">Listing Address:<span class="required">*</span>
                                         <input type="text" class="input-text validate {{ $errors->has('listing_address') ? 'form-error' : ''}}" value="{{Session::get('listing_address')}}" name="listing_address" id="listing_address" placeholder="Full Street Address" autocomplete="off" style="padding-left: 20px;" @if(Session::has('listing_address')) data-is-valid="true" @endif />
@@ -639,6 +656,9 @@
         let dob_value = "{{Session::get('dob')}}";
         if(dob_value) { on_dob_change(dob_value); }
 
+        let address_line_2 = "{{Session::get('address_line_2')}}";
+        if(address_line_2) { on_remove_address_line_2(_, address_line_2); }
+
         get_form("{{ Session::get('type') }}", true);
         set_max_date();
         if("{{ Session::get('selectedTab'), 'tab1' }}" === 'tab2') {
@@ -678,6 +698,7 @@
                 $('#agency-caption').show();
                 $('#tax_home_field').show();
                 $('#address_field').show();
+                $('#btn_add_apt_number').show();
                 $('#listing_address_field').hide();
                 $('#terms_accept_field').show();
                 $('#register_button_field').show();
@@ -716,6 +737,7 @@
                 $('#agency-caption').hide();
                 $('#tax_home_field').hide();
                 $('#address_field').show();
+                $('#btn_add_apt_number').show();
                 $('#listing_address_field').show();
                 $('#terms_accept_field').show();
                 $('#register_button_field').show();
@@ -752,6 +774,7 @@
                 $('#agency-caption').hide();
                 $('#tax_home_field').hide();
                 $('#address_field').hide();
+                $('#btn_add_apt_number').hide();
                 $('#listing_address_field').hide();
                 $('#terms_accept_field').show();
                 $('#register_button_field').show();
@@ -788,6 +811,7 @@
                 $('#agency-caption').hide();
                 $('#tax_home_field').hide();
                 $('#address_field').hide();
+                $('#btn_add_apt_number').hide();
                 $('#listing_address_field').hide();
                 $('#terms_accept_field').hide();
                 $('#register_button_field').hide();
@@ -807,6 +831,16 @@
 
 
     function initialize() {
+        var componentForm = {
+            street_number: 'short_name',
+            route: 'long_name',
+            locality: 'long_name',
+            administrative_area_level_1: 'short_name',
+            country: 'long_name',
+            postal_code: 'short_name'
+        };
+
+
         let options = {
             componentRestrictions: {country: 'us'}
         };
@@ -819,15 +853,32 @@
                 let element_address = document.getElementById(addressFields[field]);
                 let element_address_error = document.getElementById(`${addressFields[field]}_error`);
                 if(element_address) {
-                    google.maps.event.addDomListener(element_address, 'keydown', (event) => {
+                    google.maps.event.addDomListener(element_address, 'keypress', (event) => {
                         if (event.keyCode === 13) {
                             event.preventDefault();
-                        } else {
+                        } else if(element_address.dataset.isValid) {
                             delete element_address.dataset.isValid;
+                            if(element_address.name === 'address') {
+                                for (var component in componentForm) {
+                                    document.getElementById(component).value = '';
+                                }
+                            }
                         }
                     });
                     let autocomplete_address = new google.maps.places.Autocomplete(element_address, (addressFields[field] === 'tax_home') ? options_tax_home : options);
                     autocomplete_address.addListener('place_changed', (e) => {
+                        if(element_address.name === 'address') {
+                            var place = autocomplete_address.getPlace();
+
+                            for (var i = 0; i < place.address_components.length; i++) {
+                                var addressType = place.address_components[i].types[0];
+                                if (componentForm[addressType]) {
+                                    var val = place.address_components[i][componentForm[addressType]];
+                                    document.getElementById(addressType).value = val;
+                                }
+                            }
+                        }
+
                         element_address.style.borderColor = '#e0e0e0';
                         element_address_error.style.display = "none";
                         element_address.dataset.isValid = true;
@@ -869,6 +920,20 @@
         } else {
             $('#dob_validation_error').html('');
         }
+    }
+
+    function on_add_address_line_2(e) {
+        e.preventDefault();
+        $('#add_apt_number_field').show();
+        $('#btn_add_apt_number').hide();
+        $('#address_line_2').val('');
+    }
+
+    function on_remove_address_line_2(e, value = '') {
+        if (e) { e.preventDefault(); }
+        $('#add_apt_number_field').hide();
+        $('#btn_add_apt_number').show();
+        $('#address_line_2').val(value);
     }
 
     function get_input_from_prompt(title, id) {

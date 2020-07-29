@@ -262,7 +262,7 @@ class UserController extends BaseController
 
     public function register_user(Request $request)
     {
-        //                 print_r($request->all());exit;
+        //                         print_r($request->all());exit;
 
         $name = $request->username;
         $fname = $request->first_name;
@@ -366,6 +366,13 @@ class UserController extends BaseController
                 ->with('languages_known', $request->languages_known)
                 ->with('tax_home', $request->tax_home)
                 ->with('address', $request->address)
+                ->with('address_line_2', $request->address_line_2)
+                ->with('street_number', $request->street_number)
+                ->with('route', $request->route)
+                ->with('city', $request->city)
+                ->with('state', $request->state)
+                ->with('pin_code', $request->pin_code)
+                ->with('country', $request->country)
                 ->with('listing_address', $request->listing_address)
                 ->with('work', $request->work)
                 ->with('work_title', $request->work_title)
@@ -379,6 +386,9 @@ class UserController extends BaseController
 
         $token = $this->generate_random_string();
         $mobile = $request->phone_no;
+
+        $address = $request->street_number . ', ' . $request->route; // Considered as Address_line_1
+
         $insert = DB::table('users')->insert([
             'client_id' => $request->client_id,
             'role_id' => $role_id,
@@ -395,7 +405,12 @@ class UserController extends BaseController
             'occupation' => $request->occupation,
             'name_of_agency' => $request->name_of_agency,
             'tax_home' => $request->tax_home,
-            'address' => $request->address,
+            'address' => $address,
+            'address_line_2' => $request->address_line_2,
+            'city' => $request->city,
+            'state' => $request->state,
+            'pin_code' => $request->pin_code,
+            'country' => $request->country,
             'listing_address' => $request->listing_address,
             'status' => 1,
             'work' => $request->work,
@@ -606,6 +621,7 @@ class UserController extends BaseController
             "property_tax_document",
             "utility_bill",
             "traveler_contract_id",
+            "cohosting_agreement_id",
         ];
         $all_documents = [];
         foreach ($keys as $key) {

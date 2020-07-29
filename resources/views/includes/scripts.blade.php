@@ -394,7 +394,6 @@ function delete_file() {
 <script>
 
     function onLoad() {
-        debugger
         gapi.load('auth2', function() {
             gapi.auth2.init();
         });

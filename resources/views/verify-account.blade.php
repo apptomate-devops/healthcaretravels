@@ -165,6 +165,48 @@
                                     {{-----  Agency Verification ----- END ---------------}}
 
 
+                                @elseif($user->role_id==4)
+
+                                    {{----- Cohost Verification ----- START ---------------}}
+
+
+                                    <div class="info-text">
+                                        You must complete all verification methods in order to submit your profile for verification.
+                                        Please submit within seven days to be granted full access to all of Health Care Travels' features.
+                                    </div>
+                                    @if ($user->is_verified == -1)
+                                        <div class="info-text text-error padding-top-10">
+                                            We were unable to verify your account. Please resubmit your information or contact support for more information. Attempts remaining: {{3 - $user->denied_count}}
+                                        </div>
+                                    @endif
+                                    <div class="col-md-6">
+                                        <label>Government ID </label>
+                                        <input type="file" name="government_id" id="government_id" class="form-control"  />
+                                        @if(isset($GOVERNMENT_ID->document_type))
+                                            <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
+                                        @endif
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Driver's license </label>
+                                        <input type="file" name="driver_license_id" id="driver_license_id" class="form-control" />
+                                        @if(isset($DRIVER_LICENSE_ID->document_type))
+                                            <a href="{{$DRIVER_LICENSE_ID->document_url}}" target="_blank" style="float: right;">view</a>
+                                        @endif
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label>Signed HCT Co-hosting Agreement </label>
+                                        <input type="file" name="cohosting_agreement_id" id="cohosting_agreement_id" class="form-control" />
+                                        @if(isset($COHOSTING_AGREEMENT_ID->document_type))
+                                            <a href="{{$COHOSTING_AGREEMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
+                                        @endif
+                                        <p class="info-text">Only the HCT Standard Agreement will be accepted.</p>
+                                        <div style="margin-top: 10px;">
+                                            <a href="" style="text-decoration-line: underline;">Download from here</a>
+                                        </div>
+                                    </div>
+
+                                    {{------- Cohost Traveler Verification ----- END ---------------}}
+
                                 @else
 
 

@@ -274,6 +274,7 @@ class UserController extends BaseController
 
         $messages = [
             'required' => 'Please complete this field',
+            'required_without' => 'Please complete this field',
             'accepted' => 'Terms and Policy must be agreed',
             'same' => 'Password must match repeat password',
             'password1.regex' =>
@@ -340,7 +341,8 @@ class UserController extends BaseController
                 'gender' => 'required',
                 'languages_known' => 'required',
                 'occupation' => 'required',
-                'name_of_agency' => 'required',
+                'name_of_agency' => 'required_without:other_agency',
+                'other_agency' => 'required_without:name_of_agency',
                 'tax_home' => 'required',
                 'address' => 'required',
                 'terms_accept' => 'accepted',
@@ -364,6 +366,7 @@ class UserController extends BaseController
                 ->with('gender', $request->gender)
                 ->with('occupation', $request->occupation)
                 ->with('name_of_agency', $request->name_of_agency)
+                ->with('other_agency', $request->other_agency)
                 ->with('languages_known', $request->languages_known)
                 ->with('tax_home', $request->tax_home)
                 ->with('address', $request->address)
@@ -405,6 +408,7 @@ class UserController extends BaseController
             'languages_known' => $request->languages_known,
             'occupation' => $request->occupation,
             'name_of_agency' => $request->name_of_agency,
+            'other_agency' => $request->other_agency,
             'tax_home' => $request->tax_home,
             'address' => $address,
             'address_line_2' => $request->address_line_2,

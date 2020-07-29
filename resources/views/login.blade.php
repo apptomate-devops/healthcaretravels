@@ -519,8 +519,9 @@
                                 <p class="form-row form-row-wide" id="agency_show" style="display: none;">
                                     <label for="agency_name" style="margin-bottom: 0;">Agency you work for:<span class="required">*</span></label>
                                     <span class="autocomplete-select"></span>
-                                    {{--                                    <div id="add_another_agency" class="add-another" onclick="add_another_agency()">Add another</div>--}}
-                                    <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
+                                <div id="add_another_agency" class="add-another" onclick="add_another_agency()" style="cursor: pointer;">Can't find it? Add it here.</div>
+                                <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
+                                <input type="text" style="display: none; width: 350px;" class="input-text validate" name="other_agency" id="other_agency" value="{{Session::get('other_agency')}}" placeholder="Other agency" autocomplete="off">
                                 <div class="info-text" id="agency-caption">Select as many agencies that you have worked for in the last 12 months.</div>
                                 {!! $errors->first('name_of_agency', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -656,14 +657,10 @@
         });
     }
     $(document).ready(() => {
-        let dob_value = "{{Session::get('dob')}}";
-        if(dob_value) { on_dob_change(dob_value); }
 
-        let address_line_2 = "{{Session::get('address_line_2')}}";
-        if(address_line_2) { on_remove_address_line_2(_, address_line_2); }
-
-        get_form("{{ Session::get('type') }}", true);
+        load_agencies();
         set_max_date();
+
         if("{{ Session::get('selectedTab'), 'tab1' }}" === 'tab2') {
             $('#login_tab').removeClass('active');
             $('#register_tab').addClass('active');
@@ -671,7 +668,16 @@
             $('#tab2').show();
         }
 
-        load_agencies();
+        get_form("{{ Session::get('type') }}", true);
+
+        let dob_value = "{{Session::get('dob')}}";
+        if(dob_value) { on_dob_change(dob_value); }
+
+        let address_line_2 = "{{Session::get('address_line_2')}}";
+        if(address_line_2) { on_add_address_line_2(undefined, address_line_2); }
+
+        let other_agency = "{{Session::get('other_agency')}}";
+        if(other_agency) { add_another_agency(); }
     })
 
     let addressFields = [];
@@ -698,6 +704,7 @@
                 $('#occupation_field').show();
                 $('#agency_show').show();
                 $('#add_another_agency').show();
+                $('#other_agency').hide();
                 $('#agency-caption').show();
                 $('#tax_home_field').show();
                 $('#address_field').show();
@@ -737,6 +744,7 @@
                 $('#occupation_field').hide();
                 $('#agency_show').hide();
                 $('#add_another_agency').hide();
+                $('#other_agency').hide();
                 $('#agency-caption').hide();
                 $('#tax_home_field').hide();
                 $('#address_field').show();
@@ -774,6 +782,7 @@
                 $('#occupation_field').hide();
                 $('#agency_show').hide();
                 $('#add_another_agency').hide();
+                $('#other_agency').hide();
                 $('#agency-caption').hide();
                 $('#tax_home_field').hide();
                 $('#address_field').hide();
@@ -811,6 +820,7 @@
                 $('#occupation_field').hide();
                 $('#agency_show').hide();
                 $('#add_another_agency').hide();
+                $('#other_agency').hide();
                 $('#agency-caption').hide();
                 $('#tax_home_field').hide();
                 $('#address_field').hide();
@@ -925,18 +935,18 @@
         }
     }
 
-    function on_add_address_line_2(e) {
-        e.preventDefault();
+    function on_add_address_line_2(e, value = '') {
+        if (e) { e.preventDefault(); }
         $('#add_apt_number_field').show();
         $('#btn_add_apt_number').hide();
-        $('#address_line_2').val('');
+        $('#address_line_2').val(value);
     }
 
-    function on_remove_address_line_2(e, value = '') {
-        if (e) { e.preventDefault(); }
+    function on_remove_address_line_2(e) {
+        e.preventDefault();
         $('#add_apt_number_field').hide();
         $('#btn_add_apt_number').show();
-        $('#address_line_2').val(value);
+        $('#address_line_2').val('');
     }
 
     function get_input_from_prompt(title, id) {
@@ -961,31 +971,8 @@
     });
 
     function add_another_agency() {
-        let value = prompt('Agency:', '');
-        let regex = /^[_A-z0-9]*((-|\s)*[_A-z0-9])*$/;
-
-        if(!value) { return false; }
-        else if (["other", "others"].includes(value.toLowerCase()) || !regex.test(value)) {
-            alert('enter valid name of agency and try again');
-        }
-        else {
-            $.ajax({
-                url : `add-another-agency/${value}`,
-                type: "GET",
-                success: function(data) {
-                    if (data.success) {
-                        alert(data.message);
-                        allAgencies.push({ name: value });
-                        initPureSelect(allAgencies, agencyAutoComplete.value());
-                    } else {
-                        alert(data.message);
-                    }
-                },
-                error: function (errorThrown) {
-                    console.log(errorThrown);
-                }
-            });
-        };
+        $('#add_another_agency').hide();
+        $('#other_agency').show();
     }
     function load_agencies() {
         var agencies = <?php echo json_encode($agency); ?>;
@@ -1012,6 +999,9 @@
     }
 
     function validate_registration() {
+        if ("{{APP_ENV}}" === "local") {
+            return true; // escape validation for local
+        }
         let dob_error = $('#dob_validation_error').html();
         if(dob_error) {
             $(window).scrollTop($('#dob').offset().top-100);

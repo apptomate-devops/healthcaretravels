@@ -96,20 +96,20 @@
                                     @endif
                                     <div class="col-md-6">
                                         <label>Government ID </label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control"  />
+                                        <input type="file" name="government_id" id="government_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                     </div>
                                     <div class="col-md-6">
                                         <label>Driver's license </label>
-                                        <input type="file" name="driver_license_id" id="driver_license_id" class="form-control" />
+                                        <input type="file" name="driver_license_id" id="driver_license_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                     </div>
                                     <div class="col-md-6">
                                         <label>Property Tax Document</label>
-                                        <input type="file" name="property_tax_document" id="property_tax_document" class="form-control"  />
+                                        <input type="file" name="property_tax_document" id="property_tax_document" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                         <div class="info-text">With proof of name and listing address</div>
                                     </div>
                                     <div class="col-md-6">
                                         <label>Utility Bill</label>
-                                        <input type="file" name="utility_bill" id="utility_bill" class="form-control"  />
+                                        <input type="file" name="utility_bill" id="utility_bill" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                         <div class="info-text">With proof of name and listing address</div>
                                     </div>
 
@@ -134,11 +134,11 @@
                                     @endif
                                     <div class="col-md-6">
                                         <label>Traveler's Contract</label>
-                                        <input type="file" name="traveler_contract_id" id="traveler_contract_id" class="form-control"  />
+                                        <input type="file" name="traveler_contract_id" id="traveler_contract_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                     </div>
                                     <div class="col-md-6">
                                         <label>Work Badge Picture </label>
-                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control"  />
+                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                     </div>
                                     <div class="col-md-12" style="margin-top: 40px;">
                                         <div class="card col-md-12" style="padding: 15px;">
@@ -181,21 +181,21 @@
                                     @endif
                                     <div class="col-md-6">
                                         <label>Government ID </label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control"  />
+                                        <input type="file" name="government_id" id="government_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                         @if(isset($GOVERNMENT_ID->document_type))
                                             <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                     </div>
                                     <div class="col-md-6">
                                         <label>Driver's license </label>
-                                        <input type="file" name="driver_license_id" id="driver_license_id" class="form-control" />
+                                        <input type="file" name="driver_license_id" id="driver_license_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                         @if(isset($DRIVER_LICENSE_ID->document_type))
                                             <a href="{{$DRIVER_LICENSE_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                     </div>
                                     <div class="col-md-12">
                                         <label>Signed HCT Co-hosting Agreement </label>
-                                        <input type="file" name="cohosting_agreement_id" id="cohosting_agreement_id" class="form-control" />
+                                        <input type="file" name="cohosting_agreement_id" id="cohosting_agreement_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                         @if(isset($COHOSTING_AGREEMENT_ID->document_type))
                                             <a href="{{$COHOSTING_AGREEMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
@@ -224,28 +224,28 @@
                                     @endif
                                     <div class="col-md-6">
                                         <label>Work Badge Picture </label>
-                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control"  />
+                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                         @if(isset($WORK_BADGE_ID->document_type))
                                             <a href="{{$WORK_BADGE_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                     </div>
                                     <div class="col-md-6">
                                         <label>Travel Contract </label>
-                                        <input type="file" name="travel_contract_id" id="travel_contract_id" class="form-control"  />
+                                        <input type="file" name="travel_contract_id" id="travel_contract_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                         @if(isset($TRAVEL_CONTRACT_ID->document_type))
                                             <a href="{{$TRAVEL_CONTRACT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                     </div>
                                     <div class="col-md-6">
                                         <label>Government ID </label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control"  />
+                                        <input type="file" name="government_id" id="government_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                         @if(isset($GOVERNMENT_ID->document_type))
                                             <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                     </div>
                                     <div class="col-md-6">
                                         <label>Driver's license </label>
-                                        <input type="file" name="driver_license_id" id="driver_license_id" class="form-control" />
+                                        <input type="file" name="driver_license_id" id="driver_license_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                         @if(isset($DRIVER_LICENSE_ID->document_type))
                                             <a href="{{$DRIVER_LICENSE_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
@@ -344,6 +344,14 @@
                         });
                         $(":submit").prop('disabled', completed_inputs.length < 3);
                     });
+                    $("input:file").change(function (e) {
+                        const target = e.target;
+                        const maxAllowedSize = 25 * 1024 * 1024;
+                        if (target.files && target.files[0] && target.files[0].size > maxAllowedSize) {
+                            alert('File size is too large, maximum upload size is 25MB.')
+                            target.value = ''
+                        }
+                    })
                 });
 
             </script>

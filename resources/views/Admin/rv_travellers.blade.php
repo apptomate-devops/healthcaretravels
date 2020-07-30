@@ -16,13 +16,13 @@
 
     </style>
     <div class="content-header row">
-        <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
-            <h3 class="content-header-title mb-0 d-inline-block">Owner <small>Management</small>
-                @if(Session::has('error'))
+        <div class="content-header-left col-md-6 col-12 mb-2 breadcrumb-new">
+            <h3 class="content-header-title mb-0 d-inline-block">RV Travelers <small>Management</small>
+                @if(Session::has('alert'))
                     &nbsp;&nbsp;&nbsp;&nbsp;<span style="float:right;font-size: 15px"><span
                             class="alert alert-{{Session::get('status')}} alert-dismissible">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    {{Session::get('error')}}
+    {{Session::get('alert')}}
   </span></span>
                 @endif</h3>
             <div class="row breadcrumbs-top d-inline-block" style="float: right;margin-right: -105%;">
@@ -40,7 +40,6 @@
     <input type="hidden" name="current" id="current" value="1">
 
     <div style="margin-bottom: 20px;">
-
     </div>
 
     <div class="content-body">
@@ -115,7 +114,7 @@
                                                         <span class="btn btn-default btn-success btn-block">Verified</span>
                                                     @endif
                                                 </td>
-                                                <td>
+                                            <td>
                                                 <a href="{{BASE_URL}}admin/single_user?id={{$traveller->id}}"><span
                                                         class="btn btn-success btn-default btn-block">View </span> </a>
                                             </td>
@@ -156,7 +155,6 @@
 @section('scripts')
 
     <script type="text/javascript">
-
         function status_update(status, id, node) {
             if (node.selectedOptions[0].dataset.approve) {
                 var url = "{{BASE_URL}}" + "admin/verify_profile/" + id;
@@ -171,21 +169,19 @@
             window.location = url;
         }
 
-
         function status_update1(status, id) {
-            var url = "{{BASE_URL}}" + "admin/change_status/" + id + "/" + status;
+            var url = "{{BASE_URL}}" + "admin/user-status-update?id=" + id + "&status=" + status;
             console.log(url);
-
             $.ajax({
                 type: 'GET',
                 url: url,
-                // dataType: 'json',
+                dataType: 'json',
                 success: function (data) {
                     // ajax success
                     console.log("data", data);
                     if (data.status) {
                         alert("Status updated successfully!...");
-                        location.reload();
+                        // location.reload();
                     }
                 },
                 error: function (data) {

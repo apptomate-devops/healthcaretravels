@@ -18,6 +18,15 @@ class TravellerController extends BaseController
         return view('Admin.travellers', compact('travellers'));
     }
 
+    public function rv_travellers(Request $request)
+    {
+        $travellers = $this->db
+            ::table('users')
+            ->where('role_id', THREE)
+            ->get();
+        return view('Admin.rv_travellers', compact('travellers'));
+    }
+
     public function agency(Request $request)
     {
         $agencyes = $this->db

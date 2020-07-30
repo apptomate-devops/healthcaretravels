@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Services\Logger;
 
 class Kernel extends ConsoleKernel
 {
@@ -12,9 +13,7 @@ class Kernel extends ConsoleKernel
      *
      * @var array
      */
-    protected $commands = [
-        //
-    ];
+    protected $commands = [Commands\SevenDayVerificationReminder::class];
 
     /**
      * Define the application's command schedule.
@@ -24,8 +23,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->command('reminder:verification')->dailyAt('10:00');
+        $schedule->command(\Jorijn\LaravelSecurityChecker\Console\SecurityMailCommand::class)->weekly();
     }
 
     /**
@@ -35,6 +34,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
+        $this->load(__DIR__ . '/Commands');
         require base_path('routes/console.php');
     }
 }

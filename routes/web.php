@@ -69,6 +69,12 @@ Route::get('/standards', 'HomeController@standards');
 Route::get('/terms-of-use', 'HomeController@terms_of_use');
 Route::get('/travellers-refund-policy', 'HomeController@travellers_refund_policy');
 
+//  Reset password flow
+Route::POST('/new-password', 'HomeController@update_password');
+Route::GET('/new-password/{token}', 'HomeController@new_password');
+Route::get('/reset-password', 'HomeController@reset_password');
+Route::POST('/reset-password', 'HomeController@reset_email');
+
 // Owner controller routes
 Route::get('/owner/profile', 'OwnerController@owner_profile');
 

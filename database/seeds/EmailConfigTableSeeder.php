@@ -39,5 +39,19 @@ class EmailConfigTableSeeder extends Seeder
                 'updated_at' => date("Y-m-d H:i:s"),
             ],
         );
+        \App\Models\EmailConfig::updateOrCreate(
+            [
+                'type' => 8,
+            ],
+            [
+                'type' => 8,
+                'title' => 'Health Care Travels',
+                'subject' => 'Urgent – Verify Your Account',
+                'message' =>
+                    "In order to use your Health Care Travels profile, you must submit information and/or documents to verify your account within seven days after opening.",
+                'role_id' => 0,
+                'updated_at' => date("Y-m-d H:i:s"),
+            ],
+        );
     }
 }

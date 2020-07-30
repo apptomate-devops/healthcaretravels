@@ -104,7 +104,7 @@
                                                     <select class="form-control"
                                                             onchange="status_update({{$property->id}},this)"
                                                             id="basicSelect" style="cursor: pointer;">
-                                                        <option selected="selected">Make..</option>
+                                                        <option selected="selected" disabled>Select</option>
                                                         <option value="1">Publish</option>
                                                         <option value="3">Unpublish</option>
                                                         <!-- <option value="0">Pending</option> -->

@@ -145,6 +145,7 @@ class UserController extends BaseController
                 $request->session()->put('profile_image', $check->profile_image);
             }
             $request->session()->put('user_id', $check->id);
+            $request->session()->put('is_verified', $check->is_verified);
             $request->session()->put('role_id', $check->role_id);
             $request->session()->put('username', $check->username);
             $request->session()->put('name_of_agency', $check->name_of_agency);
@@ -431,12 +432,11 @@ class UserController extends BaseController
         //        $request->session()->put('role_id', $d->role_id);
         $request->session()->put('username', $d->username);
         $request->session()->put('user_id', $d->id);
+        $request->session()->put('is_verified', $d->is_verified);
 
         //  Send Welcome mail
 
-        $welcome = EmailConfig::where('type', 1)
-            ->where('role_id', $d->role_id)
-            ->first();
+        $welcome = EmailConfig::where('type', 1)->first();
 
         $mail_data = [
             'username' => $request->first_name . ' ' . $request->last_name,
@@ -518,6 +518,7 @@ class UserController extends BaseController
                     $url = $this->get_base_url() . 'traveler/profile';
                 }
                 $request->session()->put('user_id', $check->id);
+                $request->session()->put('is_verified', $check->is_verified);
                 $request->session()->put('role_id', $check->role_id);
                 $request->session()->put('username', $check->username);
                 $request->session()->put('name_of_agency', $check->name_of_agency);

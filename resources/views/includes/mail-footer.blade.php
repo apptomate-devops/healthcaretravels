@@ -14,8 +14,7 @@
                     style="margin: 0; padding: 0; font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif; color: rgb(255, 90, 95); text-decoration: none"
                     target="_blank">
                         <img alt="Facebook" height="42"
-                            src="https://a1.muscache.com/airbnb/rookery/email/footer/facebook-942db036304a4d7531bd634125b0ed95.png"
-                            width="42"
+                            src="{{BASE_URL}}assets/icons/mail/facebook.png" width="42"
                             style="margin: 0; font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif; padding: 0; max-width: 100%; border: 0">
                     </a>
                 </td>
@@ -23,7 +22,7 @@
                     <a href="https://twitter.com/HC_Travels" title="Twitter"
                     style="margin: 0; padding: 0; font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif; color: rgb(255, 90, 95); text-decoration: none"
                     target="_blank"> <img alt="Twitter" height="42"
-                                            src="https://a0.muscache.com/airbnb/rookery/email/footer/twitter-1b57cb4f627e51c567753c2b1d89bd9a.png"
+                                            src="{{BASE_URL}}assets/icons/mail/facebook.png"
                                             width="42"
                                             style="margin: 0; font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif; padding: 0; max-width: 100%; border: 0">
                     </a></td>
@@ -31,7 +30,7 @@
                     <a href="https://www.instagram.com/healthcaretravels/" title="Instagram"
                     style="margin: 0; padding: 0; font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif; color: rgb(255, 90, 95); text-decoration: none"
                     target="_blank"> <img alt="Instagram" height="42"
-                                            src="https://a1.muscache.com/airbnb/rookery/email/footer/instagram-a6066bd633da64d7acbaa7c2331ef40e.png"
+                                            src="{{BASE_URL}}assets/icons/mail/instagram.png"
                                             width="42"
                                             style="margin: 0; font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif; padding: 0; max-width: 100%; border: 0">
                     </a></td>

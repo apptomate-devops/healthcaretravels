@@ -238,7 +238,7 @@ class HomeController extends BaseController
         $user = DB::table('users')
             ->where('email', $request->email)
             ->first();
-        $mail_data = EmailConfig::where('type', 5)->first();
+        $mail_data = EmailConfig::where('type', TEMPLATE_PASSWORD_RESET)->first();
         $email = $request->email;
         if ($user->role_id == 2) {
             $username = $user->name_of_agency;
@@ -252,13 +252,7 @@ class HomeController extends BaseController
         ];
         $title = isset($mail_data->title) ? $mail_data->title : 'Mail from - ' . APP_BASE_NAME;
         $subject = isset($mail_data->subject) ? $mail_data->subject : "Mail from - " . APP_BASE_NAME;
-
-        Mail::send('mail.password-reset', $data, function ($message) use ($email, $subject, $title) {
-            $message->from('gotocva@gmail.com', $title);
-            $message->to($email);
-            $message->subject($subject);
-        });
-
+        $this->send_custom_email($email, $subject, 'mail.password-reset', $data, $title);
         return back()->with('success', 'Password reset link sent to your email');
     }
 
@@ -532,15 +526,9 @@ class HomeController extends BaseController
                 CLIENT_PHONE,
             'username' => $username,
         ];
-
         $title = 'Your Password Changed Successfully';
         $subject = 'Your Password Changed Successfully';
-        $email = $request->email;
-        Mail::send('mail.custom-email', $data, function ($message) use ($email, $subject, $title) {
-            $message->from('gotocva@gmail.com', $title);
-            $message->to($email);
-            $message->subject($subject);
-        });
+        $this->send_custom_email($request->email, $subject, 'mail.custom-mail', $data, $title);
 
         $url = BASE_URL . 'login';
         return redirect($url);

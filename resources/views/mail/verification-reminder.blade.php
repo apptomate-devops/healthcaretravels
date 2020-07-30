@@ -1,20 +1,15 @@
 @extends('layout.mail')
 @section('content')
-    <div style="float: left;">
+    <div>
         Hi {{$name}},
     </div>
-    <br>
-    <br>
-    <div style="float: left;">
+    <div style="padding-top: 5px;">
         {{$text}}
     </div>
-    <br>
-    <div style="float: left;">
+    <div style="padding-top: 5px;">
         Please verify your profile at the link below within 48 hours
     </div>
-    <br>
-    <br>
-    <div style="float: left;">
+    <div style="padding-top: 10px;">
         <a href="{{BASE_URL}}verify-account" style="color: blue;text-decoration: underline;">
             Verify here
         </a>

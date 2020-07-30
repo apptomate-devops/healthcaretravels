@@ -1,9 +1,9 @@
 @extends('layout.mail')
 @section('content')
-    <div style="float: left;">Hi {{$username}},</div>
-    <br>
-    <br>
-    <div style="float: left;">
+    <div>
+        Hi {{$username}},
+    </div>
+    <div style="padding-top: 5px;">
         {{$content}}
     </div>
 @endsection

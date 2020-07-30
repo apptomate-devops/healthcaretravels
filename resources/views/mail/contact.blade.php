@@ -1,18 +1,15 @@
 @extends('layout.mail')
 @section('content')
-    <div style="float: left;">
+    <div>
         Name : {{$name}},
     </div>
-    <br>
-    <br>
-    <div style="float: left;">
+    <div style="padding-top: 5px;">
         Email : <a href="mailto:{{$email}}">{{$email}}</a>
     </div>
     <br>
     <br>
-    <br>
-    Message : <br><br>
-    <div style="float: left;">
+    Message :
+    <div style="padding-top: 10px;">
         {{$text}}
     </div>
 @endsection

@@ -11,15 +11,12 @@
             </div>
             <span style="float:right; text-align:right;"></span>
             <div style="clear:both;"></div>
-            <hr width="100%"/>
         </div>
-        <div class="mail-container">
-            <div style="margin: 0; font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif; padding: 0; margin-top: 1em">
-                @yield('content')
-                <br>
-            </div>
-            <br/>
+        <hr width="100%"/>
+        <div class="mail-container"style="margin: 1em 0; display: inline-block; font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif; padding: 0; display: inline-block;">
+            @yield('content')
         </div>
+        <hr width="100%"/>
         @include('includes.mail-footer')
     </div>
 </body>

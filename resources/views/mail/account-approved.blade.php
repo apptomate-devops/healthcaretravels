@@ -1,20 +1,15 @@
 @extends('layout.mail')
 @section('content')
-    <div style="float: left;">
+    <div>
         Hi {{$name}},
     </div>
-    <br>
-    <br>
-    <div style="float: left;">
+    <div style="padding-top: 5px;">
         {{$text}}
     </div>
-    <br>
-    <div style="float: left;">
+    <div style="padding-top: 5px;">
         Again, welcome!
     </div>
-    <br>
-    <br>
-    <div style="float: left;">
+    <div style="padding-top: 10px;">
         <a href="{{BASE_URL}}login" style="color: blue;text-decoration: underline;">
             Login here
         </a>

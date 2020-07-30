@@ -1,11 +1,14 @@
-<br/>
-<hr width="100%"/>
 <footer class="navbar-inverse">
     <div class="row">
-        <!--'.$sign.'-->
-        Thank you<br>{{APP_BASE_NAME}} Team<br><br>
-        © {{date('Y')}} {{APP_BASE_NAME}}. All Rights Reserved.
-        <br>
+        <div>
+            Thank you
+        </div>
+        <div style="padding-top: 5px;">
+            {{APP_BASE_NAME}} Team
+        </div>
+        <div style="padding: 10px 0;">
+            © {{date('Y')}} {{APP_BASE_NAME}}. All Rights Reserved.
+        </div>
         <table cellpadding="5" style="margin: 0; padding: 0; font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif; border-spacing: 0; line-height: 150%; width: 100%; width: auto">
             <tbody>
             <tr style="margin: 0; padding: 0; font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif">

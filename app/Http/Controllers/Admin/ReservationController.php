@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use DB;
-use App\Users;
+use App\Models\Users;
 use App\Http\Controllers\BaseController;
 
 class ReservationController extends BaseController

@@ -39,6 +39,20 @@ class UserController extends BaseController
         }
     }
 
+    public function check_verified(Request $request)
+    {
+        $user_id = $request->session()->get("user_id");
+        if (empty($user_id)) {
+            return response()->json(['isVerified' => 0]);
+        }
+        $check = DB::table('users')
+            ->where('client_id', '=', CLIENT_ID)
+            ->where('id', $user_id)
+            ->where('is_verified', 1)
+            ->count();
+        return response()->json(['isVerified' => $check]);
+    }
+
     public function email_send()
     {
         return view('email-send');

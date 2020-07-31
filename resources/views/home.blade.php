@@ -642,7 +642,7 @@
                                                 <div class="col-md-8"> @endif
                                                 @if($i < count($categories))
                                                     <!-- Image Box -->
-                                                        <a href="{{url('/')}}/short-term?place={{$category->title}}"
+                                                        <a href="{{url('/')}}/search-property?place={{$category->title}}"
                                                            class="img-box"
                                                            @if($i==0 || $i==4 || $i==11 || $i==15 || $i==5) style="height: 525px;"
                                                            @endif @if($i==3 || $i==7 || $i==8 ||$i==12) style="height: 250px;"

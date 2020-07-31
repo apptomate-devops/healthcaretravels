@@ -64,8 +64,6 @@ Route::get('/request-roommate', 'HomeController@request_roommate');
 Route::post('/request_roommate', 'HomeController@save_request_roommate');
 Route::post('/request_roommate2', 'HomeController@save_request_roommate2');
 Route::get('/rv_professional', 'HomeController@rv_professional');
-Route::get('/short-term', 'HomeController@short_term');
-Route::post('/short-term', 'HomeController@search_property');
 Route::get('/standards', 'HomeController@standards');
 Route::get('/terms-of-use', 'HomeController@terms_of_use');
 Route::get('/travellers-refund-policy', 'HomeController@travellers_refund_policy');
@@ -77,6 +75,7 @@ Route::get('/reset-password', 'HomeController@reset_password');
 Route::POST('/reset-password', 'HomeController@reset_email');
 
 // Property routes :: Home Controller
+Route::get('/search-property', 'HomeController@search_property');
 Route::post('/search-property', 'HomeController@search_property');
 Route::post('/search-property-filtering', 'HomeController@search_property');
 

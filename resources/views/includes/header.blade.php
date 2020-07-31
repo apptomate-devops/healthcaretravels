@@ -163,25 +163,14 @@
                 </ul>
               </li>
               <li>
-                <a href="{{url('/')}}/short-term">
+                <a href="{{url('/')}}/search-property">
                 Properties
                 </a>
               </li>
-
-              {{-- <li>
-                <a href="{{url('/')}}/short-term">
-                </a>
-                <ul>
-                  <li><a href="{{url('/')}}/short-term">Vacation Homes</a></li>
-                  <li><a href="{{url('/')}}/long-term">For Rent</a></li>
-                </ul>
-              </li> --}}
-
               <li>
                  @if(Session::get('username'))
                 <a href="{{url('/')}}/owner/add-property">
                 Become a Host
-
                 </a>
                 @endif
               </li>

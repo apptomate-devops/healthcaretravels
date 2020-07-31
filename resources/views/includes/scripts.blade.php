@@ -37,12 +37,6 @@
 
 
 <script>
-
-
-    // This example requires the Places library. Include the libraries=places
-    // parameter when you first load the API. For example:
-    // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-
     function lsTest() {
         var test = 'test';
         try {
@@ -123,24 +117,11 @@
                 html_data += '<input type="hidden" name="formatted_address" value="' + address + '"/>';
                 $("#set_location").html(html_data);
                 $("#search_location").html(html_data);
-
-
             });
         });
-        @if(Request::path()=='short-term' || Request::path()=='search-property')
-        initMaps();
-        @endif
-
-        @if(Request::path()=='contact')
-        contact_map();
-        @endif
-
-        //create_map(-25.363,-25.363);
-
     }
 
     function dragMap() {
-        // body...
         var latitude = 40.238856;
         var longitude = -101.909323;
 
@@ -150,10 +131,7 @@
             minZoom: 1
         });
     }
-
-    // contact_map();
     function contact_map() {
-        // body...
         var latitude = 30.0003267;
         var longitude = -95.2464395;
 
@@ -216,7 +194,7 @@
     ];
     var mapMarkers = [];
     var mapMarkers1 = [];
-        @if(Request::path()=='short-term')
+    @if(Request::path()=='short-term' || Request::path()=='search-property')
     var latitude = 40.238856;
     var longitude = -101.909323;
         @else
@@ -224,6 +202,14 @@
     var longitude = {{array_key_exists ('lng' , $request_data) ? $request_data['lng'] : -101.909323}};
 
     @endif
+    function onGoogleLoad() {
+        var path = "{{Request::path()}}";
+        if (['short-term', 'search-property'].indexOf(path) !== -1) {
+            initMaps();
+        } else if (path === 'contact') {
+            contact_map();
+        }
+    }
     function initMaps() {
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: latitude, lng: longitude},
@@ -393,7 +379,7 @@
 
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}&libraries=places" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}&libraries=places&callback=onGoogleLoad" async defer></script>
 
 <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
 

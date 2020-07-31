@@ -474,7 +474,7 @@
             } else {
                 $("#current").val(1);
                 $("#map_wrapper").hide();
-                $(".content-body").show();
+                $(".content-body"script).show();
                 $("#btnMap").html("Show on map");
             }
         });

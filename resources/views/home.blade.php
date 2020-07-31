@@ -300,12 +300,6 @@
 
 </head>
 <body>
-<script>
-    $(document).on("click", "#button", function (e) {
-        console.log("test");
-        e.preventDefault();
-    })
-</script>
 <!-- Wrapper -->
 <div id="wrapper">
     <!-- Header Container

@@ -6,8 +6,15 @@
         <div class="navbar-header">
             <div style="text-align: center;">
                 <a href="" title="" style="margin-top:0px">
-                    <img src="{{BASE_URL}}uploads/keepers_logo.png" height="100px" width="100px"
-                         class="img-responsive logo-new"></a>
+                    <img
+                        alt="Logo"
+                        title="Logo"
+                        height="100"
+                        width="100"
+                        style="display: block;"
+                        src="{{BASE_URL}}uploads/keepers_logo.png"
+                    >
+                </a>
             </div>
             <span style="float:right; text-align:right;">
 

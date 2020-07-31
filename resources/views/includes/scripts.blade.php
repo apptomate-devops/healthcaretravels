@@ -1,7 +1,4 @@
-
 <script src="https://apis.google.com/js/platform.js" async defer></script>
-
-
 
 <script type="text/javascript" src="{{URL::asset('scripts/chosen.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/magnific-popup.min.js') }}"></script>
@@ -27,11 +24,11 @@
     });
 </script>
 <style type="text/css">
-.uploading{
-    color: #ffffff;
-    background-color: #e78016;
-    border-color: #ffffff;
-}
+    .uploading {
+        color: #ffffff;
+        background-color: #e78016;
+        border-color: #ffffff;
+    }
 
 </style>
 
@@ -42,42 +39,41 @@
 <script>
 
 
-
     // This example requires the Places library. Include the libraries=places
     // parameter when you first load the API. For example:
     // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
 
-    function lsTest(){
-	    var test = 'test';
-	    try {
-	        localStorage.setItem(test, test);
-	        localStorage.removeItem(test);
-	        return true;
-	    } catch(e) {
-	        return false;
-	    }
-	}
+    function lsTest() {
+        var test = 'test';
+        try {
+            localStorage.setItem(test, test);
+            localStorage.removeItem(test);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
 
-// listen to storage event
-	window.addEventListener('storage', function(event){
-    // do what you want on logout-event
-    if (event.key == 'logout-event') {
-	      //alert('Received logout event! Insert logout script here.');
-	      window.location = window.location.protocol + "//" + window.location.host;
-	    }
-	}, false);
+    // listen to storage event
+    window.addEventListener('storage', function (event) {
+        // do what you want on logout-event
+        if (event.key == 'logout-event') {
+            //alert('Received logout event! Insert logout script here.');
+            window.location = window.location.protocol + "//" + window.location.host;
+        }
+    }, false);
 
-		$(document).ready(function(){
-			  if(lsTest()) {
-			    $('#logout').on('click', function(){
-			      // change logout-event and therefore send an event
-			      localStorage.setItem('logout-event', 'logout' + Math.random());
-			      return true;
-			    });
-			  } else {
-			     // setInterval or setTimeout
-			  }
-		});
+    $(document).ready(function () {
+        if (lsTest()) {
+            $('#logout').on('click', function () {
+                // change logout-event and therefore send an event
+                localStorage.setItem('logout-event', 'logout' + Math.random());
+                return true;
+            });
+        } else {
+            // setInterval or setTimeout
+        }
+    });
 
     function signOut() {
         //alert("logout");
@@ -103,12 +99,10 @@
     }
 
 
-
-
     function initMap() {
         @if(Request::path()=='owner/add-property')
         dragMap();
-        @endif
+            @endif
 
         var input = document.getElementById('pac-input');
         var autocomplete = new google.maps.places.Autocomplete(input);
@@ -124,9 +118,9 @@
                 mesg += "\nLatitude: " + latitude;
                 mesg += "\nLongitude: " + longitude;
                 //alert(mesg);
-                var html_data = '<input type="hidden" name="lat" value="'+latitude+'"/>';
-                html_data += '<input type="hidden" name="lng" value="'+longitude+'"/>';
-                html_data += '<input type="hidden" name="formatted_address" value="'+address+'"/>';
+                var html_data = '<input type="hidden" name="lat" value="' + latitude + '"/>';
+                html_data += '<input type="hidden" name="lng" value="' + longitude + '"/>';
+                html_data += '<input type="hidden" name="formatted_address" value="' + address + '"/>';
                 $("#set_location").html(html_data);
                 $("#search_location").html(html_data);
 
@@ -147,26 +141,27 @@
 
     function dragMap() {
         // body...
-           var latitude = 40.238856;
-    var longitude = -101.909323;
+        var latitude = 40.238856;
+        var longitude = -101.909323;
 
         map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat:latitude , lng:longitude },
+            center: {lat: latitude, lng: longitude},
             zoom: 14,
             minZoom: 1
         });
     }
+
     // contact_map();
-     function contact_map() {
+    function contact_map() {
         // body...
-           var latitude = 30.0003267;
-            var longitude = -95.2464395;
+        var latitude = 30.0003267;
+        var longitude = -95.2464395;
 
-             var infowindow = new google.maps.InfoWindow({
-    content: '<div class="contact_map" style="top: 55px;margin-bottom: 8px;"><center><h2 style="color:orange">Health Care Travels</h2><h4> 7075 Fm 1960 Rd W,</h4><h4>Houston, Texas 77069, </h4><h4> United States Suite 1010</h4><center></div>'
-});
+        var infowindow = new google.maps.InfoWindow({
+            content: '<div class="contact_map" style="top: 55px;margin-bottom: 8px;"><center><h2 style="color:orange">Health Care Travels</h2><h4> 7075 Fm 1960 Rd W,</h4><h4>Houston, Texas 77069, </h4><h4> United States Suite 1010</h4><center></div>'
+        });
 
-         var uluru = {lat: latitude, lng: longitude};
+        var uluru = {lat: latitude, lng: longitude};
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 4,
             center: uluru
@@ -175,16 +170,16 @@
             position: uluru,
             map: map,
             icon: 'https://www.healthcaretravels.com/public/assets/icons/others/Map.png',
-             title: 'Health Care Travels',
+            title: 'Health Care Travels',
         });
 
-             infowindow.open(map,marker);
-        google.maps.event.addListener(marker, 'load', function() {
-  infowindow.open(map,marker);
- });
+        infowindow.open(map, marker);
+        google.maps.event.addListener(marker, 'load', function () {
+            infowindow.open(map, marker);
+        });
     }
 
-    function create_map(latitude,longitude) {
+    function create_map(latitude, longitude) {
 
 
         var uluru = {lat: latitude, lng: longitude};
@@ -195,59 +190,50 @@
         var marker = new google.maps.Marker({
             position: uluru,
             map: map,
-
         });
-
-
     }
 
-   var map;
-   @if(Request::path()=='short-term' || Request::path()=='search-property')
+    var map;
+        @if(Request::path()=='short-term' || Request::path()=='search-property')
     var markers = [
-        @foreach($properties as $propmap)
-        {property_details:'<div style="background: white;width: 405px;padding-left: 2px;padding-bottom: 5px;    border-radius: 10px;"><div>@if(isset($propmap->image_url) != "")<img src="{{$propmap->image_url}}" style="width: 400px;">@endif<p style="font-size: 30px;font-weight: 600;margin-top: -45px;background-color: rgba(74,74,76,0.7);position: absolute;width: 400px;color: white;height: 45px;padding-left: 20px;width: 400px;">$ {{$propmap->price_per_night}}</p></div><div><h4 style="font-size: 22px;font-weight: bold;padding-left: 5px;">{{$propmap->title}}</h4></div><div><p style="font-size: 15px;font-weight: 600;width: 400px;padding-left: 5px;"><i class="fa fa-map-marker"></i><?php
-        $location = explode(',', $propmap->location);
-        $getLoc = end($location);
-        echo $getLoc;
-        ?> </p></div></div>', provider_id: "{{ $propmap->id }}",name: '', lat: {{ $propmap->lat }}, lng: {{ $propmap->lng }}},
+                @foreach($properties as $propmap)
+            {
+                property_details: '<div style="background: white;width: 405px;padding-left: 2px;padding-bottom: 5px;    border-radius: 10px;"><div>@if(isset($propmap->image_url) != "")<img src="{{$propmap->image_url}}" style="width: 400px;">@endif<p style="font-size: 30px;font-weight: 600;margin-top: -45px;background-color: rgba(74,74,76,0.7);position: absolute;width: 400px;color: white;height: 45px;padding-left: 20px;width: 400px;">$ {{$propmap->price_per_night}}</p></div><div><h4 style="font-size: 22px;font-weight: bold;padding-left: 5px;">{{$propmap->title}}</h4></div><div><p style="font-size: 15px;font-weight: 600;width: 400px;padding-left: 5px;"><i class="fa fa-map-marker"></i><?php
+                $location = explode(',', $propmap->location);
+                $getLoc = end($location);
+                echo $getLoc;
+                ?> </p></div></div>',
+                provider_id: "{{ $propmap->id }}",
+                name: '',
+                lat: {{ $propmap->lat }},
+                lng: {{ $propmap->lng }}},
+            @endforeach
+        ];
 
-
-        @endforeach
-    ];
-
-console.log(markers);
+    console.log(markers);
     var mapIcons = [
-         'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-
+        'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
     ];
     var mapMarkers = [];
     var mapMarkers1 = [];
-    @if(Request::path()=='short-term')
-        var latitude = 40.238856;
-        var longitude = -101.909323;
-    @else
-        var latitude = {{$request_data['lat']}};
-        var longitude = {{$request_data['lng']}};
+        @if(Request::path()=='short-term')
+    var latitude = 40.238856;
+    var longitude = -101.909323;
+        @else
+    var latitude = {{array_key_exists ('lat' , $request_data) ? $request_data['lat'] : 40.238856}};
+    var longitude = {{array_key_exists ('lng' , $request_data) ? $request_data['lng'] : -101.909323}};
+
     @endif
     function initMaps() {
         map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat:latitude , lng:longitude },
+            center: {lat: latitude, lng: longitude},
             zoom: 4,
             minZoom: 1
         });
-
-
-   console.log("latitude");
-   console.log(latitude);
-   console.log("longitude");
-   console.log(longitude);
-
-            var infoWindow = new google.maps.InfoWindow(), marker, i;
-var i=0;
-        markers.forEach( function(element, index) {
-
+        var infoWindow = new google.maps.InfoWindow(), marker, i;
+        var i = 0;
+        markers.forEach(function (element, index) {
             var url = "/admin/provider/details/"
-
             marker = new google.maps.Marker({
                 property_details: element.property_details,
                 position: {lat: element.lat, lng: element.lng},
@@ -255,29 +241,20 @@ var i=0;
                 title: element.name,
                 icon: mapIcons[element.available],
             });
-
-
-   google.maps.event.addListener(marker, 'click', (function(marker, i) {
-            return function() {
-                infoWindow.setContent(markers[i]['property_details']);
-                infoWindow.open(map, marker);
-            }
-        })(marker, i));
-
-   console.log("i");
-   console.log(i);
-    i++;
+            google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                return function () {
+                    infoWindow.setContent(markers[i]['property_details']);
+                    infoWindow.open(map, marker);
+                }
+            })(marker, i));
+            i++;
         });
-console.log(infoWindow);
-
     }
 
 
-  @endif
+    @endif
 
 </script>
-
-
 
 
 <!-- Firebase -->
@@ -305,9 +282,9 @@ console.log(infoWindow);
     var geoFire = new GeoFire(firebaseRef);
 
     var ref = geoFire.ref();  // ref === firebaseRef
-    geoFire.set("test", [10.48, 2.41]).then(function() {
+    geoFire.set("test", [10.48, 2.41]).then(function () {
         console.log("Provided key has been added to GeoFire");
-    }, function(error) {
+    }, function (error) {
         console.log("Error: " + error);
     });
 
@@ -316,11 +293,11 @@ console.log(infoWindow);
         radius: 100.5
     });
 
-    var onKeyEnteredRegistration = geoQuery.on("key_entered", function(key, location, distance) {
+    var onKeyEnteredRegistration = geoQuery.on("key_entered", function (key, location, distance) {
         console.log(key + " entered query at " + location + " (" + distance + " km from center)");
     });
 
-    var onKeyExitedRegistration = geoQuery.on("key_exited", function(key, location, distance) {
+    var onKeyExitedRegistration = geoQuery.on("key_exited", function (key, location, distance) {
         console.log(key + " exited query to " + location + " (" + distance + " km from center)");
 
         // Cancel the "key_entered" callback
@@ -344,9 +321,9 @@ console.log(infoWindow);
             processData: false,
             data: form_data,
             type: 'post',
-            success: function(php_script_response){
+            success: function (php_script_response) {
                 //alert(php_script_response); // display response from the PHP script, if any
-                var data = '<img src="'+php_script_response+'" alt="profile picture">'
+                var data = '<img src="' + php_script_response + '" alt="profile picture">'
                 //$("#profileImage").html(data);
                 document.getElementById("profileImage").innerHTML = data;
                 document.getElementById("header_profile_image").innerHTML = data;
@@ -359,7 +336,8 @@ console.log(infoWindow);
 
 
     }
-function delete_file() {
+
+    function delete_file() {
 
         var tok = $("#token_1").val();
         var form_data = new FormData();
@@ -373,7 +351,7 @@ function delete_file() {
             processData: false,
             data: form_data,
             type: 'post',
-            success: function(php_script_response){
+            success: function (php_script_response) {
                 //alert(php_script_response); // display response from the PHP script, if any
                 // var data = '<img src="'+php_script_response+'" alt="profile picture">'
                 // //$("#profileImage").html(data);
@@ -394,7 +372,7 @@ function delete_file() {
 <script>
 
     function onLoad() {
-        gapi.load('auth2', function() {
+        gapi.load('auth2', function () {
             gapi.auth2.init();
         });
     }

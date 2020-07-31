@@ -10,6 +10,7 @@ use App\Models\PropertyList;
 use App\Models\EmailConfig;
 use DB;
 use Mail;
+use Session;
 
 class HomeController extends BaseController
 {
@@ -323,30 +324,28 @@ class HomeController extends BaseController
             ->select('property_list.*', 'property_room.*', 'property_short_term_pricing.*')
             ->where('property_list.is_complete', '=', ACTIVE)
             ->where('property_list.status', '=', 1)
-            ->where('property_list.property_status', '=', 1)
-            ->selectRaw(
-                "(6371 * acos(cos(radians(" .
-                    $source_lat .
-                    "))* cos(radians(`lat`))
+            ->where('property_list.property_status', '=', 1);
+        if (!empty($source_lng) && !empty($source_lat)) {
+            $query
+                ->selectRaw(
+                    "(6371 * acos(cos(radians(" .
+                        $source_lat .
+                        "))* cos(radians(`lat`))
                             * cos(radians(`lng`) - radians(" .
-                    $source_lng .
-                    ")) + sin(radians(" .
-                    $source_lat .
-                    "))
+                        $source_lng .
+                        ")) + sin(radians(" .
+                        $source_lat .
+                        "))
                             * sin(radians(`lat`)))) as distance",
-            )
-            ->having('distance', '<=', RADIUS)
-            ->orderBy('distance');
-
+                )
+                ->having('distance', '<=', RADIUS)
+                ->orderBy('distance');
+        }
         $where = [];
-        // if filter applied
-
-        if (Session::get('role_id') == 3) {
+        if (Session::has('role_id') && Session::get('role_id') == 3) {
             $where[] = 'property_list.property_type_rv_or_home = 1';
-            // ->where('property_list.property_type_rv_or_home', '=', 1)
         } else {
             $where[] = 'property_list.property_type_rv_or_home = 2';
-            // ->where('property_list.property_type_rv_or_home', '=', 2)
         }
         if ($request->guests != "") {
             $where[] = 'property_list.total_guests >= "' . $request->guests . '" ';
@@ -374,20 +373,13 @@ class HomeController extends BaseController
         }
 
         $dataWhere = implode(" and ", $where);
-        //dd($dataWhere);
-
         if ($dataWhere != "") {
             $query->whereRaw($dataWhere);
         }
-
         $total_count = count($query->get());
-
         $query = $query->skip($offset)->take($items_per_page);
-
         $nearby_properties = $query->get();
-
         $total_properties = count($nearby_properties);
-
         foreach ($nearby_properties as $key => $value) {
             $image = DB::table('property_images')
                 ->where('property_id', $value->property_id)

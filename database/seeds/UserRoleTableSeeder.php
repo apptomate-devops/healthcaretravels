@@ -11,60 +11,19 @@ class UserRoleTableSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\UserRole::updateOrCreate(
-            [
-                'id' => 0,
-            ],
-            [
-                'role' => 'HEALTHCARE TRAVELER',
-                'client_id' => 15465793,
-                'status' => 1,
-                'updated_at' => date("Y-m-d H:i:s"),
-            ],
-        );
-        \App\Models\UserRole::updateOrCreate(
-            [
-                'id' => 1,
-            ],
-            [
-                'role' => 'PROPERTY OWNER',
-                'client_id' => 15465793,
-                'status' => 1,
-                'updated_at' => date("Y-m-d H:i:s"),
-            ],
-        );
-        \App\Models\UserRole::updateOrCreate(
-            [
-                'id' => 2,
-            ],
-            [
-                'role' => 'AGENCY',
-                'client_id' => 15465793,
-                'status' => 1,
-                'updated_at' => date("Y-m-d H:i:s"),
-            ],
-        );
-        \App\Models\UserRole::updateOrCreate(
-            [
-                'id' => 3,
-            ],
-            [
-                'role' => 'RV HEALTHCARE TRAVELER',
-                'client_id' => 15465793,
-                'status' => 1,
-                'updated_at' => date("Y-m-d H:i:s"),
-            ],
-        );
-        \App\Models\UserRole::updateOrCreate(
-            [
-                'id' => 4,
-            ],
-            [
-                'role' => 'COHOST',
-                'client_id' => 15465793,
-                'status' => 1,
-                'updated_at' => date("Y-m-d H:i:s"),
-            ],
-        );
+        $roles = ['HEALTHCARE TRAVELER', 'PROPERTY OWNER', 'AGENCY', 'RV HEALTHCARE TRAVELER', 'COHOST'];
+        foreach ($roles as $id => $role) {
+            \App\Models\UserRole::updateOrCreate(
+                [
+                    'id' => $id,
+                ],
+                [
+                    'role' => $role,
+                    'client_id' => CLIENT_ID,
+                    'status' => 1,
+                    'updated_at' => date("Y-m-d H:i:s"),
+                ],
+            );
+        }
     }
 }

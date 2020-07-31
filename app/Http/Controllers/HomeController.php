@@ -173,9 +173,11 @@ class HomeController extends BaseController
         $categories = DB::select(
             "SELECT A.image_url,A.location,A.title FROM `home_listings` A, `home_category` B WHERE A.category_id = B.id",
         );
+        $room_types = DB::table('property_room_types')->get();
         return view('home', [
             'latest_properties' => $latest_properties,
             'categories' => $categories,
+            'room_types' => $room_types,
         ]);
     }
 

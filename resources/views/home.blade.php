@@ -367,10 +367,14 @@
                                     <select name="home_type" required data-placeholder="Any Status"
                                             class="chosen-select-no-single">
                                         <option value="" selected disabled>Home Type</option>
-                                        <option value="1">Entire Place</option>
-                                        <option value="2">Private Room</option>
-                                        <option value="3">Share Room</option>
-                                        <option value="4">RV Parking</option>
+                                        @foreach($room_types as $pro)
+                                            <option
+                                                value="{{$pro->name}}"
+                                                @if(isset($request_data['roomtype']) && $request_data['roomtype'] == $pro->name)  selected @endif
+                                            >
+                                                    {{$pro->name}}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-2 col-sm-12 col-xs-12" style="margin-top: 10px;">

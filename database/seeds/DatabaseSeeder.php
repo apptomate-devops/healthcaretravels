@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
+define("CLIENT_ID", "15465793");
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -14,5 +16,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserRoleTableSeeder::class);
         $this->call(EmailConfigTableSeeder::class);
         $this->call(AdminUsersTableSeeder::class);
+        $this->call(PropertyListingRoomTypesSeeder::class);
     }
 }

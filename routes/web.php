@@ -20,6 +20,7 @@ Route::GET('/is_user_active', 'LogoutController@is_user_active');
 // User Controller Auth Routes
 Route::GET('/check_email/{email}/{client_id}', 'UserController@check_email');
 Route::GET('/check_phone/{phono_no}/{client_id}', 'UserController@check_phone');
+Route::GET('/check_verified', 'UserController@check_verified');
 Route::GET('/email-send', 'UserController@email_send');
 Route::GET('/get_phone_number/{user_id}', 'UserController@get_phone_number');
 Route::get('/login', 'UserController@login');

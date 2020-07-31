@@ -335,15 +335,15 @@
 
                                 <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
                                     <div class="main-search-input">
-                                        <input type="text" name="from_date" onchange="set_to_date();"
-                                               placeholder="Check in" value="" id="from_date"/>
+                                        <input type="text" name="from_date" placeholder="Check in" value=""
+                                               id="from_date" autocomplete="off"/>
                                     </div>
                                 </div>
 
                                 <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
                                     <div class="main-search-input">
                                         <input name="to_date" type="text" onchange="check_to_date();"
-                                               placeholder="Check out" value="" id="to_date"/>
+                                               placeholder="Check out" value="" id="to_date" autocomplete="off"/s>
 
                                     </div>
                                 </div>
@@ -758,27 +758,46 @@
 <!-- Wrapper / End -->
 
 <script type="text/javascript">
-    $('.date_picker').datepicker({});
-    var date = new Date();
-    //date.setDate(date.getDate()-1);
-    $('#from_date').datepicker({
-        autoclose: true,
-        startDate: date
+    $(function () {
+        var dateFormat = "mm/dd/yy";
+        var date_today = new Date();
+        var date_today_next_month = new Date();
+        date_today_next_month.setMonth(date_today_next_month.getMonth() + 1);
+        var fromOptions = {
+            startDate: date_today,
+            changeMonth: true,
+        };
+        var toOptions = {
+            startDate: date_today_next_month,
+            changeMonth: true,
+        };
+        var from = $("#from_date")
+                .datepicker(fromOptions)
+                .on("change", function () {
+                    var selectedDate = getDate(this);
+                    if (selectedDate) {
+                        selectedDate.setMonth(selectedDate.getMonth() + 1);
+                        toOptions.startDate = selectedDate;
+                        toOptions.minDate = selectedDate;
+                        to.datepicker("destroy");
+                        to.datepicker(toOptions);
+                    }
+                });
+        var to = $("#to_date").datepicker(toOptions)
+                .on("change", function () {
+                    var selectedDate = getDate(this);
+                });
+
+        function getDate(element) {
+            var date;
+            try {
+                date = new Date(element.value);
+            } catch (error) {
+                date = null;
+            }
+            return date;
+        }
     });
-    $('#to_date').datepicker({
-        autoclose: true,
-        startDate: date
-    });
-
-
-    function set_to_date() {
-
-        // body...
-        // var from_date = $('#from_date').val();
-        //   $('#to_date').datepicker({
-        //       startDate: from_date
-        //   });
-    }
 
     function check_to_date() {
         var to_date = $('#to_date').val();

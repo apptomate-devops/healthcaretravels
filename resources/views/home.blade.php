@@ -332,6 +332,12 @@
                                                placeholder="Enter address e.g. street, city or state" value=""/>
                                     </div>
                                 </div>
+                                <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
+                                    <div class="main-search-input">
+                                        <input type="number" name="distance"
+                                               placeholder="Distance" value=""/>
+                                    </div>
+                                </div>
 
                                 <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
                                     <div class="main-search-input">
@@ -349,20 +355,6 @@
                                 </div>
 
                                 <div id="search_location"></div>
-                                <!-- Property Type  -->
-                            {{--<div class="col-md-3">
-                              <select name="guests" required data-placeholder="Any Type" class="chosen-select-no-single" >
-                                <option value="" selected disabled>Guests</option>
-                                <option value="0">Any</option>
-                                <option value="1">1 Guest</option>
-                                <option value="2">2 Guests</option>
-                                <option value="3">3 Guests</option>
-                                <option value="4">4 Guests</option>
-                                <option value="5">5 Guests</option>
-
-                              </select>
-                            </div>--}}
-                            <!-- Status  -->
                                 <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
                                     <select name="property_type" required data-placeholder="Any Status"
                                             class="chosen-select-no-single">
@@ -371,7 +363,16 @@
                                         <option value="2">Long Term Rental</option>
                                     </select>
                                 </div>
-
+                                <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
+                                    <select name="home_type" required data-placeholder="Any Status"
+                                            class="chosen-select-no-single">
+                                        <option value="" selected disabled>Home Type</option>
+                                        <option value="1">Entire Place</option>
+                                        <option value="2">Private Room</option>
+                                        <option value="3">Share Room</option>
+                                        <option value="4">RV Parking</option>
+                                    </select>
+                                </div>
                                 <div class="col-md-2 col-sm-12 col-xs-12" style="margin-top: 10px;">
                                     <button class="button" id="button" style="height: 58px;width: 150px;" type="submit">
                                         <i class="fa fa-search">&nbsp;SEARCH</i>

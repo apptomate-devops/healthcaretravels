@@ -9,4 +9,9 @@
     <div style="padding-top: 5px;">
         In the meantime, you are welcome to continue browsing through our website and current listings.
     </div>
+    <div style="padding-top: 10px;">
+        <a href="{{BASE_URL}}" style="color: blue;text-decoration: underline;">
+            Click here to visit Health Care Travels
+        </a>
+    </div>
 @endsection

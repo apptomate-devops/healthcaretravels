@@ -320,8 +320,25 @@
       </div>
       <!-- Header / End -->
       <script type="text/javascript">
+            var isUserVerified = false;
+            var verifiedInterval = setInterval(function() {
+                $.ajax({
+                    type: 'GET',
+                    url: '/check_verified',
+                    success: (response) => {
+                        isUserVerified = response.isVerified;
+                        if (isUserVerified) {
+                            clearInterval(verifiedInterval);
+                            verifiedInterval = undefined;
+                        }
+                    },
+                    error: (error) => {
+                        console.log(error);
+                    }
+                });
+            }, 10000);
             $(document).on('click', '.not-verified-block', function(event) {
-                var isVerified = "{{Session::get('is_verified')}}";
+                var userId = "{{Session::get('user_id')}}";
                 if (isVerified != 1) {
                     event.preventDefault();
                     event.stopPropagation();

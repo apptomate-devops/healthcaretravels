@@ -308,13 +308,13 @@
                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                                 <input type="hidden" name="client_id" value="{{$constants['client_id']}}">
                                 <p class="form-row form-row-wide">
-                                    <label for="username">Email Address:<span class="required">*</span>
+                                    <label for="username">Email Address:
                                         <i class="im im-icon-Male"></i>
                                         <input type="email" class="input-text" name="username" id="username" placeholder="Email Address" required />
                                     </label>
                                 </p>
                                 <p class="form-row form-row-wide">
-                                    <label for="password">Password:<span class="required">*</span>
+                                    <label for="password">Password:
                                         <i class="im im-icon-Lock-2"></i>
                                         <input class="input-text" type="password" name="password" id="password" placeholder="Password" required />
                                     </label>
@@ -341,7 +341,7 @@
                                 <input type="hidden" name="client_id" id="client_id" value="{{$constants['client_id']}}">
 
                                 <p class="form-row form-row-wide">
-                                    <label for="user_type required">Account Type:<span class="required">*</span>
+                                    <label for="user_type required">Account Type:
                                         <select type="text" class="input-text validate {{ $errors->has('user_type') ? 'form-error' : ''}}" onchange="get_form(this.value)" name="user_type" id="user_type" autocomplete="off" >
                                             <option label="" selected>Select Account Type</option>
 
@@ -359,7 +359,7 @@
                                     {!! $errors->first('user_type', '<p class="error-text">:message</p>') !!}
                                 </p>
                                 <p class="form-row form-row-wide" id="username2_field" style="display: none;">
-                                    <label for="username2 required">Username:<span class="required">*</span>
+                                    <label for="username2 required">Username:
                                         <i class="im im-icon-Male"></i>
                                         <input type="text" class="input-text validate {{ $errors->has('username') ? 'form-error' : ''}}" name="username" id="username2" value="{{Session::get('username')}}" autocomplete="off" required />
                                     </label>
@@ -367,7 +367,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="email_field" style="display: none;">
-                                    <label for="email2"><label id="email-label">Email Address:</label><span class="required">*</span>
+                                    <label for="email2"><label id="email-label">Email Address:</label>
                                         <i class="im im-icon-Mail"></i>
                                         <input type="email" class="input-text validate {{ $errors->has('email') ? 'form-error' : ''}}" value="{{Session::get('mail')}}" name="email" id="email2" autocomplete="off" required />
                                     </label>
@@ -375,7 +375,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="password_field" style="display: none;">
-                                    <label for="password1">Password:<span class="required">*</span>
+                                    <label for="password1">Password:
                                         <i class="im im-icon-Lock-2" ></i>
                                         <input class="input-text validate {{ $errors->has('password1') ? 'form-error' : ''}}" type="password" data-strength autocomplete="off" name="password1" id="password1" required />
                                     </label>
@@ -399,7 +399,7 @@
                                 </div>
 
                                 <p class="form-row form-row-wide" id="password2_field" style="display: none;" >
-                                    <label for="password2">Repeat Password:<span class="required">*</span>
+                                    <label for="password2">Repeat Password:
                                         <i class="im im-icon-Lock-2" ></i>
                                         <input class="input-text validate {{ $errors->has('password2') ? 'form-error' : ''}}" autocomplete="off" type="password" name="password2" id="password2" required />
                                     </label>
@@ -411,7 +411,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="first_name_field" style="display: none;">
-                                    <label for="username2">First Name:<span class="required">*</span>
+                                    <label for="username2">First Name:
                                         <i class="im im-icon-Male"></i>
                                         <input type="text" class="input-text validate {{ $errors->has('first_name') ? 'form-error' : ''}}" value="{{Session::get('fname')}}" name="first_name" id="first_name" autocomplete="off" required />
                                     </label>
@@ -419,7 +419,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="last_name_field" style="display: none;">
-                                    <label for="username2">Last Name:<span class="required">*</span>
+                                    <label for="username2">Last Name:
                                         <i class="im im-icon-Male"></i>
                                         <input type="text" class="input-text validate {{ $errors->has('last_name') ? 'form-error' : ''}}" value="{{Session::get('lname')}}" name="last_name" id="last_name" autocomplete="off" required />
                                     </label>
@@ -429,7 +429,7 @@
                                 <div class="info-text" id="name-caption">Your name will not appear in your listing.</div>
 
                                 <p class="form-row form-row-wide" id="ethnicity_filed" style="display: none;">
-                                    <label for="ethnicity">Ethnicity:<span class="required">*</span>
+                                    <label for="ethnicity">Ethnicity:
                                         <select type="text" class="input-text validate {{ $errors->has('ethnicity') ? 'form-error' : ''}}" name="ethnicity" id="ethnicity" autocomplete="off" required>
                                             <option value="" selected>Select Ethnicity</option>
                                             <option value="American Indian or Alaskan Native" @if(Session::get('ethnicity')=='American Indian or Alaskan Native') selected @endif>American Indian or Alaskan Native</option>
@@ -445,7 +445,7 @@
                                 <div class="info-text" id="ethnicity-caption">We use this information for identity verification. It will not appear on your public profile.</div>
 
                                 <p class="form-row form-row-wide" id="phone_number_field" style="display: none;">
-                                    <label for="phone_no">Mobile Number:<span class="required">*</span>
+                                    <label for="phone_no">Mobile Number:
                                         <i class="im im-icon-Phone-2"></i>
                                         <input type="text" class="input-text validate {{ $errors->has('phone_no') ? 'form-error' : ''}}" value="{{Session::get('phone')}}" name="phone_no" id="phone_no" maxlength="10" required />
                                     </label>
@@ -453,7 +453,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="work_number_field" style="display: none;">
-                                    <label for="work">Office Number:<span class="required">*</span>
+                                    <label for="work">Office Number:
                                         <i class="im im-icon-Phone"></i>
                                         <input type="text" class="input-text validate {{ $errors->has('work') ? 'form-error' : ''}}" value="{{Session::get('work')}}" name="work" id="work" maxlength="10" />
                                     </label>
@@ -461,7 +461,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="work_title_field" style="display: none;">
-                                    <label for="work_title">Work Title:<span class="required">*</span>
+                                    <label for="work_title">Work Title:
                                         <i class="im im-icon-Consulting"></i>
                                         <input type="text" class="input-text validate {{ $errors->has('work_title') ? 'form-error' : ''}}" value="{{Session::get('work_title')}}" name="work_title" id="work_title" />
                                     </label>
@@ -469,7 +469,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="website_field" style="display: none;">
-                                    <label for="website">Agency URL:<span class="required">*</span>
+                                    <label for="website">Agency URL:
                                         <i class="im im-icon-Ustream"></i>
                                         <input type="text" class="input-text validate {{ $errors->has('website') ? 'form-error' : ''}}" value="{{Session::get('website')}}" name="website" id="website" />
                                     </label>
@@ -477,7 +477,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide label-margin" id="dob_field" style="display: none;">
-                                    <label for="dob">Date of Birth:<span class="required">*</span>
+                                    <label for="dob">Date of Birth:
                                         <i class="im im-icon-Calendar" style="bottom: 10px;"></i>
                                         <input type="date" onchange="on_dob_change(this.value)" class="input-text validate {{ $errors->has('dob') ? 'form-error' : ''}}" value="{{Session::get('dob')}}" name="dob" id="dob" autocomplete="off" required />
                                     </label>
@@ -486,7 +486,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="gender_field" style="display: none;">
-                                    <label for="gender">Gender:<span class="required">*</span>
+                                    <label for="gender">Gender:
                                         <select type="text" class="input-text validate {{ $errors->has('gender') ? 'form-error' : ''}}" name="gender" id="gender" autocomplete="off" required >
                                             <option value="Male" @if(Session::get('gender')=='Male') selected @endif>Male</option>
                                             <option value="Female" @if(Session::get('gender')=='Female') selected @endif>Female</option>
@@ -497,7 +497,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="languages_field" style="display: none;">
-                                    <label for="languages_known">Languages Known:<span class="required">*</span>
+                                    <label for="languages_known">Languages Known:
                                         <i class="im im-icon-Globe"></i>
                                         <input type="text" class="input-text validate" value="{{Session::get('languages_known')}}" name="languages_known" id="languages_known" placeholder="English, Spanish" autocomplete="off" required />
                                     </label>
@@ -505,7 +505,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="occupation_field" style="display: none;">
-                                    <label for="occupation">Occupation:<span class="required">*</span>
+                                    <label for="occupation">Occupation:
                                         <select class="input-text validate" onchange="on_occupation_change(this.value)" autocomplete="off" name="occupation" id="occupation">
                                             <option label="" value="" >Select Occupation</option>
                                             @foreach($occupation as $a)
@@ -517,7 +517,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="agency_show" style="display: none;">
-                                    <label for="agency_name" style="margin-bottom: 0;">Agency you work for:<span class="required">*</span></label>
+                                    <label for="agency_name" style="margin-bottom: 0;">Agency you work for:</label>
                                     <span class="autocomplete-select"></span>
                                 <div id="add_another_agency" class="add-another" onclick="add_another_agency()" style="cursor: pointer;">Can't find it? Add it here.</div>
                                 <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
@@ -527,7 +527,7 @@
                                 </p>
 
                                 <p class="form-row form-row-wide" id="tax_home_field" style="display: none;">
-                                    <label for="tax_home">Tax Home:<span class="required">*</span>
+                                    <label for="tax_home">Tax Home:
                                         <input type="text" class="input-text validate {{ $errors->has('tax_home') ? 'form-error' : ''}}" value="{{Session::get('tax_home')}}" name="tax_home" id="tax_home" placeholder="City, State" autocomplete="off" style="padding-left: 20px;" @if(Session::has('tax_home')) data-is-valid="true" @endif />
                                     </label>
                                     {!! $errors->first('tax_home', '<p class="error-text">:message</p>') !!}
@@ -535,7 +535,7 @@
                                 <div class="error-text" id="tax_home_error" style="display: none;">Please select a valid address from the suggestions.</div>
 
                                 <p class="form-row form-row-wide" id="address_field" style="display: none;">
-                                    <label for="address"><label id="address_label">Address:</label><span class="required">*</span>
+                                    <label for="address"><label id="address_label">Address:</label>
                                         <input type="text" class="input-text validate {{ $errors->has('address') ? 'form-error' : ''}}" value="{{Session::get('address')}}" name="address" id="address" placeholder="Full Street Address" autocomplete="off" style="padding-left: 20px;" @if(Session::has('address')) data-is-valid="true" @endif />
                                     </label>
                                     {!! $errors->first('address', '<p class="error-text">:message</p>') !!}
@@ -560,7 +560,7 @@
                                 <button id="btn_add_apt_number" onclick="on_add_address_line_2(event)" class="button border fw" style="width: 100%; margin-bottom: 25px; margin-top: -15px; display: none;">Add an Apt or Floor #</button>
 
                                 <p class="form-row form-row-wide" id="listing_address_field" style="display: none;">
-                                    <label for="listing_address">Listing Address:<span class="required">*</span>
+                                    <label for="listing_address">Listing Address:
                                         <input type="text" class="input-text validate {{ $errors->has('listing_address') ? 'form-error' : ''}}" value="{{Session::get('listing_address')}}" name="listing_address" id="listing_address" placeholder="Full Street Address" autocomplete="off" style="padding-left: 20px;" @if(Session::has('listing_address')) data-is-valid="true" @endif />
                                     </label>
                                     {!! $errors->first('listing_address', '<p class="error-text">:message</p>') !!}

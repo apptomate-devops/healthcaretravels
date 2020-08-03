@@ -184,19 +184,19 @@
                                         <!-- Status -->
                                         <div class="col-fs-3">
                                             <div class="main-search-input">
-                                                <input type="text" onchange="set_to_date();" name="from_date"
-                                                       placeholder="Check in date"
+                                                <input type="text" name="from_date"
+                                                       placeholder="Check in"
                                                        value="@if(isset($request_data['from_date'])) {{$request_data['from_date']}} @endif"
-                                                       id="from_date"/>
+                                                       id="from_date" autocomplete="off"/>
                                             </div>
                                         </div>
 
                                         <!-- Property Type -->
                                         <div class="col-fs-3">
                                             <div class="main-search-input">
-                                                <input type="text" placeholder="Check out date"
+                                                <input type="text" placeholder="Check out" onchange="check_to_date();"
                                                        value="@if(isset($request_data['to_date']))  {{$request_data['to_date']}} @endif"
-                                                       name="to_date" value="" id="to_date"/>
+                                                       name="to_date" value="" id="to_date" autocomplete="off"/>
 
                                             </div>
                                         </div>
@@ -242,44 +242,17 @@
 
                                         </div>
 
-                                        <!-- Max Price -->
                                         <div class="col-fs-3">
-
-                                            <!-- Select Input -->
                                             <div class="select-input disabled-first-option">
-                                                <select class="chosen-select-no-single" name="roomtype">
-                                                    <option value="" label="blank">Select Home Type</option>
-                                                    @foreach($room_types as $pro)
-                                                        <option value="{{$pro->name}}"
-                                                                @if(isset($request_data['roomtype']) && $request_data['roomtype'] == $pro->name)  selected @endif>{{$pro->name}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <!-- Select Input / End -->
+                                                <input
+                                                    type="number"
+                                                    placeholder="Distance"
+                                                    name="distance"
+                                                    data-unit="Mi"
+                                                    value="@if(isset($request_data['distance']))  {{intval($request_data['distance'])}} @endif">
 
+                                            </div>
                                         </div>
-
-
-                                        <!-- Min Price -->
-                                        <!-- <div class="col-fs-3">
-
-                                            <div class="select-input disabled-first-option">
-
-                                                <select class="chosen-select-no-single validate" name="guests">
-                                                    <option label="blank">Category</option>
-                                                    <option value="1"></option>
-
-                                                </select>
-                                            </div>
-
-
-                                        </div> -->
-
-
-                                        <!-- Max Price -->
-
-
-                                        <!-- Min Price -->
                                         <div class="col-fs-3">
 
                                             <!-- Select Input -->
@@ -289,32 +262,41 @@
                                                        value="@if(isset($request_data['minprice']))  {{$request_data['minprice']}} @endif">
 
                                             </div>
-                                            <!-- Select Input / End -->
-
                                         </div>
-
-
-                                        <!-- Max Price -->
                                         <div class="col-fs-3">
-
-                                            <!-- Select Input -->
                                             <div class="select-input disabled-first-option">
                                                 <input type="number" placeholder="Max Price" name="maxprice"
                                                        data-unit="USD"
                                                        value="@if(isset($request_data['maxprice']))  {{$request_data['maxprice']}} @endif">
 
                                             </div>
-                                            <!-- Select Input / End -->
-
                                         </div>
 
                                         <div class="col-fs-3">
-
-                                            <!-- Select Input -->
                                             <div class="select-input disabled-first-option">
-
+                                                <select class="chosen-select-no-single" name="roomtype">
+                                                    <option value="" label="blank">Home Type</option>
+                                                    @foreach($room_types as $pro)
+                                                        <option value="{{$pro->name}}"
+                                                                @if(isset($request_data['roomtype']) && $request_data['roomtype'] == $pro->name)  selected @endif>{{$pro->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                                                                <div class="col-fs-3">
+                                            <div class="select-input disabled-first-option">
+                                                <select name="property_type" required data-placeholder="Any Status"
+                                                    class="chosen-select-no-single">
+                                                    <option value="" selected disabled>Property Type</option>
+                                                    <option value="1">Short Term Rental</option>
+                                                    <option value="2">Long Term Rental</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-fs-3">
+                                            <div class="select-input disabled-first-option">
                                                 <select class="chosen-select-no-single" name="bookingmode">
-                                                    <option value="" label="blank">Select Booking Type</option>
+                                                    <option value="" label="blank">Booking Type</option>
                                                     <option value="1"
                                                             @if(isset($request_data['bookingmode']) && $request_data['bookingmode'] == "1")  selected @endif>
                                                         Instant Book
@@ -325,10 +307,39 @@
                                                     </option>
                                                 </select>
                                             </div>
-                                            <!-- Select Input / End -->
-
                                         </div>
-
+                                        <div class="col-fs-3">
+                                            <div class="select-input disabled-first-option">
+                                            <div class="checkboxes in-row">
+                                                <input id="occupied-check" type="checkbox" name="filters-check" value="CURRENTLY_OCCUPIED">
+                                                <label for="occupied-check">Currently occupied</label>
+                                            </div>
+                                            <div class="mt-5 occupied-extra" style="display: none">
+                                                <div class="px-0 col-md-6 checkboxes in-row">
+                                                    <input id="no-kids-check" type="checkbox" name="filters-check" value="CURRENTLY_NO_KIDS">
+                                                    <label for="no-kids-check">No kids</label>
+                                                </div>
+                                                <div class="px-0 col-md-6 checkboxes in-row">
+                                                    <input id="no-dogs-check" type="checkbox" name="filters-check" value="CURRENTLY_NO_DOGS">
+                                                    <label for="no-dogs-check">No dogs</label>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="extra-filters-wrapper">
+                                        <div class="col-fs-3">
+                                            <div class="checkboxes in-row">
+                                                <input id="covid-check" type="checkbox" name="filters-check" value="COVID_SAFETY">
+                                                <label for="covid-check">COVID Safety Measures Certified</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-fs-3">
+                                            <div class="checkboxes in-row">
+                                                <input id="cancellation-check" type="checkbox" name="filters-check" value="CANCELATION">
+                                                <label for="cancellation-check">Cancellation flexibility</label>
+                                            </div>
+                                        </div>
                                     </div>
                                     <!-- Row With Forms / End -->
 
@@ -525,35 +536,14 @@
     </div>
     @include('includes.scripts')
     <script type="text/javascript">
-        $('.date_picker').datepicker({});
-        var date = new Date();
-        //date.setDate(date.getDate()-1);
-        $('#from_date').datepicker({
-            autoclose: true,
-            startDate: date
-        });
-
-        $("#from_date").change(function () {
-
-            var fDate = $("#from_date").val();
-            // alert(fDate);
-
-
-            // $("#property_to_date").foucs();
-            $("#to_date").datepicker('remove');
-            $("#to_date").datepicker({
-                startDate: fDate,
-                autoclose: true
-            });
-
-        });
-
-        function set_to_date() {
-            // body...
-//            var from_date = $('#from_date').val();
-//            $('#to_date').datepicker({
-//                startDate: from_date
-//            });
+        function check_to_date() {
+            var to_date = $('#to_date').val();
+            from_date = $('#from_date').val();
+            if (to_date && from_date > to_date) {
+                alert("Please choose date after " + from_date);
+                $('#to_date').val("");
+                return false;
+            }
         }
 
         function set_favourite(property_id) {
@@ -572,10 +562,56 @@
 
         });
         $(function () {
+            $('#occupied-check').change(function (event) {
+                var isChecked = event.currentTarget.checked;
+                if (isChecked) {
+                    $('.occupied-extra').fadeIn();
+                } else {
+                    $('.occupied-extra').fadeOut();
+                }
+            });
             $(".show_skimmer").fadeOut(2000, function () {
                 $(".content").fadeIn(1500);
 
             });
+            var dateFormat = "mm/dd/yy";
+            var date_today = new Date();
+            var date_today_next_month = new Date();
+            date_today_next_month.setMonth(date_today_next_month.getMonth() + 1);
+            var fromOptions = {
+                startDate: date_today,
+                changeMonth: true,
+            };
+            var toOptions = {
+                startDate: date_today_next_month,
+                changeMonth: true,
+            };
+            var from = $("#from_date")
+                    .datepicker(fromOptions)
+                    .on("change", function () {
+                        var selectedDate = getDate(this);
+                        if (selectedDate) {
+                            selectedDate.setMonth(selectedDate.getMonth() + 1);
+                            toOptions.startDate = selectedDate;
+                            toOptions.minDate = selectedDate;
+                            to.datepicker("destroy");
+                            to.datepicker(toOptions);
+                        }
+                    });
+            var to = $("#to_date").datepicker(toOptions)
+                    .on("change", function () {
+                        var selectedDate = getDate(this);
+                    });
+debugger;
+            function getDate(element) {
+                var date;
+                try {
+                    date = new Date(element.value);
+                } catch (error) {
+                    date = null;
+                }
+                return date;
+            }
         });
 
         $("#next").click(function (event) {

@@ -329,7 +329,7 @@
                                     <!-- Main Search Input  -->
                                     <div class="col-md-4 col-sm-6 col-xs-12" style="margin-top: 10px;">
                                         <div class="main-search-input">
-                                            <input type="text" required id="search-address-input" name="search_addr"
+                                            <input type="text" required id="search-address-input" name="formatted_address"
                                                 placeholder="Enter address e.g. street, city or state" value=""/>
                                             <input class="field" type="hidden" id="street_number" name="street_number" value="{{Session::get('street_number')}}" />
                                             <input class="field" type="hidden" id="route" name="route" value="{{Session::get('route')}}" />
@@ -342,7 +342,7 @@
                                     <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
                                         <div class="main-search-input">
                                             <input type="number" name="distance"
-                                                placeholder="Distance" value=""/>
+                                                placeholder="Distance" data-unit="Mi" value=""/>
                                         </div>
                                     </div>
                                     <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">

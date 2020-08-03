@@ -37,3 +37,22 @@
 .padding-5 {
     padding: 5px 0;
 }
+.px-0 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.mt-5 {
+    margin-top: 5px;
+}
+.mb-10 {
+    margin-bottom: 10px;
+}
+.checkboxes label:before {
+    top: 0;
+}
+.checkboxes.in-row label {
+    margin-top: 0;
+}
+.extra-filters-wrapper {
+    padding-bottom: 35px;
+}

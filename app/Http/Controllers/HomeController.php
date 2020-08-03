@@ -385,7 +385,6 @@ class HomeController extends BaseController
             ->with('total_count', $total_count)
             ->with('location_url', $lat_lng_url)
             ->with('request_data', $request_data)
-            ->with('request_data1', $request_data)
             ->with('total_properties', $total_properties)
             ->with('next', $page)
             ->with('room_types', $room_types);

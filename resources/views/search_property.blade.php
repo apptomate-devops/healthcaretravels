@@ -345,7 +345,7 @@
 
 
                                     <!-- Search Button -->
-                                    <button class="button fs-map-btn" type="submit">Update</button>
+                                    <button class="button fs-map-btn" type="submit">Search</button>
 
                                     <!-- More Search Options
                                     <a href="#" class="more-search-options-trigger margin-top-20" data-open-title="More Options" data-close-title="Less Options"></a>-->

@@ -202,14 +202,6 @@
     var longitude = {{array_key_exists ('lng' , $request_data) ? $request_data['lng'] : -101.909323}};
 
     @endif
-    function onGoogleLoad() {
-        var path = "{{Request::path()}}";
-        if (['short-term', 'search-property'].indexOf(path) !== -1) {
-            initMaps();
-        } else if (path === 'contact') {
-            contact_map();
-        }
-    }
     function initMaps() {
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: latitude, lng: longitude},
@@ -383,5 +375,16 @@
 
 <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
 
-
+<script type="text/javascript">
+    function onGoogleLoad() {
+        var path = "{{Request::path()}}";
+        if (['short-term', 'search-property'].indexOf(path) !== -1) {
+            initMaps();
+        } else if (path === 'contact') {
+            contact_map();
+        } else if (path === '/') {
+            initHomeSearchInput();
+        }
+    }
+</script>
 

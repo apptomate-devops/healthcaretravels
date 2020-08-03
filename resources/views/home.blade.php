@@ -328,8 +328,14 @@
                                 <!-- Main Search Input  -->
                                 <div class="col-md-4 col-sm-6 col-xs-12" style="margin-top: 10px;">
                                     <div class="main-search-input">
-                                        <input type="text" required id="pac-input" name="search_addr"
-                                               placeholder="Enter address e.g. street, city or state" value=""/>
+                                        <input type="text" required id="search-address-input" name="search_addr"
+                                            placeholder="Enter address e.g. street, city or state" value=""/>
+                                        <input class="field" type="hidden" id="street_number" name="street_number" value="{{Session::get('street_number')}}" />
+                                        <input class="field" type="hidden" id="route" name="route" value="{{Session::get('route')}}" />
+                                        <input class="field" type="hidden" id="locality" name="city" value="{{Session::get('city')}}" />
+                                        <input class="field" type="hidden" id="administrative_area_level_1" name="state" value="{{Session::get('state')}}" />
+                                        <input class="field" type="hidden" id="postal_code" name="pin_code" value="{{Session::get('pin_code')}}" />
+                                        <input class="field" type="hidden" id="country" name="country" value="{{Session::get('country')}}" />
                                     </div>
                                 </div>
                                 <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
@@ -807,7 +813,7 @@
     function check_to_date() {
         var to_date = $('#to_date').val();
         from_date = $('#from_date').val();
-        if (from_date > to_date) {
+        if (to_date && from_date > to_date) {
             alert("Please choose date after " + from_date);
             $('#to_date').val("");
             return false;
@@ -859,10 +865,46 @@
         //   prevArrow: $(".testimonial-carousel-controls .prev"),
         //   nextArrow: $(".testimonial-carousel-controls .next")
         // });
-
         $(".owl-buttons:first").hide();
-
     });
+    function initHomeSearchInput() {
+        var componentForm = {
+            street_number: 'short_name',
+            route: 'long_name',
+            locality: 'long_name',
+            administrative_area_level_1: 'short_name',
+            country: 'long_name',
+            postal_code: 'short_name'
+        };
+        var addressOptions = {
+            componentRestrictions: {country: 'us'}
+        };
+        try {
+            var element_address = document.getElementById('search-address-input');
+            if(element_address) {
+                google.maps.event.addDomListener(element_address, 'keypress', (event) => {
+                    if (event.keyCode === 13) {
+                        event.preventDefault();
+                    }
+                });
+                var autocomplete_address = new google.maps.places.Autocomplete(element_address, addressOptions);
+                autocomplete_address.addListener('place_changed', (e) => {
+                    if(element_address.name === 'address') {
+                        var place = autocomplete_address.getPlace();
+                        for (var i = 0; i < place.address_components.length; i++) {
+                            var addressType = place.address_components[i].types[0];
+                            if (componentForm[addressType]) {
+                                var val = place.address_components[i][componentForm[addressType]];
+                                document.getElementById(addressType).value = val;
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
 </script>
 
 

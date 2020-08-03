@@ -325,70 +325,69 @@
 
                             <form name="test" action="{{url('/')}}/search-property" method="post">
                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
-                                <!-- Main Search Input  -->
-                                <div class="col-md-4 col-sm-6 col-xs-12" style="margin-top: 10px;">
-                                    <div class="main-search-input">
-                                        <input type="text" required id="search-address-input" name="search_addr"
-                                            placeholder="Enter address e.g. street, city or state" value=""/>
-                                        <input class="field" type="hidden" id="street_number" name="street_number" value="{{Session::get('street_number')}}" />
-                                        <input class="field" type="hidden" id="route" name="route" value="{{Session::get('route')}}" />
-                                        <input class="field" type="hidden" id="locality" name="city" value="{{Session::get('city')}}" />
-                                        <input class="field" type="hidden" id="administrative_area_level_1" name="state" value="{{Session::get('state')}}" />
-                                        <input class="field" type="hidden" id="postal_code" name="pin_code" value="{{Session::get('pin_code')}}" />
-                                        <input class="field" type="hidden" id="country" name="country" value="{{Session::get('country')}}" />
+                                <div class="row">
+                                    <!-- Main Search Input  -->
+                                    <div class="col-md-4 col-sm-6 col-xs-12" style="margin-top: 10px;">
+                                        <div class="main-search-input">
+                                            <input type="text" required id="search-address-input" name="search_addr"
+                                                placeholder="Enter address e.g. street, city or state" value=""/>
+                                            <input class="field" type="hidden" id="street_number" name="street_number" value="{{Session::get('street_number')}}" />
+                                            <input class="field" type="hidden" id="route" name="route" value="{{Session::get('route')}}" />
+                                            <input class="field" type="hidden" id="locality" name="city" value="{{Session::get('city')}}" />
+                                            <input class="field" type="hidden" id="administrative_area_level_1" name="state" value="{{Session::get('state')}}" />
+                                            <input class="field" type="hidden" id="postal_code" name="pin_code" value="{{Session::get('pin_code')}}" />
+                                            <input class="field" type="hidden" id="country" name="country" value="{{Session::get('country')}}" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
+                                        <div class="main-search-input">
+                                            <input type="number" name="distance"
+                                                placeholder="Distance" value=""/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
+                                        <div class="main-search-input">
+                                            <input type="text" name="from_date" placeholder="Check in" value=""
+                                                id="from_date" autocomplete="off"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
+                                        <div class="main-search-input">
+                                            <input name="to_date" type="text" onchange="check_to_date();"
+                                                placeholder="Check out" value="" id="to_date" autocomplete="off"/s>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
-                                    <div class="main-search-input">
-                                        <input type="number" name="distance"
-                                               placeholder="Distance" value=""/>
+                                <div class="row">
+                                    <div id="search_location"></div>
+                                    <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
+                                        <select name="property_type" required data-placeholder="Any Status"
+                                                class="chosen-select-no-single">
+                                            <option value="" selected disabled>Property Type</option>
+                                            <option value="1">Short Term Rental</option>
+                                            <option value="2">Long Term Rental</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
+                                        <select name="home_type" required data-placeholder="Any Status"
+                                                class="chosen-select-no-single">
+                                            <option value="" selected disabled>Home Type</option>
+                                            @foreach($room_types as $pro)
+                                                <option
+                                                    value="{{$pro->name}}"
+                                                    @if(isset($request_data['roomtype']) && $request_data['roomtype'] == $pro->name)  selected @endif
+                                                >
+                                                        {{$pro->name}}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 col-sm-12 col-xs-12" style="margin-top: 10px;">
+                                        <button class="button" id="button" style="height: 58px;width: 150px;" type="submit">
+                                            <i class="fa fa-search">&nbsp;SEARCH</i>
+                                        </button>
                                     </div>
                                 </div>
-
-                                <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
-                                    <div class="main-search-input">
-                                        <input type="text" name="from_date" placeholder="Check in" value=""
-                                               id="from_date" autocomplete="off"/>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
-                                    <div class="main-search-input">
-                                        <input name="to_date" type="text" onchange="check_to_date();"
-                                               placeholder="Check out" value="" id="to_date" autocomplete="off"/s>
-
-                                    </div>
-                                </div>
-
-                                <div id="search_location"></div>
-                                <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
-                                    <select name="property_type" required data-placeholder="Any Status"
-                                            class="chosen-select-no-single">
-                                        <option value="" selected disabled>Property Type</option>
-                                        <option value="1">Short Term Rental</option>
-                                        <option value="2">Long Term Rental</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
-                                    <select name="home_type" required data-placeholder="Any Status"
-                                            class="chosen-select-no-single">
-                                        <option value="" selected disabled>Home Type</option>
-                                        @foreach($room_types as $pro)
-                                            <option
-                                                value="{{$pro->name}}"
-                                                @if(isset($request_data['roomtype']) && $request_data['roomtype'] == $pro->name)  selected @endif
-                                            >
-                                                    {{$pro->name}}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-2 col-sm-12 col-xs-12" style="margin-top: 10px;">
-                                    <button class="button" id="button" style="height: 58px;width: 150px;" type="submit">
-                                        <i class="fa fa-search">&nbsp;SEARCH</i>
-                                    </button>
-                                </div>
-
                             </form>
                         </div>
 

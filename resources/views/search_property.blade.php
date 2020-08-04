@@ -173,10 +173,16 @@
                                         <!-- Main Search Input -->
                                         <div class="col-fs-6">
                                             <div class="main-search-input">
-                                                <input type="text" required id="pac-input"
-                                                       placeholder="Enter address e.g. street, city or state"
-                                                       value="@if(isset($request_data['formatted_address']))  {{$request_data['formatted_address']}} @endif"
-                                                       name="formatted_address" autocomplete="off"/>
+                                                <input type="text" required id="search-address-input"
+                                                    placeholder="Enter address e.g. street, city or state"
+                                                    value="@if(isset($request_data['formatted_address']))  {{$request_data['formatted_address']}} @endif"
+                                                    name="formatted_address" autocomplete="off"/>
+                                                <input class="field" type="hidden" id="street_number" name="street_number" value="{{Session::get('street_number')}}" />
+                                                <input class="field" type="hidden" id="route" name="route" value="{{Session::get('route')}}" />
+                                                <input class="field" type="hidden" id="locality" name="city" value="{{Session::get('city')}}" />
+                                                <input class="field" type="hidden" id="administrative_area_level_1" name="state" value="{{Session::get('state')}}" />
+                                                <input class="field" type="hidden" id="postal_code" name="pin_code" value="{{Session::get('pin_code')}}" />
+                                                <input class="field" type="hidden" id="country" name="country" value="{{Session::get('country')}}" />
                                             </div>
                                         </div>
 
@@ -247,6 +253,7 @@
                                                 <input
                                                     type="number"
                                                     placeholder="Distance"
+                                                    id="search-distance"
                                                     name="distance"
                                                     data-unit="Mi"
                                                     value="@if(isset($request_data['distance']))  {{intval($request_data['distance'])}} @endif">
@@ -602,7 +609,6 @@
                     .on("change", function () {
                         var selectedDate = getDate(this);
                     });
-debugger;
             function getDate(element) {
                 var date;
                 try {
@@ -621,12 +627,95 @@ debugger;
             $("#filter_form").submit();
         });
 
+        $('#search-distance').change(function (event) {
+            if (window.circleLocation) {
+                repaintCircle(window.circleLocation);
+            }
+        });
+
         function nextpage(page) {
             let dynamicHtml = '<input type="hidden" name="page" value="' + page + '">';
             $("#dynamic_elements").html(dynamicHtml);
             $("#filter_form").submit();
         }
+        function initSearchPropertySearchInput() {
+            var componentForm = {
+                street_number: 'short_name',
+                route: 'long_name',
+                locality: 'long_name',
+                administrative_area_level_1: 'short_name',
+                country: 'long_name',
+                postal_code: 'short_name'
+            };
+            var addressOptions = {
+                componentRestrictions: {country: 'us'}
+            };
+            try {
+                var element_address = document.getElementById('search-address-input');
+                if(element_address) {
+                    google.maps.event.addDomListener(element_address, 'keypress', (event) => {
+                        if (event.keyCode === 13) {
+                            event.preventDefault();
+                        }
+                    });
+                    var autocomplete_address = new google.maps.places.Autocomplete(element_address, addressOptions);
+                    autocomplete_address.addListener('place_changed', (e) => {
+                        if(element_address.name === 'formatted_address') {
+                            var place = autocomplete_address.getPlace();
+                            var selectedLocation = {
+                                lat: place.geometry.location.lat(),
+                                lng: place.geometry.location.lng()
+                            };
+                            repaintCircle(selectedLocation);
+                            for (var i = 0; i < place.address_components.length; i++) {
+                                var addressType = place.address_components[i].types[0];
+                                if (componentForm[addressType]) {
+                                    var val = place.address_components[i][componentForm[addressType]];
+                                    document.getElementById(addressType).value = val;
+                                }
+                            }
+                        }
+                    });
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        function repaintCircle(location) {
+            if (location) {
+                window.circleLocation = location;
+            }
+            var currentDistance = 25;
+            if ($('#search-distance').val()) {
+                try {
+                    currentDistance = parseInt($('#search-distance').val());
+                } catch (error) {
 
+                }
+            }
+            var radius = currentDistance * 1609.34 // Converted Miles to Metres
+            if (window.distanceCircle) {
+                window.distanceCircle.setMap(null);
+            }
+            window.distanceCircle = new google.maps.Circle({
+                strokeColor: "#e78016",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#e78016",
+                fillOpacity: 0.35,
+                map: map,
+                center: location,
+                radius: radius
+            });
+            map.setCenter(location);
+            map.setZoom(getZoomLevel(radius));
+        }
+        function getZoomLevel(radius) {
+            var zoomLevel = 11;
+            var scale = radius / 450;
+            zoomLevel = (16 - Math.log(scale) / Math.log(2));
+            return zoomLevel;
+        }
     </script>
     <!-- Maps -->
 @endsection

@@ -378,12 +378,22 @@
 <script type="text/javascript">
     function onGoogleLoad() {
         var path = "{{Request::path()}}";
-        if (['short-term', 'search-property'].indexOf(path) !== -1) {
-            initMaps();
-        } else if (path === 'contact') {
-            contact_map();
-        } else if (path === '/') {
-            initHomeSearchInput();
+        switch (path) {
+            case '/':
+                initHomeSearchInput();
+                break;
+            case 'contact':
+                contact_map();
+                break;
+            case 'short-term':
+                initMaps();
+                break;
+            case 'search-property':
+                initMaps();
+                initSearchPropertySearchInput();
+                break;
+            default:
+                break;
         }
     }
 </script>

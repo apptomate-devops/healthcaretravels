@@ -888,7 +888,7 @@
                 });
                 var autocomplete_address = new google.maps.places.Autocomplete(element_address, addressOptions);
                 autocomplete_address.addListener('place_changed', (e) => {
-                    if(element_address.name === 'address') {
+                    if(element_address.name === 'formatted_address') {
                         var place = autocomplete_address.getPlace();
                         for (var i = 0; i < place.address_components.length; i++) {
                             var addressType = place.address_components[i].types[0];

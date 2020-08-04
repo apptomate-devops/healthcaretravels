@@ -74,10 +74,10 @@ Route::GET('/new-password/{token}', 'HomeController@new_password');
 Route::get('/reset-password', 'HomeController@reset_password');
 Route::POST('/reset-password', 'HomeController@reset_email');
 
-// Property routes :: Home Controller
-Route::get('/search-property', 'HomeController@search_property');
-Route::post('/search-property', 'HomeController@search_property');
-Route::post('/search-property-filtering', 'HomeController@search_property');
+// Property Controller
+Route::get('/search-property', 'PropertyController@search_property');
+Route::post('/search-property', 'PropertyController@search_property');
+Route::post('/search-property-filtering', 'PropertyController@search_property');
 
 // Owner controller routes
 Route::get('/owner/profile', 'OwnerController@owner_profile');

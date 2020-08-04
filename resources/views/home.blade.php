@@ -337,6 +337,8 @@
                                             <input class="field" type="hidden" id="administrative_area_level_1" name="state" value="{{Session::get('state')}}" />
                                             <input class="field" type="hidden" id="postal_code" name="pin_code" value="{{Session::get('pin_code')}}" />
                                             <input class="field" type="hidden" id="country" name="country" value="{{Session::get('country')}}" />
+                                            <input class="field" type="hidden" id="lat" name="lat" value="{{Session::get('lat')}}" />
+                                            <input class="field" type="hidden" id="lng" name="lng" value="{{Session::get('lng')}}" />
                                         </div>
                                     </div>
                                     <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
@@ -369,13 +371,13 @@
                                         </select>
                                     </div>
                                     <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
-                                        <select name="home_type" required data-placeholder="Any Status"
+                                    <select name="roomtype" required data-placeholder="Any Status"
                                                 class="chosen-select-no-single">
                                             <option value="" selected disabled>Home Type</option>
                                             @foreach($room_types as $pro)
                                                 <option
-                                                    value="{{$pro->name}}"
-                                                    @if(isset($request_data['roomtype']) && $request_data['roomtype'] == $pro->name)  selected @endif
+                                                    value="{{$pro->id}}"
+                                                    @if(isset($request_data['roomtype']) && $request_data['roomtype'] == $pro->name) selected @endif
                                                 >
                                                         {{$pro->name}}
                                                 </option>
@@ -811,9 +813,23 @@
 
     function check_to_date() {
         var to_date = $('#to_date').val();
-        from_date = $('#from_date').val();
-        if (to_date && from_date > to_date) {
-            alert("Please choose date after " + from_date);
+        var from_date = $('#from_date').val();
+        if (to_date && from_date) {
+            var td = new Date(to_date);
+            var fd = new Date(from_date);
+            td.setHours(0,0,0,0);
+            fd.setHours(0,0,0,0);
+            if (td => fd) {
+                var diffTime = td.getTime() - fd.getTime();
+                var diffDays = diffTime / (1000 * 3600 * 24);
+                if (diffDays >= 30) {
+                    return false;
+                }
+            }
+            var mintoDate = new Date(from_date);
+            mintoDate.setMonth(mintoDate.getMonth() + 1);
+            var minDateString = (mintoDate.getMonth() + 1) "/" + mintoDate.getDate() + "/" + mintoDate.getFullYear();
+            alert("Please choose date after " + minDateString);
             $('#to_date').val("");
             return false;
         }
@@ -890,6 +906,12 @@
                 autocomplete_address.addListener('place_changed', (e) => {
                     if(element_address.name === 'formatted_address') {
                         var place = autocomplete_address.getPlace();
+                        var selectedLocation = {
+                            lat: place.geometry.location.lat(),
+                            lng: place.geometry.location.lng()
+                        };
+                        document.getElementById('lat').value = selectedLocation.lat;
+                        document.getElementById('lng').value = selectedLocation.lng;
                         for (var i = 0; i < place.address_components.length; i++) {
                             var addressType = place.address_components[i].types[0];
                             if (componentForm[addressType]) {

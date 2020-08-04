@@ -151,7 +151,7 @@
 
                             <!-- Title -->
                             @if(count($properties) == 0)
-                                <div class="alert alert-danger">No Properties found for your filter</div>
+                                <div class="alert alert-danger">There aren't any properties near this location yet. Try expanding your search.</div>
                             @endif
 
                             <h4 class="search-title">Find Your Home </h4>
@@ -177,12 +177,14 @@
                                                     placeholder="Enter address e.g. street, city or state"
                                                     value="@if(isset($request_data['formatted_address']))  {{$request_data['formatted_address']}} @endif"
                                                     name="formatted_address" autocomplete="off"/>
-                                                <input class="field" type="hidden" id="street_number" name="street_number" value="{{Session::get('street_number')}}" />
-                                                <input class="field" type="hidden" id="route" name="route" value="{{Session::get('route')}}" />
-                                                <input class="field" type="hidden" id="locality" name="city" value="{{Session::get('city')}}" />
-                                                <input class="field" type="hidden" id="administrative_area_level_1" name="state" value="{{Session::get('state')}}" />
-                                                <input class="field" type="hidden" id="postal_code" name="pin_code" value="{{Session::get('pin_code')}}" />
-                                                <input class="field" type="hidden" id="country" name="country" value="{{Session::get('country')}}" />
+                                                <input class="field" type="hidden" id="street_number" name="street_number" value="{{$request_data['street_number'] ?? ''}}" />
+                                                <input class="field" type="hidden" id="route" name="route" value="{{$request_data['route'] ?? ''}}" />
+                                                <input class="field" type="hidden" id="locality" name="city" value="{{$request_data['city'] ?? ''}}" />
+                                                <input class="field" type="hidden" id="administrative_area_level_1" name="state" value="{{$request_data['state'] ?? ''}}" />
+                                                <input class="field" type="hidden" id="postal_code" name="pin_code" value="{{$request_data['pin_code'] ?? ''}}" />
+                                                <input class="field" type="hidden" id="country" name="country" value="{{$request_data['country'] ?? ''}}" />
+                                                <input class="field" type="hidden" id="lat" name="lat" value="{{$request_data['lat'] ?? ''}}" />
+                                                <input class="field" type="hidden" id="lng" name="lng" value="{{$request_data['lng'] ?? ''}}" />
                                             </div>
                                         </div>
 
@@ -192,7 +194,7 @@
                                             <div class="main-search-input">
                                                 <input type="text" name="from_date"
                                                        placeholder="Check in"
-                                                       value="@if(isset($request_data['from_date'])) {{$request_data['from_date']}} @endif"
+                                                       value="@if(isset($request_data['from_date'])){{$request_data['from_date']}}@endif"
                                                        id="from_date" autocomplete="off"/>
                                             </div>
                                         </div>
@@ -201,7 +203,7 @@
                                         <div class="col-fs-3">
                                             <div class="main-search-input">
                                                 <input type="text" placeholder="Check out" onchange="check_to_date();"
-                                                       value="@if(isset($request_data['to_date']))  {{$request_data['to_date']}} @endif"
+                                                       value="@if(isset($request_data['to_date'])){{$request_data['to_date']}}@endif"
                                                        name="to_date" value="" id="to_date" autocomplete="off"/>
 
                                             </div>
@@ -223,31 +225,29 @@
                                                 <select class="chosen-select-no-single" name="guests">
                                                     <option label="blank" value="">Guests</option>
                                                     <option value="1"
-                                                            @if(isset($request_data['guests']) && $request_data['guests'] == "1")  selected @endif>
+                                                            @if(isset($request_data['guests']) && $request_data['guests'] == "1") selected @endif>
                                                         1 Guest
                                                     </option>
                                                     <option value="2"
-                                                            @if(isset($request_data['guests']) && $request_data['guests'] == "2")  selected @endif>
+                                                            @if(isset($request_data['guests']) && $request_data['guests'] == "2") selected @endif>
                                                         2 Guests
                                                     </option>
                                                     <option value="3"
-                                                            @if(isset($request_data['guests']) && $request_data['guests'] == "3")  selected @endif>
+                                                            @if(isset($request_data['guests']) && $request_data['guests'] == "3") selected @endif>
                                                         3 Guests
                                                     </option>
                                                     <option value="4"
-                                                            @if(isset($request_data['guests']) && $request_data['guests'] == "4")  selected @endif>
+                                                            @if(isset($request_data['guests']) && $request_data['guests'] == "4") selected @endif>
                                                         4 Guests
                                                     </option>
                                                     <option value="5"
-                                                            @if(isset($request_data['guests']) && $request_data['guests'] == "5")  selected @endif>
+                                                            @if(isset($request_data['guests']) && $request_data['guests'] == "5") selected @endif>
                                                         5 Guests
                                                     </option>
                                                 </select>
                                             </div>
                                             <!-- Select Input / End -->
-
                                         </div>
-
                                         <div class="col-fs-3">
                                             <div class="select-input disabled-first-option">
                                                 <input
@@ -256,8 +256,7 @@
                                                     id="search-distance"
                                                     name="distance"
                                                     data-unit="Mi"
-                                                    value="@if(isset($request_data['distance']))  {{intval($request_data['distance'])}} @endif">
-
+                                                    value="@if(isset($request_data['distance'])){{intval($request_data['distance'])}}@endif">
                                             </div>
                                         </div>
                                         <div class="col-fs-3">
@@ -265,17 +264,16 @@
                                             <!-- Select Input -->
                                             <div class="select-input disabled-first-option">
                                                 <input type="number" placeholder="Min Price" name="minprice"
-                                                       data-unit="USD"
-                                                       value="@if(isset($request_data['minprice']))  {{$request_data['minprice']}} @endif">
+                                                    data-unit="USD"
+                                                    value="@if(isset($request_data['minprice'])){{$request_data['minprice']}}@endif">
 
                                             </div>
                                         </div>
                                         <div class="col-fs-3">
                                             <div class="select-input disabled-first-option">
                                                 <input type="number" placeholder="Max Price" name="maxprice"
-                                                       data-unit="USD"
-                                                       value="@if(isset($request_data['maxprice']))  {{$request_data['maxprice']}} @endif">
-
+                                                    data-unit="USD"
+                                                    value="@if(isset($request_data['maxprice'])){{$request_data['maxprice']}}@endif">
                                             </div>
                                         </div>
 
@@ -284,8 +282,8 @@
                                                 <select class="chosen-select-no-single" name="roomtype">
                                                     <option value="" label="blank">Home Type</option>
                                                     @foreach($room_types as $pro)
-                                                        <option value="{{$pro->name}}"
-                                                                @if(isset($request_data['roomtype']) && $request_data['roomtype'] == $pro->name)  selected @endif>{{$pro->name}}</option>
+                                                        <option value="{{$pro->id}}"
+                                                                @if(isset($request_data['roomtype']) && $request_data['roomtype'] == $pro->id) selected @endif>{{$pro->name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -295,8 +293,8 @@
                                                 <select name="property_type" required data-placeholder="Any Status"
                                                     class="chosen-select-no-single">
                                                     <option value="" selected disabled>Property Type</option>
-                                                    <option value="1">Short Term Rental</option>
-                                                    <option value="2">Long Term Rental</option>
+                                                    <option value="1" @if(isset($request_data['property_type']) && $request_data['property_type'] == "1") selected @endif>Short Term Rental</option>
+                                                    <option value="2" @if(isset($request_data['property_type']) && $request_data['property_type'] == "2") selected @endif>Long Term Rental</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -305,11 +303,11 @@
                                                 <select class="chosen-select-no-single" name="bookingmode">
                                                     <option value="" label="blank">Booking Type</option>
                                                     <option value="1"
-                                                            @if(isset($request_data['bookingmode']) && $request_data['bookingmode'] == "1")  selected @endif>
+                                                            @if(isset($request_data['bookingmode']) && $request_data['bookingmode'] == "1") selected @endif>
                                                         Instant Book
                                                     </option>
                                                     <option value="0"
-                                                            @if(isset($request_data['bookingmode']) && $request_data['bookingmode'] == "0")  selected @endif>
+                                                            @if(isset($request_data['bookingmode']) && $request_data['bookingmode'] == "0") selected @endif>
                                                         Request Book
                                                     </option>
                                                 </select>
@@ -318,16 +316,16 @@
                                         <div class="col-fs-3">
                                             <div class="select-input disabled-first-option">
                                             <div class="checkboxes in-row">
-                                                <input id="occupied-check" type="checkbox" name="filters-check" value="CURRENTLY_OCCUPIED">
+                                                <input id="occupied-check" type="checkbox" name="occupied-check" value="CURRENTLY_OCCUPIED" @if ($request_data['occupied-check'] ?? '') checked @endif>
                                                 <label for="occupied-check">Currently occupied</label>
                                             </div>
-                                            <div class="mt-5 occupied-extra" style="display: none">
+                                            <div class="mt-5 occupied-extra" style="display: {{($request_data['occupied-check'] ?? '') ? 'block' : 'none'}}">
                                                 <div class="px-0 col-md-6 checkboxes in-row">
-                                                    <input id="no-kids-check" type="checkbox" name="filters-check" value="CURRENTLY_NO_KIDS">
+                                                    <input id="no-kids-check" type="checkbox" name="occupied-no-kids" value="CURRENTLY_NO_KIDS" @if ($request_data['occupied-no-kids'] ?? '') checked @endif>
                                                     <label for="no-kids-check">No kids</label>
                                                 </div>
                                                 <div class="px-0 col-md-6 checkboxes in-row">
-                                                    <input id="no-dogs-check" type="checkbox" name="filters-check" value="CURRENTLY_NO_DOGS">
+                                                    <input id="no-dogs-check" type="checkbox" name="occupied-no-dogs" value="CURRENTLY_NO_DOGS" @if ($request_data['occupied-no-dogs'] ?? '') checked @endif>
                                                     <label for="no-dogs-check">No dogs</label>
                                                 </div>
                                             </div>
@@ -337,13 +335,13 @@
                                     <div class="extra-filters-wrapper">
                                         <div class="col-fs-3">
                                             <div class="checkboxes in-row">
-                                                <input id="covid-check" type="checkbox" name="filters-check" value="COVID_SAFETY">
+                                                <input id="covid-check" type="checkbox" name="covid-check" value="COVID_SAFETY" @if ($request_data['covid-check'] ?? '') checked @endif>
                                                 <label for="covid-check">COVID Safety Measures Certified</label>
                                             </div>
                                         </div>
                                         <div class="col-fs-3">
                                             <div class="checkboxes in-row">
-                                                <input id="cancellation-check" type="checkbox" name="filters-check" value="CANCELATION">
+                                                <input id="cancellation-check" type="checkbox" name="cancelation-check" value="CANCELATION" @if ($request_data['cancelation-check'] ?? '') checked @endif>
                                                 <label for="cancellation-check">Cancellation flexibility</label>
                                             </div>
                                         </div>
@@ -545,9 +543,23 @@
     <script type="text/javascript">
         function check_to_date() {
             var to_date = $('#to_date').val();
-            from_date = $('#from_date').val();
-            if (to_date && from_date > to_date) {
-                alert("Please choose date after " + from_date);
+            var from_date = $('#from_date').val();
+            if (to_date && from_date) {
+                var td = new Date(to_date);
+                var fd = new Date(from_date);
+                td.setHours(0,0,0,0);
+                fd.setHours(0,0,0,0);
+                if (td => fd) {
+                    var diffTime = td.getTime() - fd.getTime();
+                    var diffDays = diffTime / (1000 * 3600 * 24);
+                    if (diffDays >= 30) {
+                        return false;
+                    }
+                }
+                var mintoDate = new Date(from_date);
+                mintoDate.setMonth(mintoDate.getMonth() + 1);
+                var minDateString = (mintoDate.getMonth() + 1) + "/" + mintoDate.getDate() + "/" + mintoDate.getFullYear();
+                alert("Please choose date after " + minDateString);
                 $('#to_date').val("");
                 return false;
             }
@@ -650,6 +662,13 @@
             var addressOptions = {
                 componentRestrictions: {country: 'us'}
             };
+            if ("{{$request_data['lat'] ?? ''}}" && "{{$request_data['lng'] ?? ''}}") {
+                var selectedLocation = {
+                    lat: parseFloat("{{$request_data['lat'] ?? ''}}"),
+                    lng: parseFloat("{{$request_data['lng'] ?? ''}}")
+                }
+                repaintCircle(selectedLocation);
+            }
             try {
                 var element_address = document.getElementById('search-address-input');
                 if(element_address) {

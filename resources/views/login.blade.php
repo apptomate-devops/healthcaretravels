@@ -39,24 +39,24 @@
         <div class="container">
             <div class="login-container">
 
-                @if(Session::has('success'))
-                    <div class="alert alert-success">
-                        <h4>{{Session::get('success')}}</h4>
-                    </div>
-                @endif
-                @if(Session::has('error'))
-                    <div class="alert alert-danger">
-                        <h4>{{ Session::get('error') }}</h4>
-                    </div>
-                @endif
-                @if (count($errors) > 0)
-                    <div class="alert alert-danger">
-                        <h4>Something went wrong. Please review the form and correct the required fields.</h4>
-                    </div>
-                @endif
-
                 <!--Tab -->
                 <div class="my-account style-1" id="login_form">
+
+                    @if(Session::has('success'))
+                        <div class="alert alert-success">
+                            <h4>{{Session::get('success')}}</h4>
+                        </div>
+                    @endif
+                    @if(Session::has('error'))
+                        <div class="alert alert-danger">
+                            <h4>{{ Session::get('error') }}</h4>
+                        </div>
+                    @endif
+                    @if (count($errors) > 0)
+                        <div class="alert alert-danger">
+                            <h4>Something went wrong. Please review the form and correct the required fields.</h4>
+                        </div>
+                    @endif
 
                     <ul class="tabs-nav">
                         <li id="login_tab"><a href="#tab1">Log In</a></li>

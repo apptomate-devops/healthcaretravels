@@ -70,6 +70,7 @@
     color: #666666;
     font-size: 14px;
     line-height: 18px;
+    text-align: center;
 }
 
 .required {
@@ -90,13 +91,14 @@
 }
 
 .form-error {
-    border-color: #ff0000 !important;
+    border-color: #9D0000 !important;
 }
 
 .error-text {
-    margin-top: -25px;
-    margin-bottom: 25px;
-    color: #ff0000;
+    margin-top: -25px !important;
+    margin-bottom: 25px !important;
+    color: #9D0000;
+    text-align: center;
 }
 
 .label-margin {
@@ -266,18 +268,24 @@
     display: none;
 }
 
-.password-checkbox,
+.password-checkbox {
+    margin-top: -20px;
+    margin-bottom: 30px;
+}
+
 #ethnicity-caption,
 #agency-caption,
 #name-caption {
     margin-top: -20px;
     margin-bottom: 30px;
+    text-align: center;
 }
 
 .password-checkbox input[type="checkbox"] {
     height: 12px;
     width: 12px;
     margin-right: 5px;
+    text-align: left;
 }
 
 .password-checkbox input[type="checkbox"]:checked {

@@ -701,7 +701,11 @@ class UserController extends BaseController
                 'agency_office_number' => isset($request->agency_office_number) ? $request->agency_office_number : null,
             ]);
 
-        $data = ['username' => $user->first_name . ' ' . $user->last_name, 'type' => $user_role->role];
+        $data = [
+            'username' => $user->first_name . ' ' . $user->last_name,
+            'type' => $user_role->role,
+            'id' => $user->id,
+        ];
 
         $subject = "Verification documents Uploads";
         $title = $user->username . " uploaded his Verification documents";

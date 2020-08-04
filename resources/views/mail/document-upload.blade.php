@@ -9,4 +9,9 @@
     <div style="padding-top: 5px;">
         User Type: {{$type}}
     </div>
+    <div style="padding-top: 10px;">
+        <a href="{{BASE_URL}}admin/single_user?id={{$id}}" style="color: blue;text-decoration: underline;">
+            Verify here
+        </a>
+    </div>
 @endsection

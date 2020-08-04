@@ -24,6 +24,7 @@ class HomeController extends BaseController
     public function index(Request $request)
     {
         $email = $request->session()->get('admin_email');
+        $request->session()->put('url.intended', url()->previous());
         if ($email) {
             return redirect()->route('admin.home');
         }
@@ -47,6 +48,10 @@ class HomeController extends BaseController
             }
         }
         $request->session()->put('admin_email', $request->email);
+        $redirectUrl = $request->session()->get('url.intended');
+        if (!empty($redirectUrl)) {
+            return redirect($redirectUrl);
+        }
         return redirect('/admin/index');
     }
 

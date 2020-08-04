@@ -10,6 +10,7 @@ use App\Models\PropertyList;
 use App\Models\EmailConfig;
 use DB;
 use Mail;
+use finfo;
 
 class HomeController extends BaseController
 {
@@ -95,6 +96,17 @@ class HomeController extends BaseController
     public function fees_explained()
     {
         return view('statics.fees-explained');
+    }
+
+    public function get_document($file_name, Request $request)
+    {
+        $encryptedContents = \Storage::get($file_name . '.dat');
+        $decryptedContents = \Crypt::decrypt($encryptedContents);
+        $data = $this->get_encrypted_file($file_name);
+        return response()->make($data['content'], 200, [
+            'Content-Type' => $data['type'],
+            'Content-Disposition' => 'attachment; filename="' . pathinfo($file_name, PATHINFO_BASENAME) . '"',
+        ]);
     }
 
     public function how_its_works()

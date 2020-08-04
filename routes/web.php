@@ -48,6 +48,7 @@ Route::get('/cookies-policy', 'HomeController@cookies_policy');
 Route::get('/copyright-policy', 'HomeController@copyright_policy');
 Route::get('/dear_host', 'HomeController@dear_host');
 Route::get('/dear_travelers', 'HomeController@dear_travelers');
+Route::get('/documents/{file_name}', 'HomeController@get_document');
 Route::get('/exortion-policy', 'HomeController@exortion_policy');
 Route::get('/Extenuating-Circ-policy', 'HomeController@Extenuating_Circ_policy');
 Route::get('/eye-catching-photo', 'HomeController@eye_catching_photo');

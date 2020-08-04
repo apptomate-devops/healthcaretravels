@@ -28,6 +28,7 @@ use Image;
 use DB;
 use Log;
 use Mail;
+use finfo;
 
 define('FB_URL', 'https://health-care-travels.firebaseio.com/');
 // define('CLIENT_MAIL', 'info@healthcaretravels.com');
@@ -128,11 +129,31 @@ class BaseController extends ConstantsController
 
     public function base_document_upload_with_key($request, $key)
     {
+        $file = $request->file($key);
         $image = $request->$key;
         $ext = $image->getClientOriginalExtension();
         $imageName = self::generate_random_string() . '.' . $ext;
-        $request->file($key)->move('documents/', $imageName);
+        $this->store_encrypted_file($file, $imageName);
         return $image_url = BASE_URL . "documents/" . $imageName;
+    }
+
+    public function store_encrypted_file($file, $fileName)
+    {
+        $fileContent = file_get_contents($file->getRealPath());
+        $encryptedContent = \Crypt::encrypt($fileContent);
+        \Storage::put($fileName . '.dat', $encryptedContent);
+    }
+
+    public function get_encrypted_file($fileName)
+    {
+        $encryptedContents = \Storage::get($fileName . '.dat');
+        $decryptedContents = \Crypt::decrypt($encryptedContents);
+        $type = (new finfo(FILEINFO_MIME))->buffer($decryptedContents);
+        $data = [
+            'type' => (new finfo(FILEINFO_MIME))->buffer($decryptedContents),
+            'content' => $decryptedContents,
+        ];
+        return $data;
     }
 
     public function base_image_upload_with_key($request, $key)
@@ -199,8 +220,7 @@ class BaseController extends ConstantsController
             Mail::send($view_name, $data, function ($message) use ($email, $subject, $name) {
                 $message->from($email, 'Mail from ' . $name);
                 $message->replyTo($email, $name);
-                $message->to(CLIENT_MAIL);
-                // $message->to('guru@sparkouttech.com');
+                $message->to(SUPPORT_MAIL);
                 $message->subject($subject);
             });
         } catch (\Exception $ex) {
@@ -209,13 +229,14 @@ class BaseController extends ConstantsController
         }
     }
 
-    public function send_custom_email($email, $subject, $view_name, $data, $title)
+    public function send_custom_email($email, $subject, $view_name, $data, $title, $from = GENERAL_MAIL)
     {
         $mail_title = $title;
+        $mail_from = $from ? $from : GENERAL_MAIL;
         try {
-            Mail::send($view_name, $data, function ($message) use ($email, $mail_title, $subject) {
-                // From configurations are used from config file
-                // $message->from('gotocva@gmail.com', $mail_title);
+            Mail::send($view_name, $data, function ($message) use ($email, $mail_title, $subject, $mail_from) {
+                Logger::info('Sending Mail From: ' . $mail_from . ' To: ' . $email);
+                $message->from($mail_from, config('mail.from.name'));
                 $message->to($email);
                 $message->subject($subject);
             });

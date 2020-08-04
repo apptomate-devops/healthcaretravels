@@ -24,6 +24,7 @@ class HomeController extends BaseController
     public function index(Request $request)
     {
         $email = $request->session()->get('admin_email');
+        $request->session()->put('url.intended', url()->previous());
         if ($email) {
             return redirect()->route('admin.home');
         }
@@ -47,6 +48,10 @@ class HomeController extends BaseController
             }
         }
         $request->session()->put('admin_email', $request->email);
+        $redirectUrl = $request->session()->get('url.intended');
+        if (!empty($redirectUrl)) {
+            return redirect($redirectUrl);
+        }
         return redirect('/admin/index');
     }
 
@@ -495,13 +500,13 @@ class HomeController extends BaseController
 
     public function register_mail(Request $request)
     {
-        $register = EmailConfig::where('type', 1)->first();
+        $register = EmailConfig::where('type', TEMPLATE_REGISTER)->first();
         return view('Admin.mail-register', ['register' => $register]);
     }
     public function verification_mail(Request $request)
     {
-        $verification = EmailConfig::where('type', 2)->first();
-        $reminder = EmailConfig::where('type', 8)->first();
+        $verification = EmailConfig::where('type', TEMPLATE_VERIFICATION)->first();
+        $reminder = EmailConfig::where('type', TEMPLATE_VERIFICATION_REMINDER)->first();
         return view('Admin.mail-verification', [
             'verification' => $verification,
             'reminder' => $reminder,
@@ -509,24 +514,24 @@ class HomeController extends BaseController
     }
     public function approval_mail(Request $request)
     {
-        $approval = EmailConfig::where('type', 6)->first();
-        $denial = EmailConfig::where('type', 7)->first();
+        $approval = EmailConfig::where('type', TEMPLATE_APPROVAL)->first();
+        $denial = EmailConfig::where('type', TEMPLATE_DENIAL)->first();
         $data = ['approval' => $approval, 'denial' => $denial];
         return view('Admin.mail-approval', $data);
     }
     public function booking_confirm_mail(Request $request)
     {
-        $confirm = EmailConfig::where('type', 3)->first();
+        $confirm = EmailConfig::where('type', TEMPLATE_BOOKING)->first();
         return view('Admin.mail-confirm-booking', ['confirm' => $confirm]);
     }
     public function booking_cancel_mail(Request $request)
     {
-        $cancel = EmailConfig::where('type', 4)->first();
+        $cancel = EmailConfig::where('type', TEMPLATE_CANCEL_BOOKING)->first();
         return view('Admin.mail-cancel-booking', ['cancel' => $cancel]);
     }
     public function password_reset(Request $request)
     {
-        $password = EmailConfig::where('type', 5)->first();
+        $password = EmailConfig::where('type', TEMPLATE_PASSWORD_RESET)->first();
         return view('Admin.mail-password-reset', ['password' => $password]);
     }
 
@@ -579,7 +584,7 @@ class HomeController extends BaseController
             ->update(['status' => $updateStatus]);
         if ($user) {
             // Accept/Denied Email flow
-            $emailType = $isDenied ? 7 : 6;
+            $emailType = $isDenied ? TEMPLATE_DENIAL : TEMPLATE_APPROVAL;
             $emailTemplate = $isDenied ? 'mail.account-denied' : 'mail.account-approved';
             $reg = $this->emailConfig->where('type', $emailType)->first();
             $mail_data = [
@@ -589,7 +594,7 @@ class HomeController extends BaseController
             ];
             $title = isset($reg->title) ? $reg->title : 'Message from ' . APP_BASE_NAME;
             $subject = isset($reg->subject) ? $reg->subject : "Email verification from " . APP_BASE_NAME;
-            $this->send_custom_email($user->email, $subject, $emailTemplate, $mail_data, $title);
+            $this->send_custom_email($user->email, $subject, $emailTemplate, $mail_data, $title, VERIFY_MAIL);
         }
         return back()->with('success', 'User has been verified');
     }

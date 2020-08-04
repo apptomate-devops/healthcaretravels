@@ -89,34 +89,67 @@ define(
 //define("UPLOAD_CLOUD_NAME","dazx7zpzb");
 define("START_YEAR", "2018");
 define("END_YEAR", "2040");
-$Settings = Settings::where("param", "logo")->first();
-define("LOGO", $Settings->value);
-$Settings = Settings::where("param", "app_name")->first();
-define("APP_NAME", $Settings->value);
-$Settings = Settings::where("param", "currency")->first();
-define("CURRENCY", $Settings->value);
-$Settings = Settings::where("param", "client_email")->first();
-define("CLIENT_MAIL", $Settings->value);
-$Settings = Settings::where("param", "client_phone")->first();
-define("CLIENT_PHONE", $Settings->value);
-$Settings = Settings::where("param", "client_web")->first();
-define("CLIENT_WEB", $Settings->value);
-$Settings = Settings::where("param", "client_address")->first();
-define("CLIENT_ADDRESS", $Settings->value);
-$Settings = Settings::where("param", "contact_content")->first();
-define("CONTACT_CONTENT", $Settings->value);
-$Settings = Settings::where("param", "verification_mail")->first();
-define("VERIFY_MAIL", $Settings->value);
-$Settings = Settings::where("param", "support_mail")->first();
-define("SUPPORT_MAIL", $Settings->value);
-$Settings = Settings::where("param", "facebook")->first();
-define("FACEBOOK", $Settings->value);
-$Settings = Settings::where("param", "twitter")->first();
-define("TWITTER", $Settings->value);
-$Settings = Settings::where("param", "google")->first();
-define("GOOGLE", $Settings->value);
-$Settings = Settings::where("param", "instagram")->first();
-define("INSTAGRAM", $Settings->value);
+$all_settings = Settings::all();
+foreach ($all_settings as $setting) {
+    switch ($setting->param) {
+        case 'logo':
+            define("LOGO", $setting->value);
+            break;
+        case 'app_name':
+            define("APP_NAME", $setting->value);
+            break;
+        case 'currency':
+            define("CURRENCY", $setting->value);
+            break;
+        case 'client_email':
+            define("CLIENT_MAIL", $setting->value);
+            break;
+        case 'client_phone':
+            define("CLIENT_PHONE", $setting->value);
+            break;
+        case 'client_web':
+            define("CLIENT_WEB", $setting->value);
+            break;
+        case 'client_address':
+            define("CLIENT_ADDRESS", $setting->value);
+            break;
+        case 'contact_content':
+            define("CONTACT_CONTENT", $setting->value);
+            break;
+        case 'verification_mail':
+            define("VERIFY_MAIL", $setting->value);
+            break;
+        case 'support_mail':
+            define("SUPPORT_MAIL", $setting->value);
+            break;
+        case 'general_mail':
+            define("GENERAL_MAIL", $setting->value);
+            break;
+        case 'facebook':
+            define("FACEBOOK", $setting->value);
+            break;
+        case 'twitter':
+            define("TWITTER", $setting->value);
+            break;
+        case 'google':
+            define("GOOGLE", $setting->value);
+            break;
+        case 'instagram':
+            define("INSTAGRAM", $setting->value);
+            break;
+        default:
+            break;
+    }
+}
+
+define("TEMPLATE_REGISTER", 1);
+define("TEMPLATE_VERIFICATION", 2);
+define("TEMPLATE_BOOKING", 3);
+define("TEMPLATE_CANCEL_BOOKING", 4);
+define("TEMPLATE_PASSWORD_RESET", 5);
+define("TEMPLATE_APPROVAL", 6);
+define("TEMPLATE_DENIAL", 7);
+define("TEMPLATE_VERIFICATION_REMINDER", 8);
 
 class ConstantsController extends Controller
 {

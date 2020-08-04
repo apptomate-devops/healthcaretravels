@@ -1,19 +1,3 @@
-<style type="text/css">
-  .center{
-    text-align: center;
-  }
-  .btn-header {
-    float: right;
-  }
-  @media only screen and (max-width: 992px){
-    .right-side {
-      text-align: center;
-    }
-    .btn-header {
-      float: none;
-    }
-  }
-</style>
 <!-- Modal Notification -->
 <div class="top-notification-overlay" id="verification-pending-modal">
     <div class="overlay-content">
@@ -28,23 +12,21 @@
 <header id="header-container" class="header-style-2">
       <!-- Header -->
       <div id="header">
-        <div class="container">
-          <!-- Left Side Content -->
-          <div class="left-side">
-            <!-- Logo -->
-            <div id="logo" class="margin-top-10">
-              <a href="{{url('/')}}"><img src="{{url('/')}}/healthcaretravel.png" alt=""></a>
-            </div>
-            <!-- Mobile Navigation -->
-            <div class="mmenu-trigger">
-              <button class="hamburger hamburger--collapse" type="button">
-              <span class="hamburger-box">
-              <span class="hamburger-inner"></span>
-              </span>
-              </button>
-            </div>
-          </div>
-          <!-- Left Side Content / End -->
+            <div class="container">
+                <!-- Left Side Content -->
+                <div class="left-side">
+                    <!-- Mobile Navigation -->
+                    <div class="mmenu-trigger">
+                        <button class="hamburger hamburger--collapse" type="button">
+                            <span class="hamburger-inner"></span>
+                        </button>
+                    </div>
+                    <!-- Logo -->
+                    <div id="logo" class="margin-top-10">
+                        <a href="{{url('/')}}"><img src="{{url('/')}}/healthcaretravel.png" alt=""></a>
+                    </div>
+                </div>
+                <!-- Left Side Content / End -->
           <!-- Right Side Content / End -->
           <div class="right-side">
             <ul class="header-widget">
@@ -67,7 +49,7 @@
          {{--    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfWnft5cRSmWcyZ23q63C6onr1W0HifZqULU4fej3y9qc2hWw/viewform?usp=sf_link" target="_blank" class="sign-in">
               <button class="btn btn-primary btn-header"> --}}
                      <a href="{{url('/')}}/login" target="_blank" class="sign-in">
-              <button class="btn btn-primary btn-header">
+              <button class="btn btn-primary btn-header pull-right">
                 RV Covid-19 Assistance
               </button>
             </a>
@@ -87,13 +69,13 @@
                <a href="{{url('/')}}">Home</a>
               @endif
                 <ul>
-                	<li class="center">
+                	<li class="text-center">
                 		<a href="{{url('/')}}/about_us">About Us</a>
                 	</li>
-                	<li class="center">
+                	<li class="text-center">
                 		<a href="{{url('/')}}/how_its_works">How It Works</a>
                 	</li>
-                	 <li class="center">
+                	 <li class="text-center">
                 		<a href="{{url('/')}}/standards">Standards</a>
                 	</li>
                 </ul>
@@ -104,23 +86,23 @@
                 Traveler
                 </a>
                 	<ul>
-                		<li class="center">
+                		<li class="text-center">
                 			<a href="{{url('/')}}/dear_travelers">
 			                Traveler
 			                </a>
                 		</li>
-                    <li class="center">
+                    <li class="text-center">
                       <a class="not-verified-block" href="{{url('/')}}/request-roommate">
                       Request a Roommate
                       </a>
                     </li>
-                    <li class="center">
+                    <li class="text-center">
                       <a href="{{url('/')}}/rv_professional">
                       RV Professionals
                       </a>
                     </li>
                      @if(Session::get('role_id') == 3) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency -- 3 -- RV Traveller --}}
-                      <li class="center">
+                      <li class="text-center">
                         <a href="{{url('/')}}/rv-traveller">
                         RV Traveller
                         </a>
@@ -140,22 +122,22 @@
                 <a href="{{url('/')}}/">Opportunities
                 </a>
                 <ul>
-                <li class="center">
+                <li class="text-center">
                   <a href="{{url('/')}}/become-a-ambassador">
                     Become An Ambassador
                     </a>
                 </li>
-                <li class="center">
+                <li class="text-center">
                   <a href="{{url('/')}}/become-a-scout">
                     Become A Scout
                     </a>
                 </li>
-                 <li class="center">
+                 <li class="text-center">
                   <a href="{{url('/')}}/partner">
                     Partner
                   </a>
                 </li>
-                <li class="center">
+                <li class="text-center">
                   <a href="#">
                     Agency
                   </a>
@@ -190,13 +172,13 @@
                 Help
                 </a>
                   <ul>
-                    <li class="center">
+                    <li class="text-center">
                       <a href="{{url('/')}}/faq">
 
                       FAQ
                       </a>
                     </li>
-                    <li class="center">
+                    <li class="text-center">
                       <a href="{{url('/')}}/contact">
                       Contact Us
                       </a>
@@ -212,7 +194,11 @@
               @else
                <li class="right-side-menu-item">
               {{--   <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAqkiqDWb4SVrS9ySxpGTVRFDTqX2noe3ItyKiGFBYwFmqeg/viewform?fbclid=IwAR2t27UuX3zLHL3fAl3gAgL_qEdDgZv4vF3U_mzCvdHAs4dEOuZGunsVJHA" class="sign-in"> --}}
-                   <a href="{{url('/')}}/login" class="sign-in">
+                <a href="{{url('/')}}/login" class="sign-in visible-md">
+                <i class="fa fa-user"></i>
+                Log In / Register
+                </a>
+                <a href="{{url('/')}}/login" class="sign-in btn btn-primary hidden-md">
                 <i class="fa fa-user"></i>
                 Log In / Register
                 </a>

@@ -13,7 +13,11 @@
         .info-text.text-error {
             color: red;
         }
-
+        .error-text {
+            margin-top: -10px;
+            margin-bottom: 15px;
+            color: #ff0000;
+        }
         ul.my-account-nav li a {
             font-size: 14px;
             line-height: 34px;
@@ -70,13 +74,16 @@
             @if($user->is_verified == 1)
                 <b class="info-text" style="color: forestgreen; font-size: 18px;">Your account has been verified.</b>
             @elseif($user->is_submitted_documents == 1)
-                <b class="info-text" style="font-size: 18px;">Your account has been submitted for verification. Please allow up to 24 hours for your information to be reviewed.</b>
+                <b class="info-text" style="font-size: 18px;">
+                    Your account has been submitted for verification. Please allow up to 24 hours for your information to be reviewed.
+                </b>
+                <p class="info-text" style="margin-top: 15px;">You'll receive in email once your account has been reviewed or if we need more information.</p>
             @elseif($user->denied_count >= 3)
                 <b class="info-text" style="color: red; font-size: 18px;">We were unable to verify your account and cannot grant your access to our features. Please contact support for more information.</b>
             @else
                 <div class="col-md-8">
                     <div class="row">
-                        <form name="doc" method="POST" action="{{url('/')}}/upload-document" enctype="multipart/form-data">
+                        <form name="doc" method="POST" action="{{url('/')}}/upload-document" enctype="multipart/form-data" onsubmit="return validate_submit()" autocomplete="off" onkeydown="return event.key != 'Enter';">
                             <input type="hidden" name="_token" value="{{csrf_token()}}" />
                             <div class="col-md-12 my-profile" style="padding-top: 15px;">
                                 @if($user->role_id == 1)
@@ -86,7 +93,7 @@
 
 
                                     <div class="info-text">
-                                        You must complete 3 of 5 verification methods in order to submit your profile for verification.
+                                        You must complete 3 of 4 verification methods in order to submit your profile for verification.
                                         Please submit within seven days to be granted full access to all of Health Care Travels' features.
                                     </div>
                                     @if ($user->is_verified == -1)
@@ -95,21 +102,22 @@
                                         </div>
                                     @endif
                                     <div class="col-md-6">
-                                        <label>Government ID </label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control"  />
+                                        <label>Driver's License or Government ID</label>
+                                        <input type="file" name="government_id" id="government_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                     </div>
                                     <div class="col-md-6">
-                                        <label>Driver's license </label>
-                                        <input type="file" name="driver_license_id" id="driver_license_id" class="form-control" />
+                                        <label>Lease Agreement</label>
+                                        <input type="file" name="lease_agreement" id="lease_agreement" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
+                                        <div class="info-text">If approved by your state for subleasing</div>
                                     </div>
                                     <div class="col-md-6">
                                         <label>Property Tax Document</label>
-                                        <input type="file" name="property_tax_document" id="property_tax_document" class="form-control"  />
+                                        <input type="file" name="property_tax_document" id="property_tax_document" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                         <div class="info-text">With proof of name and listing address</div>
                                     </div>
                                     <div class="col-md-6">
                                         <label>Utility Bill</label>
-                                        <input type="file" name="utility_bill" id="utility_bill" class="form-control"  />
+                                        <input type="file" name="utility_bill" id="utility_bill" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                         <div class="info-text">With proof of name and listing address</div>
                                     </div>
 
@@ -133,12 +141,13 @@
                                         </div>
                                     @endif
                                     <div class="col-md-6">
-                                        <label>Traveler's Contract</label>
-                                        <input type="file" name="traveler_contract_id" id="traveler_contract_id" class="form-control"  />
+                                        <label>A Traveler's Contract</label>
+                                        <input type="file" name="traveler_contract_id" id="traveler_contract_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
+                                        <p class="info-text" style="margin-top: 5px;">This should have your name as a contact person in the contract.</p>
                                     </div>
                                     <div class="col-md-6">
-                                        <label>Work Badge Picture </label>
-                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control"  />
+                                        <label>Work Badge </label>
+                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                     </div>
                                     <div class="col-md-12" style="margin-top: 40px;">
                                         <div class="card col-md-12" style="padding: 15px;">
@@ -154,7 +163,7 @@
                                             <label>Agency HR Direct Phone Number</label>
                                             <input value="@if($user->agency_hr_phone == '0' || $user->agency_hr_phone == null)@else{{$user->agency_hr_phone}}@endif" type="text" placeholder="Agency HR Phone Number" name="agency_hr_phone" class="form-control" />
 
-                                            <label>Agency Office Phone Number</label>
+                                            <label>Direct Office Number</label>
                                             <input value="@if($user->agency_office_number == '0' || $user->agency_office_number == null)@else{{$user->agency_office_number}}@endif" type="text" placeholder="Agency Office Number" name="agency_office_number" class="form-control" />
                                             <p class="info-text">Provide your agency's main office phone number.</p>
 
@@ -171,7 +180,7 @@
 
 
                                     <div class="info-text">
-                                        You must complete all verification methods in order to submit your profile for verification.
+                                        You must complete 3 out of 6 verification methods in order to submit your profile for verification.
                                         Please submit within seven days to be granted full access to all of Health Care Travels' features.
                                     </div>
                                     @if ($user->is_verified == -1)
@@ -180,28 +189,21 @@
                                         </div>
                                     @endif
                                     <div class="col-md-6">
-                                        <label>Government ID </label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control"  />
+                                        <label>Driver's License or Government ID</label>
+                                        <input type="file" name="government_id" id="government_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                         @if(isset($GOVERNMENT_ID->document_type))
                                             <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                     </div>
                                     <div class="col-md-6">
-                                        <label>Driver's license </label>
-                                        <input type="file" name="driver_license_id" id="driver_license_id" class="form-control" />
-                                        @if(isset($DRIVER_LICENSE_ID->document_type))
-                                            <a href="{{$DRIVER_LICENSE_ID->document_url}}" target="_blank" style="float: right;">view</a>
-                                        @endif
-                                    </div>
-                                    <div class="col-md-12">
                                         <label>Signed HCT Co-hosting Agreement </label>
-                                        <input type="file" name="cohosting_agreement_id" id="cohosting_agreement_id" class="form-control" />
+                                        <input type="file" name="cohosting_agreement_id" id="cohosting_agreement_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                         @if(isset($COHOSTING_AGREEMENT_ID->document_type))
                                             <a href="{{$COHOSTING_AGREEMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                         <p class="info-text">Only the HCT Standard Agreement will be accepted.</p>
                                         <div style="margin-top: 10px;">
-                                            <a href="" style="text-decoration-line: underline;">Download from here</a>
+                                            <a href="" style="text-decoration-line: underline;">Download form here</a>
                                         </div>
                                     </div>
 
@@ -214,7 +216,7 @@
 
 
                                     <div class="info-text">
-                                        You must complete 3 of 6 verification methods in order to submit your profile for verification.
+                                        You must complete 3 of 5 verification methods in order to submit your profile for verification.
                                         Please submit within seven days to be granted full access to all of Health Care Travels' features.
                                     </div>
                                     @if ($user->is_verified == -1)
@@ -223,34 +225,26 @@
                                         </div>
                                     @endif
                                     <div class="col-md-6">
-                                        <label>Work Badge Picture </label>
-                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control"  />
+                                        <label>Work Badge </label>
+                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                         @if(isset($WORK_BADGE_ID->document_type))
                                             <a href="{{$WORK_BADGE_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                     </div>
                                     <div class="col-md-6">
                                         <label>Travel Contract </label>
-                                        <input type="file" name="travel_contract_id" id="travel_contract_id" class="form-control"  />
+                                        <input type="file" name="travel_contract_id" id="travel_contract_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                         @if(isset($TRAVEL_CONTRACT_ID->document_type))
                                             <a href="{{$TRAVEL_CONTRACT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                     </div>
                                     <div class="col-md-6">
-                                        <label>Government ID </label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control"  />
+                                        <label>Driver's License or Government ID</label>
+                                        <input type="file" name="government_id" id="government_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
                                         @if(isset($GOVERNMENT_ID->document_type))
                                             <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                     </div>
-                                    <div class="col-md-6">
-                                        <label>Driver's license </label>
-                                        <input type="file" name="driver_license_id" id="driver_license_id" class="form-control" />
-                                        @if(isset($DRIVER_LICENSE_ID->document_type))
-                                            <a href="{{$DRIVER_LICENSE_ID->document_url}}" target="_blank" style="float: right;">view</a>
-                                        @endif
-                                    </div>
-
 
                                     {{------- Traveler or RV Traveler Verification ----- END ---------------}}
 
@@ -259,36 +253,63 @@
                                 @endif
 
 
-                                <div class="col-md-12" style="margin-top: 40px;">
-                                    <div class="card col-md-12" style="padding: 15px;">
-                                        <h4>Social Media Account link</h4>
-
-                                        <label>Facebook</label>
-                                        <input value="@if($user->facebook_url == '0' || $user->facebook_url == null)@else{{$user->facebook_url}}@endif" type="text" placeholder="Enter you facebook url" name="facebook" class="form-control" />
-
-                                        <label>LinkedIn</label>
-                                        <input value="@if($user->linkedin_url == '0' || $user->linkedin_url == null)@else{{$user->linkedin_url}}@endif" type="text" placeholder="Enter you LinkedIn url" name="linkedin" class="form-control" />
-
-                                        <label>Instagram</label>
-                                        <input value="@if($user->instagram_url == '0' || $user->instagram_url == null)@else{{$user->instagram_url}}@endif" type="text" placeholder="Enter you Instagram url" name="instagram" class="form-control" />
-
-                                    </div>
-                                </div>
-
-
                                 @if($user->role_id == 0 || $user->role_id == 3)
                                     <div class="col-md-12" style="margin-top: 20px;">
                                         <div class="card col-md-12" style="padding: 15px;">
                                             <h4>Certified Traveler License</h4>
-                                            <input value="@if($user->traveler_license == '0' || $user->traveler_license == null)@else{{$user->traveler_license}}@endif" type="text" placeholder="State/Website of Licensure" name="traveler_license" id="traveler_license" class="form-control" />
+                                            <p class="info-text" style="margin-bottom: 25px;">Please provide your license number and your state's licensing or certification website URL</p>
+                                            <div class="col-md-6">
+                                                <input value="@if($user->traveler_license == '0' || $user->traveler_license == null)@else{{$user->traveler_license}}@endif" type="text" placeholder="License/Certification Number" name="traveler_license" id="traveler_license" class="form-control" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input value="@if($user->website == '0' || $user->website == null)@else{{$user->website}}@endif" type="text" placeholder="State Website URL" name="website" id="website" class="form-control" />
+                                                <div style="margin-top: -10px; margin-left: 5px;">
+                                                    <a href="https://www.bon.texas.gov/" target="_blank" class="info-text">Ex: https://www.bon.texas.gov/</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 @endif
 
-
-
-                                @if($user->role_id == 1)
+                                @if($user->role_id == 4)
                                     <div class="col-md-12" style="margin-top: 40px;">
+                                        <div class="card col-md-12" style="padding: 15px;">
+                                            <h4>Homeowner's Contact Information</h4>
+
+                                            <label>First Name</label>
+                                            <input value="@if($user->homeowner_first_name == '0' || $user->homeowner_first_name == null)@else{{$user->homeowner_first_name}}@endif" type="text" placeholder="First Name" name="homeowner_first_name" class="form-control" />
+
+                                            <label>Last Name</label>
+                                            <input value="@if($user->homeowner_last_name == '0' || $user->homeowner_last_name == null)@else{{$user->homeowner_last_name}}@endif" type="text" placeholder="Last Name" name="homeowner_last_name" class="form-control" />
+
+                                            <label>Email</label>
+                                            <input value="@if($user->homeowner_email == '0' || $user->homeowner_email == null)@else{{$user->homeowner_email}}@endif" type="text" placeholder="Email" name="homeowner_email" class="form-control" />
+
+                                            <label>Phone Number</label>
+                                            <input value="@if($user->homeowner_phone_number == '0' || $user->homeowner_phone_number == null)@else{{$user->homeowner_phone_number}}@endif" type="text" placeholder="Phone Number" name="homeowner_phone_number" class="form-control" />
+
+                                        </div>
+                                        <div class="card col-md-12" style="padding: 15px; margin-top: 25px;">
+                                            <h4>Property Address</h4>
+                                            <input value="@if($user->property_address == '0' || $user->property_address == null)@else{{$user->property_address}}@endif" type="text" placeholder="Property Address" id="property_address" name="property_address" class="form-control" />
+                                            <div class="error-text" id="property_address_error" style="display: none;">Please select a valid address from the suggestions.</div>
+                                            <div id="add_apt_number_field" style="display: none;">
+                                                <label for="add_apt" style="width: 100%;">Add Apartment Number:
+                                                    <input type="text" class="input-text validate {{ $errors->has('address_line_2') ? 'form-error' : ''}}" value="{{Session::get('address_line_2')}}" name="address_line_2" id="address_line_2" placeholder="Apt, Unit, Suite, or Floor #" style="padding-left: 20px;" />
+                                                </label>
+                                                <button id="remove_add_apt_number" class="button" style="float: right; margin-bottom: 25px;" >Don't Add</button>
+                                            </div>
+                                            <button id="btn_add_apt_number" class="button border fw" style="width: 100%; margin-bottom: 25px;">Add an Apt or Floor #</button>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if($user->role_id == 1 || $user->role_id == 4)
+                                    <div class="col-md-12" style="margin-top: 40px;">
+                                        <div class="card col-md-12" style="padding: 15px; margin-bottom: 25px;">
+                                            <h4>Property Tax Proof URL</h4>
+                                            <input value="@if($user->property_tax_url == '0' || $user->property_tax_url == null)@else{{$user->property_tax_url}}@endif" type="text" placeholder="Property Tax Proof URL" name="property_tax_url" class="form-control" />
+                                        </div>
                                         <div class="card col-md-12" style="padding: 15px;">
                                             <h4>Existing Listing URL</h4>
 
@@ -305,14 +326,30 @@
                                     </div>
                                 @endif
 
+                                <div class="col-md-12" style="margin-top: 40px;">
+                                    <div class="card col-md-12" style="padding: 15px;">
+                                        <h4>Your Social Media Account Links</h4>
+
+                                        <label>Facebook</label>
+                                        <input value="@if($user->facebook_url == '0' || $user->facebook_url == null)@else{{$user->facebook_url}}@endif" type="text" placeholder="Enter your facebook url (ex: https://www.facebook.com/healthcaretravels/)" name="facebook" class="form-control" />
+
+                                        <label>Linkedin</label>
+                                        <input value="@if($user->linkedin_url == '0' || $user->linkedin_url == null)@else{{$user->linkedin_url}}@endif" type="text" placeholder="Enter your LinkedIn url (ex: https://www.linkedin.com/company/health-care-travels/)" name="linkedin" class="form-control" />
+
+                                        <label>Instagram</label>
+                                        <input value="@if($user->instagram_url == '0' || $user->instagram_url == null)@else{{$user->instagram_url}}@endif" type="text" placeholder="Enter your Instagram url (ex: https://www.instagram.com/healthcaretravels/)" name="instagram" class="form-control" />
+
+                                    </div>
+                                </div>
 
 
-                                <button style="margin-top:20px;margin-bottom:20px;float:right;" type="submit" disabled class="button">Submit</button>
+                                <button id="submit_documents" style="margin-top:20px;margin-bottom:20px;float:right;" type="submit" disabled class="button">Submit</button>
                             </div>
                         </form>
                     </div>
                 </div>
             @endif
+
             <script>
                 $(function() {
                     $(':input').on('input', function() {
@@ -320,8 +357,11 @@
                         let completed_inputs = $(':input').filter(function() {
 
                             if(!this.value || ignore_fields.includes(this.name)) { return false; }
+
                             let input_value = this.value;
+
                             let regex = /.*/s;
+
                             if(this.name === 'facebook') {
                                 regex = /(https?:\/\/)?(www\.)?facebook.com\/[a-zA-Z0-9(\.\?)?]/;
                             }
@@ -331,20 +371,123 @@
                             if(this.name === 'instagram') {
                                 regex = /(https?)?:?(www)?instagram\.com\/[a-z].{3}/;
                             }
-                            if(['agency_hr_phone', 'agency_office_number'].includes(this.name)) {
+                            if(['agency_hr_phone', 'agency_office_number', 'homeowner_phone_number'].includes(this.name)) {
                                 regex = /(\+\d{1,3}[- ]?)?\d{10}$/;
                             }
-                            if(this.name === 'agency_hr_email') {
+                            if(['agency_hr_email', 'homeowner_email'].includes(this.name)) {
                                 regex = /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                             }
-                            if(['airbnb_link', 'home_away_link', 'vrbo_link', 'agency_website'].includes(this.name)) {
+                            if(['airbnb_link', 'home_away_link', 'vrbo_link', 'agency_website', 'website', 'property_tax_url'].includes(this.name)) {
+                                // URL validations
                                 regex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/
                             }
                             return regex.test(input_value);
                         });
-                        $(":submit").prop('disabled', completed_inputs.length < 3);
+                        $("#submit_documents").prop('disabled', completed_inputs.length < 3);
                     });
+
+                    $("input:file").change(function (e) {
+                        const target = e.target;
+                        const maxAllowedSize = 25 * 1024 * 1024;
+                        if (target.files && target.files[0] && target.files[0].size > maxAllowedSize) {
+                            alert('File size is too large, maximum upload size is 25MB.')
+                            target.value = ''
+                        }
+                    })
                 });
+
+            </script>
+
+            <script>
+                $(document).ready(function (e) {
+                    initializeAddress();
+                })
+                function initializeAddress() {
+                    var componentForm = {
+                        street_number: 'short_name',
+                        route: 'long_name',
+                        locality: 'long_name',
+                        administrative_area_level_1: 'short_name',
+                        country: 'long_name',
+                        postal_code: 'short_name'
+                    };
+                    let options = {
+                        componentRestrictions: {country: 'us'}
+                    };
+                    try {
+                        let property_address = document.getElementById('property_address');
+                        if(property_address) {
+                            google.maps.event.addDomListener(property_address, 'keypress', (event) => {
+                                if (event.keyCode === 13) {
+                                    event.preventDefault();
+                                } else if(property_address.dataset.isValid) {
+                                    delete property_address.dataset.isValid;
+                                }
+                            });
+                            let autocomplete_address = new google.maps.places.Autocomplete(property_address, options);
+                            autocomplete_address.addListener('place_changed', (e) => {
+                                var place = autocomplete_address.getPlace();
+                                property_address.style.borderColor = '#e0e0e0';
+                                $(`#property_address_error`).show();
+                                property_address.dataset.isValid = JSON.stringify(place.address_components);
+                            });
+                        }
+                    } catch (e) { console.log('address error: ', e); }
+                };
+
+                $('#btn_add_apt_number').click(function (e) {
+                    if (e) { e.preventDefault(); }
+                    $('#add_apt_number_field').show();
+                    $('#btn_add_apt_number').hide();
+                    $('#address_line_2').val('');
+                });
+
+                $('#remove_add_apt_number').click(function (e) {
+                    e.preventDefault();
+                    $('#add_apt_number_field').hide();
+                    $('#btn_add_apt_number').show();
+                    $('#address_line_2').val('');
+                });
+
+                function validate_submit() {
+                    var user = <?php echo json_encode($user); ?>;
+
+                    if (user.role_id == 4) {
+                        let property_address = document.getElementById('property_address');
+                        if(property_address.value && property_address.dataset.isValid) {
+
+                            var address_components = JSON.parse(property_address.dataset.isValid);
+                            // TODO: add address
+
+                            var componentForm = {
+                                street_number: { type: 'short_name' },
+                                route: { type: 'long_name' },
+                                apartment_number: { value: $('#address_line_2').val() || '' },
+                                locality: { type: 'long_name' },
+                                administrative_area_level_1: { type: 'short_name' },
+                                country: { type: 'long_name' },
+                                postal_code: { type: 'short_name' }
+                            };
+
+                            for (var i = 0; i < address_components.length; i++) {
+                                var addressType = address_components[i].types[0];
+                                if (componentForm[addressType]) {
+                                    componentForm[addressType].value = address_components[i][componentForm[addressType].type];
+                                }
+                            }
+                            var complete_address = Object.values(componentForm).map(a => a.value).join(', ');
+                            $(`#property_address`).val(complete_address);
+                            return true;
+                        } else {
+                            $(`#property_address`).css('border-color', '#ff0000');
+                            $(`#property_address_error`).show();
+                            $(window).scrollTop($(`#property_address`).offset().top-200);
+                            return false;
+                        }
+                    };
+
+                    return true;
+                }
 
             </script>
         </div>

@@ -1,4 +1,8 @@
-<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}&libraries=places"></script>
+
+<script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+
 
 <script type="text/javascript" src="{{URL::asset('scripts/chosen.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/magnific-popup.min.js') }}"></script>
@@ -370,10 +374,6 @@
     }
 
 </script>
-
-<script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}&libraries=places&callback=onGoogleLoad" async defer></script>
-
-<script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
 
 <script type="text/javascript">
     function onGoogleLoad() {

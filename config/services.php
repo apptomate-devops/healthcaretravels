@@ -16,7 +16,7 @@ return [
     'google' => [
         'captcha_site_key' => env('RECAPTCHA_SITE_KEY', '6LcdUVMUAAAAAHf1NDwJ5VG7s3AemNQbXuMHZBsR'),
         'captcha_secret_key' => env('RECAPTCHA_SECRET_KEY', '6LcdUVMUAAAAABjB_DldChticg66WclweVoUsjHU'),
-        'maps_api_key' => env('GOOGLE_MAPS_API_KEY', 'AIzaSyD1hcgnWfhWCmFtVt-mS0rUnkWLOmmkITU'),
+        'maps_api_key' => env('GOOGLE_MAPS_API_KEY', 'AIzaSyB-rD5XU_5kd1vcx_EiOg4syU_honD2XIg'),
     ],
 
     'mailgun' => [

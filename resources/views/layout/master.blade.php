@@ -100,56 +100,57 @@
 
 
 <script type="text/javascript">
+    try {
+        $("#caleran-ex-1").caleran();
 
-    $("#caleran-ex-1").caleran();
+        $( function() {
+            $( "#datepicker" ).datepicker();
+            $( "#datepicker1" ).datepicker();
+            var date = new Date();
+            $('#from_dates').datepicker({
+                startDate: date
+            });
+            $("#from_date").datepicker({
+                startDate: date,
+                datesDisabled:["03/13/2018","11/28/2016","12/02/2016","12/23/2016"]
+            });
+            $('#to_date').datepicker({
+                startDate: date
+            });
+        } );
 
-    $( function() {
-        $( "#datepicker" ).datepicker();
-        $( "#datepicker1" ).datepicker();
-        var date = new Date();
-        $('#from_dates').datepicker({
-            startDate: date
-        });
-        $("#from_date").datepicker({
-            startDate: date,
-            datesDisabled:["03/13/2018","11/28/2016","12/02/2016","12/23/2016"]
-        });
-        $('#to_date').datepicker({
-            startDate: date
-        });
-    } );
+        $('.date_picker').datepicker({});
 
-    $('.date_picker').datepicker({});
+        $('#timepicker').timepicker();
+        $('#timepicker1').timepicker();
+        $('#timepicker2').timepicker();
 
-    $('#timepicker').timepicker();
-    $('#timepicker1').timepicker();
-    $('#timepicker2').timepicker();
-
-    $('#button').click(function (e) {
-        var isvalid = true;
-        var checki=true;
-        $(".validate").each(function () {
-            if ($.trim($(this).val()) == '') {
-                isValid = false;
-                $(this).css({
-                    "border-color": "1px solid red",
-                    "background": ""
-                });
-                //alert("Please fill all required fields");
-                if (isValid == false)
-                     alert("Please fill all required fields");
+        $('#button').click(function (e) {
+            var isvalid = true;
+            var checki=true;
+            $(".validate").each(function () {
+                if ($.trim($(this).val()) == '') {
+                    isValid = false;
+                    $(this).css({
+                        "border-color": "1px solid red",
+                        "background": ""
+                    });
+                    //alert("Please fill all required fields");
+                    if (isValid == false)
+                        alert("Please fill all required fields");
                     e.preventDefault();
-            }
-            else {
-                $(this).css({
-                    "border": "2px solid green",
-                    "background": ""
-                });
+                }
+                else {
+                    $(this).css({
+                        "border": "2px solid green",
+                        "background": ""
+                    });
 
-            }
+                }
+            });
+
         });
-
-    });
+    } catch (e) {};
 </script>
     @yield('custom_script')
 </div>

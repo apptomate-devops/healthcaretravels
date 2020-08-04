@@ -828,7 +828,7 @@
             }
             var mintoDate = new Date(from_date);
             mintoDate.setMonth(mintoDate.getMonth() + 1);
-            var minDateString = (mintoDate.getMonth() + 1) "/" + mintoDate.getDate() + "/" + mintoDate.getFullYear();
+            var minDateString = (mintoDate.getMonth() + 1) + "/" + mintoDate.getDate() + "/" + mintoDate.getFullYear();
             alert("Please choose date after " + minDateString);
             $('#to_date').val("");
             return false;

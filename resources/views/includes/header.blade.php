@@ -183,11 +183,11 @@
               @else
                <li class="right-side-menu-item">
               {{--   <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAqkiqDWb4SVrS9ySxpGTVRFDTqX2noe3ItyKiGFBYwFmqeg/viewform?fbclid=IwAR2t27UuX3zLHL3fAl3gAgL_qEdDgZv4vF3U_mzCvdHAs4dEOuZGunsVJHA" class="sign-in"> --}}
-                <a href="{{url('/')}}/login" class="sign-in visible-md">
+                <a href="{{url('/')}}/login" class="sign-in visible-md visible-lg">
                 <i class="fa fa-user"></i>
                 Log In / Register
                 </a>
-                <a href="{{url('/')}}/login" class="sign-in btn btn-primary hidden-md">
+                <a href="{{url('/')}}/login" class="sign-in btn btn-primary hidden-md hidden-lg">
                 <i class="fa fa-user"></i>
                 Log In / Register
                 </a>

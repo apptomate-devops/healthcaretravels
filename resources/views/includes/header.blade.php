@@ -261,7 +261,7 @@
 {{--                           @endif--}}
                         </div>
 
-                      @if(Session::get('role_id') == 1) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}
+                      @if(Session::get('role_id') == 1 || Session::get('role_id') == 4) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}
                       <ul>
                           <li><a href="{{url('/')}}/owner/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
                           <li><a href="{{url('/')}}/owner/verify-account"><i class="sl sl-icon-user"></i> Verify Account</a></li>

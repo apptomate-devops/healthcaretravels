@@ -622,11 +622,11 @@ class UserController extends BaseController
             "work_badge_id",
             "travel_contract_id",
             "government_id",
-            "driver_license_id",
             "property_tax_document",
             "utility_bill",
             "traveler_contract_id",
             "cohosting_agreement_id",
+            "lease_agreement",
         ];
         $all_documents = [];
         foreach ($keys as $key) {
@@ -680,9 +680,12 @@ class UserController extends BaseController
                 'linkedin_url' => isset($request->linkedin) ? $request->linkedin : null,
                 'instagram_url' => isset($request->instagram) ? $request->instagram : null,
                 'traveler_license' => isset($request->traveler_license) ? $request->traveler_license : null,
+                'website' => isset($request->website) ? $request->website : null,
                 'airbnb_link' => isset($request->airbnb_link) ? $request->airbnb_link : null,
                 'home_away_link' => isset($request->home_away_link) ? $request->home_away_link : null,
                 'vrbo_link' => isset($request->vrbo_link) ? $request->vrbo_link : null,
+                'property_tax_url' => isset($request->property_tax_url) ? $request->property_tax_url : null,
+                'property_address' => isset($request->property_address) ? $request->property_address : null,
                 'agency_hr_email' => isset($request->agency_hr_email) ? $request->agency_hr_email : null,
                 'agency_hr_phone' => isset($request->agency_hr_phone) ? $request->agency_hr_phone : null,
                 'agency_website' => isset($request->agency_website) ? $request->agency_website : null,

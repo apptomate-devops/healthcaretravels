@@ -591,7 +591,7 @@
                                 >
                                 </div>
                                 <p class="form-row"  id="register_button_field" style="display: none; margin-top: 10px;">
-                                    <input type="submit" id="reg_button" class="button border fw margin-top-10" name="register" value="Agree and Register" disabled />
+                                    <input type="submit" id="reg_button" class="button border fw margin-top-10" name="register" value="Agree and Register" @if(APP_ENV !== "local") disabled @endif />
                                 </p>
 
                             </form>
@@ -842,7 +842,6 @@
         initialize();
     }
 
-
     function initialize() {
         var componentForm = {
             street_number: 'short_name',
@@ -1000,6 +999,7 @@
 
     function validate_registration() {
         if ("{{APP_ENV}}" === "local") {
+            $('#name_of_agency').val(agencyAutoComplete.value());
             return true; // escape validation for local
         }
         let dob_error = $('#dob_validation_error').html();

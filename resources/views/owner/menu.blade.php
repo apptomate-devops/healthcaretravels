@@ -4,7 +4,7 @@
         display: none;
     }
 </style>
-@if(Session::get('role_id') == 1 || Session::get('role_id') == 3)
+@if(Session::get('role_id') == 1 || Session::get('role_id') == 3 || Session::get('role_id') == 4)
 <ul class="my-account-nav">
 
     <li class="sub-nav-title">Manage Account</li>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Models\EmailConfig;
 use App\Models\Users;
 use DB;
@@ -14,6 +15,7 @@ use Auth;
 
 class UserController extends BaseController
 {
+    use AuthenticatesUsers;
     public function check_email($email, $client_id)
     {
         $check = DB::table('users')
@@ -110,6 +112,14 @@ class UserController extends BaseController
     }
     public function login_user(Request $request)
     {
+        if ($this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+
+            return back()->with(
+                'error',
+                'You have tried many times with the wrong email or password. Please Try again after some time.',
+            );
+        }
         if ($request->phone_no) {
             $request->username = $request->username;
 
@@ -152,13 +162,13 @@ class UserController extends BaseController
             ->where('email', '=', $request->username)
             ->first();
         if ($check) {
-            if (
-                !Auth::attempt([
-                    'email' => $request->username,
-                    'password' => $request->password,
-                    'client_id' => $request->client_id,
-                ])
-            ) {
+            $credentials = [
+                'email' => $request->username,
+                'password' => $request->password,
+                'client_id' => $request->client_id,
+            ];
+            if (!Auth::attempt($credentials)) {
+                $this->incrementLoginAttempts($request);
                 return back()->with('error', 'You have entered the wrong email or password. Please Try again.');
             }
             if ($check->profile_image) {

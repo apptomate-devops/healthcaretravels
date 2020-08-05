@@ -1,3 +1,5 @@
+/* login  screen */
+
 .login-container {
     padding: 70px 10px;
 }
@@ -311,6 +313,33 @@
 
 #other_agency {
     margin-bottom: 30px;
+}
+
+/* OTP screen */
+
+.otp-verification label {
+    width: 100%;
+}
+.otp-verification label input {
+    margin-top: 10px;
+    height: 53px;
+}
+.otp-verification .btn_get_help {
+    width: 150px;
+    margin-top: 30px;
+}
+.otp-verification #get_otp,
+.otp-verification input[type="submit"] {
+    padding: 0 20px;
+}
+.otp-verification a.change-phone-link {
+    text-decoration: underline;
+    cursor: pointer;
+    display: block;
+    float: right;
+}
+.otp-verification a.change-phone-link:hover {
+    color: #ffa74a;
 }
 
 @media (max-width: 992px) {

@@ -25,12 +25,14 @@ Route::GET('/email-send', 'UserController@email_send');
 Route::GET('/get_phone_number/{user_id}', 'UserController@get_phone_number');
 Route::get('/login', 'UserController@login');
 Route::POST('/login-user', 'UserController@login_user');
-Route::GET('/otp-verify-register', 'UserController@view_otp_screen');
+Route::GET('/otp-verify-register', 'UserController@view_otp_screen_register');
+Route::GET('/otp-verify-login', 'UserController@view_otp_screen_login');
 Route::POST('/verify_recaptcha', 'UserController@verify_recaptcha');
 Route::GET('/add-another-agency/{agency_name}', 'UserController@add_another_agency');
 Route::POST('/register-user', 'UserController@register_user');
 Route::GET('/sent_otp/{phone_no}/{user_id}', 'UserController@sent_otp');
 Route::POST('/verify_otp', 'UserController@verify_otp');
+Route::POST('/verify_otp_login', 'UserController@verify_otp_login');
 Route::GET('/verify/{id}/{token}', 'UserController@email_verify');
 
 // Home Controller Routes
@@ -79,15 +81,18 @@ Route::get('/search-property', 'PropertyController@search_property');
 Route::post('/search-property', 'PropertyController@search_property');
 Route::post('/search-property-filtering', 'PropertyController@search_property');
 
-// Owner controller routes
-Route::get('/owner/profile', 'OwnerController@owner_profile');
+//// Owner controller routes
+//Route::get('/owner/profile', 'OwnerController@owner_profile');
+
+// Update profile
+Route::POST('/update-profile', 'UserController@update_profile');
 
 // Account Verification routes
 Route::POST('/upload-document', 'UserController@upload_document');
 
 // Logged in routes
 Route::middleware(['LoginCheck'])->group(function () {
-    Route::GET('/traveler/profile', 'OwnerController@owner_profile');
+    Route::GET('/profile', 'OwnerController@owner_profile');
     Route::GET('/traveler/favorites', 'PropertyController@favorites');
     Route::get('/owner/favorites', 'PropertyController@favorites');
     Route::GET('/cancel-booking/{id}', 'PropertyController@cancel_booking');

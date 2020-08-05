@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Models\EmailConfig;
-use App\Models\Users;
 use DB;
 use Log;
 use Mail;
@@ -110,6 +109,7 @@ class UserController extends BaseController
             'occupation' => $occupation,
         ]);
     }
+
     public function login_user(Request $request)
     {
         if ($this->hasTooManyLoginAttempts($request)) {
@@ -136,11 +136,13 @@ class UserController extends BaseController
                     $update = DB::table('users')
                         ->where('client_id', '=', CLIENT_ID)
                         ->where('phone', '=', $check->phone)
+                        ->where('id', '=', $check->id)
                         ->update(['otp' => $OTP]);
 
                     $check = DB::table('users')
                         ->where('client_id', '=', CLIENT_ID)
                         ->where('phone', '=', $check->phone)
+                        ->where('id', '=', $check->id)
                         ->first();
 
                     $url = $this->get_base_url() . 'otp-verify-register';
@@ -171,16 +173,14 @@ class UserController extends BaseController
                 $this->incrementLoginAttempts($request);
                 return back()->with('error', 'You have entered the wrong email or password. Please Try again.');
             }
-            if ($check->profile_image) {
-                $request->session()->put('profile_image', $check->profile_image);
-            }
             $request->session()->put('user_id', $check->id);
             $request->session()->put('is_verified', $check->is_verified);
             $request->session()->put('role_id', $check->role_id);
             $request->session()->put('username', $check->username);
             $request->session()->put('name_of_agency', $check->name_of_agency);
             $request->session()->put('phone', $check->phone);
-            $request->session()->put('profile_image', BASE_URL . 'user_profile_default.png');
+            $userProfileImage = $check->profile_image ? $check->profile_image : BASE_URL . 'user_profile_default.png';
+            $request->session()->put('profile_image', $userProfileImage);
 
             if ($check->otp_verified != 1) {
                 $OTP = rand(1111, 9999);
@@ -190,11 +190,13 @@ class UserController extends BaseController
                 $update = DB::table('users')
                     ->where('client_id', '=', CLIENT_ID)
                     ->where('phone', '=', $check->phone)
+                    ->where('id', '=', $check->id)
                     ->update(['otp' => $OTP]);
 
                 $check = DB::table('users')
                     ->where('client_id', '=', CLIENT_ID)
                     ->where('phone', '=', $check->phone)
+                    ->where('id', '=', $check->id)
                     ->first();
 
                 $url = $this->get_base_url() . 'otp-verify-register';
@@ -202,10 +204,6 @@ class UserController extends BaseController
                     ->with('phone', $check->phone)
                     ->with('user_id', $check->id);
             }
-            // return redirect($url)->with('mobile',$check->phone);
-            // }else{
-            //     $url = $this->get_base_url() . 'owner/profile';
-            // }
 
             if ($check->email_verified != 1) {
                 $d = DB::table('users')
@@ -234,19 +232,39 @@ class UserController extends BaseController
                 return redirect($url)->with('phone', $check->phone);
             }
 
-            $request->session()->put('profile_image', $check->profile_image);
+            if ($check->enable_two_factor_auth == 1) {
+                // Verify identity if two factor auth is enabled, by default enabled
 
-            if ($check->is_submitted_documents == 0) {
-                $url = $this->get_base_url() . 'verify-account';
+                $OTP = rand(1111, 9999);
+                // send otp
+                $this->sendOTPMessage($check->phone, $OTP);
+
+                $update = DB::table('users')
+                    ->where('client_id', '=', CLIENT_ID)
+                    ->where('phone', '=', $check->phone)
+                    ->where('id', '=', $check->id)
+                    ->update(['otp' => $OTP]);
+
+                $check = DB::table('users')
+                    ->where('client_id', '=', CLIENT_ID)
+                    ->where('phone', '=', $check->phone)
+                    ->where('id', '=', $check->id)
+                    ->first();
+
+                $url = $this->get_base_url() . 'otp-verify-login';
+                return redirect($url)
+                    ->with('phone', $check->phone)
+                    ->with('user_id', $check->id);
             } else {
-                $url = $this->get_base_url() . 'owner/profile';
-            }
-            if ($request->session()->get('propertyId')) {
-                $property_id = $request->session()->get('propertyId');
-                $url = $this->get_base_url() . 'property/' . $property_id;
-            }
+                $url = $this->check_login_redirection($check);
 
-            return redirect($url)->with('phone', $check->phone);
+                if ($request->session()->get('propertyId')) {
+                    $property_id = $request->session()->get('propertyId');
+                    $url = $this->get_base_url() . 'property/' . $property_id;
+                }
+
+                return redirect($url)->with('phone', $check->phone);
+            }
         } else {
             return back()->with('error', 'This email is not registered.');
         }
@@ -498,9 +516,14 @@ class UserController extends BaseController
         //            ->with('OTP', $OTP);
     }
 
-    public function view_otp_screen(Request $request)
+    public function view_otp_screen_register(Request $request)
     {
         return view('otp-verify-register');
+    }
+
+    public function view_otp_screen_login(Request $request)
+    {
+        return view('otp-verify-login');
     }
 
     public function verify_otp(Request $request)
@@ -535,17 +558,8 @@ class UserController extends BaseController
                 ->update(['otp_verified' => 1]);
 
             if ($check->email_verified == 1) {
-                if ($check->role_id == 1 || $check->role_id == 4 || $check->role_id == 2) {
-                    // 1: Property Owner || 4: Cohost || 2: Agency
-                    $url = $this->get_base_url() . 'owner/profile';
-                }
-                //                else if($check->role_id==3) {
-                //                    $url = $this->get_base_url() . '/rv-traveller';
-                //                }
-                else {
-                    // 0: Healthcare Traveler || 3: RV Healthcare Traveler
-                    $url = $this->get_base_url() . 'traveler/profile';
-                }
+                $url = $this->check_login_redirection($check);
+
                 $request->session()->put('user_id', $check->id);
                 $request->session()->put('is_verified', $check->is_verified);
                 $request->session()->put('role_id', $check->role_id);
@@ -583,6 +597,53 @@ class UserController extends BaseController
             return redirect()
                 ->back()
                 ->with('success', 'Verified Successfully!');
+        }
+    }
+
+    public function verify_otp_login(Request $request)
+    {
+        if (!$request->phone_no || !$request->user_id) {
+            return back()->with('error', 'Please Login again to Continue');
+        }
+        $check = DB::table('users')
+            ->where('client_id', CLIENT_ID)
+            ->where('id', $request->user_id)
+            ->where('phone', $request->phone_no)
+            ->first();
+        if (!$check || $check->otp != $request->otp) {
+            return back()
+                ->with('phone_number', $request->phone_no)
+                ->with('phone', $request->phone_no)
+                ->with('user_id', $request->user_id)
+                ->with('error', 'Wrong code. Please try again.');
+        } else {
+            $update_status = DB::table('users')
+                ->where('client_id', CLIENT_ID)
+                ->where('id', $request->user_id)
+                ->where('phone', $request->phone_no)
+                ->update(['otp_verified' => 1]);
+
+            $url = $this->check_login_redirection($check);
+
+            $request->session()->put('user_id', $check->id);
+            $request->session()->put('is_verified', $check->is_verified);
+            $request->session()->put('role_id', $check->role_id);
+            $request->session()->put('username', $check->username);
+            $request->session()->put('name_of_agency', $check->name_of_agency);
+            $request->session()->put('phone', $check->phone);
+            $userProfileImage = $check->profile_image ? $check->profile_image : BASE_URL . 'user_profile_default.png';
+            $request->session()->put('profile_image', $userProfileImage);
+
+            return redirect($url)->with('phone', $check->phone);
+        }
+    }
+
+    public function check_login_redirection($user)
+    {
+        if ($user->is_submitted_documents == 0) {
+            return $this->get_base_url() . 'verify-account';
+        } else {
+            return $this->get_base_url() . 'profile';
         }
     }
 
@@ -743,5 +804,94 @@ class UserController extends BaseController
         $this->send_custom_email($user->email, $subject, 'mail.document-uploaded-user', $data, $title, VERIFY_MAIL);
 
         return back()->with('success', 'Documents uploaded successfully');
+    }
+
+    public function update_profile(Request $request)
+    {
+        $user_id = $request->session()->get('user_id');
+        $user = DB::table('users')
+            ->where('id', $user_id)
+            ->first();
+
+        $res = [];
+        if ($request->username) {
+            $user->username = $request->username;
+        }
+
+        if ($request->first_name) {
+            $user->first_name = $request->first_name;
+            $res['first_name'] = $request->first_name;
+        }
+        if ($request->last_name) {
+            $user->last_name = $request->last_name;
+            $res['last_name'] = $request->last_name;
+        }
+        if ($request->phone) {
+            $user->phone = $request->phone;
+            $res['phone'] = $request->phone;
+        }
+        if ($request->work) {
+            $user->work = $request->work;
+            $res['work'] = $request->work;
+        }
+
+        if ($request->address) {
+            $user->address = $request->address;
+            $res['address'] = $request->address;
+        }
+        if ($request->email) {
+            $user->email = $request->email;
+        }
+        if ($request->tax_home) {
+            $user->tax_home = $request->tax_home;
+        }
+        if ($request->about) {
+            $user->about_me = $request->about;
+        }
+        if ($request->twitter_url) {
+            $user->twitter_url = $request->twitter_url;
+        }
+        if ($request->facebook_url) {
+            $user->facebook_url = $request->facebook_url;
+        }
+        if ($request->skype_id) {
+            $user->skype_id = $request->skype_id;
+        }
+        if ($request->languages_known) {
+            $user->languages_known = $request->languages_known;
+        }
+        if ($request->occupation_desc) {
+            $user->occupation_desc = $request->occupation_desc;
+        }
+        if ($request->occupation) {
+            $user->occupation = $request->occupation;
+        }
+
+        if ($request->name_of_agency) {
+            $user->name_of_agency = $request->name_of_agency;
+            $res['name_of_agency'] = $request->name_of_agency;
+        }
+        if ($request->linkedin_url) {
+            $user->linkedin_url = $request->linkedin_url;
+            $res['linkedin_url'] = $request->linkedin_url;
+        }
+        if ($request->gender) {
+            $user->gender = $request->gender;
+            $res['gender'] = $request->gender;
+        }
+        if ($request->date_of_birth) {
+            $user->date_of_birth = $request->date_of_birth;
+            $res['date_of_birth'] = $request->date_of_birth;
+        }
+
+        $user->enable_two_factor_auth = isset($request->enable_two_factor_auth) ? 1 : 0;
+        $res['enable_two_factor_auth'] = isset($request->enable_two_factor_auth) ? 1 : 0;
+
+        DB::table('users')
+            ->where('id', $user_id)
+            ->update($res);
+        //print_r($res); exit;
+
+        return back()->with('success', 'Profile updated successfully');
     }
 }

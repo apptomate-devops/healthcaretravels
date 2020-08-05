@@ -103,21 +103,21 @@
                                     @endif
                                     <div class="col-md-6">
                                         <label>Driver's License or Government ID</label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
+                                        <input type="file" name="government_id" id="government_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                     </div>
                                     <div class="col-md-6">
                                         <label>Lease Agreement</label>
-                                        <input type="file" name="lease_agreement" id="lease_agreement" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
+                                        <input type="file" name="lease_agreement" id="lease_agreement" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                         <div class="info-text">If approved by your state for subleasing</div>
                                     </div>
                                     <div class="col-md-6">
                                         <label>Property Tax Document</label>
-                                        <input type="file" name="property_tax_document" id="property_tax_document" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
+                                        <input type="file" name="property_tax_document" id="property_tax_document" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                         <div class="info-text">With proof of name and listing address</div>
                                     </div>
                                     <div class="col-md-6">
                                         <label>Utility Bill</label>
-                                        <input type="file" name="utility_bill" id="utility_bill" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
+                                        <input type="file" name="utility_bill" id="utility_bill" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                         <div class="info-text">With proof of name and listing address</div>
                                     </div>
 
@@ -142,12 +142,12 @@
                                     @endif
                                     <div class="col-md-6">
                                         <label>A Traveler's Contract</label>
-                                        <input type="file" name="traveler_contract_id" id="traveler_contract_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
+                                        <input type="file" name="traveler_contract_id" id="traveler_contract_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                         <p class="info-text" style="margin-top: 5px;">This should have your name as a contact person in the contract.</p>
                                     </div>
                                     <div class="col-md-6">
                                         <label>Work Badge </label>
-                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
+                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                     </div>
                                     <div class="col-md-12" style="margin-top: 40px;">
                                         <div class="card col-md-12" style="padding: 15px;">
@@ -190,14 +190,14 @@
                                     @endif
                                     <div class="col-md-6">
                                         <label>Driver's License or Government ID</label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
+                                        <input type="file" name="government_id" id="government_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                         @if(isset($GOVERNMENT_ID->document_type))
                                             <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                     </div>
                                     <div class="col-md-6">
                                         <label>Signed HCT Co-hosting Agreement </label>
-                                        <input type="file" name="cohosting_agreement_id" id="cohosting_agreement_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
+                                        <input type="file" name="cohosting_agreement_id" id="cohosting_agreement_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                         @if(isset($COHOSTING_AGREEMENT_ID->document_type))
                                             <a href="{{$COHOSTING_AGREEMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
@@ -226,21 +226,21 @@
                                     @endif
                                     <div class="col-md-6">
                                         <label>Work Badge </label>
-                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
+                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                         @if(isset($WORK_BADGE_ID->document_type))
                                             <a href="{{$WORK_BADGE_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                     </div>
                                     <div class="col-md-6">
                                         <label>Travel Contract </label>
-                                        <input type="file" name="travel_contract_id" id="travel_contract_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
+                                        <input type="file" name="travel_contract_id" id="travel_contract_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                         @if(isset($TRAVEL_CONTRACT_ID->document_type))
                                             <a href="{{$TRAVEL_CONTRACT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                     </div>
                                     <div class="col-md-6">
                                         <label>Driver's License or Government ID</label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control" accept="image/*, .xlsx, .xls, .doc, .docx, .pages, .rtf, .txt, .pdf, .odt" />
+                                        <input type="file" name="government_id" id="government_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                         @if(isset($GOVERNMENT_ID->document_type))
                                             <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
@@ -399,9 +399,6 @@
             </script>
 
             <script>
-                $(document).ready(function (e) {
-                    initializeAddress();
-                })
                 function initializeAddress() {
                     var componentForm = {
                         street_number: 'short_name',

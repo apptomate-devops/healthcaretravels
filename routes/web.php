@@ -32,6 +32,8 @@ Route::POST('/register-user', 'UserController@register_user');
 Route::GET('/sent_otp/{phone_no}/{user_id}', 'UserController@sent_otp');
 Route::POST('/verify_otp', 'UserController@verify_otp');
 Route::GET('/verify/{id}/{token}', 'UserController@email_verify');
+Route::get('/social/redirect/{provider}/{type}', 'UserController@handleProviderRedirect');
+Route::get('/social/callback', 'UserController@handleProviderCallback');
 
 // Home Controller Routes
 Route::get('/', 'HomeController@index');

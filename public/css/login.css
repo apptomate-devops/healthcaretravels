@@ -70,7 +70,6 @@
     color: #666666;
     font-size: 14px;
     line-height: 18px;
-    text-align: center;
 }
 
 .required {
@@ -98,7 +97,6 @@
     margin-top: -25px !important;
     margin-bottom: 25px !important;
     color: #9D0000;
-    text-align: center;
 }
 
 .label-margin {
@@ -136,8 +134,7 @@
 }
 
 #recaptcha-block > div {
-    width: 335px !important;
-    height: 85px !important;
+    margin: 0 auto;
 }
 
 #recaptcha-block > div iframe {
@@ -268,24 +265,18 @@
     display: none;
 }
 
-.password-checkbox {
-    margin-top: -20px;
-    margin-bottom: 30px;
-}
-
+.password-checkbox,
 #ethnicity-caption,
 #agency-caption,
 #name-caption {
     margin-top: -20px;
     margin-bottom: 30px;
-    text-align: center;
 }
 
 .password-checkbox input[type="checkbox"] {
     height: 12px;
     width: 12px;
     margin-right: 5px;
-    text-align: left;
 }
 
 .password-checkbox input[type="checkbox"]:checked {

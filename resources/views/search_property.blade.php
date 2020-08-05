@@ -315,11 +315,6 @@
                                         </div>
                                         <div class="col-fs-3">
                                             <div class="select-input disabled-first-option">
-                                            <div class="checkboxes in-row">
-                                                <input id="occupied-check" type="checkbox" name="occupied-check" value="CURRENTLY_OCCUPIED" @if ($request_data['occupied-check'] ?? '') checked @endif>
-                                                <label for="occupied-check">Currently occupied</label>
-                                            </div>
-                                            <div class="mt-5 occupied-extra" style="display: {{($request_data['occupied-check'] ?? '') ? 'block' : 'none'}}">
                                                 <div class="px-0 col-md-6 checkboxes in-row">
                                                     <input id="no-kids-check" type="checkbox" name="occupied-no-kids" value="CURRENTLY_NO_KIDS" @if ($request_data['occupied-no-kids'] ?? '') checked @endif>
                                                     <label for="no-kids-check">No kids</label>
@@ -329,10 +324,9 @@
                                                     <label for="no-dogs-check">No dogs</label>
                                                 </div>
                                             </div>
-                                            </div>
                                         </div>
                                     </div>
-                                    <div class="extra-filters-wrapper">
+                                    <div class="extra-filters-wrapper row with-forms">
                                         <div class="col-fs-3">
                                             <div class="checkboxes in-row">
                                                 <input id="covid-check" type="checkbox" name="covid-check" value="COVID_SAFETY" @if ($request_data['covid-check'] ?? '') checked @endif>
@@ -581,14 +575,6 @@
 
         });
         $(function () {
-            $('#occupied-check').change(function (event) {
-                var isChecked = event.currentTarget.checked;
-                if (isChecked) {
-                    $('.occupied-extra').fadeIn();
-                } else {
-                    $('.occupied-extra').fadeOut();
-                }
-            });
             $(".show_skimmer").fadeOut(2000, function () {
                 $(".content").fadeIn(1500);
 

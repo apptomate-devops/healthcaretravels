@@ -454,11 +454,7 @@ class BaseController extends ConstantsController
 
     public function encrypt_password($password)
     {
-        $key = hash('sha256', 'sparkout');
-        $iv = substr(hash('sha256', 'developer'), 0, 16);
-        $output = openssl_encrypt($password, "AES-256-CBC", $key, 0, $iv);
-        $output2 = base64_encode($output);
-        return $output2;
+        return bcrypt($password);
     }
 
     public function decrypt_password($encrypted_password)

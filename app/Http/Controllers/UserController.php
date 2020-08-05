@@ -10,6 +10,7 @@ use App\Models\Users;
 use DB;
 use Log;
 use Mail;
+use Auth;
 
 class UserController extends BaseController
 {
@@ -151,8 +152,13 @@ class UserController extends BaseController
             ->where('email', '=', $request->username)
             ->first();
         if ($check) {
-            $password = $this->encrypt_password($request->password);
-            if ($check->password !== $password) {
+            if (
+                !Auth::attempt([
+                    'email' => $request->username,
+                    'password' => $request->password,
+                    'client_id' => $request->client_id,
+                ])
+            ) {
                 return back()->with('error', 'You have entered the wrong email or password. Please Try again.');
             }
             if ($check->profile_image) {
@@ -436,6 +442,7 @@ class UserController extends BaseController
             'work_title' => $request->work_title,
             'website' => $request->website,
             'auth_token' => $token,
+            'is_encrypted' => 1,
         ]);
         $d = DB::table('users')
             ->where('client_id', '=', $request->client_id)

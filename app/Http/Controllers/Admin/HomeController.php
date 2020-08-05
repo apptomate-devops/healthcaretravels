@@ -6,6 +6,7 @@ use App\Http\Controllers\BaseController;
 use Carbon\Carbon;
 use Session;
 use DB;
+use Auth;
 use App\Models\BecomeScout;
 use App\Models\RequestRoommate;
 use App\Models\PropertyRating;
@@ -42,8 +43,7 @@ class HomeController extends BaseController
             ->where('email', '=', $request->email)
             ->first();
         if ($check) {
-            $password = $this->encrypt_password($request->password);
-            if ($check->password !== $password) {
+            if (!Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
                 return back()->with('error_message', 'You have entered the wrong email or password. Please Try again.');
             }
         }

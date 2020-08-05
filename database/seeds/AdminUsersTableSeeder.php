@@ -17,7 +17,7 @@ class AdminUsersTableSeeder extends Seeder
             ],
             [
                 'name' => 'Admin',
-                'password' => 'SnZQZHhlZ2JPd3F5ZTZad3VWdXJkSVhkU1o1V0ZHNDdIY1RRcXFQRDB5ST0=',
+                'password' => bcrypt('qez5n@KGz1aLFu$F'),
                 'pages' => 1,
                 'status' => 1,
                 'updated_at' => date("Y-m-d H:i:s"),

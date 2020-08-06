@@ -2534,6 +2534,7 @@ body .search-container button:before {
 .search-container button i {
     z-index: 100;
     position: relative;
+
 }
 
 .adv-search-btn {

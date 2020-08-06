@@ -74,13 +74,11 @@
                                 <input type="hidden" name="client_id" value="{{$constants['client_id']}}">
                                 <p class="form-row form-row-wide">
                                     <label for="username">Email Address:
-                                        <i class="im im-icon-Male"></i>
                                         <input type="email" class="input-text" name="username" id="username" placeholder="Email Address" required />
                                     </label>
                                 </p>
                                 <p class="form-row form-row-wide">
                                     <label for="password">Password:
-                                        <i class="im im-icon-Lock-2"></i>
                                         <input class="input-text" type="password" name="password" id="password" placeholder="Password" required />
                                     </label>
                                 </p>
@@ -130,8 +128,7 @@
 
                                 <p class="form-row form-row-wide" id="username2_field" style="display: none;">
                                     <label for="username2 required">Username:
-                                        <i class="im im-icon-Male"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('username') ? 'form-error' : ''}}" name="username" id="username2" value="{{Session::get('username')}}" autocomplete="off" required />
+                                        <input type="text" class="input-text validate {{ $errors->has('username') ? 'form-error' : ''}}" name="username" id="username2" value="{{Session::get('username')}}" placeholder="Username" autocomplete="off" required />
                                     </label>
                                     {!! $errors->first('username', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -139,16 +136,14 @@
                                 <p class="form-row form-row-wide" id="email_field" style="display: none;">
                                     <label for="email2">
                                         <label id="email-label" class="m-0">Email Address:</label>
-                                        <i class="im im-icon-Mail"></i>
-                                        <input type="email" class="input-text validate {{ $errors->has('email') ? 'form-error' : ''}}" value="{{Session::get('mail')}}" name="email" id="email2" autocomplete="off" required />
+                                        <input type="email" class="input-text validate {{ $errors->has('email') ? 'form-error' : ''}}" value="{{Session::get('mail')}}" name="email" id="email2" autocomplete="off" placeholder="Email Address" required />
                                     </label>
                                     {!! $errors->first('email', '<p class="error-text">:message</p>') !!}
                                 </p>
 
                                 <p class="form-row form-row-wide" id="password_field" style="display: none;">
                                     <label for="password1">Password:
-                                        <i class="im im-icon-Lock-2"></i>
-                                        <input class="input-text validate {{ $errors->has('password1') ? 'form-error' : ''}}" type="password" data-strength autocomplete="off" name="password1" id="password1" required />
+                                        <input class="input-text validate {{ $errors->has('password1') ? 'form-error' : ''}}" type="password" data-strength autocomplete="off" name="password1" placeholder="Password" id="password1" required />
                                     </label>
                                     <div class="password-checkbox">
                                         <input type="checkbox" onclick="togglePassword('password1')">
@@ -171,8 +166,7 @@
 
                                 <p class="form-row form-row-wide" id="password2_field" style="display: none;">
                                     <label for="password2">Repeat Password:
-                                        <i class="im im-icon-Lock-2"></i>
-                                        <input class="input-text validate {{ $errors->has('password2') ? 'form-error' : ''}}" autocomplete="off" type="password" name="password2" id="password2" required />
+                                        <input class="input-text validate {{ $errors->has('password2') ? 'form-error' : ''}}" autocomplete="off" type="password" name="password2" placeholder="Repeat Password" id="password2" required />
                                     </label>
                                     <div class="password-checkbox">
                                         <input type="checkbox" onclick="togglePassword('password2')">
@@ -183,16 +177,14 @@
 
                                 <p class="form-row form-row-wide" id="first_name_field" style="display: none;">
                                     <label for="username2">First Name:
-                                        <i class="im im-icon-Male"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('first_name') ? 'form-error' : ''}}" value="{{Session::get('fname')}}" name="first_name" id="first_name" autocomplete="off" required />
+                                        <input type="text" class="input-text validate {{ $errors->has('first_name') ? 'form-error' : ''}}" value="{{Session::get('fname')}}" name="first_name" id="first_name" autocomplete="off" placeholder="First Name" required />
                                     </label>
                                     {!! $errors->first('first_name', '<p class="error-text">:message</p>') !!}
                                 </p>
 
                                 <p class="form-row form-row-wide" id="last_name_field" style="display: none;">
                                     <label for="username2">Last Name:
-                                        <i class="im im-icon-Male"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('last_name') ? 'form-error' : ''}}" value="{{Session::get('lname')}}" name="last_name" id="last_name" autocomplete="off" required />
+                                        <input type="text" class="input-text validate {{ $errors->has('last_name') ? 'form-error' : ''}}" value="{{Session::get('lname')}}" name="last_name" id="last_name" autocomplete="off" placeholder="Last Name" required />
                                     </label>
                                     {!! $errors->first('last_name', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -217,39 +209,34 @@
 
                                 <p class="form-row form-row-wide" id="phone_number_field" style="display: none;">
                                     <label for="phone_no">Mobile Number:
-                                        <i class="im im-icon-Phone-2"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('phone_no') ? 'form-error' : ''}}" value="{{Session::get('phone')}}" name="phone_no" id="phone_no" maxlength="10" required />
+                                        <input type="text" class="input-text validate {{ $errors->has('phone_no') ? 'form-error' : ''}}" value="{{Session::get('phone')}}" name="phone_no" id="phone_no" maxlength="10" placeholder="Mobile Number" required />
                                     </label>
                                     {!! $errors->first('phone_no', '<p class="error-text">:message</p>') !!}
                                 </p>
 
                                 <p class="form-row form-row-wide" id="work_number_field" style="display: none;">
                                     <label for="work">Office Number:
-                                        <i class="im im-icon-Phone"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('work') ? 'form-error' : ''}}" value="{{Session::get('work')}}" name="work" id="work" maxlength="10" />
+                                        <input type="text" class="input-text validate {{ $errors->has('work') ? 'form-error' : ''}}" value="{{Session::get('work')}}" name="work" id="work" placeholder="Office Number" maxlength="10" />
                                     </label>
                                     {!! $errors->first('work', '<p class="error-text">:message</p>') !!}
                                 </p>
 
                                 <p class="form-row form-row-wide" id="work_title_field" style="display: none;">
                                     <label for="work_title">Work Title:
-                                        <i class="im im-icon-Consulting"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('work_title') ? 'form-error' : ''}}" value="{{Session::get('work_title')}}" name="work_title" id="work_title" />
+                                        <input type="text" class="input-text validate {{ $errors->has('work_title') ? 'form-error' : ''}}" value="{{Session::get('work_title')}}" name="work_title" placeholder="Work Title" id="work_title" />
                                     </label>
                                     {!! $errors->first('work_title', '<p class="error-text">:message</p>') !!}
                                 </p>
 
                                 <p class="form-row form-row-wide" id="website_field" style="display: none;">
                                     <label for="website">Agency URL:
-                                        <i class="im im-icon-Ustream"></i>
-                                        <input type="text" class="input-text validate {{ $errors->has('website') ? 'form-error' : ''}}" value="{{Session::get('website')}}" name="website" id="website" />
+                                        <input type="text" class="input-text validate {{ $errors->has('website') ? 'form-error' : ''}}" value="{{Session::get('website')}}" name="website" placeholder="Agency URL" id="website" />
                                     </label>
                                     {!! $errors->first('website', '<p class="error-text">:message</p>') !!}
                                 </p>
 
                                 <p class="form-row form-row-wide label-margin" id="dob_field" style="display: none;">
                                     <label for="dob">Date of Birth:
-                                        <i class="im im-icon-Calendar" style="bottom: 10px;"></i>
                                         <input type="date" onchange="on_dob_change(this.value)" class="input-text validate {{ $errors->has('dob') ? 'form-error' : ''}}" value="{{Session::get('dob')}}" name="dob" id="dob" autocomplete="off" required />
                                     </label>
                                     {!! $errors->first('dob', '<p class="error-text">:message</p>') !!}
@@ -269,7 +256,6 @@
 
                                 <p class="form-row form-row-wide" id="languages_field" style="display: none;">
                                     <label for="languages_known">Languages Known:
-                                        <i class="im im-icon-Globe"></i>
                                         <input type="text" class="input-text validate" value="{{Session::get('languages_known')}}" name="languages_known" id="languages_known" placeholder="English, Spanish" autocomplete="off" required />
                                     </label>
                                     {!! $errors->first('languages_known', '<p class="error-text">:message</p>') !!}
@@ -327,7 +313,7 @@
                                     <label for="add_apt">Add Apartment Number:
                                         <input type="text" class="input-text validate {{ $errors->has('address_line_2') ? 'form-error' : ''}}" value="{{Session::get('address_line_2')}}" name="address_line_2" id="address_line_2" placeholder="Apt, Unit, Suite, or Floor #" style="padding-left: 20px;" />
                                     </label>
-                                    <button id="remove_add_apt_number" onclick="on_remove_address_line_2(event)" class="button" style="float: right; margin-bottom: 25px;">Don't Add</button>
+                                    <button id="remove_add_apt_number" onclick="on_remove_address_line_2(event)" class="button">Don't Add</button>
                                 </div>
                                 <button id="btn_add_apt_number" onclick="on_add_address_line_2(event)" class="btn btn-primary w-100" style="margin-bottom: 30px; margin-top: -15px; display: none;">Add an Apt or Floor #</button>
 
@@ -618,6 +604,9 @@
                     break;
             }
             initialize();
+            if (data) {
+                on_remove_address_line_2();
+            }
         }
 
     function initialize() {
@@ -721,13 +710,17 @@
                 e.preventDefault();
             }
             $('#add_apt_number_field').show();
+            $('#remove_add_apt_number').show();
             $('#btn_add_apt_number').hide();
             $('#address_line_2').val(value);
         }
 
         function on_remove_address_line_2(e) {
-            e.preventDefault();
+            if (e) {
+                e.preventDefault();
+            }
             $('#add_apt_number_field').hide();
+            $('#remove_add_apt_number').hide();
             $('#btn_add_apt_number').show();
             $('#address_line_2').val('');
         }

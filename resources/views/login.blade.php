@@ -240,7 +240,7 @@
                                     <input type="date" onchange="on_dob_change(this.value)" class="input-text validate {{ $errors->has('dob') ? 'form-error' : ''}}" value="{{Session::get('dob')}}" name="dob" id="dob" autocomplete="off" required />
                                 </label>
                             {!! $errors->first('dob', '<p class="error-text">:message</p>') !!}
-                            <p id="dob_validation_error"></p>
+                            <p id="dob_validation_error" style="margin-bottom: 20px;"></p>
                             </p>
 
                             <p class="form-row form-row-wide" id="gender_field" style="display: none;">

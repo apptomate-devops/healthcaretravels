@@ -315,13 +315,18 @@
                                         </div>
                                         <div class="col-fs-3">
                                             <div class="select-input disabled-first-option">
-                                                <div class="px-0 col-md-6 checkboxes in-row">
-                                                    <input id="no-kids-check" type="checkbox" name="occupied-no-kids" value="CURRENTLY_NO_KIDS" @if ($request_data['occupied-no-kids'] ?? '') checked @endif>
-                                                    <label for="no-kids-check">No kids</label>
+                                                <div class="checkboxes in-row">
+                                                    <span>If Currently occupied</span>
                                                 </div>
-                                                <div class="px-0 col-md-6 checkboxes in-row">
-                                                    <input id="no-dogs-check" type="checkbox" name="occupied-no-dogs" value="CURRENTLY_NO_DOGS" @if ($request_data['occupied-no-dogs'] ?? '') checked @endif>
-                                                    <label for="no-dogs-check">No dogs</label>
+                                                <div class="mt-5 occupied-extra">
+                                                    <div class="px-0 col-md-6 checkboxes in-row">
+                                                        <input id="no-kids-check" type="checkbox" name="occupied-no-kids" value="CURRENTLY_NO_KIDS" @if ($request_data['occupied-no-kids'] ?? '') checked @endif>
+                                                        <label for="no-kids-check">No kids</label>
+                                                    </div>
+                                                    <div class="px-0 col-md-6 checkboxes in-row">
+                                                        <input id="no-dogs-check" type="checkbox" name="occupied-no-dogs" value="CURRENTLY_NO_DOGS" @if ($request_data['occupied-no-dogs'] ?? '') checked @endif>
+                                                        <label for="no-dogs-check">No dogs</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

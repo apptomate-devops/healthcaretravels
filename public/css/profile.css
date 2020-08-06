@@ -1,0 +1,35 @@
+/* profile screen */
+
+ul.my-account-nav li a {
+    font-size: 14px;
+    line-height: 34px;
+    color: black;
+}
+li.sub-nav-title {
+    font-size: 16px;
+}
+
+.my-profile label input[type="checkbox"] {
+    height: auto;
+}
+
+.enable-auth-checkbox {
+    margin: 30px 0 10px;
+}
+
+.enable-auth-checkbox span {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 23px;
+    color: #333333;
+}
+
+.enable-auth-checkbox input[type="checkbox"] {
+    height: 15px;
+    width: 15px;
+    margin-right: 5px;
+}
+
+.enable-auth-checkbox input[type="checkbox"]:checked {
+    background-color: orangered !important;
+}

@@ -526,8 +526,8 @@ class UserController extends BaseController
             ->where('email', '=', $request->email)
             ->first();
 
-        //        $request->session()->put('phone', $d->phone);
-        //        $request->session()->put('role_id', $d->role_id);
+        $request->session()->put('phone', $d->phone);
+        $request->session()->put('role_id', $d->role_id);
         $request->session()->put('username', $d->username);
         $request->session()->put('user_id', $d->id);
         $request->session()->put('is_verified', $d->is_verified);
@@ -547,9 +547,7 @@ class UserController extends BaseController
         // Sending new registration email to admin
         $this->send_custom_email(CLIENT_MAIL, 'New user registered', 'mail.new-registration', $mail_data, $title);
         $url = $this->get_base_url() . 'otp-verify-register';
-        return redirect($url)
-            ->with('phone', $d->phone)
-            ->with('user_id', $d->id);
+        return redirect($url);
     }
 
     public function view_otp_screen_register(Request $request)

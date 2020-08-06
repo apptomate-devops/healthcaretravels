@@ -123,7 +123,7 @@ class UserController extends BaseController
                         ->with(
                             'error',
                             'You account is not linked with ' .
-                                provider .
+                                $provider .
                                 '. Please log in with your email and password.',
                         );
                 }

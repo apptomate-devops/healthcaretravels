@@ -10,7 +10,7 @@
     <li class="sub-nav-title">Manage Account</li>
 
     <li>
-        <a href="{{url('/')}}/owner/profile" {{{ (Request::is('owner/profile') ? 'class=current' : '') }}}>
+        <a href="{{url('/')}}/profile" {{{ (Request::is('profile') ? 'class=current' : '') }}}>
            <i class="sl sl-icon-user"></i> My Profile
         </a>
     </li>
@@ -115,7 +115,7 @@
 <ul class="my-account-nav">
     <li class="sub-nav-title">Manage Account</li>
 
-    <li><a href="{{url('/')}}/traveler/profile" {{{ (Request::is('traveler/profile') ? 'class=current' : '') }}}>
+    <li><a href="{{url('/')}}/profile" {{{ (Request::is('profile') ? 'class=current' : '') }}}>
         <i class="sl sl-icon-user"></i> My Profile</a>
     </li>
 
@@ -153,7 +153,7 @@
 <ul class="my-account-nav">
     <li class="sub-nav-title">Manage Account</li>
 
-    <li><a href="{{url('/')}}/traveler/profile" {{{ (Request::is('traveler/profile') ? 'class=current' : '') }}}>
+    <li><a href="{{url('/')}}/profile" {{{ (Request::is('profile') ? 'class=current' : '') }}}>
         <i class="sl sl-icon-user"></i> My Profile</a>
     </li>
 

@@ -20,7 +20,6 @@
 
     @include('includes.styles')
     <link rel="stylesheet" href="{{ URL::asset('css/login.css') }}">
-
     <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 
@@ -69,6 +68,8 @@
 
                         <!-- Login -->
                         <div class="tab-content" id="tab1" style="display: none;">
+                            @component('components.social-buttons', ['type' => 'login'])
+                            @endcomponent
                             <form method="post" class="login" action="{{url('/')}}/login-user" onkeydown="return event.key != 'Enter';">
                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                                 <input type="hidden" name="client_id" value="{{$constants['client_id']}}">
@@ -105,6 +106,8 @@
                             <div class="register-info" style="margin-bottom: 30px;">
                                 <span class="required">*</span>All fields are required.
                             </div>
+                            @component('components.social-buttons', ['type' => 'register'])
+                            @endcomponent
                             <form method="post" class="register" action="{{url('/')}}/register-user" onsubmit="return validate_registration()" autocomplete="off" onkeydown="return event.key != 'Enter';">
                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                                 <input type="hidden" name="client_id" id="client_id" value="{{$constants['client_id']}}">

@@ -111,18 +111,27 @@ class UserController extends BaseController
 
         $existingUser = Users::where('email', $user->getEmail())->first();
         if ($existingUser) {
-            $login_type = $provider == "google" ? 2 : 3;
-            if ($existingUser->login_type == $login_type) {
-                Auth::login($existingUser);
-                return $this->login_user_success($existingUser, $request);
+            if ($isLogin) {
+                $login_type = $provider == "google" ? 2 : 3;
+                if ($existingUser->login_type == $login_type) {
+                    Auth::login($existingUser);
+                    return $this->login_user_success($existingUser, $request);
+                } else {
+                    return redirect()
+                        ->to('/login')
+                        ->with('selectedTab', $selectedTab)
+                        ->with(
+                            'error',
+                            'You account is not linked with ' .
+                                provider .
+                                '. Please log in with your email and password.',
+                        );
+                }
             } else {
                 return redirect()
                     ->to('/login')
                     ->with('selectedTab', $selectedTab)
-                    ->with(
-                        'error',
-                        'You account is not linked with Google. Please log in with your email and password.',
-                    );
+                    ->with('error', 'Your email is already registered. Please log in instead.');
             }
         } else {
             if ($isLogin) {

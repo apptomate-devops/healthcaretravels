@@ -19,6 +19,8 @@
     ================================================== -->
 
     @include('includes.styles')
+    <link rel="stylesheet" href="{{ URL::asset('css/login.css') }}">
+
     <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 

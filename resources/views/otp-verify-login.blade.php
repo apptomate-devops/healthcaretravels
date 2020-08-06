@@ -55,13 +55,8 @@
                     </div>
                 @endif
 
-                @if(Session::has('success'))
-                    <form name="continue_registration" action="{{URL('/')}}/email-send" method="get">
-                        <input type="submit" name="continue_registration" value="Continue Registration" style="width: 100%; margin-top: 10px;">
-                    </form>
-                @else
-                    <form name="verify_otp" action="{{URL('/')}}/verify_otp" method="post">
-                        <center><label style="font-weight: 100;"><b>Verification Code: </b> Enter the code we sent to {{COUNTRY_CODE}}<b id="phone_number"></b>.</label></center>
+                    <form name="verify_otp_login" action="{{URL('/')}}/verify_otp_login" method="post">
+                        <center><label style="font-weight: 100;"><b>Verify Your Identity: </b> Enter the code we sent to {{COUNTRY_CODE}}<b id="phone_number"></b>.</label></center>
                         <br>
                         <p class="form-row form-row-wide" id="mobile_chk" style="display: none;">
                             <label for="phone_no">Mobile Number:
@@ -71,7 +66,6 @@
                         </p>
                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                         <input type="hidden" name="user_id" value="{{Session::get('user_id')}}">
-                        <input type="hidden" name="attempts" value="{{Session::get('attempts')}}">
                         <p class="form-row form-row-wide" id="otp_sent" >
                             <label for="phone_no">
                                 <input type="text" class="input-text validate" placeholder="Enter your code here" name="otp" id="otp" value="" required="" />
@@ -80,13 +74,8 @@
                         <div id="otp_buttons">
                             <input type="submit" name="button border fw" value="Submit">
                             <span style="float:right;margin-top: 10px;background-color: #e78016;border-color: #e78016;" class="btn btn-danger btn-default" id="send_otp">Send me another code</span>
-                            <a id="change-phone" class="change-phone-link">Change number</a>
                         </div>
-                        @if(Session::has('attempts') && Session::get('attempts') > 1)
-                            <center><input type="button" class="btn_get_help" onclick="get_help()" id="get_help" value="Get Help"></center>
-                        @endif
                     </form>
-                @endif
                 <div style="height:250px"></div>
             </div>
         </div>
@@ -141,16 +130,6 @@
                 }
             })
         }
-    });
-
-    $('#change-phone').click(function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        $('#mobile_chk').show();
-        $('#phone_no').val($('#phone_number').text());
-        $('#otp_sent').hide();
-        $('#otp_buttons').hide();
-        $('#phone_no').removeAttr('readonly');
     });
 
     $('#get_help').click((e) => {

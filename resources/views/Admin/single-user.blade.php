@@ -25,13 +25,13 @@
                 <div class="text-center">
                     @if($data->facebook_url!='0')
                         <a href="{{$data->facebook_url}}" target="_blank"
-                           class="btn btn-social-icon mr-1 mb-1 btn-outline-facebook">
+                           class="btn btn-social-icon parse-link-href mr-1 mb-1 btn-outline-facebook">
                             <span class="la la-facebook"></span>
                         </a>
                     @endif
                     @if($data->linkedin_url!='0')
                         <a href="{{$data->linkedin_url}}" target="_blank"
-                           class="btn btn-social-icon mb-1 btn-outline-linkedin">
+                           class="btn btn-social-icon parse-link-href mb-1 btn-outline-linkedin">
                             <span class="la la-linkedin font-medium-4"></span>
                         </a>
                     @endif
@@ -103,23 +103,30 @@
         </div>
         <div class="card-content">
             <div class="card-body">
-                @if($data->languages_known!='0')
-                    <h4> {{$data->about_me}}</h4>
-                    <br>
-                    <br>
-                @else
-                    <br>
-                    -
-                @endif
+                <h4>{{$data->about_me != '0' ? $data->about_me : '-'}}</h4>
+                <br>
                 <h3 class="card-title">Languages Known</h3>
-                @if($data->languages_known!='0')
-                    <br>
-                    <h4>{{$data->languages_known}}</h4>
-                @else
-                    -
-                @endif
+                <h4>{{$data->languages_known ?? '-'}}</h4>
             </div>
-
+        </div>
+        <div class="card-header">
+            <h4 class="card-title">Links shared by user</h4>
+            <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+            <div class="heading-elements">
+                <ul class="list-inline mb-0">
+                    <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                    <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                    <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                    <li><a data-action="close"><i class="ft-x"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="card-body">
+                @foreach($user_links as $link => $link_name)
+                    @if($data->$link)<h5>{{$link_name.": "}}<a class="parse-link-href" target="_blank" href="{{$data->$link}}">{{$data->$link}}</a></h5>@endif
+                @endforeach
+            </div>
         </div>
     </div>
     <div class="card">
@@ -246,7 +253,7 @@
             }
             return true;
         }
-        $(document).on('click', 'a.btn-social-icon', function(event) {
+        $(document).on('click', 'a.parse-link-href', function(event) {
             event.preventDefault();
             event.stopPropagation();
             var URL = parseUrl(event.currentTarget.href);

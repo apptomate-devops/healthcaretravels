@@ -46,13 +46,6 @@
               </li>
 
             </ul>
-         {{--    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfWnft5cRSmWcyZ23q63C6onr1W0HifZqULU4fej3y9qc2hWw/viewform?usp=sf_link" target="_blank" class="sign-in">
-              <button class="btn btn-primary btn-header"> --}}
-                     <a href="{{url('/')}}/login" target="_blank" class="sign-in">
-              <button class="btn btn-primary btn-header pull-right">
-                RV Covid-19 Assistance
-              </button>
-            </a>
           </div>
           <!-- Right Side Content / End -->
         </div>
@@ -238,7 +231,7 @@
 
                       @if(Session::get('role_id') == 1 || Session::get('role_id') == 4) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}
                       <ul>
-                          <li><a href="{{url('/')}}/owner/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
+                          <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
                           <li><a href="{{url('/')}}/owner/verify-account"><i class="sl sl-icon-user"></i> Verify Account</a></li>
                           <li><a href="{{url('/')}}/owner/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
                           <li><a href="{{url('/')}}/owner/my-properties" class="not-verified-block"><i class="sl sl-icon-home"></i> My Properties</a></li>
@@ -256,7 +249,7 @@
 
                       @if(Session::get('role_id') == 0) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}
                       <ul>
-                          <li><a href="{{url('/')}}/traveler/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
+                          <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
                           <li><a href="{{url('/')}}/traveler/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
                           <li><a href="{{url('/')}}/traveler/my-reservations" class="not-verified-block"><i class="sl sl-icon-credit-card"></i> My Trips</a></li>
                           <li><a href="{{url('/')}}/traveler/inbox" class="not-verified-block"><i class="fa fa-inbox"></i> Inbox</a></li>
@@ -267,7 +260,7 @@
 
                       @if(Session::get('role_id') == 2) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}
                       <ul>
-                          <li><a href="{{url('/')}}/traveler/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
+                          <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
                           <li><a href="{{url('/')}}/traveler/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
                           <li><a href="{{url('/')}}/traveler/my-reservations" class="not-verified-block"><i class="sl sl-icon-credit-card"></i> My Trips</a></li>
                           <li><a href="{{url('/')}}/traveler/inbox" class="not-verified-block"><i class="fa fa-inbox"></i> Inbox</a></li>
@@ -277,7 +270,7 @@
                       @endif
                       @if(Session::get('role_id') == 3) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency -- 3 -- RV Traveller --}}
                       <ul>
-                          <li><a href="{{url('/')}}/traveler/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
+                          <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
 
                           <li><a href="{{url('/')}}/logout" onclick="signOut();"  id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
                       </ul>

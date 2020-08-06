@@ -3,7 +3,6 @@
 <link rel="stylesheet" href="{{ URL::asset('css/bootstrap.min.css') }}">
 <link rel="stylesheet" href="{{ URL::asset('css/style.css') }}">
 <link rel="stylesheet" href="{{ URL::asset('css/style-override.css') }}">
-<link rel="stylesheet" href="{{ URL::asset('css/login.css') }}">
 
 <link rel="stylesheet" href="{{ URL::asset('css/colors/main.css') }}" id="colors">
 <link rel="stylesheet" href="{{ URL::asset('css/bootstrap-datepicker.min.css') }}">

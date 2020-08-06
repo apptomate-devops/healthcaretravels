@@ -60,13 +60,21 @@ class OwnerController extends BaseController
         $total_booking = DB::table('property_booking')
             ->where('traveller_id', $request->id)
             ->count();
-        //print_r($data);exit;
+        $user_links = [
+            'airbnb_link' => 'Airbnb Link',
+            'home_away_link' => 'Home Away Link',
+            'vrbo_link' => 'Vrbo Link',
+            'agency_website' => 'Agency Website',
+            'website' => 'Website',
+            'property_tax_url' => 'Property tax url',
+        ];
         return view('Admin.single-user', [
             'data' => $data,
             'document' => $document,
             'total_posted' => $total_posted,
             'total_booking' => $total_booking,
             'mobile' => $mobile,
+            'user_links' => $user_links,
         ]);
     }
 }

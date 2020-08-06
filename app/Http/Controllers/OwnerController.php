@@ -35,7 +35,7 @@ class OwnerController extends BaseController
             ->where('client_id', '=', $client_id)
             ->get();
 
-        return view('owner.profile', [
+        return view('profile', [
             'user_detail' => $user_detail,
             'country_codes' => $country_codes,
             'agency' => $agency,

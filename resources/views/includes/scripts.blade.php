@@ -379,6 +379,9 @@
             case 'contact':
                 contact_map();
                 break;
+            case 'verify-account':
+                initializeAddress();
+                break;
             case 'short-term':
                 initMaps();
                 break;

@@ -327,9 +327,7 @@ class UserController extends BaseController
                 ->where('id', '=', $check->id)
                 ->update(['otp' => $OTP]);
             $url = $this->get_base_url() . 'otp-verify-login';
-            return redirect($url)
-                ->with('phone', $check->phone)
-                ->with('user_id', $check->id);
+            return redirect($url);
         } else {
             $url = $this->check_login_redirection($check);
             if ($request->session()->get('propertyId')) {

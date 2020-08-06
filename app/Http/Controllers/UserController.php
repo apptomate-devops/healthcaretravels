@@ -101,11 +101,12 @@ class UserController extends BaseController
     {
         $provider = $request->session()->get('provider');
         $type = $request->session()->get('type');
-        $selectedTab = $type == "login" ? "tab1" : "tab2";
+        $isLogin = $type == "login";
+        $selectedTab = $isLogin ? "tab1" : "tab2";
         try {
             $user = Socialite::driver($provider)->user();
         } catch (\Exception $e) {
-            return redirect('/login');
+            return redirect('/login')->with('error', 'There was error fetching your profile information');
         }
 
         $existingUser = Users::where('email', $user->getEmail())->first();
@@ -124,6 +125,11 @@ class UserController extends BaseController
                     );
             }
         } else {
+            if ($isLogin) {
+                return redirect('/login')
+                    ->with('selectedTab', $selectedTab)
+                    ->with('error', "We don't have an account on record associated with your profile.");
+            }
             $parts = explode(" ", trim($user->getName()));
             $lame = array_pop($parts);
             $fname = implode(" ", $parts);
@@ -252,18 +258,11 @@ class UserController extends BaseController
             $OTP = rand(1111, 9999);
             // send otp
             $this->sendOTPMessage($check->phone, $OTP);
-
             $update = DB::table('users')
                 ->where('client_id', '=', CLIENT_ID)
                 ->where('phone', '=', $check->phone)
                 ->where('id', '=', $check->id)
                 ->update(['otp' => $OTP]);
-
-            $check = DB::table('users')
-                ->where('client_id', '=', CLIENT_ID)
-                ->where('phone', '=', $check->phone)
-                ->where('id', '=', $check->id)
-                ->first();
 
             $url = $this->get_base_url() . 'otp-verify-register';
             return redirect($url)
@@ -297,7 +296,6 @@ class UserController extends BaseController
 
         if ($check->enable_two_factor_auth == 1) {
             // Verify identity if two factor auth is enabled, by default enabled
-
             $OTP = rand(1111, 9999);
             // send otp
             $this->sendOTPMessage($check->phone, $OTP);
@@ -306,11 +304,6 @@ class UserController extends BaseController
                 ->where('phone', '=', $check->phone)
                 ->where('id', '=', $check->id)
                 ->update(['otp' => $OTP]);
-            $check = DB::table('users')
-                ->where('client_id', '=', CLIENT_ID)
-                ->where('phone', '=', $check->phone)
-                ->where('id', '=', $check->id)
-                ->first();
             $url = $this->get_base_url() . 'otp-verify-login';
             return redirect($url)
                 ->with('phone', $check->phone)

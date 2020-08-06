@@ -10,7 +10,7 @@
         User Type: {{$type}}
     </div>
     <div style="padding-top: 10px;">
-        <a href="{{BASE_URL}}admin/single_user?id={{$id}}" style="color: blue;text-decoration: underline;">
+        <a href="{{BASE_URL}}admin/single_user?id={{$id}}" style="color: blue;text-decoration: underline;" target="_blank">
             Verify here
         </a>
     </div>

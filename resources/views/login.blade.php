@@ -105,11 +105,15 @@
                         <div class="register-info" style="margin-bottom: 30px;">
                             <span class="required">*</span>All fields are required.
                         </div>
-                        @component('components.social-buttons', ['type' => 'login'])
-                        @endcomponent
+                        @if (!Session::get('social_id'))
+                            @component('components.social-buttons', ['type' => 'register'])
+                            @endcomponent
+                        @endif
                         <form method="post" class="register" action="{{url('/')}}/register-user" onsubmit="return validate_registration()" autocomplete="off" onkeydown="return event.key != 'Enter';">
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
                             <input type="hidden" name="client_id" id="client_id" value="{{$constants['client_id']}}">
+                            <input type="hidden" name="social_id" id="social_id" value="{{Session::get('social_id')}}">
+                            <input type="hidden" name="login_type" id="login_type" value="{{Session::get('login_type')}}">
 
                             <p class="form-row form-row-wide">
                                 <label for="user_type required">Account Type:
@@ -140,44 +144,46 @@
                             <p class="form-row form-row-wide" id="email_field" style="display: none;">
                                 <label for="email2">
                                     <label id="email-label" class="m-0">Email Address:</label>
-                                    <input type="email" class="input-text validate {{ $errors->has('email') ? 'form-error' : ''}}" value="{{Session::get('mail')}}" name="email" id="email2" autocomplete="off" placeholder="Email Address" required />
+                                    <input type="email" class="input-text validate {{ $errors->has('email') ? 'form-error' : ''}}" value="{{Session::get('mail')}}" name="email" id="email2" autocomplete="off" placeholder="Email Address" required @if (Session::get('social_id')) readonly @endif />
                                 </label>
                                 {!! $errors->first('email', '<p class="error-text">:message</p>') !!}
                             </p>
 
-                            <p class="form-row form-row-wide" id="password_field" style="display: none;">
+                            @if (!Session::get('social_id'))
+                                <p class="form-row form-row-wide" id="password_field" style="display: none;">
                                 <label for="password1">Password:
                                     <input class="input-text validate {{ $errors->has('password1') ? 'form-error' : ''}}" type="password" data-strength autocomplete="off" name="password1" placeholder="Password" id="password1" required />
                                 </label>
-                            <div class="password-checkbox">
-                                <input type="checkbox" onclick="togglePassword('password1')">
-                                <span>Show Password</span>
-                            </div>
-                            {!! $errors->first('password1', '<p class="error-text">:message</p>') !!}
-                            </p>
+                                <div class="password-checkbox">
+                                    <input type="checkbox" onclick="togglePassword('password1')">
+                                    <span>Show Password</span>
+                                </div>
+                                {!! $errors->first('password1', '<p class="error-text">:message</p>') !!}
+                                </p>
 
-                            <div id="password-strength" class="strength" style="display: none;"><span class="strength-span"></span></div>
-                            <div id="password-strength-text" class="strength-text" style="display: none;">Passsword is weak</div>
+                                <div id="password-strength" class="strength" style="display: none;"><span class="strength-span"></span></div>
+                                <div id="password-strength-text" class="strength-text" style="display: none;">Passsword is weak</div>
 
-                            <div id="password_message" style="display: none;">
-                                <p><b>Your password must meet the below requirements:</b></p>
-                                <p id="letter" class="invalid-password">At least one lowercase letter</p>
-                                <p id="capital" class="invalid-password">At least one uppercase letter</p>
-                                <p id="number" class="invalid-password">At least one number</p>
-                                <p id="special_character" class="invalid-password">At least one special character</p>
-                                <p id="length" class="invalid-password">At least 8 characters long</b></p>
-                            </div>
+                                <div id="password_message" style="display: none;">
+                                    <p><b>Your password must meet the below requirements:</b></p>
+                                    <p id="letter" class="invalid-password">At least one lowercase letter</p>
+                                    <p id="capital" class="invalid-password">At least one uppercase letter</p>
+                                    <p id="number" class="invalid-password">At least one number</p>
+                                    <p id="special_character" class="invalid-password">At least one special character</p>
+                                    <p id="length" class="invalid-password">At least 8 characters long</b></p>
+                                </div>
 
-                            <p class="form-row form-row-wide" id="password2_field" style="display: none;">
-                                <label for="password2">Repeat Password:
-                                    <input class="input-text validate {{ $errors->has('password2') ? 'form-error' : ''}}" autocomplete="off" type="password" name="password2" placeholder="Repeat Password" id="password2" required />
-                                </label>
-                            <div class="password-checkbox">
-                                <input type="checkbox" onclick="togglePassword('password2')">
-                                <span>Show Password</span>
-                            </div>
-                            {!! $errors->first('password2', '<p class="error-text">:message</p>') !!}
-                            </p>
+                                <p class="form-row form-row-wide" id="password2_field" style="display: none;">
+                                    <label for="password2">Repeat Password:
+                                        <input class="input-text validate {{ $errors->has('password2') ? 'form-error' : ''}}" autocomplete="off" type="password" name="password2" placeholder="Repeat Password" id="password2" required />
+                                    </label>
+                                <div class="password-checkbox">
+                                    <input type="checkbox" onclick="togglePassword('password2')">
+                                    <span>Show Password</span>
+                                </div>
+                                {!! $errors->first('password2', '<p class="error-text">:message</p>') !!}
+                                </p>
+                            @endif
 
                             <p class="form-row form-row-wide" id="first_name_field" style="display: none;">
                                 <label for="username2">First Name:

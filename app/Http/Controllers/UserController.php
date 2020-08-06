@@ -103,6 +103,7 @@ class UserController extends BaseController
         $type = $request->session()->get('type');
         $isLogin = $type == "login";
         $selectedTab = $isLogin ? "tab1" : "tab2";
+        $login_type = $provider == "google" ? 2 : 3;
         try {
             $user = Socialite::driver($provider)->user();
         } catch (\Exception $e) {
@@ -112,7 +113,6 @@ class UserController extends BaseController
         $existingUser = Users::where('email', $user->getEmail())->first();
         if ($existingUser) {
             if ($isLogin) {
-                $login_type = $provider == "google" ? 2 : 3;
                 if ($existingUser->login_type == $login_type) {
                     Auth::login($existingUser);
                     return $this->login_user_success($existingUser, $request);
@@ -145,11 +145,17 @@ class UserController extends BaseController
             return redirect()
                 ->to('/login')
                 ->with('selectedTab', $selectedTab)
-                ->with($provider . '_id', $user->getId())
-                ->with('email', $user->getEmail())
+                ->with('provider', $provider)
+                ->with('login_type', $login_type)
+                ->with('social_id', $user->getId())
+                ->with('mail', $user->getEmail())
                 ->with('fname', $fname)
                 ->with('lname', $lame)
-                ->with('social_avatar', $user->getAvatar());
+                ->with('social_avatar', $user->getAvatar())
+                ->with(
+                    'success',
+                    'Data fetched successfully. Please fill out other required fields to continue registration.',
+                );
         }
     }
     public function handleProviderRedirect($provider, $type, Request $request)
@@ -381,6 +387,8 @@ class UserController extends BaseController
         $mail = $request->email;
         $phone = $request->phone_no;
         $type = $request->user_type;
+        $social_id = $request->social_id;
+        $login_type = $request->login_type ?? 1;
 
         $messages = [
             'required' => 'Please complete this field',
@@ -395,68 +403,42 @@ class UserController extends BaseController
             'digits' => 'Please enter valid phone number',
         ];
 
+        $rules = [
+            'username' => 'required|unique:users,username',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'ethnicity' => 'required',
+            'phone_no' => 'required|numeric|digits:10',
+            'dob' => 'required',
+            'gender' => 'required',
+            'languages_known' => 'required',
+            'terms_accept' => 'accepted',
+        ];
+        if (empty($social_id)) {
+            $rules["password1"] =
+                'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#^_+=:;><~$!%*?&])[A-Za-z\d@#^_+=:;><~$!%*?&]{8,}$/i';
+            $rules["password2"] = 'required|same:password1';
+        }
         if ($request->user_type === "1" || $request->user_type === "4") {
-            // Owner
-            $rules = [
-                'username' => 'required|unique:users,username',
-                'email' => 'required|email:rfc,dns|unique:users,email',
-                'password1' =>
-                    'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#^_+=:;><~$!%*?&])[A-Za-z\d@#^_+=:;><~$!%*?&]{8,}$/i',
-                'password2' => 'required|same:password1',
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'ethnicity' => 'required',
-                'phone_no' => 'required|numeric|digits:10',
-                'dob' => 'required',
-                'gender' => 'required',
-                'languages_known' => 'required',
-                'address' => 'required',
-                'listing_address' => 'required',
-                'terms_accept' => 'accepted',
-            ];
+            // Owner or Cohost
+            $rules["email"] = 'required|email:rfc,dns|unique:users,email';
+            $rules["address"] = 'required';
+            $rules["listing_address"] = 'required';
         } elseif ($request->user_type === "2") {
             // Travel Agency
-            $rules = [
-                'username' => 'required|unique:users,username',
-                'email' =>
-                    'required|email:rfc,dns|unique:users,email|regex:/^([\w\-.]+@(?!gmail.com)(?!yahoo.com)(?!hotmail.com)(?!yahoo.co.in)(?!aol.com)(?!abc.com)(?!xyz.com)(?!pqr.com)(?!rediffmail.com)(?!live.com)(?!outlook.com)(?!me.com)(?!msn.com)(?!ymail.com)([\w-]+\.)+[\w-]{2,4})?$/i',
-                'password1' =>
-                    'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#^_+=:><~$!%*?&])[A-Za-z\d@#^_+=:><~$!%*?&]{8,}$/i',
-                'password2' => 'required|same:password1',
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'ethnicity' => 'required',
-                'phone_no' => 'required|numeric|digits:10',
-                'work' => 'required',
-                'work_title' => 'required',
-                'website' => 'required|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/',
-                'dob' => 'required',
-                'gender' => 'required',
-                'languages_known' => 'required',
-                'terms_accept' => 'accepted',
-            ];
+            $rules["email"] =
+                'required|email:rfc,dns|unique:users,email|regex:/^([\w\-.]+@(?!gmail.com)(?!yahoo.com)(?!hotmail.com)(?!yahoo.co.in)(?!aol.com)(?!abc.com)(?!xyz.com)(?!pqr.com)(?!rediffmail.com)(?!live.com)(?!outlook.com)(?!me.com)(?!msn.com)(?!ymail.com)([\w-]+\.)+[\w-]{2,4})?$/i';
+            $rules["work"] = 'required';
+            $rules["work_title"] = 'required';
+            $rules["website"] = 'required|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
         } else {
             // Traveler or RV traveler
-            $rules = [
-                'username' => 'required|unique:users,username',
-                'email' => 'required|email:rfc,dns|unique:users,email',
-                'password1' =>
-                    'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#^_+=:><~$!%*?&])[A-Za-z\d@#^_+=:><~$!%*?&]{8,}$/i',
-                'password2' => 'required|same:password1',
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'ethnicity' => 'required',
-                'phone_no' => 'required|numeric|digits:10',
-                'dob' => 'required',
-                'gender' => 'required',
-                'languages_known' => 'required',
-                'occupation' => 'required',
-                'name_of_agency' => 'required_without:other_agency',
-                'other_agency' => 'required_without:name_of_agency',
-                'tax_home' => 'required',
-                'address' => 'required',
-                'terms_accept' => 'accepted',
-            ];
+            $rules["email"] = 'required|email:rfc,dns|unique:users,email';
+            $rules["occupation"] = 'required';
+            $rules["name_of_agency"] = 'required_without:other_agency';
+            $rules["other_agency"] = 'required_without:name_of_agency';
+            $rules["tax_home"] = 'required';
+            $rules["address"] = 'required';
         }
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -494,7 +476,7 @@ class UserController extends BaseController
                 ->withErrors($validator);
         }
 
-        $password = $this->encrypt_password($request->password1);
+        $password = $social_id ? null : $this->encrypt_password($request->password1);
 
         $role_id = $request->user_type;
 
@@ -503,6 +485,8 @@ class UserController extends BaseController
 
         $address = $request->street_number . ', ' . $request->route; // Considered as Address_line_1
 
+        $OTP = rand(1111, 9999);
+        $isOTPSent = $this->sendOTPMessage($request->phone_no, $OTP);
         $insert = DB::table('users')->insert([
             'client_id' => $request->client_id,
             'role_id' => $role_id,
@@ -533,6 +517,9 @@ class UserController extends BaseController
             'website' => $request->website,
             'auth_token' => $token,
             'is_encrypted' => 1,
+            'login_type' => $login_type,
+            'social_id' => $social_id,
+            'otp' => $OTP,
         ]);
         $d = DB::table('users')
             ->where('client_id', '=', $request->client_id)
@@ -546,9 +533,7 @@ class UserController extends BaseController
         $request->session()->put('is_verified', $d->is_verified);
 
         //  Send Welcome mail
-
         $welcome = EmailConfig::where('type', TEMPLATE_REGISTER)->first();
-
         $mail_data = [
             'username' => $request->first_name . ' ' . $request->last_name,
             'text' => isset($welcome->message) ? $welcome->message : '',
@@ -561,21 +546,10 @@ class UserController extends BaseController
 
         // Sending new registration email to admin
         $this->send_custom_email(CLIENT_MAIL, 'New user registered', 'mail.new-registration', $mail_data, $title);
-
-        $OTP = rand(1111, 9999);
-
-        $isOTPSent = $this->sendOTPMessage($d->phone, $OTP);
-        $update = DB::table('users')
-            ->where('client_id', '=', CLIENT_ID)
-            ->where('id', '=', $d->id)
-            ->where('phone', '=', $d->phone)
-            ->update(['otp' => $OTP]);
-
         $url = $this->get_base_url() . 'otp-verify-register';
-
-        return redirect($url)->with('phone', $d->phone);
-        //            ->with('user_id', $d->id)
-        //            ->with('OTP', $OTP);
+        return redirect($url)
+            ->with('phone', $d->phone)
+            ->with('user_id', $d->id);
     }
 
     public function view_otp_screen_register(Request $request)

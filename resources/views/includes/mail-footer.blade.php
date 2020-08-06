@@ -25,7 +25,7 @@
                     <a href="https://twitter.com/HC_Travels" title="Twitter"
                     style="margin: 0; padding: 0; font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif; color: rgb(255, 90, 95); text-decoration: none"
                     target="_blank"> <img alt="Twitter" height="42"
-                                            src="{{BASE_URL}}assets/icons/mail/facebook.png"
+                                            src="{{BASE_URL}}assets/icons/mail/twitter.png"
                                             width="42"
                                             style="margin: 0; font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif; padding: 0; max-width: 100%; border: 0">
                     </a></td>

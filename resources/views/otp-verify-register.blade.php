@@ -42,7 +42,11 @@
                 @endif
                 @if(Session::has('error'))
                     <div class="alert alert-danger">
-                        <h4>{{ Session::get('error') }}</h4>
+                        @if(Session::get('error') == "Please Login again to Continue")
+                            <h4>Please <a href="{{url('/')}}/login" style="color: white;">Login</a> again to Continue</h4>
+                        @else
+                            <h4>{{ Session::get('error') }}</h4>
+                        @endif
                     </div>
                 @endif
                 @if (count($errors) > 0)

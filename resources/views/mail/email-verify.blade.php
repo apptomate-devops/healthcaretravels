@@ -10,7 +10,7 @@
         {{$text}}
     </div>
     <div style="padding-top: 10px;">
-        <a href="{{$url}}" style="color: blue;text-decoration: underline;">
+        <a href="{{$url}}" style="color: blue;text-decoration: underline;" target="_blank">
             Verify Email
         </a>
     </div>

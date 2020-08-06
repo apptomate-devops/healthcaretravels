@@ -1791,7 +1791,6 @@ li.mm-vertical.mm-opened > .mm-panel {
 .mm-menu .mm-navbar a,
 .mm-menu .mm-navbar > * {
     color: #fff;
-    text-transform: uppercase;
     font-weight: 500;
     font-size: 17px;
     line-height: 32px;
@@ -1863,7 +1862,8 @@ em.mm-counter {
     margin-top: -11px;
     position: absolute;
     right:50px;
-    top: 50%
+    top: 50%;
+    display: none;
 }
 
 em.mm-counter + a.mm-next {
@@ -2534,6 +2534,7 @@ body .search-container button:before {
 .search-container button i {
     z-index: 100;
     position: relative;
+
 }
 
 .adv-search-btn {

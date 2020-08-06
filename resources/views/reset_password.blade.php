@@ -64,7 +64,6 @@
                                     <input type="hidden" name="_token" value="{{csrf_token()}}" />
                                     <p class="form-row form-row-wide">
                                         <label for="email">Email :
-                                            <i class="im im-icon-Email"></i>
                                             <input type="text" class="input-text validate1" name="email" id="email" value="" />
                                         </label>
                                     </p>

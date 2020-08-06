@@ -10,7 +10,7 @@
         Again, welcome!
     </div>
     <div style="padding-top: 10px;">
-        <a href="{{BASE_URL}}login" style="color: blue;text-decoration: underline;">
+        <a href="{{BASE_URL}}login" style="color: blue;text-decoration: underline;" target="_blank">
             Login here
         </a>
     </div>

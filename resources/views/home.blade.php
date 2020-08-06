@@ -386,7 +386,7 @@
                                     </div>
                                     <div class="col-md-2 col-sm-12 col-xs-12" style="margin-top: 10px;">
                                         <button class="button" id="button" style="height: 58px;width: 150px;" type="submit">
-                                            <i class="fa fa-search">&nbsp;SEARCH</i>
+                                            <i class="fa fa-search"></i> SEARCH
                                         </button>
                                     </div>
                                 </div>

@@ -10,7 +10,7 @@
         In the meantime, you are welcome to continue browsing through our website and current listings.
     </div>
     <div style="padding-top: 10px;">
-        <a href="{{BASE_URL}}" style="color: blue;text-decoration: underline;">
+        <a href="{{BASE_URL}}" style="color: blue;text-decoration: underline;" target="_blank">
             Click here to visit Health Care Travels
         </a>
     </div>

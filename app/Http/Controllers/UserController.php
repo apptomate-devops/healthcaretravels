@@ -230,6 +230,13 @@ class UserController extends BaseController
             ->where('email', '=', $request->username)
             ->first();
         if ($check) {
+            if ($check->login_type != 1) {
+                $login_provider = $check->login_type == 2 ? "google" : "facebook";
+                return back()->with(
+                    'error',
+                    'This email is linked with ' . $login_provider . '. Please sign in with ' . $login_provider . '.',
+                );
+            }
             $credentials = [
                 'email' => $request->username,
                 'password' => $request->password,

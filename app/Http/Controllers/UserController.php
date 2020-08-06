@@ -769,8 +769,6 @@ class UserController extends BaseController
 
     public function upload_document(Request $request)
     {
-        print_r($request->all());
-        exit();
         // upload_documents
         try {
             $user_id = $request->session()->get('user_id');
@@ -841,8 +839,6 @@ class UserController extends BaseController
             $title = "Profile Verification Pending";
             $subject = "Profile Verification Pending";
             $this->send_custom_email($user->email, $subject, 'mail.document-uploaded-user', $data, $title, VERIFY_MAIL);
-
-            $request->session()->forget('success');
 
             return redirect()
                 ->back()

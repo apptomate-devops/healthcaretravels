@@ -64,6 +64,9 @@ define("GOOGLE_MAPS_API_KEY", config("services.google.maps_api_key"));
 define("RECAPTCHA_SITE_KEY", config("services.google.captcha_site_key"));
 define("RECAPTCHA_SECRET_KEY", config("services.google.captcha_secret_key"));
 
+define("IS_GOOGLE_SOCIAL_ENABLED", (bool) config("services.google.client_id"));
+define("IS_FACEBOOK_SOCIAL_ENABLED", (bool) config("services.facebook.client_id"));
+
 define("INSTANT_CHAT", "instant_chat");
 define("REQUEST_CHAT", "request_chat");
 define("PERSONAL_CHAT", "personal_chat");

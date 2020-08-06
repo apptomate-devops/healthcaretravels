@@ -1507,7 +1507,8 @@ ul.top-bar-menu li i {
     overflow: scroll;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 0 20px
+    padding: 0 20px;
+    transition: 1s transform ease;
 }
 
 .mm-panels > .mm-panel.mm-subopened.mm-hidden {
@@ -1797,6 +1798,12 @@ li.mm-vertical.mm-opened > .mm-panel {
     letter-spacing: 0.025em;
 }
 
+.mm-menu .mm-prev:before {
+    content: '\002B';
+    border: 0;
+    font-size: 35px;
+}
+
 .mm-menu .mm-btn:after,
 .mm-menu .mm-btn:before {
     border-color: rgba(255, 255, 255, 0.8);
@@ -2036,6 +2043,10 @@ html.mm-opening .mm-menu.mm-opened ~ .mm-slideout {
         left: 0;
         padding: 0 20px;
     }
+
+    .mm-panels > .mm-panel.mm-subopened.mm-hidden:first-child {
+        transform: translate(-100%, 0);
+    }
 }
 
 @media (max-width: 360px) {
@@ -2199,6 +2210,11 @@ ul.footer-links {
     opacity: 1;
 }
 
+@media (max-width: 767px) {
+    #footer {
+        position: initial !important;
+    }
+}
 /* Back to Top ========== */
 
 #backtotop {

@@ -769,75 +769,89 @@ class UserController extends BaseController
 
     public function upload_document(Request $request)
     {
+        print_r($request->all());
+        exit();
         // upload_documents
-        $user_id = $request->session()->get('user_id');
-        $all_documents = $this->map_documents($request);
-        foreach ($all_documents as $doc) {
-            DB::table('documents')->updateOrInsert(
-                [
-                    'user_id' => $user_id,
-                    'document_type' => $doc->type,
-                ],
-                [
-                    'user_id' => $user_id,
-                    'document_type' => $doc->type,
-                    'document_url' => $doc->image,
-                    'status' => 0,
-                ],
-            );
+        try {
+            $user_id = $request->session()->get('user_id');
+            $all_documents = $this->map_documents($request);
+            foreach ($all_documents as $doc) {
+                DB::table('documents')->updateOrInsert(
+                    [
+                        'user_id' => $user_id,
+                        'document_type' => $doc->type,
+                    ],
+                    [
+                        'user_id' => $user_id,
+                        'document_type' => $doc->type,
+                        'document_url' => $doc->image,
+                        'status' => 0,
+                    ],
+                );
+            }
+
+            $user = DB::table('users')
+                ->where('id', $user_id)
+                ->first();
+
+            $user_role = DB::table('user_role')
+                ->where('id', $user->role_id)
+                ->first();
+
+            DB::table('users')
+                ->where('id', $user_id)
+                ->update([
+                    'is_verified' => 0,
+                    'is_submitted_documents' => 1,
+                    'facebook_url' => isset($request->facebook) ? $request->facebook : null,
+                    'linkedin_url' => isset($request->linkedin) ? $request->linkedin : null,
+                    'instagram_url' => isset($request->instagram) ? $request->instagram : null,
+                    'traveler_license' => isset($request->traveler_license) ? $request->traveler_license : null,
+                    'website' => isset($request->website) ? $request->website : null,
+                    'airbnb_link' => isset($request->airbnb_link) ? $request->airbnb_link : null,
+                    'home_away_link' => isset($request->home_away_link) ? $request->home_away_link : null,
+                    'vrbo_link' => isset($request->vrbo_link) ? $request->vrbo_link : null,
+                    'property_tax_url' => isset($request->property_tax_url) ? $request->property_tax_url : null,
+                    'property_address' => isset($request->property_address) ? $request->property_address : null,
+                    'agency_hr_email' => isset($request->agency_hr_email) ? $request->agency_hr_email : null,
+                    'agency_hr_phone' => isset($request->agency_hr_phone) ? $request->agency_hr_phone : null,
+                    'agency_website' => isset($request->agency_website) ? $request->agency_website : null,
+                    'agency_office_number' => isset($request->agency_office_number)
+                        ? $request->agency_office_number
+                        : null,
+                ]);
+
+            $data = [
+                'username' => $user->first_name . ' ' . $user->last_name,
+                'type' => $user_role->role,
+                'id' => $user->id,
+            ];
+
+            $subject = "Verification documents Uploads";
+            $title = $user->username . " uploaded his Verification documents";
+            $usermail = $user->email;
+
+            Mail::send('mail.document-upload', $data, function ($message) use ($usermail, $title, $subject) {
+                $message->from($usermail, $title);
+                $message->to(VERIFY_MAIL);
+                $message->replyTo($usermail);
+                $message->subject($subject);
+            });
+
+            $title = "Profile Verification Pending";
+            $subject = "Profile Verification Pending";
+            $this->send_custom_email($user->email, $subject, 'mail.document-uploaded-user', $data, $title, VERIFY_MAIL);
+
+            $request->session()->forget('success');
+
+            return redirect()
+                ->back()
+                ->with('success', 'Documents uploaded successfully!');
+        } catch (\Exception $ex) {
+            return redirect()
+                ->back()
+                ->with('error', 'Error submitting documents, Please try again later');
         }
-
-        $user = DB::table('users')
-            ->where('id', $user_id)
-            ->first();
-
-        $user_role = DB::table('user_role')
-            ->where('id', $user->role_id)
-            ->first();
-
-        DB::table('users')
-            ->where('id', $user_id)
-            ->update([
-                'is_verified' => 0,
-                'is_submitted_documents' => 1,
-                'facebook_url' => isset($request->facebook) ? $request->facebook : null,
-                'linkedin_url' => isset($request->linkedin) ? $request->linkedin : null,
-                'instagram_url' => isset($request->instagram) ? $request->instagram : null,
-                'traveler_license' => isset($request->traveler_license) ? $request->traveler_license : null,
-                'website' => isset($request->website) ? $request->website : null,
-                'airbnb_link' => isset($request->airbnb_link) ? $request->airbnb_link : null,
-                'home_away_link' => isset($request->home_away_link) ? $request->home_away_link : null,
-                'vrbo_link' => isset($request->vrbo_link) ? $request->vrbo_link : null,
-                'property_tax_url' => isset($request->property_tax_url) ? $request->property_tax_url : null,
-                'property_address' => isset($request->property_address) ? $request->property_address : null,
-                'agency_hr_email' => isset($request->agency_hr_email) ? $request->agency_hr_email : null,
-                'agency_hr_phone' => isset($request->agency_hr_phone) ? $request->agency_hr_phone : null,
-                'agency_website' => isset($request->agency_website) ? $request->agency_website : null,
-                'agency_office_number' => isset($request->agency_office_number) ? $request->agency_office_number : null,
-            ]);
-
-        $data = [
-            'username' => $user->first_name . ' ' . $user->last_name,
-            'type' => $user_role->role,
-            'id' => $user->id,
-        ];
-
-        $subject = "Verification documents Uploads";
-        $title = $user->username . " uploaded his Verification documents";
-        $usermail = $user->email;
-
-        Mail::send('mail.document-upload', $data, function ($message) use ($usermail, $title, $subject) {
-            $message->from($usermail, $title);
-            $message->to(VERIFY_MAIL);
-            $message->replyTo($usermail);
-            $message->subject($subject);
-        });
-
-        $title = "Profile Verification Pending";
-        $subject = "Profile Verification Pending";
-        $this->send_custom_email($user->email, $subject, 'mail.document-uploaded-user', $data, $title, VERIFY_MAIL);
-
-        return back()->with('success', 'Documents uploaded successfully');
     }
 
     public function update_profile(Request $request)

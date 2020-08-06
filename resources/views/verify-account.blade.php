@@ -93,7 +93,7 @@
 
 
                                     <div class="info-text">
-                                        You must complete 3 of 4 verification methods in order to submit your profile for verification.
+                                        You must complete 3 of 5 verification methods in order to submit your profile for verification.
                                         Please submit within seven days to be granted full access to all of Health Care Travels' features.
                                     </div>
                                     @if ($user->is_verified == -1)
@@ -109,11 +109,6 @@
                                         <label>Lease Agreement</label>
                                         <input type="file" name="lease_agreement" id="lease_agreement" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                         <div class="info-text">If approved by your state for subleasing</div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label>Property Tax Document</label>
-                                        <input type="file" name="property_tax_document" id="property_tax_document" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
-                                        <div class="info-text">With proof of name and listing address</div>
                                     </div>
                                     <div class="col-md-6">
                                         <label>Utility Bill</label>
@@ -304,12 +299,24 @@
                                     </div>
                                 @endif
 
-                                @if($user->role_id == 1 || $user->role_id == 4)
+                                @if($user->role_id == 1)
                                     <div class="col-md-12" style="margin-top: 40px;">
                                         <div class="card col-md-12" style="padding: 15px; margin-bottom: 25px;">
-                                            <h4>Property Tax Proof URL</h4>
-                                            <input value="@if($user->property_tax_url == '0' || $user->property_tax_url == null)@else{{$user->property_tax_url}}@endif" type="text" placeholder="Property Tax Proof URL" name="property_tax_url" class="form-control" />
+                                            <div>
+                                                <h4>Property Tax Proof URL</h4>
+                                                <input value="@if($user->property_tax_url == '0' || $user->property_tax_url == null)@else{{$user->property_tax_url}}@endif" type="text" placeholder="Property Tax Proof URL" name="property_tax_url" id="property_tax_url" class="form-control" />
+                                            </div>
+                                            <div>
+                                                <label>Property Tax Document</label>
+                                                <input type="file" name="property_tax_document" id="property_tax_document" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
+                                                <div class="info-text">With proof of name and listing address</div>
+                                            </div>
                                         </div>
+                                    </div>
+                                @endif
+
+                                @if($user->role_id == 1 || $user->role_id == 4)
+                                    <div class="col-md-12" style="margin-top: 40px;">
                                         <div class="card col-md-12" style="padding: 15px;">
                                             <h4>Existing Listing URL</h4>
 
@@ -325,6 +332,7 @@
                                         </div>
                                     </div>
                                 @endif
+
 
                                 <div class="col-md-12" style="margin-top: 40px;">
                                     <div class="card col-md-12" style="padding: 15px;">
@@ -480,6 +488,15 @@
                             $(`#property_address_error`).show();
                             $(window).scrollTop($(`#property_address`).offset().top-200);
                             return false;
+                        }
+                    } else if(user.role_id == 1) {
+                        let property_tax_url = $('#property_tax_url').val();
+                        let property_tax_document = $('#property_tax_document').val();
+                        if(property_tax_document || property_tax_url) {
+                            if(!property_tax_url || !property_tax_document) {
+                                alert('Please submit both Property Tax Document and URL.');
+                                return false;
+                            }
                         }
                     };
 

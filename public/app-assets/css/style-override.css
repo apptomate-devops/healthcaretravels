@@ -7,3 +7,20 @@ option:disabled {
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
+img[data-enlargable] {
+    cursor: zoom-in;
+}
+.modal-buttons-wrapper {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+}
+.modal-buttons-wrapper .button-download img {
+    height: 40px;
+}
+.modal-close-x {
+    color: #ffffff;
+    font-size: 26px;
+    margin-left: 5px;
+    cursor: pointer;
+}

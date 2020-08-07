@@ -220,12 +220,14 @@
                                             itemtype="http://schema.org/ImageObject">
                                         <div class="card-body px-0">
                                             <h4 class="card-title">   {{ucfirst(str_replace("_"," ",$d->document_type))}}</h4>
-                                        </div>
+                                        {{-- </div>
                                         <a href="{{$d->document_url}}" target="_blank" itemprop="contentUrl"
                                            data-size="480x360">
-                                            <img class="gallery-thumbnail card-img-top" src="{{$d->document_url}}"
+                                            <img data-enlargable class="gallery-thumbnail card-img-top" src="{{$d->document_url}}"
                                                  itemprop="thumbnail" alt="Image description">
-                                        </a>
+                                        </a> --}}
+                                        <img data-enlargable class="gallery-thumbnail card-img-top" src="{{$d->document_url}}"
+                                                 itemprop="thumbnail" alt="Image description">
 
                                         <div class="card-body px-0">
                                             @if($d->status == 0)

@@ -319,7 +319,7 @@
                                 <input class="field" type="hidden" id="country" name="country" value="{{Session::get('country')}}" />
                             </div>
 
-                            <label for="add_apt" id="add_apt_number_field" style="display: none;">Add Apartment Number:
+                            <label for="add_apt" id="add_apt_number_field" style="display: none; margin-top: -10px;">
                                 <input type="text" class="input-text validate {{ $errors->has('address_line_2') ? 'form-error' : ''}}" value="{{Session::get('address_line_2')}}" name="address_line_2" id="address_line_2" placeholder="Apt, Unit, Suite, or Floor #" style="padding-left: 20px;" />
                             </label>
                             <div style="width: 100%; display: inline-block;">
@@ -483,6 +483,8 @@
                 $('#tax_home_field').show();
                 $('#address_field').show();
                 $('#btn_add_apt_number').show();
+                $('#add_apt_number_field').hide();
+                $('#remove_add_apt_number').hide();
                 $('#listing_address_field').hide();
                 $('#terms_accept_field').show();
                 $('#register_button_field').show();
@@ -523,6 +525,8 @@
                 $('#tax_home_field').hide();
                 $('#address_field').show();
                 $('#btn_add_apt_number').show();
+                $('#add_apt_number_field').hide();
+                $('#remove_add_apt_number').hide();
                 $('#listing_address_field').show();
                 $('#terms_accept_field').show();
                 $('#register_button_field').show();
@@ -561,6 +565,8 @@
                 $('#tax_home_field').hide();
                 $('#address_field').hide();
                 $('#btn_add_apt_number').hide();
+                $('#add_apt_number_field').hide();
+                $('#remove_add_apt_number').hide();
                 $('#listing_address_field').hide();
                 $('#terms_accept_field').show();
                 $('#register_button_field').show();
@@ -599,6 +605,8 @@
                 $('#tax_home_field').hide();
                 $('#address_field').hide();
                 $('#btn_add_apt_number').hide();
+                $('#add_apt_number_field').hide();
+                $('#remove_add_apt_number').hide();
                 $('#listing_address_field').hide();
                 $('#terms_accept_field').hide();
                 $('#register_button_field').hide();

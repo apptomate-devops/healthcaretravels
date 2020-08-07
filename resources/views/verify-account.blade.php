@@ -5,41 +5,11 @@
 
 @section('main_content')
 
-    <style>
 
-        .verify-traveler .info-text {
-            color: #e78016;
-        }
-        .info-text.text-error {
-            color: red;
-        }
-        .error-text {
-            margin-top: -10px;
-            margin-bottom: 15px;
-            color: #ff0000;
-        }
-        ul.my-account-nav li a {
-            font-size: 14px;
-            line-height: 34px;
-            color: black;
-        }
-        li.sub-nav-title {
-            font-size: 16px;
-        }
-        .approved{
-            background-color: #119E67;
-            color: white;
-        }
-        .unapproved{
-            background-color: red;
-            color: white;
-        }
-        .info-text {
-            color: red;
-            font-size: 14px;
-            margin: 0;
-        }
-    </style>
+    <!-- CSS
+    ================================================== -->
+    <link rel="stylesheet" href="{{ URL::asset('css/profile.css') }}">
+
     <div class="container verify-traveler" style="margin-top: 35px;">
         @if(Session::has('success'))
             <div class="alert alert-success">
@@ -83,7 +53,7 @@
             @else
                 <div class="col-md-8">
                     <div class="row">
-                        <form name="doc" method="POST" action="{{url('/')}}/upload-document" enctype="multipart/form-data" onsubmit="return validate_submit()" autocomplete="off" onkeydown="return event.key != 'Enter';">
+                        <form name="doc" method="POST" action="{{url('/')}}/upload-document" enctype="multipart/form-data" autocomplete="off" onkeydown="return event.key != 'Enter';">
                             <input type="hidden" name="_token" value="{{csrf_token()}}" />
                             <div class="col-md-12 my-profile" style="padding-top: 15px;">
                                 @if($user->role_id == 1)
@@ -349,9 +319,27 @@
 
                                     </div>
                                 </div>
-
-
-                                <button id="submit_documents" style="margin-top:20px;margin-bottom:20px;float:right;" type="submit" disabled class="button">Submit</button>
+                                <button id="submit_documents" style="margin-top:20px;margin-bottom:20px;float:right;" type="button" disabled class="btn btn-primary" onclick="validate_submit(this)">Submit</button>
+                            </div>
+                            <!-- Modal -->
+                            <div class="modal fade in" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                                 aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Are you sure you are ready to submit?</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            You will not be able to edit or upload more documents once they have been submitted.                                </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -500,7 +488,7 @@
                         }
                     };
 
-                    return true;
+                    $("#confirmationModal").modal('show');
                 }
 
             </script>

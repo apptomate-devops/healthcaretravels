@@ -33,3 +33,37 @@ li.sub-nav-title {
 .enable-auth-checkbox input[type="checkbox"]:checked {
     background-color: orangered !important;
 }
+
+.verify-traveler .info-text {
+    color: #e78016;
+}
+
+.info-text.text-error {
+    color: red;
+}
+.error-text {
+    margin-top: -10px;
+    margin-bottom: 15px;
+    color: #ff0000;
+}
+.info-text {
+    color: red;
+    font-size: 14px;
+    margin: 0;
+}
+
+#confirmationModal.modal {
+    background: rgba(0, 0, 0, 0.3);
+}
+#confirmationModal.modal .btn-secondary {
+    border-radius: 9px;
+}
+#confirmationModal.modal .close {
+    position: absolute;
+    /* background: red; */
+    top: 6%;
+    right: 2%;
+}
+#confirmationModal.modal .close span {
+    font-size: 30px;
+}

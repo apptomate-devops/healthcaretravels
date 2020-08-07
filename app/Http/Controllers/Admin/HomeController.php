@@ -13,6 +13,7 @@ use App\Models\PropertyRating;
 use App\Models\PropertyBookingPrice;
 use App\Models\EmailConfig;
 use App\Models\HomeListing;
+use App\Services\Logger;
 
 class HomeController extends BaseController
 {
@@ -556,6 +557,46 @@ class HomeController extends BaseController
         return back()->with('success', 'Mail config has been Saved');
     }
 
+    public function verify_all_documents($id, Request $request)
+    {
+        // This only handles the denied documents flow
+        $data = $request->responses;
+        $deniedCount = 0;
+        foreach ($data as $value) {
+            if ($value["status"] == -1) {
+                $deniedCount++;
+            }
+            DB::table('documents')
+                ->where('id', $value["id"])
+                ->update(['status' => $value["status"], 'reason' => $value["reason"]]);
+        }
+        $isDenied = $deniedCount > 0;
+        $updateStatus = $isDenied ? -1 : ONE;
+        $updateData = ['is_verified' => $updateStatus];
+        if ($isDenied) {
+            $updateData['denied_count'] = DB::raw('denied_count+1');
+            $updateData['is_submitted_documents'] = 0;
+        }
+        $this->user->where('id', $id)->update($updateData);
+        $user = $this->user->where('id', $id)->first();
+        if ($user) {
+            // Accept/Denied Email flow
+            $emailType = $isDenied ? TEMPLATE_DENIAL : TEMPLATE_APPROVAL;
+            $emailTemplate = $isDenied ? 'mail.account-denied' : 'mail.account-approved';
+            $reg = $this->emailConfig->where('type', $emailType)->first();
+            $mail_data = [
+                'name' => $user->first_name . ' ' . $user->last_name,
+                'email' => $user->email,
+                'text' => isset($reg->message) ? $reg->message : '',
+            ];
+            $title = isset($reg->title) ? $reg->title : 'Message from ' . APP_BASE_NAME;
+            $subject = isset($reg->subject) ? $reg->subject : "Email verification from " . APP_BASE_NAME;
+            $this->send_custom_email($user->email, $subject, $emailTemplate, $mail_data, $title, VERIFY_MAIL);
+        }
+        return response()->json([
+            'success' => true,
+        ]);
+    }
     public function verify_property($id)
     {
         $this->propertyList->where('id', $id)->update(['verified' => ONE]);
@@ -581,9 +622,6 @@ class HomeController extends BaseController
             $updateData['is_submitted_documents'] = 0;
         }
         $this->user->where('id', $id)->update($updateData);
-        DB::table('verify_mobile')
-            ->where('user_id', $id)
-            ->update(['status' => $updateStatus]);
         if ($user) {
             // Accept/Denied Email flow
             $emailType = $isDenied ? TEMPLATE_DENIAL : TEMPLATE_APPROVAL;
@@ -615,9 +653,9 @@ class HomeController extends BaseController
 
     public function verify_mobile($id, $status)
     {
-        DB::table('verify_mobile')
+        DB::table('users')
             ->where('id', $id)
-            ->update(['status' => $status]);
+            ->update(['otp_verified' => $status]);
         return back()->with('success', 'User Mobile number has been verified');
     }
 

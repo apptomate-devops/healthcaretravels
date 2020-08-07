@@ -35,6 +35,18 @@
                             <span class="la la-linkedin font-medium-4"></span>
                         </a>
                     @endif
+                    @if($data->instagram_url!='0')
+                        <a href="{{$data->instagram_url}}" target="_blank"
+                           class="btn btn-social-icon parse-link-href mb-1 btn-outline-linkedin">
+                            <span class="la la-instagram font-medium-4"></span>
+                        </a>
+                    @endif
+                    @if($data->twitter_url!='0')
+                        <a href="{{$data->twitter_url}}" target="_blank"
+                           class="btn btn-social-icon parse-link-href mb-1 btn-outline-linkedin">
+                            <span class="la la-twitter font-medium-4"></span>
+                        </a>
+                    @endif
                 </div>
                 @if ($data->is_verified==1)
                         <span class="btn btn-default btn-success btn-block" style="background-color: green">Verified</span>
@@ -51,7 +63,8 @@
                         </span>
                     </a>
                 @endif
-                @if($data->is_verified!=-1)
+                {{-- Disabling main deny button --}}
+                {{-- @if($data->is_verified!=-1)
                     <a
                         style="float:right" class="btn btn-default btn-danger btn-block"
                         href="{{BASE_URL}}admin/verify_profile/{{$data->id}}/true"
@@ -60,7 +73,7 @@
                             Click here to Deny This @if($data->role_id==0) Traveler @elseif($data->role_id==1) Owner @else  Travel Agency @endif
                         </span>
                     </a>
-                @endif
+                @endif --}}
                 <br>
             </div>
         </div>
@@ -109,25 +122,6 @@
                 <h4>{{$data->languages_known ?? '-'}}</h4>
             </div>
         </div>
-        <div class="card-header">
-            <h4 class="card-title">Links shared by user</h4>
-            <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
-            <div class="heading-elements">
-                <ul class="list-inline mb-0">
-                    <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-                    <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
-                    <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
-                    <li><a data-action="close"><i class="ft-x"></i></a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="card-content">
-            <div class="card-body">
-                @foreach($user_links as $link => $link_name)
-                    @if($data->$link)<h5>{{$link_name.": "}}<a class="parse-link-href" target="_blank" href="{{$data->$link}}">{{$data->$link}}</a></h5>@endif
-                @endforeach
-            </div>
-        </div>
     </div>
     <div class="card">
         <div class="card-header">
@@ -171,21 +165,45 @@
                         : {{ $data->recruiter_phone?$data->recruiter_phone:'Not Added'}} </h4><br>
 
                 @endif
-                <h4 class="card-title"> Verification Mobile Number
-                    : {{isset($mobile->mobile)?$mobile->mobile:' Not Added '}}</h4> <br>
-                @if(isset($mobile->mobile))
-                    @if($mobile->status == 0)
-                        <a style="float:left" class="btn btn-default btn-success"
-                           href="{{BASE_URL}}admin/verify_mobile/{{$mobile->id}}/1"><span
-                                style="height:29px;width: 10px">Click here to Verify Mobile Number</span></a>
-                        <a style="float:left" class="btn btn-default btn-danger"
-                           href="{{BASE_URL}}admin/verify_mobile/{{$mobile->id}}/2"><span style="height:29px">Click here to Unverify Mobile Number</span></a>
-                    @elseif($mobile->status == 1)
+                <div class="phone-wrapper">
+                    <h4 class="card-title"> Verification Mobile Number
+                    : {{$data->phone ?? 'Not Added'}}</h4>
+                    @if ($data->otp_verified == 1)
                         <span class="btn btn-default btn-success" style="background-color: green">Verified</span>
                     @else
                         <span class="btn btn-default btn-danger">Unverified</span>
                     @endif
+                </div>
+                <br>
+                @if(isset($data->phone))
+                    @if($data->otp_verified == 0)
+                        <a style="float:left" class="btn btn-default btn-success"
+                            href="{{BASE_URL}}admin/verify_mobile/{{$data->id}}/1"><span
+                            style="height:29px;width: 10px">Click here to Verify Phone Number</span></a>
+                    @elseif($data->otp_verified == 1)
+                        <a style="float:left" class="btn btn-default btn-danger"
+                            href="{{BASE_URL}}admin/verify_mobile/{{$data->id}}/0"><span style="height:29px">Click here to Unverify Phone Number</span></a>
+                    @endif
                 @endif
+            </div>
+            <div class="card-header">
+                <h4 class="card-title">Links shared by user</h4>
+                <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                <div class="heading-elements">
+                    <ul class="list-inline mb-0">
+                        <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                        <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                        <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                        <li><a data-action="close"><i class="ft-x"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    @foreach($user_links as $link => $link_name)
+                        @if($data->$link)<h5>{{$link_name.": "}}<a class="parse-link-href" target="_blank" href="{{$data->$link}}">{{$data->$link}}</a></h5>@endif
+                    @endforeach
+                </div>
             </div>
             <div class="card-body  my-gallery" itemscope="" itemtype="http://schema.org/ImageGallery" data-pswp-uid="1">
                 <div class="card-deck-wrapper">
@@ -211,12 +229,19 @@
 
                                         <div class="card-body px-0">
                                             @if($d->status == 0)
-                                                <a style="float:right" class="btn btn-default btn-success btn-block"
-                                                   href="{{BASE_URL}}admin/verify_document/{{$d->id}}/1"><span
-                                                        style="height:29px">Click here to Verify This Document</span></a>
-                                                <a style="float:right" class="btn btn-default btn-danger btn-block"
-                                                   href="{{BASE_URL}}admin/verify_document/{{$d->id}}/2"><span
-                                                        style="height:29px">Unverify This Document</span></a>
+                                                <a class="verification-response verification-approved btn btn-default btn-success btn-block"
+                                                    {{-- href="{{BASE_URL}}admin/verify_document/{{$d->id}}/1" --}}
+                                                    data-id="{{$d->id}}" data-status="1" data-title="{{ucfirst(str_replace("_"," ",$d->document_type))}}">
+                                                    <span style="height:30px">Verify This Document</span>
+                                                </a>
+                                                <a class="verification-response verification-denied btn btn-default btn-danger btn-block"
+                                                    {{-- href="{{BASE_URL}}admin/verify_document/{{$d->id}}/2" --}}
+                                                    data-id="{{$d->id}}" data-status="-1" data-title="{{ucfirst(str_replace("_"," ",$d->document_type))}}">
+                                                    <span style="height:30px">Deny This Document</span>
+                                                </a>
+                                                <div class="form-group">
+                                                    <input type="text" class="denial-reason form-control" style="margin-top: 10px; display: none;" name="reason-{{$d->id}}" id="reason-{{$d->id}}" data-id="{{$d->id}}" placeholder="specify reason for denial">
+                                                </div>
                                             @elseif($d->status == 1)
                                                 <span class="btn btn-default btn-success btn-block"
                                                       style="background-color: green">Verified</span>
@@ -228,6 +253,12 @@
                                 </div><br>
                             @endforeach
                         @endif
+                        <div class="col-md-12 submit-block-wrapper">
+                            <div class="alert alert-danger" style="display: none">
+                                <h4>An Error occured</h4>
+                            </div>
+                            <button id="btn-submit-verification" class="btn btn-default btn-primary btn-block">Submit verification</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -239,6 +270,9 @@
 
 @section('scripts')
     <script type="text/javascript">
+        var totalDocs = "{{count($document)}}";
+        var userId = "{{$data->id}}";
+        var responses = {};
         function parseUrl(url) {
             if (isValidUrl(url)) {
                 return url;
@@ -258,6 +292,108 @@
             event.stopPropagation();
             var URL = parseUrl(event.currentTarget.href);
             window.open(URL, '_blank');
+        });
+        $(document).on('click', 'a.verification-response', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var doc = event.currentTarget.dataset;
+            responses[doc.id] = {
+                id: doc.id,
+                status: doc.status,
+                title: doc.title,
+                reason: responses[doc.id] ? responses[doc.id].reason : ''
+            };
+            var currentNode = $(event.currentTarget);
+            var reasonInput = currentNode.parent().find('.denial-reason');
+            var approveNode = currentNode.parent().find('.verification-approved');
+            var denyNode = currentNode.parent().find('.verification-denied');
+            if (doc.status == 1) {
+                // Hide reason and remove it from data
+                approveNode.find('span').html('Document will be verified');
+                denyNode.find('span').html('Deny This Document');
+                reasonInput.fadeOut();
+            } else {
+                // Show reason box and add to data;
+                reasonInput.fadeIn();
+                denyNode.find('span').html('Document will be denied');
+                approveNode.find('span').html('Verify This Document');
+            }
+        });
+        $(document).on('change', '.denial-reason', function (event) {
+            var reason = event.currentTarget.value;
+            var id = event.currentTarget.dataset.id;
+            if (responses[id]) {
+                responses[id].reason = reason;
+            } else {
+                responses[id] = { reason: reason };
+            }
+        });
+        $(document).on('click', '#btn-submit-verification', function (event) {
+            event.preventDefault();
+            var alertNode = $(event.currentTarget).siblings('.alert-danger');
+            var formData = {
+                responses: [],
+                _token: '{{ csrf_token() }}'
+            };
+            function setError(message) {
+                if (message) {
+                    alertNode.find('h4').html(message);
+                    alertNode.fadeIn();
+                } else {
+                    alertNode.hide();
+                }
+            }
+            var responsesLength = 0;
+            var deniedLength = 0;
+            var isValid = true;
+            for (var k in responses) {
+                if (responses.hasOwnProperty(k)) {
+                    var resp = responses[k];
+                    if (resp.status == -1) {
+                        deniedLength++;
+                        if (!resp.reason) {
+                            $('#reason-' + k).parent().addClass('has-error');
+                            isValid = false;
+                        }
+                    } else {
+                        $('#reason-' + k).parent().removeClass('has-error');
+                    }
+                    formData.responses.push(resp);
+                    responsesLength++;
+                }
+            }
+            if (responsesLength != totalDocs) {
+                setError('All docuemnts should be responded to submit data');
+            } else if(!isValid) {
+                setError('Some denied docuemnts are missing reasons.');
+                $('html, body').animate({
+                    scrollTop: $('.has-error:first').offset().top - 50
+                }, 1000);
+            } else if (isValid) {
+                setError();
+                if (!deniedLength) {
+                    return window.location.href = "/admin/verify_profile/" + userId;
+                }
+
+                $.ajax({
+                    url: "/admin/verify_all_documents/" + userId,
+                    type: "POST",
+                    data: formData,
+                    json: true,
+                    success: function(data, textStatus, jqXHR) {
+                        if (data.success) {
+                            window.location.reload();
+                        } else {
+                            console.log(data);
+                            setError('An error occured');
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                        setError('An error occured');
+                    }
+                });
+            }
         });
     </script>
 @endsection

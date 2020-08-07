@@ -112,6 +112,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::GET('/verify_profile/{id}/{deny?}', 'Admin\HomeController@verify_profile');
         Route::GET('/verify_document/{id}/{status}', 'Admin\HomeController@verify_document');
         Route::GET('/verify_mobile/{id}/{status}', 'Admin\HomeController@verify_mobile');
+        Route::POST('/verify_all_documents/{id}', 'Admin\HomeController@verify_all_documents');
         // faq
         Route::POST('/add_faq_process', 'Admin\HomeController@add_faq_process');
         Route::GET('/faq', 'Admin\HomeController@add_faq');

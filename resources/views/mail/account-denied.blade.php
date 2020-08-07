@@ -7,6 +7,6 @@
         {{$text}}
     </div>
     <div style="padding-top: 5px;">
-        Please try again or contact support at <a href="mailto:info@healthcaretravels.com" target="_blank">info@healthcaretravels.com</a> for more information
+        Check your verification page to see which information was denied. Please correct the errors and resubmit documents for approval.
     </div>
 @endsection

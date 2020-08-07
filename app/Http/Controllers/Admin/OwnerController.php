@@ -51,9 +51,6 @@ class OwnerController extends BaseController
         $document = DB::table('documents')
             ->where('user_id', $request->id)
             ->get();
-        $mobile = DB::table('verify_mobile')
-            ->where('user_id', $request->id)
-            ->first();
         $total_posted = DB::table('property_list')
             ->where('user_id', $request->id)
             ->count();
@@ -73,7 +70,6 @@ class OwnerController extends BaseController
             'document' => $document,
             'total_posted' => $total_posted,
             'total_booking' => $total_booking,
-            'mobile' => $mobile,
             'user_links' => $user_links,
         ]);
     }

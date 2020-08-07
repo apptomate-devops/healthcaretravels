@@ -51,6 +51,15 @@
             @elseif($user->denied_count >= 3)
                 <b class="info-text" style="color: red; font-size: 18px;">We were unable to verify your account and cannot grant your access to our features. Please contact support for more information.</b>
             @else
+                @if($user->is_verified == -1)
+                    <div class="denied-details">
+                        <b class="info-text" style="color: red; font-size: 18px;">One or more document(s) was denied:</b>
+                        @foreach ($documents as $d)
+                            <br><b class="info-text" style="color: red; font-size: 18px;">{{ucfirst(str_replace("_"," ",$d->document_type))}}: {{$d->reason}}</b>
+                        @endforeach
+
+                    </div>
+                @endif
                 <div class="col-md-8">
                     <div class="row">
                         <form name="doc" method="POST" action="{{url('/')}}/upload-document" enctype="multipart/form-data" autocomplete="off" onkeydown="return event.key != 'Enter';">

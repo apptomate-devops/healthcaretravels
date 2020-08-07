@@ -747,7 +747,11 @@ class UserController extends BaseController
         $user = DB::table('users')
             ->where('id', $user_id)
             ->first();
-        return view('verify-account', compact('user'));
+        $documents = DB::table('documents')
+            ->where('user_id', $user_id)
+            ->where('status', -1)
+            ->get();
+        return view('verify-account', compact('user', 'documents'));
     }
 
     public function map_documents(Request $request)

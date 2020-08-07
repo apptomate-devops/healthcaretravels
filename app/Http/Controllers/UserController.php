@@ -109,8 +109,15 @@ class UserController extends BaseController
         } catch (\Exception $e) {
             return redirect('/login')->with('error', 'There was error fetching your profile information');
         }
-
-        $existingUser = Users::where('email', $user->getEmail())->first();
+        $email = $user->getEmail();
+        $fullname = trim($user->getName());
+        $social_id = $user->getId();
+        $social_avatar = $user->getAvatar();
+        if ($email) {
+            $existingUser = Users::where('email', $email)->first();
+        } else {
+            $existingUser = Users::where('social_id', $social_id)->first();
+        }
         if ($existingUser) {
             if ($isLogin) {
                 if ($existingUser->login_type == $login_type) {
@@ -139,19 +146,24 @@ class UserController extends BaseController
                     ->with('selectedTab', $selectedTab)
                     ->with('error', "We don't have an account on record associated with your profile.");
             }
-            $parts = explode(" ", trim($user->getName()));
-            $lame = array_pop($parts);
-            $fname = implode(" ", $parts);
+            if (strpos($fullname, ' ') !== false) {
+                $parts = explode(" ", $fullname);
+                $lname = array_pop($parts);
+                $fname = implode(" ", $parts);
+            } else {
+                $fname = $fullname;
+                $lname = '';
+            }
             return redirect()
                 ->to('/login')
                 ->with('selectedTab', $selectedTab)
                 ->with('provider', $provider)
                 ->with('login_type', $login_type)
-                ->with('social_id', $user->getId())
-                ->with('mail', $user->getEmail())
+                ->with('social_id', $social_id)
+                ->with('mail', $email)
                 ->with('fname', $fname)
-                ->with('lname', $lame)
-                ->with('social_avatar', $user->getAvatar())
+                ->with('lname', $lname)
+                ->with('social_avatar', $social_avatar)
                 ->with(
                     'success',
                     'Data fetched successfully. Please fill out other required fields to continue registration.',

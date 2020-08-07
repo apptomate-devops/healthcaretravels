@@ -144,7 +144,7 @@
                             <p class="form-row form-row-wide" id="email_field" style="display: none;">
                                 <label for="email2">
                                     <label id="email-label" class="m-0">Email Address:</label>
-                                    <input type="email" class="input-text validate {{ $errors->has('email') ? 'form-error' : ''}}" value="{{Session::get('mail')}}" name="email" id="email2" autocomplete="off" placeholder="Email Address" required @if (Session::get('social_id')) readonly @endif />
+                                    <input type="email" class="input-text validate {{ $errors->has('email') ? 'form-error' : ''}}" value="{{Session::get('mail')}}" name="email" id="email2" autocomplete="off" placeholder="Email Address" required @if (Session::get('social_id') && Session::get('mail')) readonly @endif />
                                 </label>
                                 {!! $errors->first('email', '<p class="error-text">:message</p>') !!}
                             </p>

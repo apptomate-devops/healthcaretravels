@@ -12,6 +12,11 @@ return [
     | to have a conventional place to find your various credentials.
     |
     */
+    'facebook' => [
+        'client_id' => env('FACEBOOK_CLIENT_ID'),
+        'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
+        'redirect' => env('SOCIAL_REDIRECT'),
+    ],
 
     'google' => [
         'captcha_site_key' => env('RECAPTCHA_SITE_KEY', '6LcdUVMUAAAAAHf1NDwJ5VG7s3AemNQbXuMHZBsR'),
@@ -19,7 +24,7 @@ return [
         'maps_api_key' => env('GOOGLE_MAPS_API_KEY', 'AIzaSyBZHka56h_B3dLKxn-awZJO7HTqzcuvcy0'),
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => env('GOOGLE_REDIRECT'),
+        'redirect' => env('SOCIAL_REDIRECT'),
     ],
 
     'mailgun' => [

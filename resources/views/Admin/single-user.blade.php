@@ -220,15 +220,25 @@
                                             itemtype="http://schema.org/ImageObject">
                                         <div class="card-body px-0">
                                             <h4 class="card-title">   {{ucfirst(str_replace("_"," ",$d->document_type))}}</h4>
-                                        {{-- </div>
-                                        <a href="{{$d->document_url}}" target="_blank" itemprop="contentUrl"
+                                        </div>
+                                        {{-- <a href="{{$d->document_url}}" target="_blank" itemprop="contentUrl"
                                            data-size="480x360">
                                             <img data-enlargable class="gallery-thumbnail card-img-top" src="{{$d->document_url}}"
                                                  itemprop="thumbnail" alt="Image description">
                                         </a> --}}
-                                        <img data-enlargable class="gallery-thumbnail card-img-top" src="{{$d->document_url}}"
-                                                 itemprop="thumbnail" alt="Image description">
-
+                                        @if (\Illuminate\Support\Str::endsWith($d->document_url, '.pdf'))
+                                            {{-- <span>Render PDF</span> --}}
+                                            <div class="pdf-wrapper">
+                                                <canvas data-enlargable class="pdf-links" data-pdf="{{$d->document_url}}" style="direction: ltr;"></canvas>
+                                            </div>
+                                        @elseif (\Illuminate\Support\Str::endsWith($d->document_url, '.heic'))
+                                            {{-- <span>Render Heic</span> --}}
+                                            <img data-enlargable class="gallery-thumbnail card-img-top heic-image" src="{{$d->document_url}}"
+                                                itemprop="thumbnail" alt="Image description">
+                                        @else
+                                            <img data-enlargable class="gallery-thumbnail card-img-top" src="{{$d->document_url}}"
+                                                itemprop="thumbnail" alt="Image description">
+                                        @endif
                                         <div class="card-body px-0">
                                             @if($d->status == 0)
                                                 <a class="verification-response verification-approved btn btn-default btn-success btn-block"
@@ -246,7 +256,7 @@
                                                 </div>
                                             @elseif($d->status == 1)
                                                 <span class="btn btn-default btn-success btn-block"
-                                                      style="background-color: green">Verified</span>
+                                                    style="background-color: green">Verified</span>
                                             @else
                                                 <span class="btn btn-default btn-danger btn-block">Unverified</span>
                                             @endif
@@ -328,6 +338,29 @@
                 responses[id].reason = reason;
             } else {
                 responses[id] = { reason: reason };
+            }
+        });
+
+        $(function () {
+            var heicImages = $('.heic-image');
+            if (heicImages.length) {
+                $.each(heicImages, function(index, item) {
+                    fetch(item.src)
+                        .then((res) => res.blob())
+                        .then((blob) => heic2any({ blob }))
+                        .then((conversionResult) => {
+                            item.src = URL.createObjectURL(conversionResult);
+                        })
+                        .catch((e) => {
+                            console.error('Error in coverting heic image');
+                        });
+                });
+            }
+            var pdfs = $('.pdf-links');
+            if (pdfs.length) {
+                $.each(pdfs, function(index, canvas) {
+                    renderPDFonCanvas(canvas.dataset.pdf, canvas);
+                });
             }
         });
         $(document).on('click', '#btn-submit-verification', function (event) {

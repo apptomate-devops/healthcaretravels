@@ -65,16 +65,13 @@
                         <form name="doc" method="POST" action="{{url('/')}}/upload-document" enctype="multipart/form-data" autocomplete="off" onkeydown="return event.key != 'Enter';">
                             <input type="hidden" name="_token" value="{{csrf_token()}}" />
                             <div class="col-md-12 my-profile" style="padding-top: 15px;">
+                                <div class="info-text">
+                                    You must complete at least three verification methods in order to submit your profile for verification. Please submit within seven days to be granted full access to all of Health Care Travels' features.
+                                </div>
                                 @if($user->role_id == 1)
-
 
                                     {{-----  Owner Verification  ----- START ---------------}}
 
-
-                                    <div class="info-text">
-                                        You must complete 3 of 5 verification methods in order to submit your profile for verification.
-                                        Please submit within seven days to be granted full access to all of Health Care Travels' features.
-                                    </div>
                                     @if ($user->is_verified == -1)
                                         <div class="info-text text-error padding-top-10">
                                             We were unable to verify your account. Please resubmit your information or contact support for more information. Attempts remaining: {{3 - $user->denied_count}}
@@ -104,11 +101,6 @@
 
                                     {{-----  Agency Verification -----  START ---------------}}
 
-
-                                    <div class="info-text">
-                                        You must complete 3 of 7 verification methods in order to submit your profile for verification.
-                                        Please submit within seven days to be granted full access to all of Health Care Travels' features.
-                                    </div>
                                     @if ($user->is_verified == -1)
                                         <div class="info-text text-error padding-top-10">
                                             We were unable to verify your account. Please resubmit your information or contact support for more information. Attempts remaining: {{3 - $user->denied_count}}
@@ -152,11 +144,6 @@
 
                                     {{----- Cohost Verification ----- START ---------------}}
 
-
-                                    <div class="info-text">
-                                        You must complete 3 out of 6 verification methods in order to submit your profile for verification.
-                                        Please submit within seven days to be granted full access to all of Health Care Travels' features.
-                                    </div>
                                     @if ($user->is_verified == -1)
                                         <div class="info-text text-error padding-top-10">
                                             We were unable to verify your account. Please resubmit your information or contact support for more information. Attempts remaining: {{3 - $user->denied_count}}
@@ -188,11 +175,6 @@
 
                                     {{----- Traveler or RV Traveler Verification ----- START ---------------}}
 
-
-                                    <div class="info-text">
-                                        You must complete 3 of 5 verification methods in order to submit your profile for verification.
-                                        Please submit within seven days to be granted full access to all of Health Care Travels' features.
-                                    </div>
                                     @if ($user->is_verified == -1)
                                         <div class="info-text text-error padding-top-10">
                                             We were unable to verify your account. Please resubmit your information or contact support for more information. Attempts remaining: {{3 - $user->denied_count}}

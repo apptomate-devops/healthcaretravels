@@ -58,7 +58,9 @@
 	<div class="col-md-4 col-md-offset-4">
 
 		<div class="card" style="margin-bottom: 300px;">
-			Thank you for registering with Health Care Travels, to complete your registration process please check your <br> email and click on the link that we have provided.” If you did not receive a email please email  us at  <br>​<a href="mailto:support@heatlhcaretravels.com​">{{SUPPORT_MAIL}}</a> for further assistance.”
+			Thank you for registering with Health Care Travels, to complete your registration process please check your email and click on the link that we have provided.
+            <br>
+            If you did not receive a email please email  us at ​<a href="mailto:support@heatlhcaretravels.com​">{{SUPPORT_MAIL}}</a> for further assistance.
 		</div>
 
 

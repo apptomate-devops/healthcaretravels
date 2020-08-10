@@ -582,7 +582,8 @@ ul.top-bar-menu li i {
     content: "\e066";
     font-size: 17px;
     position: relative;
-    top: -1px;
+    top: 2px;
+    padding-right: 7px;
 }
 
 .header-widget .sign-in:hover {
@@ -2016,7 +2017,7 @@ html.mm-opening .mm-menu.mm-opened ~ .mm-slideout {
         font-size: 15px;
         position: relative;
         top: 1px;
-        padding-right: 6px;
+        padding-right: 7px;
     }
 
     .mmenu-trigger {

@@ -54,8 +54,10 @@
             top: '0',
             left: '0',
             cursor: 'zoom-out'
-        }).click(function() {
-            removeModal();
+        }).click(function(e) {
+            if (!$(e.target).parent().hasClass('button-download')) {
+                removeModal();
+            }
         }).appendTo('body');
 
         // Handle Escape key

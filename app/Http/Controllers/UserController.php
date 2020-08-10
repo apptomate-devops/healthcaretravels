@@ -186,6 +186,7 @@ class UserController extends BaseController
         $agency = DB::table('agency')
             ->orderBy('name', 'ASC')
             ->get();
+
         $occupation = DB::table('occupation')->get();
         $data = [];
         return view('login', [

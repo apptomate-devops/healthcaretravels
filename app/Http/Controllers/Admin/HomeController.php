@@ -353,7 +353,9 @@ class HomeController extends BaseController
 
     public function add_agency(Request $request)
     {
-        $data = DB::table('agency')->get();
+        $data = DB::table('agency')
+            ->orderBy('name', 'ASC')
+            ->get();
         return view('Admin.add-agency', ['agencies' => $data]);
     }
 

@@ -89,6 +89,15 @@ define(
     ]),
 );
 
+define(
+    'PASSWORD_REGEX',
+    'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#^_+=:;><~$!%*?&])[A-Za-z\d@#^_+=:;><~$!%*?&]{8,}$/i',
+);
+define(
+    'PASSWORD_REGEX_MESSAGE',
+    'Password should be at least 8 characters long and should contain at least 1 uppercase, 1 lowercase, 1 number and 1 special character',
+);
+
 //define("UPLOAD_CLOUD_NAME","dazx7zpzb");
 define("START_YEAR", "2018");
 define("END_YEAR", "2040");

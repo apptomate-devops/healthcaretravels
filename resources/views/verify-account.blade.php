@@ -66,7 +66,7 @@
                             <input type="hidden" name="_token" value="{{csrf_token()}}" />
                             <div class="col-md-12 my-profile" style="padding-top: 15px;">
                                 <div class="info-text">
-                                    You must complete at least three verification methods in order to submit your profile for verification. Please submit within seven days to be granted full access to all of Health Care Travels' features.
+                                    You must complete at least <b>three</b> verification methods in order to submit your profile for verification. Please submit within seven days to be granted full access to all of Health Care Travels' features.
                                 </div>
                                 @if($user->role_id == 1)
 
@@ -78,18 +78,18 @@
                                         </div>
                                     @endif
                                     <div class="col-md-6">
-                                        <label>Driver's License or Government ID</label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
-                                    </div>
-                                    <div class="col-md-6">
                                         <label>Lease Agreement</label>
+                                        <div class="caption-text">If approved by your state for subleasing</div>
                                         <input type="file" name="lease_agreement" id="lease_agreement" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
-                                        <div class="info-text">If approved by your state for subleasing</div>
                                     </div>
                                     <div class="col-md-6">
                                         <label>Utility Bill</label>
+                                        <div class="caption-text">With proof of name and listing address</div>
                                         <input type="file" name="utility_bill" id="utility_bill" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
-                                        <div class="info-text">With proof of name and listing address</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Driver's License or Government ID</label>
+                                        <input type="file" name="government_id" id="government_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                     </div>
 
 
@@ -108,8 +108,8 @@
                                     @endif
                                     <div class="col-md-6">
                                         <label>A Traveler's Contract</label>
+                                        <div class="caption-text" style="margin-top: 5px;">This should have your name as a contact person in the contract.</div>
                                         <input type="file" name="traveler_contract_id" id="traveler_contract_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
-                                        <p class="info-text" style="margin-top: 5px;">This should have your name as a contact person in the contract.</p>
                                     </div>
                                     <div class="col-md-6">
                                         <label>Work Badge </label>
@@ -120,8 +120,8 @@
                                             <h4>Agency Details</h4>
 
                                             <label>Proof of Employment on agency website </label>
+                                            <div class="caption-text">If your agency has a page with your name on it, share it here.</div>
                                             <input value="@if($user->agency_website == '0' || $user->agency_website == null)@else{{$user->agency_website}}@endif" type="text" placeholder="Agency Website" name="agency_website" class="form-control" />
-                                            <p class="info-text">If your agency has a page with your name on it, share it here.</p>
 
                                             <label>Agency HR Business Email</label>
                                             <input value="@if($user->agency_hr_email == '0' || $user->agency_hr_email == null)@else{{$user->agency_hr_email}}@endif" type="text" placeholder="Agency HR Email Address" name="agency_hr_email" class="form-control" />
@@ -130,8 +130,8 @@
                                             <input value="@if($user->agency_hr_phone == '0' || $user->agency_hr_phone == null)@else{{$user->agency_hr_phone}}@endif" type="text" placeholder="Agency HR Phone Number" name="agency_hr_phone" class="form-control" />
 
                                             <label>Direct Office Number</label>
+                                            <div class="caption-text">Provide your agency's main office phone number.</div>
                                             <input value="@if($user->agency_office_number == '0' || $user->agency_office_number == null)@else{{$user->agency_office_number}}@endif" type="text" placeholder="Agency Office Number" name="agency_office_number" class="form-control" />
-                                            <p class="info-text">Provide your agency's main office phone number.</p>
 
                                         </div>
                                     </div>
@@ -158,11 +158,11 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label>Signed HCT Co-hosting Agreement </label>
+                                        <div class="caption-text">Only the HCT Standard Agreement will be accepted.</div>
                                         <input type="file" name="cohosting_agreement_id" id="cohosting_agreement_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
-                                        @if(isset($COHOSTING_AGREEMENT_ID->document_type))
+                                    @if(isset($COHOSTING_AGREEMENT_ID->document_type))
                                             <a href="{{$COHOSTING_AGREEMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
-                                        <p class="info-text">Only the HCT Standard Agreement will be accepted.</p>
                                         <div style="margin-top: 10px;">
                                             <a href="" style="text-decoration-line: underline;">Download form here</a>
                                         </div>
@@ -213,7 +213,7 @@
                                     <div class="col-md-12" style="margin-top: 20px;">
                                         <div class="card col-md-12" style="padding: 15px;">
                                             <h4>Certified Traveler License</h4>
-                                            <p class="info-text" style="margin-bottom: 25px;">Please provide your license number and your state's licensing or certification website URL</p>
+                                            <div class="caption-text" style="margin-bottom: 25px;">Please provide your license number and your state's licensing or certification website URL</div>
                                             <div class="col-md-6">
                                                 <input value="@if($user->traveler_license == '0' || $user->traveler_license == null)@else{{$user->traveler_license}}@endif" type="text" placeholder="License/Certification Number" name="traveler_license" id="traveler_license" class="form-control" />
                                             </div>
@@ -269,8 +269,8 @@
                                             </div>
                                             <div>
                                                 <label>Property Tax Document</label>
+                                                <div class="caption-text">With proof of name and listing address</div>
                                                 <input type="file" name="property_tax_document" id="property_tax_document" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
-                                                <div class="info-text">With proof of name and listing address</div>
                                             </div>
                                         </div>
                                     </div>

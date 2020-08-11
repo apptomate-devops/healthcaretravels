@@ -9,6 +9,7 @@
     <!-- CSS
     ================================================== -->
     @include('includes.styles')
+    <link rel="stylesheet" href="{{ URL::asset('css/login.css') }}">
 
 </head>
 
@@ -85,14 +86,24 @@
                                     <input type="hidden" name="email" value="{{$email}}" />
                                     <p class="form-row form-row-wide">
                                         <label for="email">New Password :
-                                            <i class="im im-icon-Email"></i>
-                                            <input type="password" class="input-text validate1" name="password" id="email" value="" />
+                                            <input type="password" class="input-text validate1" name="password" id="email" data-strength value="" />
                                         </label>
                                     </p>
 
+                                        <div id="password-strength" class="strength" style="display: none;"><span class="strength-span"></span></div>
+                                        <div id="password-strength-text" class="strength-text" style="display: none;">Passsword is weak</div>
+
+                                        <div id="password_message" style="display: none;">
+                                            <div><b>Your password must meet the below requirements:</b></div>
+                                            <p id="letter" class="invalid-password">At least one lowercase letter</p>
+                                            <p id="capital" class="invalid-password">At least one uppercase letter</p>
+                                            <p id="number" class="invalid-password">At least one number</p>
+                                            <p id="special_character" class="invalid-password">At least one special character</p>
+                                            <p id="length" class="invalid-password">At least 8 characters long</b></p>
+                                        </div>
+
                                     <p class="form-row form-row-wide">
                                         <label for="email">Confirm Password :
-                                            <i class="im im-icon-Email"></i>
                                             <input type="password" class="input-text validate1" name="confirm_password" id="email" value="" />
                                         </label>
                                     </p>
@@ -137,7 +148,122 @@
         ================================================== -->
         @include('includes.scripts')
 
+        <script>
+            let strength = 0;
 
+            function passwordCheck(password) {
+                if (password.match(/(?=.*[a-z])/)) {
+                    strength += 1;
+                    $('#letter').removeClass('invalid-password').addClass('valid-password');
+                } else {
+                    $('#letter').removeClass('valid-password').addClass('invalid-password');
+                }
+
+                if (password.match(/(?=.*[A-Z])/)) {
+                    strength += 1;
+                    $('#capital').removeClass('invalid-password').addClass('valid-password');
+                } else {
+                    $('#capital').removeClass('valid-password').addClass('invalid-password');
+                }
+
+                if (password.match(/(?=.*[0-9])/)) {
+                    strength += 1;
+                    $('#number').removeClass('invalid-password').addClass('valid-password');
+                } else {
+                    $('#number').removeClass('valid-password').addClass('invalid-password');
+                }
+
+                if (password.length >= 8) {
+                    strength += 1;
+                    $('#length').removeClass('invalid-password').addClass('valid-password');
+                } else {
+                    $('#length').removeClass('valid-password').addClass('invalid-password');
+                }
+
+                if (password.match(/(?=.*[!,%,&,@,#,$,^,*,?,_,~,<,>,])/)) {
+                    strength += 1;
+                    $('#special_character').removeClass('invalid-password').addClass('valid-password');
+                } else {
+                    $('#special_character').removeClass('valid-password').addClass('invalid-password');
+                }
+
+                displayBar(strength);
+            }
+
+            function displayBar(strength) {
+                switch (strength) {
+                    case 1:
+                        $("#password-strength span").css({
+                            "width": "20%",
+                            "background": "#de1616"
+                        });
+                        $("#password-strength-text").text('Password is too weak').css({
+                            "color": "#de1616"
+                        });
+                        break;
+
+                    case 2:
+                        $("#password-strength span").css({
+                            "width": "40%",
+                            "background": "#f86564"
+                        });
+                        $("#password-strength-text").text('Password is weak').css({
+                            "color": "#f86564"
+                        });
+                        break;
+
+                    case 3:
+                        $("#password-strength span").css({
+                            "width": "60%",
+                            "background": "#ffca00"
+                        });
+                        $("#password-strength-text").text('Password is not so good').css({
+                            "color": "#ffca00"
+                        });
+                        break;
+
+                    case 4:
+                        $("#password-strength span").css({
+                            "width": "80%",
+                            "background": "#FFA200"
+                        });
+                        $("#password-strength-text").text('Password is good').css({
+                            "color": "#FFA200"
+                        });
+                        break;
+
+                    case 5:
+                        $("#password-strength span").css({
+                            "width": "100%",
+                            "background": "#68b300"
+                        });
+                        $("#password-strength-text").text('Password is great!').css({
+                            "color": "#68b300"
+                        });
+                        break;
+
+                    default:
+                        $("#password-strength span").css({
+                            "width": "0",
+                            "background": "#de1616"
+                        });
+                        $("#password-strength-text").text('').css({
+                            "color": "#de1616"
+                        });
+                }
+            }
+
+            $("[data-strength]").focus(function() {
+                $("#password-strength, #password-strength-text, #password_message").show();
+            });
+
+            $("[data-strength]").keyup(function() {
+                strength = 0;
+                var password = $(this).val();
+                passwordCheck(password);
+            });
+
+        </script>
 
     </div>
     <!-- Wrapper / End -->

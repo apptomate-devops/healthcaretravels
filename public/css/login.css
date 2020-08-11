@@ -67,10 +67,11 @@
 }
 
 .register-info {
-    letter-spacing: 0.015em;
-    color: #666666;
+    font-weight: normal;
     font-size: 14px;
     line-height: 18px;
+    letter-spacing: 0.015em;
+    color: #666666;
 }
 
 .required {
@@ -272,12 +273,16 @@
     display: none;
 }
 
-.password-checkbox,
-#ethnicity-caption,
-#agency-caption,
-#name-caption {
+.password-checkbox {
     margin-top: -20px;
     margin-bottom: 30px;
+}
+
+#agency-caption,
+#ethnicity-caption,
+#name-caption {
+    margin-top: 5px;
+    margin-bottom: 10px;
 }
 
 .password-checkbox input[type="checkbox"] {
@@ -299,6 +304,9 @@
     margin-left: 20px;
 }
 
+#password_message p {
+    margin-left: 20px;
+}
 .valid-password:before {
     position: relative;
     left: -15px;

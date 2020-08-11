@@ -71,7 +71,7 @@
                     <div class="tab-content" id="tab1" style="display: none;">
                         @component('components.social-buttons', ['type' => 'login'])
                         @endcomponent
-                        <form method="post" class="login" action="{{url('/')}}/login-user" onkeydown="return event.key != 'Enter';">
+                        <form method="post" class="login" action="{{url('/')}}/login-user">
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
                             <input type="hidden" name="client_id" value="{{$constants['client_id']}}">
                             <p class="form-row form-row-wide">
@@ -187,6 +187,7 @@
 
                             <p class="form-row form-row-wide" id="first_name_field" style="display: none;">
                                 <label for="username2">First Name:
+                                    <label class="register-info" id="name-caption">Your name will not appear in your listing.</label>
                                     <input type="text" class="input-text validate {{ $errors->has('first_name') ? 'form-error' : ''}}" value="{{Session::get('fname')}}" name="first_name" id="first_name" autocomplete="off" placeholder="First Name" required />
                                 </label>
                                 {!! $errors->first('first_name', '<p class="error-text">:message</p>') !!}
@@ -199,10 +200,9 @@
                                 {!! $errors->first('last_name', '<p class="error-text">:message</p>') !!}
                             </p>
 
-                            <div class="register-text" id="name-caption">Your name will not appear in your listing.</div>
-
                             <p class="form-row form-row-wide" id="ethnicity_filed" style="display: none;">
                                 <label for="ethnicity">Ethnicity:
+                                    <label class="register-info" id="ethnicity-caption">We use this information for identity verification. It will not appear on your public profile.</label>
                                     <select type="text" class="input-text validate {{ $errors->has('ethnicity') ? 'form-error' : ''}}" name="ethnicity" id="ethnicity" autocomplete="off" required>
                                         <option value="" selected>Select Ethnicity</option>
                                         <option value="American Indian or Alaskan Native" @if(Session::get('ethnicity')=='American Indian or Alaskan Native' ) selected @endif>American Indian or Alaskan Native</option>
@@ -215,7 +215,6 @@
                                 </label>
                                 {!! $errors->first('ethnicity', '<p class="error-text">:message</p>') !!}
                             </p>
-                            <div class="register-info" id="ethnicity-caption">We use this information for identity verification. It will not appear on your public profile.</div>
 
                             <p class="form-row form-row-wide" id="phone_number_field" style="display: none;">
                                 <label for="phone_no">Mobile Number:
@@ -285,11 +284,11 @@
 
                             <p class="form-row form-row-wide" id="agency_show" style="display: none;">
                                 <label for="agency_name" style="margin-bottom: 0;">Agency you work for:</label>
-                                <span class="autocomplete-select"></span>
+                            <label class="register-info" id="agency-caption">Select as many agencies that you have worked for in the last 12 months.</label>
+                            <span class="autocomplete-select"></span>
                             <div id="add_another_agency" class="add-another" onclick="add_another_agency()" style="cursor: pointer;">Can't find it? Add it here.</div>
                             <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
                             <input type="text" style="display: none;" class="input-text validate" name="other_agency" id="other_agency" value="{{Session::get('other_agency')}}" placeholder="Other agency" autocomplete="off">
-                            <div id="agency-caption">Select as many agencies that you have worked for in the last 12 months.</div>
                             {!! $errors->first('name_of_agency', '<p class="error-text">:message</p>') !!}
                             </p>
 
@@ -928,8 +927,6 @@
 
     $("[data-strength]").focus(function() {
         $("#password-strength, #password-strength-text, #password_message").show();
-    }).blur(function() {
-        // $("#password-strength, #password-strength-text, #password_message").hide();
     });
 
     $("[data-strength]").keyup(function() {

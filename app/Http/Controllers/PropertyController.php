@@ -150,6 +150,72 @@ class PropertyController extends BaseController
         return view('owner.favourites', ['properties' => $properties_near, 'role_id' => $role_id]);
     }
 
+    public function inbox_traveller(Request $request)
+    {
+        $user_id = $request->session()->get('user_id');
+
+        $request_chats = DB::table('request_chat')
+            ->where('client_id', '=', CLIENT_ID)
+            ->where('request_chat.traveller_id', '=', $user_id)
+            ->get();
+        foreach ($request_chats as $request_chat) {
+            $request_chat->traveller = DB::table('users')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('id', $request_chat->traveller_id)
+                ->first();
+            $request_chat->owner = DB::table('users')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('id', $request_chat->owner_id)
+                ->first();
+            $request_chat->chat_key = 'request_chat';
+            $request_chat->last_message = $this->get_firebase_last_message('request_chat', $request_chat->id);
+        }
+
+        $instant_chats = DB::table('instant_chat')
+            ->where('client_id', '=', CLIENT_ID)
+            ->where('instant_chat.traveller_id', '=', $user_id)
+            ->get();
+        foreach ($instant_chats as $request_chat) {
+            $request_chat->traveller = DB::table('users')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('id', $request_chat->traveller_id)
+                ->first();
+            $request_chat->owner = DB::table('users')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('id', $request_chat->owner_id)
+                ->first();
+            $request_chat->chat_key = 'instant_chat';
+            $request_chat->last_message = $this->get_firebase_last_message('instant_chat', $request_chat->id);
+        }
+
+        $personal_chats = DB::table('personal_chat')
+            ->where('client_id', '=', CLIENT_ID)
+            ->where('personal_chat.traveller_id', '=', $user_id)
+            ->where('traveler_visible', 1)
+            ->get();
+        foreach ($personal_chats as $request_chat) {
+            $request_chat->traveller = DB::table('users')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('id', $request_chat->traveller_id)
+                ->first();
+            $request_chat->owner = DB::table('users')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('id', $request_chat->owner_id)
+                ->first();
+            $request_chat->chat_key = 'personal_chat';
+            $request_chat->last_message = $this->get_firebase_last_message('personal_chat', $request_chat->id);
+        }
+
+        $results = [];
+        $results[] = $request_chats;
+        $results[] = $instant_chats;
+        $results[] = $personal_chats;
+
+        $f_result = $results[0];
+
+        return view('traveller.inbox-listing', ['properties' => $results]);
+    }
+
     public function owner_update_booking(Request $request)
     {
         DB::table('property_booking')
@@ -279,6 +345,67 @@ class PropertyController extends BaseController
             ->with('total_properties', $total_properties)
             ->with('next', $page)
             ->with('room_types', $room_types);
+    }
+
+    public function traveller_fire_chat($id, Request $request)
+    {
+        if ($request->fbkey == "personal_chat") {
+            $property = DB::table('personal_chat')
+                ->where('id', $id)
+                ->first();
+            // echo json_encode($property);exit;
+            $traveller = DB::table('users')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('id', $property->traveller_id)
+                ->first();
+            $owner = DB::table('users')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('id', $property->owner_id)
+                ->first();
+            return view('traveller.fire_chat', [
+                'owner' => $owner,
+                'traveller' => $traveller,
+                'id' => $id,
+                'traveller_id' => $property->traveller_id,
+            ]);
+        }
+        if ($request->fbkey == "request_chat") {
+            $property = DB::table('request_chat')
+                ->where('id', $id)
+                ->first();
+            $traveller = DB::table('users')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('id', $property->traveller_id)
+                ->first();
+
+            $owner = DB::table('users')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('id', $property->owner_id)
+                ->first();
+            //dd($owner->id);
+            return view('traveller.fire_chat', [
+                'owner' => $owner,
+                'traveller' => $traveller,
+                'id' => $id,
+                'traveller_id' => $traveller->id,
+                'owner_id' => $owner->id,
+            ]);
+        }
+        $property = DB::table('property_booking')
+            ->where('client_id', '=', CLIENT_ID)
+            ->where('id', $id)
+            ->first();
+        $traveller = DB::table('users')
+            ->where('client_id', '=', CLIENT_ID)
+            ->where('id', $property->traveller_id)
+            ->first();
+        $owner = DB::table('users')
+            ->where('client_id', '=', CLIENT_ID)
+            ->where('id', $property->owner_id)
+            ->first();
+        //echo json_encode($traveller); exit;
+
+        return view('traveller.fire_chat', ['owner' => $owner, 'traveller' => $traveller, 'id' => $id]);
     }
 
     public function add_property(Request $request)

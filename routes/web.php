@@ -99,6 +99,8 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::GET('/cancel-booking/{id}', 'PropertyController@cancel_booking');
     Route::GET('/owner-update-booking', 'PropertyController@owner_update_booking');
     Route::GET('/verify-account', 'UserController@verify_account');
+    Route::GET('/traveler/inbox', 'PropertyController@inbox_traveller');
+    Route::get('/traveler/chat/{id}', 'PropertyController@traveller_fire_chat');
 
     // Owner
     Route::get('/owner/favorites', 'PropertyController@favorites');

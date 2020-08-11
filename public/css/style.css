@@ -5492,22 +5492,6 @@ section.fullwidth.border-bottom {
     margin-right: 2px;
 }
 
-.my-profile label {
-    margin-top: 30px;
-}
-
-.my-profile {
-    padding-right: 35px;
-}
-
-.my-profile label i {
-    margin-right: 3px;
-}
-
-.my-profile textarea {
-    height: 200px;
-}
-
 table.manage-table {
     width: 100%;
     border-collapse: separate;

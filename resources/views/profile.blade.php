@@ -42,10 +42,10 @@
                                 <h4>{{ Session::get('error') }}</h4>
                             </div>
                         @endif
-                        <form name="update_profile" action="update-profile" method="post" style="margin-top: -30px;" autocomplete="off">
+
+                        <form name="update_profile" action="update-profile" method="post" autocomplete="off">
 
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
-                            <br>
                             @if($user_detail->is_verified==1)
                                 <span style="border:2px solid #0983b8;color:#0983b8;padding: 15px;width: 100%"><b>Your account has been verified</b></span><br>
                             @endif
@@ -65,6 +65,45 @@
                                 <input value="{{$user_detail->last_name}}" required placeholder="Please Enter Last Name" type="text" name="last_name">
                             @endif
 
+                            <label>Mobile Number</label>
+                            @if($user_detail->phone==0)
+                                <input placeholder="+1 (XXX) XXX XXXX" type="text" name="phone" required disabled>
+                            @endif
+                            @if($user_detail->phone!=0)
+                                <input value="{{$user_detail->phone}}" style="border:{{$user_detail->otp_verified==1?'2px solid #0983b8':'2px solid #e78016'}}" placeholder="+1 (XXX) XXX XXXX" type="text" name="phone" required disabled>
+                            @endif
+                            <div class="caption">{{$user_detail->otp_verified==1?'Mobile Number is Verified':'Mobile Number is not Verified'}}</div>
+
+                            <label>Email</label>
+                            <input value="{{$user_detail->email}}" style="border:{{$user_detail->email_verified==1?'2px solid #0983b8':'2px solid #e78016'}}" type="text" name="email" required disabled>
+                            <div class="caption">{{$user_detail->email_verified==1?'Email is Verified':'Email not Verified'}}</div>
+
+                            @if($user_detail->gender)
+                                <label> Gender</label>
+                                <select name="gender" id="gender" required>
+                                    <option value="Male" @if(Session::get('gender')=='Male' ) selected @endif>Male</option>
+                                    <option value="Female" @if(Session::get('gender')=='Female' ) selected @endif>Female</option>
+                                    <option value="Neutral" @if(Session::get('gender')=='Neutral' ) selected @endif>Neutral</option>
+                                </select>
+                            @endif
+
+                            @if($user_detail->date_of_birth)
+                                <label> Date of Birth</label>
+                                <input  type="text"  required value="{{$user_detail->date_of_birth}}" id="date_birth" name="date_of_birth">
+                            @endif
+
+                            <label>Languages Known</label>
+                            <input value="{{$user_detail->languages_known!=""?$user_detail->languages_known:""}}" type="text" name="languages_known" placeholder="English, Spanish">
+
+                            <label>About Me</label>
+                            <p class="register-info">Please do not add any personal contact information for your privacy and safety</p>
+                            <textarea name="about" id="about" cols="30" rows="10">@if($user_detail->about_me){{$user_detail->about_me}}@endif</textarea>
+                            @if($user_detail->role_id == 0)
+                                <label>Tax Home</label>
+                                <input value="@if($user_detail->tax_home) {{$user_detail->tax_home}} @endif" type="text" name="tax_home" >
+                            @endif
+
+                            <input value="0" type="hidden" name="twitter_url">
 
                             @if($user_detail->name_of_agency)
                                 @php $agency_array = json_decode(json_encode($agency), True); @endphp
@@ -85,7 +124,6 @@
                                 </select>
 
                             @endif
-                            <br>
                             <input autocomplete="off" id="others_show" type="text"  name="" id="" style="display: none;">
 
 
@@ -110,72 +148,11 @@
                             @endif
                             <input autocomplete="off" type="text"  name="" id="others_occupation" placeholder="Occupation" style="display: none;">
 
-                            <label>Mobile Number</label>
-                            @if($user_detail->phone==0)
-                                <input placeholder="+1 (XXX) XXX XXXX" type="text" name="phone" required disabled>
-                            @endif
-                            @if($user_detail->phone!=0)
-                                <input value="{{$user_detail->phone}}" style="border:{{$user_detail->otp_verified==1?'2px solid #0983b8':'2px solid #e78016'}}" placeholder="+1 (XXX) XXX XXXX" type="text" name="phone" required disabled>
-                            @endif
-                            <span style="color:{{$user_detail->otp_verified==1?'#0983b8':'#e78016'}}"><b>{{$user_detail->otp_verified==1?'Mobile Number is Verified':'Mobile Number is not Verified'}}</b></span>
-                            <br>
-
-                            <label>Email</label>
-                            <input value="{{$user_detail->email}}" style="border:{{$user_detail->email_verified==1?'2px solid #0983b8':'2px solid #e78016'}}" type="text" name="email" required disabled>
-                            <span style="color:{{$user_detail->email_verified==1?'#0983b8':'#e78016'}}"><b>{{$user_detail->email_verified==1?'Email is Verified':'Email not Verified'}}</b></span>
-                            <br>
-
-                            {{-- <!-- <label>Location</label>
-                                                                    <input value="{{$user_detail->address}}" type="text" name="address"> --> --}}
-
-
-                            <label>About Me</label>
-                            <textarea name="about" id="about" cols="30" rows="10">@if($user_detail->about_me){{$user_detail->about_me}}@endif</textarea>
-                            <p>*Please do not add any personal contact information for your privacy and safety</p>
-                            @if($user_detail->role_id == 0)
-                                <label>Tax Home</label>
-                                <input value="@if($user_detail->tax_home) {{$user_detail->tax_home}} @endif" type="text" name="tax_home" >
-                            @endif
-                            <label>Languages Known</label>
-                            <input value="{{$user_detail->languages_known!=""?$user_detail->languages_known:""}}" type="text" name="languages_known" placeholder="English, Spanish">
-
-                            <input value="0" type="hidden" name="twitter_url">
-
-                            @if($user_detail->gender)
-                                <label> Gender</label>
-                                <select name="gender" required>
-                                    <option value=""></option>
-                                    @if($user_detail->gender=='Male')
-                                        <option value="Male" selected>Male</option>
-                                    @else
-                                        <option value="Male">Male</option>
-                                    @endif
-                                    @if($user_detail->gender=='Female')
-                                        <option value="Female" selected>Female</option>
-                                    @else
-                                        <option value="Female">Female</option>
-                                    @endif
-                                    @if($user_detail->gender=='Others')
-                                        <option value="Others" selected>Others</option>
-                                    @else
-                                        <option value="Others">Others</option>
-                                    @endif
-                                </select>
-                            @endif
-
-
-                            @if($user_detail->date_of_birth)
-
-                                <label> Date of Birth</label>
-                                <input  type="text"  required value="{{$user_detail->date_of_birth}}" id="date_birth" name="date_of_birth">
-                            @endif
-
-
                             <div class="enable-auth-checkbox">
                                 <input type="checkbox" name="enable_two_factor_auth" id="enable_two_factor_auth" @if("{$user_detail->enable_two_factor_auth}" == 1) checked @endif>
                                 <span>Use two-factor authentication on every login</span>
                             </div>
-                            <button type="submit" class="button margin-top-20 margin-bottom-20">Save Changes</button>
+                            <button type="submit" class="button">Save Changes</button>
                         </form>
                     </div>
 

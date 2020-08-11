@@ -10,7 +10,7 @@
     ================================================== -->
     <link rel="stylesheet" href="{{ URL::asset('css/profile.css') }}">
 
-    <div class="container verify-traveler" style="margin-top: 35px;">
+    <div class="container verify-account" style="margin-top: 35px;">
         @if(Session::has('success'))
             <div class="alert alert-success">
                 <h4>{{ Session::get('success') }}</h4>

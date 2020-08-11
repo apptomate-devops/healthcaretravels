@@ -349,10 +349,17 @@ class HomeController extends BaseController
 
     public function update_password(Request $request)
     {
-        $this->validate($request, [
-            'password' => 'required|min:4',
+        $messages = [
+            'password.regex' => PASSWORD_REGEX_MESSAGE,
+        ];
+        $rules = [
+            'password' => PASSWORD_REGEX,
             'confirm_password' => 'required|same:password',
-        ]);
+        ];
+        $validator = \Validator::make($request->all(), $rules, $messages);
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
 
         $password = $this->encrypt_password($request->password);
         DB::table('users')

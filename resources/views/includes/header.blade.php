@@ -222,11 +222,7 @@
                                   <img src="{{url('/')}}/user_profile_default.png" alt="">
                               @endif
                           </span>
-                                {{--                          @if(Session::get('role_id') == 2)--}}
-                                {{--                          &nbsp;{{ Session::get('name_of_agency') }}--}}
-                                {{--                          @else--}}
-                                &nbsp;{{ Session::get('username') }}
-                                {{--                           @endif--}}
+                                <span>{{ Session::get('username') }}</span>
                             </div>
 
                             @if(Session::get('role_id') == 1 || Session::get('role_id') == 4) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}

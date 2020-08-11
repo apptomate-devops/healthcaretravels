@@ -408,8 +408,7 @@ class UserController extends BaseController
             'required_without' => 'Please complete this field',
             'accepted' => 'Terms and Policy must be agreed',
             'same' => 'Password must match repeat password',
-            'password1.regex' =>
-                'Password should be at least 8 characters long and should contain at least 1 uppercase, 1 lowercase, 1 number and 1 special character',
+            'password1.regex' => PASSWORD_REGEX_MESSAGE,
             'email.regex' => 'This should be your business email',
             'website.regex' => 'Please enter valid URL',
             'numeric' => 'Please enter valid phone number',
@@ -428,8 +427,7 @@ class UserController extends BaseController
             'terms_accept' => 'accepted',
         ];
         if (empty($social_id)) {
-            $rules["password1"] =
-                'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#^_+=:;><~$!%*?&])[A-Za-z\d@#^_+=:;><~$!%*?&]{8,}$/i';
+            $rules["password1"] = PASSWORD_REGEX;
             $rules["password2"] = 'required|same:password1';
         }
         if ($request->user_type === "1" || $request->user_type === "4") {

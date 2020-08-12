@@ -69,7 +69,7 @@
     </li>
 
     <li>
-        <a href="{{url('/')}}/owner/transcation-history" {{{ (Request::is('owner/transcation-history') ? 'class=current' : '') }}}>
+        <a href="{{url('/')}}/owner/transaction-history" {{{ (Request::is('owner/transaction-history') ? 'class=current' : '') }}}>
            <i class="sl sl-icon-note"></i> Transcation History
         </a>
     </li>
@@ -97,7 +97,7 @@
     </li>
 
     <li>
-        <a href="{{url('/')}}/owner/change-password" {{{ (Request::is('owner/change-password') ? 'class=current' : '') }}}>
+        <a href="{{url('/')}}/change-password" {{{ (Request::is('change-password') ? 'class=current' : '') }}}>
            <i class="sl sl-icon-lock"></i> Change Password
         </a>
     </li>
@@ -134,12 +134,12 @@
     <li><a href="{{url('/')}}/traveler/inbox" {{{ (Request::is('traveler/inbox') ? 'class=current not-verified-block' : 'class=not-verified-block') }}}>
            <i class="fa fa-inbox"></i> Inbox</a></li>
 <li>
-        <a href="{{url('/')}}/owner/delete_account" {{{ (Request::is('delete_account') ? 'class=current' : '') }}}>
+        <a href="{{url('/')}}/delete_account" {{{ (Request::is('delete_account') ? 'class=current' : '') }}}>
            <i class="fa fa-trash"></i> Delete My Account
         </a>
     </li>
 <li>
-        <a href="{{url('/')}}/owner/change-password" {{{ (Request::is('owner/change-password') ? 'class=current' : '') }}}>
+        <a href="{{url('/')}}/change-password" {{{ (Request::is('change-password') ? 'class=current' : '') }}}>
            <i class="sl sl-icon-lock"></i> Change Password
         </a>
     </li>
@@ -177,7 +177,7 @@
         </a>
     </li>
 <li>
-        <a href="{{url('/')}}/owner/change-password" {{{ (Request::is('owner/change-password') ? 'class=current' : '') }}}>
+        <a href="{{url('/')}}/change-password" {{{ (Request::is('change-password') ? 'class=current' : '') }}}>
            <i class="sl sl-icon-lock"></i> Change Password
         </a>
     </li>

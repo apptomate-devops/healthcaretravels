@@ -183,7 +183,7 @@
                             <div class="col-md-6">
                                 <div class="change-photo-btn del" >
                                     <div class="photoUpload">
-                                        <span id="delete_image" onclick="location.href='{{BASE_URL}}/owner/owner-delete-profile';"><i class="fa fa-trash"></i></span>
+                                        <span id="delete_image" onclick="location.href='{{BASE_URL}}delete-profile-picture';"><i class="fa fa-trash"></i></span>
                                     </div>
                                 </div>
                             </div>

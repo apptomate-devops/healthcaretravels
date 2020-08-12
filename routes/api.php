@@ -16,3 +16,19 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::group(['middleware' => ['API']], function () {
+    //routes on which you want the middleware
+    Route::GET('/owner/get-my-properties', 'Api\OwnerController@get_my_properties');
+    Route::GET('/get_property/{id}', 'Api\PropertyController@get_property');
+
+    Route::GET('/get-property/1', 'Api\PropertyController@get_property1');
+    Route::GET('/get-property/2', 'Api\PropertyController@get_property2');
+    Route::GET('/get-property/3', 'Api\PropertyController@get_property3');
+    Route::GET('/get-property/4', 'Api\PropertyController@get_property4');
+
+    Route::POST('/add-property/1', 'Api\PropertyController@add_property1');
+    Route::POST('/add-property/2', 'Api\PropertyController@add_property2');
+    Route::POST('/add-property/3', 'Api\PropertyController@add_property3');
+    Route::POST('/add-property/4', 'Api\PropertyController@add_property4');
+});

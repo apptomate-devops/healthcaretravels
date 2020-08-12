@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Session;
+use Auth;
 
 class LogoutController extends Controller
 {
     //
     public function logout(Request $request)
     {
+        if (Auth::check()) {
+            Auth::logout();
+        }
         $request->session()->flush();
         return redirect('/');
     }

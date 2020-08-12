@@ -30,3 +30,7 @@ canvas[data-enlargable] {
     margin-left: 5px;
     cursor: pointer;
 }
+
+.verification-response {
+    color: #ffffff !important;
+}

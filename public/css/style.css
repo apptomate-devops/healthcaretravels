@@ -926,12 +926,16 @@ ul.top-bar-menu li i {
     color: #444;
 }
 
+
 .user-menu .user-name {
+    transition: 0.2s;
+    color: #444;
     transition: 0.2s;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 145px;
+    display: flex;
+    align-items: center;
 }
 
 .user-menu .user-name:after {
@@ -940,7 +944,6 @@ ul.top-bar-menu li i {
     transition: 0.2s;
     transform: rotate(0deg);
     display: inline-block;
-    margin-left: 6px;
     color: #aaa;
     right: 0;
     padding: 0 5px;
@@ -959,20 +962,14 @@ ul.top-bar-menu li i {
 }
 
 .user-name span img {
-    width: 100%;
-    display: inline-block;
     border-radius: 50%;
-}
-
-.user-name span {
-    display: inline-block;
     width: 38px;
     height: 38px;
+}
+
+.user-name span#header_profile_image {
     margin-right: 10px;
     border-radius: 50%;
-    position: absolute;
-    left: -22px;
-    top: -5px;
 }
 
 .user-menu ul {

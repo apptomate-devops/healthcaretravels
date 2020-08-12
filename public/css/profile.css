@@ -32,6 +32,19 @@ li.sub-nav-title {
     font-weight: bold;
 }
 
+.my-profile .error-text,
+.my-profile #dob_validation_error:not(:empty) {
+    margin-top: -25px;
+}
+
+.my-profile .add-another {
+    font-size: 12px;
+    color: #e78016;
+    text-align: right;
+    margin: -10px 10px 20px 0;
+    cursor: pointer;
+}
+
 .enable-auth-checkbox {
     margin-top: 30px;
 }
@@ -53,11 +66,8 @@ li.sub-nav-title {
     background-color: orangered !important;
 }
 
-.verify-account .info-text {
-    color: #e78016;
-}
-
-.info-text.text-error {
+.info-text.text-error,
+.error-text {
     color: red;
 }
 .verify-account .error-text {
@@ -66,7 +76,7 @@ li.sub-nav-title {
     color: #ff0000;
 }
 .verify-account .info-text {
-    color: red;
+    color: #e78016;
     font-size: 14px;
     margin: 0;
 }

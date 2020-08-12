@@ -13,13 +13,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <script src="https://unpkg.com/select-pure@latest/dist/bundle.min.js"></script>
 
     <!-- CSS
     ================================================== -->
 
     @include('includes.styles')
     <link rel="stylesheet" href="{{ URL::asset('css/login.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('css/select-pure.css') }}">
 
     <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
@@ -629,7 +629,7 @@
             route: 'long_name',
             locality: 'long_name',
             administrative_area_level_1: 'short_name',
-            country: 'long_name',
+            country: 'short_name',
             postal_code: 'short_name'
         };
 
@@ -784,7 +784,7 @@
         $('.autocomplete-select').empty();
         var autocomplete = new SelectPure(".autocomplete-select", {
             options: mappedData,
-            value: selected,
+            value: selected_agencies,
             multiple: true,
             autocomplete: true,
             icon: "fa fa-times",

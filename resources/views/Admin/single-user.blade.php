@@ -102,6 +102,63 @@
                 {{$data->address}}{{$data->country}}{{$data->state}}
             </div>
         </div>
+        <div class="card-body">
+            @if($data->role_id==0)
+                <h4 class="card-title"> Recuriter Name
+                    : {{$data->recruiter_name ?? ' Not Added '}}</h4> <br>
+                <h4 class="card-title"> Recuriter Phone
+                    : {{$data->recruiter_phone ?? 'Not Added'}} </h4><br>
+            @endif
+            <div class="phone-wrapper">
+                <h4 class="card-title"> Verification Mobile Number
+                : {{$data->phone ?? 'Not Added'}}</h4>
+                @if ($data->otp_verified == 1)
+                    <span class="btn btn-default btn-success" style="background-color: green">Verified</span>
+                @else
+                    <span class="btn btn-default btn-danger">Unverified</span>
+                @endif
+            </div>
+            <br>
+            @if(isset($data->phone))
+                @if($data->otp_verified == 0)
+                    <a style="float:left" class="btn btn-default btn-success"
+                        href="{{BASE_URL}}admin/verify_mobile/{{$data->id}}/1"><span
+                        style="height:29px;width: 10px">Click here to Verify Phone Number</span></a>
+                @elseif($data->otp_verified == 1)
+                    <a style="float:left" class="btn btn-default btn-danger"
+                        href="{{BASE_URL}}admin/verify_mobile/{{$data->id}}/0"><span style="height:29px">Click here to Unverify Phone Number</span></a>
+                @endif
+            @endif
+        </div>
+        @php
+            $linksDataCount = 0;
+            foreach($user_links as $link => $link_name) {
+                if($data->$link) {
+                    $linksDataCount++;
+                }
+            }
+        @endphp
+        @if ($linksDataCount > 0)
+            <div class="card-header">
+                <h4 class="card-title">Links shared by user</h4>
+                <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                <div class="heading-elements">
+                    <ul class="list-inline mb-0">
+                        <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                        <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                        <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                        <li><a data-action="close"><i class="ft-x"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    @foreach($user_links as $link => $link_name)
+                        @if($data->$link)<h5>{{$link_name.": "}}<a class="parse-link-href" target="_blank" href="{{$data->$link}}">{{$data->$link}}</a></h5>@endif
+                    @endforeach
+                </div>
+            </div>
+        @endif
         <div class="card-header">
             <h4 class="card-title">About</h4>
             <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
@@ -157,54 +214,6 @@
             </div>
         </div>
         <div class="card-content">
-            <div class="card-body">
-                @if($data->role_id==0)
-                    <h4 class="card-title"> Recuriter Name
-                        : {{$data->recruiter_name?$data->recruiter_name:' Not Added '}}</h4> <br>
-                    <h4 class="card-title"> Recuriter Phone
-                        : {{ $data->recruiter_phone?$data->recruiter_phone:'Not Added'}} </h4><br>
-
-                @endif
-                <div class="phone-wrapper">
-                    <h4 class="card-title"> Verification Mobile Number
-                    : {{$data->phone ?? 'Not Added'}}</h4>
-                    @if ($data->otp_verified == 1)
-                        <span class="btn btn-default btn-success" style="background-color: green">Verified</span>
-                    @else
-                        <span class="btn btn-default btn-danger">Unverified</span>
-                    @endif
-                </div>
-                <br>
-                @if(isset($data->phone))
-                    @if($data->otp_verified == 0)
-                        <a style="float:left" class="btn btn-default btn-success"
-                            href="{{BASE_URL}}admin/verify_mobile/{{$data->id}}/1"><span
-                            style="height:29px;width: 10px">Click here to Verify Phone Number</span></a>
-                    @elseif($data->otp_verified == 1)
-                        <a style="float:left" class="btn btn-default btn-danger"
-                            href="{{BASE_URL}}admin/verify_mobile/{{$data->id}}/0"><span style="height:29px">Click here to Unverify Phone Number</span></a>
-                    @endif
-                @endif
-            </div>
-            <div class="card-header">
-                <h4 class="card-title">Links shared by user</h4>
-                <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
-                <div class="heading-elements">
-                    <ul class="list-inline mb-0">
-                        <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-                        <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
-                        <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
-                        <li><a data-action="close"><i class="ft-x"></i></a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="card-content">
-                <div class="card-body">
-                    @foreach($user_links as $link => $link_name)
-                        @if($data->$link)<h5>{{$link_name.": "}}<a class="parse-link-href" target="_blank" href="{{$data->$link}}">{{$data->$link}}</a></h5>@endif
-                    @endforeach
-                </div>
-            </div>
             <div class="card-body  my-gallery" itemscope="" itemtype="http://schema.org/ImageGallery" data-pswp-uid="1">
                 <div class="card-deck-wrapper">
                     <div class="card-deck">

@@ -103,7 +103,7 @@
             </div>
         </div>
         <div class="card-body">
-            @if($data->role_id==0)
+            @if($data->role_id==0 || $data->role_id==3)
                 <h4 class="card-title"> Recuriter Name
                     : {{$data->recruiter_name ?? ' Not Added '}}</h4> <br>
                 <h4 class="card-title"> Recuriter Phone

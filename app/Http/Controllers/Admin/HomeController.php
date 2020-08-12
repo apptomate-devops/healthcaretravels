@@ -60,6 +60,9 @@ class HomeController extends BaseController
 
     public function logout(Request $request)
     {
+        if (Auth::check()) {
+            Auth::logout();
+        }
         $request->session()->flush();
         return redirect('/admin');
     }

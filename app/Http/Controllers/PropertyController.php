@@ -250,6 +250,31 @@ class PropertyController extends BaseController
         return response()->json(['status' => 'SUCCESS']);
     }
 
+    public function reservations(Request $request)
+    {
+        $user_id = $request->session()->get('user_id');
+        $data = DB::select(
+            "SELECT A.*,A.status as bookStatus,B.* FROM `property_booking` A,`property_list` B WHERE A.property_id = B.id AND A.traveller_id = $user_id",
+        );
+        DB::table('property_booking')
+            ->where('property_booking.traveller_id', $request->session()->get('user_id'))
+            ->update(['traveler_notify' => 0]);
+        foreach ($data as $datum) {
+            $traveller = DB::select(
+                "SELECT concat(first_name,last_name) as name,id FROM users WHERE client_id = CLIENT_ID AND id = $datum->owner_id LIMIT 1",
+            );
+
+            $image = DB::table('property_images')
+                ->where('client_id', CLIENT_ID)
+                ->where('property_id', $datum->property_id)
+                ->first();
+            $datum->image_url = $image->image_url;
+            $datum->owner_name = $traveller[0]->name;
+            $datum->owner_id = $traveller[0]->id;
+        }
+        return view('owner.reservations', ['bookings' => $data]);
+    }
+
     public function search_property(Request $request)
     {
         $request_data = $request->all();

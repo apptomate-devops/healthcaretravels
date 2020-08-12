@@ -17,6 +17,38 @@ use Auth;
 class UserController extends BaseController
 {
     use AuthenticatesUsers;
+
+    public function account_delete_process(Request $request)
+    {
+        // TODO: handle soft delete, handle logout from all sessions when account is deleted.
+        DB::table('users')
+            ->where('id', $request->user_id)
+            ->delete();
+        if ($request->role_id == 0) {
+            DB::table('property_list')
+                ->where('user_id', $request->user_id)
+                ->update(['status' => 2]);
+        }
+
+        if ($request->role_id == 1) {
+            DB::table('property_list')
+                ->where('user_id', $request->user_id)
+                ->update(['status' => 2]);
+        }
+
+        if ($request->role_id == 2) {
+            DB::table('property_list')
+                ->where('user_id', $request->user_id)
+                ->update(['status' => 2]);
+        }
+        if (Auth::check()) {
+            Auth::logout();
+        }
+        session()->flush();
+        $url = BASE_URL . 'login';
+        return redirect($url);
+    }
+
     public function check_email($email, $client_id)
     {
         $check = DB::table('users')
@@ -55,6 +87,11 @@ class UserController extends BaseController
             ->where('is_verified', 1)
             ->count();
         return response()->json(['isVerified' => $check]);
+    }
+
+    public function delete_account()
+    {
+        return view('delete_account');
     }
 
     public function email_send()
@@ -326,6 +363,9 @@ class UserController extends BaseController
             $title = isset($reg->title) ? $reg->title : 'Message from ' . APP_BASE_NAME;
             $subject = isset($reg->subject) ? $reg->subject : "Email verification from " . APP_BASE_NAME;
             $this->send_custom_email($check->email, $subject, 'mail.email-verify', $mail_data, $title);
+            if (Auth::check()) {
+                Auth::logout();
+            }
             $request->session()->flush();
             $url = $this->get_base_url() . 'email-send';
             return redirect($url)->with('phone', $check->phone);
@@ -668,7 +708,9 @@ class UserController extends BaseController
                 $this->send_custom_email($check->email, $subject, 'mail.email-verify', $mail_data, $title);
 
                 // Redirect to email verification screen
-
+                if (Auth::check()) {
+                    Auth::logout();
+                }
                 $request->session()->flush();
                 //                $url = $this->get_base_url() . 'email-send';
             }

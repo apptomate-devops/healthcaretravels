@@ -88,6 +88,8 @@ Route::middleware(['LoginCheck'])->group(function () {
     // All Users
     Route::GET('/profile', 'UserController@profile');
     Route::GET('/verify-account', 'UserController@verify_account');
+    Route::POST('/account_delete_process', 'UserController@account_delete_process');
+    Route::get('/delete_account', 'UserController@delete_account');
     Route::POST('/update-profile', 'UserController@update_profile');
     Route::POST('/update-profile-picture', 'UserController@update_profile_picture');
     Route::get('/delete-profile-picture', 'UserController@delete_profile_picture');

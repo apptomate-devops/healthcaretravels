@@ -77,7 +77,7 @@
                             <div class="chat_box touchscroll chat_box_colors_a" id="chat" >
 
                                 <div ng-if="loader">
-                                    
+
                                 </div>
                                 <img ng-hide="loader == 'yes'" src="http://52.14.214.241/public/loader.gif" style="height: 100px;margin-left: 300px;margin-top: 20px;">
 
@@ -94,7 +94,7 @@
                                     </div>
                                     <ul class="chat_message">
                                         <li>
-                                            <p> 
+                                            <p>
                                                 <%message.message%>
                                                 <span class="chat_message_time"><%message.date%></span>
                                             </p>
@@ -114,10 +114,10 @@
                                     </div>
                                     <ul class="chat_message">
                                         <li>
-                                            <p> 
+                                            <p>
                                                 <%message.message%>
                                                 <span class="chat_message_time"><%message.date%></span>
-                                            
+
                                             </p>
 
                                         </li>
@@ -203,7 +203,7 @@
 
                 var isEvery = checkInput(str,arr);
                 console.log(isEvery);
-                
+
                 if(isEvery == true){
                     $("#send_msg").hide();
                     $('#myModal').modal();
@@ -217,14 +217,14 @@
                 $('#myModal').modal();
                 // alert('You are receiving this message either because you are attempting to send information that is either NOT allowed by Health Care Travels Terms of Use and Polices or in error. If you feel this message is in error contact support@healthcaretravels.com');
             }
-            
-           
+
+
         }
-     
+
         function checkInput(input, words) {
             return words.some(word => input.toLowerCase().includes(word.toLowerCase()));
         }
-        // function checkIfEmailInString(text) { 
+        // function checkIfEmailInString(text) {
         //     var re = /(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
         //     return re.test(text);
         // }
@@ -305,7 +305,7 @@
     </script>
 
 
-   
+
     <!-- DropZone | Documentation: http://dropzonejs.com -->
 
 
@@ -368,9 +368,9 @@
             var file_data = $('#profile_image').prop('files')[0];
             var form_data = new FormData();
             form_data.append('profile_image', file_data);
-            //alert(form_data);
+            form_data.append('_token', "{{csrf_token()}}");
             $.ajax({
-                url: 'owner-update-profile', // point to server-side PHP script
+                url: '/update-profile-picture', // point to server-side PHP script
                 dataType: 'text',  // what to expect back from the PHP script, if anything
                 cache: false,
                 contentType: false,

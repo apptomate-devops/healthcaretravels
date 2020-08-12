@@ -285,13 +285,12 @@
         var up = '<p  class="alert uploading" style="margin-top: 5px;text-align:  center;">Uploading...</p>';
         document.getElementById("uploading").innerHTML = up;
         var file_data = $('#profile_image').prop('files')[0];
-        var tok = $("#token").val();
         var form_data = new FormData();
         form_data.append('profile_image', file_data);
-        form_data.append('_token', tok);
+        form_data.append('_token', "{{csrf_token()}}");
         $.ajax({
-            url: 'owner-update-profile', // point to server-side PHP script
-            dataType: 'text',  // what to expect back from the PHP script, if anything
+            url: '/update-profile-picture',
+            dataType: 'text',
             cache: false,
             contentType: false,
             processData: false,

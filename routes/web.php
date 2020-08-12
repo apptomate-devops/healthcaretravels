@@ -101,7 +101,8 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::GET('/verify-account', 'UserController@verify_account');
     Route::GET('/traveler/inbox', 'PropertyController@inbox_traveller');
     Route::get('/traveler/chat/{id}', 'PropertyController@traveller_fire_chat');
-
+    Route::POST('/update-profile-picture', 'UserController@update_profile_picture');
+    Route::get('/delete-profile-picture', 'UserController@delete_profile_picture');
     // Owner
     Route::get('/owner/favorites', 'PropertyController@favorites');
     Route::get('/owner/my-properties', 'PropertyController@my_properties');

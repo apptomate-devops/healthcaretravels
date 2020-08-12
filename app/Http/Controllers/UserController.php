@@ -953,4 +953,43 @@ class UserController extends BaseController
 
         return back()->with('success', 'Profile updated successfully');
     }
+
+    public function update_profile_picture(Request $request)
+    {
+        $user_id = $request->session()->get('user_id');
+        if (!$user_id) {
+            return redirect('/login')->with('error', 'Session timeout login again');
+        }
+        if ($request->file('profile_image')) {
+            # code...
+        }
+        $file = $request->file('profile_image');
+        //Move Uploaded File $file->getClientOriginalExtension();
+        $destinationPath = 'public/uploads';
+        $file_name = rand(111111, 999999) . '.' . $file->getClientOriginalExtension();
+        $file->move($destinationPath, $file_name);
+        $client_id = $this->get_client_id();
+        $complete_url = $this->get_base_url() . $destinationPath . '/' . $file_name;
+        $update = DB::table('users')
+            ->where('client_id', '=', $client_id)
+            ->where('id', '=', $user_id)
+            ->update(['profile_image' => $complete_url]);
+        $request->session()->put('profile_image', $complete_url);
+        return $complete_url;
+    }
+    public function delete_profile_picture(Request $request)
+    {
+        $user_id = $request->session()->get('user_id');
+        if (!$user_id) {
+            return redirect('/login')->with('error', 'Session timeout login again');
+        }
+        $client_id = $this->get_client_id();
+        $complete_url = " ";
+        $update = DB::table('users')
+            ->where('client_id', '=', $client_id)
+            ->where('id', '=', $user_id)
+            ->update(['profile_image' => ' ']);
+        $request->session()->put('profile_image', ' ');
+        return redirect('profile');
+    }
 }

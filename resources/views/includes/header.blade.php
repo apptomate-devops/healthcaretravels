@@ -215,13 +215,13 @@
                     <div class="user-menu-container">
                         <div class="user-menu">
                             <div class="user-name">
-                          <span id="header_profile_image">
-                             @if(Session::has('profile_image'))
-                                  <img src="{{ Session::get('profile_image') }}" style="max-width: 38px;max-height: 34px;" alt="">
-                              @else
-                                  <img src="{{url('/')}}/user_profile_default.png" alt="">
-                              @endif
-                          </span>
+                                <span id="header_profile_image">
+                                    @if(Session::has('profile_image'))
+                                        <img src="{{ Session::get('profile_image') }}" style="max-width: 38px;max-height: 34px;" alt="">
+                                    @else
+                                        <img src="{{url('/')}}/user_profile_default.png" alt="">
+                                    @endif
+                                </span>
                                 <span>{{ Session::get('username') }}</span>
                             </div>
 

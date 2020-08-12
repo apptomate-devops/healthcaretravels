@@ -94,6 +94,8 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::POST('/update-profile-picture', 'UserController@update_profile_picture');
     Route::get('/delete-profile-picture', 'UserController@delete_profile_picture');
     Route::POST('/upload-document', 'UserController@upload_document');
+    Route::GET('/change-password', 'UserController@change_password');
+    Route::POST('/change-password', 'UserController@update_password');
 
     // Traveller
     Route::get('/traveler/my-reservations', 'PropertyController@reservations');

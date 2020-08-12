@@ -49,6 +49,20 @@ class UserController extends BaseController
         return redirect($url);
     }
 
+    public function change_password(Request $request)
+    {
+        $user_id = $request->session()->get('user_id');
+        if (!$user_id) {
+            return redirect('/login')->with('error', 'Session timeout login again');
+        }
+        $client_id = $this->get_client_id();
+        $user_detail = DB::table('users')
+            ->where('client_id', '=', $client_id)
+            ->where('id', '=', $user_id)
+            ->first();
+        return view('owner.change_password', ['user_detail' => $user_detail]);
+    }
+
     public function check_email($email, $client_id)
     {
         $check = DB::table('users')
@@ -855,6 +869,51 @@ class UserController extends BaseController
             }
         }
         return $all_documents;
+    }
+
+    public function update_password(Request $request)
+    {
+        $messages = [
+            'new_password.regex' => PASSWORD_REGEX_MESSAGE,
+        ];
+        $rules = [
+            'new_password' => PASSWORD_REGEX,
+            'confirm_password' => 'required|same:new_password',
+        ];
+        $validator = \Validator::make($request->all(), $rules, $messages);
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
+        if ($request->new_password != $request->confirm_password) {
+            return back()->with('error', 'Passwords does not match');
+        }
+        $user_id = $request->session()->get('user_id');
+        LOG::info("update_password with user_id " . $user_id);
+        $client_id = $this->get_client_id();
+        if ($request->old_password) {
+            $check = DB::table('users')
+                ->where('id', '=', $user_id)
+                ->first();
+            $credentials = [
+                'email' => $check->email,
+                'password' => $request->old_password,
+                'client_id' => $client_id,
+            ];
+            if (!Auth::attempt($credentials)) {
+                return back()->with('error', 'You have entered wrong old password');
+            }
+            $newEncryptedPassword = $this->encrypt_password($request->new_password);
+            $update = DB::table('users')
+                ->where('id', '=', $user_id)
+                ->update(['password' => $newEncryptedPassword]);
+            return back()->with('success', 'Password updated successfully');
+        } else {
+            $update = DB::table('users')
+                ->where('client_id', '=', $client_id)
+                ->where('id', '=', $user_id)
+                ->update(['password' => $this->encrypt_password($request->new_password)]);
+            return back()->with('success', 'Password updated successfully');
+        }
     }
 
     public function upload_document(Request $request)

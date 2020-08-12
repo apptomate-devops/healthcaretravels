@@ -97,7 +97,7 @@
     </li>
 
     <li>
-        <a href="{{url('/')}}/owner/change-password" {{{ (Request::is('owner/change-password') ? 'class=current' : '') }}}>
+        <a href="{{url('/')}}/change-password" {{{ (Request::is('change-password') ? 'class=current' : '') }}}>
            <i class="sl sl-icon-lock"></i> Change Password
         </a>
     </li>
@@ -139,7 +139,7 @@
         </a>
     </li>
 <li>
-        <a href="{{url('/')}}/owner/change-password" {{{ (Request::is('owner/change-password') ? 'class=current' : '') }}}>
+        <a href="{{url('/')}}/change-password" {{{ (Request::is('change-password') ? 'class=current' : '') }}}>
            <i class="sl sl-icon-lock"></i> Change Password
         </a>
     </li>
@@ -177,7 +177,7 @@
         </a>
     </li>
 <li>
-        <a href="{{url('/')}}/owner/change-password" {{{ (Request::is('owner/change-password') ? 'class=current' : '') }}}>
+        <a href="{{url('/')}}/change-password" {{{ (Request::is('change-password') ? 'class=current' : '') }}}>
            <i class="sl sl-icon-lock"></i> Change Password
         </a>
     </li>

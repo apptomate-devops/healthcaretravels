@@ -96,6 +96,7 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::POST('/upload-document', 'UserController@upload_document');
     Route::GET('/change-password', 'UserController@change_password');
     Route::POST('/change-password', 'UserController@update_password');
+    Route::get('/delete_chat/{id}', 'PropertyController@delete_chat');
 
     // Traveller
     Route::get('/traveler/my-reservations', 'PropertyController@reservations');
@@ -105,6 +106,7 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::GET('/cancel-booking/{id}', 'PropertyController@cancel_booking');
 
     // Owner
+    Route::get('/owner/inbox', 'PropertyController@inbox');
     Route::get('/owner/favorites', 'PropertyController@favorites');
     Route::get('/owner/my-properties', 'PropertyController@my_properties');
     Route::get('/owner/add-property', 'PropertyController@add_property');
@@ -119,5 +121,6 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::GET('/owner-update-booking', 'PropertyController@owner_update_booking');
     Route::get('/owner/update-property/{id}', 'PropertyController@update_property');
     Route::GET('/owner/calender', 'OwnerController@calender');
+    Route::get('/owner/chat/{id}', 'PropertyController@fire_chat');
     Route::GET('/ical/{id}', 'IcalController@ical');
 });

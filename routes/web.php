@@ -108,6 +108,7 @@ Route::middleware(['LoginCheck'])->group(function () {
     // Owner
     Route::get('/owner/inbox', 'PropertyController@inbox');
     Route::get('/owner/favorites', 'PropertyController@favorites');
+    Route::GET('/owner/transaction-history', 'TransactionController@transaction_history');
     Route::get('/owner/my-properties', 'PropertyController@my_properties');
     Route::get('/owner/add-property', 'PropertyController@add_property');
     Route::POST('/owner/add-property', 'PropertyController@add_new_property');

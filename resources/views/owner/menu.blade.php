@@ -69,7 +69,7 @@
     </li>
 
     <li>
-        <a href="{{url('/')}}/owner/transcation-history" {{{ (Request::is('owner/transcation-history') ? 'class=current' : '') }}}>
+        <a href="{{url('/')}}/owner/transaction-history" {{{ (Request::is('owner/transaction-history') ? 'class=current' : '') }}}>
            <i class="sl sl-icon-note"></i> Transcation History
         </a>
     </li>

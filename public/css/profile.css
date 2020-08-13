@@ -9,12 +9,44 @@ li.sub-nav-title {
     font-size: 16px;
 }
 
+.my-profile {
+    padding-right: 35px;
+}
+
+.my-profile input,select,textarea {
+    margin: 0 0 30px 0;
+}
+
+.my-profile textarea {
+    height: 200px;
+}
+
 .my-profile label input[type="checkbox"] {
     height: auto;
 }
 
+.my-profile .caption {
+    color: #0983b8;
+    margin-top: -25px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.my-profile .error-text,
+.my-profile #dob_validation_error:not(:empty) {
+    margin-top: -25px;
+}
+
+.my-profile .add-another {
+    font-size: 12px;
+    color: #e78016;
+    text-align: right;
+    margin: -10px 10px 20px 0;
+    cursor: pointer;
+}
+
 .enable-auth-checkbox {
-    margin: 30px 0 10px;
+    margin-top: 30px;
 }
 
 .enable-auth-checkbox span {
@@ -34,25 +66,22 @@ li.sub-nav-title {
     background-color: orangered !important;
 }
 
-.verify-traveler .info-text {
-    color: #e78016;
-}
-
-.info-text.text-error {
+.info-text.text-error,
+.error-text {
     color: red;
 }
-.error-text {
+.verify-account .error-text {
     margin-top: -10px;
     margin-bottom: 15px;
     color: #ff0000;
 }
-.info-text {
-    color: red;
+.verify-account .info-text {
+    color: #e78016;
     font-size: 14px;
     margin: 0;
 }
 
-.caption-text {
+.verify-account .caption-text {
     font-size: 14px;
     color: #808080;
     line-height: 15px;

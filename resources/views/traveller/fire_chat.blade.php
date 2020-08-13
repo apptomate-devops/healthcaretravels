@@ -27,13 +27,13 @@
             font-size: 16px;
         }
     </style>
-    <link rel="stylesheet" href="{{ URL::asset('public/assets/icons/flags/flags.min.css') }}" media="all">
+    <link rel="stylesheet" href="{{ URL::asset('assets/icons/flags/flags.min.css') }}" media="all">
     <!-- style switcher -->
-    <link rel="stylesheet" href="{{ URL::asset('public/assets/css/style_switcher.min.css') }}" media="all">
+    <link rel="stylesheet" href="{{ URL::asset('assets/css/style_switcher.min.css') }}" media="all">
     <!-- altair admin -->
-    <link rel="stylesheet" href="{{ URL::asset('public/assets/css/main.min.css') }}" media="all">
+    <link rel="stylesheet" href="{{ URL::asset('assets/css/main.min.css') }}" media="all">
     <!-- themes -->
-    {{--   <link rel="stylesheet" href="{{ URL::asset('public/assets/css/themes/themes_combined.min.css') }}" media="all"> --}}
+    {{--   <link rel="stylesheet" href="{{ URL::asset('assets/css/themes/themes_combined.min.css') }}" media="all"> --}}
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
     <script src="https://code.angularjs.org/1.4.4/angular-route.min.js"></script>
 
@@ -170,14 +170,14 @@
       </div>
     </div>
     <!-- common functions -->
-    <script src="{{ URL::asset('public/bower_components/common.min.js') }}"></script>
+    <script src="{{ URL::asset('bower_components/common.min.js') }}"></script>
     <!-- uikit functions -->
-    <script src="{{ URL::asset('public/bower_components/uikit_custom.min.js') }}"></script>
+    <script src="{{ URL::asset('bower_components/uikit_custom.min.js') }}"></script>
     <!-- altair common functions/helpers -->
-    <script src="{{ URL::asset('public/bower_components/altair_admin_common.min.js') }}"></script>
+    <script src="{{ URL::asset('bower_components/altair_admin_common.min.js') }}"></script>
     <!-- page specific plugins -->
     <!--  chat functions -->
-    <script src="{{ URL::asset('public/bower_components/page_chat.min.js') }}"></script>
+    <script src="{{ URL::asset('bower_components/page_chat.min.js') }}"></script>
      <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <!-- Contact

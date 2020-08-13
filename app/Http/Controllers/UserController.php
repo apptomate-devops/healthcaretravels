@@ -581,7 +581,8 @@ class UserController extends BaseController
         $token = $this->generate_random_string();
         $mobile = $request->phone_no;
 
-        $address = $request->street_number . ', ' . $request->route; // Considered as Address_line_1
+        // Considered as Address_line_1
+        $address = implode(", ", array_filter([$request->street_number, $request->route]));
 
         $OTP = rand(1111, 9999);
         $isOTPSent = $this->sendOTPMessage($request->phone_no, $OTP);
@@ -1006,84 +1007,96 @@ class UserController extends BaseController
             ->where('id', $user_id)
             ->first();
 
-        $res = [];
-        if ($request->username) {
-            $user->username = $request->username;
+        $messages = [
+            'required' => 'Please complete :attribute field',
+            'required_without' => 'Please complete this field',
+            'accepted' => 'Terms and Policy must be agreed',
+            'same' => 'Password must match repeat password',
+            'website.regex' => 'Please enter valid URL',
+            'numeric' => 'Please enter valid phone number',
+            'digits' => 'Please enter valid phone number',
+        ];
+
+        $rules = [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'dob' => 'required',
+            'gender' => 'required',
+            'languages_known' => 'required',
+        ];
+        if ($user->role_id == "1" || $user->role_id == "4") {
+            // Owner or Cohost
+            $rules["address"] = 'required';
+            $rules["listing_address"] = 'required';
+        } elseif ($user->role_id == "2") {
+            // Travel Agency
+            $rules["work_title"] = 'required';
+            $rules["website"] = 'required|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
+        } else {
+            // Traveler or RV traveler
+            $rules["occupation"] = 'required';
+            $rules["name_of_agency"] = 'required_without:other_agency';
+            $rules["other_agency"] = 'required_without:name_of_agency';
+            $rules["tax_home"] = 'required';
+            $rules["address"] = 'required';
         }
 
-        if ($request->first_name) {
-            $user->first_name = $request->first_name;
-            $res['first_name'] = $request->first_name;
-        }
-        if ($request->last_name) {
-            $user->last_name = $request->last_name;
-            $res['last_name'] = $request->last_name;
-        }
-        if ($request->phone) {
-            $user->phone = $request->phone;
-            $res['phone'] = $request->phone;
-        }
-        if ($request->work) {
-            $user->work = $request->work;
-            $res['work'] = $request->work;
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return back()
+                ->with('first_name', $request->first_name)
+                ->with('last_name', $request->last_name)
+                ->with('date_of_birth', $request->dob)
+                ->with('gender', $request->gender)
+                ->with('languages_known', $request->languages_known)
+                ->with('occupation', $request->occupation)
+                ->with('name_of_agency', $request->name_of_agency)
+                ->with('other_agency', $request->other_agency)
+                ->with('tax_home', $request->tax_home)
+                ->with('address', $request->address)
+                ->with('address_line_2', $request->address_line_2)
+                ->with('street_number', $request->street_number)
+                ->with('route', $request->route)
+                ->with('city', $request->city)
+                ->with('state', $request->state)
+                ->with('pin_code', $request->pin_code)
+                ->with('country', $request->country)
+                ->with('listing_address', $request->listing_address)
+                ->with('work', $request->work)
+                ->with('work_title', $request->work_title)
+                ->with('website', $request->website)
+                ->with('enable_two_factor_auth', $request->enable_two_factor_auth)
+                ->withErrors($validator);
         }
 
-        if ($request->address) {
-            $user->address = $request->address;
-            $res['address'] = $request->address;
-        }
-        if ($request->email) {
-            $user->email = $request->email;
-        }
-        if ($request->tax_home) {
-            $user->tax_home = $request->tax_home;
-        }
-        if ($request->about) {
-            $user->about_me = $request->about;
-        }
-        if ($request->twitter_url) {
-            $user->twitter_url = $request->twitter_url;
-        }
-        if ($request->facebook_url) {
-            $user->facebook_url = $request->facebook_url;
-        }
-        if ($request->skype_id) {
-            $user->skype_id = $request->skype_id;
-        }
-        if ($request->languages_known) {
-            $user->languages_known = $request->languages_known;
-        }
-        if ($request->occupation_desc) {
-            $user->occupation_desc = $request->occupation_desc;
-        }
-        if ($request->occupation) {
-            $user->occupation = $request->occupation;
-        }
-
-        if ($request->name_of_agency) {
-            $user->name_of_agency = $request->name_of_agency;
-            $res['name_of_agency'] = $request->name_of_agency;
-        }
-        if ($request->linkedin_url) {
-            $user->linkedin_url = $request->linkedin_url;
-            $res['linkedin_url'] = $request->linkedin_url;
-        }
-        if ($request->gender) {
-            $user->gender = $request->gender;
-            $res['gender'] = $request->gender;
-        }
-        if ($request->date_of_birth) {
-            $user->date_of_birth = $request->date_of_birth;
-            $res['date_of_birth'] = $request->date_of_birth;
-        }
-
-        $user->enable_two_factor_auth = isset($request->enable_two_factor_auth) ? 1 : 0;
-        $res['enable_two_factor_auth'] = isset($request->enable_two_factor_auth) ? 1 : 0;
+        // Considered as Address_line_1
+        $address = implode(", ", array_filter([$request->street_number, $request->route]));
 
         DB::table('users')
             ->where('id', $user_id)
-            ->update($res);
-        //print_r($res); exit;
+            ->update([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'date_of_birth' => $request->dob,
+                'gender' => $request->gender,
+                'languages_known' => $request->languages_known,
+                'occupation' => $request->occupation,
+                'name_of_agency' => $request->name_of_agency,
+                'other_agency' => $request->other_agency,
+                'tax_home' => $request->tax_home,
+                'address' => $address,
+                'address_line_2' => $request->address_line_2,
+                'city' => $request->city,
+                'state' => $request->state,
+                'pin_code' => $request->pin_code,
+                'country' => $request->country,
+                'listing_address' => $request->listing_address,
+                'work' => $request->work,
+                'work_title' => $request->work_title,
+                'website' => $request->website,
+                'enable_two_factor_auth' => isset($request->enable_two_factor_auth) ? 1 : 0,
+            ]);
 
         return back()->with('success', 'Profile updated successfully');
     }

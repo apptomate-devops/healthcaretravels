@@ -378,6 +378,9 @@
             case 'contact':
                 contact_map();
                 break;
+            case 'profile':
+                initialize();
+                break;
             case 'verify-account':
                 initializeAddress();
                 break;
@@ -396,4 +399,6 @@
 <script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}&libraries=places&callback=onGoogleLoad" async defer></script>
 
 <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+
+<script src="https://unpkg.com/select-pure@latest/dist/bundle.min.js"></script>
 

@@ -10,7 +10,7 @@
     ================================================== -->
     <link rel="stylesheet" href="{{ URL::asset('css/profile.css') }}">
 
-    <div class="container verify-traveler" style="margin-top: 35px;">
+    <div class="container verify-account" style="margin-top: 35px;">
         @if(Session::has('success'))
             <div class="alert alert-success">
                 <h4>{{ Session::get('success') }}</h4>
@@ -65,7 +65,7 @@
                         <form name="doc" method="POST" action="{{url('/')}}/upload-document" enctype="multipart/form-data" autocomplete="off" onkeydown="return event.key != 'Enter';">
                             <input type="hidden" name="_token" value="{{csrf_token()}}" />
                             <div class="col-md-12 my-profile" style="padding-top: 15px;">
-                                <div class="info-text">
+                                <div class="info-text" style="margin-bottom: 20px;">
                                     You must complete at least <b>three</b> verification methods in order to submit your profile for verification. Please submit within seven days to be granted full access to all of Health Care Travels' features.
                                 </div>
                                 @if($user->role_id == 1)
@@ -392,7 +392,7 @@
                         route: 'long_name',
                         locality: 'long_name',
                         administrative_area_level_1: 'short_name',
-                        country: 'long_name',
+                        country: 'short_name',
                         postal_code: 'short_name'
                     };
                     let options = {
@@ -449,7 +449,7 @@
                                 apartment_number: { value: $('#address_line_2').val() || '' },
                                 locality: { type: 'long_name' },
                                 administrative_area_level_1: { type: 'short_name' },
-                                country: { type: 'long_name' },
+                                country: { type: 'short_name' },
                                 postal_code: { type: 'short_name' }
                             };
 

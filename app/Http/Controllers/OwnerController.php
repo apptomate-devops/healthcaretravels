@@ -10,39 +10,6 @@ use \stdClass;
 
 class OwnerController extends BaseController
 {
-    public function owner_profile(Request $request)
-    {
-        $user_id = $request->session()->get('user_id');
-        if (!$user_id) {
-            return redirect('/login')->with('error', 'Session timeout login again');
-        }
-        $client_id = $this->get_client_id();
-        $user_detail = DB::table('users')
-            ->where('client_id', '=', $client_id)
-            ->where('id', '=', $user_id)
-            ->first();
-
-        foreach ($user_detail as $key => $value) {
-            if ($value == '0') {
-                $user_detail->$key = "";
-            }
-        }
-
-        $agency = DB::table('agency')->get();
-        $occupation = DB::table('occupation')->get();
-
-        $country_codes = DB::table('country_code')
-            ->where('client_id', '=', $client_id)
-            ->get();
-
-        return view('profile', [
-            'user_detail' => $user_detail,
-            'country_codes' => $country_codes,
-            'agency' => $agency,
-            'occupation' => $occupation,
-        ]);
-    }
-
     public function calender(Request $request)
     {
         # code...
@@ -136,5 +103,52 @@ class OwnerController extends BaseController
         // print_r($properties);
         // echo $id;exit;
         return view('owner.calender', compact('properties', 'id', 'events', 'icals', 'block_events', 'res'));
+    }
+
+    public function special_price(Request $request)
+    {
+        $properties = DB::table('property_list')
+            ->where('client_id', CLIENT_ID)
+            ->where('user_id', $request->session()->get('user_id'))
+            ->where('is_complete', 1)
+            ->get();
+        $special_price = DB::table('property_special_pricing')
+            ->where('property_special_pricing.client_id', CLIENT_ID)
+            ->join('property_list', 'property_special_pricing.property_id', '=', 'property_list.id')
+            ->where('property_special_pricing.owner_id', $request->session()->get('user_id'))
+            ->select('property_special_pricing.*', 'property_list.title')
+            ->limit(5)
+            ->orderBy('property_special_pricing.id', 'desc')
+            ->get();
+        $blocking = DB::table('property_blocking')
+            ->where('property_blocking.client_id', CLIENT_ID)
+            ->join('property_list', 'property_blocking.property_id', '=', 'property_list.id')
+            ->where('property_blocking.owner_id', $request->session()->get('user_id'))
+            ->select('property_blocking.*', 'property_list.title')
+            ->limit(5)
+            ->orderBy('property_blocking.id', 'desc')
+            ->get();
+        return view('owner.special-pricing', [
+            'properties' => $properties,
+            'special_price' => $special_price,
+            'blocking' => $blocking,
+        ]);
+    }
+
+    public function special_price_details(Request $request)
+    {
+        $special_price = DB::table('property_special_pricing')
+            ->where('property_special_pricing.client_id', CLIENT_ID)
+            ->join('property_list', 'property_special_pricing.property_id', '=', 'property_list.id')
+            ->where('property_special_pricing.owner_id', $request->session()->get('user_id'))
+            ->select('property_special_pricing.*', 'property_list.title')
+            ->get();
+        $blocking = DB::table('property_blocking')
+            ->where('property_blocking.client_id', CLIENT_ID)
+            ->join('property_list', 'property_blocking.property_id', '=', 'property_list.id')
+            ->where('property_blocking.owner_id', $request->session()->get('user_id'))
+            ->select('property_blocking.*', 'property_list.title')
+            ->get();
+        return view('owner.special_price_details', ['special_price' => $special_price, 'blocking' => $blocking]);
     }
 }

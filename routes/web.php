@@ -83,29 +83,37 @@ Route::get('/search-property', 'PropertyController@search_property');
 Route::post('/search-property', 'PropertyController@search_property');
 Route::post('/search-property-filtering', 'PropertyController@search_property');
 
-//// Owner controller routes
-//Route::get('/owner/profile', 'OwnerController.php@owner_profile');
-
-// Update profile
-Route::POST('/update-profile', 'UserController@update_profile');
-
-// Account Verification routes
-Route::POST('/upload-document', 'UserController@upload_document');
-
 // Logged in routes
 Route::middleware(['LoginCheck'])->group(function () {
-    Route::GET('/profile', 'OwnerController.php@owner_profile');
-    Route::GET('/traveler/favorites', 'PropertyController@favorites');
-    Route::GET('/cancel-booking/{id}', 'PropertyController@cancel_booking');
-    Route::GET('/owner-update-booking', 'PropertyController@owner_update_booking');
+    // All Users
+    Route::GET('/profile', 'UserController@profile');
     Route::GET('/verify-account', 'UserController@verify_account');
+    Route::POST('/account_delete_process', 'UserController@account_delete_process');
+    Route::get('/delete_account', 'UserController@delete_account');
+    Route::POST('/update-profile', 'UserController@update_profile');
+    Route::POST('/update-profile-picture', 'UserController@update_profile_picture');
+    Route::get('/delete-profile-picture', 'UserController@delete_profile_picture');
+    Route::POST('/upload-document', 'UserController@upload_document');
+    Route::GET('/change-password', 'UserController@change_password');
+    Route::POST('/change-password', 'UserController@update_password');
+    Route::get('/delete_chat/{id}', 'PropertyController@delete_chat');
+
+    // Traveller
+    Route::get('/traveler/my-reservations', 'PropertyController@reservations');
+    Route::GET('/traveler/inbox', 'PropertyController@inbox_traveller');
+    Route::GET('/traveler/favorites', 'PropertyController@favorites');
+    Route::get('/traveler/chat/{id}', 'PropertyController@traveller_fire_chat');
+    Route::GET('/cancel-booking/{id}', 'PropertyController@cancel_booking');
 
     // Owner
+    Route::get('/owner/inbox', 'PropertyController@inbox');
     Route::get('/owner/favorites', 'PropertyController@favorites');
+    Route::GET('/owner/transaction-history', 'TransactionController@transaction_history');
+    Route::GET('/owner/special_price', 'OwnerController@special_price');
+    Route::GET('/owner/special_price_details', 'OwnerController@special_price_details');
     Route::get('/owner/my-properties', 'PropertyController@my_properties');
     Route::get('/owner/add-property', 'PropertyController@add_property');
     Route::POST('/owner/add-property', 'PropertyController@add_new_property');
-
     Route::GET('/owner/add-new-property/{stage}/{property_id}', 'PropertyController@property_next');
     Route::POST('/owner/add-new-property/2', 'PropertyController@property_next2');
     Route::POST('/owner/add-new-property/3', 'PropertyController@property_next3');
@@ -113,10 +121,9 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::POST('/owner/add-new-property/5', 'PropertyController@property_next5');
     Route::POST('/owner/add-new-property/6', 'PropertyController@property_next6');
     Route::POST('/owner/add-new-property/7', 'PropertyController@property_next7');
-
+    Route::GET('/owner-update-booking', 'PropertyController@owner_update_booking');
     Route::get('/owner/update-property/{id}', 'PropertyController@update_property');
-
     Route::GET('/owner/calender', 'OwnerController@calender');
-
+    Route::get('/owner/chat/{id}', 'PropertyController@fire_chat');
     Route::GET('/ical/{id}', 'IcalController@ical');
 });

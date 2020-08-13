@@ -17,6 +17,52 @@ use Auth;
 class UserController extends BaseController
 {
     use AuthenticatesUsers;
+
+    public function account_delete_process(Request $request)
+    {
+        // TODO: handle soft delete, handle logout from all sessions when account is deleted.
+        DB::table('users')
+            ->where('id', $request->user_id)
+            ->delete();
+        if ($request->role_id == 0) {
+            DB::table('property_list')
+                ->where('user_id', $request->user_id)
+                ->update(['status' => 2]);
+        }
+
+        if ($request->role_id == 1) {
+            DB::table('property_list')
+                ->where('user_id', $request->user_id)
+                ->update(['status' => 2]);
+        }
+
+        if ($request->role_id == 2) {
+            DB::table('property_list')
+                ->where('user_id', $request->user_id)
+                ->update(['status' => 2]);
+        }
+        if (Auth::check()) {
+            Auth::logout();
+        }
+        session()->flush();
+        $url = BASE_URL . 'login';
+        return redirect($url);
+    }
+
+    public function change_password(Request $request)
+    {
+        $user_id = $request->session()->get('user_id');
+        if (!$user_id) {
+            return redirect('/login')->with('error', 'Session timeout login again');
+        }
+        $client_id = $this->get_client_id();
+        $user_detail = DB::table('users')
+            ->where('client_id', '=', $client_id)
+            ->where('id', '=', $user_id)
+            ->first();
+        return view('owner.change_password', ['user_detail' => $user_detail]);
+    }
+
     public function check_email($email, $client_id)
     {
         $check = DB::table('users')
@@ -55,6 +101,11 @@ class UserController extends BaseController
             ->where('is_verified', 1)
             ->count();
         return response()->json(['isVerified' => $check]);
+    }
+
+    public function delete_account()
+    {
+        return view('delete_account');
     }
 
     public function email_send()
@@ -326,6 +377,9 @@ class UserController extends BaseController
             $title = isset($reg->title) ? $reg->title : 'Message from ' . APP_BASE_NAME;
             $subject = isset($reg->subject) ? $reg->subject : "Email verification from " . APP_BASE_NAME;
             $this->send_custom_email($check->email, $subject, 'mail.email-verify', $mail_data, $title);
+            if (Auth::check()) {
+                Auth::logout();
+            }
             $request->session()->flush();
             $url = $this->get_base_url() . 'email-send';
             return redirect($url)->with('phone', $check->phone);
@@ -351,6 +405,39 @@ class UserController extends BaseController
             }
             return redirect($url)->with('phone', $check->phone);
         }
+    }
+
+    public function profile(Request $request)
+    {
+        $user_id = $request->session()->get('user_id');
+        if (!$user_id) {
+            return redirect('/login')->with('error', 'Session timeout login again');
+        }
+        $client_id = $this->get_client_id();
+        $user_detail = DB::table('users')
+            ->where('client_id', '=', $client_id)
+            ->where('id', '=', $user_id)
+            ->first();
+
+        foreach ($user_detail as $key => $value) {
+            if ($value == '0') {
+                $user_detail->$key = "";
+            }
+        }
+
+        $agency = DB::table('agency')->get();
+        $occupation = DB::table('occupation')->get();
+
+        $country_codes = DB::table('country_code')
+            ->where('client_id', '=', $client_id)
+            ->get();
+
+        return view('profile', [
+            'user_detail' => $user_detail,
+            'country_codes' => $country_codes,
+            'agency' => $agency,
+            'occupation' => $occupation,
+        ]);
     }
 
     public function verify_recaptcha(Request $request)
@@ -635,7 +722,9 @@ class UserController extends BaseController
                 $this->send_custom_email($check->email, $subject, 'mail.email-verify', $mail_data, $title);
 
                 // Redirect to email verification screen
-
+                if (Auth::check()) {
+                    Auth::logout();
+                }
                 $request->session()->flush();
                 //                $url = $this->get_base_url() . 'email-send';
             }
@@ -780,6 +869,51 @@ class UserController extends BaseController
             }
         }
         return $all_documents;
+    }
+
+    public function update_password(Request $request)
+    {
+        $messages = [
+            'new_password.regex' => PASSWORD_REGEX_MESSAGE,
+        ];
+        $rules = [
+            'new_password' => PASSWORD_REGEX,
+            'confirm_password' => 'required|same:new_password',
+        ];
+        $validator = \Validator::make($request->all(), $rules, $messages);
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
+        if ($request->new_password != $request->confirm_password) {
+            return back()->with('error', 'Passwords does not match');
+        }
+        $user_id = $request->session()->get('user_id');
+        LOG::info("update_password with user_id " . $user_id);
+        $client_id = $this->get_client_id();
+        if ($request->old_password) {
+            $check = DB::table('users')
+                ->where('id', '=', $user_id)
+                ->first();
+            $credentials = [
+                'email' => $check->email,
+                'password' => $request->old_password,
+                'client_id' => $client_id,
+            ];
+            if (!Auth::attempt($credentials)) {
+                return back()->with('error', 'You have entered wrong old password');
+            }
+            $newEncryptedPassword = $this->encrypt_password($request->new_password);
+            $update = DB::table('users')
+                ->where('id', '=', $user_id)
+                ->update(['password' => $newEncryptedPassword]);
+            return back()->with('success', 'Password updated successfully');
+        } else {
+            $update = DB::table('users')
+                ->where('client_id', '=', $client_id)
+                ->where('id', '=', $user_id)
+                ->update(['password' => $this->encrypt_password($request->new_password)]);
+            return back()->with('success', 'Password updated successfully');
+        }
     }
 
     public function upload_document(Request $request)
@@ -952,5 +1086,44 @@ class UserController extends BaseController
         //print_r($res); exit;
 
         return back()->with('success', 'Profile updated successfully');
+    }
+
+    public function update_profile_picture(Request $request)
+    {
+        $user_id = $request->session()->get('user_id');
+        if (!$user_id) {
+            return redirect('/login')->with('error', 'Session timeout login again');
+        }
+        if ($request->file('profile_image')) {
+            # code...
+        }
+        $file = $request->file('profile_image');
+        //Move Uploaded File $file->getClientOriginalExtension();
+        $destinationPath = 'public/uploads';
+        $file_name = rand(111111, 999999) . '.' . $file->getClientOriginalExtension();
+        $file->move($destinationPath, $file_name);
+        $client_id = $this->get_client_id();
+        $complete_url = $this->get_base_url() . $destinationPath . '/' . $file_name;
+        $update = DB::table('users')
+            ->where('client_id', '=', $client_id)
+            ->where('id', '=', $user_id)
+            ->update(['profile_image' => $complete_url]);
+        $request->session()->put('profile_image', $complete_url);
+        return $complete_url;
+    }
+    public function delete_profile_picture(Request $request)
+    {
+        $user_id = $request->session()->get('user_id');
+        if (!$user_id) {
+            return redirect('/login')->with('error', 'Session timeout login again');
+        }
+        $client_id = $this->get_client_id();
+        $complete_url = " ";
+        $update = DB::table('users')
+            ->where('client_id', '=', $client_id)
+            ->where('id', '=', $user_id)
+            ->update(['profile_image' => ' ']);
+        $request->session()->put('profile_image', ' ');
+        return redirect('profile');
     }
 }

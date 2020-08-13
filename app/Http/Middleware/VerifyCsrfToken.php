@@ -14,6 +14,5 @@ class VerifyCsrfToken extends BaseVerifier
     protected $except = [
         //
         'search-property',
-        'owner-update-profile',
     ];
 }

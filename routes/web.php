@@ -110,6 +110,9 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::get('/traveler/chat/{id}', 'PropertyController@traveller_fire_chat');
     Route::GET('/cancel-booking/{id}', 'PropertyController@cancel_booking');
 
+    // Property
+    Route::POST('/create_chat/{id}', 'PropertyController@create_chat');
+
     // Owner
     Route::get('/owner/inbox', 'PropertyController@inbox');
     Route::get('/owner/favorites', 'PropertyController@favorites');

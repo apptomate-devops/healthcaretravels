@@ -100,6 +100,91 @@ class PropertyController extends BaseController
         return back()->with('success', 'Booking Cancelled successfully!');
     }
 
+    public function create_chat($property_id, Request $request)
+    {
+        $property_detail = DB::table('property_list')
+            ->where('client_id', CLIENT_ID)
+            ->where('id', $property_id)
+            ->first();
+        $ins_data = [];
+        $ins_data['client_id'] = CLIENT_ID;
+        $ins_data['owner_id'] = $property_detail->user_id;
+        $ins_data['property_id'] = $property_id;
+        $ins_data['traveller_id'] = $request->session()->get('user_id');
+        $ins_data['sent_by'] = $request->session()->get('user_id');
+        $ins_data['message'] = "Hi";
+        $chat_check = DB::table('personal_chat')
+            ->where('client_id', CLIENT_ID)
+            ->where('owner_id', $property_detail->user_id)
+            ->where('traveller_id', $request->session()->get('user_id'))
+            ->where('property_id', $property_id)
+            ->first();
+        if ($chat_check) {
+            $chat_get = DB::table('personal_chat')
+                ->where('client_id', CLIENT_ID)
+                ->where('owner_id', $chat_check->owner_id)
+                ->where('traveller_id', $chat_check->traveller_id)
+                ->where('property_id', $property_id)
+                ->where('owner_visible', 1)
+                ->first();
+            $chat_id = $chat_get->id;
+        } else {
+            $chat_id = DB::table('personal_chat')->insertGetId($ins_data);
+        }
+
+        $message = "Enquiry sent for ";
+        $message .= $property_detail->title;
+        $message .= ", Property ID :" . $property_id;
+        $message .=
+            " on " .
+            date("m/d/Y", strtotime($request->check_in)) .
+            " to " .
+            date("m/d/Y", strtotime($request->check_out));
+
+        // firebase write starts
+        $date_fmt = date("m/d/Y H:i A");
+        $values = [];
+        $values['traveller_id'] = $request->session()->get('user_id');
+        $values['owner_id'] = $property_detail->user_id;
+        $values['sent_by'] = $request->session()->get('user_id');
+        $values['property_id'] = $property_id;
+        $values['date'] = $date_fmt;
+        $values['message'] = "Hi, " . $message;
+        $values['header'] = ONE;
+        $postdata = json_encode($values);
+        $header = [];
+        $header[] = 'Content-Type: application/json';
+        $url = $this->firebase_base_url() . PERSONAL_CHAT . '/' . $chat_id . '/start.json';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        $traveler = DB::table('users')
+            ->where('id', $request->session()->get('user_id'))
+            ->first();
+        $owner = DB::table('users')
+            ->where('id', $property_detail->user_id)
+            ->first();
+
+        if ($owner->email != "0") {
+            $content = $message;
+
+            $data = ['username' => $owner->username, 'content' => $content];
+
+            $subject = "Enquiry for Your Property";
+            $title = $traveler->username . " sends Enquiry for Your Property";
+            $ownermail = $owner->email;
+            $mail_data = ['username' => $owner->username, 'content' => $content];
+            $this->send_custom_email($ownermail, $subject, 'mail.custom-email', $mail_data, $title);
+        }
+
+        return redirect()->intended('/traveler/chat/' . $chat_id . '?fb-key=personal_chat&fbkey=personal_chat');
+    }
     public function delete_chat($id, Request $request)
     {
         $chat = DB::table('personal_chat')
@@ -120,6 +205,20 @@ class PropertyController extends BaseController
         }
 
         return redirect('owner/inbox');
+    }
+
+    public function delete_property_image($id)
+    {
+        $data = DB::table('property_images')
+            ->where('id', $id)
+            ->first();
+
+        //$file_name = 'data/'.$property_id.'.json';
+        //unlink($data->image_url);
+        DB::table('property_images')
+            ->where('id', $id)
+            ->delete();
+        return response()->json(['status' => 'SUCCESS']);
     }
 
     public function favorites(Request $request)
@@ -201,6 +300,214 @@ class PropertyController extends BaseController
             ->where('id', $property->owner_id)
             ->first();
         return view('owner.fire_chat', ['owner' => $owner, 'traveller' => $traveller, 'id' => $id]);
+    }
+
+    public function get_price(Request $request)
+    {
+        $guest_count = $request->guest_count == "Guests" ? 20 : $request->guest_count;
+        $request->adults_count = $guest_count;
+        $check_in = date('Y-m-d', strtotime($request->check_in));
+        $check_out = date('Y-m-d', strtotime($request->check_out));
+
+        $sql =
+            "SELECT count(*) as is_available,B.total_guests FROM `property_booking` A, `property_list` B WHERE (A.start_date BETWEEN '" .
+            $check_in .
+            "' AND '" .
+            $check_out .
+            "') AND (A.end_date BETWEEN '" .
+            $check_in .
+            "' AND '" .
+            $check_out .
+            "')  AND B.minimum_guests < " .
+            $guest_count .
+            " AND A.payment_done = 1 AND A.is_instant = B.is_instant AND A.property_id = " .
+            $request->property_id .
+            "";
+
+        $s_price =
+            "SELECT count(*) as is_available,A.* FROM `property_special_pricing` A, `property_list` B WHERE (A.start_date  BETWEEN '" .
+            $check_in .
+            "' AND '" .
+            $check_out .
+            "') AND (A.end_date  BETWEEN '" .
+            $check_in .
+            "' AND '" .
+            $check_out .
+            "') AND A.property_id = " .
+            $request->property_id .
+            "";
+
+        $pricing_config = DB::table('property_short_term_pricing')
+            ->where('client_id', CLIENT_ID)
+            ->where('property_id', $request->property_id)
+            ->first();
+
+        $special_price = DB::select($s_price);
+
+        $is_available = DB::select($sql);
+
+        $property_details = DB::table('property_list')
+            ->where('client_id', CLIENT_ID)
+            ->where('id', $request->property_id)
+            ->first();
+
+        $booking_count = DB::table('property_booking')
+            ->where('client_id', CLIENT_ID)
+            ->where('property_id', $request->property_id)
+            ->count();
+
+        $weeks = $this->get_weekend_count($check_in, $check_out);
+        $weeks['total'] = $weeks['total'] - 1;
+
+        if ($weeks['total'] < $property_details->min_days) {
+            return response()->json([
+                'status' => 'FAILED',
+                'message' => 'Please Select Minimum days ',
+                'status_code' => ONE,
+            ]);
+        }
+
+        if ($is_available[ZERO]->is_available == ZERO || $booking_count == ZERO) {
+            $booking_price = [];
+            $booking_price['client_id'] = CLIENT_ID;
+            $booking_price['single_day_fare'] = $pricing_config->price_per_night;
+            // $booking_price['single_day_fare'] = $pricing_config->price_per_night;
+            $booking_price['total_days'] = $weeks['total'];
+            $booking_price['price_per_extra_guest'] = $pricing_config->price_per_extra_guest;
+
+            $total_days = $weeks['total'];
+
+            // // edited By Karthik for Extra Guest systems.
+            //     if($pricing_config->is_extra_guest!=0){
+            //          $booking_price['no_extra_guest'] = 0;
+            //         if($property_details->total_guests <$request->guest_count){
+            //             $extra_guest=$request->guest_count-$property_details->total_guests;
+            //             $extra_guest_price=$pricing_config->price_per_extra_guest*$extra_guest;
+            //               $booking_price['is_extra_guest'] = 1;
+            //         }else{
+            //             $extra_guest=0;
+            //             $extra_guest_price=0;
+            //               $booking_price['is_extra_guest'] = 0;
+            //         }
+            //     }else{
+            //         $extra_guest=0;
+            //             $extra_guest_price=0;
+            //         $booking_price['no_extra_guest'] = 1;
+            //     }
+            //     $booking_price['extra_guest'] = $extra_guest;
+
+            // $booking_price['extra_guest_price'] = $extra_guest_price;
+
+            // $week_end_pre = explode(",", $pricing_config->weekend_days);
+            // $check_out_day = date('D', strtotime($request->check_out));
+            // $check_in_day = date('D', strtotime($request->check_in));
+            // $week_end_days = ZERO;
+            // foreach ($week_end_pre as $week_day) {
+            //     if(!in_array($check_out_day, $week_end_pre)){
+            //         switch ($week_day) {
+            //             case 'Fri';
+            //                 $week_end_days = $week_end_days + $weeks['friday_count'];
+            //                 break;
+
+            //             case 'Sat';
+            //                 $week_end_days = $week_end_days + $weeks['saturday_count'];
+            //                 break;
+
+            //             case 'Sun';
+            //                 $week_end_days = $week_end_days + $weeks['sunday_count'];
+            //                 break;
+            //         }
+            //     }
+            // }
+
+            $normal_days = $weeks['total'];
+
+            // $normal_days = $normal_days - 1;
+            if ($weeks['total'] > 30) {
+                $pricing_config->price_per_night = $pricing_config->price_more_than_one_month;
+                $booking_price['single_day_fare'] = $pricing_config->price_more_than_one_month;
+                $pricing_config->price_per_weekend = 0;
+                $week_end_days = 0;
+                $price = $weeks['total'] * $pricing_config->price_per_night;
+                $booking_price['normal_days'] = $weeks['total'];
+            } else {
+                $week_end_days = 0;
+                $booking_price['normal_days'] = $weeks['total'];
+                $booking_price['normal_days'] = $normal_days;
+                $price = $normal_days * $pricing_config->price_per_night;
+            }
+
+            $booking_price['week_end_days'] = $week_end_days;
+            $booking_price['price_per_weekend'] = $pricing_config->price_per_weekend;
+            $booking_price['weekend_total'] = $pricing_config->price_per_weekend * $week_end_days;
+
+            $cleaning_fee_amount = ZERO;
+            $city_fee_amount = ZERO;
+            if ($total_days <= 30) {
+                $service_tax = DB::table('settings')
+                    ->where('param', 'traveller_below_30_days')
+                    ->first();
+                $admin_commision = DB::table('settings')
+                    ->where('param', 'traveller_below_30_days')
+                    ->first();
+            } else {
+                $service_tax = DB::table('settings')
+                    ->where('param', 'traveler_above_30_days')
+                    ->first();
+                $admin_commision = DB::table('settings')
+                    ->where('param', 'traveler_above_30_days')
+                    ->first();
+            }
+
+            $adminCommision = $admin_commision->value + $service_tax->value;
+            // switch ($pricing_config->cleaning_fee_type) {
+            //     case "Flat Rate Fee";
+            //      $cleaning_fee_amount = $service_tax->value;
+            //         break;
+
+            //     case "Per Day";
+            //         $cleaning_fee_amount = $weeks['total'] * $pricing_config->cleaning_fee;
+            //         break;
+
+            //     case "Per Month";
+            //         $cleaning_fee_amount = $pricing_config->cleaning_fee;
+            //         break;
+
+            // }
+            $cleaning_fee_amount = $service_tax->value;
+            $booking_price['cleaning_fare'] = $service_tax->value;
+
+            /*
+             * Cleaning fee calculation ended
+             */
+
+            /*
+             *
+             * Total amount calculation
+             */
+            $total_price = $price + $cleaning_fee_amount + $pricing_config->security_deposit + $service_tax->value;
+            //$tax_value = $this->get_percentage($pricing_config->tax, $total_price);
+            $due_now = $this->get_percentage($pricing_config->first_payment_percentage, $total_price);
+            $booking_price['service_tax'] = $service_tax->value;
+            //$booking_price['tax_amount'] = $tax_value;
+            $booking_price['initial_pay'] = $due_now;
+            //$booking_price['total_amount'] = $total_price + $tax_value;
+            $booking_price['total_amount'] = $total_price;
+            $booking_price['check_in'] = $check_in;
+            $booking_price['check_out'] = $check_out;
+            $booking_price['city_fee_amount'] = $city_fee_amount;
+            $booking_price['security_deposit'] = $pricing_config->security_deposit;
+            $booking_price['sub_total'] = $total_price;
+            $booking_price['price'] = $price;
+
+            return response()->json(['status' => 'SUCCESS', 'data' => $booking_price, 'status_code' => ONE]);
+        } else {
+            return response()->json([
+                'status' => 'FAILED',
+                'message' => 'This property not available',
+                'status_code' => ZERO,
+            ]);
+        }
     }
 
     public function inbox(Request $request)
@@ -494,6 +801,421 @@ class PropertyController extends BaseController
             ->with('room_types', $room_types);
     }
 
+    public function set_favourite($property_id, Request $request)
+    {
+        $user_id = $request->session()->get('user_id');
+        $favourite = DB::table('user_favourites')
+            ->where('user_favourites.client_id', '=', CLIENT_ID)
+            ->where('user_favourites.user_id', '=', $user_id)
+            ->where('user_favourites.property_id', '=', $property_id)
+            ->get();
+        if (count($favourite) != 0) {
+            $favourite = DB::table('user_favourites')
+                ->where('user_favourites.client_id', '=', CLIENT_ID)
+                ->where('user_favourites.user_id', '=', $user_id)
+                ->where('user_favourites.property_id', '=', $property_id)
+                ->delete();
+            return response()->json(['status' => 'SUCCESS', 'message' => 'Removed from favourites', 'code' => 0]);
+        } else {
+            $insert = DB::table('user_favourites')->insert([
+                'client_id' => CLIENT_ID,
+                'user_id' => $user_id,
+                'property_id' => $property_id,
+            ]);
+            return response()->json(['status' => 'SUCCESS', 'message' => 'Added to favourites', 'code' => 1]);
+        }
+    }
+
+    public function single_property($property_id, Request $request)
+    {
+        if ($request->reviews) {
+            $properties = DB::table('property_list')
+                ->leftjoin('users', 'users.id', '=', 'property_list.user_id')
+                ->leftjoin('property_images', 'property_images.property_id', '=', 'property_list.id')
+                ->leftjoin('property_room', 'property_room.property_id', '=', 'property_list.id')
+                ->leftjoin(
+                    'property_short_term_pricing',
+                    'property_short_term_pricing.property_id',
+                    '=',
+                    'property_list.id',
+                )
+                ->leftjoin('property_video', 'property_video.property_id', '=', 'property_list.id')
+                ->leftjoin('country', 'country.id', 'property_list.country')
+                ->where('property_list.client_id', '=', CLIENT_ID)
+                ->where('property_list.id', '=', $property_id)
+                ->select(
+                    'property_images.*',
+                    'property_room.*',
+                    'property_short_term_pricing.*',
+                    'property_video.*',
+                    'property_list.*',
+                    'users.*',
+                    'property_list.state as prop_state',
+                    'property_list.city as prop_city',
+                    'country.country_name',
+                )
+
+                ->first();
+            //print_r($properties);exit;
+
+            $reviews = DB::table('property_review')
+                ->join('users', 'users.id', '=', 'property_review.reviewed_by')
+                ->where('property_review.property_id', $property_id)
+                ->get();
+            $reviews_count = DB::table('property_review')
+                ->join('users', 'users.id', '=', 'property_review.reviewed_by')
+                ->where('property_review.property_id', $property_id)
+                ->count();
+            $properties->reviews_count = $reviews_count;
+
+            $avg_rating = DB::select(
+                "SELECT AVG(A.review_rating) as avg_rating FROM property_review A, property_list B, users C WHERE C.id = B.user_id AND A.property_id = B.id AND A.property_id = $property_id",
+            );
+            $ratng = $avg_rating[0]->avg_rating;
+
+            $properties->avg_rating = $ratng;
+            $properties->reviews_data = $reviews;
+            return view('all-reviews', ['data' => $properties]);
+        }
+
+        $properties = DB::table('property_list')
+            ->leftjoin('users', 'users.id', '=', 'property_list.user_id')
+            ->leftjoin('property_images', 'property_images.property_id', '=', 'property_list.id')
+            ->leftjoin('property_room', 'property_room.property_id', '=', 'property_list.id')
+            ->join('property_short_term_pricing', 'property_short_term_pricing.property_id', '=', 'property_list.id')
+            ->leftjoin('property_video', 'property_video.property_id', '=', 'property_list.id')
+            ->where('property_list.client_id', '=', CLIENT_ID)
+            ->where('property_list.id', '=', $property_id)
+            ->select(
+                'property_list.*',
+                'users.first_name',
+                'users.last_name',
+                'users.profile_image',
+                'users.device_token',
+                'property_short_term_pricing.*',
+                'property_images.image_url',
+                'property_room.*',
+                'property_video.url',
+            )
+            ->first();
+
+        if ($properties) {
+            // SELECT GROUP_CONCAT(bed_type) FROM `property_bedrooms` WHERE `property_id` = 1 AND `bedroom_number` = 1
+
+            $property_bedrooms = DB::table('property_bedrooms')
+                ->where('property_id', $property_id)
+                ->get();
+            $temp_bed_rooms = [];
+            $temp_rooms = [];
+            foreach ($property_bedrooms as $key => $value) {
+                $sql = "SELECT GROUP_CONCAT(bed_type,' - ',count) as bed_types FROM `property_bedrooms` WHERE `property_id` = $property_id AND `bedroom_number` = $value->bedroom_number AND `count` != 0";
+                $bed_rooms = DB::select($sql);
+
+                if (in_array($bed_rooms, $temp_bed_rooms)) {
+                } else {
+                    $temp_bed_rooms[] = $bed_rooms;
+                    $temp_rooms[] = [$bed_rooms[0]->bed_types];
+                }
+            }
+
+            $bed_list = DB::table('property_bedrooms')
+                ->where('property_bedrooms.client_id', '=', CLIENT_ID)
+                ->where('property_bedrooms.property_id', '=', $property_id)
+                ->where('property_bedrooms.count', '!=', 0)
+                ->select('count', 'bed_type')
+                ->get();
+
+            foreach ($bed_list as $bed) {
+                $bed->count = (string) $bed->count;
+                switch ($bed->bed_type) {
+                    case "double_bed":
+                        $bed->bed_type = "Double Bed";
+                        $bed->icon_url = DOUBLE_BED;
+                        break;
+                    case "queen_bed":
+                        $bed->bed_type = "Queen Bed";
+                        $bed->icon_url = QUEEN_BED;
+                        break;
+                    case "single_bed":
+                        $bed->bed_type = "Single Bed";
+                        $bed->icon_url = SINGLE_BED;
+                        break;
+                    case "sofa_bed":
+                        $bed->bed_type = "Sofa Bed";
+                        $bed->icon_url = SOFA_BED;
+                        break;
+                    case "bunk_bed":
+                        $bed->bed_type = "Bunk Bed";
+                        $bed->icon_url = BUNK_BED;
+                        break;
+                    default:
+                        $bed->bed_type = "Common Space";
+                        $bed->icon_url = COMMON_SPACE_BED;
+                }
+            }
+
+            $properties->bed_rooms = $bed_list;
+
+            $amenties = DB::table('property_amenties')
+                ->where('property_amenties.client_id', '=', CLIENT_ID)
+                ->where('property_amenties.property_id', '=', $property_id)
+                ->join('amenities_list', 'property_amenties.amenties_name', '=', 'amenities_list.amenities_name')
+                ->select('amenities_list.amenities_name as amenties_name', 'amenities_list.icon_url as amenties_icon')
+                ->get();
+
+            //print_r($amenties);exit;
+
+            $properties->amenties = $amenties;
+
+            $prop_full_rating = DB::table('property_rating')
+                ->where('property_rating.client_id', '=', CLIENT_ID)
+                ->join('users', 'users.id', '=', 'property_rating.user_id')
+                ->where('property_rating.property_id', '=', $property_id)
+                ->select('property_rating.*', 'users.first_name', 'users.last_name', 'users.profile_image')
+                ->get();
+            if (count($prop_full_rating) > 0) {
+                $properties->prop_full_rating = $prop_full_rating;
+            } else {
+                $properties->prop_full_rating = [];
+            }
+            $favourite = DB::table('user_favourites')
+                ->where('user_favourites.client_id', '=', CLIENT_ID)
+                ->where('user_favourites.user_id', '=', $request->session()->get('user_id'))
+                ->where('user_favourites.property_id', '=', $property_id)
+                ->count();
+            if ($favourite != 0) {
+                $properties->is_favourite = 1;
+            } else {
+                $properties->is_favourite = 0;
+            }
+            $pd = DB::table('property_images')
+                ->where('property_images.client_id', '=', CLIENT_ID)
+                ->where('property_images.property_id', '=', $property_id)
+                ->orderBy('property_images.sort', 'asc')
+                ->select('property_images.image_url')
+                ->get();
+            $properties->property_images = $pd;
+            $location = $properties->location;
+        }
+        $result = $properties;
+
+        if ($request->price_high_to_low) {
+            $properties = DB::table('property_list')
+                ->where('property_list.client_id', '=', CLIENT_ID)
+                ->orderBy('price_per_weekend', 'DESC')
+                ->get();
+        }
+        if ($request->price_low_to_high) {
+            $properties = DB::table('property_list')
+                ->where('property_list.client_id', '=', CLIENT_ID)
+                ->orderBy('price_per_weekend', 'ASC')
+                ->get();
+        }
+
+        $latest_properties = DB::table('property_list')
+            ->leftjoin('users', 'users.id', '=', 'property_list.user_id')
+            ->leftjoin(
+                'property_short_term_pricing',
+                'property_short_term_pricing.property_id',
+                '=',
+                'property_list.id',
+            )
+            ->leftjoin('property_room', 'property_room.property_id', '=', 'property_list.id')
+            ->where('property_list.client_id', '=', CLIENT_ID)
+            ->where('property_list.is_complete', '=', ACTIVE)
+            ->where('property_list.property_status', '=', 1)
+            ->where('property_list.status', '=', 1)
+            ->where('property_list.id', '!=', $property_id)
+            ->select(
+                'property_short_term_pricing.price_per_night',
+                'property_short_term_pricing.price_more_than_one_month',
+                'property_list.title',
+                'property_list.location',
+                'property_room.bedroom_count',
+                'property_room.bathroom_count',
+                'property_list.property_size',
+                'users.first_name',
+                'users.last_name',
+                'property_list.id as property_id',
+                'property_list.verified',
+                'users.id as owner_id',
+                'property_list.state',
+                'property_list.city',
+                'property_list.pets_allowed',
+            )
+            ->get();
+        foreach ($latest_properties as $property) {
+            $favourite = DB::table('user_favourites')
+                ->where('user_favourites.client_id', '=', CLIENT_ID)
+                ->where('user_favourites.user_id', '=', $request->session()->get('user_id'))
+                ->where('user_favourites.property_id', '=', $property->property_id)
+                ->count();
+            if ($favourite != ZERO) {
+                $property->is_favourite = ONE;
+            } else {
+                $property->is_favourite = ZERO;
+            }
+            $pd = DB::table('property_images')
+                ->where('property_images.client_id', '=', CLIENT_ID)
+                ->where('property_images.property_id', '=', $property->property_id)
+                ->orderBy('property_images.sort', 'asc')
+                ->first();
+
+            $property->image_url = isset($pd->image_url) ? $pd->image_url : '';
+        }
+
+        $properties = $latest_properties;
+
+        //price_per_weekend
+        $properties_near = [];
+
+        foreach ($properties as $property) {
+            $pd = DB::table('property_images')
+                ->where('property_images.client_id', '=', CLIENT_ID)
+                ->where('property_images.property_id', '=', $property->property_id)
+                ->orderBy('property_images.sort', 'asc')
+                ->select('property_images.image_url')
+                ->get();
+            $propertys = [];
+            $propertysd = [];
+            $propertys['image_url'] = STATIC_IMAGE;
+            if (count($pd) == 0) {
+                $propertysd[] = $propertys;
+                $property->property_images = $propertysd;
+            } else {
+                $property->property_images = $pd;
+            }
+
+            $favourite = DB::table('user_favourites')
+                ->where('user_favourites.client_id', '=', CLIENT_ID)
+                ->where('user_favourites.user_id', '=', $request->session()->get('user_id'))
+                ->where('user_favourites.property_id', '=', $property->property_id)
+                ->count();
+            if ($favourite != 0) {
+                $property->is_favourite = 1;
+            } else {
+                $property->is_favourite = 0;
+            }
+
+            if ($properties) {
+                $source_location = $properties[0]->location; //$location;
+                $source_location = urlencode($source_location);
+                $loc = $property->location;
+                $location = explode(',', $property->location);
+                $getLoc = end($location);
+                $property->property_country = $getLoc;
+                $property->location = urlencode($property->location);
+                $url =
+                    "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" .
+                    $source_location .
+                    "&destinations=" .
+                    $property->location .
+                    "&key=AIzaSyCD_0PVfhwHKvGcB4SUFq2ZBT0GOW900Bg"; //exit;
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $response = curl_exec($ch);
+                $response = json_decode($response); //dd($response); exit;
+                if (isset($response->rows[0]->elements[0]->status) != 'ZERO_RESULTS') {
+                    // echo $response->rows[0]->elements[0]->distance->text;exit;
+                    // $distance = (float) $response->rows[0]->elements[0]->distance->text;
+                    if (isset($response->rows[0]->elements[0]->distance->text) <= $this->get_radius()) {
+                        $property->location = $loc;
+                        $property->property_id = $property->property_id;
+                        $properties_near[] = $property;
+                    } else {
+                        $properties_near[] = $property;
+                    }
+                } else {
+                    if ($property->property_id != $property_id) {
+                        $properties_near[] = $property;
+                    }
+                }
+            }
+        } //array_multisort(array_column($inventory, 'price'), SORT_DESC, $inventory);
+
+        $booked_dates = DB::table('property_booking')
+            ->where('property_booking.client_id', '=', CLIENT_ID)
+            ->where('property_booking.payment_done', '=', 1)
+            ->where('property_booking.property_id', '=', $property_id)
+            ->select('start_date', 'end_date')
+            ->get();
+
+        $b_dates = [];
+        foreach ($booked_dates as $booked_date) {
+            $strDateFrom = date("Y-m-d", strtotime($booked_date->start_date));
+            $strDateTo = date("Y-m-d", strtotime($booked_date->end_date));
+            $dates_list = $this->createDateRangeArray($strDateFrom, $strDateTo);
+            foreach ($dates_list as $item) {
+                $item = date("m/d/Y", strtotime($item));
+                $b_dates[] = ["dates" => $item];
+            }
+        }
+
+        $blocked_dates = DB::table('property_blocking')
+            ->where('property_blocking.client_id', '=', CLIENT_ID)
+            ->where('property_blocking.property_id', '=', $property_id)
+            ->select('start_date')
+            ->get();
+
+        foreach ($blocked_dates as $item) {
+            $item = date("m/d/Y", strtotime($item->start_date));
+            $b_dates[] = ["dates" => $item];
+        }
+        // print_r($b_dates);exit;
+        $user_id = $request->session()->get('user_id');
+        $current_user = DB::table('users')
+            ->where('id', $user_id)
+            ->first();
+        $arr = [];
+        if ($request->session()->get('propertyId')) {
+            $arr = [
+                'property_id' => $request->session()->get('propertyId'),
+                'fromDate' => $request->session()->get('fromDate'),
+                'toDate' => $request->session()->get('toDate'),
+                'guest_count' => $request->session()->get('guest_count'),
+            ];
+
+            $request->session()->forget('propertyId');
+            $request->session()->forget('fromDate');
+            $request->session()->forget('toDate');
+            $request->session()->forget('guest_count');
+        }
+
+        $user_id = $request->session()->get('role_id');
+        if ($user_id) {
+            $is_user = 1;
+        } else {
+            $is_user = 0;
+        }
+        //print_r($b_dates);exit;
+        $f_result = [
+            'status' => 'SUCCESS',
+            'is_user' => $is_user,
+            'current_user' => $current_user,
+            'bed_rooms' => $temp_bed_rooms,
+            'data' => $result,
+            'booked_dates' => $b_dates,
+            'properties_near' => $properties_near,
+            'property_id' => $property_id,
+            'session' => $arr,
+            'properties' => $properties,
+        ];
+
+        //print_r($f_result);exit;
+
+        if ($f_result['data']->pets_allowed == 1) {
+            $pets = $this->yelp_pets($f_result['data']->lat, $f_result['data']->lng);
+        } else {
+            $pets = [];
+        }
+        $hospitals = $this->yelp_hospitals($f_result['data']->lat, $f_result['data']->lng);
+
+        return view('property', $f_result)
+            ->with('hospitals', $hospitals)
+            ->with('pets', $pets);
+    }
+
     public function traveller_fire_chat($id, Request $request)
     {
         if ($request->fbkey == "personal_chat") {
@@ -553,6 +1275,19 @@ class PropertyController extends BaseController
         //echo json_encode($traveller); exit;
 
         return view('traveller.fire_chat', ['owner' => $owner, 'traveller' => $traveller, 'id' => $id]);
+    }
+
+    public function update_cover_image($id, $property_id)
+    {
+        DB::table('property_images')
+            ->where('property_id', $property_id)
+            ->update(['is_cover' => 0]);
+        DB::table('property_images')
+            ->where('property_id', $property_id)
+            ->where('id', $id)
+            ->update(['is_cover' => 1]);
+
+        return response()->json(['status' => 'SUCCESS']);
     }
 
     public function add_property(Request $request)

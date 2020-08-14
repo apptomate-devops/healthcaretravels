@@ -37,10 +37,17 @@ class UsersTableSeeder extends Seeder
         $users = \App\Models\Users::where('is_encrypted', 0)->get();
         Log::info('Encrypting passwords for users count: ' . count($users));
         echo 'Encrypting passwords for users count: ' . count($users) . PHP_EOL;
-        foreach ($users as $user) {
+        foreach ($users as $index => $user) {
+            $countIndex = $index + 1;
+            if ($countIndex % 10 === 0) {
+                Log::info('Completed ' . $countIndex . '...');
+                echo 'Completed ' . $countIndex . '...' . PHP_EOL;
+            }
             $decrypted_password = $this->decrypt_password($user->password);
             $password = $this->encrypt_password($decrypted_password);
             \App\Models\Users::where('id', $user->id)->update(['password' => $password, 'is_encrypted' => 1]);
         }
+        Log::info('Done encrypting users passwords');
+        echo 'Done encrypting users passwords' . PHP_EOL;
     }
 }

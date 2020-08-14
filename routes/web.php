@@ -57,6 +57,7 @@ Route::get('/Extenuating-Circ-policy', 'HomeController@Extenuating_Circ_policy')
 Route::get('/eye-catching-photo', 'HomeController@eye_catching_photo');
 Route::get('/faq', 'HomeController@faq');
 Route::get('/fees-explained', 'HomeController@fees_explained');
+Route::GET('/get-user-notifications', 'HomeController@get_user_notifications');
 Route::get('/how_its_works', 'HomeController@how_its_works');
 Route::get('/non-discrimination-policy', 'HomeController@non_discrimination_policy');
 Route::get('/partner', 'HomeController@partner');
@@ -79,9 +80,16 @@ Route::get('/reset-password', 'HomeController@reset_password');
 Route::POST('/reset-password', 'HomeController@reset_email');
 
 // Property Controller
+Route::get('/delete_property_image/{id}', 'PropertyController@delete_property_image');
+Route::get('/update_cover_image/{id}/{property_id}', 'PropertyController@update_cover_image');
 Route::get('/search-property', 'PropertyController@search_property');
 Route::post('/search-property', 'PropertyController@search_property');
 Route::post('/search-property-filtering', 'PropertyController@search_property');
+Route::GET('/property/get-price', 'PropertyController@get_price');
+Route::GET('/property/{id}', 'PropertyController@single_property');
+
+// Property related :: Maps Controller
+Route::GET('/single-marker/{lat}/{lng}/{pets}', 'MapController@single_marker');
 
 // Logged in routes
 Route::middleware(['LoginCheck'])->group(function () {
@@ -104,6 +112,10 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::GET('/traveler/favorites', 'PropertyController@favorites');
     Route::get('/traveler/chat/{id}', 'PropertyController@traveller_fire_chat');
     Route::GET('/cancel-booking/{id}', 'PropertyController@cancel_booking');
+
+    // Property
+    Route::POST('/create_chat/{id}', 'PropertyController@create_chat');
+    Route::GET('/property/set-favourite/{id}', 'PropertyController@set_favourite');
 
     // Owner
     Route::get('/owner/inbox', 'PropertyController@inbox');

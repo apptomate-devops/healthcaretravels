@@ -57,6 +57,7 @@ Route::get('/Extenuating-Circ-policy', 'HomeController@Extenuating_Circ_policy')
 Route::get('/eye-catching-photo', 'HomeController@eye_catching_photo');
 Route::get('/faq', 'HomeController@faq');
 Route::get('/fees-explained', 'HomeController@fees_explained');
+Route::GET('/get-user-notifications', 'HomeController@get_user_notifications');
 Route::get('/how_its_works', 'HomeController@how_its_works');
 Route::get('/non-discrimination-policy', 'HomeController@non_discrimination_policy');
 Route::get('/partner', 'HomeController@partner');
@@ -79,6 +80,8 @@ Route::get('/reset-password', 'HomeController@reset_password');
 Route::POST('/reset-password', 'HomeController@reset_email');
 
 // Property Controller
+Route::get('/delete_property_image/{id}', 'PropertyController@delete_property_image');
+Route::get('/update_cover_image/{id}/{property_id}', 'PropertyController@update_cover_image');
 Route::get('/search-property', 'PropertyController@search_property');
 Route::post('/search-property', 'PropertyController@search_property');
 Route::post('/search-property-filtering', 'PropertyController@search_property');
@@ -112,6 +115,7 @@ Route::middleware(['LoginCheck'])->group(function () {
 
     // Property
     Route::POST('/create_chat/{id}', 'PropertyController@create_chat');
+    Route::GET('/property/set-favourite/{id}', 'PropertyController@set_favourite');
 
     // Owner
     Route::get('/owner/inbox', 'PropertyController@inbox');

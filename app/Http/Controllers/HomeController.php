@@ -110,6 +110,24 @@ class HomeController extends BaseController
         ]);
     }
 
+    public function get_user_notifications(Request $request)
+    {
+        $user_id = $request->user_id;
+        $booking_count = DB::table('property_booking')
+            ->where('owner_id', $user_id)
+            ->where('owner_notify', 1)
+            ->count();
+        $trip_count = DB::table('property_booking')
+            ->where('traveller_id', $user_id)
+            ->where('traveler_notify', 1)
+            ->count();
+        return response()->json([
+            'status' => 'SUCCESS',
+            'booking_count' => $booking_count,
+            'trip_count' => $trip_count,
+        ]);
+    }
+
     public function how_its_works()
     {
         return view('statics.how_its_works');

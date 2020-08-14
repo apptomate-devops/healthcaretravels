@@ -207,6 +207,20 @@ class PropertyController extends BaseController
         return redirect('owner/inbox');
     }
 
+    public function delete_property_image($id)
+    {
+        $data = DB::table('property_images')
+            ->where('id', $id)
+            ->first();
+
+        //$file_name = 'data/'.$property_id.'.json';
+        //unlink($data->image_url);
+        DB::table('property_images')
+            ->where('id', $id)
+            ->delete();
+        return response()->json(['status' => 'SUCCESS']);
+    }
+
     public function favorites(Request $request)
     {
         $user_id = $request->session()->get('user_id');
@@ -787,6 +801,31 @@ class PropertyController extends BaseController
             ->with('room_types', $room_types);
     }
 
+    public function set_favourite($property_id, Request $request)
+    {
+        $user_id = $request->session()->get('user_id');
+        $favourite = DB::table('user_favourites')
+            ->where('user_favourites.client_id', '=', CLIENT_ID)
+            ->where('user_favourites.user_id', '=', $user_id)
+            ->where('user_favourites.property_id', '=', $property_id)
+            ->get();
+        if (count($favourite) != 0) {
+            $favourite = DB::table('user_favourites')
+                ->where('user_favourites.client_id', '=', CLIENT_ID)
+                ->where('user_favourites.user_id', '=', $user_id)
+                ->where('user_favourites.property_id', '=', $property_id)
+                ->delete();
+            return response()->json(['status' => 'SUCCESS', 'message' => 'Removed from favourites', 'code' => 0]);
+        } else {
+            $insert = DB::table('user_favourites')->insert([
+                'client_id' => CLIENT_ID,
+                'user_id' => $user_id,
+                'property_id' => $property_id,
+            ]);
+            return response()->json(['status' => 'SUCCESS', 'message' => 'Added to favourites', 'code' => 1]);
+        }
+    }
+
     public function single_property($property_id, Request $request)
     {
         if ($request->reviews) {
@@ -1236,6 +1275,19 @@ class PropertyController extends BaseController
         //echo json_encode($traveller); exit;
 
         return view('traveller.fire_chat', ['owner' => $owner, 'traveller' => $traveller, 'id' => $id]);
+    }
+
+    public function update_cover_image($id, $property_id)
+    {
+        DB::table('property_images')
+            ->where('property_id', $property_id)
+            ->update(['is_cover' => 0]);
+        DB::table('property_images')
+            ->where('property_id', $property_id)
+            ->where('id', $id)
+            ->update(['is_cover' => 1]);
+
+        return response()->json(['status' => 'SUCCESS']);
     }
 
     public function add_property(Request $request)

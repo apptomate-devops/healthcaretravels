@@ -290,7 +290,8 @@ class PropertyController extends BaseController
 
     public function get_price(Request $request)
     {
-        $request->adults_count = $request->guest_count;
+        $guest_count = $request->guest_count == "Guests" ? 20 : $request->guest_count;
+        $request->adults_count = $guest_count;
         $check_in = date('Y-m-d', strtotime($request->check_in));
         $check_out = date('Y-m-d', strtotime($request->check_out));
 
@@ -304,7 +305,7 @@ class PropertyController extends BaseController
             "' AND '" .
             $check_out .
             "')  AND B.minimum_guests < " .
-            $request->guest_count .
+            $guest_count .
             " AND A.payment_done = 1 AND A.is_instant = B.is_instant AND A.property_id = " .
             $request->property_id .
             "";

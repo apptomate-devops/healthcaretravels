@@ -158,8 +158,8 @@
                                 <p class="error-text" id="address_error" style="display: none;">Please select a valid address from the suggestions.</p>
 
                                 <div>
-                                    <input class="field" type="hidden" id="street_number" name="street_number" value="{{$user_detail->street_number ?? ''}}" />
-                                    <input class="field" type="hidden" id="route" name="route" value="{{$user_detail->route ?? ''}}" />
+                                    <input class="field" type="hidden" id="street_number" name="street_number" value="{{$street_number ?? ''}}" />
+                                    <input class="field" type="hidden" id="route" name="route" value="{{$route ?? ''}}" />
                                     <input class="field" type="hidden" id="locality" name="city" value="{{$user_detail->city ?? ''}}" />
                                     <input class="field" type="hidden" id="administrative_area_level_1" name="state" value="{{$user_detail->state ?? ''}}" />
                                     <input class="field" type="hidden" id="postal_code" name="pin_code" value="{{$user_detail->pin_code ?? ''}}" />
@@ -328,7 +328,7 @@
                 street_number: 'short_name',
                 route: 'long_name',
                 locality: 'long_name',
-                administrative_area_level_1: 'short_name',
+                administrative_area_level_1: 'long_name',
                 country: 'short_name',
                 postal_code: 'short_name'
             };
@@ -456,7 +456,6 @@
                 $(window).scrollTop($('#dob').offset().top-100);
                 return false;
             }
-            debugger
             let allFields = addressFields.filter(e => {
                 let element_address = document.getElementById(e);
                 let invalidAddress = !element_address.value || (element_address.value && !element_address.dataset.isValid);

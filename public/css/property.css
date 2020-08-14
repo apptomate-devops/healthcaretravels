@@ -1,0 +1,19 @@
+.caption-text {
+    font-size: 12px;
+    margin-top: -10px;
+    margin-bottom: 5px;
+}
+.add-property {
+    margin-top: 35px;
+}
+.incremental-counter {
+    width: 300px;
+    margin: 5px auto;
+}
+.counter-inputs {
+    margin: 5px auto;
+}
+
+.counter-inputs a {
+    margin: 0 5px;
+}

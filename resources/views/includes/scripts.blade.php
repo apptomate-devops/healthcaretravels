@@ -381,6 +381,7 @@
             case 'profile':
                 initialize();
                 break;
+            case 'owner/add-property':
             case 'verify-account':
                 initializeAddress();
                 break;

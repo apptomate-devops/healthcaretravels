@@ -1,4 +1,5 @@
 @extends('layout.master') @section('title','Profile') @section('main_content')
+    <link rel="stylesheet" href="{{ URL::asset('css/property.css') }}">
 
     <div class="container" style="margin-top: 35px;">
         <div class="row">
@@ -6,8 +7,6 @@
             <div class="col-md-12">
                 <hr>
                 <div>
-
-
 
                     <div class="dashboard-header">
 
@@ -25,56 +24,34 @@
                             <input type="hidden" name="client_id" value="{{$client_id}}">
                             <input type="hidden" name="property_id" value="{{$property_details->id}}">
                         <h3>Listing :</h3>
-                      
-
 
                         <div class="row with-forms container">
-
-
-                            
-
                             <div class="col-md-6">
-                                <h5>Property Type <span style="color: red">*</span></h5>
-                                <select class="search-field" name="property_type">
-                                    @if(isset($property_data->property_type) == 1)
-                                        <option value="1">RV Lisiting</option>
-                                        <option value="2">Home Lisiting</option>
-                                    @elseif(isset($property_data->property_type) == 2)
-                                        <option value="2">Home Lisiting</option>
-                                        <option value="1">RV Lisiting</option>
-                                    @else
-                                        <option value="1">RV Lisiting</option>
-                                        <option value="2">Home Lisiting</option>
-                                    @endif
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row with-forms container">
-
-
-                            
-
-                            <div class="col-md-6">
-                                <h5>Property Title <span style="color: red">*</span></h5>
-                                <input class="search-field validate" type="text" value="{{isset($property_data->title)?$property_data->title:''}}"   id="value" name="title" />
+                                <h5>Property Title <span class="required">*</span></h5>
+                                <input class="search-field validate" type="text" value="{{isset($property_data->title)?$property_data->title:''}}"  id="value" name="title" />
                             </div>
                         </div>
 
 
                         <div class="row with-forms container">
                             <div class="col-md-6">
-                                <h5>Description <span style="color: red">*</span></h5>
-                                <textarea id="button" class="search-field validate"   id="value" name="description">{{isset($property_data->description)?$property_data->description:''}}</textarea>
-                                <p style="font-size: 11px;color: #e78016;">Please do not add any personal contact information for your privacy and safety.</p>
+                                <h5>Description <span class="required">*</span></h5>
+                                <p class="caption-text">Please do not add any personal contact information for your privacy and safety.</p>
+                                <textarea id="button" class="search-field validate" id="value" name="description">{{isset($property_data->description)?$property_data->description:''}}</textarea>
                             </div>
+                        </div>
 
-
+                        <div class="row with-forms container">
+                            <div class="col-md-6">
+                                <h5>House Rules</h5>
+                                <textarea  class="search-field" id="house_rules" name="house_rules">{{isset($property_data->house_rules)?$property_data->house_rules:''}}</textarea>
+                            </div>
                         </div>
 
                          <div class="col-md-12 form-row">
-                                <h3>Trash Pickup Days <span style="color: red">*</span> : </h3>
+                                <h3>Trash Pickup Days: </h3>
                                 <div class="checkboxes in-row" id="trash_days">
-                                    
+
                                             <input id="check-2"  value="Sun" name="trash_pickup_days[]" type="checkbox" name="check">
                                             <label for="check-2" >Sunday</label>
 
@@ -85,7 +62,7 @@
                                             <label for="check-4"  >Tuesday</label>
 
                                             <input id="check-5" value="Wed" name="trash_pickup_days[]" type="checkbox" name="check">
-                                            <label for="check-5" >Wednesday</label>   
+                                            <label for="check-5" >Wednesday</label>
 
 
                                             <input id="check-6" value="Thu" name="trash_pickup_days[]" type="checkbox" name="check">
@@ -97,17 +74,17 @@
 
                                             <input id="check-8" value="Sat" name="trash_pickup_days[]" type="checkbox" name="check">
                                             <label for="check-8" >Saturday</label>
-                                    
+
                                         </div>
                             </div>
 
                               <div class="col-md-12"><br><br>
-                                <h3>Lawn Services<span style="color: red">*</span> :</h3>
+                                <h3>Lawn Services<span class="required">*</span> :</h3>
                                 <div class="checkboxes in-row">
-                                    
+
                                             <input id="lawn_yes" name="lawn_service" type="checkbox" value="1" name="check">
                                             <label for="lawn_yes" >Yes</label>
-                                            
+
                                             <input id="lawn_no" name="lawn_service" type="checkbox" value="0" checked  name="check">
                                             <label for="lawn_no"  value="1">No</label>
                                 </div>
@@ -116,22 +93,22 @@
                             <div class="col-md-12"><br><br>
                                 <h3>Pets Allowed :</h3>
                                 <div class="checkboxes in-row">
-                                    
+
                                             <input id="pet_yes" name="pets_allowed" type="checkbox" value="1" >
                                             <label for="pet_yes" >Yes</label>
-                                            
+
                                             <input id="pet_no" name="pets_allowed" type="checkbox" value="0" checked  >
                                             <label for="pet_no"  value="1">No</label>
                                 </div>
                             </div>
 
-                       
+
 
                             <div class="row with-forms">
 
                                 <div class="col-md-3"></div>
                                 <div class="col-md-3">
-                                  
+
                                 </div>
 
                             </div>
@@ -151,7 +128,7 @@
                             {{-- @if(isset($property_details->is_complete) && $property_details->is_complete == 1)
                                 <button id="button" class="button border margin-top-5" name="save" value="save" style="background-color: #e78016;">Save<i class="fa fa-save"></i></button>
                             @endif --}}
-                            <button type="submit" class="button preview margin-top-5" value="NEXT">Save  <i class="fa fa-arrow-circle-right"></i></button>
+                            <button type="submit" id="button" class="button preview margin-top-5" value="NEXT">Save  <i class="fa fa-arrow-circle-right"></i></button>
                         </div>
                         </form>
 
@@ -191,7 +168,7 @@
    <?php }
         }
         ?>
-        
+
 
 
         $('#lawn_no,#lawn_yes').change(function(){
@@ -216,7 +193,7 @@
        $('#pet_yes').attr('checked',false);
    <?php }
 } ?>
-        
+
 
 
         $('#pet_no,#pet_yes').change(function(){
@@ -227,31 +204,6 @@
                $('#pet_yes').attr('checked',false);
             }
         })
-
-
-        function show_table(id) {
-            var name=document.getElementById('name').value;
-            var value=document.getElementById('value').value;
-            var single_fee=document.getElementById('single_fee').value;
-
-            document.getElementById('rname').value =(name);
-            document.getElementById('rvalue').value =(value);
-            document.getElementById('rsingle_fee').value =(single_fee);
-            var ix;
-
-            for (ix = 1;  ix <= 6;  ++ix) {
-                document.getElementById('table' + ix).style.display='none';
-            }
-            if (typeof id === "number") {
-                document.getElementById('table'+id).style.display='block';
-            } else if (id && id.length) {
-                for (ix = 0;  ix < id.length;  ++ix) {
-                    document.getElementById('table'+ix).style.display='block';
-                }
-            }
-
-        }
-
     </script>
 {{--    <script type="text/javascript">
         $('.date_picker').datepicker({});

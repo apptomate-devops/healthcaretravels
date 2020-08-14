@@ -196,7 +196,7 @@
                                             <input id="Towels" type="checkbox" name="towels" value="Towels">
                                             <label for="Towels">Towels</label>
                                         </div>
-                                       
+
                                         <div class="col-md-3">
                                             <input id="Free_Parking_on_Premises" type="checkbox" name="free_parking_on_premises" value="Free Parking on Premises">
                                             <label for="Free_Parking_on_Premises">Free Parking on Premises</label>
@@ -211,7 +211,7 @@
                                             <input id="Coffee-pot" type="checkbox" name="coffee_pot" value="Coffee Pot">
                                             <label for="Coffee-pot">Coffee Pot</label>
                                         </div>
-                                        
+
                                     </div>
 
 
@@ -263,34 +263,6 @@
 
 </div>
 </div>
-<script type="text/javascript">
-
-
-
-    function show_table(id) {
-        var name = document.getElementById('name').value;
-        var value = document.getElementById('value').value;
-        var single_fee = document.getElementById('single_fee').value;
-
-        document.getElementById('rname').value = (name);
-        document.getElementById('rvalue').value = (value);
-        document.getElementById('rsingle_fee').value = (single_fee);
-        var ix;
-
-        for (ix = 1; ix <= 6; ++ix) {
-            document.getElementById('table' + ix).style.display = 'none';
-        }
-        if (typeof id === "number") {
-            document.getElementById('table' + id).style.display = 'block';
-        } else if (id && id.length) {
-            for (ix = 0; ix < id.length; ++ix) {
-                document.getElementById('table' + ix).style.display = 'block';
-            }
-        }
-
-    }
-
-</script>
 <script type="text/javascript">
     $('.date_picker').datepicker({});
     var date = new Date();

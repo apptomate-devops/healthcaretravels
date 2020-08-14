@@ -89,7 +89,7 @@
                                 <span>Show Password</span>
                             </div>
                             <p class="form-row">
-                                <input id="button1" type="submit" class="btn btn-primary w-100 m-0" name="login" value="Login" />
+                                <input type="submit" class="btn btn-primary w-100 m-0" name="login" value="Login" />
                             </p>
                             <p class="lost_password text-center">
                                 <a href="{{url('/')}}/reset-password">Lost Your Password?</a>
@@ -628,7 +628,7 @@
             street_number: 'short_name',
             route: 'long_name',
             locality: 'long_name',
-            administrative_area_level_1: 'short_name',
+            administrative_area_level_1: 'long_name',
             country: 'short_name',
             postal_code: 'short_name'
         };

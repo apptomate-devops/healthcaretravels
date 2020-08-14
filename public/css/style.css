@@ -133,6 +133,10 @@ button {
     to {bottom: 0; opacity: 0;}
 }
 
+span.required {
+    color: #e78016;
+}
+
 a:focus, a:hover {
     color: #e78016;
     text-decoration: underline;
@@ -9397,7 +9401,7 @@ img.mfp-img {
 
 .dropzone .dz-message {
     text-align: center;
-    margin: 50px 0;
+    margin: 30px 0;
     font-size: 17px;
     color: #888;
     transition: all 0.3s linear;

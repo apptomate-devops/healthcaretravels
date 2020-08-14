@@ -373,7 +373,7 @@ class PropertyController extends BaseController
             $booking_price['single_day_fare'] = $pricing_config->price_per_night;
             // $booking_price['single_day_fare'] = $pricing_config->price_per_night;
             $booking_price['total_days'] = $weeks['total'];
-            $booking_price['price_per_extra_guest'] = $pricing_config->price_per_extra_guest;
+            //            $booking_price['price_per_extra_guest'] = $pricing_config->price_per_extra_guest;
 
             $total_days = $weeks['total'];
 
@@ -1322,26 +1322,27 @@ class PropertyController extends BaseController
         $new_property->client_id = $request->client_id;
         $new_property->user_id = $request->user_id;
 
-        $new_property->address = $request->streetname ? $request->streetname : "";
-        $new_property->location = urldecode($request->mlocation);
+        $new_property->address = implode(", ", array_filter([$request->street_number, $request->route]));
+        $new_property->building_number = $request->building_number;
+        //        $new_property->location = urldecode($request->mlocation);
         $new_property->city = $request->city;
         $new_property->state = $request->state;
-        $new_property->building_number = $request->building_number;
-        $new_property->zip_code = $request->zip_code;
+        $new_property->zip_code = $request->pin_code;
+        $new_property->country = $request->country;
         $new_property->stage = 1;
 
-        //Get LatLong From Address
-        $address =
-            $request->location .
-            "," .
-            $new_property->address .
-            "," .
-            $new_property->city .
-            "," .
-            $new_property->state .
-            "," .
-            $new_property->zip_code;
-        $formattedAddr = str_replace(' ', '+', $address);
+        //        //Get LatLong From Address
+        //        $address =
+        //            $request->location .
+        //            "," .
+        //            $new_property->address .
+        //            "," .
+        //            $new_property->city .
+        //            "," .
+        //            $new_property->state .
+        //            "," .
+        //            $new_property->zip_code;
+        //        $formattedAddr = str_replace(' ', '+', $address);
 
         if ($request->mlat != "") {
             $new_property->lat = $request->mlat;
@@ -1653,17 +1654,18 @@ class PropertyController extends BaseController
                 'cur_pets' => $request->cur_pets,
                 'stage' => 2,
             ]);
+        //        print_r($request->double_bed);exit();
 
         $property_room = DB::table('property_room')->insert([
             'client_id' => CLIENT_ID,
             'property_id' => $request->property_id,
             'property_size' => $request->property_size ? $request->property_size : 0,
             'bathroom_count' => $request->bathroom_count ? $request->bathroom_count : 0,
-            'check_in_time' => $request->check_in_time ? $request->check_in_time : 0,
-            'check_out_time' => $request->check_out_time ? $request->check_out_time : 0,
-            //'bedroom_count' => $request->no_of_bedrooms,
-            'bedroom_count' => count($request->double_bed),
-            'bed_count' => $request->bed_count,
+            //            'check_in_time' => $request->check_in_time ? $request->check_in_time : 0,
+            //            'check_out_time' => $request->check_out_time ? $request->check_out_time : 0,
+            'bedroom_count' => $request->no_of_bedrooms,
+            //            'bedroom_count' => count($request->double_bed),
+            //            'bed_count' => $request->bed_count,
             'common_spaces' => $request->common_spaces ? $request->common_spaces : 0,
             'status' => ACTIVE,
         ]);
@@ -1810,10 +1812,10 @@ class PropertyController extends BaseController
             ->update([
                 'title' => $request->title,
                 'description' => $request->description,
+                'house_rules' => $request->house_rules,
                 'trash_pickup_days' => $trash_pickup_days,
                 'lawn_service' => $request->lawn_service,
                 'pets_allowed' => $request->pets_allowed,
-                'property_type_rv_or_home' => $request->property_type,
             ]);
 
         $prop = DB::table('property_list')
@@ -1859,15 +1861,11 @@ class PropertyController extends BaseController
         // $ins['cleaning_fee_type'] = (string) $request->cleaning_fee_type;
         $ins['city_fee'] = $request->city_fee;
         $ins['city_fee_type'] = $request->city_fee_type;
-        $ins['is_extra_guest'] = $request->is_extra_guest ? $request->is_extra_guest : '0';
-        $ins['price_per_extra_guest'] = $request->price_per_extra_guest;
+        //        $ins['is_extra_guest'] = $request->is_extra_guest ? $request->is_extra_guest : '0';
+        //        $ins['price_per_extra_guest'] = $request->price_per_extra_guest;
         $ins['security_deposit'] = $request->security_deposit;
         $ins['check_in'] = $request->check_in;
         $ins['check_out'] = $request->check_out;
-        DB::table('property_list')
-            ->where('client_id', '=', CLIENT_ID)
-            ->where('id', $request->property_id)
-            ->update(['house_rules' => $request->house_rules]);
         $val_count = DB::table('property_short_term_pricing')
             ->where('property_id', $request->property_id)
             ->count();
@@ -2304,6 +2302,19 @@ class PropertyController extends BaseController
         //owner/calender?id=94
         session()->forget('property_id');
         $url = BASE_URL . "owner/calender?id=" . $request->property_id;
+        return redirect($url);
+    }
+
+    public function update_property($property_id)
+    {
+        $data = DB::table('property_list')
+            ->where('id', '=', $property_id)
+            ->first();
+        $stage = $data->on_stage;
+        $stage = 2;
+
+        $url = BASE_URL . 'owner/add-new-property/' . $stage . '/' . $data->id;
+
         return redirect($url);
     }
 

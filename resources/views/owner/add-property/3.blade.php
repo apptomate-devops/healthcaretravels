@@ -23,70 +23,70 @@
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
                             <input type="hidden" name="client_id" value="{{$client_id}}">
                             <input type="hidden" name="property_id" value="{{$property_details->id}}">
-                        <h3>Listing :</h3>
+                            <h3>Listing :</h3>
 
-                        <div class="row with-forms container">
-                            <div class="col-md-6">
-                                <h5>Property Title <span class="required">*</span></h5>
-                                <input class="search-field validate" type="text" value="{{isset($property_data->title)?$property_data->title:''}}"  id="value" name="title" />
+                            <div class="row with-forms container">
+                                <div class="col-md-6">
+                                    <h5>Property Title <span class="required">*</span></h5>
+                                    <input class="search-field validate" type="text" value="{{isset($property_data->title)?$property_data->title:''}}"  id="value" name="title" />
+                                </div>
                             </div>
-                        </div>
 
 
-                        <div class="row with-forms container">
-                            <div class="col-md-6">
-                                <h5>Description <span class="required">*</span></h5>
-                                <p class="caption-text">Please do not add any personal contact information for your privacy and safety.</p>
-                                <textarea id="button" class="search-field validate" id="value" name="description">{{isset($property_data->description)?$property_data->description:''}}</textarea>
+                            <div class="row with-forms container">
+                                <div class="col-md-6">
+                                    <h5>Description <span class="required">*</span></h5>
+                                    <p class="caption-text">Please do not add any personal contact information for your privacy and safety.</p>
+                                    <textarea id="button" class="search-field validate" id="value" name="description">{{isset($property_data->description)?$property_data->description:''}}</textarea>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="row with-forms container">
-                            <div class="col-md-6">
-                                <h5>House Rules</h5>
-                                <textarea  class="search-field" id="house_rules" name="house_rules">{{isset($property_data->house_rules)?$property_data->house_rules:''}}</textarea>
+                            <div class="row with-forms container">
+                                <div class="col-md-6">
+                                    <h5>House Rules</h5>
+                                    <textarea  class="search-field" id="house_rules" name="house_rules">{{isset($property_data->house_rules)?$property_data->house_rules:''}}</textarea>
+                                </div>
                             </div>
-                        </div>
 
-                         <div class="col-md-12 form-row">
+                            <div class="col-md-12 form-row">
                                 <h3>Trash Pickup Days: </h3>
                                 <div class="checkboxes in-row" id="trash_days">
 
-                                            <input id="check-2"  value="Sun" name="trash_pickup_days[]" type="checkbox" name="check">
-                                            <label for="check-2" >Sunday</label>
+                                    <input id="check-2"  value="Sun" name="trash_pickup_days[]" type="checkbox" name="check">
+                                    <label for="check-2" >Sunday</label>
 
-                                            <input id="check-3" name="trash_pickup_days[]" value="Mon" type="checkbox" name="check">
-                                            <label for="check-3">Monday</label>
+                                    <input id="check-3" name="trash_pickup_days[]" value="Mon" type="checkbox" name="check">
+                                    <label for="check-3">Monday</label>
 
-                                            <input id="check-4" name="trash_pickup_days[]" value="Tue" type="checkbox" name="check">
-                                            <label for="check-4"  >Tuesday</label>
+                                    <input id="check-4" name="trash_pickup_days[]" value="Tue" type="checkbox" name="check">
+                                    <label for="check-4"  >Tuesday</label>
 
-                                            <input id="check-5" value="Wed" name="trash_pickup_days[]" type="checkbox" name="check">
-                                            <label for="check-5" >Wednesday</label>
+                                    <input id="check-5" value="Wed" name="trash_pickup_days[]" type="checkbox" name="check">
+                                    <label for="check-5" >Wednesday</label>
 
 
-                                            <input id="check-6" value="Thu" name="trash_pickup_days[]" type="checkbox" name="check">
-                                            <label for="check-6" >Thursday</label>
-                                            <br><br>
+                                    <input id="check-6" value="Thu" name="trash_pickup_days[]" type="checkbox" name="check">
+                                    <label for="check-6" >Thursday</label>
+                                    <br><br>
 
-                                            <input id="check-7" value="Fri" name="trash_pickup_days[]" type="checkbox" name="check">
-                                            <label for="check-7" >Friday</label>
+                                    <input id="check-7" value="Fri" name="trash_pickup_days[]" type="checkbox" name="check">
+                                    <label for="check-7" >Friday</label>
 
-                                            <input id="check-8" value="Sat" name="trash_pickup_days[]" type="checkbox" name="check">
-                                            <label for="check-8" >Saturday</label>
+                                    <input id="check-8" value="Sat" name="trash_pickup_days[]" type="checkbox" name="check">
+                                    <label for="check-8" >Saturday</label>
 
-                                        </div>
+                                </div>
                             </div>
 
-                              <div class="col-md-12"><br><br>
+                            <div class="col-md-12"><br><br>
                                 <h3>Lawn Services<span class="required">*</span> :</h3>
                                 <div class="checkboxes in-row">
 
-                                            <input id="lawn_yes" name="lawn_service" type="checkbox" value="1" name="check">
-                                            <label for="lawn_yes" >Yes</label>
+                                    <input id="lawn_yes" name="lawn_service" type="checkbox" value="1" name="check">
+                                    <label for="lawn_yes" >Yes</label>
 
-                                            <input id="lawn_no" name="lawn_service" type="checkbox" value="0" checked  name="check">
-                                            <label for="lawn_no"  value="1">No</label>
+                                    <input id="lawn_no" name="lawn_service" type="checkbox" value="0" checked  name="check">
+                                    <label for="lawn_no"  value="1">No</label>
                                 </div>
                             </div>
 
@@ -94,42 +94,29 @@
                                 <h3>Pets Allowed :</h3>
                                 <div class="checkboxes in-row">
 
-                                            <input id="pet_yes" name="pets_allowed" type="checkbox" value="1" >
-                                            <label for="pet_yes" >Yes</label>
+                                    <input id="pet_yes" name="pets_allowed" type="checkbox" value="1" >
+                                    <label for="pet_yes" >Yes</label>
 
-                                            <input id="pet_no" name="pets_allowed" type="checkbox" value="0" checked  >
-                                            <label for="pet_no"  value="1">No</label>
+                                    <input id="pet_no" name="pets_allowed" type="checkbox" value="0" checked  >
+                                    <label for="pet_no"  value="1">No</label>
                                 </div>
                             </div>
 
 
 
-                            <div class="row with-forms">
+                            <div class="text-center">
 
-                                <div class="col-md-3"></div>
-                                <div class="col-md-3">
+                                <input type="hidden" id="lat" name="lat" value="{{$property_details->lat}}">
+                                <input type="hidden" id="lng" name="lng" value="{{$property_details->lng}}">
 
-                                </div>
-
+                                <!--   <div class="col-md-10">
+                                      <input  type="button" class="button preview" value="PREVIOUS">
+                              </div> -->
+                                {{-- @if(isset($property_details->is_complete) && $property_details->is_complete == 1)
+                                    <button id="button" class="button border margin-top-5" name="save" value="save" style="background-color: #e78016;">Save<i class="fa fa-save"></i></button>
+                                @endif --}}
+                                <button type="submit" id="button" class="button preview margin-top-5" value="NEXT">Save  <i class="fa fa-arrow-circle-right"></i></button>
                             </div>
-
-                        <div class="col-md-3">
-                            <h5>&nbsp;</h5>
-                        </div>
-                        <div class="col-md-3">
-
-                            <input type="hidden" id="lat" name="lat" value="{{$property_details->lat}}">
-                            <input type="hidden" id="lng" name="lng" value="{{$property_details->lng}}">
-
-                            <div class="divider"></div>
-                          <!--   <div class="col-md-10">
-                                <input  type="button" class="button preview" value="PREVIOUS">
-                        </div> -->
-                            {{-- @if(isset($property_details->is_complete) && $property_details->is_complete == 1)
-                                <button id="button" class="button border margin-top-5" name="save" value="save" style="background-color: #e78016;">Save<i class="fa fa-save"></i></button>
-                            @endif --}}
-                            <button type="submit" id="button" class="button preview margin-top-5" value="NEXT">Save  <i class="fa fa-arrow-circle-right"></i></button>
-                        </div>
                         </form>
 
                     </div>
@@ -150,7 +137,7 @@
         if (isset($property_data->trash_pickup_days)) {
             $value = explode(',', $property_data->trash_pickup_days);
             foreach ($value as $v) { ?>
-                $("input[type=checkbox][value={{$v}}]").prop("checked",true);
+        $("input[type=checkbox][value={{$v}}]").prop("checked",true);
 
         <?php }
         }
@@ -159,13 +146,13 @@
 
             if ($temp == 1) { ?>
 
-       $('#lawn_no').attr('checked',false);
-       $('#lawn_yes').attr('checked',true);
+        $('#lawn_no').attr('checked',false);
+        $('#lawn_yes').attr('checked',true);
         <?php }
             if ($temp == 0) { ?>
-         $('#lawn_no').attr('checked',true);
-       $('#lawn_yes').attr('checked',false);
-   <?php }
+        $('#lawn_no').attr('checked',true);
+        $('#lawn_yes').attr('checked',false);
+        <?php }
         }
         ?>
 
@@ -176,23 +163,23 @@
             if(value==1){
                 $('#lawn_no').attr('checked',false);
             }else{
-               $('#lawn_yes').attr('checked',false);
+                $('#lawn_yes').attr('checked',false);
             }
         })
 
-<?php if (isset($property_data->pets_allowed)) {
-    $temp = $property_data->pets_allowed;
+        <?php if (isset($property_data->pets_allowed)) {
+            $temp = $property_data->pets_allowed;
 
-    if ($temp == 1) { ?>
+            if ($temp == 1) { ?>
 
-       $('#pet_no').attr('checked',false);
-       $('#pet_yes').attr('checked',true);
+        $('#pet_no').attr('checked',false);
+        $('#pet_yes').attr('checked',true);
         <?php }
-    if ($temp == 0) { ?>
-         $('#pet_no').attr('checked',true);
-       $('#pet_yes').attr('checked',false);
-   <?php }
-} ?>
+            if ($temp == 0) { ?>
+        $('#pet_no').attr('checked',true);
+        $('#pet_yes').attr('checked',false);
+        <?php }
+        } ?>
 
 
 
@@ -201,29 +188,29 @@
             if(value==1){
                 $('#pet_no').attr('checked',false);
             }else{
-               $('#pet_yes').attr('checked',false);
+                $('#pet_yes').attr('checked',false);
             }
         })
     </script>
-{{--    <script type="text/javascript">
-        $('.date_picker').datepicker({});
-        var date = new Date();
-        //date.setDate(date.getDate()-1);
-        $('#from_date').datepicker({
-            startDate: date
-        });
-
-        function set_to_date() {
-            // body...
-            var from_date = $('#from_date').val();
-            $('#to_date').datepicker({
-                startDate: from_date
+    {{--    <script type="text/javascript">
+            $('.date_picker').datepicker({});
+            var date = new Date();
+            //date.setDate(date.getDate()-1);
+            $('#from_date').datepicker({
+                startDate: date
             });
-        }
 
-    </script>--}}
+            function set_to_date() {
+                // body...
+                var from_date = $('#from_date').val();
+                $('#to_date').datepicker({
+                    startDate: from_date
+                });
+            }
 
- <!--    <script type="text/javascript">
+        </script>--}}
+
+    <!--    <script type="text/javascript">
 //        var markers = [
 //            {
 //                "title": 'Alibaug',

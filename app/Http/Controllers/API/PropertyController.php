@@ -895,4 +895,69 @@ class PropertyController extends BaseController
         }
         return response()->json(['status' => true, 'success_message' => 'Price updated successfully']);
     }
+
+    public function disable_property($id, Request $request)
+    {
+        //property_list
+        $user_id = $request->header('authId');
+        $client_id = $request->header('clientId');
+        $user = DB::table('users')
+            ->where('client_id', $client_id)
+            ->where('id', $user_id)
+            ->first();
+        $username = $user->first_name . ' ' . $user->last_name;
+        $check = DB::table('property_list')
+            ->where('client_id', $client_id)
+            ->where('id', $id)
+            ->first();
+        //print_r($check);exit;
+        if ($check->is_disable == 0) {
+            $disable = 1;
+            $content = "Your Property : " . $check->title . "(Property ID : " . $check->id . ") Has been Disabled.";
+        } else {
+            $disable = 0;
+            $content = "Your Property : " . $check->title . "(Property ID : " . $check->id . ") Has been Enabled.";
+        }
+        $update = DB::table('property_list')
+            ->where('client_id', $client_id)
+            ->where('id', $id)
+            ->update(['is_disable' => $disable]);
+        $mail_email = $this->get_email($check->user_id);
+        $mail_data = [
+            'username' => $username,
+            'content' => $content,
+        ];
+        $this->send_email($mail_email, 'mail.custom-email', $mail_data);
+        if ($disable == 0) {
+            return response()->json(['status' => 'SUCCESS', 'message' => 'Your Property Disabled']);
+        }
+        if ($disable == 1) {
+            return response()->json(['status' => 'SUCCESS', 'message' => 'Your Property Enabled']);
+        }
+    }
+    public function delete_property(Request $request)
+    {
+        $delete = $this->property_amenities->where('property_id', '=', $request->property_id)->delete();
+        $delete = $this->property_booking->where('property_id', '=', $request->property_id)->delete();
+        $delete = $this->propertyRoom->where('property_id', '=', $request->property_id)->delete();
+        $delete = $this->propertyBedRooms->where('property_id', '=', $request->property_id)->delete();
+        $delete = $this->propertyList->where('property_list.id', '=', $request->property_id)->delete();
+        if ($delete) {
+            return response()->json(['status' => true, 'success_message' => 'Property deleted successfully']);
+        } else {
+            return response()->json(['status' => false, 'error_message' => 'Unable to delete property']);
+        }
+    }
+
+    public function delete_property_image($id)
+    {
+        $delete = DB::table('property_images')
+            ->where('id', $id)
+            ->delete();
+        if ($delete) {
+            return response()->json(['status' => true, 'success_message' => 'Property Image deleted successfully']);
+        } else {
+            return response()->json(['status' => false, 'error_message' => 'Unable to delete property Image']);
+        }
+    }
 }

@@ -16,14 +16,21 @@
 
                     <div class="style-1">
 
-                        <button class="btn" style="margin-top: 10px;background-color:#0983b8;color:white">Listing Location</button>
-                        <button class="btn" style="margin-left: 5px;margin-top: 10px;" @if(isset($property_details)) @if($property_details->stage >= 2) href="{{url('/')}}/owner/add-new-property/2/{{$property_details->id}}" @else disabled="" @endif @endif>Property Details</button>
-                        <button class="btn" style="margin-left: 5px;margin-top: 10px;" @if(isset($property_details)) @if($property_details->stage >= 3) href="{{url('/')}}/owner/add-new-property/3/{{$property_details->id}}" @else disabled="" @endif @endif>Listing</button>
-                        <button class="btn" style="margin-left: 5px;margin-top: 10px;" @if(isset($property_details)) @if($property_details->stage >= 4) href="{{url('/')}}/owner/add-new-property/4/{{$property_details->id}}" @else disabled="" @endif @endif>Pricing</button>
-                        <button class="btn" style="margin-left: 5px;margin-top: 10px;" @if(isset($property_details)) @if($property_details->stage >= 5) href="{{url('/')}}/owner/add-new-property/5/{{$property_details->id}}" @else disabled="" @endif @endif>Add Photo</button>
-                        <!--  <button class="btn" style="margin-left: 5px;margin-top: 10px;" disabled="">Amenties</button>
+                    {{--                        <button class="btn" style="margin-top: 10px;background-color:#0983b8;color:white">Listing Location</button>--}}
+                    {{--                        <button class="btn" style="margin-left: 5px;margin-top: 10px;" @if(isset($property_details)) @if($property_details->stage >= 2) href="{{url('/')}}/owner/add-new-property/2/{{$property_details->id}}" @else disabled="" @endif @endif>Property Details</button>--}}
+                    {{--                        <button class="btn" style="margin-left: 5px;margin-top: 10px;" @if(isset($property_details)) @if($property_details->stage >= 3) href="{{url('/')}}/owner/add-new-property/3/{{$property_details->id}}" @else disabled="" @endif @endif>Listing</button>--}}
+                    {{--                        <button class="btn" style="margin-left: 5px;margin-top: 10px;" @if(isset($property_details)) @if($property_details->stage >= 4) href="{{url('/')}}/owner/add-new-property/4/{{$property_details->id}}" @else disabled="" @endif @endif>Pricing</button>--}}
+                    {{--                        <button class="btn" style="margin-left: 5px;margin-top: 10px;" @if(isset($property_details)) @if($property_details->stage >= 5) href="{{url('/')}}/owner/add-new-property/5/{{$property_details->id}}" @else disabled="" @endif @endif>Add Photo</button>--}}
+                    <!--  <button class="btn" style="margin-left: 5px;margin-top: 10px;" disabled="">Amenties</button>
                          <button class="btn" style="margin-left: 5px;margin-top: 10px;" disabled="">Calender</button> -->
+                        <div class="dashboard-header">
 
+                            <div class=" user_dashboard_panel_guide">
+
+                                @include('owner.add-property.menu')
+
+                            </div>
+                        </div>
                         <!-- Tabs Content -->
                         <div class="tabs-container">
 
@@ -137,7 +144,7 @@
                 "lng": -101.5360453,
                 "description": '10052 County Rd 2, Yuma, CO 80759, USA'
             }
-            @if(isset($property_details))
+                @if(isset($property_details) && isset($property_details->id))
             var propertyDetails = <?php echo json_encode($property_details); ?>;
             var fullAddress = [propertyDetails.address, propertyDetails.city, propertyDetails.state, propertyDetails.pin_code, propertyDetails.country].filter(Boolean).join(', ');
 
@@ -145,6 +152,7 @@
             var streetNumber = addressParts[0] || '';
             var route = addressParts[1] || '';
 
+            $('#address').val(fullAddress);
             $('#street_number').val(streetNumber);
             $('#route').val(route);
             $('#locality').val(propertyDetails.city);

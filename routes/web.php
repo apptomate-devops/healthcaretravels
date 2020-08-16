@@ -135,8 +135,13 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::POST('/owner/add-new-property/5', 'PropertyController@property_next5');
     Route::POST('/owner/add-new-property/6', 'PropertyController@property_next6');
     Route::POST('/owner/add-new-property/7', 'PropertyController@property_next7');
+    Route::POST('/owner/property/file-upload', 'PropertyController@property_image_upload');
+
     Route::GET('/owner-update-booking', 'PropertyController@owner_update_booking');
     Route::get('/owner/update-property/{id}', 'PropertyController@update_property');
+    Route::GET('/disable-property/{id}', 'PropertyController@disable_property');
+    Route::GET('/delete-property/{id}', 'PropertyController@delete_property');
+
     Route::GET('/owner/calender', 'OwnerController@calender');
     Route::get('/owner/chat/{id}', 'PropertyController@fire_chat');
     Route::GET('/ical/{id}', 'IcalController@ical');

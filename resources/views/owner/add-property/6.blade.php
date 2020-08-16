@@ -220,28 +220,11 @@
                                 <!-- Checkboxes / End -->
 
                             </div>
-
-
-
-                            <div class="col-md-3">
-                                <h5>&nbsp;</h5>
-                            </div>
-                            <div class="col-md-3">
-                                <h5>&nbsp;</h5>
-                            </div>
-                            <div class="col-md-3">
-                                <h5>&nbsp;</h5>
-                            </div>
-                            <div class="col-md-3" style="
-                                 margin-top: 40px;
-                                 margin-bottom: 50px;
-                                 ">
-
-                                <div class="divider"></div>
-                               {{--  @if(isset($property_details->is_complete) && $property_details->is_complete == 1)
+                            <div class="text-center">
+                                {{--  @if(isset($property_details->is_complete) && $property_details->is_complete == 1)
                                                 <button id="button" class="button border margin-top-5" name="save" value="save" style="background-color: #e78016;">Save<i class="fa fa-save"></i></button>
                                             @endif --}}
-                                <button type="submit" class="button preview margin-top-5" value="NEXT">Save  <i class="fa fa-arrow-circle-right"></i></button>
+                                <button type="submit" class="button preview margin-top-50" value="NEXT">Save  <i class="fa fa-arrow-circle-right"></i></button>
                             </div>
 
 

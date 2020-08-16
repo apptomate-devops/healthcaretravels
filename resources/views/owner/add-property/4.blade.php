@@ -177,25 +177,26 @@
                                     <!-- Row -->
 
                                     <!-- Row / End -->
-                                    <div class="divider"></div>
-                                    @if(Session::has('user_id'))
-                                        @if(Session::get('role_id') == 1)
-                                            <input type="hidden" name="user_id" value="{{Session::get('user_id')}}">
-                                            {{-- @if(isset($property_details->is_complete) && $property_details->is_complete == 1)
-                                                <button id="button" class="button border margin-top-5" name="save" value="save" style="background-color: #e78016;">Save<i class="fa fa-save"></i></button>
-                                            @endif --}}
-                                            <button id="button" class="button border margin-top-5">Save <i class="fa fa-arrow-circle-right"></i></button>
+                                    <div class="text-center">
+                                        @if(Session::has('user_id'))
+                                            @if(Session::get('role_id') == 1)
+                                                <input type="hidden" name="user_id" value="{{Session::get('user_id')}}">
+                                                {{-- @if(isset($property_details->is_complete) && $property_details->is_complete == 1)
+                                                    <button id="button" class="button border margin-top-5" name="save" value="save" style="background-color: #e78016;">Save<i class="fa fa-save"></i></button>
+                                                @endif --}}
+                                                <button id="button" class="button border margin-top-5">Save <i class="fa fa-arrow-circle-right"></i></button>
+                                            @else
+                                                <p> </p>
+                                                {{-- @if(isset($property_details->is_complete) && $property_details->is_complete == 1)
+                                                    <button id="button" class="button border margin-top-5" name="save" value="save" style="background-color: #e78016;">Save<i class="fa fa-save"></i></button>
+                                                @endif --}}
+                                                <button id="button" class="button border margin-top-5">Save <i class="fa fa-arrow-circle-right"></i></button>
+                                            @endif
                                         @else
-                                            <p> </p>
-                                            {{-- @if(isset($property_details->is_complete) && $property_details->is_complete == 1)
-                                                <button id="button" class="button border margin-top-5" name="save" value="save" style="background-color: #e78016;">Save<i class="fa fa-save"></i></button>
-                                            @endif --}}
-                                            <button id="button" class="button border margin-top-5">Save <i class="fa fa-arrow-circle-right"></i></button>
+                                            <p>Login to add property </p>
+                                            <button id="button" disabled class="button border margin-top-5">Save <i class="fa fa-arrow-circle-right"></i></button>
                                         @endif
-                                    @else
-                                        <p>Login to add property </p>
-                                        <button id="button" disabled class="button border margin-top-5">Save <i class="fa fa-arrow-circle-right"></i></button>
-                                    @endif
+                                    </div>
 
                                 </div>
                                 <!-- Section / End -->

@@ -31,4 +31,13 @@ Route::group(['middleware' => ['API']], function () {
     Route::POST('/add-property/2', 'Api\PropertyController@add_property2');
     Route::POST('/add-property/3', 'Api\PropertyController@add_property3');
     Route::POST('/add-property/4', 'Api\PropertyController@add_property4');
+
+    Route::GET('/disable_property/{id}', 'Api\PropertyController@disable_property');
+
+    Route::POST('/property/upload-image', 'Api\PropertyController@upload_image')->name('Api\image_upload');
+    Route::GET('/delete-property', 'Api\PropertyController@delete_property')->name('Api\delete_property');
+    Route::GET('/delete-property_image/{id}', 'Api\PropertyController@delete_property_image');
+    Route::POST('/cover_photo_change', 'Api\PropertyController@cover_photo_change');
+
+    Route::POST('/save-amenities', 'Api\PropertyController@save_amenities')->name('Api\save_amenities');
 });

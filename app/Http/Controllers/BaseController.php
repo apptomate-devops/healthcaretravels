@@ -200,13 +200,13 @@ class BaseController extends ConstantsController
             return false;
         }
     }
-    public function send_email_listing($email, $view_name, $data)
+    public function send_email_listing($email, $view_name, $data, $subject)
     {
         try {
             Mail::send($view_name, $data, function ($message) use ($email) {
                 $message->from('gotocva@gmail.com', 'Mail from ' . APP_BASE_NAME);
                 $message->to($email);
-                $message->subject('Your Property listed successfully - ' . APP_BASE_NAME);
+                $message->subject($subject);
             });
         } catch (\Exception $ex) {
             Logger::error('Error sending email to: ' . $email);

@@ -116,15 +116,16 @@
                     </div>
                     @endif
 
-                    <form action="{{url('/')}}/owner/add-new-property/7" method="post" name="form-add-new">
+                    <form action="{{url('/')}}/owner/add-new-property/5" method="post" name="form-add-new">
                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                         <input type="hidden" name="client_id" value="{{$client_id}}">
                         <input type="hidden" name="property_id" value="{{$property_details->id}}">
-                        <div class="divider"></div>
-                        <button type="submit" class="button preview" style="float: right;">
-                            SAVE
-                            <i class="fa fa-arrow-circle-right"></i>
-                        </button>
+                        <div class="text-center">
+                            <button type="submit" class="button preview">
+                                SAVE
+                                <i class="fa fa-arrow-circle-right"></i>
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>

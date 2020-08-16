@@ -1293,18 +1293,27 @@ class PropertyController extends BaseController
     public function add_property(Request $request)
     {
         $client_id = CLIENT_ID;
-        $property_id = $request->session()->get('property_id');
-        if ($property_id) {
-            $property_details = DB::table('property_list')
-                ->where('client_id', '=', CLIENT_ID)
-                ->where('id', '=', $property_id)
-                ->first();
-            return view('owner.add_property')
-                ->with('client_id', $client_id)
-                ->with('property_details', $property_details);
-        } else {
-            return view('owner.add_property')->with('client_id', $client_id);
-        }
+        session()->forget('property_id');
+
+        //        $property_id = $request->session()->get('property_id');
+        //        if ($property_id) {
+        //            $property_details = DB::table('property_list')
+        //                ->where('client_id', '=', CLIENT_ID)
+        //                ->where('id', '=', $property_id)
+        //                ->first();
+        //            return view('owner.add_property')
+        //                ->with('client_id', $client_id)
+        //                ->with('stage', 0)
+        //                ->with('property_details', $property_details);
+        //        } else {
+        $property_details = new \stdClass();
+        $property_details->stage = 0;
+        $property_details->is_complete = 0;
+        return view('owner.add_property')
+            ->with('client_id', $client_id)
+            ->with('stage', 0)
+            ->with('property_details', $property_details);
+        //        }
     }
 
     public function add_new_property(Request $request)
@@ -1897,13 +1906,13 @@ class PropertyController extends BaseController
         $insert = DB::table('property_list')
             ->where('id', $request->property_id)
             ->update([
-                'country' => $request->country_id,
-                'state' => $request->state_id,
-                'address' => $request->address,
-                'zip_code' => $request->zip,
-                'lat' => $request->lat,
-                'lng' => $request->lng,
-                'status' => 1,
+                //                'country' => $request->country_id,
+                //                'state' => $request->state_id,
+                //                'address' => $request->address,
+                //                'zip_code' => $request->zip,
+                //                'lat' => $request->lat,
+                //                'lng' => $request->lng,
+                //                'status' => 1,
                 'stage' => 5,
             ]);
 
@@ -1911,7 +1920,7 @@ class PropertyController extends BaseController
             session()->forget('property_id');
             $url = BASE_URL . "owner/calender?id=" . $request->property_id;
         } else {
-            $url = BASE_URL . 'owner/add-new-property/6/' . $request->property_id;
+            $url = BASE_URL . 'owner/add-new-property/7/' . $request->property_id;
         }
 
         return redirect($url);
@@ -2283,25 +2292,53 @@ class PropertyController extends BaseController
                 ->update(['role_id' => ONE]);
             $request->session()->put('role_id', ONE);
         }
-        DB::table('property_list')
-            ->where('client_id', '=', CLIENT_ID)
-            ->where('id', $request->property_id)
-            ->update(['is_complete' => 1, 'stage' => 6]);
 
         $file_name = 'data/' . $request->property_id . '.json';
         if (file_exists($file_name)) {
             unlink($file_name);
         }
+
         $mail_email = $this->get_email($property->user_id);
         $user = DB::table('users')
             ->where('id', $request->session()->get('user_id'))
             ->first();
-        $mail_data = ['name' => $user->first_name . ' ' . $user->last_name];
 
-        $this->send_email_listing($mail_email, 'mail.listing', $mail_data);
-        //owner/calender?id=94
-        session()->forget('property_id');
-        $url = BASE_URL . "owner/calender?id=" . $request->property_id;
+        $mail_data = [
+            'name' => $user->first_name . ' ' . $user->last_name,
+            'property_link' => BASE_URL . 'property/' . $request->property_id,
+            'availability_calendar' => BASE_URL . 'ical/' . $request->property_id,
+        ];
+
+        $address = implode(
+            ", ",
+            array_filter([
+                $property->street_number,
+                $property->route,
+                $property->city,
+                $property->state,
+                $property->pin_code,
+                $property->country,
+            ]),
+        );
+
+        if ($property->is_complete == 0) {
+            DB::table('property_list')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('id', $request->property_id)
+                ->update(['is_complete' => 1, 'stage' => 7]);
+
+            $this->send_email_listing($mail_email, 'mail.listing', $mail_data, 'Listing Confirmation: ' . $address);
+            session()->forget('property_id');
+            $url = BASE_URL . "owner/calender?id=" . $request->property_id;
+        } else {
+            $this->send_email_listing(
+                $mail_email,
+                'mail.listing_update',
+                $mail_data,
+                'You edited your property listing: ' . $address,
+            );
+            $url = BASE_URL . 'owner/my-properties';
+        }
         return redirect($url);
     }
 
@@ -2365,7 +2402,7 @@ class PropertyController extends BaseController
             $propertys = [];
             $propertysd = [];
             if (count($pd) > 0) {
-                if (count($cover_img) == 1) {
+                if (isset($cover_img) && count($cover_img) == 1) {
                     $property->image_url = $cover_img->image_url;
                 } else {
                     $property->image_url = $pd[ZERO]->image_url;
@@ -2385,5 +2422,97 @@ class PropertyController extends BaseController
         }
 
         return view('owner.my_properties', ['properties' => $properties_near]);
+    }
+
+    public function property_image_upload(Request $request)
+    {
+        //
+        $file = $request->file('file');
+        $image = $request->$key;
+        $ext = $image->getClientOriginalExtension();
+        $imageName = self::generate_random_string() . '.' . $ext;
+        $destinationPath = 'public/uploads';
+        $file->move($destinationPath, $imageName);
+        $complete_url = BASE_URL . $destinationPath . '/' . $imageName;
+
+        $property_id = $request->session()->get('property_id');
+        $insert = DB::table('property_images')->insert([
+            'client_id' => CLIENT_ID,
+            'property_id' => $property_id,
+            'image_url' => $complete_url,
+            'sort' => ONE,
+            'status' => ONE,
+        ]);
+        return $complete_url;
+    }
+
+    public function disable_property($id, Request $request)
+    {
+        //property_list
+        $user_id = $request->session()->get('user_id');
+        $user = DB::table('users')
+            ->where('client_id', CLIENT_ID)
+            ->where('id', $user_id)
+            ->first();
+        $username = $user->first_name . ' ' . $user->last_name;
+        $check = DB::table('property_list')
+            ->where('client_id', CLIENT_ID)
+            ->where('id', $id)
+            ->first();
+        //print_r($check);exit;
+        if ($check->is_disable == 0) {
+            $disable = 1;
+            $status = 0;
+            $content = "Your Property : " . $check->title . "(Property ID : " . $check->id . ") Has been Disabled.";
+        } else {
+            $disable = 0;
+            $status = 1;
+            $content = "Your Property : " . $check->title . "(Property ID : " . $check->id . ") Has been Enabled.";
+        }
+        $update = DB::table('property_list')
+            ->where('client_id', CLIENT_ID)
+            ->where('id', $id)
+            ->update(['is_disable' => $disable, 'status' => $status]);
+        $mail_email = $this->get_email($check->user_id);
+        $mail_data = [
+            'username' => $username,
+            'content' => $content,
+        ];
+        $this->send_email($mail_email, 'mail.custom-email', $mail_data);
+        return back()->with('success', 'Property updated');
+    }
+
+    public function delete_property($property_id, Request $request)
+    {
+        $file_name = 'data/' . $property_id . '.json';
+        if (file_exists($file_name)) {
+            unlink($file_name);
+        }
+        DB::table('property_list')
+            ->where('client_id', CLIENT_ID)
+            ->where('id', $property_id)
+            ->update(['status' => 0]);
+        $data = DB::table('property_list')
+            ->join('users', 'users.id', '=', 'property_list.user_id')
+            ->where('property_list.client_id', CLIENT_ID)
+            ->where('property_list.id', $property_id)
+            ->first();
+        $mail_data = [
+            'name' => $data->first_name . " " . $data->last_name,
+            'data' => $data,
+            'text' => 'Trying to delete his/her property',
+        ];
+        $title = 'Alert from - ' . APP_BASE_NAME;
+        $subject = "Property Deletion request from - " . APP_BASE_NAME;
+        $email = "guru@sparkouttech.com";
+        // $email = "info@healthcaretravels.com";
+        $this->send_custom_email($email, $subject, 'mail.property-delete-mail', $mail_data, $title);
+
+        // DB::table('property_amenties')->where('client_id', CLIENT_ID)->where('property_id', $property_id)->delete();
+        // DB::table('property_bedrooms')->where('client_id', CLIENT_ID)->where('property_id', $property_id)->delete();
+        // DB::table('property_room')->where('client_id', CLIENT_ID)->where('property_id', $property_id)->delete();
+        // DB::table('property_short_term_pricing')->where('client_id', CLIENT_ID)->where('property_id', $property_id)->delete();
+        // DB::table('property_images')->where('client_id', CLIENT_ID)->where('property_id', $property_id)->delete();
+        return back()->with('success', 'Property removed successfully');
     }
 }

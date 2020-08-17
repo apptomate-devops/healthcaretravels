@@ -28,7 +28,7 @@
             </div>
             <!-- Left Side Content / End -->
             <!-- Right Side Content / End -->
-            <div class="right-side">
+            <div class="right-side visible-lg">
                 <ul class="header-widget">
                     {{--  <li>
                        <i class="sl sl-icon-location"></i>
@@ -210,7 +210,7 @@
         <!-- User Menu -->
 
         @if(Session::has('user_id'))
-            <div class="container">
+            <div class="container hidden-xs">
                 <div class="row">
                     <div class="user-menu-container">
                         <div class="user-menu">
@@ -320,6 +320,15 @@
         function closeVerificationModal() {
             document.getElementById("verification-pending-modal").style.height = "0%";
         }
+        // $( window ).on( "load", function() {
+        //     $('.mm-next').click(function(){
+        //         $('.mm-next').removeClass('active');
+        //         $(this).addClass('active')
+        //     });
+        //     $('.mm-prev').click(function(){
+        //         $('.mm-next').removeClass('active');
+        //     });
+        // });
     </script>
 </header>
 

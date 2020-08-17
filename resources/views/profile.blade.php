@@ -176,13 +176,13 @@
 
                             @endif
 
-                            @if($user_detail->role_id == 1 || $user_detail->role_id == 4)
-                                <div class="form-row form-row-wide" id="listing_address_field">
-                                    <label for="listing_address">Listing Address:</label>
-                                    <input type="text" class="input-text validate" value="{{Session::get('listing_address') ?? $user_detail->listing_address}}" name="listing_address" id="listing_address" placeholder="Full Street Address" autocomplete="off" style="padding-left: 20px;" @if($user_detail->listing_address) data-is-valid="true" @endif />
-                                </div>
-                                <p class="error-text" id="listing_address_error" style="display: none;">Please select a valid address from the suggestions.</p>
-                            @endif
+{{--                            @if($user_detail->role_id == 1 || $user_detail->role_id == 4)--}}
+{{--                                <div class="form-row form-row-wide" id="listing_address_field">--}}
+{{--                                    <label for="listing_address">Listing Address:</label>--}}
+{{--                                    <input type="text" class="input-text validate" value="{{Session::get('listing_address') ?? $user_detail->listing_address}}" name="listing_address" id="listing_address" placeholder="Full Street Address" autocomplete="off" style="padding-left: 20px;" @if($user_detail->listing_address) data-is-valid="true" @endif />--}}
+{{--                                </div>--}}
+{{--                                <p class="error-text" id="listing_address_error" style="display: none;">Please select a valid address from the suggestions.</p>--}}
+{{--                            @endif--}}
 
                             @if($user_detail->role_id == 2)
                                 <label for="work">Office Number:</label>
@@ -338,7 +338,7 @@
             if(roleId == 0 || roleId == 3) {
                 addressFields = ['tax_home', 'address'];
             } else if(roleId == 1 || roleId == 4) {
-                addressFields = ['address', 'listing_address'];
+                addressFields = ['address'];
             };
 
             let options = {

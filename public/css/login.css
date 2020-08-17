@@ -205,6 +205,17 @@
     margin-bottom: 30px;
 }
 
+#other_occupation {
+    margin-bottom: 30px;
+    margin-top: -15px;
+}
+
+#other_agency_cancel,
+#other_occupation_cancel,
+#add_another_occupation {
+    margin-top: -25px;
+}
+
 /* OTP screen */
 
 .otp-verification label {

@@ -377,6 +377,7 @@ button[disabled], html input[disabled] {
     z-index: 999;
     padding: 25px 0 14px 0;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.12);
+    background: #fff;
 }
 
 header.fullwidth .container {
@@ -923,6 +924,7 @@ ul.top-bar-menu li i {
     padding-left: 25px;
     padding-right: 20px;
     margin-left: 25px;
+    max-width: 35%;
 }
 
 .user-menu .user-name {
@@ -974,6 +976,12 @@ ul.top-bar-menu li i {
 .user-name span#header_profile_image {
     margin-right: 10px;
     border-radius: 50%;
+}
+
+.user-name span#header_profile_image + span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .user-menu ul {
@@ -1095,8 +1103,8 @@ ul.top-bar-menu li i {
 
 @media (max-width: 1366px) and (min-width: 1240px) {
 
-    .user-menu .user-name {
-        max-width: 110px;
+    .user-menu {
+        max-width: 28%;
     }
 }
 
@@ -1115,7 +1123,7 @@ ul.top-bar-menu li i {
     }
 
     .user-menu {
-        top: 12px;
+        max-width: 20%;
     }
 
     .right-side {
@@ -1189,6 +1197,11 @@ ul.top-bar-menu li i {
         border-top: 1px solid #e0e0e0;
         margin: 15px;
         padding-top: 15px;
+    }
+
+    .user-menu {
+        max-width: 100%;
+        margin: 0;
     }
 
     .user-menu ul {
@@ -1350,6 +1363,20 @@ ul.top-bar-menu li i {
 }
 
 @media (max-width: 480px) {
+
+    #header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+    }
+
+    body {
+        padding-top: 97px;
+    }
+
+    .mm-blocking.mm-background > body {
+        padding-top: 0;
+    }
 
     .header-widget .user-menu {
         top: 0;
@@ -1572,6 +1599,10 @@ li.mm-vertical.mm-opened > .mm-panel {
     -ms-transform: rotate(225deg);
     transform: rotate(225deg);
     right: 19px
+}
+
+.mm-listview .mm-next.active {
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 .mm-btn {
@@ -2025,7 +2056,7 @@ html.mm-opening .mm-menu.mm-opened ~ .mm-slideout {
         display: block;
     }
 
-    .mm-panels > .mm-panel.mm-hasnavbar.mm-opened .mm-title {
+    .mm-panels > .mm-panel.mm-hasnavbar .mm-navbar .mm-title {
         display: none;
     }
 }

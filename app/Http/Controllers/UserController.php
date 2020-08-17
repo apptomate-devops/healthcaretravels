@@ -17,7 +17,7 @@ use Auth;
 class UserController extends BaseController
 {
     // protected $maxAttempts = 2;
-    protected $decayMinutes = 300;
+    protected $decayMinutes = 5;
     use AuthenticatesUsers;
 
     public function account_delete_process(Request $request)

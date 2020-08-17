@@ -8,7 +8,6 @@ use Auth;
 
 class LogoutController extends Controller
 {
-    //
     public function logout(Request $request)
     {
         if (Auth::check()) {

@@ -16,6 +16,8 @@ use Auth;
 
 class UserController extends BaseController
 {
+    // protected $maxAttempts = 2;
+    protected $decayMinutes = 300;
     use AuthenticatesUsers;
 
     public function account_delete_process(Request $request)
@@ -255,7 +257,7 @@ class UserController extends BaseController
 
             return back()->with(
                 'error',
-                'You have tried many times with the wrong email or password. Please Try again after some time.',
+                'Your account is locked due to too many failed login attempts. Please wait 5 minutes before reattempting. If you can not access your account you can reset your password or contact <a href="mailto:support@healthcaretravels.com" style="color: white">support@healthcaretravels.com</a>',
             );
         }
         if ($request->phone_no) {

@@ -51,7 +51,7 @@
                 @endif
                 @if(Session::has('error'))
                     <div class="alert alert-danger">
-                        <h4>{{ Session::get('error') }}</h4>
+                        <h4>{!!Session::get('error')!!}</h4>
                     </div>
                 @endif
                 @if (count($errors) > 0)

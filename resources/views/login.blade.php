@@ -342,14 +342,14 @@
                                 <input id="terms_accept" type="checkbox" name="terms_accept" @if(Session::has('terms_accept')) checked @endif">
                                 <label for="terms_accept">I don’t want to receive marketing messages from Health Care Travels. I can also opt out of receiving these at any time by emailing
                                     <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com.</a>
-                                {!! $errors->first('terms_accept', '<p class="error-text" style="margin-top: 15px;">:message</p>') !!}
+                                {!! $errors->first('terms_accept', '<p class="error-text-accept">:message</p>') !!}
                             </div>
 
                             <div class="checkboxes" id="policy_accept_field" style="display: none;">
                                 <input id="policy_accept" type="checkbox" name="policy_accept" @if(Session::has('policy_accept')) checked @endif">
                                 <label for="policy_accept">
                                     By checking and selecting Agree and Register below, I agree to Health Care Travels <a href="{{URL('/')}}/terms-of-use">Terms of Service</a>, <a href="{{URL('/')}}/payment-terms">Payments Terms of Service</a>, <a href="{{URL('/')}}/policies">Privacy Policy</a>, and <a href="{{URL('/')}}/non-discrimination-policy">Nondiscrimination Policy.</a></p></label>
-                                {!! $errors->first('policy_accept', '<p class="error-text" style="margin-top: 15px;">:message</p>') !!}
+                                {!! $errors->first('policy_accept', '<p class="error-text-accept">:message</p>') !!}
                             </div>
                             <div id="recaptcha-block" class="g-recaptcha" style="display: none" data-sitekey="{{RECAPTCHA_SITE_KEY}}" data-expired-callback="recaptcha_expired_callback" data-callback="recaptcha_callback">
                             </div>

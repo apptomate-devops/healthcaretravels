@@ -128,7 +128,7 @@
 
                                         <option value="3" @if(Session::get('type')=="3" ) selected @endif>RV Healthcare Traveler</option>
 
-                                        <option value="4" @if(Session::get('type')=="4" ) selected @endif>Cohost</option>
+                                        <option value="4" @if(Session::get('type')=="4" ) selected @endif>Co-host</option>
                                     </select>
                                 </label>
                                 {!! $errors->first('user_type', '<p class="error-text">:message</p>') !!}
@@ -151,9 +151,9 @@
 
                             @if (!Session::get('social_id'))
                                 <p class="form-row form-row-wide" id="password_field" style="display: none;">
-                                <label for="password1">Password:
-                                    <input class="input-text validate {{ $errors->has('password1') ? 'form-error' : ''}}" type="password" data-strength autocomplete="off" name="password1" placeholder="Password" id="password1" required />
-                                </label>
+                                    <label for="password1">Password:
+                                        <input class="input-text validate {{ $errors->has('password1') ? 'form-error' : ''}}" type="password" data-strength autocomplete="off" name="password1" placeholder="Password" id="password1" required />
+                                    </label>
                                 <div class="password-checkbox">
                                     <input type="checkbox" onclick="togglePassword('password1')">
                                     <span>Show Password</span>
@@ -272,23 +272,27 @@
 
                             <p class="form-row form-row-wide" id="occupation_field" style="display: none;">
                                 <label for="occupation">Occupation:
-                                    <select class="input-text validate" onchange="on_occupation_change(this.value)" autocomplete="off" name="occupation" id="occupation">
+                                    <select class="input-text validate" autocomplete="off" name="occupation" id="occupation">
                                         <option label="" value="">Select Occupation</option>
                                         @foreach($occupation as $a)
                                             <option value="{{$a->name}}" @if(Session::get('occupation')===$a->name) selected @endif>{{$a->name}}</option>
                                         @endforeach
                                     </select>
                                 </label>
-                                {!! $errors->first('occupation', '<p class="error-text">:message</p>') !!}
+                            <div id="add_another_occupation" class="add-another" onclick="add_another_occupation(true)" style="cursor: pointer;">Can't find it? Add it here.</div>
+                            <input type="text" style="display: none;" class="input-text validate" name="other_occupation" id="other_occupation"  value="{{Session::get('occupation')}}" placeholder="Other Occupation" autocomplete="off">
+                            <div style="display: none;" id="other_occupation_cancel" class="add-another" onclick="add_another_occupation()" style="cursor: pointer;">Cancel</div>
+                            {!! $errors->first('occupation', '<p class="error-text">:message</p>') !!}
                             </p>
 
                             <p class="form-row form-row-wide" id="agency_show" style="display: none;">
                                 <label for="agency_name" style="margin-bottom: 0;">Agency you work for:</label>
-                            <label class="register-info" id="agency-caption">Select as many agencies that you have worked for in the last 12 months.</label>
-                            <span class="autocomplete-select"></span>
-                            <div id="add_another_agency" class="add-another" onclick="add_another_agency()" style="cursor: pointer;">Can't find it? Add it here.</div>
+                                <label class="register-info" id="agency-caption">Select as many agencies that you have worked for in the last 12 months.</label>
+                                <span class="autocomplete-select"></span>
+                            <div id="add_another_agency" class="add-another" onclick="add_another_agency(true)" style="cursor: pointer;">Can't find it? Add it here.</div>
                             <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
                             <input type="text" style="display: none;" class="input-text validate" name="other_agency" id="other_agency" value="{{Session::get('other_agency')}}" placeholder="Other agency" autocomplete="off">
+                            <div style="display: none;" id="other_agency_cancel" class="add-another" onclick="add_another_agency()" style="cursor: pointer;">Cancel</div>
                             {!! $errors->first('name_of_agency', '<p class="error-text">:message</p>') !!}
                             </p>
 
@@ -326,27 +330,26 @@
                             </div>
                             <button id="btn_add_apt_number" onclick="on_add_address_line_2(event)" class="btn btn-primary w-100" style="margin-bottom: 30px; margin-top: -40px; display: none;">Add an Apt or Floor #</button>
 
-                            <p class="form-row form-row-wide" id="listing_address_field" style="display: none;">
-                                <label for="listing_address">Listing Address:
-                                    <input type="text" class="input-text validate {{ $errors->has('listing_address') ? 'form-error' : ''}}" value="{{Session::get('listing_address')}}" name="listing_address" id="listing_address" placeholder="Full Street Address" autocomplete="off" style="padding-left: 20px;" @if(Session::has('listing_address')) data-is-valid="true" @endif />
-                                </label>
-                                {!! $errors->first('listing_address', '<p class="error-text">:message</p>') !!}
-                            </p>
-                            <div class="error-text" id="listing_address_error" style="display: none;">Please select a valid address from the suggestions.</div>
+                            {{--                            <p class="form-row form-row-wide" id="listing_address_field" style="display: none;">--}}
+                            {{--                                <label for="listing_address">Listing Address:--}}
+                            {{--                                    <input type="text" class="input-text validate {{ $errors->has('listing_address') ? 'form-error' : ''}}" value="{{Session::get('listing_address')}}" name="listing_address" id="listing_address" placeholder="Full Street Address" autocomplete="off" style="padding-left: 20px;" @if(Session::has('listing_address')) data-is-valid="true" @endif />--}}
+                            {{--                                </label>--}}
+                            {{--                                {!! $errors->first('listing_address', '<p class="error-text">:message</p>') !!}--}}
+                            {{--                            </p>--}}
+                            {{--                            <div class="error-text" id="listing_address_error" style="display: none;">Please select a valid address from the suggestions.</div>--}}
 
                             <div class="checkboxes" id="terms_accept_field" style="display: none;">
-                                @if(Session::has('terms_accept'))
-                                    <input id="terms_accept" type="checkbox" name="terms_accept" checked>
-                                @else
-                                    <input id="terms_accept" type="checkbox" name="terms_accept">
-                                @endif
-
+                                <input id="terms_accept" type="checkbox" name="terms_accept" @if(Session::has('terms_accept')) checked @endif">
                                 <label for="terms_accept">I don’t want to receive marketing messages from Health Care Travels. I can also opt out of receiving these at any time by emailing
                                     <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com.</a>
-                                    <br>
-                                    <br>
-                                    By selecting Agree and Register below, I agree to Health Care Travels <a href="{{URL('/')}}/terms-of-use">Terms of Service</a>, <a href="{{URL('/')}}/payment-terms">Payments Terms of Service</a>, <a href="{{URL('/')}}/policies">Privacy Policy</a>, and <a href="{{URL('/')}}/non-discrimination-policy">Nondiscrimination Policy.</a></p></label>
                                 {!! $errors->first('terms_accept', '<p class="error-text" style="margin-top: 15px;">:message</p>') !!}
+                            </div>
+
+                            <div class="checkboxes" id="policy_accept_field" style="display: none;">
+                                <input id="policy_accept" type="checkbox" name="policy_accept" @if(Session::has('policy_accept')) checked @endif">
+                                <label for="policy_accept">
+                                    By checking and selecting Agree and Register below, I agree to Health Care Travels <a href="{{URL('/')}}/terms-of-use">Terms of Service</a>, <a href="{{URL('/')}}/payment-terms">Payments Terms of Service</a>, <a href="{{URL('/')}}/policies">Privacy Policy</a>, and <a href="{{URL('/')}}/non-discrimination-policy">Nondiscrimination Policy.</a></p></label>
+                                {!! $errors->first('policy_accept', '<p class="error-text" style="margin-top: 15px;">:message</p>') !!}
                             </div>
                             <div id="recaptcha-block" class="g-recaptcha" style="display: none" data-sitekey="{{RECAPTCHA_SITE_KEY}}" data-expired-callback="recaptcha_expired_callback" data-callback="recaptcha_callback">
                             </div>
@@ -447,8 +450,16 @@
 
         let other_agency = "{{Session::get('other_agency')}}";
         if (other_agency) {
-            add_another_agency();
+            add_another_agency(true);
         }
+
+        var allOccupations = <?php echo json_encode($occupation); ?>;
+        let occupation = "{{Session::get('occupation')}}";
+        if (occupation && !allOccupations.includes(occupation)) {
+            add_another_occupation(true);
+        }
+
+
     })
 
     let addressFields = [];
@@ -475,17 +486,21 @@
                 $('#gender_field').show();
                 $('#languages_field').show();
                 $('#occupation_field').show();
+                $('#add_another_occupation').show();
+                $('#other_occupation').hide();
+                $('#other_occupation_cancel').hide();
                 $('#agency_show').show();
                 $('#add_another_agency').show();
                 $('#other_agency').hide();
+                $('#other_agency_cancel').hide();
                 $('#agency-caption').show();
                 $('#tax_home_field').show();
                 $('#address_field').show();
                 $('#btn_add_apt_number').show();
                 $('#add_apt_number_field').hide();
                 $('#remove_add_apt_number').hide();
-                $('#listing_address_field').hide();
                 $('#terms_accept_field').show();
+                $('#policy_accept_field').show();
                 $('#register_button_field').show();
                 $('#name-caption').hide();
                 $('#work_title_field').hide();
@@ -501,7 +516,7 @@
                 break;
 
             case "1": // Property Owner
-            case "4": // Cohost
+            case "4": // Co-host
                 $('#recaptcha-block').show();
                 $('#username2_field').show();
                 $('#email_field').show();
@@ -517,17 +532,21 @@
                 $('#gender_field').show();
                 $('#languages_field').show();
                 $('#occupation_field').hide();
+                $('#add_another_occupation').hide();
+                $('#other_occupation').hide();
+                $('#other_occupation_cancel').hide();
                 $('#agency_show').hide();
                 $('#add_another_agency').hide();
                 $('#other_agency').hide();
+                $('#other_agency_cancel').hide();
                 $('#agency-caption').hide();
                 $('#tax_home_field').hide();
                 $('#address_field').show();
                 $('#btn_add_apt_number').show();
                 $('#add_apt_number_field').hide();
                 $('#remove_add_apt_number').hide();
-                $('#listing_address_field').show();
                 $('#terms_accept_field').show();
+                $('#policy_accept_field').show();
                 $('#register_button_field').show();
                 $('#name-caption').show();
                 $('#work_title_field').hide();
@@ -537,7 +556,7 @@
                 $('#email-label').text('Email Address:');
                 $('#address_label').text('Mailing Address:');
 
-                addressFields = ['address', 'listing_address']
+                addressFields = ['address']
 
                 break;
 
@@ -557,17 +576,21 @@
                 $('#gender_field').show();
                 $('#languages_field').show();
                 $('#occupation_field').hide();
+                $('#add_another_occupation').hide();
+                $('#other_occupation').hide();
+                $('#other_occupation_cancel').hide();
                 $('#agency_show').hide();
                 $('#add_another_agency').hide();
                 $('#other_agency').hide();
+                $('#other_agency_cancel').hide();
                 $('#agency-caption').hide();
                 $('#tax_home_field').hide();
                 $('#address_field').hide();
                 $('#btn_add_apt_number').hide();
                 $('#add_apt_number_field').hide();
                 $('#remove_add_apt_number').hide();
-                $('#listing_address_field').hide();
                 $('#terms_accept_field').show();
+                $('#policy_accept_field').show();
                 $('#register_button_field').show();
                 $('#name-caption').hide();
                 $('#work_title_field').show();
@@ -597,17 +620,21 @@
                 $('#gender_field').hide();
                 $('#languages_field').hide();
                 $('#occupation_field').hide();
+                $('#add_another_occupation').hide();
+                $('#other_occupation').hide();
+                $('#other_occupation_cancel').hide();
                 $('#agency_show').hide();
                 $('#add_another_agency').hide();
                 $('#other_agency').hide();
+                $('#other_agency_cancel').hide();
                 $('#agency-caption').hide();
                 $('#tax_home_field').hide();
                 $('#address_field').hide();
                 $('#btn_add_apt_number').hide();
                 $('#add_apt_number_field').hide();
                 $('#remove_add_apt_number').hide();
-                $('#listing_address_field').hide();
                 $('#terms_accept_field').hide();
+                $('#policy_accept_field').hide();
                 $('#register_button_field').hide();
                 $('#name-caption').hide();
                 $('#work_title_field').hide();
@@ -697,12 +724,6 @@
         document.getElementById("dob").max = `${yyyy}-${ mm<10 ? '0'+mm : mm }-${ dd<10 ? '0'+dd : dd }`;
     }
 
-    function on_occupation_change(value) {
-        if (["other", "others"].includes(value.toLowerCase())) {
-            get_input_from_prompt("Occupation:", 'occupation');
-        }
-    }
-
     function on_dob_change(value) {
         const dateString = value;
         let today = new Date();
@@ -739,18 +760,6 @@
         $('#address_line_2').val('');
     }
 
-    function get_input_from_prompt(title, id) {
-        let value = prompt(title, '');
-        if (value && !["other", "others"].includes(value.toLowerCase())) {
-            let newOption = $('<option>');
-            newOption.attr('value', value).text(value);
-            $(`#${id}`).append(newOption);
-            $(`#${id}  > [value="${value}"]`).attr("selected", "true");
-        } else {
-            $(`#${id}`).val($(`#${id} option:first`).val());
-        };
-    }
-
     $('#phone_no, #work_number_field').on('keypress', function(event) {
         var regex = new RegExp("^[0-9+]$");
         var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
@@ -760,9 +769,36 @@
         }
     });
 
-    function add_another_agency() {
-        $('#add_another_agency').hide();
-        $('#other_agency').show();
+    function add_another_agency(show = false) {
+        if(show) {
+            $('#add_another_agency').hide();
+            $('#other_agency').show();
+            $('#other_agency_cancel').show();
+        } else {
+            $('#add_another_agency').show();
+            $('#other_agency').hide();
+            $('#other_agency_cancel').hide();
+            $('#other_agency').val('');
+        }
+    }
+
+    function add_another_occupation(show = false) {
+        if(show) {
+            $('#add_another_occupation').hide();
+            $('#other_occupation').show();
+            $('#occupation').hide();
+            $('#other_occupation_cancel').show();
+            $('#other_occupation').attr('name','occupation');
+            $('#occupation').attr('name','other_occupation');
+        } else {
+            $('#add_another_occupation').show();
+            $('#other_occupation').hide();
+            $('#occupation').show();
+            $('#other_occupation_cancel').hide();
+            $('#other_occupation').val('');
+            $('#occupation').attr('name','occupation');
+            $('#other_occupation').attr('name','other_occupation');
+        }
     }
 
     function load_agencies() {

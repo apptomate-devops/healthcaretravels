@@ -512,6 +512,7 @@ class UserController extends BaseController
             'gender' => 'required',
             'languages_known' => 'required',
             'terms_accept' => 'accepted',
+            'policy_accept' => 'accepted',
         ];
         if (empty($social_id)) {
             $rules["password1"] = PASSWORD_REGEX;
@@ -521,7 +522,7 @@ class UserController extends BaseController
             // Owner or Cohost
             $rules["email"] = 'required|email:rfc,dns|unique:users,email';
             $rules["address"] = 'required';
-            $rules["listing_address"] = 'required';
+            //            $rules["listing_address"] = 'required';
         } elseif ($request->user_type === "2") {
             // Travel Agency
             $rules["email"] =
@@ -552,6 +553,7 @@ class UserController extends BaseController
                 ->with('type', $type)
                 ->with('selectedTab', 'tab2')
                 ->with('terms_accept', $request->terms_accept)
+                ->with('policy_accept', $request->policy_accept)
                 ->with('dob', $request->dob)
                 ->with('gender', $request->gender)
                 ->with('occupation', $request->occupation)
@@ -567,7 +569,7 @@ class UserController extends BaseController
                 ->with('state', $request->state)
                 ->with('pin_code', $request->pin_code)
                 ->with('country', $request->country)
-                ->with('listing_address', $request->listing_address)
+                //                ->with('listing_address', $request->listing_address)
                 ->with('work', $request->work)
                 ->with('work_title', $request->work_title)
                 ->with('website', $request->website)
@@ -609,7 +611,7 @@ class UserController extends BaseController
             'state' => $request->state,
             'pin_code' => $request->pin_code,
             'country' => $request->country,
-            'listing_address' => $request->listing_address,
+            //            'listing_address' => $request->listing_address,
             'status' => 1,
             'work' => $request->work,
             'work_title' => $request->work_title,
@@ -1027,7 +1029,7 @@ class UserController extends BaseController
         if ($user->role_id == "1" || $user->role_id == "4") {
             // Owner or Cohost
             $rules["address"] = 'required';
-            $rules["listing_address"] = 'required';
+            //            $rules["listing_address"] = 'required';
         } elseif ($user->role_id == "2") {
             // Travel Agency
             $rules["work_title"] = 'required';
@@ -1062,7 +1064,7 @@ class UserController extends BaseController
                 ->with('state', $request->state)
                 ->with('pin_code', $request->pin_code)
                 ->with('country', $request->country)
-                ->with('listing_address', $request->listing_address)
+                //                ->with('listing_address', $request->listing_address)
                 ->with('work', $request->work)
                 ->with('work_title', $request->work_title)
                 ->with('website', $request->website)
@@ -1091,7 +1093,7 @@ class UserController extends BaseController
                 'state' => $request->state,
                 'pin_code' => $request->pin_code,
                 'country' => $request->country,
-                'listing_address' => $request->listing_address,
+                //                'listing_address' => $request->listing_address,
                 'work' => $request->work,
                 'work_title' => $request->work_title,
                 'website' => $request->website,

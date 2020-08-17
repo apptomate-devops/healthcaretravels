@@ -47,7 +47,7 @@
                 <b class="info-text" style="font-size: 18px;">
                     Your account has been submitted for verification. Please allow up to 24 hours for your information to be reviewed.
                 </b>
-                <p class="info-text" style="margin-top: 15px;">You'll receive in email once your account has been reviewed or if we need more information.</p>
+                <p class="info-text" style="margin-top: 15px;">You'll receive an email once your account has been reviewed or if we need more information.</p>
             @elseif($user->denied_count >= 3)
                 <b class="info-text" style="color: red; font-size: 18px;">We were unable to verify your account and cannot grant your access to our features. Please contact support for more information.</b>
             @else
@@ -88,7 +88,7 @@
                                         <input type="file" name="utility_bill" id="utility_bill" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                     </div>
                                     <div class="col-md-6">
-                                        <label>Driver's License or Government ID</label>
+                                        <label>Driver's License or Government ID or Passport<span class="required">*</span></label>
                                         <input type="file" name="government_id" id="government_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                     </div>
 
@@ -150,7 +150,7 @@
                                         </div>
                                     @endif
                                     <div class="col-md-6">
-                                        <label>Driver's License or Government ID</label>
+                                        <label>Driver's License or Government ID or Passport<span class="required">*</span></label>
                                         <input type="file" name="government_id" id="government_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                         @if(isset($GOVERNMENT_ID->document_type))
                                             <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
@@ -195,7 +195,7 @@
                                         @endif
                                     </div>
                                     <div class="col-md-6">
-                                        <label>Driver's License or Government ID</label>
+                                        <label>Driver's License or Government ID or Passport<span class="required">*</span></label>
                                         <input type="file" name="government_id" id="government_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                         @if(isset($GOVERNMENT_ID->document_type))
                                             <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
@@ -434,6 +434,12 @@
                 });
 
                 function validate_submit() {
+                    debugger
+                    if(!$('#government_id').val()) {
+                        $(`#government_id`).css('border-color', '#ff0000');
+                        $(window).scrollTop($(`#government_id`).offset().top-50);
+                        return false;
+                    }
                     var user = <?php echo json_encode($user); ?>;
 
                     if (user.role_id == 4) {

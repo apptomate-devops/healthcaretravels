@@ -95,6 +95,10 @@
     border-color: #9D0000 !important;
 }
 
+.error-text-accept {
+    margin-top: 10px !important;
+    color: #9D0000;
+}
 .error-text {
     margin-top: -25px !important;
     margin-bottom: 25px !important;

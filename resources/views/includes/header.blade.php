@@ -320,15 +320,15 @@
         function closeVerificationModal() {
             document.getElementById("verification-pending-modal").style.height = "0%";
         }
-        // $( window ).on( "load", function() {
-        //     $('.mm-next').click(function(){
-        //         $('.mm-next').removeClass('active');
-        //         $(this).addClass('active')
-        //     });
-        //     $('.mm-prev').click(function(){
-        //         $('.mm-next').removeClass('active');
-        //     });
-        // });
+        $( window ).on( "load", function() {
+            $('.mm-next').click(function(){
+                $('.mm-next').removeClass('active');
+                $(this).addClass('active')
+            });
+            $('.mm-prev').click(function(){
+                $('.mm-next').removeClass('active');
+            });
+        });
     </script>
 </header>
 

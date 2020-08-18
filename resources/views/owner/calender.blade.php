@@ -102,61 +102,62 @@
 
                 allDaySlot: false,
                 selectHelper: false,
-                select: function(start, end, allDay) {
-                    var check_start=$('#start_date_hidden').val();
-                    if(check_start==0)
-                    {
-                        var s_date=convert(start);
-                        $('#start_date_hidden').val(convert(start));
-                        $("[data-date='" + s_date + "']").attr("id", "start_date");
-                    }
+                {{--select: function(start, end, allDay) {--}}
+                {{--    var check_start=$('#start_date_hidden').val();--}}
+                {{--    if(check_start==0)--}}
+                {{--    {--}}
+                {{--        var s_date=convert(start);--}}
+                {{--        $('#start_date_hidden').val(convert(start));--}}
+                {{--        $("[data-date='" + s_date + "']").attr("id", "start_date");--}}
+                {{--    }--}}
 
-                    if($('#start_date_hidden').val()!=convert(start))
-                    {
+                {{--    if($('#start_date_hidden').val()!=convert(start))--}}
+                {{--    {--}}
+                {{--        debugger--}}
 
-                        var e_date=convert(end);
-                        $("[data-date='" + e_date + "']").attr("id", "start_date");
-                        var roomtxt = $('#selector1  option:selected').text();
-                        //var title = prompt('Block a Room', roomtxt);
-                        var title = prompt('Block a Room', roomtxt);
-                        var pro_id = $("#property").val();
-                        if(pro_id == 0 || pro_id == " "){
-                            alert("Please Select Property");
-                            return false;
-                        }
+                {{--        var e_date=convert(end);--}}
+                {{--        $("[data-date='" + e_date + "']").attr("id", "start_date");--}}
+                {{--        var roomtxt = $('#selector1  option:selected').text();--}}
+                {{--        //var title = prompt('Block a Room', roomtxt);--}}
+                {{--        var title = prompt('Block a Room', roomtxt);--}}
+                {{--        var pro_id = $("#property").val();--}}
+                {{--        if(pro_id == 0 || pro_id == " "){--}}
+                {{--            alert("Please Select Property");--}}
+                {{--            return false;--}}
+                {{--        }--}}
 
 
-                        if (title) {
-                            // alert(title);
+                {{--        if (title) {--}}
+                {{--            // alert(title);--}}
 
-                            // alert(allDay);
-                            var start_date=$('#start_date_hidden').val();
-                            var end_date=convert(end);
-                            var ajax_url = "{{BASE_URL}}"+"block_booking?title="+title+"&start="+start_date+"&end="+end_date+"&pro_id="+pro_id;
-                            $.ajax({
-                                url:ajax_url,
-                                type:"GET",
-                                success: function(data){
-                                    window.location.reload();
-                                }
+                {{--            // alert(allDay);--}}
+                {{--            var start_date=$('#start_date_hidden').val();--}}
+                {{--            var end_date=convert(end);--}}
+                {{--            var ajax_url = "{{BASE_URL}}"+"block_booking?title="+title+"&start="+start_date+"&end="+end_date+"&pro_id="+pro_id;--}}
+                {{--            $.ajax({--}}
+                {{--                url:ajax_url,--}}
+                {{--                type:"GET",--}}
+                {{--                success: function(data){--}}
+                {{--                    window.location.reload();--}}
+                {{--                }--}}
 
-                            });
+                {{--            });--}}
 
-                            calendar.fullCalendar('renderEvent',
-                                {
-                                    title: title,
-                                    start: start,
-                                    end: end,
-                                    allDay: allDay,
-                                    className: 'reserved',
-                                },
+                {{--            calendar.fullCalendar('renderEvent',--}}
+                {{--                {--}}
+                {{--                    title: title,--}}
+                {{--                    start: start,--}}
+                {{--                    end: end,--}}
+                {{--                    allDay: allDay,--}}
+                {{--                    className: 'reserved',--}}
+                {{--                },--}}
 
-                                true // make the event "stick"
-                            );
-                        }
-                    }
-                    calendar.fullCalendar('unselect');
-                },
+                {{--                true // make the event "stick"--}}
+                {{--            );--}}
+                {{--        }--}}
+                {{--    }--}}
+                {{--    calendar.fullCalendar('unselect');--}}
+                {{--},--}}
                 events: [
                     // place the added events
                         @foreach($events as $event)

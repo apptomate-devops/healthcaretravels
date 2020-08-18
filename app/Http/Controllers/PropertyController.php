@@ -185,6 +185,7 @@ class PropertyController extends BaseController
 
         return redirect()->intended('/traveler/chat/' . $chat_id . '?fb-key=personal_chat&fbkey=personal_chat');
     }
+
     public function delete_chat($id, Request $request)
     {
         $chat = DB::table('personal_chat')
@@ -854,7 +855,6 @@ class PropertyController extends BaseController
                     'property_list.city as prop_city',
                     'country.country_name',
                 )
-
                 ->first();
             //print_r($properties);exit;
 
@@ -1603,24 +1603,93 @@ class PropertyController extends BaseController
                 break;
 
             case 7:
-                $events = DB::table('property_booking')
-                    ->where('client_id', '=', CLIENT_ID)
-                    ->where('property_id', '=', $property_id)
-                    ->get();
+                # code...
+
                 $stage_update = DB::table('property_list')
                     ->where('client_id', '=', CLIENT_ID)
                     ->where('id', '=', $property_id)
                     ->update(['on_stage' => 7]);
-                $client_id = CLIENT_ID;
-                $constants = $this->constants();
-                //code to be executed if n=label3;
-                return view('owner.add-property.7', [
-                    'constants' => $constants,
-                    'property_details' => $property_details,
-                    'events' => $events,
-                ])
+
+                if ($property_id) {
+                    $property_rate = DB::table('property_short_term_pricing')
+                        ->where('property_id', $property_id)
+                        ->select('price_per_night')
+                        ->first();
+
+                    $list = [];
+
+                    $month = date('m');
+                    $year = date('Y');
+                    $days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                    for ($d = 1; $d <= $days; $d++) {
+                        $time = mktime(12, 0, 0, $month, $d, $year);
+                        if (date('m', $time) == $month) {
+                            $list[$d]['date'] = date('Y-m-d', $time);
+                        }
+                        $list[$d]['price'] = $property_rate->price_per_night;
+                    }
+                    $icals = DB::table('third_party_calender')
+                        ->where('property_id', '=', $property_id)
+                        ->get();
+                    $events = DB::table('property_booking')
+                        ->where('client_id', '=', CLIENT_ID)
+                        ->where('property_id', '=', $property_id)
+                        ->get();
+                    $block_events = DB::table('property_blocking')
+                        ->where('client_id', '=', CLIENT_ID)
+                        ->where('property_id', '=', $property_id)
+                        ->get();
+                    $special_price = DB::table('property_special_pricing')
+                        ->where('client_id', '=', CLIENT_ID)
+                        ->where('property_id', '=', $property_id)
+                        ->get();
+
+                    //print_r($special_price);
+                    $dates = [];
+
+                    for ($i = 0; $i < count($special_price); $i++) {
+                        $dates[$i]['date'] = $special_price[$i]->start_date;
+                        $dates[$i]['price'] = $special_price[$i]->price_per_night;
+                    }
+
+                    //print_r($dates);exit;
+
+                    $finn = [];
+                    $finn = array_merge($dates, $list);
+                    // print_r($finn);exit;
+                    $res = [];
+                    $val = [];
+                    foreach ($finn as $key => $index) {
+                        if (!in_array($index['date'], $val)) {
+                            if ($index['date']) {
+                                $val[] = $index['date'];
+                                $res[] = $index;
+                            }
+                        }
+                    }
+
+                    foreach ($events as $key => $value) {
+                        if ($value->is_instant < 2) {
+                            $value->booked_on = APP_BASE_NAME;
+                        } else {
+                            $value->booked_on = 'Airbnb';
+                        }
+                    }
+                } else {
+                    $events = [];
+                    $icals = [];
+                    $property_rate = new stdClass();
+                    $property_rate->price_per_night = 0;
+                    $res = [];
+                    $block_events = [];
+                }
+                //                print_r($block_events);exit();
+                return view(
+                    'owner.add-property.7',
+                    compact('property_details', 'events', 'icals', 'block_events', 'res'),
+                )
                     ->with('stage', $stage)
-                    ->with('client_id', $client_id);
+                    ->with('client_id', CLIENT_ID);
                 break;
 
             default:
@@ -1903,19 +1972,92 @@ class PropertyController extends BaseController
 
     public function property_next5(Request $request)
     {
+        $property_id = $request->property_id;
         $insert = DB::table('property_list')
-            ->where('id', $request->property_id)
-            ->update([
-                //                'country' => $request->country_id,
-                //                'state' => $request->state_id,
-                //                'address' => $request->address,
-                //                'zip_code' => $request->zip,
-                //                'lat' => $request->lat,
-                //                'lng' => $request->lng,
-                //                'status' => 1,
-                'stage' => 5,
-            ]);
+            ->where('client_id', '=', CLIENT_ID)
+            ->where('id', $property_id)
+            ->update(['stage' => 5]);
 
+        $property_details = DB::table('property_list')
+            ->where('client_id', '=', CLIENT_ID)
+            ->where('id', $property_id)
+            ->first();
+
+        if ($property_id) {
+            $property_rate = DB::table('property_short_term_pricing')
+                ->where('property_id', $property_id)
+                ->select('price_per_night')
+                ->first();
+
+            $list = [];
+
+            $month = date('m');
+            $year = date('Y');
+            $days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+            for ($d = 1; $d <= $days; $d++) {
+                $time = mktime(12, 0, 0, $month, $d, $year);
+                if (date('m', $time) == $month) {
+                    $list[$d]['date'] = date('Y-m-d', $time);
+                }
+                $list[$d]['price'] = $property_rate->price_per_night;
+            }
+            $icals = DB::table('third_party_calender')
+                ->where('property_id', '=', $property_id)
+                ->get();
+            $events = DB::table('property_booking')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('property_id', '=', $property_id)
+                ->get();
+            $block_events = DB::table('property_blocking')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('property_id', '=', $property_id)
+                ->get();
+            $special_price = DB::table('property_special_pricing')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('property_id', '=', $property_id)
+                ->get();
+
+            //print_r($special_price);
+            $dates = [];
+
+            for ($i = 0; $i < count($special_price); $i++) {
+                $dates[$i]['date'] = $special_price[$i]->start_date;
+                $dates[$i]['price'] = $special_price[$i]->price_per_night;
+            }
+
+            //print_r($dates);exit;
+
+            $finn = [];
+            $finn = array_merge($dates, $list);
+            // print_r($finn);exit;
+            $res = [];
+            $val = [];
+            foreach ($finn as $key => $index) {
+                if (!in_array($index['date'], $val)) {
+                    if ($index['date']) {
+                        $val[] = $index['date'];
+                        $res[] = $index;
+                    }
+                }
+            }
+
+            foreach ($events as $key => $value) {
+                if ($value->is_instant < 2) {
+                    $value->booked_on = APP_BASE_NAME;
+                } else {
+                    $value->booked_on = 'Airbnb';
+                }
+            }
+        } else {
+            $events = [];
+            $icals = [];
+            $property_rate = new stdClass();
+            $property_rate->price_per_night = 0;
+            $res = [];
+            $block_events = [];
+        }
+
+        //        print_r($block_events);exit();
         if (isset($request->save)) {
             session()->forget('property_id');
             $url = BASE_URL . "owner/calender?id=" . $request->property_id;
@@ -1923,7 +2065,7 @@ class PropertyController extends BaseController
             $url = BASE_URL . 'owner/add-new-property/7/' . $request->property_id;
         }
 
-        return redirect($url);
+        return redirect($url)->with(compact('property_details', 'events', 'icals', 'block_events', 'res'));
     }
 
     public function property_next6(Request $request)
@@ -2260,12 +2402,12 @@ class PropertyController extends BaseController
             ->where('client_id', '=', CLIENT_ID)
             ->where('id', $request->property_id)
             ->update(['stage' => 6]);
-        if ($c_data->property_type == BLOCK) {
-            $url = BASE_URL . 'owner/add-new-property/7/' . $request->property_id;
-        } else {
-            // DB::table('property_list')->where('client_id', '=', CLIENT_ID)->where('id', $request->property_id)->update(['is_complete' => 1]);
-            $url = BASE_URL . "owner/my-properties";
-        }
+        //        if ($c_data->property_type == BLOCK) {
+        //            $url = BASE_URL . 'owner/add-new-property/7/' . $request->property_id;
+        //        } else {
+        //            // DB::table('property_list')->where('client_id', '=', CLIENT_ID)->where('id', $request->property_id)->update(['is_complete' => 1]);
+        //            $url = BASE_URL . "owner/my-properties";
+        //        }
 
         if (isset($request->save)) {
             session()->forget('property_id');
@@ -2284,6 +2426,8 @@ class PropertyController extends BaseController
             ->where('client_id', '=', CLIENT_ID)
             ->where('id', $request->property_id)
             ->first();
+        //        print_r($property);exit();
+
         $role_id = $request->session()->get('role_id');
         $user_id = $request->session()->get('user_id');
         if ($role_id == 2) {
@@ -2312,11 +2456,10 @@ class PropertyController extends BaseController
         $address = implode(
             ", ",
             array_filter([
-                $property->street_number,
-                $property->route,
+                $property->address,
                 $property->city,
                 $property->state,
-                $property->pin_code,
+                $property->zip_code,
                 $property->country,
             ]),
         );

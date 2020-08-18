@@ -434,7 +434,6 @@
                 });
 
                 function validate_submit() {
-                    debugger
                     if(!$('#government_id').val()) {
                         $(`#government_id`).css('border-color', '#ff0000');
                         $(window).scrollTop($(`#government_id`).offset().top-50);

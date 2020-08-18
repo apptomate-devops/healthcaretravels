@@ -733,7 +733,7 @@
         if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
             age--;
         }
-        if (age < 18) {
+        if (age < 18 || age > 100) {
             $('#dob_validation_error').html('You must be 18 or older to register online. Contact <br>​<a href="mailto:{{VERIFY_MAIL}}">{{VERIFY_MAIL}}</a> to create a minor account.')
         } else {
             $('#dob_validation_error').html('');

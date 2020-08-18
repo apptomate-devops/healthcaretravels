@@ -1365,7 +1365,7 @@ ul.top-bar-menu li i {
 @media (max-width: 480px) {
 
     #header {
-        position: fixed;
+        position: fixed !important;
         top: 0;
         width: 100%;
     }
@@ -1540,7 +1540,7 @@ ul.top-bar-menu li i {
     transition: 0.5s transform ease;
 }
 
-.mm-panels > .mm-panel.mm-subopened.mm-hidden {
+.mm-panels > .mm-panel.mm-subopened.mm-hidden:first-child {
     display: block !important;
 }
 

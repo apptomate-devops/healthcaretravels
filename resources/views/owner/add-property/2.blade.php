@@ -261,7 +261,7 @@
                                     @for($i=1;$i<count($property_bedrooms)+1;$i++)
                                         <div class="incremental-counter">
                                             <div class="row with-forms">
-                                                <h4>Bed Type {{$i}} </h4>
+                                                <h4>Room {{$i}} Beds</h4>
                                             </div>
                                             <div class="row with-forms">
                                                 <div class="counter-inputs">
@@ -341,15 +341,7 @@
                                     <div id="dynamic_bedrooms"></div>
                                 @endif
                                 <br><hr> <br>
-                                <div id="cur_occupancy" @if(isset($property_data->room_type))
-                                @if($property_data->room_type == "Entire Room")
-                                style="display: none;"
-                                     @else
-                                     style="display: block"
-                                     @endif
-                                     @else
-                                     style="display: none;"
-                                    @endif>
+                                <div id="cur_occupancy" @if($property_data->room_type === 'Entire Place') style="display: none;" @endif">
                                     <div class="incremental-counter">
                                         <div class="row with-forms">
                                             <h4>Current Occupancy </h4>
@@ -465,7 +457,7 @@
                 html += `<br><hr>
             <div class="incremental-counter">
                 <div class="row with-forms">
-                    <h4>Bed Type ${j} </h4>
+                    <h4>Room ${j} Beds</h4>
                 </div>
                 <div class="row with-forms">
                     <div class="counter-inputs">

@@ -12,30 +12,36 @@ class MapController extends BaseController
         $hospitals = $this->yelp_hospitals($lat, $lng);
         $pets = $this->yelp_pets($lat, $lng);
         $array = [];
-        foreach ($hospitals->businesses as $hospital) {
-            $arr['name'] = $hospital->name;
-            $arr['image_url'] = $hospital->image_url;
-            $arr['url'] = $hospital->url;
-            $arr['lat'] = $hospital->coordinates->latitude;
-            $arr['lang'] = $hospital->coordinates->longitude;
-            $arr['address'] = $hospital->location->display_address[0];
-            $arr['display_phone'] = $hospital->display_phone;
-            $arr['distance'] = round($hospital->distance / 1000) . " Km From this Property";
+        if (isset($hospitals->businesses)) {
+            foreach ($hospitals->businesses as $hospital) {
+                $arr['name'] = $hospital->name;
+                $arr['image_url'] = $hospital->image_url;
+                $arr['url'] = $hospital->url;
+                $arr['lat'] = $hospital->coordinates->latitude;
+                $arr['lang'] = $hospital->coordinates->longitude;
+                $arr['address'] = $hospital->location->display_address[0];
+                $arr['display_phone'] = $hospital->display_phone;
+                $arr['distance'] = round($hospital->distance / 1000) . " Km From this Property";
 
-            array_push($array, $arr);
+                array_push($array, $arr);
+            }
         }
-        $pet_place = [];
-        foreach ($pets->businesses as $pets) {
-            $arr1['name'] = $pets->name;
-            $arr1['image_url'] = $pets->image_url;
-            $arr1['url'] = $pets->url;
-            $arr1['lat'] = $pets->coordinates->latitude;
-            $arr1['lang'] = $pets->coordinates->longitude;
-            $arr1['address'] = $pets->location->display_address[0];
-            $arr1['display_phone'] = $pets->display_phone;
-            $arr1['distance'] = round($pets->distance / 1000) . " Km From this Property";
 
-            array_push($pet_place, $arr1);
+        $pet_place = [];
+
+        if (isset($pets->businesses)) {
+            foreach ($pets->businesses as $pets) {
+                $arr1['name'] = $pets->name;
+                $arr1['image_url'] = $pets->image_url;
+                $arr1['url'] = $pets->url;
+                $arr1['lat'] = $pets->coordinates->latitude;
+                $arr1['lang'] = $pets->coordinates->longitude;
+                $arr1['address'] = $pets->location->display_address[0];
+                $arr1['display_phone'] = $pets->display_phone;
+                $arr1['distance'] = round($pets->distance / 1000) . " Km From this Property";
+
+                array_push($pet_place, $arr1);
+            }
         }
 
         return view('map.single_marker', [

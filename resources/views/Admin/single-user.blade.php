@@ -278,7 +278,7 @@
                             <div class="alert alert-danger" style="display: none">
                                 <h4>An Error occured</h4>
                             </div>
-                            <button id="btn-submit-verification" class="btn btn-default btn-primary btn-block">Submit verification</button>
+                            <button id="btn-submit-verification" class="btn btn-default btn-primary btn-block">Submit</button>
                         </div>
                     </div>
                 </div>

@@ -254,11 +254,11 @@ class UserController extends BaseController
     {
         if ($this->hasTooManyLoginAttempts($request)) {
             $this->fireLockoutEvent($request);
-
-            return back()->with(
-                'error',
-                'Your account is locked due to too many failed login attempts. Please wait 5 minutes before reattempting. If you can not access your account you can reset your password or contact <a href="mailto:support@healthcaretravels.com" style="color: white">support@healthcaretravels.com</a>',
-            );
+            $error_message = 'Your account is locked due to too many failed login attempts.';
+            $error_message .= ' Please wait 5 minutes before reattempting.';
+            $error_message .= ' If you can not access your account you can reset your password or contact';
+            $error_message .= ' <a href="mailto:' . SUPPORT_MAIL . '" style="color: white">' . SUPPORT_MAIL . '</a>';
+            return back()->with('error', $error_message);
         }
         if ($request->phone_no) {
             $request->username = $request->username;

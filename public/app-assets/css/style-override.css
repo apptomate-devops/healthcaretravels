@@ -34,3 +34,7 @@ canvas[data-enlargable] {
 .verification-response {
     color: #ffffff !important;
 }
+
+.field-label {
+    margin-right: 5px;
+}

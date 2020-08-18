@@ -11,15 +11,15 @@
                     class="rounded-circle  height-150" alt="{{$data->username}} image">
             </div>
             <div class="card-body">
-                <h4 class="card-title">{{$data->username}}</h4>
-                <h6 class="card-subtitle text-muted">@if($data->role_id==0) Traveler @elseif($data->role_id==1)
-                        Owner @else  Travel Agency @endif
+                <h4 class="card-title"><span class="field-label">Username:</span>{{$data->username}}</h4>
+                <h6 class="card-subtitle text-muted"><span class="field-label">Type:</span>@if($data->role_id==0)Traveler @elseif($data->role_id==1)
+                        Owner @else Travel Agency @endif
                 </h6>
-                <br><h6 class="card-subtitle text-muted">@if($data->phone!='0'||$data->phone!=0){{$data->phone}}@endif
+                <br><h6 class="card-subtitle text-muted"><span class="field-label">Phone:</span>@if($data->phone!='0'||$data->phone!=0){{$data->phone}}@endif
                 </h6>
-                <br><h6 class="card-subtitle text-muted">@if($data->email!='0'||$data->email!=0){{$data->email}}@endif
+                <br><h6 class="card-subtitle text-muted"><span class="field-label">Email:</span>@if($data->email!='0'||$data->email!=0){{$data->email}}@endif
                 </h6><br>
-                <h6 class="card-subtitle text-muted">@if($data->name_of_agency!='0'||$data->name_of_agency!=0){{$data->name_of_agency}}@endif
+                <h6 class="card-subtitle text-muted"><span class="field-label">Agency:</span>@if($data->name_of_agency!='0'||$data->name_of_agency!=0){{$data->name_of_agency}}@endif
                 </h6><br>
 
                 <div class="text-center">

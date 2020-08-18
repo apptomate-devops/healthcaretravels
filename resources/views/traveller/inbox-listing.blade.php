@@ -32,7 +32,7 @@
 
                 <!-- Item #1 -->
                 @foreach($properties[0] as $property)
-                <?php if (count($property) != 0) { ?>
+                <?php if (!empty($property)) { ?>
                     <tr>
                         <td class="title-container">
 
@@ -62,7 +62,7 @@
                 @endforeach
 
                 @foreach($properties[1] as $property)
-                <?php if (count($property) != 0) { ?>
+                <?php if (!empty($property)) { ?>
                     <tr>
                         <td class="title-container">
 
@@ -92,7 +92,7 @@
                 @endforeach
 
                 @foreach($properties[2] as $property)
-                <?php if (count($property) != 0) { ?>
+                <?php if (!empty($property)) { ?>
                     <tr>
                         <td class="title-container">
 

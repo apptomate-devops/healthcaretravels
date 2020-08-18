@@ -369,6 +369,15 @@
 </script>
 
 <script type="text/javascript">
+function limitNavigationUsingLinks() {
+    $('.not-verified-block').toggleClass('not-verified-block');
+    $('.notification-message').html('Verify otp to continue');
+    $(document).on('click', 'a', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        openVerificationModal();
+    });
+}
     function onGoogleLoad() {
         var path = "{{Request::path()}}";
         switch (path) {
@@ -391,6 +400,10 @@
             case 'search-property':
                 initMaps();
                 initSearchPropertySearchInput();
+                break;
+            case 'otp-verify-register':
+            case 'otp-verify-login':
+                limitNavigationUsingLinks();
                 break;
             default:
                 break;

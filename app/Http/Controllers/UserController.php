@@ -16,6 +16,8 @@ use Auth;
 
 class UserController extends BaseController
 {
+    // protected $maxAttempts = 2;
+    protected $decayMinutes = 5;
     use AuthenticatesUsers;
 
     public function account_delete_process(Request $request)
@@ -252,11 +254,11 @@ class UserController extends BaseController
     {
         if ($this->hasTooManyLoginAttempts($request)) {
             $this->fireLockoutEvent($request);
-
-            return back()->with(
-                'error',
-                'You have tried many times with the wrong email or password. Please Try again after some time.',
-            );
+            $error_message = 'Your account is locked due to too many failed login attempts.';
+            $error_message .= ' Please wait 5 minutes before reattempting.';
+            $error_message .= ' If you can not access your account you can reset your password or contact';
+            $error_message .= ' <a href="mailto:' . SUPPORT_MAIL . '" style="color: white">' . SUPPORT_MAIL . '</a>';
+            return back()->with('error', $error_message);
         }
         if ($request->phone_no) {
             $request->username = $request->username;

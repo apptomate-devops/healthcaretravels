@@ -40,6 +40,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::GET('/travellers', 'Admin\TravellerController@index');
         Route::GET('/rv_travellers', 'Admin\TravellerController@rv_travellers');
         Route::GET('/owner', 'Admin\OwnerController@index');
+        Route::GET('/co_host', 'Admin\OwnerController@co_host');
         Route::GET('/user-status-update', 'Admin\OwnerController@status_update');
         Route::GET('/single_user', 'Admin\OwnerController@single_user');
 

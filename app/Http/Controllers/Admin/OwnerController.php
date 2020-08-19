@@ -18,6 +18,14 @@ class OwnerController extends BaseController
             ->get();
         return view('Admin.owner', compact('travellers'));
     }
+    public function co_host(Request $request)
+    {
+        $travellers = $this->db
+            ::table('users')
+            ->where('role_id', FOUR)
+            ->get();
+        return view('Admin.co_host', compact('travellers'));
+    }
 
     public function status_update(Request $request)
     {

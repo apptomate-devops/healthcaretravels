@@ -12,15 +12,24 @@
             </div>
             <div class="card-body">
                 <h4 class="card-title"><span class="field-label">Username:</span>{{$data->username}}</h4>
+                <h6 class="card-subtitle text-muted"><span class="field-label">Name:</span>{{$data->first_name ?? ''}} {{$data->last_name ?? ''}}</h6>
+                <br>
                 <h6 class="card-subtitle text-muted"><span class="field-label">Type:</span>@if($data->role_id==0)Traveler @elseif($data->role_id==1)
                         Owner @else Travel Agency @endif
                 </h6>
-                <br><h6 class="card-subtitle text-muted"><span class="field-label">Phone:</span>@if($data->phone!='0'||$data->phone!=0){{$data->phone}}@endif
-                </h6>
-                <br><h6 class="card-subtitle text-muted"><span class="field-label">Email:</span>@if($data->email!='0'||$data->email!=0){{$data->email}}@endif
-                </h6><br>
-                <h6 class="card-subtitle text-muted"><span class="field-label">Agency:</span>@if($data->name_of_agency!='0'||$data->name_of_agency!=0){{$data->name_of_agency}}@endif
-                </h6><br>
+                <br>
+                <h6 class="card-subtitle text-muted"><span class="field-label">Phone:</span>{{$data->phone ?? '-'}}</h6>
+                <br>
+                <h6 class="card-subtitle text-muted"><span class="field-label">Email:</span>{{$data->email ?? '-'}}</h6>
+                <br>
+                <h6 class="card-subtitle text-muted"><span class="field-label">Agency:</span>{{$data->other_agency ?? $data->name_of_agency ?? ""}}</h6>
+                <br>
+                <h6 class="card-subtitle text-muted"><span class="field-label">Ethnicity:</span>{{$data->ethnicity ?? '-'}}</h6>
+                <br>
+                <h6 class="card-subtitle text-muted"><span class="field-label">Date of birth:</span>{{$data->date_of_birth ?? '-'}}</h6>
+                <br>
+                <h6 class="card-subtitle text-muted"><span class="field-label">Gender:</span>{{$data->gender ?? '-'}}</h6>
+                <br>
 
                 <div class="text-center">
                     @if($data->facebook_url!='0')
@@ -99,7 +108,7 @@
         </div>
         <div class="card-content">
             <div class="card-body">
-                {{$data->address}}{{$data->country}}{{$data->state}}
+                {{$data->address}}{{$data->country ?: ''}}{{$data->state ?: ''}}
             </div>
         </div>
         <div class="card-body">
@@ -177,6 +186,22 @@
                 <br>
                 <h3 class="card-title">Languages Known</h3>
                 <h4>{{$data->languages_known ?? '-'}}</h4>
+                <br>
+                <h3 class="card-title">Occupation</h3>
+                <h4>{{$data->occupation ?? '-'}}</h4>
+                @if (isset($data->agency_office_number))
+                    <br>
+                    <h3 class="card-title">Agency Office Number</h3>
+                    <h4>{{$data->agency_office_number ?? '-'}}</h4>
+                @endif
+                @if (isset($data->agency_website))
+                    <br>
+                    <h3 class="card-title">Agency Website Number</h3>
+                    <h4><a class="parse-link-href" target="_blank" href="{{$data->agency_website}}">{{$data->agency_website}}</a></h4>
+                @endif
+                <br>
+                <h3 class="card-title">Email merketing</h3>
+                <h4>{{$data->email_opt == 0 ? "Subscribed" : "Not Subscribed"}}</h4>
             </div>
         </div>
     </div>

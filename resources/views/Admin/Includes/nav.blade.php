@@ -46,6 +46,14 @@
                 </span>
                 </a>
             </li>
+            <li {{{ (Request::is('admin/co_host*') ? 'class=active' : '') }}}>
+                <a href="{{url('admin/co_host')}}">
+                    <i class="la la-user-plus"></i>
+                    <span class="menu-title" data-i18n="nav.dash.main">
+                   Manage Co-Host
+                </span>
+                </a>
+            </li>
             <li {{{ (Request::is('admin/agency*') ? 'class=active' : '') }}}>
                 <a href="{{url('admin/agency')}}">
                     <i class="la la-user-plus"></i>

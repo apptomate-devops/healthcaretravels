@@ -721,6 +721,7 @@ class PropertyController extends BaseController
         $items_per_page = 100;
         $offset = ($page - 1) * $items_per_page;
         $property_list_obj = new PropertyList();
+
         $query = $property_list_obj
             ->join('users', 'users.id', '=', 'property_list.user_id')
             ->join('property_room', 'property_room.property_id', '=', 'property_list.id')

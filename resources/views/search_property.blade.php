@@ -44,7 +44,7 @@
             /* For desktop: */
             .myclass {
                 margin-top: 20px;
-                position: fixed;
+                /*position: fixed;*/
             }
         }
 

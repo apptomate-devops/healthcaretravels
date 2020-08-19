@@ -88,8 +88,8 @@
                                         <input type="file" name="utility_bill" id="utility_bill" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                     </div>
                                     <div class="col-md-6">
-                                        <label>Driver's License or Government ID or Passport<span class="required">*</span></label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
+                                        <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
+                                        <input type="file" name="government_id" id="government_id" class="form-control" required accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                     </div>
 
 
@@ -106,6 +106,10 @@
                                             We were unable to verify your account. Please resubmit your information or contact support for more information. Attempts remaining: {{3 - $user->denied_count}}
                                         </div>
                                     @endif
+                                    <div class="col-md-6">
+                                        <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
+                                        <input type="file" name="government_id" id="government_id" class="form-control" required accept=".jpg, .jpeg, .heic, .png, .pdf" />
+                                    </div>
                                     <div class="col-md-6">
                                         <label>A Traveler's Contract</label>
                                         <div class="caption-text" style="margin-top: 5px;">This should have your name as a contact person in the contract.</div>
@@ -150,20 +154,20 @@
                                         </div>
                                     @endif
                                     <div class="col-md-6">
-                                        <label>Driver's License or Government ID or Passport<span class="required">*</span></label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
+                                        <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
+                                        <input type="file" name="government_id" id="government_id" class="form-control" required accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                         @if(isset($GOVERNMENT_ID->document_type))
                                             <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                     </div>
                                     <div class="col-md-6">
-                                        <label>Signed HCT Co-hosting Agreement </label>
+                                        <label>Signed HCT Co-hosting Agreement<span class="required">*</span></label>
                                         <div class="caption-text">Only the HCT Standard Agreement will be accepted.</div>
-                                        <input type="file" name="cohosting_agreement_id" id="cohosting_agreement_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
+                                        <input type="file" name="cohosting_agreement_id" id="cohosting_agreement_id" class="form-control" required accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                     @if(isset($COHOSTING_AGREEMENT_ID->document_type))
                                             <a href="{{$COHOSTING_AGREEMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
-                                        <div style="margin-top: 10px;">
+                                        <div style="margin-top: -20px;">
                                             <a href="" style="text-decoration-line: underline;">Download form here</a>
                                         </div>
                                     </div>
@@ -195,7 +199,7 @@
                                         @endif
                                     </div>
                                     <div class="col-md-6">
-                                        <label>Driver's License or Government ID or Passport<span class="required">*</span></label>
+                                        <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
                                         <input type="file" name="government_id" id="government_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
                                         @if(isset($GOVERNMENT_ID->document_type))
                                             <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
@@ -247,7 +251,7 @@
                                         </div>
                                         <div class="card col-md-12" style="padding: 15px; margin-top: 25px;">
                                             <h4>Property Address</h4>
-                                            <input value="@if($user->property_address == '0' || $user->property_address == null)@else{{$user->property_address}}@endif" type="text" placeholder="Property Address" id="property_address" name="property_address" class="form-control" />
+                                            <input value="@if($user->property_address == '0' || $user->property_address == null)@else{{$user->property_address}}@endif" type="text" placeholder="Property Address" id="property_address" name="property_address" class="form-control" @if($user->property_address) data-is-valid="true" @endif />
                                             <div class="error-text" id="property_address_error" style="display: none;">Please select a valid address from the suggestions.</div>
                                             <div id="add_apt_number_field" style="display: none;">
                                                 <label for="add_apt" style="width: 100%;">Add Apartment Number:
@@ -412,7 +416,7 @@
                             autocomplete_address.addListener('place_changed', (e) => {
                                 var place = autocomplete_address.getPlace();
                                 property_address.style.borderColor = '#e0e0e0';
-                                $(`#property_address_error`).show();
+                                $(`#property_address_error`).hide();
                                 property_address.dataset.isValid = JSON.stringify(place.address_components);
                             });
                         }
@@ -442,6 +446,11 @@
                     var user = <?php echo json_encode($user); ?>;
 
                     if (user.role_id == 4) {
+                        if(!$('#cohosting_agreement_id').val()) {
+                            $(`#cohosting_agreement_id`).css('border-color', '#ff0000');
+                            $(window).scrollTop($(`#cohosting_agreement_id`).offset().top-50);
+                            return false;
+                        }
                         let property_address = document.getElementById('property_address');
                         if(property_address.value && property_address.dataset.isValid) {
 
@@ -464,9 +473,10 @@
                                     componentForm[addressType].value = address_components[i][componentForm[addressType].type];
                                 }
                             }
-                            var complete_address = Object.values(componentForm).map(a => a.value).join(', ');
+                            var complete_address = Object.values(componentForm).map(a => a.value).filter(Boolean).join(', ');
                             $(`#property_address`).val(complete_address);
-                            return true;
+                            $("#confirmationModal").modal('show');
+                            // return true;
                         } else {
                             $(`#property_address`).css('border-color', '#ff0000');
                             $(`#property_address_error`).show();

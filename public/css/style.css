@@ -170,7 +170,6 @@ button[disabled], html input[disabled] {
     padding: 0;
     margin-right: 4px;
     position: relative;
-    z-index: 12;
 }
 
 .tabs-nav li a,
@@ -187,7 +186,6 @@ button[disabled], html input[disabled] {
     padding: 0 15px;
     text-decoration: none;
     font-size: 15px;
-    z-index: 11;
     position: relative;
     margin-bottom: -1px;
     line-height: 32px;
@@ -217,7 +215,6 @@ button[disabled], html input[disabled] {
 .tabs-nav li.active a {
     border-color: #66676b;
     color: #66676b;
-    z-index: 11;
 }
 
 .tab-content {
@@ -374,7 +371,7 @@ button[disabled], html input[disabled] {
 
 #header {
     position: relative;
-    z-index: 999;
+    z-index: 5;
     padding: 25px 0 14px 0;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.12);
     background: #fff;
@@ -1990,7 +1987,7 @@ html.mm-background .mm-page {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 2
+    z-index: 6;
 }
 
 #mm-blocker::after {
@@ -2033,12 +2030,6 @@ html.mm-blocking #mm-blocker::after {
     z-index: 20;
     min-width: 140px;
     max-width: 300px
-}
-
-html.mm-opening .mm-menu.mm-opened ~ .mm-slideout {
-    -webkit-transform: translate(0, 0);
-    -ms-transform: translate(0, 0);
-    transform: translate(0, 0);
 }
 
 /* Media Queries ========== */

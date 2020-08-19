@@ -513,7 +513,7 @@ class UserController extends BaseController
             'dob' => 'required',
             'gender' => 'required',
             'languages_known' => 'required',
-            'terms_accept' => 'accepted',
+            //            'email_opt' => 'accepted',
             'policy_accept' => 'accepted',
         ];
         if (empty($social_id)) {
@@ -554,7 +554,7 @@ class UserController extends BaseController
                 ->with('phone', $phone)
                 ->with('type', $type)
                 ->with('selectedTab', 'tab2')
-                ->with('terms_accept', $request->terms_accept)
+                ->with('email_opt', $request->email_opt)
                 ->with('policy_accept', $request->policy_accept)
                 ->with('dob', $request->dob)
                 ->with('gender', $request->gender)
@@ -623,6 +623,7 @@ class UserController extends BaseController
             'login_type' => $login_type,
             'social_id' => $social_id,
             'otp' => $OTP,
+            'email_opt' => isset($request->email_opt) ? 1 : 0,
         ]);
         $d = DB::table('users')
             ->where('client_id', '=', $request->client_id)
@@ -970,6 +971,16 @@ class UserController extends BaseController
                     'agency_website' => isset($request->agency_website) ? $request->agency_website : null,
                     'agency_office_number' => isset($request->agency_office_number)
                         ? $request->agency_office_number
+                        : null,
+                    'homeowner_first_name' => isset($request->homeowner_first_name)
+                        ? $request->homeowner_first_name
+                        : null,
+                    'homeowner_last_name' => isset($request->homeowner_last_name)
+                        ? $request->homeowner_last_name
+                        : null,
+                    'homeowner_email' => isset($request->homeowner_email) ? $request->homeowner_email : null,
+                    'homeowner_phone_number' => isset($request->homeowner_phone_number)
+                        ? $request->homeowner_phone_number
                         : null,
                 ]);
 

@@ -338,18 +338,21 @@
                             {{--                            </p>--}}
                             {{--                            <div class="error-text" id="listing_address_error" style="display: none;">Please select a valid address from the suggestions.</div>--}}
 
-                            <div class="checkboxes" id="terms_accept_field" style="display: none;">
-                                <input id="terms_accept" type="checkbox" name="terms_accept" @if(Session::has('terms_accept')) checked @endif">
-                                <label for="terms_accept">I don’t want to receive marketing messages from Health Care Travels. I can also opt out of receiving these at any time by emailing
+                            <div class="checkboxes" id="email_opt_field" style="display: none;">
+                                <input id="email_opt" type="checkbox" name="email_opt" @if(Session::has('email_opt')) checked @endif">
+                                <label for="email_opt">I don’t want to receive marketing messages from Health Care Travels. I can also opt out of receiving these at any time by emailing
                                     <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com.</a>
-                                {!! $errors->first('terms_accept', '<p class="error-text-accept">:message</p>') !!}
+{{--                                {!! $errors->first('email_opt', '<p class="error-text-accept">:message</p>') !!}--}}
+                                </label>
                             </div>
 
                             <div class="checkboxes" id="policy_accept_field" style="display: none;">
                                 <input id="policy_accept" type="checkbox" name="policy_accept" @if(Session::has('policy_accept')) checked @endif">
                                 <label for="policy_accept">
-                                    By checking and selecting Agree and Register below, I agree to Health Care Travels <a href="{{URL('/')}}/terms-of-use">Terms of Service</a>, <a href="{{URL('/')}}/payment-terms">Payments Terms of Service</a>, <a href="{{URL('/')}}/policies">Privacy Policy</a>, and <a href="{{URL('/')}}/non-discrimination-policy">Nondiscrimination Policy.</a></p></label>
-                                {!! $errors->first('policy_accept', '<p class="error-text-accept">:message</p>') !!}
+                                    By checking and selecting Agree and Register below, I agree to Health Care Travels <a href="{{URL('/')}}/terms-of-use">Terms of Service</a>, <a href="{{URL('/')}}/payment-terms">Payments Terms of Service</a>, <a href="{{URL('/')}}/policies">Privacy Policy</a>, and <a href="{{URL('/')}}/non-discrimination-policy">Nondiscrimination Policy.</a>
+                                {!! $errors->first('policy_accept', '<p class="error-text-accept">Policy must be agreed</p>') !!}
+                                </label>
+
                             </div>
                             <div id="recaptcha-block" class="g-recaptcha" style="display: none" data-sitekey="{{RECAPTCHA_SITE_KEY}}" data-expired-callback="recaptcha_expired_callback" data-callback="recaptcha_callback">
                             </div>
@@ -455,7 +458,7 @@
 
         var allOccupations = <?php echo json_encode($occupation); ?>;
         let occupation = "{{Session::get('occupation')}}";
-        if (occupation && !allOccupations.includes(occupation)) {
+        if (occupation && !allOccupations.some(e => e.name === occupation)) {
             add_another_occupation(true);
         }
 
@@ -499,7 +502,7 @@
                 $('#btn_add_apt_number').show();
                 $('#add_apt_number_field').hide();
                 $('#remove_add_apt_number').hide();
-                $('#terms_accept_field').show();
+                $('#email_opt_field').show();
                 $('#policy_accept_field').show();
                 $('#register_button_field').show();
                 $('#name-caption').hide();
@@ -545,7 +548,7 @@
                 $('#btn_add_apt_number').show();
                 $('#add_apt_number_field').hide();
                 $('#remove_add_apt_number').hide();
-                $('#terms_accept_field').show();
+                $('#email_opt_field').show();
                 $('#policy_accept_field').show();
                 $('#register_button_field').show();
                 $('#name-caption').show();
@@ -589,7 +592,7 @@
                 $('#btn_add_apt_number').hide();
                 $('#add_apt_number_field').hide();
                 $('#remove_add_apt_number').hide();
-                $('#terms_accept_field').show();
+                $('#email_opt_field').show();
                 $('#policy_accept_field').show();
                 $('#register_button_field').show();
                 $('#name-caption').hide();
@@ -633,7 +636,7 @@
                 $('#btn_add_apt_number').hide();
                 $('#add_apt_number_field').hide();
                 $('#remove_add_apt_number').hide();
-                $('#terms_accept_field').hide();
+                $('#email_opt_field').hide();
                 $('#policy_accept_field').hide();
                 $('#register_button_field').hide();
                 $('#name-caption').hide();
@@ -725,6 +728,7 @@
     }
 
     function on_dob_change(value) {
+        debugger
         const dateString = value;
         let today = new Date();
         let birthDate = new Date(dateString);

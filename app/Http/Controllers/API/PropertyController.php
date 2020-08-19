@@ -960,4 +960,150 @@ class PropertyController extends BaseController
             return response()->json(['status' => false, 'error_message' => 'Unable to delete property Image']);
         }
     }
+
+    public function search_property(Request $request, $location)
+    {
+        LOG::info("search property hitted");
+
+        $location = urldecode($location);
+        $auth_id = $request->header('authId');
+        $location = explode(',', $location)[0];
+
+        $where = "A.client_id = " . CLIENT_ID . "";
+
+        if ($request->price_desc) {
+            $where .= " ORDER BY B.price_per_night DESC";
+        }
+
+        if ($request->price_asc) {
+            $where .= " ORDER BY B.price_per_night ASC";
+        }
+
+        if ($request->rating) {
+            $where .= " ORDER BY property_rating DESC";
+        }
+
+        if ($request->reviews) {
+            $where .= " ORDER BY review_count DESC";
+        }
+
+        if ($request->bed_desc) {
+            $where .= " ORDER BY bedroom_count DESC";
+        }
+
+        if ($request->bed_asc) {
+            $where .= " ORDER BY bedroom_count ASC";
+        }
+
+        $sql =
+            "SELECT A.*,B.price_per_night,B.property_id,
+(SELECT room.bed_count FROM property_room room WHERE room.property_id = A.id LIMIT 1) AS bed_count,
+(SELECT room.bedroom_count FROM property_room room WHERE room.property_id = A.id LIMIT 1) AS bedroom_count,
+(SELECT images.image_url  FROM property_images images WHERE images.property_id = A.id and images.sort = 2 LIMIT 1) AS image_url,
+(SELECT count(*)  FROM property_review review WHERE review.property_id = A.id) AS review_count,
+(SELECT count(*)  FROM property_rating rating WHERE rating.property_id = A.id) AS raters_count,
+(SELECT count(*)  FROM user_favourites favourites WHERE favourites.property_id = A.id AND favourites.user_id = $auth_id) AS is_favourite,
+(SELECT IFNULL(AVG(rating),0) FROM property_rating rating_avg WHERE rating_avg.property_id = A.id) AS property_rating
+FROM `property_list` A , `property_short_term_pricing` B WHERE  A.status = '1'  AND A.property_status = '1'  AND A.id = B.property_id AND A.is_complete = " .
+            ONE .
+            " AND (A.location like '%" .
+            $location .
+            "%' OR A.city like '%" .
+            $location .
+            "%' OR A.country like '%" .
+            $location .
+            "%' OR A.address like '%" .
+            $location .
+            "%') AND " .
+            $where .
+            "";
+
+        LOG::info("search property sql " . $sql);
+        //echo $sql;exit;
+        $properties = DB::select($sql);
+        //print_r($properties);exit;
+        $properties = $this->remove_null($properties);
+        //var_dump($properties);exit;
+        //price_per_weekend
+        $properties_near = [];
+        foreach ($properties as $property) {
+            $pd = DB::table('property_images')
+                ->where('property_images.client_id', '=', $request->header('clientId'))
+                ->where('property_images.property_id', '=', $property->property_id)
+                ->orderBy('property_images.sort', 'desc')
+                ->select('property_images.image_url')
+                ->get();
+            $propertys = [];
+            $propertysd = [];
+            $propertys['image_url'] = STATIC_IMAGE;
+            if (count($pd) == 0) {
+                $propertysd[] = $propertys;
+                $property->property_images = $propertysd;
+            } else {
+                $property->property_images = $pd;
+            }
+
+            $source_location = $location;
+
+            $source_location = urlencode($source_location);
+            $loc = $property->location;
+            $property->location = urlencode($property->location);
+            $properties_near[] = $property;
+            $url =
+                "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" .
+                $source_location .
+                "&destinations=" .
+                $property->location .
+                "&key=AIzaSyCGX6aGjOeMptlBNc0WF3vhm0SPMl1vNBE"; //exit;
+            // LOG::info("distance matrix url ".$url);
+            // $ch = curl_init();
+            // curl_setopt($ch, CURLOPT_URL, $url);
+            // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            // $response = curl_exec($ch);
+            // $response = json_decode($response);
+            // print_r($response);
+
+            // // $stat = $response->rows[0]->elements[0]->status;
+            // //    if()
+            // // print_r($response); exit;
+            // if (isset($response->rows[0]->elements[0]->status) ) {
+            //     if($response->rows[0]->elements[0]->status != 'ZERO_RESULTS'){
+
+            //         if (isset($response->rows[0]->elements[0]->distance->text)) {
+            //             $distance = (float) $response->rows[0]->elements[0]->distance->text;
+
+            //             if ($distance <= $this->get_radius()) {
+
+            //                 $property->location = $loc;
+            //                 $property->property_id = $property->property_id;
+            //                 $properties_near[] = $property;
+
+            //             }
+            //         }
+
+            //     }
+
+            // }
+
+            //echo ; exit; Gandhipuram,Coimbatore,TamilNadu,India
+        }
+        ///array_multisort(array_column($properties_near, 'property_rating'), SORT_DESC, $properties_near);
+
+        if (count($properties_near) == 0) {
+            return response()->json([
+                'status' => 'FAILED',
+                'error' => true,
+                'message' => 'No properties found',
+                'data' => $properties_near,
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'SUCCESS',
+            'message' => 'property found',
+            'location' => $location,
+            'data' => $properties_near,
+            'url' => $url,
+        ]);
+    }
 }

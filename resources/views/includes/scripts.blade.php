@@ -94,8 +94,7 @@
     function initMap() {
         @if(Request::path()=='owner/add-property')
         dragMap();
-            @endif
-
+        @endif
         var input = document.getElementById('pac-input');
         var autocomplete = new google.maps.places.Autocomplete(input);
 
@@ -369,17 +368,22 @@
 </script>
 
 <script type="text/javascript">
-function limitNavigationUsingLinks() {
-    $('.not-verified-block').toggleClass('not-verified-block');
-    $('.notification-message').html('Verify otp to continue');
-    $(document).on('click', 'a', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        openVerificationModal();
-    });
-}
+    function limitNavigationUsingLinks() {
+        $('.not-verified-block').toggleClass('not-verified-block');
+        $('.notification-message').html('Verify otp to continue');
+        $(document).on('click', 'a', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            openVerificationModal();
+        });
+    }
     function onGoogleLoad() {
         var path = "{{Request::path()}}";
+        var property_path_regex = /^property\/(\d+)/;
+        if(property_path_regex.test(path)) {
+            initMap();
+            return;
+        }
         switch (path) {
             case '/':
                 initHomeSearchInput();

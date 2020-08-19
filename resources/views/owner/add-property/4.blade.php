@@ -58,24 +58,26 @@
 
                                     <div class="row with-forms" style="margin-bottom:10px;">
 
+{{--                                        <div class="col-md-6">--}}
+{{--                                            <h5>Nightly price for stays more than 1 month (30+ days)<span class="required">*</span></h5>--}}
+{{--                                            <input class="search-field validate price_float" id="price_more_than_one_month" name="price_more_than_one_month" type="text" value="{{isset($price->price_more_than_one_month)?$price->price_more_than_one_month:''}}" />--}}
+{{--                                            <div id="set_location"></div>--}}
+
+
+{{--                                        </div>--}}
+
                                         <div class="col-md-6">
-                                            <h5>Nightly price for stays more than 1 month (30+ days)<span class="required">*</span></h5>
-                                            <input class="search-field validate price_float" id="price_more_than_one_month" name="price_more_than_one_month" type="text" value="{{isset($price->price_more_than_one_month)?$price->price_more_than_one_month:''}}" />
-                                            <div id="set_location"></div>
-
-
+                                            <h5>Daily Rate (USD)<span class="required">*</span></h5>
+                                            <p class="caption-text">Booking prices will be calculated based on this rate, starting at a minimum of 30 days.</p>
+                                            <input class="search-field validate price_float" type="text" name="price_per_night" id="price_per_night" value="{{isset($price->price_per_night)?$price->price_per_night:''}}" />
                                         </div>
 
                                         <div class="col-md-6">
                                             <h5>Minimum Nightly Stay<span class="required">*</span></h5>
+                                            <p class="caption-text">Minimum 30 days</p>
                                             {{-- <h5>Minimum Stay<span class="required">*</span></h5>  --}}
                                             <input class="search-field validate" id="minimumstay" name="minimumstay" type="text" value="{{isset($property_details->min_days)?$property_details->min_days:'0'}}"  />
                                         </div>
-
-
-
-
-
                                     </div>
                                     <!--
                                                                         <div class="row with-forms" style="margin-bottom:10px;">
@@ -126,24 +128,24 @@
 
                                     <div class="row with-forms">
 
-                                        <div class="col-md-6">
-                                            <h5>Daily Rate (USD)<span class="required">*</span></h5>
-                                            <p class="caption-text">Booking prices will be calculated based on this rate, starting at a minimum of 30 days.</p>
-                                            <input class="search-field validate price_float" type="text" name="price_per_night" id="price_per_night" value="{{isset($price->price_per_night)?$price->price_per_night:''}}" />
-                                        </div>
+
 
                                         <div class="col-md-6" style="padding: 0;">
                                             <div class="col-md-6">
                                                 <h5>Check In<span class="required">*</span></h5>
                                                 <input class="search-field validate" name="check_in" id="property_from_date" type="text" value="{{isset($price->check_in)?$price->check_in:''}}" />
                                             </div>
-                                            <div id="set_location"></div>
                                             <div class="col-md-6">
                                                 <h5>Check Out<span class="required">*</span></h5>
                                                 <input class="search-field validate" name="check_out" id="property_to_date" type="text" value="{{isset($price->check_out)?$price->check_out:''}}" />
                                             </div>
                                         </div>
 
+                                        <div class="col-md-6">
+                                            <h5>Cleaning Fees<span class="required">*</span></h5>
+                                            <p class="caption-text">This fee will be charged once per stay</p>
+                                            <input class="search-field price_float validate" id="cleaning_fee" name="cleaning_fee" type="text" value="{{isset($price->cleaning_fee)?$price->cleaning_fee:'0'}}"   />
+                                        </div>
                                     </div>
 
                                     <div class="row with-forms">
@@ -152,26 +154,18 @@
                                             <h5>Cancellation Policy<span class="required">*</span></h5>
                                             <select class="chosen-select-no-single validate" id="cancellation_policy" name="cancellation_policy" required>
                                                 <option label=""></option>
-
                                                 <option value="Flexible">Flexible</option>
                                                 <option value="Moderate">Moderate</option>
                                                 <option value="Strict">Strict</option>
                                                 <option value="Super Strict">Super Strict</option>
-
                                             </select>
                                             <p class="caption-text" style="margin-bottom: 12px;">View more on cancellation policies <a href="https://healthcaretravels.com/cancellationpolicy" target="_blank">here</a>.</p>
                                         </div>
                                         <div class="col-md-6">
                                             <h5>Security Deposit<span class="required">*</span></h5>
                                             <input class="search-field price_float validate" id="security_deposit" name="security_deposit" type="text" value="{{isset($price->security_deposit)?$price->security_deposit:'0'}}"   />
-                                            <div id="set_location"></div>
-
                                         </div>
-
                                         <br><br><br>
-
-
-
                                     </div>
 
                                     <!-- Row -->
@@ -202,10 +196,6 @@
                                 <!-- Section / End -->
                             </div>
                         </form>
-
-
-
-
                     </div>
                 </div>
             </div>
@@ -246,6 +236,25 @@
                     $('#sunday').attr('checked',false);
                 }
             })
+
+            $('#minimumstay').change(function(){
+                var value = parseInt(this.value);
+                this.value = isNaN(value) ? 0 : value;
+            });
+
+            $('#minimumstay').blur(function(){
+                var value = parseInt(this.value);
+                this.value = (value < 30) ? 0 : value;
+            });
+
+            $('#minimumstay').keypress(function(event) {
+                var regex = new RegExp("^[0-9+]$");
+                var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+                if (!regex.test(key)) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
 
             $('.price_float').change(function(){
                 var value = parseFloat(parseFloat(this.value)).toFixed(2);

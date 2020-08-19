@@ -121,7 +121,6 @@
 
             <!-- Map -->
 
-        <!--  <iframe style="border:0;margin-top: 20px;margin-left: 10px;margin-right: 10px;" src="{{BASE_URL}}multiple-marker/{{$location_url}}" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe> -->
             <div class="map-width">
                 <div id='map' class="mapclass"
                      style="position: absolute;width: 100%;margin-left: 20px;height: 555px"></div>
@@ -163,10 +162,6 @@
                                     {{csrf_field()}}
 
                                     <div id="dynamic_elements"></div>
-                                    @if(isset($request_data['lat']))
-                                        <input type="hidden" name="lat" value="{{$request_data['lat']}}">
-                                        <input type="hidden" name="lng" value="{{$request_data['lng']}}">
-                                @endif
                                 <!-- Row With Forms -->
                                     <div class="row with-forms">
 
@@ -176,7 +171,7 @@
                                                 <input type="text" required id="search-address-input"
                                                     placeholder="Enter address e.g. street, city or state"
                                                     value="@if(isset($request_data['formatted_address']))  {{$request_data['formatted_address']}} @endif"
-                                                    name="formatted_address" autocomplete="off"/>
+                                                    name="formatted_address" id="formatted_address" autocomplete="off"/>
                                                 <input class="field" type="hidden" id="street_number" name="street_number" value="{{$request_data['street_number'] ?? ''}}" />
                                                 <input class="field" type="hidden" id="route" name="route" value="{{$request_data['route'] ?? ''}}" />
                                                 <input class="field" type="hidden" id="locality" name="city" value="{{$request_data['city'] ?? ''}}" />
@@ -288,31 +283,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                                                                <div class="col-fs-3">
-                                            <div class="select-input disabled-first-option">
-                                                <select name="property_type" required data-placeholder="Any Status"
-                                                    class="chosen-select-no-single">
-                                                    <option value="" selected disabled>Property Type</option>
-                                                    <option value="1" @if(isset($request_data['property_type']) && $request_data['property_type'] == "1") selected @endif>Short Term Rental</option>
-                                                    <option value="2" @if(isset($request_data['property_type']) && $request_data['property_type'] == "2") selected @endif>Long Term Rental</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-fs-3">
-                                            <div class="select-input disabled-first-option">
-                                                <select class="chosen-select-no-single" name="bookingmode">
-                                                    <option value="" label="blank">Booking Type</option>
-                                                    <option value="1"
-                                                            @if(isset($request_data['bookingmode']) && $request_data['bookingmode'] == "1") selected @endif>
-                                                        Instant Book
-                                                    </option>
-                                                    <option value="0"
-                                                            @if(isset($request_data['bookingmode']) && $request_data['bookingmode'] == "0") selected @endif>
-                                                        Request Book
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
+
                                         <div class="col-fs-3">
                                             <div class="select-input disabled-first-option">
                                                 <div class="checkboxes in-row">
@@ -483,7 +454,7 @@
                                         </div>
                                     @endif
                                     <div class="listing-img-content">
-                                        <span class="listing-compact-title">{{$property->title}}<i>${{$property->price_more_than_one_month * 30}}/Month</i></span>
+                                        <span class="listing-compact-title">{{$property->title}}<i>${{$property->price_per_night * $property->min_days}}/Month</i></span>
 
                                         <!-- <ul class="listing-hidden-content1">
                                             <li>Area <span>530 sq ft</span></li>
@@ -492,7 +463,7 @@
                                             <li>Baths <span>1</span></li>
                                         </ul> -->
                                     </div>
-                                    <img style="height: 250px;" src="{{$property->image_url}}" alt="">
+                                    <img style="min-height: 250px;" src="{{$property->image_url}}" alt="">
                                 </a>
 
                             </div>

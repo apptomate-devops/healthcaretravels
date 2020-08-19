@@ -5532,7 +5532,7 @@ table.manage-table th {
     font-weight: 500;
     font-size: 16px;
     position: relative;
-    z-index: 9;
+    /*z-index: 9;*/
     line-height: 22px;
     margin-left: 33px !important;
 }

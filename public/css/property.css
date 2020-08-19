@@ -17,3 +17,22 @@
 .counter-inputs a {
     margin: 0 5px;
 }
+
+/* add calendar css */
+
+.add-calendar {
+    margin-top: 35px;
+}
+.add-calendar #wrap1 {
+    max-width: 600px;
+    margin: 0 auto;
+}
+.add-calendar #wrap1 .title {
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    margin: 20px 0 30px;
+}
+.add-calendar #wrap2 {
+    padding-bottom: 100px;
+}

@@ -728,7 +728,6 @@
     }
 
     function on_dob_change(value) {
-        debugger
         const dateString = value;
         let today = new Date();
         let birthDate = new Date(dateString);

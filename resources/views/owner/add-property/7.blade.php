@@ -1,5 +1,102 @@
 @extends('layout.master') @section('title','Profile') @section('main_content')
+    <link rel="stylesheet" href="{{ URL::asset('css/property.css') }}">
+    <input type="hidden" value="0" id="start_date_hidden"/>
+    <div class="container add-calendar">
+        <div class="row">
 
+            <div class="col-md-12">
+
+                <div class="style-1">
+
+                    <div class="dashboard-header">
+
+                        <div class=" user_dashboard_panel_guide">
+
+                            @include('owner.add-property.menu')
+
+                        </div>
+                    </div>
+
+                    <!-- Tabs Content -->
+                    <div class="tabs-container">
+                        <div id='wrap1'>
+                            <label>Select and drag to block out dates for this listing:</div>
+                            <center><div id='calendar'></div></center>
+                        </div>
+
+                        <div id="wrap2">
+
+                            <form action="{{url('/')}}/owner/add-new-property/7" method="post" name="form-add-new">
+
+                                <div class="col-md-3"></div>
+                                <div class="col-md-6" style="padding-bottom: 50px;padding-top: 15px;">
+
+                                    <div class="style-2">
+                                        <!-- Tabs Navigation -->
+                                        <ul class="tabs-nav">
+                                            <li class="active">
+                                                <a href="#tab1a">
+                                                    <i class="sl sl-icon-pin"></i>
+                                                    Keepers ICAL URL
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#tab2a">
+                                                    <i class="sl sl-icon-pin"></i>
+                                                    Add other ICAL URL
+                                                </a>
+                                            </li>
+                                        </ul>
+
+                                        <!-- Tabs Content -->
+                                        <div class="tabs-container">
+                                            <div class="tab-content" id="tab1a">
+                                                <center>
+                                                    <p>Ical URL :  <a href="{{BASE_URL}}ical/{{$property_details->id}}">{{BASE_URL}}ical/{{$property_details->id}}</a></p>
+                                                    <br>
+                                                    <input type="hidden" name="id" value="{{$property_details->id}}">
+                                                    <input type="hidden" name="_token" value="{{csrf_token()}}">
+
+                                                </center>
+                                            </div>
+
+                                            <div class="tab-content" id="tab2a">
+                                                <form name="test" method="get" action="{{BASE_URL}}add-ical-url">
+                                                    <input type="hidden" id="property_id" name="property_id" value="{{$property_details->id}}">
+                                                    <input style="margin-left: 10px;max-width: 518px;" type="text" id="ical_name" placeholder="Enter Third party Name" name="ical_name">
+                                                    <input style="margin-left: 10px;max-width: 518px;" type="text" id="ical_url" placeholder="Enter Third party ICAL URL here" name="ical_url">
+                                                    <center>
+                                                        <button type="button" id="add_ical" class="button preview margin-top-5" style="margin-bottom: 20px;">
+                                                            Add
+                                                        </button>
+                                                    </center>
+                                                </form>
+                                            </div>
+
+
+                                        </div>
+
+                                        <button type="submit" style="margin-bottom: 20px;float: right;" class="button preview margin-top-5" value="NEXT">FINISH</button>
+                                    </div>
+
+                                </div>
+
+
+                            </form>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    </div>
     <script type="text/javascript">
 
         $(document).ready(function() {
@@ -118,7 +215,7 @@
                     // $("[data-date='" + e_date + "']").attr("id", "start_date");
                     var roomtxt = $('#selector1  option:selected').text();
                     //var title = prompt('Block a Room', roomtxt);
-                    var title = prompt('Block a Room', roomtxt);
+                    var title = 'Manual Dates - Property Not Available';
                     var pro_id = $("#property_id").val();
                     if(!pro_id){
                         alert("Please Select Property");
@@ -199,106 +296,6 @@
         }
 
     </script>
-
-    <input type="hidden" value="0" id="start_date_hidden"/>
-    <div class="container" style="margin-top: 35px;">
-        <div class="row">
-
-            <div class="col-md-12">
-
-                <div class="style-1">
-
-                    <div class="dashboard-header">
-
-                        <div class=" user_dashboard_panel_guide">
-
-                            @include('owner.add-property.menu')
-
-                        </div>
-                    </div>
-
-                    <!-- Tabs Content -->
-                    <div class="tabs-container">
-
-                        <div id='wrap2'>
-                            <center><div id='calendar' style="max-width: 600px;margin-top: 15px;"></div></center>
-                        </div>
-
-                        <div id="wrap2" style="padding-bottom: 100px;">
-
-
-
-                            <form action="{{url('/')}}/owner/add-new-property/7" method="post" name="form-add-new">
-
-                                <div class="col-md-3"></div>
-                                <div class="col-md-6" style="padding-bottom: 50px;padding-top: 15px;">
-
-                                    <div class="style-2">
-                                        <!-- Tabs Navigation -->
-                                        <ul class="tabs-nav">
-                                            <li class="active">
-                                                <a href="#tab1a">
-                                                    <i class="sl sl-icon-pin"></i>
-                                                    Keepers ICAL URL
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#tab2a">
-                                                    <i class="sl sl-icon-pin"></i>
-                                                    Add other ICAL URL
-                                                </a>
-                                            </li>
-                                        </ul>
-
-                                        <!-- Tabs Content -->
-                                        <div class="tabs-container">
-                                            <div class="tab-content" id="tab1a">
-                                                <center>
-                                                    <p>Ical URL :  <a href="{{BASE_URL}}ical/{{$property_details->id}}">{{BASE_URL}}ical/{{$property_details->id}}</a></p>
-                                                    <br>
-                                                    <input type="hidden" name="id" value="{{$property_details->id}}">
-                                                    <input type="hidden" name="_token" value="{{csrf_token()}}">
-
-                                                </center>
-                                            </div>
-
-                                            <div class="tab-content" id="tab2a">
-                                                <form name="test" method="get" action="{{BASE_URL}}add-ical-url">
-                                                    <input type="hidden" id="property_id" name="property_id" value="{{$property_details->id}}">
-                                                    <input style="margin-left: 10px;max-width: 518px;" type="text" id="ical_name" placeholder="Enter Third party Name" name="ical_name">
-                                                    <input style="margin-left: 10px;max-width: 518px;" type="text" id="ical_url" placeholder="Enter Third party ICAL URL here" name="ical_url">
-                                                    <center>
-                                                        <button type="button" id="add_ical" class="button preview margin-top-5" style="margin-bottom: 20px;">
-                                                            Add
-                                                        </button>
-                                                    </center>
-                                                </form>
-                                            </div>
-
-
-                                        </div>
-
-                                        <button type="submit" style="margin-bottom: 20px;float: right;" class="button preview margin-top-5" value="NEXT">FINISH</button>
-                                    </div>
-
-                                </div>
-
-
-                            </form>
-
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-    </div>
 
 @endsection
 

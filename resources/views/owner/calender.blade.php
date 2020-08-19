@@ -162,7 +162,7 @@
                     // place the added events
                         @foreach($events as $event)
                     {
-                        title: "{{$event->booked_on}}",
+                        title: "Manual Dates - Property Not Available",
                         start: "{{$event->start_date}}",
                         end: "{{$event->end_date}}",
                         className: 'blocked',
@@ -170,7 +170,7 @@
                         @endforeach
                         @foreach($block_events as $eve)
                     {
-                        title: "{{$eve->booked_on}}",
+                        title: "Manual Dates - Property Not Available",
                         start: "{{$eve->start_date}}",
                         end: "{{$eve->end_date}}",
                         className: 'booked',
@@ -245,7 +245,7 @@
             </div>
 
             <div class="col-md-8 card">
-                <div><br></div>
+                <label for="property" style="margin-top: 10px;">Select a property:</label>
                 <select class="chosen-select" id="property" onchange="property_change();">
                     <option value="0" selected="">Please select a property from the dropdown menu</option>
                     @foreach($properties as $property)

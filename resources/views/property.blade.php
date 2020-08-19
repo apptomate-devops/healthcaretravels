@@ -190,7 +190,7 @@
                         </span>
                         <div class="property-price" style="font-size: 24px;color: #e78016;">
                             <font style="vertical-align: inherit;">
-                                $ {{$data->price_more_than_one_month}}/Month
+                                $ {{$data->price_per_night * $data->min_days}}/Month
                             </font>
                         </div>
                     </div>
@@ -682,10 +682,10 @@
                                 <td style="text-align: center; width: 50%">$ {{$data->price_more_than_one_week}}</td>
                             </tr> --}}
 
-                            <tr>
-                                <td style="text-align: center;">Price per night (30day+)</td>
-                                <td style="text-align: center; width: 50%">$ {{$data->price_more_than_one_month}}</td>
-                            </tr>
+{{--                            <tr>--}}
+{{--                                <td style="text-align: center;">Price per night (30day+)</td>--}}
+{{--                                <td style="text-align: center; width: 50%">$ {{$data->price_more_than_one_month}}</td>--}}
+{{--                            </tr>--}}
 
                             <tr>
                                 <td style="text-align: center;">Security Deposit</td>
@@ -694,7 +694,7 @@
 
                             <tr>
                                 <td style="text-align: center;">Cleaning fee</td>
-                                <td style="text-align: center; width: 50%">$ {{$data->cleaning_fee}}&nbsp;(&nbsp;{{$data->cleaning_fee_type}}&nbsp;)</td>
+                                <td style="text-align: center; width: 50%">$ {{$data->cleaning_fee}}</td>
                             </tr>
 
                             {{--
@@ -983,7 +983,7 @@
                                             <a href="#">
                                                 <font style="vertical-align: inherit;">
                                                     <font style="vertical-align: inherit;">
-                                                        $ {{$data->price_more_than_one_month}}/Month
+                                                        $ {{$data->price_per_night * $data->min_days}}/Month
                                                     </font>
                                                 </font>
                                             </a>
@@ -1323,7 +1323,7 @@
                                     @endif
 
                                     <div class="listing-img-content">
-                                        <span class="listing-price">$ {{$property->price_more_than_one_month}}/Month</i></span>
+                                        <span class="listing-price">$ {{$data->price_per_night * $data->min_days}}/Month</i></span>
                                         {{-- <span class="like-icon with-tip" data-tip-content="Add to Bookmarks"></span>
                                         <span class="compare-button with-tip" data-tip-content="Add to Compare"></span> --}}
                                     </div>

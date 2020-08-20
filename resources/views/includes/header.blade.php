@@ -138,7 +138,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="{{url('/')}}/search-property">
+                        <a href="{{url('/')}}/properties">
                             Properties
                         </a>
                     </li>

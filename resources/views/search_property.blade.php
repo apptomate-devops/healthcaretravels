@@ -158,7 +158,7 @@
                             <!-- Form -->
                             <div class="main-search-box no-shadow">
 
-                                <form id="filter_form" method="post" action="{{BASE_URL}}search-property">
+                                <form id="filter_form" method="post" action="{{BASE_URL}}properties">
                                     {{csrf_field()}}
 
                                     <div id="dynamic_elements"></div>

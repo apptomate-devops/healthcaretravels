@@ -84,8 +84,7 @@ Route::POST('/reset-password', 'HomeController@reset_email');
 // Property Controller
 Route::get('/delete_property_image/{id}', 'PropertyController@delete_property_image');
 Route::get('/update_cover_image/{id}/{property_id}', 'PropertyController@update_cover_image');
-Route::get('/search-property', 'PropertyController@search_property');
-Route::post('/search-property', 'PropertyController@search_property');
+Route::match(['get', 'post'], '/properties', 'PropertyController@search_property');
 Route::post('/search-property-filtering', 'PropertyController@search_property');
 Route::GET('/property/get-price', 'PropertyController@get_price');
 Route::GET('/property/{id}', 'PropertyController@single_property');

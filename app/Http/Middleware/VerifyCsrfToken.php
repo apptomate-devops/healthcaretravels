@@ -13,6 +13,6 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected $except = [
         //
-        'search-property',
+        'properties',
     ];
 }

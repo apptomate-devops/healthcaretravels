@@ -11,6 +11,8 @@
 |
 */
 
+Route::GET('/not_found', 'BaseController@not_found');
+
 // Logout Controller Routes
 Route::GET('/logout', 'LogoutController@logout');
 Route::GET('/is_user_active', 'LogoutController@is_user_active');

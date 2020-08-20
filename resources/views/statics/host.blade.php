@@ -64,7 +64,7 @@
 
                 <h4>Cancellation</h4><br>
                 <p>Here at Health Care Travels, we understand things come up. That’s why we have created an <a
-                        href="{{url('/')}}/Extenuating-Circ-policy">Extenuating Circumstance policy</a> and a <a
+                        href="{{url('/')}}/extenuating-circ-policy">Extenuating Circumstance policy</a> and a <a
                         href="{{url('/')}}/travallers-refund-policy">Traveler Refund policy</a>. Please read them over
                     and become familiar with our set forth <a href="{{url('/')}}/policies">policies</a>. Also, as a
                     host, you have 4 cancellation options to choose from when listing your short-term property. Click

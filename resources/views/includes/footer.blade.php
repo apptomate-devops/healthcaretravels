@@ -38,10 +38,10 @@
                 <ul class="footer-links">
                     <!-- <li><a href="#">How to be a Great Host</a></li> -->
                 <!--<li><a href="{{url('/')}}/understanding-tax">Understanding Tax</a></li> -->
-                    <li><a href="{{url('/')}}/fees-explained">Fees Explained</a></li>
+                    <li><a href="{{url('/')}}/fees">Fees Explained</a></li>
                 <!-- <li><a href="{{url('/')}}/cancellationpolicy">Cancellation Policy</a></li> -->
                 <!-- <li><a href="{{url('/')}}/payment-terms">Payment Terms</a></li> -->
-                    <li><a href="{{url('/')}}/eye-catching-photo">Eye Catching Photos</a></li>
+                    <li><a href="{{url('/')}}/eye-catching-photos">Eye Catching Photos</a></li>
                 <!-- <li><a href="{{url('/')}}/how-to-be-great-host">How to be a Great Host</a></li>
                <li><a href="{{url('/')}}/policies">Policies</a></li> -->
                 </ul>

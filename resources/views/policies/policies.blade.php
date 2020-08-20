@@ -36,7 +36,7 @@
                                 </th>
                                 <th style="text-align: left;">
                                     <ul>
-                                        <li><a class="menu-item-link" href="{{url('/')}}/exortion-policy">Extortion
+                                        <li><a class="menu-item-link" href="{{url('/')}}/extortion-policy">Extortion
                                                 Policy</a></li>
                                     </ul>
                                 </th>
@@ -44,7 +44,7 @@
                             <tr>
                                 <th style="text-align: left;">
                                     <ul>
-                                        <li><a class="menu-item-link" href="{{url('/')}}/cookies-policy">Cookie
+                                        <li><a class="menu-item-link" href="{{url('/')}}/cookie-policy">Cookie
                                                 Policy</a></li>
                                     </ul>
                                 </th>
@@ -72,7 +72,7 @@
                             <tr>
                                 <th style="text-align: left;">
                                     <ul>
-                                        <li><a class="menu-item-link" href="{{url('/')}}/content">Content Policy</a>
+                                        <li><a class="menu-item-link" href="{{url('/')}}/content-policy">Content Policy</a>
                                         </li>
                                     </ul>
                                 </th>
@@ -86,13 +86,13 @@
                             <tr>
                                 <th style="text-align: left;">
                                     <ul>
-                                        <li><a class="menu-item-link" href="{{url('/')}}/Extenuating-Circ-policy">Extenuating
+                                        <li><a class="menu-item-link" href="{{url('/')}}/extenuating-circ-policy">Extenuating
                                                 Circ. Policy</a></li>
                                     </ul>
                                 </th>
                                 <th style="text-align: left;">
                                     <ul>
-                                        <li><a class="menu-item-link" href="{{url('/')}}/travellers-refund-policy">Traveler
+                                        <li><a class="menu-item-link" href="{{url('/')}}/travelers-refund-policy">Traveler
                                                 Refund Policy</a></li>
                                     </ul>
                                 </th>

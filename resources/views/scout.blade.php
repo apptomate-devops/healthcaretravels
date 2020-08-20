@@ -18,7 +18,7 @@
             color: #868383;
             position: absolute;
             left: 15px;
-            bottom: 27px;
+            bottom: 15px;
             font-weight: bolder;
         }
 
@@ -27,6 +27,9 @@
             padding-left: 50px;
             height: 53px;
             width: 355px;
+        }
+        .my-account .form-row-wide {
+            position: relative;
         }
 
         input[type="number"], {

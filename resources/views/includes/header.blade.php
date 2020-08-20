@@ -66,7 +66,7 @@
                                 <a href="{{url('/')}}/about_us">About Us</a>
                             </li>
                             <li class="text-center">
-                                <a href="{{url('/')}}/how_its_works">How It Works</a>
+                                <a href="{{url('/')}}/how_it_works">How It Works</a>
                             </li>
                             <li class="text-center">
                                 <a href="{{url('/')}}/standards">Standards</a>
@@ -80,12 +80,12 @@
                         </a>
                         <ul>
                             <li class="text-center">
-                                <a href="{{url('/')}}/dear_travelers">
+                                <a href="{{url('/')}}/travelers">
                                     Traveler
                                 </a>
                             </li>
                             <li class="text-center">
-                                <a class="not-verified-block" href="{{url('/')}}/request-roommate">
+                                <a class="not-verified-block" href="{{url('/')}}/roommate">
                                     Request a Roommate
                                 </a>
                             </li>
@@ -106,7 +106,7 @@
                     </li>
 
                     <li>
-                        <a href="{{url('/')}}/dear_host">Host
+                        <a href="{{url('/')}}/host">Host
                         </a>
 
                     </li>
@@ -116,12 +116,12 @@
                         </a>
                         <ul>
                             <li class="text-center">
-                                <a href="{{url('/')}}/become-a-ambassador">
+                                <a href="{{url('/')}}/ambassador">
                                     Become An Ambassador
                                 </a>
                             </li>
                             <li class="text-center">
-                                <a href="{{url('/')}}/become-a-scout">
+                                <a href="{{url('/')}}/scout">
                                     Become A Scout
                                 </a>
                             </li>

@@ -19,14 +19,14 @@ class HomeController extends BaseController
     {
         return view('statics.about_us');
     }
-    public function become_a_ambassador()
+    public function ambassador()
     {
-        return view('statics.become-a-ambassador');
+        return view('statics.ambassador');
     }
 
-    public function become_a_scout()
+    public function scout()
     {
-        return view('become-a-scout');
+        return view('scout');
     }
     public function cancellation_policy()
     {
@@ -53,9 +53,9 @@ class HomeController extends BaseController
     {
         return view('policies.content-policy');
     }
-    public function cookies_policy()
+    public function cookie_policy()
     {
-        return view('policies.cookies-policy');
+        return view('policies.cookie-policy');
     }
 
     public function copyright_policy()
@@ -63,24 +63,24 @@ class HomeController extends BaseController
         return view('policies.copyright-policy');
     }
 
-    public function dear_host()
+    public function host()
     {
-        return view('statics.dear_host');
+        return view('statics.host');
     }
 
-    public function dear_travelers()
+    public function travelers()
     {
-        return view('statics.dear_travelers');
+        return view('statics.travelers');
     }
 
-    public function Extenuating_Circ_policy()
+    public function extenuating_circ_policy()
     {
         return view('policies.Extenuating-Circ-policy');
     }
 
-    public function exortion_policy()
+    public function extortion_policy()
     {
-        return view('policies.exortion-policy');
+        return view('policies.extortion-policy');
     }
 
     public function eye_catching_photo()
@@ -128,9 +128,9 @@ class HomeController extends BaseController
         ]);
     }
 
-    public function how_its_works()
+    public function how_it_works()
     {
-        return view('statics.how_its_works');
+        return view('statics.how_it_works');
     }
 
     public function index(Request $request)

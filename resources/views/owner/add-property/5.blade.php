@@ -76,7 +76,7 @@
                                                     </span>
                                         </div>
                                     </form>
-                                    <p>Add up to 20 images of your property. Check out our <a href="https://healthcaretravels.com/eye-catching-photo" target="_blank">article</a> on how to take great photos.</p>
+                                    <p>Add up to 20 images of your property. Check out our <a href="https://healthcaretravels.com/eye-catching-photos" target="_blank">article</a> on how to take great photos.</p>
                                     <p><span style="color: #e78016">* </span>You Can Upload Multiple Images</p>
                                     {{-- <h5>**Change images order with Drag & Drop.</h5> --}}
                                 </div>

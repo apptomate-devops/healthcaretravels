@@ -724,7 +724,7 @@ class PropertyController extends BaseController
             }
             $source_lat = $request->lat;
             $source_lng = $request->lng;
-            $items_per_page = 100;
+            $items_per_page = 10;
             $offset = ($page - 1) * $items_per_page;
             $property_list_obj = new PropertyList();
 
@@ -760,22 +760,27 @@ class PropertyController extends BaseController
             //                    ->orderBy('distance');
             //            }
             $where = [];
-            //        if (Session::has('role_id')) {
-            //            if (Session::get('role_id') == 3) {
-            //                $where[] = 'property_list.property_type_rv_or_home = 1';
-            //            } else {
-            //                $where[] = 'property_list.property_type_rv_or_home = 2';
-            //            }
-            //        }
+
             if ($request->guests != "") {
                 $where[] = 'property_list.total_guests >= "' . $request->guests . '" ';
             }
-            if ($request->roomtype != "") {
-                $where[] = 'property_list.room_type = "' . $request->roomtype . '" ';
+
+            if ($request->room_type != "") {
+                $where[] = 'property_list.room_type = "' . $request->room_type . '" ';
             }
+
+            if (isset($request->pets_allowed)) {
+                $where[] = 'property_list.pets_allowed = 1';
+            }
+
             //        if ($request->bookingmode != "") {
             //            $where[] = 'property_list.is_instant = "' . $request->bookingmode . '" ';
             //        }
+
+            // TODO: check in check out filter for block date
+
+            // TODO: instant booking, flexible cancellation, enhanced cleaning pool, no kids, no pets filter
+
             if ($request->minprice != "" && $request->maxprice != "") {
                 $where[] =
                     'property_short_term_pricing.price_per_night BETWEEN "' .

@@ -2853,6 +2853,14 @@ a.adv-search-btn.active i.fa.fa-caret-up {
     padding: 0 10px;
 }
 
+.p-0 {
+    padding: 0 !important;
+}
+
+.m-0 {
+    margin: 0 !important;
+}
+
 section.search {
     margin: 0;
     padding: 50px 0;
@@ -4364,7 +4372,7 @@ button.fs-map-btn.button {
 .listing-badges {
     position: absolute;
     top: 0;
-    z-index: 999;
+    /*z-index: 999;*/
     right: 0;
     width: 100%;
     display: block;
@@ -4707,7 +4715,7 @@ ul.listing-details li {
 .listing-item.compact {
     overflow: hidden;
     position: relative;
-    z-index: 99;
+    /*z-index: 99;*/
 }
 
 .compact .listing-img-content {
@@ -7067,22 +7075,6 @@ body .comment-content p {
     border-top: 20px solid #fff;
 }
 
-#map {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    z-index: 990;
-}
-
-#map-container {
-    position: relative;
-    top: 0;
-    left: 0;
-    height: 520px;
-    width: 100%;
-    z-index: 990;
-    margin-bottom: 60px;
-}
 
 .gmnoprint {
     margin: 10px;
@@ -13694,9 +13686,9 @@ button.button.social-login.via-twitter {
         opacity: 1;
     }
 
-    .compact .listing-img-container:before {
-        transform: translateY(-70px);
-    }
+    /*.compact .listing-img-container:before {*/
+    /*    transform: translateY(-70px);*/
+    /*}*/
 
     .fullwidth-property-slider .item {
         height: 400px;

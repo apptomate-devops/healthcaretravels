@@ -33,7 +33,7 @@
             </div>
             <div class="col-md-8">
                 <div class="container_wrapper search_container" style="display: none;">
-                    <form id="filter_form" method="post" action="{{BASE_URL}}search-property" onsubmit="return validate_submit()" autocomplete="off" onkeydown="return event.key != 'Enter';">
+                    <form id="filter_form" method="post" action="{{BASE_URL}}properties" onsubmit="return validate_submit()" autocomplete="off" onkeydown="return event.key != 'Enter';">
                         {{csrf_field()}}
                         <div class="row with-forms">
                             <div class="col-md-12 title">Search Properties</div>

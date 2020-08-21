@@ -169,7 +169,7 @@
     }
 
     var map;
-        @if(Request::path()=='short-term' || Request::path()=='search-property')
+        @if(Request::path()=='short-term' || Request::path()=='properties')
     var markers = [
                 @foreach($properties as $propmap)
             {
@@ -191,7 +191,7 @@
     ];
     var mapMarkers = [];
     var mapMarkers1 = [];
-    @if(Request::path()=='short-term' || Request::path()=='search-property')
+    @if(Request::path()=='short-term' || Request::path()=='properties')
     var latitude = 40.238856;
     var longitude = -101.909323;
         @else
@@ -401,7 +401,7 @@
             case 'short-term':
                 initMaps();
                 break;
-            case 'search-property':
+            case 'properties':
                 initMaps();
                 initSearchPropertySearchInput();
                 break;

@@ -323,7 +323,7 @@
                         <h2 style="font-family: sans-serif;">Find New Home </h2>
                         <!-- Row With Forms -->
                         <div class="row with-forms">
-                            <form name="test" method="post" action="{{BASE_URL}}search-property" onsubmit="return validate_submit()" autocomplete="off" onkeydown="return event.key != 'Enter';">
+                            <form name="test" method="post" action="{{BASE_URL}}properties" onsubmit="return validate_submit()" autocomplete="off" onkeydown="return event.key != 'Enter';">
                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                                 <div class="row col-md-12">
                                     <!-- Main Search Input  -->
@@ -644,7 +644,7 @@
                                                 <div class="col-md-8"> @endif
                                                 @if($i < count($categories))
                                                     <!-- Image Box -->
-                                                        <a href="{{url('/')}}/search-property?place={{$category->title}}"
+                                                        <a href="{{url('/')}}/properties?place={{$category->title}}"
                                                            class="img-box"
                                                            @if($i==0 || $i==4 || $i==11 || $i==15 || $i==5) style="height: 525px;"
                                                            @endif @if($i==3 || $i==7 || $i==8 ||$i==12) style="height: 250px;"

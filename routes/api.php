@@ -39,7 +39,7 @@ Route::group(['middleware' => ['API']], function () {
     Route::GET('/delete-property_image/{id}', 'Api\PropertyController@delete_property_image');
     Route::POST('/cover_photo_change', 'Api\PropertyController@cover_photo_change');
 
-    Route::GET('/search-property/{location}', 'Api\PropertyController@search_property');
+    Route::GET('/properties/{location}', 'Api\PropertyController@search_property');
 
     Route::POST('/save-amenities', 'Api\PropertyController@save_amenities')->name('Api\save_amenities');
 });

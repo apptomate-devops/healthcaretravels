@@ -116,7 +116,7 @@
         <div class="container">
 
             <div class="row" style="padding-top: 2%;background-color: #f2f2f2;margin-bottom: 20px;">
-                <form name="test" action="{{url('/')}}/search-property" method="post" utocomplete="off">
+                <form name="test" action="{{url('/')}}/properties" method="post" utocomplete="off">
                     <div class="col-md-6">
                         <input type="text" class="form-control" name="search" id="pac-input" />
                     </div>

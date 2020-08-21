@@ -5,8 +5,9 @@
     <title>{{APP_BASE_NAME}} | Home Page</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="{{ URL::asset('css/listing_search.css') }}">
     <!-- CSS
-      ================================================== -->
+         ================================================== -->
     @include('includes.styles')
 
     <style>
@@ -322,73 +323,67 @@
                         <h2 style="font-family: sans-serif;">Find New Home </h2>
                         <!-- Row With Forms -->
                         <div class="row with-forms">
-
-                            <form name="test" action="{{url('/')}}/properties" method="post">
+                            <form name="test" method="post" action="{{BASE_URL}}properties" onsubmit="return validate_submit()" autocomplete="off" onkeydown="return event.key != 'Enter';">
                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
-                                <div class="row">
+                                <div class="row col-md-12">
                                     <!-- Main Search Input  -->
-                                    <div class="col-md-4 col-sm-6 col-xs-12" style="margin-top: 10px;">
+                                    <div class="col-md-3 col-sm-12 col-xs-12">
                                         <div class="main-search-input">
-                                            <input type="text" required id="search-address-input" name="formatted_address"
-                                                placeholder="Enter address e.g. street, city or state" value=""/>
-                                            <input class="field" type="hidden" id="street_number" name="street_number" value="{{Session::get('street_number')}}" />
-                                            <input class="field" type="hidden" id="route" name="route" value="{{Session::get('route')}}" />
-                                            <input class="field" type="hidden" id="locality" name="city" value="{{Session::get('city')}}" />
-                                            <input class="field" type="hidden" id="administrative_area_level_1" name="state" value="{{Session::get('state')}}" />
-                                            <input class="field" type="hidden" id="postal_code" name="pin_code" value="{{Session::get('pin_code')}}" />
-                                            <input class="field" type="hidden" id="country" name="country" value="{{Session::get('country')}}" />
+                                            <input type="text" required id="search-address-input" @if(isset($request_data['formatted_address'])) data-is-valid="true" @endif
+                                                placeholder="Hospital, City, or Address"/>
+                                            <p id="search-address-input_error" style="display: none;">Please select a valid address from the suggestions.</p>
+                                            {{--                                            <input class="field" type="hidden" id="street_number" name="street_number" value="{{Session::get('street_number')}}" />--}}
+                                            {{--                                            <input class="field" type="hidden" id="route" name="route" value="{{Session::get('route')}}" />--}}
+                                            {{--                                            <input class="field" type="hidden" id="locality" name="city" value="{{Session::get('city')}}" />--}}
+                                            {{--                                            <input class="field" type="hidden" id="administrative_area_level_1" name="state" value="{{Session::get('state')}}" />--}}
+                                            {{--                                            <input class="field" type="hidden" id="postal_code" name="pin_code" value="{{Session::get('pin_code')}}" />--}}
+                                            {{--                                            <input class="field" type="hidden" id="country" name="country" value="{{Session::get('country')}}" />--}}
+                                            <input class="field" type="hidden" id="formatted_address" name="formatted_address" value="{{Session::get('formatted_address')}}" />
                                             <input class="field" type="hidden" id="lat" name="lat" value="{{Session::get('lat')}}" />
                                             <input class="field" type="hidden" id="lng" name="lng" value="{{Session::get('lng')}}" />
                                         </div>
                                     </div>
-                                    <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
-                                        <div class="main-search-input">
-                                            <input type="number" name="distance"
-                                                placeholder="Distance" data-unit="Mi" value=""/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
-                                        <div class="main-search-input">
-                                            <input type="text" name="from_date" placeholder="Check in" value=""
-                                                id="from_date" autocomplete="off"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
-                                        <div class="main-search-input">
-                                            <input name="to_date" type="text" onchange="check_to_date();"
-                                                placeholder="Check out" value="" id="to_date" autocomplete="off"/s>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div id="search_location"></div>
-                                    <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
-                                        <select name="property_type" required data-placeholder="Any Status"
-                                                class="chosen-select-no-single">
-                                            <option value="" selected disabled>Property Type</option>
-                                            <option value="1">Short Term Rental</option>
-                                            <option value="2">Long Term Rental</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">
-                                    <select name="roomtype" required data-placeholder="Any Status"
-                                                class="chosen-select-no-single">
-                                            <option value="" selected disabled>Home Type</option>
-                                            @foreach($room_types as $pro)
-                                                <option
-                                                    value="{{$pro->id}}"
-                                                    @if(isset($request_data['roomtype']) && $request_data['roomtype'] == $pro->name) selected @endif
-                                                >
-                                                        {{$pro->name}}
-                                                </option>
+                                    <div class="col-md-2 col-sm-3 col-xs-6">
+                                        <select class="chosen-select-no-single" name="room_type" id="room_type" data-placeholder="Home Type">
+                                            <option label=""></option>
+                                            @foreach($room_types as $room)
+                                                <option value="{{$room->name}}" @if(isset($request_data['room_type']) && $request_data['room_type'] == $room->name) selected @endif>{{$room->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-2 col-sm-12 col-xs-12" style="margin-top: 10px;">
+                                    <div class="col-md-2 col-sm-3 col-xs-6">
+                                        <select class="chosen-select-no-single" name="guests" id="guests" data-placeholder="Guests">
+                                            <option label=""></option>
+                                            @for($i=1;$i<=10;$i++)
+                                                <option value="{{$i}}">{{$i}} Guest</option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                        <div class="check-in-out-wrapper">
+                                            <input type="text" name="from_date"
+                                                   placeholder="Check in"
+                                                   id="from_date" autocomplete="off"/>
+                                            <input type="text" placeholder="Check out" onchange="check_to_date();"
+                                                   name="to_date" value="" id="to_date" autocomplete="off"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-2 col-xs-12 text-center">
                                         <button class="button" id="button" style="height: 58px;width: 150px;" type="submit">
                                             <i class="fa fa-search"></i> SEARCH
                                         </button>
                                     </div>
+                                </div>
+                                <div class="row">
+                                    <div id="search_location"></div>
+{{--                                    <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">--}}
+{{--                                        <select name="property_type" required data-placeholder="Any Status"--}}
+{{--                                                class="chosen-select-no-single">--}}
+{{--                                            <option value="" selected disabled>Property Type</option>--}}
+{{--                                            <option value="1">Short Term Rental</option>--}}
+{{--                                            <option value="2">Long Term Rental</option>--}}
+{{--                                        </select>--}}
+{{--                                    </div>--}}
                                 </div>
                             </form>
                         </div>
@@ -763,9 +758,6 @@
 <div id="backtotop"><a href="#"></a></div>
 <!-- Scripts
   ================================================== -->
-@include('includes.scripts')
-
-
 </div>
 <!-- Wrapper / End -->
 
@@ -896,35 +888,45 @@
         };
         try {
             var element_address = document.getElementById('search-address-input');
+            var element_address_error = document.getElementById('search-address-input_error');
             if(element_address) {
                 google.maps.event.addDomListener(element_address, 'keypress', (event) => {
                     if (event.keyCode === 13) {
                         event.preventDefault();
+                    } else if (element_address.dataset.isValid) {
+                        delete element_address.dataset.isValid;
                     }
                 });
                 var autocomplete_address = new google.maps.places.Autocomplete(element_address, addressOptions);
                 autocomplete_address.addListener('place_changed', (e) => {
-                    if(element_address.name === 'formatted_address') {
-                        var place = autocomplete_address.getPlace();
-                        var selectedLocation = {
-                            lat: place.geometry.location.lat(),
-                            lng: place.geometry.location.lng()
-                        };
-                        document.getElementById('lat').value = selectedLocation.lat;
-                        document.getElementById('lng').value = selectedLocation.lng;
-                        for (var i = 0; i < place.address_components.length; i++) {
-                            var addressType = place.address_components[i].types[0];
-                            if (componentForm[addressType]) {
-                                var val = place.address_components[i][componentForm[addressType]];
-                                document.getElementById(addressType).value = val;
-                            }
-                        }
-                    }
+                    var place = autocomplete_address.getPlace();
+                    var lat = place.geometry.location.lat();
+                    var lng = place.geometry.location.lng()
+
+                    var selectedLocation = {lat, lng};
+
+                    $('#formatted_address').val(place.formatted_address);
+                    $('#lat').val(lat);
+                    $('#lng').val(lng);
+                    element_address.style.borderColor = '#e0e0e0';
+                    element_address_error.style.display = "none";
+                    element_address.dataset.isValid = true;
+                    repaintCircle(selectedLocation);
                 });
             }
         } catch (e) {
             console.error(e);
         }
+    }
+    function validate_submit() {
+        let search_address_input = document.getElementById('search-address-input');
+        if(search_address_input.value && search_address_input.dataset.isValid) {
+            return true;
+        }
+        $(`#search-address-input`).css('border-color', '#ff0000');
+        $(`#search-address-input_error`).show();
+        $(window).scrollTop($(`#search-address-input`).offset().top-200);
+        return false;
     }
 </script>
 
@@ -955,5 +957,7 @@
         }
     }
 </script>
+@include('includes.scripts')
+
 </body>
 </html>

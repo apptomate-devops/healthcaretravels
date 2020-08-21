@@ -1,0 +1,212 @@
+.search_property {
+    padding: 45px 30px;
+    background: white;
+}
+
+.min-max-price-wrapper,
+.check-in-out-wrapper {
+    display: flex;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.min-max-price-wrapper input,
+.check-in-out-wrapper input {
+    border-radius: 0 !important;
+    height: 57px !important;
+    text-align: center;
+}
+
+.map-width {
+    width: 100% !important;
+    height: 425px;
+    position: relative;
+}
+
+#map {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.container_wrapper {
+    background: #F8FAFB;
+    border: 1px solid #E0E0E0;
+    border-radius: 2px;
+    padding: 30px 23px;
+    margin-bottom: 30px;
+}
+
+#search-address-input_error {
+    color: red;
+    margin: -15px 0 10px;
+}
+
+.home-slide #search-address-input_error {
+    color: red;
+    padding: 10px;
+    background-color: white;
+    border-radius: 3px;
+}
+
+.search_container form {
+    margin-bottom: 0;
+}
+
+.search_container .checkboxes.in-row label {
+    margin-top: 0;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 500;
+    padding-left: 28px;
+    margin-right: 14px;
+}
+
+.search_container .row-1 a.chosen-single,
+.search_container .row-1 input {
+    height: 53px;
+}
+
+.search_container .row-2 a.chosen-single,
+.search_container .row-2 input {
+    height: 57px;
+}
+
+.search_container .title {
+    font-weight: bold;
+    font-size: 22px;
+    line-height: 32px;
+    color: #333333;
+    margin-bottom: 15px;
+}
+
+.search_container button[type="submit"] {
+    width: 250px;
+    height: 48px;
+    font-size: 17px;
+    margin-top: 22px;
+}
+
+.properties_container .title {
+    font-weight: bold;
+    font-size: 22px;
+    line-height: 32px;
+    letter-spacing: 0.025em;
+    color: #333333;
+}
+
+.properties_container #search_criteria {
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 23px;
+    letter-spacing: 0.025em;
+    color: #888888;
+    margin: 10px 0 20px;
+}
+
+.properties_container button {
+    width: 250px;
+    height: 48px;
+    font-size: 17px;
+}
+
+.properties_container .button-container {
+    margin: 0 30px 80px;
+}
+
+.properties_container .button-container button {
+    width: 125px;
+    height: 48px;
+    font-size: 17px;
+    margin-right: 0;
+}
+
+.properties_container .listing-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.main-search-input {
+    display: block !important;
+}
+
+.main-search-input #search-address-input {
+    background: url(../icons/location-marker.png) no-repeat 15px center;
+    padding-left: 45px;
+    vertical-align: middle;
+    background-size: 17px 21px;
+    background-color: #fcfcfc;
+}
+
+.chosen-container-single .chosen-single div {
+    right: 15px !important;
+}
+.chosen-container-single .chosen-single div b {
+    display: block;
+    width: 50px;
+    height: 100%;
+    background: url(../icons/select-down-arrow.png) no-repeat 0 23px #fcfcfc;
+    background-size: 14px 8px;
+}
+.chosen-container-single .chosen-single div b:after {
+    display: none !important;
+}
+
+.checkboxes {
+    margin: 10px 10px 20px;
+}
+
+#currently_occupied {
+    display: inline-block;
+}
+#currently_occupied p {
+    display: inline-block;
+    margin: 0 14px 0 0;
+    font-size: 14px;
+    letter-spacing: 0.015em;
+    color: #909090;
+}
+
+@media (max-width: 992px) {
+
+    .map-width, .search_container {
+        margin-bottom: 50px;
+    }
+
+    .checkboxes {
+        margin: 0 10px 0;
+    }
+
+    .checkboxes:not(:last-child) label {
+        margin-bottom: 14px;
+    }
+
+    .search_property .main-container {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+}
+
+@media (max-width: 767px) {
+    .properties_container .col-sm-6 {
+        padding: 0 !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .search_property {
+        padding: 0;
+    }
+    .map-width {
+        height: 250px;
+        margin-bottom: 50px;
+    }
+    #currently_occupied {
+        margin-top: 10px;
+    }
+    .properties_container .button-container {
+        margin: 0 0 30px;
+    }
+}

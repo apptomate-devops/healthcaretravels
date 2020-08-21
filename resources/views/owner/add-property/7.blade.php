@@ -20,8 +20,8 @@
                     <!-- Tabs Content -->
                     <div class="tabs-container">
                         <div id='wrap1'>
-                            <label>Select and drag to block out dates for this listing:</div>
-                            <center><div id='calendar'></div></center>
+                            <label style="margin-top: 30px;">Select and drag to block out dates for this listing:</div>
+                            <center><div id='calendar' style="max-width: 600px;margin-top: 15px;margin-bottom: 15px;"></div></center>
                         </div>
 
                         <div id="wrap2">

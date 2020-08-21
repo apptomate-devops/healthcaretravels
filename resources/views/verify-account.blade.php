@@ -10,6 +10,10 @@
     ================================================== -->
     <link rel="stylesheet" href="{{ URL::asset('css/profile.css') }}">
 
+    @php
+        $filtypes = ".jpg, .jpeg, .heic, .png, .pdf"
+    @endphp
+
     <div class="container verify-account" style="margin-top: 35px;">
         @if(Session::has('success'))
             <div class="alert alert-success">
@@ -80,16 +84,16 @@
                                     <div class="col-md-6">
                                         <label>Lease Agreement</label>
                                         <div class="caption-text">If approved by your state for subleasing</div>
-                                        <input type="file" name="lease_agreement" id="lease_agreement" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
+                                        <input type="file" name="lease_agreement" id="lease_agreement" class="form-control" accept="{{$filtypes}}" />
                                     </div>
                                     <div class="col-md-6">
                                         <label>Utility Bill</label>
                                         <div class="caption-text">With proof of name and listing address</div>
-                                        <input type="file" name="utility_bill" id="utility_bill" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
+                                        <input type="file" name="utility_bill" id="utility_bill" class="form-control" accept="{{$filtypes}}" />
                                     </div>
                                     <div class="col-md-6">
                                         <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control" required accept=".jpg, .jpeg, .heic, .png, .pdf" />
+                                        <input type="file" name="government_id" id="government_id" class="form-control" required accept="{{$filtypes}}" />
                                     </div>
 
 
@@ -108,16 +112,16 @@
                                     @endif
                                     <div class="col-md-6">
                                         <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control" required accept=".jpg, .jpeg, .heic, .png, .pdf" />
+                                        <input type="file" name="government_id" id="government_id" class="form-control" required accept="{{$filtypes}}" />
                                     </div>
                                     <div class="col-md-6">
                                         <label>A Traveler's Contract</label>
                                         <div class="caption-text" style="margin-top: 5px;">This should have your name as a contact person in the contract.</div>
-                                        <input type="file" name="traveler_contract_id" id="traveler_contract_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
+                                        <input type="file" name="traveler_contract_id" id="traveler_contract_id" class="form-control" accept="{{$filtypes}}" />
                                     </div>
                                     <div class="col-md-6">
                                         <label>Work Badge </label>
-                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
+                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept="{{$filtypes}}" />
                                     </div>
                                     <div class="col-md-12" style="margin-top: 40px;">
                                         <div class="card col-md-12" style="padding: 15px;">
@@ -155,7 +159,7 @@
                                     @endif
                                     <div class="col-md-6">
                                         <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control" required accept=".jpg, .jpeg, .heic, .png, .pdf" />
+                                        <input type="file" name="government_id" id="government_id" class="form-control" required accept="{{$filtypes}}" />
                                         @if(isset($GOVERNMENT_ID->document_type))
                                             <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
@@ -163,7 +167,7 @@
                                     <div class="col-md-6">
                                         <label>Signed HCT Co-hosting Agreement<span class="required">*</span></label>
                                         <div class="caption-text">Only the HCT Standard Agreement will be accepted.</div>
-                                        <input type="file" name="cohosting_agreement_id" id="cohosting_agreement_id" class="form-control" required accept=".jpg, .jpeg, .heic, .png, .pdf" />
+                                        <input type="file" name="cohosting_agreement_id" id="cohosting_agreement_id" class="form-control" required accept="{{$filtypes}}" />
                                     @if(isset($COHOSTING_AGREEMENT_ID->document_type))
                                             <a href="{{$COHOSTING_AGREEMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
@@ -186,21 +190,21 @@
                                     @endif
                                     <div class="col-md-6">
                                         <label>Work Badge </label>
-                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
+                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept="{{$filtypes}}" />
                                         @if(isset($WORK_BADGE_ID->document_type))
                                             <a href="{{$WORK_BADGE_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                     </div>
                                     <div class="col-md-6">
                                         <label>Travel Contract </label>
-                                        <input type="file" name="travel_contract_id" id="travel_contract_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
+                                        <input type="file" name="travel_contract_id" id="travel_contract_id" class="form-control" accept="{{$filtypes}}" />
                                         @if(isset($TRAVEL_CONTRACT_ID->document_type))
                                             <a href="{{$TRAVEL_CONTRACT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
                                     </div>
                                     <div class="col-md-6">
                                         <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
+                                        <input type="file" name="government_id" id="government_id" class="form-control" accept="{{$filtypes}}" />
                                         @if(isset($GOVERNMENT_ID->document_type))
                                             <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
@@ -274,7 +278,7 @@
                                             <div>
                                                 <label>Property Tax Document</label>
                                                 <div class="caption-text">With proof of name and listing address</div>
-                                                <input type="file" name="property_tax_document" id="property_tax_document" class="form-control" accept=".jpg, .jpeg, .heic, .png, .pdf" />
+                                                <input type="file" name="property_tax_document" id="property_tax_document" class="form-control" accept="{{$filtypes}}" />
                                             </div>
                                         </div>
                                     </div>

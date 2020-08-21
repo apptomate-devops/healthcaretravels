@@ -329,6 +329,19 @@
                 $('.mm-next').removeClass('active');
             });
         });
+
+        $(document).ready(function() {
+            $(".user-menu").hover(function () {
+                var class_n = $(this).attr('class');
+                if (class_n == "user-menu") {
+                    $(this).addClass('active');
+                }
+                if (class_n == "user-menu active") {
+                    $(this).removeClass('active');
+                }
+            });
+        });
+
     </script>
 </header>
 

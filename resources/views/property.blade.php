@@ -1562,6 +1562,44 @@
 
         $( document ).ready(function() {
 
+            var dateFormat = "mm/dd/yy";
+            var date_today = new Date();
+            var date_today_next_month = new Date();
+            date_today_next_month.setMonth(date_today_next_month.getMonth() + 1);
+            var fromOptions = {
+                startDate: date_today,
+                changeMonth: true,
+            };
+            var toOptions = {
+                startDate: date_today_next_month,
+                changeMonth: true,
+            };
+            var from = $("#from_date")
+                .datepicker(fromOptions)
+                .on("change", function () {
+                    var selectedDate = getDate(this);
+                    if (selectedDate) {
+                        selectedDate.setMonth(selectedDate.getMonth() + 1);
+                        toOptions.startDate = selectedDate;
+                        toOptions.minDate = selectedDate;
+                        to.datepicker("destroy");
+                        to.datepicker(toOptions);
+                    }
+                });
+            var to = $("#to_date").datepicker(toOptions)
+                .on("change", function () {
+                    var selectedDate = getDate(this);
+                });
+            function getDate(element) {
+                var date;
+                try {
+                    date = new Date(element.value);
+                } catch (error) {
+                    date = null;
+                }
+                return date;
+            }
+            
             console.log(<?php echo json_encode($data); ?>);
             $('#stars').on('starrr:change', function(e, value){
                 $('#count').html(value);
@@ -1570,8 +1608,7 @@
             $('#stars-existing').on('starrr:change', function(e, value){
                 $('#count-existing').val(value);
             });
-        });
-        $(document).ready(function(){
+
             console.log(<?php echo json_encode($booked_dates); ?>	);
             $(".alert").hide();
             console.log('{{url('/')}}/loader.gif');

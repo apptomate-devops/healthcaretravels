@@ -1142,6 +1142,7 @@ ul.top-bar-menu li i {
         float: right;
         margin-top: -52px;
         margin-right: 10px;
+        padding: 0 25px 15px;
     }
 
     .header-style-2 .user-menu.active .user-name,
@@ -1413,7 +1414,7 @@ ul.top-bar-menu li i {
     background-color: #555;
     border-radius: 4px;
     position: absolute;
-    top: 10px;
+    top: 23px;
     transition-property: transform;
     transition-duration: 0.15s;
     outline: none;
@@ -1432,7 +1433,7 @@ ul.top-bar-menu li i {
 }
 
 .hamburger-inner::after {
-    bottom: -10px;
+    top: 10px;
     outline: none;
 }
 
@@ -2498,15 +2499,19 @@ button.widget-button {
 }
 
 .search-container h2 {
-    font-size: 40px;
-    color: #fff;
+    font-weight: bold;
+    font-size: 42px;
+    line-height: 32px;
+    letter-spacing: 0.025em;
+    color: #F7F9FB;
     margin-bottom: 30px;
-    letter-spacing: -1px;
 }
 
 .search-container .main-search-input input {
+    line-height: 32px;
+    letter-spacing: 0.025em;
     font-weight: 500;
-    font-size: 17px;
+    font-size: 15px;
     height: 57px !important;
     float: left;
     box-sizing: border-box;
@@ -2539,9 +2544,11 @@ button.widget-button {
 }
 
 .search-container .chosen-container-single .chosen-single {
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: 0.025em;
     height: 57px;
     line-height: 57px;
-    font-size: 17px;
     border-color: #fff !important
 }
 
@@ -4293,7 +4300,7 @@ button.fs-map-btn.button {
     display: block;
     width: 100%;
     border-radius: 3px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .owl-carousel .listing-item {
@@ -4321,7 +4328,7 @@ button.fs-map-btn.button {
     top: 0;
     left: 0;
     content: "";
-    z-index: 9;
+    z-index: 1;
 }
 
 .listing-img-container:before {
@@ -4348,7 +4355,7 @@ button.fs-map-btn.button {
 
 .listing-img-content {
     position: absolute;
-    z-index: 99;
+    z-index: 2;
     bottom: 0;
     left: 0;
     width: 100%;
@@ -4715,6 +4722,7 @@ ul.listing-details li {
 .listing-item.compact {
     overflow: hidden;
     position: relative;
+    height: 300px;
     /*z-index: 99;*/
 }
 
@@ -14206,6 +14214,11 @@ button.button.social-login.via-twitter {
 }
 
 @media (max-width: 480px) {
+    .listing-item.compact {
+        height: 250px;
+        padding: 0 10px;
+        margin-bottom: 15px;
+    }
     .property-slider .item,
     .property-slider.default .item {
         height: 200px;

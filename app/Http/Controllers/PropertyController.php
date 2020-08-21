@@ -708,6 +708,7 @@ class PropertyController extends BaseController
     public function search_property(Request $request)
     {
         $request_data = $request->all();
+        //        print_r($request->all());exit();
         $nearby_properties = [];
         $total_count = 0;
         $lat_lng_url = '';

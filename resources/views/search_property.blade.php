@@ -39,7 +39,7 @@
                             <div class="col-md-12 title">Search Properties</div>
                         </div>
                         <div class="row with-forms row-1">
-                            <div class="col-md-8">
+                            <div class="col-sm-8">
                                 <div class="main-search-input">
                                     <input type="text" required id="search-address-input"
                                            placeholder="Hospital, City, or Address"
@@ -56,7 +56,7 @@
                                     <input class="field" type="hidden" id="lng" name="lng" value="{{$request_data['lng'] ?? ''}}" />
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-sm-4">
                                 <select class="chosen-select-no-single" name="room_type" id="room_type" data-placeholder="Home Type">
                                     <option label=""></option>
                                     @foreach($room_types as $room)
@@ -66,7 +66,7 @@
                             </div>
                         </div>
                         <div class="row with-forms row-2">
-                            <div class="col-md-15 col-sm-3">
+                            <div class="col-lg-2 col-md-3 col-sm-3">
                                 <select class="chosen-select-no-single" name="guests" id="guests" data-placeholder="Guests">
                                     <option label=""></option>
                                     @for($i=1;$i<=10;$i++)
@@ -74,24 +74,24 @@
                                     @endfor
                                 </select>
                             </div>
-                            <div class="col-md-15 col-sm-3">
-                                <input type="text" name="from_date"
-                                       placeholder="Check in"
-                                       value="@if(isset($request_data['from_date'])){{$request_data['from_date']}}@endif"
-                                       id="from_date" autocomplete="off"/>
+                            <div class="col-lg-5 col-md-5 col-sm-5">
+                                <div class="check-in-out-wrapper">
+                                    <input type="text" name="from_date"
+                                           placeholder="Check in"
+                                           value="@if(isset($request_data['from_date'])){{$request_data['from_date']}}@endif"
+                                           id="from_date" autocomplete="off"/>
+                                    <input type="text" placeholder="Check out" onchange="check_to_date();"
+                                           value="@if(isset($request_data['to_date'])){{$request_data['to_date']}}@endif"
+                                           name="to_date" value="" id="to_date" autocomplete="off"/>
+                                </div>
                             </div>
-                            <div class="col-md-15 col-sm-3">
-                                <input type="text" placeholder="Check out" onchange="check_to_date();"
-                                       value="@if(isset($request_data['to_date'])){{$request_data['to_date']}}@endif"
-                                       name="to_date" value="" id="to_date" autocomplete="off"/>
-                            </div>
-                            <div class="col-md-15 col-sm-3">
-                                <input type="text" class="price_float" placeholder="$Min" name="minprice" id="minprice"
-                                       value="@if(isset($request_data['minprice'])){{$request_data['minprice']}}@endif">
-                            </div>
-                            <div class="col-md-15 col-sm-3">
-                                <input type="text" class="price_float" placeholder="$Max" name="maxprice" id="maxprice"
-                                       value="@if(isset($request_data['maxprice'])){{$request_data['maxprice']}}@endif">
+                            <div class="col-lg-5 col-md-4 col-sm-4">
+                                <div class="min-max-price-wrapper">
+                                    <input type="text" class="price_float" placeholder="$Min" name="minprice" id="minprice"
+                                           value="@if(isset($request_data['minprice'])){{$request_data['minprice']}}@endif">
+                                    <input type="text" class="price_float" placeholder="$Max" name="maxprice" id="maxprice"
+                                           value="@if(isset($request_data['maxprice'])){{$request_data['maxprice']}}@endif">
+                                </div>
                             </div>
                         </div>
 
@@ -167,22 +167,22 @@
                                             <span class="listing-compact-title">{{$property->title}}<i>${{$property->price_per_night * $property->min_days}}/Month</i></span>
 
                                         </div>
-                                        <img style="min-height: 250px;" src="{{$property->image_url}}" alt="">
+                                        <img style="height: 100%; width: 100%;" src="{{$property->image_url}}" alt="">
                                     </a>
                                 </div>
                             </div>
                             <!-- Listing Property / End -->
                         @endforeach
                     </div>
-                    <div class="row with-forms" style="margin: 0px 30px 80px;">
-                        <div class="col-md-6 p-0">
-                            <button onclick="nextpage({{$next-1}})" value="PREVIOUS" class="button" style="width: 110px;">
+                    <div class="row with-forms button-container">
+                        <div class="col-xs-6">
+                            <button onclick="nextpage({{$next-1}})" value="PREVIOUS" class="button">
                                 PREVIOUS
                             </button>
                         </div>
-                        <div class="col-md-6 text-right p-0">
+                        <div class="col-xs-6 text-right">
                             <input type="hidden" id="page" name="next" value="{{$next+1}}">
-                            <button id="next" onclick="nextpage({{$next+1}})" value="NEXT" class="button" style="width: 110px;">
+                            <button id="next" onclick="nextpage({{$next+1}})" value="NEXT" class="button">
                                 NEXT
                             </button>
                         </div>
@@ -427,8 +427,9 @@
                 }
             });
 
-            if("{{$request_data['room_type']}}") {
-                show_current_occupacy("{{$request_data['room_type']}}");
+            var request_data = <?php echo json_encode($request_data); ?>;
+            if(request_data.room_type) {
+                show_current_occupacy(request_data.room_type);
             };
 
             $('#room_type').change(function () {
@@ -442,17 +443,6 @@
                     $('#currently_occupied').hide();
                 }
             }
-        });
-
-        $(".user-menu").click(function () {
-            var class_n = $(this).attr('class');
-            if (class_n == "user-menu") {
-                $(this).addClass('active');
-            }
-            if (class_n == "user-menu active") {
-                $(this).removeClass('active');
-            }
-
         });
 
         $("#next").click(function (event) {

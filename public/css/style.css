@@ -2028,7 +2028,7 @@ html.mm-blocking #mm-blocker::after {
 
 .mm-menu.mm-offcanvas {
     top: 97px;
-    z-index: 20;
+    z-index: 9999999;
     min-width: 140px;
     max-width: 300px
 }

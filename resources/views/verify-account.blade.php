@@ -160,9 +160,9 @@
                                     <div class="col-md-6">
                                         <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
                                         <input type="file" name="government_id" id="government_id" class="form-control" required accept="{{$filtypes}}" />
-                                        @if(isset($GOVERNMENT_ID->document_type))
-                                            <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
-                                        @endif
+{{--                                        @if(isset($GOVERNMENT_ID->document_type))--}}
+{{--                                            <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>--}}
+{{--                                        @endif--}}
                                     </div>
                                     <div class="col-md-6">
                                         <label>Signed HCT Co-hosting Agreement<span class="required">*</span></label>
@@ -205,9 +205,9 @@
                                     <div class="col-md-6">
                                         <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
                                         <input type="file" name="government_id" id="government_id" class="form-control" accept="{{$filtypes}}" />
-                                        @if(isset($GOVERNMENT_ID->document_type))
-                                            <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
-                                        @endif
+{{--                                        @if(isset($GOVERNMENT_ID->document_type))--}}
+{{--                                            <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>--}}
+{{--                                        @endif--}}
                                     </div>
 
                                     {{------- Traveler or RV Traveler Verification ----- END ---------------}}
@@ -241,16 +241,16 @@
                                             <h4>Homeowner's Contact Information</h4>
 
                                             <label>First Name</label>
-                                            <input value="@if($user->homeowner_first_name == '0' || $user->homeowner_first_name == null)@else{{$user->homeowner_first_name}}@endif" type="text" placeholder="First Name" name="homeowner_first_name" class="form-control" />
+                                            <input value="@if($user->homeowner_first_name == '0' || $user->homeowner_first_name == null)@else{{$user->homeowner_first_name}}@endif" type="text" placeholder="First Name" name="homeowner_first_name" id="homeowner_first_name" class="form-control" />
 
                                             <label>Last Name</label>
-                                            <input value="@if($user->homeowner_last_name == '0' || $user->homeowner_last_name == null)@else{{$user->homeowner_last_name}}@endif" type="text" placeholder="Last Name" name="homeowner_last_name" class="form-control" />
+                                            <input value="@if($user->homeowner_last_name == '0' || $user->homeowner_last_name == null)@else{{$user->homeowner_last_name}}@endif" type="text" placeholder="Last Name" name="homeowner_last_name" id="homeowner_last_name" class="form-control" />
 
                                             <label>Email</label>
-                                            <input value="@if($user->homeowner_email == '0' || $user->homeowner_email == null)@else{{$user->homeowner_email}}@endif" type="text" placeholder="Email" name="homeowner_email" class="form-control" />
+                                            <input value="@if($user->homeowner_email == '0' || $user->homeowner_email == null)@else{{$user->homeowner_email}}@endif" type="text" placeholder="Email" name="homeowner_email" id="homeowner_email" class="form-control" />
 
                                             <label>Phone Number</label>
-                                            <input value="@if($user->homeowner_phone_number == '0' || $user->homeowner_phone_number == null)@else{{$user->homeowner_phone_number}}@endif" type="text" placeholder="Phone Number" name="homeowner_phone_number" class="form-control" />
+                                            <input value="@if($user->homeowner_phone_number == '0' || $user->homeowner_phone_number == null)@else{{$user->homeowner_phone_number}}@endif" type="text" placeholder="Phone Number" name="homeowner_phone_number" id="homeowner_phone_number" class="form-control"/>
 
                                         </div>
                                         <div class="card col-md-12" style="padding: 15px; margin-top: 25px;">
@@ -346,7 +346,18 @@
             @endif
 
             <script>
+                var validation_regex = {
+                    text: /.*/s,
+                    email: /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                    facebook: /(https?:\/\/)?(www\.)?facebook.com\/[a-zA-Z0-9(\.\?)?]/,
+                    linkedin: /http(s)?:\/\/([\w]+\.)?linkedin\.com\/in\/[A-z0-9_-]+\/?/,
+                    instagram: /(https?)?:?(www)?instagram\.com\/[a-z].{3}/,
+                    phone_number: /(\+\d{1,3}[- ]?)?\d{10}$/,
+                    url: /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/,
+                }
+
                 $(function() {
+
                     $(':input').on('input', function() {
                         const ignore_fields = ['_token'];
                         let completed_inputs = $(':input').filter(function() {
@@ -355,26 +366,26 @@
 
                             let input_value = this.value;
 
-                            let regex = /.*/s;
+                            let regex = validation_regex.text;
 
                             if(this.name === 'facebook') {
-                                regex = /(https?:\/\/)?(www\.)?facebook.com\/[a-zA-Z0-9(\.\?)?]/;
+                                regex = validation_regex.facebook;
                             }
-                            if(this.name === 'linkedin') {
-                                regex = /http(s)?:\/\/([\w]+\.)?linkedin\.com\/in\/[A-z0-9_-]+\/?/;
+                            else if(this.name === 'linkedin') {
+                                regex = validation_regex.linkedin;
                             }
-                            if(this.name === 'instagram') {
-                                regex = /(https?)?:?(www)?instagram\.com\/[a-z].{3}/;
+                            else if(this.name === 'instagram') {
+                                regex = validation_regex.instagram;
                             }
-                            if(['agency_hr_phone', 'agency_office_number', 'homeowner_phone_number'].includes(this.name)) {
-                                regex = /(\+\d{1,3}[- ]?)?\d{10}$/;
+                            else if(['agency_hr_phone', 'agency_office_number', 'homeowner_phone_number'].includes(this.name)) {
+                                regex = validation_regex.phone_number;
                             }
-                            if(['agency_hr_email', 'homeowner_email'].includes(this.name)) {
-                                regex = /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                            else if(['agency_hr_email', 'homeowner_email'].includes(this.name)) {
+                                regex = validation_regex.email;
                             }
-                            if(['airbnb_link', 'home_away_link', 'vrbo_link', 'agency_website', 'website', 'property_tax_url'].includes(this.name)) {
+                            else if(['airbnb_link', 'home_away_link', 'vrbo_link', 'agency_website', 'website', 'property_tax_url'].includes(this.name)) {
                                 // URL validations
-                                regex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/
+                                regex = validation_regex.url;
                             }
                             return regex.test(input_value);
                         });
@@ -385,15 +396,17 @@
                         const target = e.target;
                         const maxAllowedSize = 25 * 1024 * 1024;
                         if (target.files && target.files[0] && target.files[0].size > maxAllowedSize) {
+                            $(this).css('border-color', '#ff0000');
                             alert('File size is too large, maximum upload size is 25MB.')
                             target.value = ''
+                        } else {
+                            if(target.value) {
+                                $(this).css('border-color', '#ccc');
+                            }
                         }
                     })
                 });
 
-            </script>
-
-            <script>
                 function initializeAddress() {
                     var componentForm = {
                         street_number: 'short_name',
@@ -442,17 +455,31 @@
                 });
 
                 function validate_submit() {
-                    if(!$('#government_id').val()) {
-                        $(`#government_id`).css('border-color', '#ff0000');
-                        $(window).scrollTop($(`#government_id`).offset().top-50);
-                        return false;
-                    }
                     var user = <?php echo json_encode($user); ?>;
 
                     if (user.role_id == 4) {
-                        if(!$('#cohosting_agreement_id').val()) {
-                            $(`#cohosting_agreement_id`).css('border-color', '#ff0000');
-                            $(window).scrollTop($(`#cohosting_agreement_id`).offset().top-50);
+
+                        var invalid = false;
+
+                        $('#government_id, #cohosting_agreement_id, #homeowner_first_name, #homeowner_last_name, #homeowner_email, #homeowner_phone_number').each(function () {
+                            if(!$(this).val()) {
+                                $(this).css('border-color', '#ff0000');
+                                $(window).scrollTop($(this).offset().top-50);
+                                invalid = true;
+                            } else if(this.name === 'homeowner_email' && $(this).val() && !validation_regex.email.test($(this).val())) {
+                                $(this).css('border-color', '#ff0000');
+                                $(window).scrollTop($(this).offset().top-50);
+                                invalid = true;
+                            } else if(this.name === 'homeowner_phone_number' && $(this).val() && !validation_regex.phone_number.test($(this).val())) {
+                                $(this).css('border-color', '#ff0000');
+                                $(window).scrollTop($(this).offset().top-50);
+                                invalid = true;
+                            } else {
+                                $(this).css('border-color', '#ccc');
+                            }
+                        });
+
+                        if(invalid) {
                             return false;
                         }
                         let property_address = document.getElementById('property_address');
@@ -487,13 +514,20 @@
                             $(window).scrollTop($(`#property_address`).offset().top-200);
                             return false;
                         }
-                    } else if(user.role_id == 1) {
-                        let property_tax_url = $('#property_tax_url').val();
-                        let property_tax_document = $('#property_tax_document').val();
-                        if(property_tax_document || property_tax_url) {
-                            if(!property_tax_url || !property_tax_document) {
-                                alert('Please submit both Property Tax Document and URL.');
-                                return false;
+                    } else {
+                        if(!$('#government_id').val()) {
+                            $(`#government_id`).css('border-color', '#ff0000');
+                            $(window).scrollTop($(`#government_id`).offset().top-50);
+                            return false;
+                        }
+                        if(user.role_id == 1) {
+                            let property_tax_url = $('#property_tax_url').val();
+                            let property_tax_document = $('#property_tax_document').val();
+                            if(property_tax_document || property_tax_url) {
+                                if(!property_tax_url || !property_tax_document) {
+                                    alert('Please submit both Property Tax Document and URL.');
+                                    return false;
+                                }
                             }
                         }
                     };
@@ -501,6 +535,14 @@
                     $("#confirmationModal").modal('show');
                 }
 
+                $('#agency_hr_phone, #agency_office_number, #homeowner_phone_number').on('keypress', function(event) {
+                    var regex = new RegExp("^[0-9+]$");
+                    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+                    if (!regex.test(key)) {
+                        event.preventDefault();
+                        return false;
+                    }
+                });
             </script>
         </div>
 

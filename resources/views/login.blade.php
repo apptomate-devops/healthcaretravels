@@ -88,8 +88,12 @@
                                 <input type="checkbox" onclick="togglePassword('password')">
                                 <span>Show Password</span>
                             </div>
+                            <div class="password-checkbox">
+                                <input type="checkbox" id="remember-email-check" onclick="rememberEmail()">
+                                <span>Remember my email</span>
+                            </div>
                             <p class="form-row">
-                                <input type="submit" class="btn btn-primary w-100 m-0" name="login" value="Login" />
+                                <input type="submit" onclick="checkRememberEmail()" class="btn btn-primary w-100 m-0" name="login" value="Login" />
                             </p>
                             <p class="lost_password text-center">
                                 <a href="{{url('/')}}/reset-password">Lost Your Password?</a>
@@ -431,6 +435,7 @@
 
         load_agencies();
         set_max_date();
+        checkRememberEmail(true);
 
         if ("{{ Session::get('selectedTab'), 'tab1' }}" === 'tab2') {
             $('#login_tab').removeClass('active');
@@ -985,6 +990,35 @@
         }
     }
 
+    function rememberEmail() {
+        var isRememberChecked = $('#remember-email-check').is(':checked');
+        if (isRememberChecked) {
+            var loginUserEmail = $('#username').val();
+            setEmailInStorage(loginUserEmail);
+        } else {
+            setEmailInStorage('');
+        }
+    }
+    function checkRememberEmail(isInitialLoad) {
+        var storageEmail = getEmailFromStorage();
+        if (storageEmail) {
+            if (isInitialLoad) {
+                $('#username').val(storageEmail);
+                $('#password').val('');
+            } else {
+                var loginUserEmail = $('#username').val();
+                if (loginUserEmail != storageEmail) {
+                    setEmailInStorage('');
+                }
+            }
+        }
+    }
+    function setEmailInStorage(value) {
+        return window.localStorage.setItem('email', value);
+    }
+    function getEmailFromStorage() {
+        return window.localStorage.getItem('email');
+    }
 </script>
 </body>
 

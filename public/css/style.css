@@ -371,7 +371,7 @@ button[disabled], html input[disabled] {
 
 #header {
     position: relative;
-    z-index: 5;
+    z-index: 9999999;
     padding: 25px 0 14px 0;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.12);
     background: #fff;

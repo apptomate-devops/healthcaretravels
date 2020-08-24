@@ -336,14 +336,7 @@ class UserController extends BaseController
     public function login_user_success($check, $request)
     {
         $request->session()->put('user_id', $check->id);
-        $request->session()->put('is_verified', $check->is_verified);
-        $request->session()->put('role_id', $check->role_id);
-        $request->session()->put('username', $check->username);
-        $request->session()->put('name_of_agency', $check->name_of_agency);
         $request->session()->put('phone', $check->phone);
-        $userProfileImage = $check->profile_image ? $check->profile_image : BASE_URL . 'user_profile_default.png';
-        $request->session()->put('profile_image', $userProfileImage);
-
         if ($check->otp_verified != 1) {
             $OTP = rand(1111, 9999);
             // send otp
@@ -355,6 +348,9 @@ class UserController extends BaseController
                 ->update(['otp' => $OTP]);
 
             $url = $this->get_base_url() . 'otp-verify-register';
+            if (Auth::check()) {
+                Auth::logout();
+            }
             return redirect($url)
                 ->with('phone', $check->phone)
                 ->with('user_id', $check->id);
@@ -397,9 +393,22 @@ class UserController extends BaseController
                 ->where('phone', '=', $check->phone)
                 ->where('id', '=', $check->id)
                 ->update(['otp' => $OTP]);
+            if (Auth::check()) {
+                Auth::logout();
+            }
             $url = $this->get_base_url() . 'otp-verify-login';
-            return redirect($url);
+            return redirect($url)
+                ->with('phone', $check->phone)
+                ->with('user_id', $check->id);
         } else {
+            $request->session()->put('user_id', $check->id);
+            $request->session()->put('is_verified', $check->is_verified);
+            $request->session()->put('role_id', $check->role_id);
+            $request->session()->put('username', $check->username);
+            $request->session()->put('name_of_agency', $check->name_of_agency);
+            $request->session()->put('phone', $check->phone);
+            $userProfileImage = $check->profile_image ? $check->profile_image : BASE_URL . 'user_profile_default.png';
+            $request->session()->put('profile_image', $userProfileImage);
             $url = $this->check_login_redirection($check);
             if ($request->session()->get('propertyId')) {
                 $property_id = $request->session()->get('propertyId');
@@ -676,8 +685,7 @@ class UserController extends BaseController
             $attempts = 1;
         }
 
-        $check = DB::table('users')
-            ->where('client_id', CLIENT_ID)
+        $check = Users::where('client_id', CLIENT_ID)
             ->where('id', $request->user_id)
             ->where('phone', $request->phone_no)
             ->first();
@@ -689,6 +697,7 @@ class UserController extends BaseController
                 ->with('error', 'Wrong code. Please try again.')
                 ->with('attempts', $attempts);
         } else {
+            Auth::login($check);
             $update_status = DB::table('users')
                 ->where('client_id', CLIENT_ID)
                 ->where('id', $request->user_id)
@@ -745,18 +754,19 @@ class UserController extends BaseController
         if (!$request->phone_no || !$request->user_id) {
             return back()->with('error', 'Please Login again to Continue');
         }
-        $check = DB::table('users')
-            ->where('client_id', CLIENT_ID)
+        $check = Users::where('client_id', CLIENT_ID)
             ->where('id', $request->user_id)
             ->where('phone', $request->phone_no)
             ->first();
         if (!$check || $check->otp != $request->otp) {
-            return back()
-                ->with('phone_number', $request->phone_no)
-                ->with('phone', $request->phone_no)
-                ->with('user_id', $request->user_id)
-                ->with('error', 'Wrong code. Please try again.');
+            return back()->with([
+                'phone_number' => $request->phone_no,
+                'phone' => $request->phone_no,
+                'user_id' => $request->user_id,
+                'error' => 'Wrong code. Please try again.',
+            ]);
         } else {
+            Auth::login($check);
             $update_status = DB::table('users')
                 ->where('client_id', CLIENT_ID)
                 ->where('id', $request->user_id)

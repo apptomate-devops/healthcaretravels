@@ -209,7 +209,7 @@
 
         <!-- User Menu -->
 
-        @if(Session::has('user_id'))
+        @if(Auth::check() && Auth::user()->id)
             <div class="container hidden-xs">
                 <div class="row">
                     <div class="user-menu-container">

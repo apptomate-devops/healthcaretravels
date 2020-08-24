@@ -49,7 +49,7 @@
                 <b class="info-text" style="color: forestgreen; font-size: 18px;">Your account has been verified.</b>
             @elseif($user->is_submitted_documents == 1)
                 <b class="info-text" style="font-size: 18px;">
-                    Your account has been submitted for verification. Please allow up to 24 hours for your information to be reviewed.
+                    Your account has been submitted for verification. Please allow up to 1 to 3 business days for your information to be reviewed.
                 </b>
                 <p class="info-text" style="margin-top: 15px;">You'll receive an email once your account has been reviewed or if we need more information.</p>
             @elseif($user->denied_count >= 3)

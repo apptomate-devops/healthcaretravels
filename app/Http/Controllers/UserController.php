@@ -487,7 +487,6 @@ class UserController extends BaseController
         $fname = $request->first_name;
         $lname = $request->last_name;
         $mail = $request->email;
-        $phone = $request->phone_no;
         $type = $request->user_type;
         $social_id = $request->social_id;
         $login_type = $request->login_type ?? 1;
@@ -502,6 +501,8 @@ class UserController extends BaseController
             'website.regex' => 'Please enter valid URL',
             'numeric' => 'Please enter valid phone number',
             'digits' => 'Please enter valid phone number',
+            'phone.unique' =>
+                'This phone number is already in use an another account. If this is an error, please contact <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com</a>.',
         ];
 
         $rules = [
@@ -509,7 +510,7 @@ class UserController extends BaseController
             'first_name' => 'required',
             'last_name' => 'required',
             'ethnicity' => 'required',
-            'phone_no' => 'required|numeric|digits:10',
+            'phone' => 'required|numeric|digits:10|unique:users,phone',
             'dob' => 'required',
             'gender' => 'required',
             'languages_known' => 'required',
@@ -551,7 +552,7 @@ class UserController extends BaseController
                 ->with('lname', $lname)
                 ->with('ethnicity', $request->ethnicity)
                 ->with('mail', $mail)
-                ->with('phone', $phone)
+                ->with('phone', $request->phone)
                 ->with('type', $type)
                 ->with('selectedTab', 'tab2')
                 ->with('email_opt', $request->email_opt)
@@ -583,13 +584,12 @@ class UserController extends BaseController
         $role_id = $request->user_type;
 
         $token = $this->generate_random_string();
-        $mobile = $request->phone_no;
 
         // Considered as Address_line_1
         $address = implode(", ", array_filter([$request->street_number, $request->route]));
 
         $OTP = rand(1111, 9999);
-        $isOTPSent = $this->sendOTPMessage($request->phone_no, $OTP);
+        $isOTPSent = $this->sendOTPMessage($request->phone, $OTP);
         $insert = DB::table('users')->insert([
             'client_id' => $request->client_id,
             'role_id' => $role_id,
@@ -599,7 +599,7 @@ class UserController extends BaseController
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'ethnicity' => $request->ethnicity,
-            'phone' => $request->phone_no,
+            'phone' => $request->phone,
             'date_of_birth' => $request->dob,
             'gender' => $request->gender,
             'languages_known' => $request->languages_known,

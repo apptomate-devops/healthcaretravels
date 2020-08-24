@@ -173,7 +173,7 @@
                                     <p id="letter" class="invalid-password">At least one lowercase letter</p>
                                     <p id="capital" class="invalid-password">At least one uppercase letter</p>
                                     <p id="number" class="invalid-password">At least one number</p>
-                                    <p id="special_character" class="invalid-password">At least one special character</p>
+                                    <p id="special_character" class="invalid-password">At least one special character (@#^_+=:;><~$!%*?&)</p>
                                     <p id="length" class="invalid-password">At least 8 characters long</b></p>
                                 </div>
 
@@ -221,10 +221,10 @@
                             </p>
 
                             <p class="form-row form-row-wide" id="phone_number_field" style="display: none;">
-                                <label for="phone_no">Mobile Number:
-                                    <input type="text" class="input-text validate {{ $errors->has('phone_no') ? 'form-error' : ''}}" value="{{Session::get('phone')}}" name="phone_no" id="phone_no" maxlength="10" placeholder="Mobile Number" required />
+                                <label for="phone">Mobile Number:
+                                    <input type="text" class="input-text validate {{ $errors->has('phone') ? 'form-error' : ''}}" value="{{Session::get('phone')}}" name="phone" id="phone" maxlength="10" placeholder="Mobile Number" required />
                                 </label>
-                                {!! $errors->first('phone_no', '<p class="error-text">:message</p>') !!}
+                                {!! $errors->first('phone', '<p class="error-text">:message</p>') !!}
                             </p>
 
                             <p class="form-row form-row-wide" id="work_number_field" style="display: none;">
@@ -768,7 +768,7 @@
         $('#address_line_2').val('');
     }
 
-    $('#phone_no, #work_number_field').on('keypress', function(event) {
+    $('#phone, #work_number_field').on('keypress', function(event) {
         var regex = new RegExp("^[0-9+]$");
         var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
         if (!regex.test(key)) {
@@ -863,8 +863,7 @@
         $('#name_of_agency').val(agencyAutoComplete.value());
         return true;
     }
-</script>
-<script>
+
     let strength = 0;
 
     function passwordCheck(password) {

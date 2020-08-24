@@ -75,7 +75,7 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="{{url('/')}}/travelers">
                             Traveler
                         </a>
                         <ul>
@@ -112,7 +112,7 @@
                     </li>
 
                     <li>
-                        <a href="{{url('/')}}/">Opportunities
+                        <a style="cursor: pointer">Opportunities
                         </a>
                         <ul>
                             <li class="text-center">
@@ -150,7 +150,7 @@
                         @endif
                     </li>
                     <li>
-                        <a href="#">
+                        <a style="cursor: pointer">
                             Help
                         </a>
                         <ul>

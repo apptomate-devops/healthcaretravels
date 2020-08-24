@@ -56,11 +56,17 @@
 
                     <li>
                     <!--  <a class="current" href="{{url('/')}}"> -->
-                        @if(Session::get('role_id') == 3)
+                        {{-- @if(Session::get('role_id') == 3)
                             <a href="{{url('/')}}/rv-traveller">Home</a>
                         @else
                             <a href="{{url('/')}}">Home</a>
-                        @endif
+                        @endif --}}
+                        <a
+                            style="cursor: pointer"
+                            {{-- href="{{url('/')}}" --}}
+                        >
+                            Home
+                        </a>
                         <ul>
                             <li class="text-center">
                                 <a href="{{url('/')}}/about_us">About Us</a>
@@ -75,7 +81,10 @@
                     </li>
 
                     <li>
-                        <a href="{{url('/')}}/travelers">
+                        <a
+                            style="cursor: pointer"
+                            {{-- href="{{url('/')}}/travelers" --}}
+                        >
                             Traveler
                         </a>
                         <ul>

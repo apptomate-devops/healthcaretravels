@@ -12,6 +12,10 @@
 <script type="text/javascript" src="{{URL::asset('js/caleran.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/my-library.js') }}"></script>
 
+// Date Range Picker
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
 
 <!-- DropZone | Documentation: http://dropzonejs.com -->
 <script type="text/javascript" src="{{URL::asset('scripts/dropzone.js') }}"></script>
@@ -19,6 +23,24 @@
 <script>
     $(".dropzone").dropzone({
         dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here or drop files to upload",
+    });
+</script>
+<script>
+    // Date Range Picker
+    $('input[id="date_range_picker"]').daterangepicker({
+        autoUpdateInput: false,
+        locale: {
+            cancelLabel: 'Clear'
+        }
+    });
+
+    $('input[id="date_range_picker"]').on('apply.daterangepicker', function(ev, picker) {
+        $('input[name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
+        $('input[name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
+    });
+
+    $('input[id="date_range_picker"]').on('cancel.daterangepicker', function(ev, picker) {
+        $('input[name="from_date"], input[name="to_date"]').val('');
     });
 </script>
 <style type="text/css">

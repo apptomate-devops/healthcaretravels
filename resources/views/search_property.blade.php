@@ -35,8 +35,9 @@
                 <div class="container_wrapper search_container" style="display: none;">
                     <form id="filter_form" method="post" action="{{BASE_URL}}properties" onsubmit="return validate_submit()" autocomplete="off" onkeydown="return event.key != 'Enter';">
                         {{csrf_field()}}
-                        <div class="row with-forms">
+                        <div class="row with-forms position-relative">
                             <div class="col-md-12 title">Search Properties</div>
+                            <div id="hide_search_block" @if(count($properties)) style="display: block;" @endif></div>
                         </div>
                         <div class="row with-forms row-1">
                             <div class="col-sm-8">
@@ -79,14 +80,15 @@
                                     <input type="text" name="from_date"
                                            placeholder="Check in"
                                            value="@if(isset($request_data['from_date'])){{$request_data['from_date']}}@endif"
-                                           id="from_date" autocomplete="off"/>
-                                    <input type="text" placeholder="Check out" onchange="check_to_date();"
+                                           id="date_range_picker" autocomplete="off"/>
+                                    <input type="text" name="to_date"
+                                           placeholder="Check out"
                                            value="@if(isset($request_data['to_date'])){{$request_data['to_date']}}@endif"
-                                           name="to_date" value="" id="to_date" autocomplete="off"/>
+                                           id="date_range_picker" autocomplete="off"/>
                                 </div>
                             </div>
                             <div class="col-lg-5 col-md-4 col-sm-4">
-                                <div class="min-max-price-wrapper">
+                                <div class="check-in-out-wrapper">
                                     <input type="text" class="price_float" placeholder="$Min" name="minprice" id="minprice"
                                            value="@if(isset($request_data['minprice'])){{$request_data['minprice']}}@endif">
                                     <input type="text" class="price_float" placeholder="$Max" name="maxprice" id="maxprice"
@@ -103,8 +105,8 @@
                                 <input id="flexible_cancellation" name="flexible_cancellation" type="checkbox" @if(isset($request_data['flexible_cancellation'])) checked @endif>
                                 <label for="flexible_cancellation">Flexible Cancellation</label>
 
-                                <input id="enhanced_cleaning_protocol" name="enhanced_cleaning_protocol" type="checkbox" @if(isset($request_data['enhanced_cleaning_protocol'])) checked @endif>
-                                <label for="enhanced_cleaning_protocol">Enhanced Cleaning Protocol</label>
+{{--                                <input id="enhanced_cleaning_protocol" name="enhanced_cleaning_protocol" type="checkbox" @if(isset($request_data['enhanced_cleaning_protocol'])) checked @endif>--}}
+{{--                                <label for="enhanced_cleaning_protocol">Enhanced Cleaning Protocol</label>--}}
 
                             </div>
                             <div class="checkboxes in-row">
@@ -113,8 +115,8 @@
 
                                 <div id="currently_occupied" style="display: none;">
                                     <p class="caption-text">Currently Occupied By:</p>
-                                    <input id="no_kids" name="no_kids" type="checkbox" @if(isset($request_data['no_kids'])) checked @endif>
-                                    <label for="no_kids">No Kids</label>
+                                    <input id="no_child" name="no_child" type="checkbox" @if(isset($request_data['no_child'])) checked @endif>
+                                    <label for="no_child">No Kids</label>
 
                                     <input id="no_pets" name="no_pets" type="checkbox" @if(isset($request_data['no_pets'])) checked @endif>
                                     <label for="no_pets">No Pets</label>
@@ -359,7 +361,12 @@
                 e.preventDefault();
                 $('.search_container').show();
                 $('.properties_container').hide();
-            })
+            });
+            $('#hide_search_block').click(function (e) {
+                e.preventDefault();
+                $('.search_container').hide();
+                $('.properties_container').show();
+            });
 
             function get_price_range() {
                 var price_range = [
@@ -488,7 +495,6 @@
             $("#filter_form").submit();
         }
     </script>
-
     @include('includes.scripts')
 
     <!-- Maps -->

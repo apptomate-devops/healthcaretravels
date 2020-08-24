@@ -708,7 +708,6 @@ class PropertyController extends BaseController
     public function search_property(Request $request)
     {
         $request_data = $request->all();
-        //        print_r($request->all());exit();
         $nearby_properties = [];
         $total_count = 0;
         $lat_lng_url = '';
@@ -716,7 +715,6 @@ class PropertyController extends BaseController
         $room_types = DB::table('property_room_types')->get();
 
         if (count(array_filter($request_data)) > 0) {
-            //            print_r($request_data);exit();
             $lat_lng = [];
             $lat_lng_url = urlencode(serialize($lat_lng));
 
@@ -743,23 +741,22 @@ class PropertyController extends BaseController
                 ->where('property_list.status', '=', 1)
                 ->where('property_list.property_status', '=', 1);
 
-            //            if (!empty($source_lng) && !empty($source_lat)) {
-            //                print_r('having location');exit();
-            //                $query
-            //                    ->selectRaw(
-            //                        "(6371 * acos(cos(radians(" .
-            //                        $source_lat .
-            //                        "))* cos(radians(`lat`))
-            //                            * cos(radians(`lng`) - radians(" .
-            //                        $source_lng .
-            //                        ")) + sin(radians(" .
-            //                        $source_lat .
-            //                        "))
-            //                            * sin(radians(`lat`)))) as distance",
-            //                )
-            //                    ->having('distance', '<=', RADIUS)
-            //                    ->orderBy('distance');
-            //            }
+            if (!empty($source_lng) && !empty($source_lat)) {
+                $query
+                    ->selectRaw(
+                        "(6371 * acos(cos(radians(" .
+                            $source_lat .
+                            "))* cos(radians(`lat`))
+                                        * cos(radians(`lng`) - radians(" .
+                            $source_lng .
+                            ")) + sin(radians(" .
+                            $source_lat .
+                            "))
+                                        * sin(radians(`lat`)))) as distance",
+                    )
+                    ->having('distance', '<=', RADIUS)
+                    ->orderBy('distance');
+            }
             $where = [];
 
             if ($request->guests != "") {
@@ -770,8 +767,24 @@ class PropertyController extends BaseController
                 $where[] = 'property_list.room_type = "' . $request->room_type . '" ';
             }
 
+            if (isset($request->instance_booking)) {
+                $where[] = 'property_list.is_instant = 1';
+            }
+
+            if (isset($request->flexible_cancellation)) {
+                $where[] = 'property_list.cancellation_policy = Flexible';
+            }
+
             if (isset($request->pets_allowed)) {
                 $where[] = 'property_list.pets_allowed = 1';
+            }
+
+            if (isset($request->no_child)) {
+                $where[] = 'property_list.cur_child = 0';
+            }
+
+            if (isset($request->no_pets)) {
+                $where[] = 'property_list.cur_pets = 0';
             }
 
             //        if ($request->bookingmode != "") {

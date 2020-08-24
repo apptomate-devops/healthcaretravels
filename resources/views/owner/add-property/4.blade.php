@@ -165,6 +165,21 @@
                                             <h5>Security Deposit<span class="required">*</span></h5>
                                             <input class="search-field price_float validate" id="security_deposit" name="security_deposit" type="text" value="{{isset($price->security_deposit)?$price->security_deposit:'0'}}"   />
                                         </div>
+                                        <br><br>
+                                    </div>
+                                    <div class="row with-forms">
+
+                                        <div class="col-md-12">
+                                            <h3>Allow Instant Booking :</h3>
+                                            <div class="checkboxes in-row">
+
+                                                <input id="booking_type_yes" name="booking_type" type="checkbox" value="1" >
+                                                <label for="booking_type_yes">Yes</label>
+
+                                                <input id="booking_type_no" name="booking_type" type="checkbox" value="0" checked >
+                                                <label for="booking_type_no">No</label>
+                                            </div>
+                                        </div>
                                         <br><br><br>
                                     </div>
 
@@ -362,9 +377,26 @@
         <?php }
         } ?>
 
-        $("#cancellation_policy").val("{{isset($property_details->cancellation_policy)?$property_details->cancellation_policy:''}}");
-        $("#booking_type").val("{{isset($property_details->is_instant)?$property_details->is_instant:''}}");
-        $("#cleaning_fee_type").val("{{isset($price->cleaning_fee_type)?$price->cleaning_fee_type:''}}");
+        var is_instant = "{{$property_details->is_instant}}";
+        if(is_instant === '1') {
+            $('#booking_type_yes').attr('checked',true);
+            $('#booking_type_no').attr('checked',false);
+        } else {
+            $('#booking_type_yes').attr('checked',false);
+            $('#booking_type_no').attr('checked',true);
+        };
+
+        $('#booking_type_yes,#booking_type_no').change(function(){
+            if($(this).val()==1){
+                $('#booking_type_no').attr('checked',false);
+            }else{
+                $('#booking_type_yes').attr('checked',false);
+            }
+        });
+
+        <!--$("#cancellation_policy").val("{{isset($property_details->cancellation_policy)?$property_details->cancellation_policy:''}}");-->
+{{--        $("#booking_type").val("{{isset($property_details->is_instant)?$property_details->is_instant:''}}");--}}
+<!--        $("#cleaning_fee_type").val("{{isset($price->cleaning_fee_type)?$price->cleaning_fee_type:''}}");-->
 
     </script>
     </body>{{-- https://maps.googleapis.com/maps/api/js?libraries=places&#038;language=en&#038;key=AIzaSyBWoWfqptSqcHj_tAT3khy2jjj7fuANNaM&#038;ver=1.0 --}}

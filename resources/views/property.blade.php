@@ -117,26 +117,32 @@
 
             <div class="row" style="padding-top: 2%;background-color: #f2f2f2;margin-bottom: 20px;">
                 <form name="test" action="{{url('/')}}/properties" method="post" utocomplete="off">
-                    <div class="col-md-6">
-                        <input type="text" class="form-control" name="search" id="pac-input" />
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" name="search" id="pac-input" style="height: 57px;" />
                     </div>
-                    <div class="col-md-2 col-sm-6 col-xs-6">
-                        <div class="main-search-input">
+                    <div class="col-md-3">
+                        <div class="check-in-out-wrapper">
+                            <input type="text" name="from_date"
+                                   placeholder="Check in"
+                                   id="date_range_picker" autocomplete="off"/>
+                            <input type="text" name="to_date"
+                                   placeholder="Check out"
+                                   id="date_range_picker" autocomplete="off"/>
                             <!-- <input type="text"  name="from_date" onchange="set_to_date();" placeholder="Check in" value="" id="from_date" /> -->
-                            <input type="text"  name="from_date" placeholder="Check in" value="" autocomplete="off" id="from_date" />
+{{--                            <input type="text"  name="from_date" placeholder="Check in" value="" autocomplete="off" id="from_date" />--}}
                         </div>
                     </div>
 
-                    <div class="col-md-2 col-sm-6 col-xs-6">
-                        <div class="main-search-input">
-                            <input name="to_date"  type="text"  placeholder="Check out" value="" autocomplete="off" id="to_date" />
-                            <!-- <input name="to_date"  type="text" onchange="check_to_date();" placeholder="Check out" value="" id="to_date" /> -->
+{{--                    <div class="col-md-2 col-sm-6 col-xs-6">--}}
+{{--                        <div class="main-search-input">--}}
+{{--                            <input name="to_date"  type="text"  placeholder="Check out" value="" autocomplete="off" id="to_date" />--}}
+{{--                            <!-- <input name="to_date"  type="text" onchange="check_to_date();" placeholder="Check out" value="" id="to_date" /> -->--}}
 
-                        </div>
-                    </div>
+{{--                        </div>--}}
+{{--                    </div>--}}
 
-                    <div class="col-md-2">
-                        <button class="button" type="submit" >Search</button>
+                    <div class="col-md-2 text-center">
+                        <button class="button" type="submit" style="width: 100%; margin: 5px 0 20px;" >Search</button>
                     </div>
                     <div id="search_location"></div>
 
@@ -1599,7 +1605,7 @@
                 }
                 return date;
             }
-            
+
             console.log(<?php echo json_encode($data); ?>);
             $('#stars').on('starrr:change', function(e, value){
                 $('#count').html(value);

@@ -9500,13 +9500,16 @@ img.mfp-img {
     color: #999;
 }
 
+.chosen-container-single .chosen-single.chosen-default span {
+    color: #888;
+}
 .chosen-container-single .chosen-single span {
     display: block;
     overflow: hidden;
     margin-right: 26px;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: #888;
+    color: #000;
 }
 
 .chosen-container-single .chosen-single-with-deselect span {

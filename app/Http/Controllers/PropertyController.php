@@ -770,7 +770,7 @@ class PropertyController extends BaseController
             }
 
             if (isset($request->flexible_cancellation)) {
-                $where[] = 'property_list.cancellation_policy = Flexible';
+                $where[] = "property_list.cancellation_policy = 'Flexible'";
             }
 
             if (isset($request->pets_allowed)) {
@@ -800,12 +800,9 @@ class PropertyController extends BaseController
                     '" and "' .
                     $request->maxprice .
                     '" ';
-            }
-
-            if ($request->minprice != "" && $request->maxprice == "") {
+            } elseif ($request->minprice != "" && $request->maxprice == "") {
                 $where[] = 'property_short_term_pricing.price_per_night <= "' . $request->minprice . '" ';
-            }
-            if ($request->minprice == "" && $request->maxprice != "") {
+            } elseif ($request->minprice == "" && $request->maxprice != "") {
                 $where[] = 'property_short_term_pricing.price_per_night <= "' . $request->maxprice . '" ';
             }
 

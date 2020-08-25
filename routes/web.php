@@ -12,6 +12,7 @@
 */
 
 Route::GET('/not_found', 'BaseController@not_found');
+Route::get('/storage/{filePath}', 'BaseController@get_storage_file')->where(['filePath' => '.*']);
 
 // Logout Controller Routes
 Route::GET('/logout', 'LogoutController@logout');

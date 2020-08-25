@@ -85,15 +85,20 @@ class Handler extends ExceptionHandler
             $e = FlattenException::create($exception);
             $handler = new SymfonyExceptionHandler();
             $html = $handler->getHtml($e);
-            if (config("app.env") !== "local") {
-                $emails = [
-                    'brijeshbhakta30@gmail.com',
+            $emails = ['brijeshbhakta30@gmail.com', 'phpatel.4518@gmail.com'];
+            if (config('app.env') == 'stage') {
+                $stage_emails_notify = [
                     'info@healthcaretravels.com',
                     'ldavis@healthcaretravels.com',
                     'pashiofu@healthcaretravels.com',
                     'dylan@arborvita.io',
                     'garrethdottin1@gmail.com',
                 ];
+                foreach ($stage_emails_notify as $email) {
+                    array_push($emails, $email);
+                }
+            }
+            if (config('app.env') !== 'local') {
                 Mail::to($emails)->send(new ExceptionOccurred($html));
                 Logger::info('Error emails sent');
             }

@@ -180,7 +180,7 @@
 
 
 
-                    @if(Session::has('user_id'))
+                    @if(Auth::check() && Auth::user()->id)
 
                     @else
                         <li class="right-side-menu-item">

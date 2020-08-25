@@ -1004,7 +1004,7 @@
                                 <div id="check_in_div">
                                     <div class="form-group">
                                         <!-- Date input -->
-                                        <label class="control-label" for="property_from_date">Check In</label>
+                                        <label class="control-label" for="property_from_date">Check Innnn</label>
                                         <input name="check_in" required value="@if(count($session)!=0) {{$session['fromDate']}} @endif" id="property_from_date" placeholder="Check In date" onchange="get_price({{$property_id}})" type="text" style="width: 273px;" >
                                     </div>
                                 </div>
@@ -1013,7 +1013,7 @@
                                 <div id="check_out_div">
                                     <div class="form-group">
                                         <!-- Date input -->
-                                        <label class="control-label" for="date">Check Out</label>
+                                        <label class="control-label" for="date">Check Outttt</label>
                                         <input name="check_out" value="@if(count($session)!=0) {{$session['toDate']}} @endif"  required id="property_to_date" onchange="get_price({{$property_id}})" placeholder="Check Out date" type="text" style="width: 273px;" >
 
                                         <input name="property_id" type="hidden" value="{{$property_id}}" >
@@ -1728,10 +1728,15 @@
             var from_date = $("#property_from_date").val();
             var to_date = $("#property_to_date").val();
             var guest_count = $("#current_guest_count").val();
-            var totalguestcount=$('#total_guest_count').val();
-            //alert(guest_count);return false;
+            var totalguestcount=parseInt($('#total_guest_count').val());
+            totalguestcount = isNaN(totalguestcount) ? 0 : totalguestcount;
+
             $("#pricing_details").show();
             $('.guest').show();
+
+            if(!id || !from_date || !to_date) {
+                return;
+            }
             var url = 'get-price?property_id='+id+"&check_in="+from_date+"&check_out="+to_date+"&guest_count="+guest_count;
 
 
@@ -1823,6 +1828,9 @@
                         $("#table_body").html(tr_data);
 
                     }
+                },
+                error: function (e) {
+                    console.log('Error in Get_price', e);
                 }
             });
         }

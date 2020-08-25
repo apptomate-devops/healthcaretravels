@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Services\Logger;
 use Illuminate\Http\Request;
 use DB;
 use DateTime;
@@ -437,8 +438,11 @@ class PropertyController extends BaseController
             }
 
             $booking_price['week_end_days'] = $week_end_days;
-            $booking_price['price_per_weekend'] = $pricing_config->price_per_weekend ?? 0;
-            $booking_price['weekend_total'] = ($pricing_config->price_per_weekend ?? 0) * $week_end_days;
+            $booking_price['price_per_weekend'] = isset($pricing_config->price_per_weekend)
+                ? $pricing_config->price_per_weekend
+                : 0;
+            $booking_price['weekend_total'] =
+                (isset($pricing_config->price_per_weekend) ? $pricing_config->price_per_weekend : 0) * $week_end_days;
 
             $cleaning_fee_amount = ZERO;
             $city_fee_amount = ZERO;
@@ -2600,7 +2604,7 @@ class PropertyController extends BaseController
     public function property_image_upload(Request $request)
     {
         //
-        $complete_url = $this->base_image_upload($request, 'property_image', 'properties');
+        $complete_url = $this->base_image_upload($request, 'file', 'properties');
         $property_id = $request->session()->get('property_id');
         $insert = DB::table('property_images')->insert([
             'client_id' => CLIENT_ID,

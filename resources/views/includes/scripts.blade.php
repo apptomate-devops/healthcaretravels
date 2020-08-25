@@ -16,24 +16,54 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
-
 <!-- DropZone | Documentation: http://dropzonejs.com -->
-<script type="text/javascript" src="{{URL::asset('scripts/dropzone.js') }}"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/min/dropzone.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.2.0/min/dropzone.min.js"></script>
+
+{{--<script type="text/javascript" src="{{URL::asset('scripts/dropzone.js') }}"></script>--}}
 <script type="text/javascript" src="{{URL::asset('scripts/common.js') }}"></script>
+
 <script>
-    // function dropzoneExists(selector) {
-    //     var elements = $(selector).find('.dz-default');
-    //     return elements.length > 0;
-    // }
-    //
-    // var exists = dropzoneExists('.dropzone');
-    // if(!exists) {
-        Dropzone.autoDiscover = false;
-        $(".dropzone").dropzone({
-            dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here or drop files to upload",
-        });
-    // }
+    Dropzone.autoDiscover = false;
+    $(".dropzone").dropzone({
+        dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here or drop files to upload",
+        autoProcessQueue: false,
+        maxFiles: 10,
+        acceptedFiles: ".jpg, .jpeg, .png, .gif, .pdf",
+        addRemoveLinks: true,
+        dictInvalidFileType: "Invalid File Type",
+        dictMaxFilesExceeded: "Only 10 files are allowed",
+        init: function () {
+            var fileDropzone = this;
+
+            $("#propertyImageSubmit").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (fileDropzone.files.length) {
+                    fileDropzone.processQueue();
+                } else {
+                    $("#property_submit_5").submit();
+                }
+            });
+            // on success
+            this.on("success", function(file) {
+                // submit form
+                $("#property_submit_5").submit();
+            });
+            // on success multiple
+            this.on("successmultiple", function(file) {
+                // submit form
+                $("#property_submit_5").submit();
+            });
+            // on error
+            this.on("error", function (file, response) {
+                console.log('error uploading property images', response);
+            });
+        }
+    });
 </script>
+
 <script>
     // Date Range Picker
     $('input[id="date_range_picker"]').daterangepicker({
@@ -129,7 +159,7 @@
     function initMap() {
         @if(Request::path()=='owner/add-property')
         dragMap();
-        @endif
+            @endif
         var input = document.getElementById('pac-input');
         var autocomplete = new google.maps.places.Autocomplete(input);
 
@@ -226,7 +256,7 @@
     ];
     var mapMarkers = [];
     var mapMarkers1 = [];
-    @if(Request::path()=='short-term' || Request::path()=='properties')
+        @if(Request::path()=='short-term' || Request::path()=='properties')
     var latitude = 40.238856;
     var longitude = -101.909323;
         @else

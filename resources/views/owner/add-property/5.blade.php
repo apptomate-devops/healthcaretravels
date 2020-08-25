@@ -68,7 +68,7 @@
                             <h3>Add Photos</h3>
                             <div class="submit-section">
                                 <div class="row with-forms" style="padding: 0 15px;">
-                                    <form action="{{url('/')}}/owner/property/file-upload" method="post" class="dropzone dz-clickable">
+                                    <form action="{{BASE_URL}}owner/property/file-upload" method="post" enctype="multipart/form-data" class="dropzone" id="property-image">
                                         <div  class="dz-default dz-message">
                                             <span>
                                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
@@ -116,12 +116,12 @@
                     </div>
                     @endif
 
-                    <form action="{{url('/')}}/owner/add-new-property/5" method="post" name="form-add-new">
+                    <form action="{{BASE_URL}}owner/add-new-property/5" method="post" name="form-add-new" id="property_submit_5">
                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                         <input type="hidden" name="client_id" value="{{$client_id}}">
                         <input type="hidden" name="property_id" value="{{$property_details->id}}">
                         <div class="text-center">
-                            <button type="submit" class="button preview">
+                            <button type="button" id="propertyImageSubmit" class="button preview">
                                 SAVE
                                 <i class="fa fa-arrow-circle-right"></i>
                             </button>

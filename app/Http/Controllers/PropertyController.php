@@ -322,8 +322,7 @@ class PropertyController extends BaseController
             "')  AND B.minimum_guests < " .
             $guest_count .
             " AND A.payment_done = 1 AND A.is_instant = B.is_instant AND A.property_id = " .
-            $request->property_id .
-            "";
+            $request->property_id;
 
         $s_price =
             "SELECT count(*) as is_available,A.* FROM `property_special_pricing` A, `property_list` B WHERE (A.start_date  BETWEEN '" .
@@ -335,8 +334,7 @@ class PropertyController extends BaseController
             "' AND '" .
             $check_out .
             "') AND A.property_id = " .
-            $request->property_id .
-            "";
+            $request->property_id;
 
         $pricing_config = DB::table('property_short_term_pricing')
             ->where('client_id', CLIENT_ID)
@@ -439,8 +437,8 @@ class PropertyController extends BaseController
             }
 
             $booking_price['week_end_days'] = $week_end_days;
-            $booking_price['price_per_weekend'] = $pricing_config->price_per_weekend;
-            $booking_price['weekend_total'] = $pricing_config->price_per_weekend * $week_end_days;
+            $booking_price['price_per_weekend'] = $pricing_config->price_per_weekend ?? 0;
+            $booking_price['weekend_total'] = ($pricing_config->price_per_weekend ?? 0) * $week_end_days;
 
             $cleaning_fee_amount = ZERO;
             $city_fee_amount = ZERO;

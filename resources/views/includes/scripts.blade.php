@@ -12,7 +12,7 @@
 <script type="text/javascript" src="{{URL::asset('js/caleran.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/my-library.js') }}"></script>
 
-// Date Range Picker
+{{-- Date Range Picker--}}
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
@@ -28,6 +28,10 @@
 <script>
     // Date Range Picker
     $('input[id="date_range_picker"]').daterangepicker({
+        minDate: new Date(),
+        maxSpan: {
+            "days": 30
+        },
         autoUpdateInput: false,
         locale: {
             cancelLabel: 'Clear'
@@ -309,6 +313,7 @@
         var form_data = new FormData();
         form_data.append('profile_image', file_data);
         form_data.append('_token', "{{csrf_token()}}");
+
         $.ajax({
             url: '/update-profile-picture',
             dataType: 'text',
@@ -325,8 +330,6 @@
                 document.getElementById("header_profile_image").innerHTML = data;
                 document.getElementById("uploading").innerHTML = '';
                 $("#upload_button").show();
-
-
             }
         });
 

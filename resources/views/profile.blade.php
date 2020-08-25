@@ -176,13 +176,13 @@
 
                             @endif
 
-{{--                            @if($user_detail->role_id == 1 || $user_detail->role_id == 4)--}}
-{{--                                <div class="form-row form-row-wide" id="listing_address_field">--}}
-{{--                                    <label for="listing_address">Listing Address:</label>--}}
-{{--                                    <input type="text" class="input-text validate" value="{{Session::get('listing_address') ?? $user_detail->listing_address}}" name="listing_address" id="listing_address" placeholder="Full Street Address" autocomplete="off" style="padding-left: 20px;" @if($user_detail->listing_address) data-is-valid="true" @endif />--}}
-{{--                                </div>--}}
-{{--                                <p class="error-text" id="listing_address_error" style="display: none;">Please select a valid address from the suggestions.</p>--}}
-{{--                            @endif--}}
+                            {{--                            @if($user_detail->role_id == 1 || $user_detail->role_id == 4)--}}
+                            {{--                                <div class="form-row form-row-wide" id="listing_address_field">--}}
+                            {{--                                    <label for="listing_address">Listing Address:</label>--}}
+                            {{--                                    <input type="text" class="input-text validate" value="{{Session::get('listing_address') ?? $user_detail->listing_address}}" name="listing_address" id="listing_address" placeholder="Full Street Address" autocomplete="off" style="padding-left: 20px;" @if($user_detail->listing_address) data-is-valid="true" @endif />--}}
+                            {{--                                </div>--}}
+                            {{--                                <p class="error-text" id="listing_address_error" style="display: none;">Please select a valid address from the suggestions.</p>--}}
+                            {{--                            @endif--}}
 
                             @if($user_detail->role_id == 2)
                                 <label for="work">Office Number:</label>
@@ -211,19 +211,14 @@
                         <!-- Avatar -->
                         <div class="edit-profile-photo">
                             <div id="profileImage">
-                                @if($user_detail->profile_image != " ")
-                                    <img src="{{$user_detail->profile_image}}" alt="" style="border-radius: 100%;height: 150px;width: 150px;">
-                                @else
-                                    <img  src="/user_profile_default.png" style="border-radius: 100%;height: 150px;width: 150px;"/>
-                                @endif
-
+                                <img src="{{($user_detail->profile_image != " ") ? $user_detail->profile_image : '/user_profile_default.png'}}"/>
                             </div>
                             <div class="col-md-6">
                                 <div class="change-photo-btn" id="upload_button">
 
                                     <div class="photoUpload">
                                         <span><i class="fa fa-upload"></i></span>
-                                        <input type="file" id="profile_image" onchange="file_upload();" class="upload" name="profile_image" />
+                                        <input type="file" id="profile_image" onchange="file_upload();" class="upload" name="profile_image" accept="image/*" />
                                         <input type="hidden" id="token" name="_token" value="{{ csrf_token() }}">
                                     </div>
                                 </div>

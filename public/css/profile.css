@@ -45,6 +45,13 @@ li.sub-nav-title {
     cursor: pointer;
 }
 
+#profileImage img {
+    border-radius: 100%;
+    height: 150px;
+    width: 150px;
+    object-fit: contain;
+    border: 1px solid #e78016;
+}
 .enable-auth-checkbox {
     margin-top: 30px;
 }

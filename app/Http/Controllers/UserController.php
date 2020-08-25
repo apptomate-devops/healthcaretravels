@@ -510,6 +510,10 @@ class UserController extends BaseController
             'website.regex' => 'Please enter valid URL',
             'numeric' => 'Please enter valid phone number',
             'digits' => 'Please enter valid phone number',
+            'pet_name' => 'The :attribute field is required when you are travelling with pet.',
+            'pet_breed' => 'The :attribute field is required when you are travelling with pet.',
+            'pet_weight' => 'The :attribute field is required when you are travelling with pet.',
+            'pet_image' => 'The :attribute field is required when you are travelling with pet.',
             'phone.unique' =>
                 'This phone number is already in use an another account. If this is an error, please contact <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com</a>.',
         ];
@@ -550,6 +554,10 @@ class UserController extends BaseController
             $rules["other_agency"] = 'required_without:name_of_agency';
             $rules["tax_home"] = 'required';
             $rules["address"] = 'required';
+            $rules["pet_name"] = 'required_with:is_pet_travelling';
+            $rules["pet_breed"] = 'required_with:is_pet_travelling';
+            $rules["pet_weight"] = 'required_with:is_pet_travelling';
+            $rules["pet_image"] = 'required_with:is_pet_travelling';
         }
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -585,6 +593,11 @@ class UserController extends BaseController
                 ->with('work', $request->work)
                 ->with('work_title', $request->work_title)
                 ->with('website', $request->website)
+                ->with('is_pet_travelling', $request->is_pet_travelling)
+                ->with('pet_name', $request->pet_name)
+                ->with('pet_breed', $request->pet_breed)
+                ->with('pet_weight', $request->pet_weight)
+                ->with('pet_image', $request->pet_image)
                 ->withErrors($validator);
         }
 
@@ -599,6 +612,10 @@ class UserController extends BaseController
 
         $OTP = rand(1111, 9999);
         $isOTPSent = $this->sendOTPMessage($request->phone, $OTP);
+        $petImage = '';
+        if (isset($request->is_pet_travelling)) {
+            $petImage = $this->base_image_upload($request, 'pet_image', 'pets/');
+        }
         $insert = DB::table('users')->insert([
             'client_id' => $request->client_id,
             'role_id' => $role_id,
@@ -633,7 +650,13 @@ class UserController extends BaseController
             'social_id' => $social_id,
             'otp' => $OTP,
             'email_opt' => isset($request->email_opt) ? 1 : 0,
+            'is_pet_travelling' => isset($request->is_pet_travelling) ? 1 : 0,
+            'pet_name' => isset($request->is_pet_travelling) ? $request->pet_name : '',
+            'pet_breed' => isset($request->is_pet_travelling) ? $request->pet_breed : '',
+            'pet_weight' => isset($request->is_pet_travelling) ? $request->pet_weight : '',
+            'pet_image' => isset($request->is_pet_travelling) ? $petImage : '',
         ]);
+
         $d = DB::table('users')
             ->where('client_id', '=', $request->client_id)
             ->where('email', '=', $request->email)
@@ -1137,22 +1160,17 @@ class UserController extends BaseController
         if (!$user_id) {
             return redirect('/login')->with('error', 'Session timeout login again');
         }
+        $profile_image = '';
         if ($request->file('profile_image')) {
             # code...
+            $profile_image = $this->base_image_upload($request, 'profile_image', 'users/');
         }
-        $file = $request->file('profile_image');
-        //Move Uploaded File $file->getClientOriginalExtension();
-        $destinationPath = 'public/uploads';
-        $file_name = rand(111111, 999999) . '.' . $file->getClientOriginalExtension();
-        $file->move($destinationPath, $file_name);
-        $client_id = $this->get_client_id();
-        $complete_url = $this->get_base_url() . $destinationPath . '/' . $file_name;
         $update = DB::table('users')
-            ->where('client_id', '=', $client_id)
+            ->where('client_id', '=', CLIENT_ID)
             ->where('id', '=', $user_id)
-            ->update(['profile_image' => $complete_url]);
-        $request->session()->put('profile_image', $complete_url);
-        return $complete_url;
+            ->update(['profile_image' => $profile_image]);
+        $request->session()->put('profile_image', $profile_image);
+        return $profile_image;
     }
     public function delete_profile_picture(Request $request)
     {

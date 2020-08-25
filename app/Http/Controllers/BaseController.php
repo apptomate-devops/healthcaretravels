@@ -122,12 +122,19 @@ class BaseController extends ConstantsController
     public function base_image_upload($request, $key, $path)
     {
         $file = $request->file($key);
-        $image = $request->$key;
-        $ext = $image->getClientOriginalExtension();
+        $ext = $file->getClientOriginalExtension();
         $imageName = self::generate_random_string() . '.' . $ext;
-        $destinationPath = $path;
-        $file->move($destinationPath, $imageName);
-        return $destinationPath . $imageName;
+        $path = $file->storeAs($path, $imageName);
+        return '/storage/' . $path;
+    }
+
+    public function get_storage_file($filePath)
+    {
+        $qualifiedFilePath = storage_path('app/' . $filePath);
+        if (!\Storage::disk('local')->exists($filePath)) {
+            return abort('404');
+        }
+        return response()->file($qualifiedFilePath);
     }
 
     public function base_document_upload_with_key($request, $key)

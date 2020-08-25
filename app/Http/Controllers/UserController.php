@@ -614,7 +614,7 @@ class UserController extends BaseController
         $isOTPSent = $this->sendOTPMessage($request->phone, $OTP);
         $petImage = '';
         if (isset($request->is_pet_travelling)) {
-            $petImage = $this->base_image_upload($request, 'pet_image', 'pets/');
+            $petImage = $this->base_image_upload($request, 'pet_image', 'pets');
         }
         $insert = DB::table('users')->insert([
             'client_id' => $request->client_id,
@@ -1162,8 +1162,7 @@ class UserController extends BaseController
         }
         $profile_image = '';
         if ($request->file('profile_image')) {
-            # code...
-            $profile_image = $this->base_image_upload($request, 'profile_image', 'users/');
+            $profile_image = $this->base_image_upload($request, 'profile_image', 'users');
         }
         $update = DB::table('users')
             ->where('client_id', '=', CLIENT_ID)

@@ -118,13 +118,16 @@ class BaseController extends ConstantsController
         }
         return ['status' => true];
     }
-    public function base_image_upload($request)
+
+    public function base_image_upload($request, $key, $path)
     {
-        $imageName = $request->file('image')->getClientOriginalName();
-        $ext = $request->file('image')->getClientOriginalExtension();
+        $file = $request->file($key);
+        $image = $request->$key;
+        $ext = $image->getClientOriginalExtension();
         $imageName = self::generate_random_string() . '.' . $ext;
-        $request->file('image')->move('public/uploads/', $imageName);
-        return $image_url = BASE_URL . "public/uploads/" . $imageName;
+        $destinationPath = $path;
+        $file->move($destinationPath, $imageName);
+        return $destinationPath . $imageName;
     }
 
     public function base_document_upload_with_key($request, $key)
@@ -134,7 +137,7 @@ class BaseController extends ConstantsController
         $ext = $image->getClientOriginalExtension();
         $imageName = self::generate_random_string() . '.' . $ext;
         $this->store_encrypted_file($file, $imageName);
-        return $image_url = BASE_URL . "documents/" . $imageName;
+        return $image_url = "documents/" . $imageName;
     }
 
     public function store_encrypted_file($file, $fileName)
@@ -164,7 +167,7 @@ class BaseController extends ConstantsController
         $ext = $image->getClientOriginalExtension();
         $imageName = self::generate_random_string() . '.' . $ext;
         $request->file($key)->move('public/uploads/', $imageName);
-        return $image_url = BASE_URL . "public/uploads/" . $imageName;
+        return $image_url = "public/uploads/" . $imageName;
     }
 
     public function base_image_upload_with_keys($request, $key)

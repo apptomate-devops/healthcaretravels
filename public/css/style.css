@@ -968,6 +968,8 @@ ul.top-bar-menu li i {
     border-radius: 50%;
     width: 38px;
     height: 38px;
+    object-fit: contain;
+    border: 1px solid #FFFFFF;
 }
 
 .user-name span#header_profile_image {
@@ -1140,7 +1142,7 @@ ul.top-bar-menu li i {
 
     .header-style-2 .user-menu {
         float: right;
-        margin-top: -52px;
+        margin-top: -57px;
         margin-right: 10px;
         padding: 0 25px 15px;
     }
@@ -5494,8 +5496,8 @@ section.fullwidth.border-bottom {
     display: inline-block;
     position: absolute;
     font-size: 13px;
-    bottom: 15px;
-    left: 15px;
+    bottom: 5px;
+    left: 5px;
     width: auto;
     background-color: #fff;
     color: #333;
@@ -14426,5 +14428,12 @@ div.layout-style {
 @media only screen and (max-width: 1024px) {
     #style-switcher {
         display: none;
+    }
+}
+
+@media only screen and (max-width: 1024px) and (min-width: 992px) {
+    input,
+    select {
+        font-size: 12px !important;
     }
 }

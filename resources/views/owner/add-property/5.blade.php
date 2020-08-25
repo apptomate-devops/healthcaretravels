@@ -68,15 +68,15 @@
                             <h3>Add Photos</h3>
                             <div class="submit-section">
                                 <div class="row with-forms" style="padding: 0 15px;">
-                                    <form action="{{url('/')}}/owner/property/file-upload" class="dropzone dz-clickable">
+                                    <form action="{{url('/')}}/owner/property/file-upload" method="post" class="dropzone dz-clickable">
                                         <div  class="dz-default dz-message">
-                                                    <span>
-                                                         <input type="hidden" name="_token" value="{{csrf_token()}}">
-                                                        <i class="sl sl-icon-plus"></i> Click here or drop files to upload
-                                                    </span>
+                                            <span>
+                                                <input type="hidden" name="_token" value="{{csrf_token()}}">
+                                                <i class="sl sl-icon-plus"></i> Click here or drop files to upload
+                                            </span>
                                         </div>
                                     </form>
-                                    <p>Add up to 20 images of your property. Check out our <a href="https://healthcaretravels.com/eye-catching-photos" target="_blank">article</a> on how to take great photos.</p>
+                                    <p>Add up to 20 images of your property. Check out our <a href="{{BASE_URL}}eye-catching-photos" target="_blank">article</a> on how to take great photos.</p>
                                     <p><span style="color: #e78016">* </span>You Can Upload Multiple Images</p>
                                     {{-- <h5>**Change images order with Drag & Drop.</h5> --}}
                                 </div>
@@ -161,9 +161,6 @@
             });
         }
     </script>
-
-
-
     </body>{{-- https://maps.googleapis.com/maps/api/js?libraries=places&#038;language=en&#038;key=AIzaSyBWoWfqptSqcHj_tAT3khy2jjj7fuANNaM&#038;ver=1.0 --}}
     </html>
 

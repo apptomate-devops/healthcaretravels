@@ -2600,14 +2600,7 @@ class PropertyController extends BaseController
     public function property_image_upload(Request $request)
     {
         //
-        $file = $request->file('file');
-        $image = $request->$key;
-        $ext = $image->getClientOriginalExtension();
-        $imageName = self::generate_random_string() . '.' . $ext;
-        $destinationPath = 'public/uploads';
-        $file->move($destinationPath, $imageName);
-        $complete_url = BASE_URL . $destinationPath . '/' . $imageName;
-
+        $complete_url = $this->base_image_upload($request, 'property_image', 'properties');
         $property_id = $request->session()->get('property_id');
         $insert = DB::table('property_images')->insert([
             'client_id' => CLIENT_ID,

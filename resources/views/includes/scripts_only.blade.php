@@ -20,13 +20,13 @@
 
 
 <!-- DropZone | Documentation: http://dropzonejs.com -->
-<script type="text/javascript" src="{{URL::asset('scripts/dropzone.js') }}"></script>
-<script>
-    $(".dropzone").dropzone({
-        dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here or drop files to upload",
-    });
+{{--<script type="text/javascript" src="{{URL::asset('scripts/dropzone.js') }}"></script>--}}
+{{--<script>--}}
+{{--    $(".dropzone").dropzone({--}}
+{{--        dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here or drop files to upload",--}}
+{{--    });--}}
 
-</script>
+{{--</script>--}}
 
 
 {{--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByI8gik-nps54DdqY81oqS1GCFJK8mko4&libraries=places&callback=initMap" async defer></script>--}}

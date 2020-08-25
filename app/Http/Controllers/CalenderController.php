@@ -12,8 +12,11 @@ class CalenderController extends BaseController
     public function add_calender(Request $request, $property_id)
     {
         //
+        if ($request->ical_name || $request->ical_url || $property_id) {
+            return response()->json(['status' => 'FAILED', 'message' => 'Please fill all the details']);
+        }
+
         $data = [];
-        $data['property_id'] = $property_id;
         $data['property_id'] = $property_id;
         $data['third_party_name'] = $request->ical_name;
         $data['third_party_url'] = $request->ical_url;

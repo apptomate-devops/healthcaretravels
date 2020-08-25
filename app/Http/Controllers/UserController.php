@@ -337,6 +337,8 @@ class UserController extends BaseController
     {
         $request->session()->put('user_id', $check->id);
         $request->session()->put('phone', $check->phone);
+        $request->session()->put('user_id_v', $check->id);
+        $request->session()->put('phone_v', $check->phone);
         if ($check->otp_verified != 1) {
             $OTP = rand(1111, 9999);
             // send otp
@@ -351,9 +353,7 @@ class UserController extends BaseController
             if (Auth::check()) {
                 Auth::logout();
             }
-            return redirect($url)
-                ->with('phone', $check->phone)
-                ->with('user_id', $check->id);
+            return redirect($url);
         }
 
         if ($check->email_verified != 1) {
@@ -397,12 +397,12 @@ class UserController extends BaseController
                 Auth::logout();
             }
             $url = $this->get_base_url() . 'otp-verify-login';
-            return redirect($url)
-                ->with('phone', $check->phone)
-                ->with('user_id', $check->id);
+            return redirect($url);
         } else {
             $request->session()->put('user_id', $check->id);
             $request->session()->put('is_verified', $check->is_verified);
+            $request->session()->put('user_id_v', $check->id);
+            $request->session()->put('phone_v', $check->phone);
             $request->session()->put('role_id', $check->role_id);
             $request->session()->put('username', $check->username);
             $request->session()->put('name_of_agency', $check->name_of_agency);
@@ -644,6 +644,8 @@ class UserController extends BaseController
         $request->session()->put('username', $d->username);
         $request->session()->put('user_id', $d->id);
         $request->session()->put('is_verified', $d->is_verified);
+        $request->session()->put('user_id_v', $d->id);
+        $request->session()->put('phone_v', $d->phone);
 
         //  Send Welcome mail
         $welcome = EmailConfig::where('type', TEMPLATE_REGISTER)->first();
@@ -709,6 +711,8 @@ class UserController extends BaseController
 
                 $request->session()->put('user_id', $check->id);
                 $request->session()->put('is_verified', $check->is_verified);
+                $request->session()->put('user_id_v', $check->id);
+                $request->session()->put('phone_v', $check->phone);
                 $request->session()->put('role_id', $check->role_id);
                 $request->session()->put('username', $check->username);
                 $request->session()->put('name_of_agency', $check->name_of_agency);
@@ -783,8 +787,9 @@ class UserController extends BaseController
             $request->session()->put('phone', $check->phone);
             $userProfileImage = $check->profile_image ? $check->profile_image : BASE_URL . 'user_profile_default.png';
             $request->session()->put('profile_image', $userProfileImage);
-
-            return redirect($url)->with('phone', $check->phone);
+            $request->session()->put('user_id_v', $check->id);
+            $request->session()->put('phone_v', $check->phone);
+            return redirect($url);
         }
     }
 

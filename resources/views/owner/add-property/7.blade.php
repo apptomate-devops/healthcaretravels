@@ -303,17 +303,19 @@
 @section('custom_script')
 
     <script type="text/javascript">
+        function show_alert_message(msg = "Please fill all fields") {
+            show_snackbar(msg);
+            setTimeout(function(){ remove_snackbar(); }, 4000);
+            return false;
+        };
+
         $("#add_ical").click(function(){
 
             var property_id = $("#property_id").val();
             var ical_name = $("#ical_name").val();
             var ical_url = $("#ical_url").val();
 
-            if(ical_name == "" || ical_url == "")
-            {
-                show_snackbar("Please fill all fields");
-                setTimeout(function(){ remove_snackbar(); }, 4000);
-            }
+            if(ical_name == "" || ical_url == "") { show_alert_message(); }
             var ajax_url = "{{BASE_URL}}"+"add-calender/"+property_id+"?ical_name="+ical_name+"&ical_url="+ical_url;
             $.ajax({
                 url:ajax_url,
@@ -322,16 +324,16 @@
                     show_snackbar("Loading...");
                 },
                 success: function(data){
-                    show_snackbar("Calender added successfully");
-                    $("#ical_name").val("");
-                    $("#ical_url").val("");
-                    setTimeout(function(){ remove_snackbar(); }, 4000);
-                    $("#ical_name").focus();
+                    if(data.status === 'SUCCESS') {
+                        $("#ical_name").val("");
+                        $("#ical_url").val("");
+                        $("#ical_name").focus();
+                        show_alert_message("Calender added successfully");
+                    } else {
+                        show_alert_message();
+                    }
                 },
-                error: function(){
-                    show_snackbar("Please fill all fields");
-                    setTimeout(function(){ remove_snackbar(); }, 4000);
-                }
+                error: function(){ show_alert_message(); }
             });
 
         });

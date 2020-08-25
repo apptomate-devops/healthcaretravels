@@ -21,9 +21,18 @@
 <script type="text/javascript" src="{{URL::asset('scripts/dropzone.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/common.js') }}"></script>
 <script>
-    $(".dropzone").dropzone({
-        dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here or drop files to upload",
-    });
+    // function dropzoneExists(selector) {
+    //     var elements = $(selector).find('.dz-default');
+    //     return elements.length > 0;
+    // }
+    //
+    // var exists = dropzoneExists('.dropzone');
+    // if(!exists) {
+        Dropzone.autoDiscover = false;
+        $(".dropzone").dropzone({
+            dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here or drop files to upload",
+        });
+    // }
 </script>
 <script>
     // Date Range Picker

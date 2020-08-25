@@ -649,10 +649,12 @@
                 break;
 
             default:
+                $('#recaptcha-block').hide();
                 $('#username2_field').hide();
                 $('#email_field').hide();
                 $('#password_field').hide();
                 $('#password2_field').hide();
+                $("#password-strength, #password-strength-text, #password_message").hide();
                 $('#tab2 .password-checkbox').hide();
                 $('#first_name_field').hide();
                 $('#last_name_field').hide();

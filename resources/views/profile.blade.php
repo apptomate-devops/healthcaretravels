@@ -57,7 +57,7 @@
 
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
                             @if($user_detail->is_verified==1)
-                                <span style="border:2px solid #0983b8;color:#0983b8;padding: 15px;width: 100%"><b>Your account has been verified</b></span><br>
+                                <div style="border:2px solid #0983b8;color:#0983b8;padding: 15px;width: 100%"><b>Your account has been verified</b></div><br>
                             @endif
 
                             <label>Username</label>

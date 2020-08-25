@@ -322,7 +322,7 @@
             var zoomLevel = 11;
             var scale = radius / 450;
             zoomLevel = (16 - Math.log(scale) / Math.log(2));
-            return zoomLevel;
+            return zoomLevel - 0.5;
         }
 
         function validate_submit() {

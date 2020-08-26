@@ -1004,7 +1004,7 @@
                                 <div id="check_in_div">
                                     <div class="form-group">
                                         <!-- Date input -->
-                                        <label class="control-label" for="property_from_date">Check Innnn</label>
+                                        <label class="control-label" for="property_from_date">Check In</label>
                                         <input name="check_in" required value="@if(count($session)!=0) {{$session['fromDate']}} @endif" id="property_from_date" placeholder="Check In date" onchange="get_price({{$property_id}})" type="text" style="width: 273px;" >
                                     </div>
                                 </div>
@@ -1013,7 +1013,7 @@
                                 <div id="check_out_div">
                                     <div class="form-group">
                                         <!-- Date input -->
-                                        <label class="control-label" for="date">Check Outttt</label>
+                                        <label class="control-label" for="date">Check Out</label>
                                         <input name="check_out" value="@if(count($session)!=0) {{$session['toDate']}} @endif"  required id="property_to_date" onchange="get_price({{$property_id}})" placeholder="Check Out date" type="text" style="width: 273px;" >
 
                                         <input name="property_id" type="hidden" value="{{$property_id}}" >

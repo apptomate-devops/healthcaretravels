@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\PropertyBlocking;
 use App\Services\Logger;
 use Illuminate\Http\Request;
 use DB;
@@ -738,7 +739,8 @@ class PropertyController extends BaseController
                     '=',
                     'property_list.id',
                 )
-                ->select('property_list.*', 'property_room.*', 'property_short_term_pricing.*')
+                ->join('property_blocking', 'property_blocking.property_id', '=', 'property_list.id')
+                ->select('property_list.*', 'property_room.*', 'property_short_term_pricing.*', 'property_blocking.*')
                 ->where('property_list.is_complete', '=', ACTIVE)
                 ->where('property_list.status', '=', 1)
                 ->where('property_list.property_status', '=', 1);
@@ -789,10 +791,6 @@ class PropertyController extends BaseController
                 $where[] = 'property_list.cur_pets = 0';
             }
 
-            //        if ($request->bookingmode != "") {
-            //            $where[] = 'property_list.is_instant = "' . $request->bookingmode . '" ';
-            //        }
-
             // TODO: check in check out filter for block date
 
             // TODO: instant booking, flexible cancellation, enhanced cleaning pool, no kids, no pets filter
@@ -809,11 +807,46 @@ class PropertyController extends BaseController
             } elseif ($request->minprice == "" && $request->maxprice != "") {
                 $where[] = 'property_short_term_pricing.price_per_night <= "' . $request->maxprice . '" ';
             }
+            $from = strtotime($request->from_date);
+            $to = strtotime($request->to_date);
+            $query_blocking = [];
+
+            if ($from && $to) {
+                $fromDate = date('Y-m-d', $from);
+                $toDate = date('Y-m-d', $to);
+                $property_blocking_obj = new PropertyBlocking();
+
+                $query_blocking = $property_blocking_obj
+                    ->select('property_id')
+                    ->whereRaw(
+                        'property_blocking.start_date between "' .
+                            $fromDate .
+                            '" and "' .
+                            $toDate .
+                            '" OR
+                             property_blocking.end_date between "' .
+                            $fromDate .
+                            '" and "' .
+                            $toDate .
+                            '" OR
+                             "' .
+                            $fromDate .
+                            '" between property_blocking.start_date and property_blocking.end_date',
+                    )
+                    ->pluck('property_id')
+                    ->toArray();
+            }
 
             $dataWhere = implode(" and ", $where);
             if ($dataWhere != "") {
                 $query->whereRaw($dataWhere);
             }
+
+            if (count($query_blocking)) {
+                $query->whereNotIn('property_list.id', $query_blocking);
+            }
+
+            $query->groupBy('property_list.id');
 
             $total_count = count($query->get());
             $query = $query->skip($offset)->take($items_per_page);

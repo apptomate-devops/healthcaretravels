@@ -372,7 +372,7 @@
                     </div>
                     <div class="checkboxes" id="email_opt_field" style="display: none;">
                         <input id="email_opt" type="checkbox" name="email_opt" @if(Session::has('email_opt')) checked @endif">
-                        <label for="email_opt">I don’t want to receive marketing messages from Health Care Travels. I can also opt out of receiving these at any time by emailing
+                        <label for="email_opt">I don’t want to receive marketing messages and offers from Health Care Travels. I can also opt out of receiving these at any time by emailing
                             <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com.</a>
                             {{--                                {!! $errors->first('email_opt', '<p class="error-text-accept">:message</p>') !!}--}}
                         </label>

@@ -93,9 +93,9 @@
                             </div>
                             <div class="col-lg-5 col-md-4 col-sm-4">
                                 <div class="check-in-out-wrapper">
-                                    <input type="text" class="price_float" placeholder="$Min" name="minprice" id="minprice"
+                                    <input type="text" class="price_float" placeholder="$ Min" name="minprice" id="minprice"
                                            value="@if(isset($request_data['minprice'])){{$request_data['minprice']}}@endif">
-                                    <input type="text" class="price_float" placeholder="$Max" name="maxprice" id="maxprice"
+                                    <input type="text" class="price_float" placeholder="$ Max" name="maxprice" id="maxprice"
                                            value="@if(isset($request_data['maxprice'])){{$request_data['maxprice']}}@endif">
                                 </div>
                             </div>

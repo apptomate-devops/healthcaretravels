@@ -240,16 +240,16 @@
                                         <div class="card col-md-12" style="padding: 15px;">
                                             <h4>Homeowner's Contact Information</h4>
 
-                                            <label>First Name</label>
+                                            <label>First Name<span class="required">*</span></label>
                                             <input value="@if($user->homeowner_first_name == '0' || $user->homeowner_first_name == null)@else{{$user->homeowner_first_name}}@endif" type="text" placeholder="First Name" name="homeowner_first_name" id="homeowner_first_name" class="form-control" />
 
-                                            <label>Last Name</label>
+                                            <label>Last Name<span class="required">*</span></label>
                                             <input value="@if($user->homeowner_last_name == '0' || $user->homeowner_last_name == null)@else{{$user->homeowner_last_name}}@endif" type="text" placeholder="Last Name" name="homeowner_last_name" id="homeowner_last_name" class="form-control" />
 
-                                            <label>Email</label>
+                                            <label>Email<span class="required">*</span></label>
                                             <input value="@if($user->homeowner_email == '0' || $user->homeowner_email == null)@else{{$user->homeowner_email}}@endif" type="text" placeholder="Email" name="homeowner_email" id="homeowner_email" class="form-control" />
 
-                                            <label>Phone Number</label>
+                                            <label>Phone Number<span class="required">*</span></label>
                                             <input value="@if($user->homeowner_phone_number == '0' || $user->homeowner_phone_number == null)@else{{$user->homeowner_phone_number}}@endif" type="text" placeholder="Phone Number" name="homeowner_phone_number" id="homeowner_phone_number" class="form-control"/>
 
                                         </div>

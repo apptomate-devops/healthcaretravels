@@ -24,13 +24,6 @@
                 <br>
                 <h6 class="card-subtitle text-muted"><span class="field-label">Agency:</span>{{$data->other_agency ?? $data->name_of_agency ?? ""}}</h6>
                 <br>
-                <h6 class="card-subtitle text-muted"><span class="field-label">Ethnicity:</span>{{$data->ethnicity ?? '-'}}</h6>
-                <br>
-                <h6 class="card-subtitle text-muted"><span class="field-label">Date of birth:</span>{{$data->date_of_birth ?? '-'}}</h6>
-                <br>
-                <h6 class="card-subtitle text-muted"><span class="field-label">Gender:</span>{{$data->gender ?? '-'}}</h6>
-                <br>
-
                 <div class="text-center">
                     @if($data->facebook_url!='0')
                         <a href="{{$data->facebook_url}}" target="_blank"
@@ -89,35 +82,7 @@
     </div>
 
     <div class="card">
-        <div class="card-header">
-            <h4 class="card-title">Tax Home</h4>
-            <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
-            <div class="heading-elements">
-            </div>
-        </div>
-        <div class="card-content">
-            <div class="card-body">
-                {{$data->tax_home}}
-            </div>
-        </div>
-        <div class="card-header">
-            <h4 class="card-title">Address</h4>
-            <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
-            <div class="heading-elements">
-            </div>
-        </div>
-        <div class="card-content">
-            <div class="card-body">
-                {{$data->address}}{{$data->country ?: ''}}{{$data->state ?: ''}}
-            </div>
-        </div>
         <div class="card-body">
-            @if($data->role_id==0 || $data->role_id==3)
-                <h4 class="card-title"> Recuriter Name
-                    : {{$data->recruiter_name ?? ' Not Added '}}</h4> <br>
-                <h4 class="card-title"> Recuriter Phone
-                    : {{$data->recruiter_phone ?? 'Not Added'}} </h4><br>
-            @endif
             <div class="phone-wrapper">
                 <h4 class="card-title"> Verification Mobile Number
                 : {{$data->phone ?? 'Not Added'}}</h4>
@@ -173,35 +138,20 @@
             <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
             <div class="heading-elements">
                 <ul class="list-inline mb-0">
-                    <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                    <li><a id="about-toggler" data-action="collapse"><i class="ft-minus"></i></a></li>
                     <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
                     <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
                     <li><a data-action="close"><i class="ft-x"></i></a></li>
                 </ul>
             </div>
         </div>
-        <div class="card-content">
+        <div class="card-content collapse">
             <div class="card-body">
-                <h4>{{$data->about_me != '0' ? $data->about_me : '-'}}</h4>
-                <br>
-                <h3 class="card-title">Languages Known</h3>
-                <h4>{{$data->languages_known ?? '-'}}</h4>
-                <br>
-                <h3 class="card-title">Occupation</h3>
-                <h4>{{$data->occupation ?? '-'}}</h4>
-                @if (isset($data->agency_office_number))
-                    <br>
-                    <h3 class="card-title">Agency Office Number</h3>
-                    <h4>{{$data->agency_office_number ?? '-'}}</h4>
-                @endif
-                @if (isset($data->agency_website))
-                    <br>
-                    <h3 class="card-title">Agency Website Number</h3>
-                    <h4><a class="parse-link-href" target="_blank" href="{{$data->agency_website}}">{{$data->agency_website}}</a></h4>
-                @endif
-                <br>
-                <h3 class="card-title">Email merketing</h3>
-                <h4>{{$data->email_opt == 0 ? "Subscribed" : "Not Subscribed"}}</h4>
+                @foreach ($data->getAttributes() as $key => $value)
+                    @if(!in_array($key, $fields_to_omit))
+                        <h5>{{ucfirst(str_replace("_"," ",$key))}}: {{($value == 1 ? 'Yes' : $value) ?: '-'}}</h5>
+                    @endif
+                @endforeach
             </div>
         </div>
     </div>

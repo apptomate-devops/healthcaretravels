@@ -52,6 +52,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
+            return redirect()
+                ->back()
+                ->withInput($request->except(['password', 'password_confirmation']))
+                ->with('error', 'The form has expired due to inactivity. Please try again');
+            // return redirect('/login')
+            //         ->with('error', 'Your session has expired. Please log back in to continue.');
+        }
         if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
             return redirect('/not_found');
         }

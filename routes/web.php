@@ -72,7 +72,7 @@ Route::get('/roommate', 'HomeController@request_roommate');
 Route::post('/request_roommate', 'HomeController@save_request_roommate');
 Route::post('/request_roommate2', 'HomeController@save_request_roommate2');
 Route::get('/rv_professional', 'HomeController@rv_professional');
-Route::get('/standards', 'HomeController@standards');
+//Route::get('/standards', 'HomeController@standards');
 Route::get('/terms-of-use', 'HomeController@terms_of_use');
 Route::get('/travelers-refund-policy', 'HomeController@travellers_refund_policy');
 

@@ -205,6 +205,9 @@
     #currently_occupied {
         margin-top: 10px;
     }
+    #currently_occupied .caption-text {
+        width: 100%;
+    }
     .properties_container .button-container {
         margin: 0 0 30px;
     }

@@ -338,6 +338,7 @@
 
         $(function () {
             var properties = <?php echo json_encode($properties); ?>;
+            var request_data = <?php echo json_encode($request_data); ?>;
 
             if(properties.length) {
                 $('.no-properties').hide();
@@ -357,7 +358,9 @@
                 });
                 $('#search_criteria').text(criterias);
             } else {
-                $('.no-properties').show();
+                if(request_data.length) {
+                    $('.no-properties').show();
+                }
                 $('.search_container').show();
                 $('.properties_container').hide();
             }
@@ -438,7 +441,6 @@
                 }
             });
 
-            var request_data = <?php echo json_encode($request_data); ?>;
             if(request_data.room_type) {
                 show_current_occupacy(request_data.room_type);
             };

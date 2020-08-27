@@ -15,7 +15,7 @@ use App\Models\OwnerRating;
 use App\Models\Couponecode;
 use App\Models\PropertyBookingPrice;
 use App\Models\EmailConfig;
-use App\Models\GuestInformations;
+use App\Models\GuestsInformation;
 use App\Models\Propertybooking;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
@@ -28,6 +28,289 @@ class PropertyController extends BaseController
         $this->users = $users;
         $this->property_list = $property_list;
     }
+
+    public function book_now(Request $request)
+    {
+        $user_id = $request->session()->get('user_id');
+        if (!$user_id) {
+            $request->session()->put('propertyId', $request->property_id);
+            $request->session()->put('fromDate', $request->check_in);
+            $request->session()->put('toDate', $request->check_out);
+            $request->session()->put('guest_count', $request->guest_count);
+            return redirect()->intended('login');
+        }
+        $check_in = date('Y-m-d', strtotime($request->check_in));
+        $check_out = date('Y-m-d', strtotime($request->check_out));
+        $sql =
+            "SELECT count(*) as is_available,B.total_guests FROM `property_booking` A, `property_list` B WHERE (A.start_date BETWEEN '" .
+            $check_in .
+            "' AND '" .
+            $check_out .
+            "') AND (A.end_date BETWEEN '" .
+            $check_in .
+            "' AND '" .
+            $check_out .
+            "')  AND B.minimum_guests < " .
+            $request->guest_count .
+            " AND A.payment_done = 1 AND A.is_instant = B.is_instant AND A.property_id = " .
+            $request->property_id .
+            "";
+
+        $s_price =
+            "SELECT count(*) as is_available,A.* FROM `property_special_pricing` A, `property_list` B WHERE (A.start_date  BETWEEN '" .
+            $check_in .
+            "' AND '" .
+            $check_out .
+            "') AND (A.end_date  BETWEEN '" .
+            $check_in .
+            "' AND '" .
+            $check_out .
+            "') AND A.property_id = " .
+            $request->property_id .
+            "";
+
+        $special_price = DB::select($s_price);
+
+        $is_available = DB::select($sql);
+
+        $property_details = DB::table('property_list')
+            ->where('client_id', CLIENT_ID)
+            ->where('id', $request->property_id)
+            ->first();
+
+        $booking_count = DB::table('property_booking')
+            ->where('client_id', CLIENT_ID)
+            ->where('property_id', $request->property_id)
+            ->count();
+        if ($is_available[ZERO]->is_available == ZERO || $booking_count == ZERO) {
+            $insert_booking = [];
+            $insert_booking['start_date'] = $check_in;
+            $insert_booking['client_id'] = CLIENT_ID;
+            $insert_booking['property_id'] = $request->property_id;
+            $insert_booking['end_date'] = $check_out;
+            $insert_booking['guest_count'] = $request->guest_count;
+            $insert_booking['traveller_id'] = $user_id;
+            $insert_booking['owner_id'] = $property_details->user_id;
+            $insert_booking['is_instant'] = $property_details->is_instant;
+            $insert_booking['status'] = ONE;
+            $insert_booking['booking_id'] = $this->generate_random_string();
+            $booking_id = $insert_booking['booking_id'];
+            $property_booking_id = DB::table('property_booking')->insertGetId($insert_booking);
+
+            $weeks = $this->get_weekend_count($check_in, $check_out);
+            $weeks['total'] = $weeks['total'] - 1;
+            $pricing_config = DB::table('property_short_term_pricing')
+                ->where('client_id', CLIENT_ID)
+                ->where('property_id', $request->property_id)
+                ->first();
+
+            if ($special_price[ZERO]->is_available != ZERO) {
+                $pricing_config->price_per_night = $special_price[ZERO]->price_per_night;
+            }
+            if (!$pricing_config) {
+                return response()->json(['status' => false, 'error_message' => 'Property cannot be finished']);
+            }
+            $booking_price = [];
+            $booking_price['client_id'] = CLIENT_ID;
+            $booking_price['single_day_fare'] = $pricing_config->price_per_night;
+            $booking_price['property_booking_id'] = $property_booking_id;
+            $booking_price['single_day_fare'] = $pricing_config->price_per_night;
+            $booking_price['total_days'] = $weeks['total'];
+            $total_days = $weeks['total'];
+            $week_end_days = ZERO;
+
+            $normal_days = $weeks['total'];
+            if ($weeks['total'] > 30) {
+                $pricing_config->price_per_night = $pricing_config->price_more_than_one_month;
+                $booking_price['single_day_fare'] = $pricing_config->price_more_than_one_month;
+                $pricing_config->price_per_weekend = 0;
+                $price = $weeks['total'] * $pricing_config->price_per_night;
+            } else {
+                $pricing_config->price_per_night = $pricing_config->price_per_night;
+                $booking_price['single_day_fare'] = $pricing_config->price_per_night;
+                $pricing_config->price_per_weekend = 0;
+                $price = $weeks['total'] * $pricing_config->price_per_night;
+            }
+
+            $city_fee_amount = ZERO;
+
+            $booking_price['city_fare'] = $city_fee_amount;
+            LOG::info("city_fee_type: " . $pricing_config->city_fee_type);
+            LOG::info("city_fee: " . $city_fee_amount);
+
+            $cleaning_fee_amount = ZERO;
+
+            if ($total_days <= 30) {
+                $service_tax = DB::table('settings')
+                    ->where('param', 'traveller_below_30_days')
+                    ->first();
+                $admin_commision = DB::table('settings')
+                    ->where('param', 'traveller_below_30_days')
+                    ->first();
+            } else {
+                $service_tax = DB::table('settings')
+                    ->where('param', 'traveler_above_30_days')
+                    ->first();
+                $admin_commision = DB::table('settings')
+                    ->where('param', 'traveler_above_30_days')
+                    ->first();
+            }
+            switch ($pricing_config->cleaning_fee_type) {
+                case "Flat Rate Fee":
+                    $cleaning_fee_amount = $service_tax->value;
+                    break;
+
+                case "Per Day":
+                    $cleaning_fee_amount = $weeks['total'] * $pricing_config->cleaning_fee;
+                    break;
+
+                case "Per Month":
+                    $cleaning_fee_amount = $pricing_config->cleaning_fee;
+                    break;
+            }
+            $cleaning_fee_amount = $service_tax->value;
+            $booking_price['cleaning_fare'] = $service_tax->value;
+
+            LOG::info("cleaning_fare _type: " . $pricing_config->cleaning_fee_type);
+            LOG::info("cleaning_fare: " . $cleaning_fee_amount);
+            $extra_guest = 0;
+            $extra_guest_price = 0;
+            $booking_price['extra_guest_price'] = $extra_guest_price;
+            if ($total_days <= 30) {
+                $service_tax = DB::table('settings')
+                    ->where('param', 'traveller_below_30_days')
+                    ->first();
+                $admin_commision = DB::table('settings')
+                    ->where('param', 'traveller_below_30_days')
+                    ->first();
+            } else {
+                $service_tax = DB::table('settings')
+                    ->where('param', 'traveler_above_30_days')
+                    ->first();
+                $admin_commision = DB::table('settings')
+                    ->where('param', 'traveler_above_30_days')
+                    ->first();
+            }
+
+            $adminCommision = $admin_commision->value + $service_tax->value;
+
+            $total_price =
+                $price +
+                $cleaning_fee_amount +
+                $city_fee_amount +
+                $pricing_config->security_deposit +
+                $service_tax->value;
+
+            LOG::info("Deposit: " . $pricing_config->security_deposit);
+            $total_price = $total_price;
+            $due_now = $this->get_percentage($pricing_config->first_payment_percentage, $total_price);
+            $booking_price['cleaning_fare'] = $service_tax->value;
+            $booking_price['city_fare'] = $city_fee_amount;
+            $booking_price['service_tax'] = $service_tax->value;
+            $booking_price['initial_pay'] = $due_now;
+            $booking_price['total_amount'] = $total_price;
+            $booking_price['temp_amount'] = $pricing_config->price_per_weekend;
+            $booking_price['week_end_days'] = $week_end_days;
+            $booking_price['admin_commision'] = $adminCommision;
+            $booking_price['security_deposit'] = $pricing_config->security_deposit;
+            $booking_price['weekend_fare'] = $pricing_config->price_per_weekend;
+
+            $log_data = json_encode($booking_price);
+            LOG::info("final array: " . $log_data);
+            DB::table('property_booking_price')->insert($booking_price);
+
+            $insert_data = DB::table('property_booking_price')
+                ->orderBy('id', 'desc')
+                ->first();
+            $insert_data->min_guests = $property_details->minimum_guests;
+            $insert_data->calc_price = $price;
+
+            $insert_data->service_amount = $this->get_percentage($pricing_config->service_fee_percentage, $total_price);
+            $user_id = $request->session()->get('user_id');
+            $user = Users::where('id', $user_id)->first();
+            $property_id = $request->property_id;
+            $property = DB::table('property_list')
+                ->leftjoin('users', 'users.id', '=', 'property_list.user_id')
+                ->join(
+                    'property_short_term_pricing',
+                    'property_short_term_pricing.property_id',
+                    '=',
+                    'property_list.id',
+                )
+                ->where('property_list.id', '=', $property_id)
+                ->first();
+            // print_r($property);exit;
+
+            $data = DB::table('property_booking')
+                ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
+                ->join(
+                    'property_short_term_pricing',
+                    'property_short_term_pricing.property_id',
+                    '=',
+                    'property_booking.property_id',
+                )
+                ->join('property_images', 'property_images.property_id', '=', 'property_booking.property_id')
+                ->join(
+                    'property_booking_price',
+                    'property_booking_price.property_booking_id',
+                    '=',
+                    'property_booking.id',
+                )
+                ->where('property_booking.client_id', CLIENT_ID)
+                ->where('property_booking.booking_id', $booking_id)
+                ->first();
+            $traveller = DB::select(
+                "SELECT concat(first_name,last_name) as name FROM users WHERE id = $data->owner_id",
+            );
+            $data->traveller_name = $traveller[0]->name;
+
+            $welcome = EmailConfig::where('type', 3)->first();
+            $mail_data = [
+                'name' => $user->first_name . " " . $user->last_name,
+                'text' => isset($welcome->message) ? $welcome->message : '',
+                'property' => $property,
+                'data' => $data,
+                'text' => isset($welcome->message) ? $welcome->message : '',
+            ];
+
+            $title = isset($welcome->title) ? $welcome->title : 'New booking from - ' . APP_BASE_NAME;
+            $subject = isset($welcome->subject) ? $welcome->subject : "New booking from  - " . APP_BASE_NAME;
+            $this->send_custom_email($property->email, $subject, 'mail.booking-mail', $mail_data, $title);
+
+            return redirect()->intended('/booking_detail/' . $booking_id);
+        } else {
+            return response()->json(['status' => 'FAILED', 'message' => 'This property not available']);
+        }
+    }
+
+    /**
+     *Get booking details of that property
+     *
+     *@param booking_id int
+     *
+     *@return Booking details of thar property
+     */
+    public function booking_detail($booking_id, Request $request)
+    {
+        $data = DB::table('property_booking')
+            ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
+            ->join(
+                'property_short_term_pricing',
+                'property_short_term_pricing.property_id',
+                '=',
+                'property_booking.property_id',
+            )
+            ->join('property_images', 'property_images.property_id', '=', 'property_booking.property_id')
+            ->join('property_booking_price', 'property_booking_price.property_booking_id', '=', 'property_booking.id')
+            ->where('property_booking.client_id', CLIENT_ID)
+            ->where('property_booking.booking_id', $booking_id)
+            ->first();
+        $traveller = DB::select("SELECT concat(first_name,last_name) as name FROM users WHERE id = $data->owner_id");
+        $data->traveller_name = $traveller[0]->name;
+        // print_r($data);exit;
+        return view('properties.property_detail', ['data' => $data]);
+    }
+
     public function cancel_booking(Request $request, $id)
     {
         $user_id = $request->session()->get('user_id');
@@ -2550,6 +2833,46 @@ class PropertyController extends BaseController
             $url = BASE_URL . 'owner/my-properties';
         }
         return redirect($url);
+    }
+
+    /**
+     *save guest details of booking
+     *
+     *@param Request data
+     *
+     *@return details of booking
+     */
+    public function save_guest_information(Request $request)
+    {
+        $booking = Propertybooking::where('booking_id', $request->booking_id)->first();
+        if ($request->recruiter_name) {
+            $booking->recruiter_name = $request->recruiter_name;
+        }
+        if ($request->recruiter_phone_number) {
+            $booking->recruiter_phone_number = $request->recruiter_phone_number;
+        }
+        if ($request->recruiter_email) {
+            $booking->recruiter_email = $request->recruiter_email;
+        }
+        if ($request->contract_start_date) {
+            $booking->contract_start_date = date('Y-m-d', strtotime($request->contract_start_date));
+        }
+        if ($request->contract_end_date) {
+            $booking->contract_end_date = date('Y-m-d', strtotime($request->contract_end_date));
+        }
+        $booking->save();
+
+        for ($i = 0; $i < count($request->guest_name); $i++) {
+            $data = new GuestsInformation();
+            $data->booking_id = $request->booking_id;
+            $data->guest_count = $request->guest_count;
+            $data->name = $request->guest_name[$i];
+            $data->occupation = $request->guest_occupation[$i];
+            $data->phone_number = $request->phone_number[$i];
+            $data->email = $request->email[$i];
+            $data->save();
+        }
+        return redirect()->intended('/traveler/my-reservations');
     }
 
     public function update_property($property_id)

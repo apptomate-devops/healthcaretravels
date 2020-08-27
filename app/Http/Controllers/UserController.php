@@ -1066,14 +1066,20 @@ class UserController extends BaseController
             'required_without' => 'Please complete this field',
             'accepted' => 'Terms and Policy must be agreed',
             'same' => 'Password must match repeat password',
+            'password1.regex' => PASSWORD_REGEX_MESSAGE,
             'website.regex' => 'Please enter valid URL',
             'numeric' => 'Please enter valid phone number',
             'digits' => 'Please enter valid phone number',
+            'pet_name' => 'The :attribute field is required when you are travelling with pet.',
+            'pet_breed' => 'The :attribute field is required when you are travelling with pet.',
+            'pet_weight' => 'The :attribute field is required when you are travelling with pet.',
+            'pet_image' => 'The :attribute field is required when you are travelling with pet.',
         ];
 
         $rules = [
             'first_name' => 'required',
             'last_name' => 'required',
+            'ethnicity' => 'required',
             'dob' => 'required',
             'gender' => 'required',
             'languages_known' => 'required',
@@ -1081,7 +1087,6 @@ class UserController extends BaseController
         if ($user->role_id == "1" || $user->role_id == "4") {
             // Owner or Cohost
             $rules["address"] = 'required';
-            //            $rules["listing_address"] = 'required';
         } elseif ($user->role_id == "2") {
             // Travel Agency
             $rules["work_title"] = 'required';
@@ -1093,6 +1098,9 @@ class UserController extends BaseController
             $rules["other_agency"] = 'required_without:name_of_agency';
             $rules["tax_home"] = 'required';
             $rules["address"] = 'required';
+            $rules["pet_name"] = 'required_with:is_pet_travelling';
+            $rules["pet_breed"] = 'required_with:is_pet_travelling';
+            $rules["pet_weight"] = 'required_with:is_pet_travelling';
         }
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -1116,22 +1124,28 @@ class UserController extends BaseController
                 ->with('state', $request->state)
                 ->with('pin_code', $request->pin_code)
                 ->with('country', $request->country)
-                //                ->with('listing_address', $request->listing_address)
                 ->with('work', $request->work)
                 ->with('work_title', $request->work_title)
                 ->with('website', $request->website)
                 ->with('enable_two_factor_auth', $request->enable_two_factor_auth)
+                ->with('pet_name', $request->pet_name)
+                ->with('pet_breed', $request->pet_breed)
+                ->with('pet_weight', $request->pet_weight)
                 ->withErrors($validator);
         }
 
         // Considered as Address_line_1
         $address = implode(", ", array_filter([$request->street_number, $request->route]));
-
+        $petImage = $user->pet_image;
+        if (isset($request->is_pet_travelling) && isset($request->pet_image)) {
+            $petImage = $this->base_image_upload($request, 'pet_image', 'pets');
+        }
         DB::table('users')
             ->where('id', $user_id)
             ->update([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
+                'ethnicity' => $request->ethnicity,
                 'date_of_birth' => $request->dob,
                 'gender' => $request->gender,
                 'languages_known' => $request->languages_known,
@@ -1145,11 +1159,15 @@ class UserController extends BaseController
                 'state' => $request->state,
                 'pin_code' => $request->pin_code,
                 'country' => $request->country,
-                //                'listing_address' => $request->listing_address,
                 'work' => $request->work,
                 'work_title' => $request->work_title,
                 'website' => $request->website,
                 'enable_two_factor_auth' => isset($request->enable_two_factor_auth) ? 1 : 0,
+                'is_pet_travelling' => isset($request->is_pet_travelling) ? 1 : 0,
+                'pet_name' => isset($request->is_pet_travelling) ? $request->pet_name : '',
+                'pet_breed' => isset($request->is_pet_travelling) ? $request->pet_breed : '',
+                'pet_weight' => isset($request->is_pet_travelling) ? $request->pet_weight : '',
+                'pet_image' => isset($request->is_pet_travelling) ? $petImage : '',
             ]);
 
         return back()->with('success', 'Profile updated successfully');

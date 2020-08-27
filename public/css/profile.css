@@ -52,6 +52,12 @@ li.sub-nav-title {
     object-fit: contain;
     border: 1px solid #e78016;
 }
+
+#petImage {
+    position: relative;
+    width: max-content;
+}
+
 .enable-auth-checkbox {
     margin-top: 30px;
 }

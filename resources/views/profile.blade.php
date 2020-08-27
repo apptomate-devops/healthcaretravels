@@ -53,7 +53,7 @@
                             </div>
                         @endif
 
-                        <form method="post" name="update_profile" action="update-profile" onsubmit="return validate_submit()" autocomplete="off" onkeydown="return event.key != 'Enter';">
+                        <form method="post" name="update_profile" action="update-profile" enctype="multipart/form-data" onsubmit="return validate_submit()" autocomplete="off" onkeydown="return event.key != 'Enter';">
 
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
                             @if($user_detail->is_verified==1)
@@ -93,6 +93,15 @@
                                 <option value="Neutral" @if(Session::get('gender')=='Neutral' || $user_detail->gender =='Neutral' ) selected @endif>Neutral</option>
                             </select>
 
+                            <label for="ethnicity">Ethnicity:</label>
+                            <p class="register-info">We use this information for identity verification. It will not appear on your public profile.</p>
+                            <select type="text" class="input-text validat" name="ethnicity" id="ethnicity" autocomplete="off" required>
+                                <option value="" selected>Select Ethnicity</option>
+                                @foreach(ETHNICITY as $ethnicity)
+                                    <option value="{{$ethnicity}}" @if(Session::get('ethnicity')==$ethnicity || $user_detail->ethnicity ==$ethnicity) selected @endif>{{$ethnicity}}</option>
+                                @endforeach
+                            </select>
+
                             <label>Languages Known</label>
                             <input value="{{Session::get('languages_known') ?? $user_detail->languages_known}}" type="text" name="languages_known" placeholder="English, Spanish">
 
@@ -113,9 +122,7 @@
                                     @endif
                                     <option value="Others" >Others</option>
                                 </select>
-                            @endif
 
-                            @if($user_detail->role_id == 0 || $user_detail->role_id == 3)
                                 <div class="form-row form-row-wide" id="agency_show">
                                     <label for="agency_name">Agency you work for:</label>
                                     <p class="register-info">Select as many agencies that you have worked for in the last 12 months.</p>
@@ -125,9 +132,39 @@
                                     <label for="other_agency_name" id="other_agency_name" style="display: none;">Other Angency:</label>
                                     <input type="text" style="display: none;" class="input-text validate" name="other_agency" id="other_agency" value="{{Session::get('other_agency') ?? $user_detail->other_agency}}" placeholder="Other agency" autocomplete="off">
                                 </div>
-                            @endif
 
-                            @if($user_detail->role_id == 0 || $user_detail->role_id == 3)
+                                <div id="is_pet" class="checkboxes in-row password-checkbox" style="margin-bottom: 20px;">
+                                    <h4>Pet Details:</h4>
+                                    <input id="is_pet_checked" name="is_pet_travelling" type="checkbox" @if(isset($user_detail->is_pet_travelling))) checked @endif>
+                                    <label for="is_pet_checked">Do you travel with a pet?</label>
+                                </div>
+
+                                <div id="pet_details" style="display: none;">
+                                    <label for="pet_name">Name:
+                                        <input type="text" class="input-text validate" value="{{Session::get('pet_name') ?? $user_detail->pet_name}}" name="pet_name" id="pet_name" placeholder="Name" autocomplete="off"/>
+                                    </label>
+
+                                    <label for="pet_breed">Breed:
+                                        <input type="text" class="input-text validate" value="{{Session::get('pet_breed') ?? $user_detail->pet_breed}}" name="pet_breed" id="pet_breed" placeholder="Breed" autocomplete="off"/>
+                                    </label>
+
+                                    <label for="pet_weight">Weight:
+                                        <input type="text" class="price_float input-text validate" value="{{Session::get('pet_weight') ?? $user_detail->pet_weight}}" name="pet_weight" id="pet_weight" placeholder="Weight" autocomplete="off"/>
+                                    </label>
+
+                                    <label for="pet_image" style="margin: 20px 0;">
+                                        <div>Pet Image:</div>
+                                        @if(isset($user_detail->pet_image))
+                                            <div id="petImage">
+                                                <img src="{{$user_detail->pet_image}}" alt="" style="height: 100px; width: 100px; border: 1px solid #e78016; border-radius: 100%; object-fit: contain;">
+                                                <input style="display: none;" type="file" name="pet_image" id="pet_image" class="form-control" accept="image/*"/>
+                                            </div>
+                                        @else
+                                            <input type="file" name="pet_image" id="pet_image" class="form-control" accept="image/*"/>
+                                        @endif
+                                    </label>
+                                </div>
+
                                 <div class="form-row form-row-wide" id="tax_home_field">
                                     <label for="tax_home">Tax Home:</label>
                                     <input type="text" class="input-text validate" value="{{Session::get('tax_home') ?? $user_detail->tax_home}}" name="tax_home" id="tax_home" placeholder="City, State" autocomplete="off" style="padding-left: 20px;" @if($user_detail->tax_home) data-is-valid="true" @endif />
@@ -259,6 +296,16 @@
             if (address_line_2) {
                 on_add_address_line_2(undefined, address_line_2);
             }
+            $("#is_pet_checked").trigger('change');
+        });
+
+        $('#is_pet_checked').change(function () {
+            var isChecked= $(this).is(':checked');
+            if(isChecked) {
+                $('#pet_details').show();
+            } else {
+                $('#pet_details').hide();
+            }
         });
 
         function set_max_date() {
@@ -281,6 +328,17 @@
                 $('#agency_name').attr('name','name_of_agency');
                 $('#others_show').attr('name','');
                 $('#others_show').hide();
+            }
+        });
+
+
+        $('#pet_image').change(function () {
+            if (this.files && this.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#petImage img').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(this.files[0]);
             }
         });
 

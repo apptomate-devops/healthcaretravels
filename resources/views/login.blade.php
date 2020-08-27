@@ -209,12 +209,10 @@
                                     <label class="register-info" id="ethnicity-caption">We use this information for identity verification. It will not appear on your public profile.</label>
                                     <select type="text" class="input-text validate {{ $errors->has('ethnicity') ? 'form-error' : ''}}" name="ethnicity" id="ethnicity" autocomplete="off" required>
                                         <option value="" selected>Select Ethnicity</option>
-                                        <option value="American Indian or Alaskan Native" @if(Session::get('ethnicity')=='American Indian or Alaskan Native' ) selected @endif>American Indian or Alaskan Native</option>
-                                        <option value="Asian" @if(Session::get('ethnicity')=='Asian' ) selected @endif>Asian</option>
-                                        <option value="Black or African American" @if(Session::get('ethnicity')=='Black or African American' ) selected @endif>Black or African American</option>
-                                        <option value="Native Hawaiian or Pacific Islander" @if(Session::get('ethnicity')=='Native Hawaiian or Pacific Islander' ) selected @endif>Native Hawaiian or Pacific Islander</option>
-                                        <option value="White" @if(Session::get('ethnicity')=='White' ) selected @endif>White</option>
-                                        <option value="Other" @if(Session::get('ethnicity')=='Other' ) selected @endif>Other</option>
+                                        @foreach(ETHNICITY as $ethnicity)
+                                            <option value="{{$ethnicity}}" @if(Session::get('ethnicity')==$ethnicity) selected @endif>{{$ethnicity}}</option>
+                                        @endforeach
+
                                     </select>
                                 </label>
                                 {!! $errors->first('ethnicity', '<p class="error-text">:message</p>') !!}

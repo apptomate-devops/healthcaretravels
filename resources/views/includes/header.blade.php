@@ -66,13 +66,6 @@
                             </ul>
                         </li>
                         <li>
-                            @if(Session::get('username'))
-                                <a href="/owner/add-property">
-                                    Become a Host
-                                </a>
-                            @endif
-                        </li>
-                        <li>
                             <a style="cursor: pointer">
                                 Help
                             </a>
@@ -116,10 +109,12 @@
             <!-- Right Side Content / End -->
             <div class="right-side">
                 <!-- User Menu -->
-
-                @if(Auth::check() && Auth::user()->id)
-                    <div class="container hidden-xs">
-                        <div class="row">
+                <div class="right-side-menu-item">
+                    <a class="button" href="/properties">
+                        <i class="fa fa-search"></i> Find a New Home
+                    </a>
+                    @if(Auth::check() && Auth::user()->id)
+                        <div class="hidden-xs">
                             <div class="user-menu-container">
                                 <div class="user-menu">
                                     <div class="user-name">
@@ -184,12 +179,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                @else
-                    <div class="right-side-menu-item">
-                        <a class="button" href="/properties">
-                            <i class="fa fa-search"></i> Find a New Home
-                        </a>
+                    @else
                         <a href="/login" class="sign-in visible-md visible-lg">
                             <img src="/icons/login.png" alt="" style="height: 20px; width: 20px; margin-right: 10px;">
                             <span>Log In / Register</span>
@@ -198,21 +188,21 @@
                             <i class="fa fa-user"></i>
                             <span>Log In / Register</span>
                         </a>
-                    </div>
-                @endif
-                <ul class="header-widget">
-                    <li class="with-btn">
-                        @if(Session::get('username'))
-                            <a href="{{url('/')}}/owner/add-property" class="button border">Submit Property</a>
-                        @endif
-                    </li>
-                </ul>
+                    @endif
+                </div>
+{{--                <ul class="header-widget">--}}
+{{--                    <li class="with-btn">--}}
+{{--                        @if(Session::get('username'))--}}
+{{--                            <a href="{{url('/')}}/owner/add-property" class="button border">Submit Property</a>--}}
+{{--                        @endif--}}
+{{--                    </li>--}}
+{{--                </ul>--}}
             </div>
             <!-- Right Side Content / End -->
         </div>
 
 
-    <!-- User Menu / End -->
+        <!-- User Menu / End -->
         <div class="clearfix"></div>
         <!-- Main Navigation / End -->
     </div>

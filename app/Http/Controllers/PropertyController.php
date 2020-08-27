@@ -439,11 +439,11 @@ class PropertyController extends BaseController
             }
 
             $booking_price['week_end_days'] = $week_end_days;
-            $booking_price['price_per_weekend'] = isset($pricing_config->price_per_weekend)
-                ? $pricing_config->price_per_weekend
-                : 0;
-            $booking_price['weekend_total'] =
-                (isset($pricing_config->price_per_weekend) ? $pricing_config->price_per_weekend : 0) * $week_end_days;
+
+            $weekend_price = (int) $pricing_config->price_per_weekend;
+
+            $booking_price['price_per_weekend'] = $weekend_price;
+            $booking_price['weekend_total'] = $weekend_price * $week_end_days;
 
             $cleaning_fee_amount = ZERO;
             $city_fee_amount = ZERO;

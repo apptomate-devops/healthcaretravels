@@ -160,22 +160,10 @@
                                     <div class="col-md-6">
                                         <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
                                         <input type="file" name="government_id" id="government_id" class="form-control" required accept="{{$filtypes}}" />
-{{--                                        @if(isset($GOVERNMENT_ID->document_type))--}}
-{{--                                            <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>--}}
-{{--                                        @endif--}}
+                                        {{--                                        @if(isset($GOVERNMENT_ID->document_type))--}}
+                                        {{--                                            <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>--}}
+                                        {{--                                        @endif--}}
                                     </div>
-                                    <div class="col-md-6">
-                                        <label>Signed HCT Co-hosting Agreement<span class="required">*</span></label>
-                                        <div class="caption-text">Only the HCT Standard Agreement will be accepted.</div>
-                                        <input type="file" name="cohosting_agreement_id" id="cohosting_agreement_id" class="form-control" required accept="{{$filtypes}}" />
-                                    @if(isset($COHOSTING_AGREEMENT_ID->document_type))
-                                            <a href="{{$COHOSTING_AGREEMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
-                                        @endif
-                                        <div style="margin-top: -20px;">
-                                            <a href="" style="text-decoration-line: underline;">Download form here</a>
-                                        </div>
-                                    </div>
-
                                     {{------- Cohost Traveler Verification ----- END ---------------}}
 
                                 @else
@@ -205,9 +193,9 @@
                                     <div class="col-md-6">
                                         <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
                                         <input type="file" name="government_id" id="government_id" class="form-control" accept="{{$filtypes}}" />
-{{--                                        @if(isset($GOVERNMENT_ID->document_type))--}}
-{{--                                            <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>--}}
-{{--                                        @endif--}}
+                                        {{--                                        @if(isset($GOVERNMENT_ID->document_type))--}}
+                                        {{--                                            <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>--}}
+                                        {{--                                        @endif--}}
                                     </div>
 
                                     {{------- Traveler or RV Traveler Verification ----- END ---------------}}
@@ -236,9 +224,23 @@
                                 @endif
 
                                 @if($user->role_id == 4)
-                                    <div class="col-md-12" style="margin-top: 40px;">
+                                    <div class="col-md-12">
                                         <div class="card col-md-12" style="padding: 15px;">
-                                            <h4>Homeowner's Contact Information</h4>
+                                            <h4>Property Information</h4>
+                                            <div class="caption-text" style="margin-bottom: 20px;">This information is required as one of your three verification items.</div>
+
+                                            <h4 style="margin-bottom: 20px;">1. Co-Host Agreement Form<span class="required">*</span></h4>
+{{--                                            <label>Signed HCT Co-hosting Agreement<span class="required">*</span></label>--}}
+                                            <div class="caption-text">Only the HCT Standard Agreement will be accepted.</div>
+                                            <input type="file" name="cohosting_agreement_id" id="cohosting_agreement_id" class="form-control" required accept="{{$filtypes}}" />
+                                            @if(isset($COHOSTING_AGREEMENT_ID->document_type))
+                                                <a href="{{$COHOSTING_AGREEMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
+                                            @endif
+                                            <div style="margin-top: -20px; margin-bottom: 20px;">
+                                                <a href="/co-host-agreement-form.pdf" download style="text-decoration-line: underline;">Download form here</a>
+                                            </div>
+
+                                            <h4 style="margin-bottom: 20px;">2. Homeowner's Contact Information</h4>
 
                                             <label>First Name<span class="required">*</span></label>
                                             <input value="@if($user->homeowner_first_name == '0' || $user->homeowner_first_name == null)@else{{$user->homeowner_first_name}}@endif" type="text" placeholder="First Name" name="homeowner_first_name" id="homeowner_first_name" class="form-control" />

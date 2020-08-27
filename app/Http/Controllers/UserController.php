@@ -336,14 +336,9 @@ class UserController extends BaseController
     public function login_user_success($check, $request)
     {
         $request->session()->put('user_id', $check->id);
-        $request->session()->put('is_verified', $check->is_verified);
-        $request->session()->put('role_id', $check->role_id);
-        $request->session()->put('username', $check->username);
-        $request->session()->put('name_of_agency', $check->name_of_agency);
         $request->session()->put('phone', $check->phone);
-        $userProfileImage = $check->profile_image ? $check->profile_image : BASE_URL . 'user_profile_default.png';
-        $request->session()->put('profile_image', $userProfileImage);
-
+        $request->session()->put('user_id_v', $check->id);
+        $request->session()->put('phone_v', $check->phone);
         if ($check->otp_verified != 1) {
             $OTP = rand(1111, 9999);
             // send otp
@@ -355,9 +350,10 @@ class UserController extends BaseController
                 ->update(['otp' => $OTP]);
 
             $url = $this->get_base_url() . 'otp-verify-register';
-            return redirect($url)
-                ->with('phone', $check->phone)
-                ->with('user_id', $check->id);
+            if (Auth::check()) {
+                Auth::logout();
+            }
+            return redirect($url);
         }
 
         if ($check->email_verified != 1) {
@@ -397,9 +393,22 @@ class UserController extends BaseController
                 ->where('phone', '=', $check->phone)
                 ->where('id', '=', $check->id)
                 ->update(['otp' => $OTP]);
+            if (Auth::check()) {
+                Auth::logout();
+            }
             $url = $this->get_base_url() . 'otp-verify-login';
             return redirect($url);
         } else {
+            $request->session()->put('user_id', $check->id);
+            $request->session()->put('is_verified', $check->is_verified);
+            $request->session()->put('user_id_v', $check->id);
+            $request->session()->put('phone_v', $check->phone);
+            $request->session()->put('role_id', $check->role_id);
+            $request->session()->put('username', $check->username);
+            $request->session()->put('name_of_agency', $check->name_of_agency);
+            $request->session()->put('phone', $check->phone);
+            $userProfileImage = $check->profile_image ? $check->profile_image : BASE_URL . 'user_profile_default.png';
+            $request->session()->put('profile_image', $userProfileImage);
             $url = $this->check_login_redirection($check);
             if ($request->session()->get('propertyId')) {
                 $property_id = $request->session()->get('propertyId');
@@ -487,7 +496,6 @@ class UserController extends BaseController
         $fname = $request->first_name;
         $lname = $request->last_name;
         $mail = $request->email;
-        $phone = $request->phone_no;
         $type = $request->user_type;
         $social_id = $request->social_id;
         $login_type = $request->login_type ?? 1;
@@ -502,6 +510,12 @@ class UserController extends BaseController
             'website.regex' => 'Please enter valid URL',
             'numeric' => 'Please enter valid phone number',
             'digits' => 'Please enter valid phone number',
+            'pet_name' => 'The :attribute field is required when you are travelling with pet.',
+            'pet_breed' => 'The :attribute field is required when you are travelling with pet.',
+            'pet_weight' => 'The :attribute field is required when you are travelling with pet.',
+            'pet_image' => 'The :attribute field is required when you are travelling with pet.',
+            'phone.unique' =>
+                'This phone number is already in use an another account. If this is an error, please contact <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com</a>.',
         ];
 
         $rules = [
@@ -509,7 +523,8 @@ class UserController extends BaseController
             'first_name' => 'required',
             'last_name' => 'required',
             'ethnicity' => 'required',
-            'phone_no' => 'required|numeric|digits:10',
+            'phone' =>
+                'required|numeric|digits:10' . (APP_ENV == 'test' || APP_ENV == 'local' ? '' : '|unique:users,phone'),
             'dob' => 'required',
             'gender' => 'required',
             'languages_known' => 'required',
@@ -540,6 +555,10 @@ class UserController extends BaseController
             $rules["other_agency"] = 'required_without:name_of_agency';
             $rules["tax_home"] = 'required';
             $rules["address"] = 'required';
+            $rules["pet_name"] = 'required_with:is_pet_travelling';
+            $rules["pet_breed"] = 'required_with:is_pet_travelling';
+            $rules["pet_weight"] = 'required_with:is_pet_travelling';
+            $rules["pet_image"] = 'required_with:is_pet_travelling';
         }
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -551,7 +570,7 @@ class UserController extends BaseController
                 ->with('lname', $lname)
                 ->with('ethnicity', $request->ethnicity)
                 ->with('mail', $mail)
-                ->with('phone', $phone)
+                ->with('phone', $request->phone)
                 ->with('type', $type)
                 ->with('selectedTab', 'tab2')
                 ->with('email_opt', $request->email_opt)
@@ -575,6 +594,11 @@ class UserController extends BaseController
                 ->with('work', $request->work)
                 ->with('work_title', $request->work_title)
                 ->with('website', $request->website)
+                ->with('is_pet_travelling', $request->is_pet_travelling)
+                ->with('pet_name', $request->pet_name)
+                ->with('pet_breed', $request->pet_breed)
+                ->with('pet_weight', $request->pet_weight)
+                ->with('pet_image', $request->pet_image)
                 ->withErrors($validator);
         }
 
@@ -583,13 +607,16 @@ class UserController extends BaseController
         $role_id = $request->user_type;
 
         $token = $this->generate_random_string();
-        $mobile = $request->phone_no;
 
         // Considered as Address_line_1
         $address = implode(", ", array_filter([$request->street_number, $request->route]));
 
         $OTP = rand(1111, 9999);
-        $isOTPSent = $this->sendOTPMessage($request->phone_no, $OTP);
+        $isOTPSent = $this->sendOTPMessage($request->phone, $OTP);
+        $petImage = '';
+        if (isset($request->is_pet_travelling)) {
+            $petImage = $this->base_image_upload($request, 'pet_image', 'pets');
+        }
         $insert = DB::table('users')->insert([
             'client_id' => $request->client_id,
             'role_id' => $role_id,
@@ -599,7 +626,7 @@ class UserController extends BaseController
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'ethnicity' => $request->ethnicity,
-            'phone' => $request->phone_no,
+            'phone' => $request->phone,
             'date_of_birth' => $request->dob,
             'gender' => $request->gender,
             'languages_known' => $request->languages_known,
@@ -624,7 +651,13 @@ class UserController extends BaseController
             'social_id' => $social_id,
             'otp' => $OTP,
             'email_opt' => isset($request->email_opt) ? 1 : 0,
+            'is_pet_travelling' => isset($request->is_pet_travelling) ? 1 : 0,
+            'pet_name' => isset($request->is_pet_travelling) ? $request->pet_name : '',
+            'pet_breed' => isset($request->is_pet_travelling) ? $request->pet_breed : '',
+            'pet_weight' => isset($request->is_pet_travelling) ? $request->pet_weight : '',
+            'pet_image' => isset($request->is_pet_travelling) ? $petImage : '',
         ]);
+
         $d = DB::table('users')
             ->where('client_id', '=', $request->client_id)
             ->where('email', '=', $request->email)
@@ -635,6 +668,8 @@ class UserController extends BaseController
         $request->session()->put('username', $d->username);
         $request->session()->put('user_id', $d->id);
         $request->session()->put('is_verified', $d->is_verified);
+        $request->session()->put('user_id_v', $d->id);
+        $request->session()->put('phone_v', $d->phone);
 
         //  Send Welcome mail
         $welcome = EmailConfig::where('type', TEMPLATE_REGISTER)->first();
@@ -676,8 +711,7 @@ class UserController extends BaseController
             $attempts = 1;
         }
 
-        $check = DB::table('users')
-            ->where('client_id', CLIENT_ID)
+        $check = Users::where('client_id', CLIENT_ID)
             ->where('id', $request->user_id)
             ->where('phone', $request->phone_no)
             ->first();
@@ -689,6 +723,7 @@ class UserController extends BaseController
                 ->with('error', 'Wrong code. Please try again.')
                 ->with('attempts', $attempts);
         } else {
+            Auth::login($check);
             $update_status = DB::table('users')
                 ->where('client_id', CLIENT_ID)
                 ->where('id', $request->user_id)
@@ -700,6 +735,8 @@ class UserController extends BaseController
 
                 $request->session()->put('user_id', $check->id);
                 $request->session()->put('is_verified', $check->is_verified);
+                $request->session()->put('user_id_v', $check->id);
+                $request->session()->put('phone_v', $check->phone);
                 $request->session()->put('role_id', $check->role_id);
                 $request->session()->put('username', $check->username);
                 $request->session()->put('name_of_agency', $check->name_of_agency);
@@ -745,18 +782,19 @@ class UserController extends BaseController
         if (!$request->phone_no || !$request->user_id) {
             return back()->with('error', 'Please Login again to Continue');
         }
-        $check = DB::table('users')
-            ->where('client_id', CLIENT_ID)
+        $check = Users::where('client_id', CLIENT_ID)
             ->where('id', $request->user_id)
             ->where('phone', $request->phone_no)
             ->first();
         if (!$check || $check->otp != $request->otp) {
-            return back()
-                ->with('phone_number', $request->phone_no)
-                ->with('phone', $request->phone_no)
-                ->with('user_id', $request->user_id)
-                ->with('error', 'Wrong code. Please try again.');
+            return back()->with([
+                'phone_number' => $request->phone_no,
+                'phone' => $request->phone_no,
+                'user_id' => $request->user_id,
+                'error' => 'Wrong code. Please try again.',
+            ]);
         } else {
+            Auth::login($check);
             $update_status = DB::table('users')
                 ->where('client_id', CLIENT_ID)
                 ->where('id', $request->user_id)
@@ -773,8 +811,9 @@ class UserController extends BaseController
             $request->session()->put('phone', $check->phone);
             $userProfileImage = $check->profile_image ? $check->profile_image : BASE_URL . 'user_profile_default.png';
             $request->session()->put('profile_image', $userProfileImage);
-
-            return redirect($url)->with('phone', $check->phone);
+            $request->session()->put('user_id_v', $check->id);
+            $request->session()->put('phone_v', $check->phone);
+            return redirect($url);
         }
     }
 
@@ -1027,14 +1066,20 @@ class UserController extends BaseController
             'required_without' => 'Please complete this field',
             'accepted' => 'Terms and Policy must be agreed',
             'same' => 'Password must match repeat password',
+            'password1.regex' => PASSWORD_REGEX_MESSAGE,
             'website.regex' => 'Please enter valid URL',
             'numeric' => 'Please enter valid phone number',
             'digits' => 'Please enter valid phone number',
+            'pet_name' => 'The :attribute field is required when you are travelling with pet.',
+            'pet_breed' => 'The :attribute field is required when you are travelling with pet.',
+            'pet_weight' => 'The :attribute field is required when you are travelling with pet.',
+            'pet_image' => 'The :attribute field is required when you are travelling with pet.',
         ];
 
         $rules = [
             'first_name' => 'required',
             'last_name' => 'required',
+            'ethnicity' => 'required',
             'dob' => 'required',
             'gender' => 'required',
             'languages_known' => 'required',
@@ -1042,7 +1087,6 @@ class UserController extends BaseController
         if ($user->role_id == "1" || $user->role_id == "4") {
             // Owner or Cohost
             $rules["address"] = 'required';
-            //            $rules["listing_address"] = 'required';
         } elseif ($user->role_id == "2") {
             // Travel Agency
             $rules["work_title"] = 'required';
@@ -1054,6 +1098,9 @@ class UserController extends BaseController
             $rules["other_agency"] = 'required_without:name_of_agency';
             $rules["tax_home"] = 'required';
             $rules["address"] = 'required';
+            $rules["pet_name"] = 'required_with:is_pet_travelling';
+            $rules["pet_breed"] = 'required_with:is_pet_travelling';
+            $rules["pet_weight"] = 'required_with:is_pet_travelling';
         }
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -1077,22 +1124,28 @@ class UserController extends BaseController
                 ->with('state', $request->state)
                 ->with('pin_code', $request->pin_code)
                 ->with('country', $request->country)
-                //                ->with('listing_address', $request->listing_address)
                 ->with('work', $request->work)
                 ->with('work_title', $request->work_title)
                 ->with('website', $request->website)
                 ->with('enable_two_factor_auth', $request->enable_two_factor_auth)
+                ->with('pet_name', $request->pet_name)
+                ->with('pet_breed', $request->pet_breed)
+                ->with('pet_weight', $request->pet_weight)
                 ->withErrors($validator);
         }
 
         // Considered as Address_line_1
         $address = implode(", ", array_filter([$request->street_number, $request->route]));
-
+        $petImage = $user->pet_image;
+        if (isset($request->is_pet_travelling) && isset($request->pet_image)) {
+            $petImage = $this->base_image_upload($request, 'pet_image', 'pets');
+        }
         DB::table('users')
             ->where('id', $user_id)
             ->update([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
+                'ethnicity' => $request->ethnicity,
                 'date_of_birth' => $request->dob,
                 'gender' => $request->gender,
                 'languages_known' => $request->languages_known,
@@ -1106,11 +1159,15 @@ class UserController extends BaseController
                 'state' => $request->state,
                 'pin_code' => $request->pin_code,
                 'country' => $request->country,
-                //                'listing_address' => $request->listing_address,
                 'work' => $request->work,
                 'work_title' => $request->work_title,
                 'website' => $request->website,
                 'enable_two_factor_auth' => isset($request->enable_two_factor_auth) ? 1 : 0,
+                'is_pet_travelling' => isset($request->is_pet_travelling) ? 1 : 0,
+                'pet_name' => isset($request->is_pet_travelling) ? $request->pet_name : '',
+                'pet_breed' => isset($request->is_pet_travelling) ? $request->pet_breed : '',
+                'pet_weight' => isset($request->is_pet_travelling) ? $request->pet_weight : '',
+                'pet_image' => isset($request->is_pet_travelling) ? $petImage : '',
             ]);
 
         return back()->with('success', 'Profile updated successfully');
@@ -1122,22 +1179,16 @@ class UserController extends BaseController
         if (!$user_id) {
             return redirect('/login')->with('error', 'Session timeout login again');
         }
+        $profile_image = '';
         if ($request->file('profile_image')) {
-            # code...
+            $profile_image = $this->base_image_upload($request, 'profile_image', 'users');
         }
-        $file = $request->file('profile_image');
-        //Move Uploaded File $file->getClientOriginalExtension();
-        $destinationPath = 'public/uploads';
-        $file_name = rand(111111, 999999) . '.' . $file->getClientOriginalExtension();
-        $file->move($destinationPath, $file_name);
-        $client_id = $this->get_client_id();
-        $complete_url = $this->get_base_url() . $destinationPath . '/' . $file_name;
         $update = DB::table('users')
-            ->where('client_id', '=', $client_id)
+            ->where('client_id', '=', CLIENT_ID)
             ->where('id', '=', $user_id)
-            ->update(['profile_image' => $complete_url]);
-        $request->session()->put('profile_image', $complete_url);
-        return $complete_url;
+            ->update(['profile_image' => $profile_image]);
+        $request->session()->put('profile_image', $profile_image);
+        return $profile_image;
     }
     public function delete_profile_picture(Request $request)
     {

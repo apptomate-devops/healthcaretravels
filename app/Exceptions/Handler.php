@@ -52,7 +52,18 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+        if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
+            return redirect()
+                ->back()
+                ->withInput($request->except(['password', 'password_confirmation']))
+                ->with('error', 'The form has expired due to inactivity. Please try again');
+            // return redirect('/login')
+            //         ->with('error', 'Your session has expired. Please log back in to continue.');
+        }
+        if (
+            config('app.env') !== 'local' &&
+            $exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+        ) {
             return redirect('/not_found');
         }
         return parent::render($request, $exception);
@@ -85,15 +96,20 @@ class Handler extends ExceptionHandler
             $e = FlattenException::create($exception);
             $handler = new SymfonyExceptionHandler();
             $html = $handler->getHtml($e);
-            if (config("app.env") !== "local") {
-                $emails = [
-                    'brijeshbhakta30@gmail.com',
+            $emails = ['brijeshbhakta30@gmail.com', 'phpatel.4518@gmail.com'];
+            if (config('app.env') == 'stage') {
+                $stage_emails_notify = [
                     'info@healthcaretravels.com',
                     'ldavis@healthcaretravels.com',
                     'pashiofu@healthcaretravels.com',
                     'dylan@arborvita.io',
                     'garrethdottin1@gmail.com',
                 ];
+                foreach ($stage_emails_notify as $email) {
+                    array_push($emails, $email);
+                }
+            }
+            if (config('app.env') !== 'local') {
                 Mail::to($emails)->send(new ExceptionOccurred($html));
                 Logger::info('Error emails sent');
             }

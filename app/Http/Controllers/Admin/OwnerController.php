@@ -73,12 +73,35 @@ class OwnerController extends BaseController
             'website' => 'Website',
             'property_tax_url' => 'Property tax url',
         ];
+        $fields_to_omit = [
+            'id',
+            'client_id',
+            'social_id',
+            'password',
+            'auth_token',
+            'device_token',
+            'role_id',
+            'rep_code',
+            'is_encrypted',
+            'airbnb_link',
+            'home_away_link',
+            'vrbo_link',
+            'agency_website',
+            'property_tax_url',
+            'status',
+            'otp',
+            'reset_date',
+            'reset_password_token',
+            'login_type',
+            'denied_count',
+        ];
         return view('Admin.single-user', [
             'data' => $data,
             'document' => $document,
             'total_posted' => $total_posted,
             'total_booking' => $total_booking,
             'user_links' => $user_links,
+            'fields_to_omit' => $fields_to_omit,
         ]);
     }
 }

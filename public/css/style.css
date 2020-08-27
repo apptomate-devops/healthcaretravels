@@ -368,11 +368,25 @@ button[disabled], html input[disabled] {
 /* Default Common Styles End ======================== */
 
 /* 3. Header custom styles start ======================== */
+.beta-banner {
+    width: 100%;
+    background-color: #E78016;
+    padding: 8px 20px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: 0.015em;
+    color: #FFFFFF;
+}
+.beta-banner a {
+    color: #FFFFFF;
+    text-decoration-line: underline;
+}
 
 #header {
     position: relative;
     z-index: 5;
-    padding: 25px 0 14px 0;
+    padding-bottom: 14px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.12);
     background: #fff;
 }
@@ -387,9 +401,9 @@ header.fullwidth .container {
     border-top: 4px solid #66676b;
 }
 
-#header-container.header-style-2 #header {
-    padding-top: 20px;
-}
+/*#header-container.header-style-2 #header {*/
+/*    padding-top: 20px;*/
+/*}*/
 
 #header-container.header-style-2 #header {
     padding-bottom: 0;
@@ -968,6 +982,8 @@ ul.top-bar-menu li i {
     border-radius: 50%;
     width: 38px;
     height: 38px;
+    object-fit: contain;
+    border: 1px solid #FFFFFF;
 }
 
 .user-name span#header_profile_image {
@@ -1140,7 +1156,7 @@ ul.top-bar-menu li i {
 
     .header-style-2 .user-menu {
         float: right;
-        margin-top: -52px;
+        margin-top: -57px;
         margin-right: 10px;
         padding: 0 25px 15px;
     }
@@ -1173,7 +1189,7 @@ ul.top-bar-menu li i {
     }
 
     #header {
-        padding-top: 20px;
+        /*padding-top: 20px;*/
         border-bottom: 1px solid #E78016;
         box-shadow: none;
     }
@@ -5494,8 +5510,8 @@ section.fullwidth.border-bottom {
     display: inline-block;
     position: absolute;
     font-size: 13px;
-    bottom: 15px;
-    left: 15px;
+    bottom: 5px;
+    left: 5px;
     width: auto;
     background-color: #fff;
     color: #333;
@@ -9500,13 +9516,16 @@ img.mfp-img {
     color: #999;
 }
 
+.chosen-container-single .chosen-single.chosen-default span {
+    color: #888;
+}
 .chosen-container-single .chosen-single span {
     display: block;
     overflow: hidden;
     margin-right: 26px;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: #888;
+    color: #000;
 }
 
 .chosen-container-single .chosen-single-with-deselect span {
@@ -14423,5 +14442,12 @@ div.layout-style {
 @media only screen and (max-width: 1024px) {
     #style-switcher {
         display: none;
+    }
+}
+
+@media only screen and (max-width: 1024px) and (min-width: 992px) {
+    input,
+    select {
+        font-size: 12px !important;
     }
 }

@@ -12,6 +12,9 @@
 <header id="header-container" class="header-style-2">
     <!-- Header -->
     <div id="header">
+        <div class="beta-banner">
+            Health Care Travels is currently in the beta phase. Please <a href="mailto:support@healthcaretravels.com">contact us</a> if you encounter any issues.
+        </div>
         <div class="container">
             <!-- Left Side Content -->
             <div class="left-side">
@@ -56,11 +59,17 @@
 
                     <li>
                     <!--  <a class="current" href="{{url('/')}}"> -->
-                        @if(Session::get('role_id') == 3)
+                        {{-- @if(Session::get('role_id') == 3)
                             <a href="{{url('/')}}/rv-traveller">Home</a>
                         @else
                             <a href="{{url('/')}}">Home</a>
-                        @endif
+                        @endif --}}
+                        <a
+                            style="cursor: pointer"
+                            {{-- href="{{url('/')}}" --}}
+                        >
+                            Home
+                        </a>
                         <ul>
                             <li class="text-center">
                                 <a href="{{url('/')}}/about_us">About Us</a>
@@ -75,7 +84,10 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a
+                            style="cursor: pointer"
+                            {{-- href="{{url('/')}}/travelers" --}}
+                        >
                             Traveler
                         </a>
                         <ul>
@@ -112,7 +124,7 @@
                     </li>
 
                     <li>
-                        <a href="{{url('/')}}/">Opportunities
+                        <a style="cursor: pointer">Opportunities
                         </a>
                         <ul>
                             <li class="text-center">
@@ -150,7 +162,7 @@
                         @endif
                     </li>
                     <li>
-                        <a href="#">
+                        <a style="cursor: pointer">
                             Help
                         </a>
                         <ul>
@@ -171,7 +183,7 @@
 
 
 
-                    @if(Session::has('user_id'))
+                    @if(Auth::check() && Auth::user()->id)
 
                     @else
                         <li class="right-side-menu-item">
@@ -209,17 +221,17 @@
 
         <!-- User Menu -->
 
-        @if(Session::has('user_id'))
+        @if(Auth::check() && Auth::user()->id)
             <div class="container hidden-xs">
                 <div class="row">
                     <div class="user-menu-container">
                         <div class="user-menu">
                             <div class="user-name">
                                 <span id="header_profile_image">
-                                    @if(Session::has('profile_image'))
-                                        <img src="{{ Session::get('profile_image') }}" style="max-width: 38px;max-height: 34px;" alt="">
+                                    @if(Session::has('profile_image') && Session::get('profile_image') != ' ')
+                                        <img src="{{ Session::get('profile_image') }}">
                                     @else
-                                        <img src="{{url('/')}}/user_profile_default.png" alt="">
+                                        <img src="/user_profile_default.png" alt="">
                                     @endif
                                 </span>
                                 <span>{{ Session::get('username') }}</span>
@@ -230,11 +242,13 @@
                                 <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
                                 <li><a href="{{url('/')}}/verify-account"><i class="sl sl-icon-user"></i> Verify Account</a></li>
                                 <li><a href="{{url('/')}}/owner/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
-                                <li><a href="{{url('/')}}/owner/my-properties" class="not-verified-block"><i class="sl sl-icon-home"></i> My Properties</a></li>
-                                <li><a href="{{url('/')}}/owner/add-property" class="not-verified-block"><i class="sl sl-icon-plus"></i> Add Property</a></li>
-                                <li><a href="{{url('/')}}/owner/bookings"><i class="sl sl-icon-basket"></i> Bookings</a></li>
-                                {{-- <li><a href="{{url('/')}}/owner/reservations"><i class="sl sl-icon-credit-card"></i> My Trips</a></li> --}}
-                                <li><a href="{{url('/')}}/owner/calender"><i class="sl sl-icon-credit-card"></i> Calender</a></li>
+                                @if(Session::get('role_id') == 1)
+                                    <li><a href="{{url('/')}}/owner/my-properties" class="not-verified-block"><i class="sl sl-icon-home"></i> My Properties</a></li>
+                                    <li><a href="{{url('/')}}/owner/add-property" class="not-verified-block"><i class="sl sl-icon-plus"></i> Add Property</a></li>
+                                    <li><a href="{{url('/')}}/owner/bookings"><i class="sl sl-icon-basket"></i> Bookings</a></li>
+                                    {{-- <li><a href="{{url('/')}}/owner/reservations"><i class="sl sl-icon-credit-card"></i> My Trips</a></li> --}}
+                                    <li><a href="{{url('/')}}/owner/calender"><i class="sl sl-icon-credit-card"></i> Calender</a></li>
+                                @endif
                                 <li><a href="{{url('/')}}/owner/inbox" class="not-verified-block"><i class="fa fa-inbox"></i> Inbox</a></li>
                                 <li><a href="{{url('/')}}/owner/invoices"><i class="sl sl-icon-note"></i> Transaction History </a></li>
                                 <li><a href="{{url('/')}}/owner/special_price"><i class="sl sl-icon-star"></i> Special Pricing </a></li>

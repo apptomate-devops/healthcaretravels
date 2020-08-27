@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Session;
+use Auth;
 
 class LoginCheck
 {
@@ -17,7 +18,7 @@ class LoginCheck
     public function handle($request, Closure $next)
     {
         $user = $request->session()->get('user_id');
-        if (!$user) {
+        if (!Auth::check()) {
             Session::flash('error_message', "Please Login to access application");
             return redirect()->intended('/');
         }

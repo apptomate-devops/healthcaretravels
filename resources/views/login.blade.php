@@ -84,13 +84,13 @@
                                     <input class="input-text" type="password" name="password" id="password" placeholder="Password" required />
                                 </label>
                             </p>
-                            <div class="password-checkbox">
-                                <input type="checkbox" onclick="togglePassword('password')">
-                                <span>Show Password</span>
+                            <div class="checkboxes in-row password-checkbox">
+                                <input id="show_password" name="show_password" type="checkbox" onclick="togglePassword('password')">
+                                <label for="show_password">Show Password</label>
                             </div>
-                            <div class="password-checkbox">
-                                <input type="checkbox" id="remember-email-check" onclick="rememberEmail()">
-                                <span>Remember my email</span>
+                            <div class="checkboxes in-row password-checkbox">
+                                <input type="checkbox" id="remember-email-check" name="remember-email-check" onclick="rememberEmail()">
+                                <label for="remember-email-check">Remember my email</label>
                             </div>
                             <p class="form-row">
                                 <input type="submit" onclick="checkRememberEmail()" class="btn btn-primary w-100 m-0" name="login" value="Login" />
@@ -113,7 +113,7 @@
                             @component('components.social-buttons', ['type' => 'register'])
                             @endcomponent
                         @endif
-                        <form method="post" class="register" action="{{url('/')}}/register-user" onsubmit="return validate_registration()" autocomplete="off" onkeydown="return event.key != 'Enter';">
+                        <form method="post" class="register" action="{{url('/')}}/register-user" enctype="multipart/form-data" onsubmit="return validate_registration()" autocomplete="off" onkeydown="return event.key != 'Enter';">
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
                             <input type="hidden" name="client_id" id="client_id" value="{{$constants['client_id']}}">
                             <input type="hidden" name="social_id" id="social_id" value="{{Session::get('social_id')}}">
@@ -158,9 +158,9 @@
                                     <label for="password1">Password:
                                         <input class="input-text validate {{ $errors->has('password1') ? 'form-error' : ''}}" type="password" data-strength autocomplete="off" name="password1" placeholder="Password" id="password1" required />
                                     </label>
-                                <div class="password-checkbox">
-                                    <input type="checkbox" onclick="togglePassword('password1')">
-                                    <span>Show Password</span>
+                                <div class="checkboxes in-row password-checkbox">
+                                    <input id="show_password_1" name="show_password_1" type="checkbox" onclick="togglePassword('password1')">
+                                    <label for="show_password_1">Show Password</label>
                                 </div>
                                 {!! $errors->first('password1', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -173,7 +173,7 @@
                                     <p id="letter" class="invalid-password">At least one lowercase letter</p>
                                     <p id="capital" class="invalid-password">At least one uppercase letter</p>
                                     <p id="number" class="invalid-password">At least one number</p>
-                                    <p id="special_character" class="invalid-password">At least one special character</p>
+                                    <p id="special_character" class="invalid-password">At least one special character (@#^_+=:;><~$!%*?&)</p>
                                     <p id="length" class="invalid-password">At least 8 characters long</b></p>
                                 </div>
 
@@ -181,9 +181,9 @@
                                     <label for="password2">Repeat Password:
                                         <input class="input-text validate {{ $errors->has('password2') ? 'form-error' : ''}}" autocomplete="off" type="password" name="password2" placeholder="Repeat Password" id="password2" required />
                                     </label>
-                                <div class="password-checkbox">
-                                    <input type="checkbox" onclick="togglePassword('password2')">
-                                    <span>Show Password</span>
+                                <div class="checkboxes in-row password-checkbox">
+                                    <input id="show_password_2" name="show_password_2" type="checkbox" onclick="togglePassword('password2')">
+                                    <label for="show_password_2">Show Password</label>
                                 </div>
                                 {!! $errors->first('password2', '<p class="error-text">:message</p>') !!}
                                 </p>
@@ -209,22 +209,20 @@
                                     <label class="register-info" id="ethnicity-caption">We use this information for identity verification. It will not appear on your public profile.</label>
                                     <select type="text" class="input-text validate {{ $errors->has('ethnicity') ? 'form-error' : ''}}" name="ethnicity" id="ethnicity" autocomplete="off" required>
                                         <option value="" selected>Select Ethnicity</option>
-                                        <option value="American Indian or Alaskan Native" @if(Session::get('ethnicity')=='American Indian or Alaskan Native' ) selected @endif>American Indian or Alaskan Native</option>
-                                        <option value="Asian" @if(Session::get('ethnicity')=='Asian' ) selected @endif>Asian</option>
-                                        <option value="Black or African American" @if(Session::get('ethnicity')=='Black or African American' ) selected @endif>Black or African American</option>
-                                        <option value="Native Hawaiian or Pacific Islander" @if(Session::get('ethnicity')=='Native Hawaiian or Pacific Islander' ) selected @endif>Native Hawaiian or Pacific Islander</option>
-                                        <option value="White" @if(Session::get('ethnicity')=='White' ) selected @endif>White</option>
-                                        <option value="Other" @if(Session::get('ethnicity')=='Other' ) selected @endif>Other</option>
+                                        @foreach(ETHNICITY as $ethnicity)
+                                            <option value="{{$ethnicity}}" @if(Session::get('ethnicity')==$ethnicity) selected @endif>{{$ethnicity}}</option>
+                                        @endforeach
+
                                     </select>
                                 </label>
                                 {!! $errors->first('ethnicity', '<p class="error-text">:message</p>') !!}
                             </p>
 
                             <p class="form-row form-row-wide" id="phone_number_field" style="display: none;">
-                                <label for="phone_no">Mobile Number:
-                                    <input type="text" class="input-text validate {{ $errors->has('phone_no') ? 'form-error' : ''}}" value="{{Session::get('phone')}}" name="phone_no" id="phone_no" maxlength="10" placeholder="Mobile Number" required />
+                                <label for="phone">Mobile Number:
+                                    <input type="text" class="input-text validate {{ $errors->has('phone') ? 'form-error' : ''}}" value="{{Session::get('phone')}}" name="phone" id="phone" maxlength="10" placeholder="Mobile Number" required />
                                 </label>
-                                {!! $errors->first('phone_no', '<p class="error-text">:message</p>') !!}
+                                {!! $errors->first('phone', '<p class="error-text">:message</p>') !!}
                             </p>
 
                             <p class="form-row form-row-wide" id="work_number_field" style="display: none;">
@@ -342,44 +340,72 @@
                             {{--                            </p>--}}
                             {{--                            <div class="error-text" id="listing_address_error" style="display: none;">Please select a valid address from the suggestions.</div>--}}
 
-                            <div class="checkboxes" id="email_opt_field" style="display: none;">
-                                <input id="email_opt" type="checkbox" name="email_opt" @if(Session::has('email_opt')) checked @endif">
-                                <label for="email_opt">I don’t want to receive marketing messages from Health Care Travels. I can also opt out of receiving these at any time by emailing
-                                    <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com.</a>
-{{--                                {!! $errors->first('email_opt', '<p class="error-text-accept">:message</p>') !!}--}}
+                            <div id="is_pet" class="checkboxes in-row password-checkbox" style="margin-top: 0; display: none;">
+                                <input id="is_pet_checked" name="is_pet_travelling" type="checkbox" @if(Session::get('is_pet_travelling')) checked @endif>
+                                <label for="is_pet_checked">Do you travel with a pet?</label>
+                            </div>
+
+                            <div id="pet_details" style="display: none;">
+                                <label for="pet_name">Name:
+                                    <input type="text" class="input-text validate {{ $errors->has('pet_name') ? 'form-error' : ''}}" value="{{Session::get('pet_name')}}" name="pet_name" id="pet_name" placeholder="Name" autocomplete="off"/>
                                 </label>
-                            </div>
+                                {!! $errors->first('pet_name', '<p class="error-text">:message</p>') !!}
 
-                            <div class="checkboxes" id="policy_accept_field" style="display: none;">
-                                <input id="policy_accept" type="checkbox" name="policy_accept" @if(Session::has('policy_accept')) checked @endif">
-                                <label for="policy_accept">
-                                    By checking and selecting Agree and Register below, I agree to Health Care Travels <a href="{{URL('/')}}/terms-of-use">Terms of Service</a>, <a href="{{URL('/')}}/payment-terms">Payments Terms of Service</a>, <a href="{{URL('/')}}/policies">Privacy Policy</a>, and <a href="{{URL('/')}}/non-discrimination-policy">Nondiscrimination Policy.</a>
-                                {!! $errors->first('policy_accept', '<p class="error-text-accept">Policy must be agreed</p>') !!}
+                                <label for="pet_breed">Breed:
+                                    <input type="text" class="input-text validate {{ $errors->has('pet_breed') ? 'form-error' : ''}}" value="{{Session::get('pet_breed')}}" name="pet_breed" id="pet_breed" placeholder="Breed" autocomplete="off"/>
                                 </label>
+                                {!! $errors->first('pet_breed', '<p class="error-text">:message</p>') !!}
 
-                            </div>
-                            <div id="recaptcha-block" class="g-recaptcha" style="display: none" data-sitekey="{{RECAPTCHA_SITE_KEY}}" data-expired-callback="recaptcha_expired_callback" data-callback="recaptcha_callback">
-                            </div>
-                            <p class="form-row" id="register_button_field" style="display: none;">
-                                <input type="submit" id="reg_button" class="btn btn-primary w-100" name="register" value="Agree and Register" disabled />
-                            </p>
+                                <label for="pet_weight">Weight:
+                                    <input type="text" class="price_float input-text validate {{ $errors->has('pet_weight') ? 'form-error' : ''}}" value="{{Session::get('pet_weight')}}" name="pet_weight" id="pet_weight" placeholder="Weight" autocomplete="off"/>
+                                </label>
+                                {!! $errors->first('pet_weight', '<p class="error-text">:message</p>') !!}
 
-                        </form>
+                                <label for="pet_image">Pet Image:
+                                    <input type="file" name="pet_image" id="pet_image" class="form-control" accept="image/*" style="padding-top: 14px;"/>
+                                </label>
+                                {!! $errors->first('pet_image', '<p class="error-text">:message</p>') !!}
+                            </div>
+
+                    </div>
+                    <div class="checkboxes" id="email_opt_field" style="display: none;">
+                        <input id="email_opt" type="checkbox" name="email_opt" @if(Session::has('email_opt')) checked @endif">
+                        <label for="email_opt">I don’t want to receive marketing messages and offers from Health Care Travels. I can also opt out of receiving these at any time by emailing
+                            <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com.</a>
+                            {{--                                {!! $errors->first('email_opt', '<p class="error-text-accept">:message</p>') !!}--}}
+                        </label>
                     </div>
 
+                    <div class="checkboxes" id="policy_accept_field" style="display: none;">
+                        <input id="policy_accept" type="checkbox" name="policy_accept" @if(Session::has('policy_accept')) checked @endif">
+                        <label for="policy_accept">
+                            By checking and selecting Agree and Register below, I agree to Health Care Travels <a href="{{URL('/')}}/terms-of-use">Terms of Service</a>, <a href="{{URL('/')}}/payment-terms">Payments Terms of Service</a>, <a href="{{URL('/')}}/policies">Privacy Policy</a>, and <a href="{{URL('/')}}/non-discrimination-policy">Nondiscrimination Policy.</a>
+                            {!! $errors->first('policy_accept', '<p class="error-text-accept">Policy must be agreed</p>') !!}
+                        </label>
+
+                    </div>
+                    <div id="recaptcha-block" class="g-recaptcha" style="display: none" data-sitekey="{{RECAPTCHA_SITE_KEY}}" data-expired-callback="recaptcha_expired_callback" data-callback="recaptcha_callback">
+                    </div>
+                    <p class="form-row" id="register_button_field" style="display: none;">
+                        <input type="submit" id="reg_button" class="btn btn-primary w-100" name="register" value="Agree and Register" disabled />
+                    </p>
+
+                    </form>
                 </div>
+
             </div>
         </div>
     </div>
-    <!-- Content Container / End -->
+</div>
+<!-- Content Container / End -->
 
-    <!-- Footer Container
-    ================================================== -->
+<!-- Footer Container
+================================================== -->
 @include('includes.footer')
 <!-- Footer Container / End -->
 
-    <!-- Scripts
-    ================================================== -->
+<!-- Scripts
+================================================== -->
 @include('includes.scripts')
 <!-- Scripts / End -->
 
@@ -432,7 +458,6 @@
         });
     }
     $(document).ready(() => {
-
         load_agencies();
         set_max_date();
         checkRememberEmail(true);
@@ -514,6 +539,8 @@
                 $('#work_title_field').hide();
                 $('#work_number_field').hide();
                 $('#website_field').hide();
+                $('#is_pet').show();
+                $('#pet_details').hide();
 
                 $('#email-label').text('Email Address:');
                 $('#address_label').text('Address:');
@@ -560,6 +587,9 @@
                 $('#work_title_field').hide();
                 $('#work_number_field').hide();
                 $('#website_field').hide();
+                $('#is_pet').hide();
+                $('#is_pet_checked').attr('checked', false);
+                $('#pet_details').hide();
 
                 $('#email-label').text('Email Address:');
                 $('#address_label').text('Mailing Address:');
@@ -604,6 +634,9 @@
                 $('#work_title_field').show();
                 $('#work_number_field').show();
                 $('#website_field').show();
+                $('#is_pet').hide();
+                $('#is_pet_checked').attr('checked', false);
+                $('#pet_details').hide();
 
                 $('#email-label').text('Work Email Address:');
                 $('#email2').val('');
@@ -614,10 +647,12 @@
                 break;
 
             default:
+                $('#recaptcha-block').hide();
                 $('#username2_field').hide();
                 $('#email_field').hide();
                 $('#password_field').hide();
                 $('#password2_field').hide();
+                $("#password-strength, #password-strength-text, #password_message").hide();
                 $('#tab2 .password-checkbox').hide();
                 $('#first_name_field').hide();
                 $('#last_name_field').hide();
@@ -648,6 +683,9 @@
                 $('#work_title_field').hide();
                 $('#work_number_field').hide();
                 $('#website_field').hide();
+                $('#is_pet').hide();
+                $('#is_pet_checked').attr('checked', false);
+                $('#pet_details').hide();
 
                 $('#email-label').text('Email Address:');
                 $('#address_label').text('Address:');
@@ -656,6 +694,7 @@
                 break;
         }
         initialize();
+        $("#is_pet_checked").trigger('change');
     }
 
     function initialize() {
@@ -768,7 +807,28 @@
         $('#address_line_2').val('');
     }
 
-    $('#phone_no, #work_number_field').on('keypress', function(event) {
+    $('#is_pet_checked').change(function () {
+        var isChecked= $(this).is(':checked');
+        if(isChecked) {
+            $('#pet_details').show();
+        } else {
+            $('#pet_details').hide();
+        }
+    });
+
+    $('.price_float').change(function(){
+        var value = parseFloat(this.value);
+        this.value = isNaN(value) ? 0 : value;
+    });
+
+
+    $('.price_float').keypress(function(event) {
+        if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    });
+
+    $('#phone, #work_number_field').on('keypress', function(event) {
         var regex = new RegExp("^[0-9+]$");
         var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
         if (!regex.test(key)) {
@@ -863,8 +923,7 @@
         $('#name_of_agency').val(agencyAutoComplete.value());
         return true;
     }
-</script>
-<script>
+
     let strength = 0;
 
     function passwordCheck(password) {

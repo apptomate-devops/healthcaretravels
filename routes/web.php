@@ -12,6 +12,7 @@
 */
 
 Route::GET('/not_found', 'BaseController@not_found');
+Route::get('/storage/{filePath}', 'BaseController@get_storage_file')->where(['filePath' => '.*']);
 
 // Logout Controller Routes
 Route::GET('/logout', 'LogoutController@logout');
@@ -117,8 +118,11 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::GET('/cancel-booking/{id}', 'PropertyController@cancel_booking');
 
     // Property
+    Route::post('/book-now', 'PropertyController@book_now');
+    Route::GET('/booking_detail/{id}', 'PropertyController@booking_detail');
     Route::POST('/create_chat/{id}', 'PropertyController@create_chat');
     Route::GET('/property/set-favourite/{id}', 'PropertyController@set_favourite');
+    Route::POST('/save-guest-information', 'PropertyController@save_guest_information');
 
     // Owner
     Route::get('/owner/inbox', 'PropertyController@inbox');

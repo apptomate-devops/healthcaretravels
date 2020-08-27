@@ -320,7 +320,7 @@
                 <div class="col-md-12">
                     <div class="search-container">
                         <!-- Form -->
-                        <h2 style="font-family: sans-serif;">Find New Home </h2>
+                        <h2 style="font-family: sans-serif;">Find Your New Home</h2>
                         <!-- Row With Forms -->
                         <div class="row with-forms">
                             <form name="test" method="post" action="{{BASE_URL}}properties" onsubmit="return validate_submit()" autocomplete="off" onkeydown="return event.key != 'Enter';">
@@ -343,29 +343,32 @@
                                             <input class="field" type="hidden" id="lng" name="lng" value="{{Session::get('lng')}}" />
                                         </div>
                                     </div>
-                                    <div class="col-md-2 col-sm-3 col-xs-6">
-                                        <select class="chosen-select-no-single" name="room_type" id="room_type" data-placeholder="Home Type">
-                                            <option label=""></option>
-                                            @foreach($room_types as $room)
-                                                <option value="{{$room->name}}" @if(isset($request_data['room_type']) && $request_data['room_type'] == $room->name) selected @endif>{{$room->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 col-sm-3 col-xs-6">
-                                        <select class="chosen-select-no-single" name="guests" id="guests" data-placeholder="Guests">
-                                            <option label=""></option>
-                                            @for($i=1;$i<=10;$i++)
-                                                <option value="{{$i}}">{{$i}} Guest</option>
-                                            @endfor
-                                        </select>
+                                    <div class="col-md-4 col-sm-6 col-xs-12 p-0">
+                                        <div class="col-sm-7 col-xs-6" style="margin-bottom: 0;">
+                                            <select class="chosen-select-no-single" name="room_type" id="room_type" data-placeholder="Home Type" style="margin-bottom: 0; height: 57px;">
+                                                <option label="Home Type" value="" disabled selected></option>
+                                                @foreach($room_types as $room)
+                                                    <option value="{{$room->name}}" @if(isset($request_data['room_type']) && $request_data['room_type'] == $room->name) selected @endif>{{$room->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-5 col-xs-6" style="margin-bottom: 0;">
+                                            <select class="chosen-select-no-single" name="guests" id="guests" data-placeholder="Guests" style="margin-bottom: 0; height: 57px;">
+                                                <option label="Guest" value="" disabled selected></option>
+                                                @for($i=1;$i<=10;$i++)
+                                                    <option value="{{$i}}">{{$i}} Guest</option>
+                                                @endfor
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                                         <div class="check-in-out-wrapper">
                                             <input type="text" name="from_date"
                                                    placeholder="Check in"
-                                                   id="from_date" autocomplete="off"/>
-                                            <input type="text" placeholder="Check out" onchange="check_to_date();"
-                                                   name="to_date" value="" id="to_date" autocomplete="off"/>
+                                                   id="date_range_picker" autocomplete="off"/>
+                                            <input type="text" name="to_date"
+                                                   placeholder="Check out"
+                                                   id="date_range_picker" autocomplete="off"/>
                                         </div>
                                     </div>
                                     <div class="col-md-2 col-sm-2 col-xs-12 text-center">

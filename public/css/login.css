@@ -156,7 +156,6 @@
 
 .password-checkbox {
     margin-top: -20px;
-    margin-bottom: 30px;
 }
 
 #agency-caption,
@@ -187,6 +186,8 @@
 
 #password_message p {
     margin-left: 20px;
+    font-size: 14px;
+    font-weight: 500;
 }
 .valid-password:before {
     position: relative;

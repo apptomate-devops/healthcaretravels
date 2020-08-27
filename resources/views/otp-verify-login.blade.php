@@ -65,7 +65,7 @@
                             </label>
                         </p>
                         <input type="hidden" name="_token" value="{{csrf_token()}}">
-                        <input type="hidden" name="user_id" value="{{Session::get('user_id')}}">
+                        <input type="hidden" name="user_id" value="{{Session::get('user_id_v')}}">
                         <p class="form-row form-row-wide" id="otp_sent" >
                             <label for="phone_no">
                                 <input type="text" class="input-text validate" placeholder="Enter your code here" name="otp" id="otp" value="" required="" />
@@ -113,8 +113,8 @@
 <script type="text/javascript">
 
     $(document).ready(() => {
-        let user_id = "{{Session::get('user_id')}}";
-        let phone = "{{Session::get('phone')}}";
+        let user_id = "{{Session::get('user_id_v')}}";
+        let phone = "{{Session::get('phone_v')}}";
         if(phone) {
             $('#phone_number').text(phone);
             $('#phone_no').val(phone);
@@ -154,7 +154,7 @@
     $('#get_otp').click(() => {
 
         var phone_no = $('#phone_no').val();
-        var user_id = "{{Session::get('user_id')}}";
+        var user_id = "{{Session::get('user_id_v')}}";
         if(!phone_no || !user_id) {
             alert('Please Login to continue.');
             return;

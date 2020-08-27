@@ -11,7 +11,7 @@ class HandlePublicURLSeeder extends Seeder
             ->where($column, 'LIKE', "%" . $subject . "%")
             ->get();
         Log::info($column . ' that needs to be replaced: count: ' . count($rows));
-        echo $column . ' that needs to be replaced: count: ' . count($rows) . PHP_EOL;
+        $this->command->info($column . ' that needs to be replaced: count: ' . count($rows));
         foreach ($rows as $row) {
             $new_url = str_replace($subject, $replace, $row->$column);
             $model::where('id', $row->id)->update([$column => $new_url]);

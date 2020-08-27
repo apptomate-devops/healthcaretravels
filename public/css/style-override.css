@@ -134,3 +134,15 @@
     top: 50%;
     z-index: 1;
 }
+
+.check-in-out-wrapper {
+    display: flex;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.check-in-out-wrapper input {
+    border-radius: 0 !important;
+    height: 57px !important;
+    text-align: center;
+}

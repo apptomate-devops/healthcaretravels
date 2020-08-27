@@ -60,7 +60,10 @@ class Handler extends ExceptionHandler
             // return redirect('/login')
             //         ->with('error', 'Your session has expired. Please log back in to continue.');
         }
-        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+        if (
+            config('app.env') !== 'local' &&
+            $exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+        ) {
             return redirect('/not_found');
         }
         return parent::render($request, $exception);

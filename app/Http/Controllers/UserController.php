@@ -523,7 +523,8 @@ class UserController extends BaseController
             'first_name' => 'required',
             'last_name' => 'required',
             'ethnicity' => 'required',
-            'phone' => 'required|numeric|digits:10' . (APP_ENV == 'test' ? '' : '|unique:users,phone'),
+            'phone' =>
+                'required|numeric|digits:10' . (APP_ENV == 'test' || APP_ENV == 'local' ? '' : '|unique:users,phone'),
             'dob' => 'required',
             'gender' => 'required',
             'languages_known' => 'required',

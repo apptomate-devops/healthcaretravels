@@ -368,11 +368,25 @@ button[disabled], html input[disabled] {
 /* Default Common Styles End ======================== */
 
 /* 3. Header custom styles start ======================== */
+.beta-banner {
+    width: 100%;
+    background-color: #E78016;
+    padding: 8px 20px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: 0.015em;
+    color: #FFFFFF;
+}
+.beta-banner a {
+    color: #FFFFFF;
+    text-decoration-line: underline;
+}
 
 #header {
     position: relative;
     z-index: 5;
-    padding: 25px 0 14px 0;
+    padding-bottom: 14px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.12);
     background: #fff;
 }
@@ -387,9 +401,9 @@ header.fullwidth .container {
     border-top: 4px solid #66676b;
 }
 
-#header-container.header-style-2 #header {
-    padding-top: 20px;
-}
+/*#header-container.header-style-2 #header {*/
+/*    padding-top: 20px;*/
+/*}*/
 
 #header-container.header-style-2 #header {
     padding-bottom: 0;
@@ -1175,7 +1189,7 @@ ul.top-bar-menu li i {
     }
 
     #header {
-        padding-top: 20px;
+        /*padding-top: 20px;*/
         border-bottom: 1px solid #E78016;
         box-shadow: none;
     }

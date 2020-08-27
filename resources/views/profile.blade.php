@@ -135,7 +135,7 @@
 
                                 <div id="is_pet" class="checkboxes in-row password-checkbox" style="margin-bottom: 20px;">
                                     <h4>Pet Details:</h4>
-                                    <input id="is_pet_checked" name="is_pet_travelling" type="checkbox" @if(isset($user_detail->is_pet_travelling))) checked @endif>
+                                    <input id="is_pet_checked" name="is_pet_travelling" type="checkbox" @if(Session::get('is_pet_travelling') ?? $user_detail->is_pet_travelling) checked @endif>
                                     <label for="is_pet_checked">Do you travel with a pet?</label>
                                 </div>
 
@@ -154,7 +154,7 @@
 
                                     <label for="pet_image" style="margin: 20px 0;">
                                         <div>Pet Image:</div>
-                                        @if(isset($user_detail->pet_image))
+                                        @if($user_detail->pet_image)
                                             <div id="petImage">
                                                 <img src="{{$user_detail->pet_image}}" alt="" style="height: 100px; width: 100px; border: 1px solid #e78016; border-radius: 100%; object-fit: contain;">
                                                 <input style="display: none;" type="file" name="pet_image" id="pet_image" class="form-control" accept="image/*"/>
@@ -296,7 +296,10 @@
             if (address_line_2) {
                 on_add_address_line_2(undefined, address_line_2);
             }
-            $("#is_pet_checked").trigger('change');
+            var is_pet_travelling = "{{Session::get('is_pet_travelling') ?? $user_detail->is_pet_travelling}}";
+            if(is_pet_travelling) {
+                $("#is_pet_checked").trigger('change');
+            }
         });
 
         $('#is_pet_checked').change(function () {

@@ -59,7 +59,7 @@
                             </div>
                             <div class="col-sm-4">
                                 <select class="chosen-select-no-single" name="room_type" id="room_type" data-placeholder="Home Type">
-                                    <option label="Home Type" value="" disabled selected></option>
+                                    <option label="Home Type" value="" disabled selected>Home Type</option>
                                     @foreach($room_types as $room)
                                         <option value="{{$room->name}}" @if(isset($request_data['room_type']) && $request_data['room_type'] == $room->name) selected @endif>
                                             {{$room->name}}
@@ -71,7 +71,7 @@
                         <div class="row with-forms row-2">
                             <div class="col-lg-2 col-md-3 col-sm-3">
                                 <select class="chosen-select-no-single" name="guests" id="guests" data-placeholder="Guests">
-                                    <option label="Guests" value="" disabled selected></option>
+                                    <option label="Guests" value="" disabled selected>Guests</option>
                                     @for($i=1;$i<=10;$i++)
                                         <option value="{{$i}}"@if(isset($request_data['guests']) && $request_data['guests'] == $i) selected @endif>
                                             {{$i}} Guest

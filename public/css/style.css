@@ -19,6 +19,15 @@
 
 /* 2. Default Common Styles Start ======================== */
 
+:root {
+    --header-height-tablet: 128px;
+}
+@media (max-width: 657px) {
+    :root {
+        --header-height-tablet: 146px;
+    }
+}
+
 body {
     color: #707070;
 }
@@ -65,6 +74,19 @@ input {
 
 .m-0 {
     margin: 0 !important;
+}
+
+select.has-placeholder {
+    color: #888888;
+}
+
+select option,
+select.has-placeholder option {
+    color: black;
+}
+
+select option:first-of-type {
+    display: none;
 }
 
 /* Button ==========*/
@@ -384,11 +406,19 @@ button[disabled], html input[disabled] {
 }
 
 #header {
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     z-index: 5;
+    height: var(--header-height-tablet);
     padding-bottom: 14px;
     border-bottom: 1px solid #E78016;
     background: #fff;
+}
+
+body {
+    padding-top: var(--header-height-tablet);
 }
 
 #header .container {
@@ -987,6 +1017,7 @@ ul.top-bar-menu li i {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    max-width: 140px;
 }
 
 .user-menu ul {
@@ -1069,6 +1100,7 @@ ul.top-bar-menu li i {
 }
 
 #navigation.style-2.cloned {
+    display: none;
     position: fixed;
     top: 0;
     width: 100%;
@@ -1127,20 +1159,28 @@ ul.top-bar-menu li i {
         width: auto;
     }
 
-    .user-menu {
-        max-width: 20%;
-    }
-
     .right-side {
         position: relative;
     }
 }
 
+@media (max-width: 1140px) and (min-width: 992px) {
+
+    #header .container {
+        padding: 20px;
+    }
+
+    .right-side-menu-item a,
+    #navigation.style-2 ul a {
+        padding: 0 10px;
+    }
+}
+
 @media (min-width: 992px) {
 
-    .header-style-2 .right-side-menu-item {
-        float: right !important
-    }
+    /*.header-style-2 .right-side-menu-item {*/
+    /*    float: right !important*/
+    /*}*/
 
     .header-style-2 #navigation ul#responsive {
         width: 100%;
@@ -1330,6 +1370,23 @@ ul.top-bar-menu li i {
     #header-container.header-style-2 .header-widget {
         zoom: 0.7;
     }
+
+    .right-side-menu-item{
+        flex-direction: column;
+        display: none;
+    }
+
+    .right-side-menu-item a {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .sign-in-icon {
+        filter: brightness(5);
+        opacity: 0.5;
+    }
 }
 
 @media (max-width: 767px) {
@@ -1369,16 +1426,6 @@ ul.top-bar-menu li i {
 }
 
 @media (max-width: 480px) {
-
-    #header {
-        position: fixed !important;
-        top: 0;
-        width: 100%;
-    }
-
-    body {
-        padding-top: 97px;
-    }
 
     .mm-blocking.mm-background > body {
         padding-top: 0;
@@ -1749,9 +1796,9 @@ li.mm-vertical.mm-opened > .mm-panel {
     border: 0;
 }
 
-.mm-listview > li.right-side-menu-item {
-    padding: 25px 30px;
-}
+/*.mm-listview > li.right-side-menu-item {*/
+/*    padding: 25px 30px;*/
+/*}*/
 
 .mm-listview > li > a,
 .mm-listview > li > span {
@@ -1904,7 +1951,6 @@ em.mm-counter {
     font-style: normal;
     text-indent: 0;
     line-height: 20px;
-    display: block;
     margin-top: -11px;
     position: absolute;
     right:50px;
@@ -2003,7 +2049,7 @@ html.mm-background .mm-page {
     content: '';
     position: fixed;
     background-color: rgba(0, 0, 0, 0.2);
-    top: 97px;
+    top: var(--header-height-tablet);
     bottom: 0;
     left: 0;
     right: 0;
@@ -2035,7 +2081,7 @@ html.mm-blocking #mm-blocker::after {
 }
 
 .mm-menu.mm-offcanvas {
-    top: 97px;
+    top: var(--header-height-tablet);
     z-index: 9999999;
     min-width: 140px;
     max-width: 300px
@@ -2085,6 +2131,13 @@ html.mm-blocking #mm-blocker::after {
         transform: translate(-100%, 0);
     }
 }
+
+/*@media (max-width: 480px) {*/
+/*    .mm-menu.mm-offcanvas,*/
+/*    #mm-blocker::after {*/
+/*        top: var(--header-height-mobile);*/
+/*    }*/
+/*}*/
 
 @media (max-width: 360px) {
 
@@ -9709,7 +9762,7 @@ img.mfp-img {
 }
 
 .chosen-container .chosen-results li.disabled-result {
-    display: list-item;
+    display: none;
     color: #ccc;
     cursor: default;
 }
@@ -13520,10 +13573,6 @@ button.button.social-login.via-twitter {
 
     .listing-features li {
         margin-right: 18px;
-    }
-
-    #header {
-        padding: 22px 0 12px 0;
     }
 
     .fullwidth-home-slider .item,

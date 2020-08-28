@@ -325,7 +325,7 @@
                         <div class="row with-forms">
                             <form name="test" method="post" action="{{BASE_URL}}properties" onsubmit="return validate_submit()" autocomplete="off" onkeydown="return event.key != 'Enter';">
                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
-                                <div class="row col-md-12">
+                                <div class="col-md-12">
                                     <!-- Main Search Input  -->
                                     <div class="col-md-3 col-sm-12 col-xs-12">
                                         <div class="main-search-input">

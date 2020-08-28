@@ -130,6 +130,12 @@
         } else {
             // setInterval or setTimeout
         }
+
+        var searchSelect = $('.search-container select, .search_container select');
+        searchSelect.addClass('has-placeholder');
+        searchSelect.change(function() {
+            $(this).removeClass('has-placeholder');
+        });
     });
 
     function signOut() {

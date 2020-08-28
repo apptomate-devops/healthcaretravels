@@ -35,7 +35,7 @@
                             <a href="/">Home</a>
                         </li>
                         <li>
-                            <a href="/">Places to Stay</a>
+                            <a href="/properties">Places to Stay</a>
                         </li>
                         <li>
                             <a href="/about_us">About Us</a>
@@ -107,14 +107,14 @@
             </div>
             <!-- Left Side Content / End -->
             <!-- Right Side Content / End -->
-            <div class="right-side">
+            <div id="right-side" class="right-side">
                 <!-- User Menu -->
-                <div class="right-side-menu-item">
+                <div class="right-side-menu-item" id="right-side-menu-item">
                     <a class="button" href="/properties">
                         <i class="fa fa-search"></i> Find a New Home
                     </a>
                     @if(Auth::check() && Auth::user()->id)
-                        <div class="hidden-xs">
+                        <div class="hidden-xs hidden-sm">
                             <div class="user-menu-container">
                                 <div class="user-menu">
                                     <div class="user-name">
@@ -180,23 +180,19 @@
                             </div>
                         </div>
                     @else
-                        <a href="/login" class="sign-in visible-md visible-lg">
-                            <img src="/icons/login.png" alt="" style="height: 20px; width: 20px; margin-right: 10px;">
-                            <span>Log In / Register</span>
-                        </a>
-                        <a href="/login" class="sign-in btn btn-primary hidden-md hidden-lg">
-                            <i class="fa fa-user"></i>
+                        <a href="/login" class="sign-in">
+                            <img src="/icons/login.png" alt="Login" class="sign-in-icon" style="height: 20px; width: 20px; margin-right: 10px;">
                             <span>Log In / Register</span>
                         </a>
                     @endif
                 </div>
-{{--                <ul class="header-widget">--}}
-{{--                    <li class="with-btn">--}}
-{{--                        @if(Session::get('username'))--}}
-{{--                            <a href="{{url('/')}}/owner/add-property" class="button border">Submit Property</a>--}}
-{{--                        @endif--}}
-{{--                    </li>--}}
-{{--                </ul>--}}
+                {{--                <ul class="header-widget">--}}
+                {{--                    <li class="with-btn">--}}
+                {{--                        @if(Session::get('username'))--}}
+                {{--                            <a href="{{url('/')}}/owner/add-property" class="button border">Submit Property</a>--}}
+                {{--                        @endif--}}
+                {{--                    </li>--}}
+                {{--                </ul>--}}
             </div>
             <!-- Right Side Content / End -->
         </div>
@@ -244,6 +240,18 @@
         function closeVerificationModal() {
             document.getElementById("verification-pending-modal").style.height = "0%";
         }
+
+
+        function responsiveRightSide() {
+            if ($(window).width() < 992) {
+                $('.right-side-menu-item').show().appendTo('#mm-1');
+                $('.sign-in').addClass('button');
+            } else {
+                $('.right-side-menu-item').show().appendTo('#right-side');
+                $('.sign-in').removeClass('button');
+            }
+        }
+
         $( window ).on( "load", function() {
             $('.mm-next').click(function(){
                 $('.mm-next').removeClass('active');
@@ -252,7 +260,12 @@
             $('.mm-prev').click(function(){
                 $('.mm-next').removeClass('active');
             });
+            responsiveRightSide();
         });
+
+        // $(window).resize(function () {
+        //     responsiveRightSide();
+        // });
 
         $(document).ready(function() {
             $(".user-menu").hover(function () {

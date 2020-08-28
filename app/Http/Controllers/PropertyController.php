@@ -275,7 +275,7 @@ class PropertyController extends BaseController
 
             $title = isset($welcome->title) ? $welcome->title : 'New booking from - ' . APP_BASE_NAME;
             $subject = isset($welcome->subject) ? $welcome->subject : "New booking from  - " . APP_BASE_NAME;
-            $this->send_custom_email('brijeshbhakta30@gmail.com', $subject, 'mail.booking-mail', $mail_data, $title);
+            $this->send_custom_email($property->email, $subject, 'mail.booking-mail', $mail_data, $title);
 
             return redirect()->intended('/booking_detail/' . $booking_id);
         } else {

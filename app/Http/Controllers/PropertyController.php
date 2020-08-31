@@ -1612,6 +1612,33 @@ class PropertyController extends BaseController
             ->with('pets', $pets);
     }
 
+    public function single_reservations($booking_id, Request $request)
+    {
+        $data = DB::table('property_booking')
+            ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
+            ->join(
+                'property_short_term_pricing',
+                'property_short_term_pricing.property_id',
+                '=',
+                'property_booking.property_id',
+            )
+            ->join('property_booking_price', 'property_booking_price.property_booking_id', '=', 'property_booking.id')
+            ->where('property_booking.client_id', CLIENT_ID)
+            ->where('property_booking.booking_id', $booking_id)
+            ->first();
+        $traveller = DB::select(
+            "SELECT first_name,last_name,role_id,name_of_agency FROM users WHERE id = $data->owner_id",
+        );
+        $data->role_id = $traveller[0]->role_id;
+        if ($traveller[0]->role_id == 2) {
+            $data->traveller_name = $traveller[0]->name_of_agency;
+        } else {
+            $data->traveller_name = $traveller[0]->first_name . " " . $traveller[0]->last_name;
+        }
+        $guest_info = GuestsInformation::where('booking_id', $booking_id)->get();
+        return view('owner.single_reservations', ['data' => $data, 'guest_info' => $guest_info]);
+    }
+
     public function traveller_fire_chat($id, Request $request)
     {
         if ($request->fbkey == "personal_chat") {

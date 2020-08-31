@@ -30,8 +30,12 @@ class OwnerController extends BaseController
             }
         }
 
-        $agency = DB::table('agency')->get();
-        $occupation = DB::table('occupation')->get();
+        $agency = DB::table('agency')
+            ->orderBy('name', 'ASC')
+            ->get();
+        $occupation = DB::table('occupation')
+            ->orderBy('name', 'ASC')
+            ->get();
 
         $country_codes = DB::table('country_code')
             ->where('client_id', '=', $client_id)
@@ -50,6 +54,7 @@ class OwnerController extends BaseController
         $properties = DB::table('property_list')
             ->where('user_id', $user_id)
             ->select('id', 'title')
+            ->orderBy('title', 'ASC')
             ->get();
 
         if ($request->id) {
@@ -201,6 +206,7 @@ class OwnerController extends BaseController
             ->where('client_id', CLIENT_ID)
             ->where('user_id', $request->session()->get('user_id'))
             ->where('is_complete', 1)
+            ->orderBy('title', 'ASC')
             ->get();
         $special_price = DB::table('property_special_pricing')
             ->where('property_special_pricing.client_id', CLIENT_ID)

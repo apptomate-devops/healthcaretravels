@@ -90,7 +90,9 @@ class HomeController extends BaseController
 
     public function faq()
     {
-        $data = DB::table('faq')->get();
+        $data = DB::table('faq')
+            ->orderBy('question', 'ASC')
+            ->get();
         return view('faq', ['data' => $data]);
     }
 
@@ -203,7 +205,9 @@ class HomeController extends BaseController
         $categories = DB::select(
             "SELECT A.image_url,A.location,A.title FROM `home_listings` A, `home_category` B WHERE A.category_id = B.id",
         );
-        $room_types = DB::table('property_room_types')->get();
+        $room_types = DB::table('property_room_types')
+            ->orderBy('name', 'ASC')
+            ->get();
         return view('home', [
             'latest_properties' => $latest_properties,
             'categories' => $categories,

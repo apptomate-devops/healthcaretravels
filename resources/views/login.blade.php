@@ -124,15 +124,12 @@
                                     <select type="text" class="input-text validate {{ $errors->has('user_type') ? 'form-error' : ''}}" onchange="get_form(this.value)" name="user_type" id="user_type" autocomplete="off">
                                         <option label="" selected>Select Account Type</option>
 
-                                        <option value="0" @if(Session::get('type')=="0" ) selected @endif>Healthcare Traveler</option>
-
-                                        <option value="1" @if(Session::get('type')=="1" ) selected @endif>Property Owner</option>
-
                                         <option value="2" @if(Session::get('type')=="2" ) selected @endif>Agency</option>
-
+                                        <option value="4" @if(Session::get('type')=="4" ) selected @endif>Co-Host</option>
+                                        <option value="0" @if(Session::get('type')=="0" ) selected @endif>Healthcare Traveler</option>
+                                        <option value="1" @if(Session::get('type')=="1" ) selected @endif>Property Owner</option>
                                         <option value="3" @if(Session::get('type')=="3" ) selected @endif>RV Healthcare Traveler</option>
 
-                                        <option value="4" @if(Session::get('type')=="4" ) selected @endif>Co-host</option>
                                     </select>
                                 </label>
                                 {!! $errors->first('user_type', '<p class="error-text">:message</p>') !!}
@@ -257,8 +254,8 @@
                             <p class="form-row form-row-wide" id="gender_field" style="display: none;">
                                 <label for="gender">Gender:
                                     <select type="text" class="input-text validate {{ $errors->has('gender') ? 'form-error' : ''}}" name="gender" id="gender" autocomplete="off" required>
-                                        <option value="Male" @if(Session::get('gender')=='Male' ) selected @endif>Male</option>
                                         <option value="Female" @if(Session::get('gender')=='Female' ) selected @endif>Female</option>
+                                        <option value="Male" @if(Session::get('gender')=='Male' ) selected @endif>Male</option>
                                         <option value="Neutral" @if(Session::get('gender')=='Neutral' ) selected @endif>Neutral</option>
                                     </select>
                                 </label>

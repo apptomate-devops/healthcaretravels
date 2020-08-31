@@ -78,8 +78,8 @@ li.sub-nav-title {
                         <label>Category</label>
                         <select class="input-text validate" autocomplete="off"  name="category" id="category" required="required">
                             <option label="" value="" >Select Category</option>
-                            <option value="sp" >Special Pricing</option>
                             <option value="rb" >Room Blocking</option>
+                            <option value="sp" >Special Pricing</option>
                         </select>
                         <label>Property</label>
                         <select class="input-text validate" autocomplete="off"  name="property" id="property" required="required">
@@ -89,10 +89,10 @@ li.sub-nav-title {
                             @endforeach
                         </select>
                         <div id="date" >
-                            <label>Date</label>  
+                            <label>Date</label>
                             <input value="" type="text" name="from_date" id="from_date" required="required">
                         </div>
-                        
+
                         <div id="per_night" style="display: none;">
                             <label>Price Per Night</label>
                             <input value=""  type="text" name="per_night" name="per_night1" placeholder="Price Per Night" onchange="this.value=parseFloat(parseFloat(this.value)).toFixed(2);">
@@ -178,7 +178,7 @@ li.sub-nav-title {
             @endif
             {{-- <a href="{{url('/')}}/owner/add-property" class="margin-top-40 button">Submit New Property</a> --}}
         </div>
-                    
+
         </div>
     </div>
     <script>
@@ -188,7 +188,7 @@ li.sub-nav-title {
             selectMultiple:true,
             multidate: true
         });
-       
+
         $('#category').change(function(){
             var value=$(this).val();
             if(value=="sp"){
@@ -197,7 +197,7 @@ li.sub-nav-title {
                $('#add_price').show();
                $('#description').hide();
                $('#block_room').hide();
-               
+
             }
             if(value=="rb"){
                $('#block_date').show();
@@ -205,8 +205,8 @@ li.sub-nav-title {
                $('#description').show();
                $('#block_room').show();
                $('#add_price').hide();
-              
-              
+
+
             }
 
         });

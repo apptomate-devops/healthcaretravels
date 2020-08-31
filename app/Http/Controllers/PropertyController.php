@@ -998,7 +998,9 @@ class PropertyController extends BaseController
         $total_count = 0;
         $lat_lng_url = '';
         $page = $request->page ?: 1;
-        $room_types = DB::table('property_room_types')->get();
+        $room_types = DB::table('property_room_types')
+            ->orderBy('name', 'ASC')
+            ->get();
 
         if (count(array_filter($request_data)) > 0) {
             $lat_lng = [];
@@ -1748,8 +1750,12 @@ class PropertyController extends BaseController
                     ->where('id', '=', $property_id)
                     ->update(['on_stage' => 2]);
 
-                $room_types = DB::table('property_room_types')->get();
-                $property_types = DB::table('property_types')->get();
+                $room_types = DB::table('property_room_types')
+                    ->orderBy('name', 'ASC')
+                    ->get();
+                $property_types = DB::table('property_types')
+                    ->orderBy('name', 'ASC')
+                    ->get();
                 $client_id = CLIENT_ID;
                 //code to be executed if n=label1; ->with('stage',$stage)
                 $property_bedrooms = DB::table('property_bedrooms')

@@ -88,8 +88,8 @@
 
                             <label> Gender</label>
                             <select name="gender" id="gender" required>
-                                <option value="Male" @if(Session::get('gender')=='Male' || $user_detail->gender =='Male' ) selected @endif>Male</option>
                                 <option value="Female" @if(Session::get('gender')=='Female' || $user_detail->gender =='Female' ) selected @endif>Female</option>
+                                <option value="Male" @if(Session::get('gender')=='Male' || $user_detail->gender =='Male' ) selected @endif>Male</option>
                                 <option value="Neutral" @if(Session::get('gender')=='Neutral' || $user_detail->gender =='Neutral' ) selected @endif>Neutral</option>
                             </select>
 

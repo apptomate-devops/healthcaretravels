@@ -14,6 +14,7 @@ class TransactionController extends BaseController
             ->where('user_id', $user_id)
             ->where('client_id', CLIENT_ID)
             ->select('id', 'title')
+            ->orderBy('title', 'ASC')
             ->get();
 
         $payment_methods = DB::table('payment_method')

@@ -459,7 +459,9 @@ class HomeController extends BaseController
 
     public function add_faq(Request $request)
     {
-        $data = DB::table('faq')->get();
+        $data = DB::table('faq')
+            ->orderBy('question', 'ASC')
+            ->get();
         return view('Admin.faq', ['faq' => $data]);
     }
 

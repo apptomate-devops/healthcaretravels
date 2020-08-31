@@ -240,7 +240,9 @@ class UserController extends BaseController
             ->orderBy('name', 'ASC')
             ->get();
 
-        $occupation = DB::table('occupation')->get();
+        $occupation = DB::table('occupation')
+            ->orderBy('name', 'ASC')
+            ->get();
         $data = [];
         return view('login', [
             'constants' => $constants,
@@ -436,8 +438,12 @@ class UserController extends BaseController
             }
         }
 
-        $agency = DB::table('agency')->get();
-        $occupation = DB::table('occupation')->get();
+        $agency = DB::table('agency')
+            ->orderBy('name', 'ASC')
+            ->get();
+        $occupation = DB::table('occupation')
+            ->orderBy('name', 'ASC')
+            ->get();
 
         $country_codes = DB::table('country_code')
             ->where('client_id', '=', $client_id)

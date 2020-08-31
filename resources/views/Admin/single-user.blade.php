@@ -214,7 +214,7 @@
                                                 <canvas data-enlargable class="pdf-links" data-pdf="{{$d->document_url}}" style="direction: ltr;"></canvas>
                                             </div>
                                         @elseif (\Illuminate\Support\Str::endsWith(strtolower($d->document_url), '.heic'))
-                                            {{-- <span>Render Heic</span> --}}
+                                            <span class="file-loading">Loading...</span>
                                             <img data-enlargable class="gallery-thumbnail card-img-top heic-image" src="{{$d->document_url}}"
                                                 itemprop="thumbnail" alt="Image description">
                                         @else
@@ -327,11 +327,16 @@
             var heicImages = $('.heic-image');
             if (heicImages.length) {
                 $.each(heicImages, function(index, item) {
+                    var $item = $(item);
+                    $item.fadeOut();
+                    $item.parent().find('.file-loading').fadeIn();
                     fetch(item.src)
                         .then((res) => res.blob())
                         .then((blob) => heic2any({ blob }))
                         .then((conversionResult) => {
                             item.src = URL.createObjectURL(conversionResult);
+                            $item.addClass('file-converted');
+                            $item.parent().find('.file-loading').fadeOut();
                         })
                         .catch((e) => {
                             console.error('Error in coverting heic image');

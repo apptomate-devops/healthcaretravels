@@ -38,3 +38,14 @@ canvas[data-enlargable] {
 .field-label {
     margin-right: 5px;
 }
+
+.heic-image {
+    display: none;
+}
+.file-loading {
+    font-size: 16px;
+    display: none;
+}
+.heic-image.file-converted {
+    display: block;
+}

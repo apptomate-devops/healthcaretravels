@@ -12,6 +12,9 @@
 <script type="text/javascript" src="{{URL::asset('js/caleran.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/my-library.js') }}"></script>
 
+{{--Masked Inputs--}}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.60/inputmask/jquery.inputmask.js"></script>
+
 {{-- Date Range Picker--}}
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
@@ -84,6 +87,12 @@
 
     $('input[id="date_range_picker"]').on('cancel.daterangepicker', function(ev, picker) {
         $('input[name="from_date"], input[name="to_date"]').val('');
+    });
+</script>
+
+<script>
+    $('.masked_phone_us').inputmask('(999) 999-9999', {
+        removeMaskOnSubmit: true
     });
 </script>
 <style type="text/css">

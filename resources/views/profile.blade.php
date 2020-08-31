@@ -71,10 +71,10 @@
 
                             <label>Mobile Number</label>
                             @if($user_detail->phone==0)
-                                <input placeholder="+1 (XXX) XXX XXXX" type="text" name="phone" required disabled>
+                                <input class="masked_phone_us" placeholder="+1 (XXX) XXX XXXX" type="text" name="phone" required disabled>
                             @endif
                             @if($user_detail->phone!=0)
-                                <input value="{{$user_detail->phone}}" style="border:{{$user_detail->otp_verified==1?'2px solid #0983b8':'2px solid #e78016'}}" placeholder="+1 (XXX) XXX XXXX" type="text" name="phone" required disabled>
+                                <input class="masked_phone_us" value="{{$user_detail->phone}}" style="border:{{$user_detail->otp_verified==1?'2px solid #0983b8':'2px solid #e78016'}}" placeholder="+1 (XXX) XXX XXXX" type="text" name="phone" required disabled>
                             @endif
                             <div class="caption">{{$user_detail->otp_verified==1?'Mobile Number is Verified':'Mobile Number is not Verified'}}</div>
 
@@ -105,6 +105,17 @@
                             <label>Languages Known</label>
                             <input value="{{Session::get('languages_known') ?? $user_detail->languages_known}}" type="text" name="languages_known" placeholder="English, Spanish">
 
+                            @if($user_detail->role_id == 0 || $user_detail->role_id == 2 || $user_detail->role_id == 3)
+                                <div class="form-row form-row-wide" id="agency_show">
+                                    <label for="agency_name">Agency you work for:</label>
+                                    <p class="register-info">Select as many agencies that you have worked for in the last 12 months.</p>
+                                    <span class="autocomplete-select"></span>
+                                    <div id="add_another_agency" class="add-another" onclick="add_another_agency()" style="cursor: pointer;">Can't find it? Add it here.</div>
+                                    <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
+                                    <label for="other_agency_name" id="other_agency_name" style="display: none;">Other Angency:</label>
+                                    <input type="text" style="display: none;" class="input-text validate" name="other_agency" id="other_agency" value="{{Session::get('other_agency') ?? $user_detail->other_agency}}" placeholder="Other agency" autocomplete="off">
+                                </div>
+                            @endif
                             @if($user_detail->role_id == 0 || $user_detail->role_id == 3)
                                 <label>Occupation</label>
                                 <select class="input-text validate" autocomplete="off" name="occupation" id="occupation" required style=" margin: 0 0 20px;">
@@ -116,16 +127,6 @@
                                 <div id="add_another_occupation" class="add-another" onclick="add_another_occupation(true)" style="cursor: pointer;">Can't find it? Add it here.</div>
                                 <input type="text" style="display: none; margin: 0 0 20px;" class="input-text validate" name="other_occupation" id="other_occupation"  value="{{Session::get('other_occupation') ?? $user_detail->other_occupation}}" placeholder="Other Occupation" autocomplete="off">
                                 <div style="display: none;" id="other_occupation_cancel" class="add-another" onclick="add_another_occupation()" style="cursor: pointer;">Cancel</div>
-
-                                <div class="form-row form-row-wide" id="agency_show">
-                                    <label for="agency_name">Agency you work for:</label>
-                                    <p class="register-info">Select as many agencies that you have worked for in the last 12 months.</p>
-                                    <span class="autocomplete-select"></span>
-                                    <div id="add_another_agency" class="add-another" onclick="add_another_agency()" style="cursor: pointer;">Can't find it? Add it here.</div>
-                                    <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
-                                    <label for="other_agency_name" id="other_agency_name" style="display: none;">Other Angency:</label>
-                                    <input type="text" style="display: none;" class="input-text validate" name="other_agency" id="other_agency" value="{{Session::get('other_agency') ?? $user_detail->other_agency}}" placeholder="Other agency" autocomplete="off">
-                                </div>
 
                                 <div id="is_pet" class="checkboxes in-row password-checkbox" style="margin-bottom: 20px;">
                                     <h4>Pet Details:</h4>
@@ -217,10 +218,10 @@
 
                             @if($user_detail->role_id == 2)
                                 <label for="work">Office Number:</label>
-                                <input type="text" class="input-text validate" value="{{Session::get('work') ?? $user_detail->work}}" name="work" id="work" placeholder="Office Number" maxlength="10" />
+                                <input type="text" class="masked_phone_us input-text validate" value="{{Session::get('work') ?? $user_detail->work}}" name="work" id="work" placeholder="Office Number" />
 
                                 <label for="work_title">Work Title:</label>
-                                <input type="text" class="input-text validate" value="{{Session::get('work_title') ?? $user_detail->work_title}}" name="work_title" id="work_title" placeholder="Work Title" maxlength="10" />
+                                <input type="text" class="input-text validate" value="{{Session::get('work_title') ?? $user_detail->work_title}}" name="work_title" id="work_title" placeholder="Work Title" />
 
                                 <label for="website">Agency URL:</label>
                                 <input type="text" class="input-text validate" value="{{Session::get('website') ?? $user_detail->website}}" name="website" id="website" placeholder="Agency URL" />

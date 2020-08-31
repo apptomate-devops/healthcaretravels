@@ -217,14 +217,14 @@
 
                             <p class="form-row form-row-wide" id="phone_number_field" style="display: none;">
                                 <label for="phone">Mobile Number:
-                                    <input type="text" class="input-text validate {{ $errors->has('phone') ? 'form-error' : ''}}" value="{{Session::get('phone')}}" name="phone" id="phone" maxlength="10" placeholder="Mobile Number" required />
+                                    <input type="text" class="masked_phone_us input-text validate {{ $errors->has('phone') ? 'form-error' : ''}}" value="{{Session::get('phone')}}" name="phone" id="phone" placeholder="Mobile Number" required />
                                 </label>
                                 {!! $errors->first('phone', '<p class="error-text">:message</p>') !!}
                             </p>
 
                             <p class="form-row form-row-wide" id="work_number_field" style="display: none;">
                                 <label for="work">Office Number:
-                                    <input type="text" class="input-text validate {{ $errors->has('work') ? 'form-error' : ''}}" value="{{Session::get('work')}}" name="work" id="work" placeholder="Office Number" maxlength="10" />
+                                    <input type="text" class="masked_phone_us input-text validate {{ $errors->has('work') ? 'form-error' : ''}}" value="{{Session::get('work')}}" name="work" id="work" placeholder="Office Number" />
                                 </label>
                                 {!! $errors->first('work', '<p class="error-text">:message</p>') !!}
                             </p>
@@ -611,8 +611,8 @@
                 $('#add_another_occupation').hide();
                 $('#other_occupation').hide();
                 $('#other_occupation_cancel').hide();
-                $('#agency_show').hide();
-                $('#add_another_agency').hide();
+                $('#agency_show').show();
+                $('#add_another_agency').show();
                 $('#other_agency').hide();
                 $('#other_agency_cancel').hide();
                 $('#agency-caption').hide();

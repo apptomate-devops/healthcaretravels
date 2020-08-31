@@ -141,6 +141,44 @@ class OwnerController extends BaseController
         // echo $id;exit;
         return view('owner.calender', compact('properties', 'id', 'events', 'icals', 'block_events', 'res'));
     }
+
+    public function my_bookings(Request $request)
+    {
+        $from = date("Y-m-d", strtotime($request->start_date));
+        $to = date("Y-m-d", strtotime($request->end_date));
+        DB::table('property_booking')
+            ->where('property_booking.owner_id', $request->session()->get('user_id'))
+            ->update(['owner_notify' => 0]);
+        $data = DB::table('property_booking')
+            ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
+            ->where('property_booking.owner_id', $request->session()->get('user_id'));
+        if ($request->start_date && $request->end_date) {
+            $data->whereBetween('property_booking.start_date', [$from, $to]);
+        }
+        $data = $data->select('property_list.title', 'property_booking.*')->get();
+
+        // print_r($data);exit;
+        foreach ($data as $datum) {
+            $traveller = DB::table('users')
+                ->where('client_id', CLIENT_ID)
+                ->where('id', $datum->traveller_id)
+                ->first();
+            $image = DB::table('property_images')
+                ->where('client_id', CLIENT_ID)
+                ->where('property_id', $datum->property_id)
+                ->first();
+            $datum->image_url = $image->image_url;
+            if ($traveller->role_id != 2) {
+                $datum->traveller_name = $traveller->first_name . ' ' . $traveller->last_name;
+            } else {
+                $datum->traveller_name = $traveller->name_of_agency;
+            }
+        }
+        // print_r($data);exit;
+
+        return view('owner.my_bookings')->with('bookings', $data);
+    }
+
     public function payment_default($id, Request $request)
     {
         DB::table('payment_method')

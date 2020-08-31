@@ -85,7 +85,7 @@ select.has-placeholder option {
     color: black;
 }
 
-select option:first-of-type {
+select.hide-first option:first-of-type {
     display: none;
 }
 

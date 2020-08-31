@@ -279,7 +279,7 @@
                                     </select>
                                 </label>
                             <div id="add_another_occupation" class="add-another" onclick="add_another_occupation(true)" style="cursor: pointer;">Can't find it? Add it here.</div>
-                            <input type="text" style="display: none;" class="input-text validate" name="other_occupation" id="other_occupation"  value="{{Session::get('occupation')}}" placeholder="Other Occupation" autocomplete="off">
+                            <input type="text" style="display: none;" class="input-text validate" name="other_occupation" id="other_occupation"  value="{{Session::get('other_occupation')}}" placeholder="Other Occupation" autocomplete="off">
                             <div style="display: none;" id="other_occupation_cancel" class="add-another" onclick="add_another_occupation()" style="cursor: pointer;">Cancel</div>
                             {!! $errors->first('occupation', '<p class="error-text">:message</p>') !!}
                             </p>
@@ -483,13 +483,10 @@
             add_another_agency(true);
         }
 
-        var allOccupations = <?php echo json_encode($occupation); ?>;
-        let occupation = "{{Session::get('occupation')}}";
-        if (occupation && !allOccupations.some(e => e.name === occupation)) {
+        let occupation = "{{Session::get('other_occupation')}}";
+        if (occupation) {
             add_another_occupation(true);
         }
-
-
     })
 
     let addressFields = [];
@@ -851,18 +848,12 @@
         if(show) {
             $('#add_another_occupation').hide();
             $('#other_occupation').show();
-            $('#occupation').hide();
             $('#other_occupation_cancel').show();
-            $('#other_occupation').attr('name','occupation');
-            $('#occupation').attr('name','other_occupation');
         } else {
             $('#add_another_occupation').show();
             $('#other_occupation').hide();
-            $('#occupation').show();
             $('#other_occupation_cancel').hide();
             $('#other_occupation').val('');
-            $('#occupation').attr('name','occupation');
-            $('#other_occupation').attr('name','other_occupation');
         }
     }
 

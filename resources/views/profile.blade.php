@@ -106,22 +106,16 @@
                             <input value="{{Session::get('languages_known') ?? $user_detail->languages_known}}" type="text" name="languages_known" placeholder="English, Spanish">
 
                             @if($user_detail->role_id == 0 || $user_detail->role_id == 3)
-                                @php $occupation_array = json_decode(json_encode($occupation), True); @endphp
                                 <label>Occupation</label>
-                                <select class="input-text validate" onchange="on_occupation_change(this.value)" autocomplete="off" name="occupation" id="occupation" required>
-                                    <option label="Select Occupation" value="">Select Occupation</option>
+                                <select class="input-text validate" autocomplete="off" name="occupation" id="occupation" required style=" margin: 0 0 20px;">
+                                    <option label="" value="">Select Occupation</option>
                                     @foreach($occupation as $a)
-                                        @if(in_array($user_detail->occupation,$occupation_array) && ($a->name == $user_detail->occupation))
-                                            <option value="{{$a->name}}"  selected >{{$a->name}}</option>
-                                        @elseif(!in_array($user_detail->occupation,$occupation_array) && ($a->name != $user_detail->occupation))
-                                            <option value="{{$a->name}}">{{$a->name}}</option>
-                                        @endif
+                                        <option value="{{$a->name}}" @if(Session::get('occupation')===$a->name || $user_detail->occupation === $a->name) selected @endif>{{$a->name}}</option>
                                     @endforeach
-                                    @if(!in_array($user_detail->occupation,$occupation_array) )
-                                        <option value="{{$user_detail->occupation}}" selected="selected">{{$user_detail->occupation}}</option>
-                                    @endif
-                                    <option value="Others" >Others</option>
                                 </select>
+                                <div id="add_another_occupation" class="add-another" onclick="add_another_occupation(true)" style="cursor: pointer;">Can't find it? Add it here.</div>
+                                <input type="text" style="display: none; margin: 0 0 20px;" class="input-text validate" name="other_occupation" id="other_occupation"  value="{{Session::get('other_occupation') ?? $user_detail->other_occupation}}" placeholder="Other Occupation" autocomplete="off">
+                                <div style="display: none;" id="other_occupation_cancel" class="add-another" onclick="add_another_occupation()" style="cursor: pointer;">Cancel</div>
 
                                 <div class="form-row form-row-wide" id="agency_show">
                                     <label for="agency_name">Agency you work for:</label>
@@ -288,6 +282,12 @@
         $(document).ready(function(){
             set_max_date();
             load_agencies();
+
+            let occupation = "{{Session::get('other_occupation') ?? $user_detail->other_occupation}}";
+            if (occupation) {
+                add_another_occupation(true);
+            }
+
             var otherAgencies = "{{Session::get('other_agency') ?? $user_detail->other_agency}}";
             if(otherAgencies) {
                 add_another_agency(otherAgencies);
@@ -345,24 +345,6 @@
             }
         });
 
-        function get_input_from_prompt(title, id) {
-            let value = prompt(title, '');
-            if (value && !["other", "others"].includes(value.toLowerCase())) {
-                let newOption = $('<option>');
-                newOption.attr('value', value).text(value);
-                $(`#${id}`).append(newOption);
-                $(`#${id}  > [value="${value}"]`).attr("selected", "true");
-            } else {
-                $(`#${id}`).val($(`#${id} option:first`).val());
-            };
-        }
-
-        function on_occupation_change(value) {
-            if (["other", "others"].includes(value.toLowerCase())) {
-                get_input_from_prompt("Occupation:", 'occupation');
-            }
-        }
-
         function on_dob_change(value) {
             const dateString = value;
             let today = new Date();
@@ -376,6 +358,19 @@
                 $('#dob_validation_error').html('You must be 18 or older to register online. Contact <br>​<a href="mailto:{{VERIFY_MAIL}}">{{VERIFY_MAIL}}</a> to create a minor account.')
             } else {
                 $('#dob_validation_error').html('');
+            }
+        }
+
+        function add_another_occupation(show = false) {
+            if(show) {
+                $('#add_another_occupation').hide();
+                $('#other_occupation').show();
+                $('#other_occupation_cancel').show();
+            } else {
+                $('#add_another_occupation').show();
+                $('#other_occupation').hide();
+                $('#other_occupation_cancel').hide();
+                $('#other_occupation').val('');
             }
         }
 

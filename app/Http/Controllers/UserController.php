@@ -584,6 +584,7 @@ class UserController extends BaseController
                 ->with('dob', $request->dob)
                 ->with('gender', $request->gender)
                 ->with('occupation', $request->occupation)
+                ->with('other_occupation', $request->other_occupation)
                 ->with('name_of_agency', $request->name_of_agency)
                 ->with('other_agency', $request->other_agency)
                 ->with('languages_known', $request->languages_known)
@@ -637,6 +638,7 @@ class UserController extends BaseController
             'gender' => $request->gender,
             'languages_known' => $request->languages_known,
             'occupation' => $request->occupation,
+            'other_occupation' => $request->other_occupation,
             'name_of_agency' => $request->name_of_agency,
             'other_agency' => $request->other_agency,
             'tax_home' => $request->tax_home,
@@ -1119,6 +1121,7 @@ class UserController extends BaseController
                 ->with('gender', $request->gender)
                 ->with('languages_known', $request->languages_known)
                 ->with('occupation', $request->occupation)
+                ->with('other_occupation', $request->other_occupation)
                 ->with('name_of_agency', $request->name_of_agency)
                 ->with('other_agency', $request->other_agency)
                 ->with('tax_home', $request->tax_home)
@@ -1156,6 +1159,7 @@ class UserController extends BaseController
                 'gender' => $request->gender,
                 'languages_known' => $request->languages_known,
                 'occupation' => $request->occupation,
+                'other_occupation' => $request->other_occupation,
                 'name_of_agency' => $request->name_of_agency,
                 'other_agency' => $request->other_agency,
                 'tax_home' => $request->tax_home,

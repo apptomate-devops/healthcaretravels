@@ -46,8 +46,6 @@ class OwnerController extends BaseController
     }
     public function calender(Request $request)
     {
-        # code...
-
         $user_id = $request->session()->get('user_id');
         $properties = DB::table('property_list')
             ->where('user_id', $user_id)
@@ -137,6 +135,64 @@ class OwnerController extends BaseController
         // print_r($properties);
         // echo $id;exit;
         return view('owner.calender', compact('properties', 'id', 'events', 'icals', 'block_events', 'res'));
+    }
+    public function payment_default($id, Request $request)
+    {
+        DB::table('payment_method')
+            ->where('client_id', '=', CLIENT_ID)
+            ->where('user_id', $request->session()->get('user_id'))
+            ->where('is_default', ZERO)
+            ->update(['is_default' => ONE]);
+        DB::table('payment_method')
+            ->where('client_id', '=', CLIENT_ID)
+            ->where('id', $id)
+            ->update(['is_default' => ZERO]);
+        $url = BASE_URL . 'owner/payment-method';
+        return redirect($url);
+    }
+
+    public function payment_method_index(Request $request)
+    {
+        $payment_method = DB::table('payment_method')
+            ->where('client_id', '=', CLIENT_ID)
+            ->where('user_id', '=', $request->session()->get('user_id'))
+            ->orderBy('is_default', 'asc')
+            ->get();
+        return view('owner.payment_method', ['payment_method' => $payment_method]);
+    }
+
+    public function property_owner_profile($id, Request $request)
+    {
+        $user = DB::table('users')
+            ->where('id', $id)
+            ->first();
+        $properties = DB::table('property_list')
+            ->join('property_room', 'property_room.property_id', '=', 'property_list.id')
+            ->join('property_short_term_pricing', 'property_short_term_pricing.property_id', '=', 'property_list.id')
+            ->where('property_list.user_id', $id)
+            ->get();
+        $current_date = date('Y-m-d H:i:s');
+
+        $avg_rating = DB::select(
+            "SELECT AVG(A.review_rating) as avg_rating FROM property_review A, property_list B, users C WHERE C.id = B.user_id AND A.property_id = B.id AND C.id = $id",
+        );
+        $ratng = $avg_rating[0]->avg_rating;
+        foreach ($properties as $property) {
+            $date2 = date_create($property->created_at);
+            $date1 = date_create($current_date);
+            $diff = date_diff($date2, $date1);
+            $property->diff = $diff->days;
+
+            $property->images = DB::table('property_images')
+                ->where('property_id', $property->property_id)
+                ->get();
+        }
+        return view('properties.owner_profile', [
+            'avg_rating' => $ratng,
+            'current_date' => $current_date,
+            'user' => $user,
+            'properties' => $properties,
+        ]);
     }
 
     public function special_price(Request $request)

@@ -135,8 +135,8 @@ class PropertyController extends BaseController
             $city_fee_amount = ZERO;
 
             $booking_price['city_fare'] = $city_fee_amount;
-            LOG::info("city_fee_type: " . $pricing_config->city_fee_type);
-            LOG::info("city_fee: " . $city_fee_amount);
+            Logger::info("city_fee_type: " . $pricing_config->city_fee_type);
+            Logger::info("city_fee: " . $city_fee_amount);
 
             $cleaning_fee_amount = ZERO;
 
@@ -171,8 +171,8 @@ class PropertyController extends BaseController
             $cleaning_fee_amount = $service_tax->value;
             $booking_price['cleaning_fare'] = $service_tax->value;
 
-            LOG::info("cleaning_fare _type: " . $pricing_config->cleaning_fee_type);
-            LOG::info("cleaning_fare: " . $cleaning_fee_amount);
+            Logger::info("cleaning_fare _type: " . $pricing_config->cleaning_fee_type);
+            Logger::info("cleaning_fare: " . $cleaning_fee_amount);
             $extra_guest = 0;
             $extra_guest_price = 0;
             $booking_price['extra_guest_price'] = $extra_guest_price;
@@ -201,7 +201,7 @@ class PropertyController extends BaseController
                 $pricing_config->security_deposit +
                 $service_tax->value;
 
-            LOG::info("Deposit: " . $pricing_config->security_deposit);
+            Logger::info("Deposit: " . $pricing_config->security_deposit);
             $total_price = $total_price;
             $due_now = $this->get_percentage($pricing_config->first_payment_percentage, $total_price);
             $booking_price['cleaning_fare'] = $service_tax->value;
@@ -216,7 +216,7 @@ class PropertyController extends BaseController
             $booking_price['weekend_fare'] = $pricing_config->price_per_weekend;
 
             $log_data = json_encode($booking_price);
-            LOG::info("final array: " . $log_data);
+            Logger::info("final array: " . $log_data);
             DB::table('property_booking_price')->insert($booking_price);
 
             $insert_data = DB::table('property_booking_price')
@@ -2743,7 +2743,7 @@ class PropertyController extends BaseController
         }
 
         //        $request_data = print_r($request->all());
-        //        LOG::info("Aminities add hitted with data :".$request_data);
+        //        Logger::info("Aminities add hitted with data :".$request_data);
         $c_data = DB::table('property_list')
             ->where('client_id', '=', CLIENT_ID)
             ->where('id', $request->property_id)

@@ -210,12 +210,12 @@
                                             <img data-enlargable class="gallery-thumbnail card-img-top" src="{{$d->document_url}}"
                                                  itemprop="thumbnail" alt="Image description">
                                         </a> --}}
-                                        @if (\Illuminate\Support\Str::endsWith($d->document_url, '.pdf'))
+                                        @if (\Illuminate\Support\Str::endsWith(strtolower($d->document_url), '.pdf'))
                                             {{-- <span>Render PDF</span> --}}
                                             <div class="pdf-wrapper">
                                                 <canvas data-enlargable class="pdf-links" data-pdf="{{$d->document_url}}" style="direction: ltr;"></canvas>
                                             </div>
-                                        @elseif (\Illuminate\Support\Str::endsWith($d->document_url, '.heic'))
+                                        @elseif (\Illuminate\Support\Str::endsWith(strtolower($d->document_url), '.heic'))
                                             {{-- <span>Render Heic</span> --}}
                                             <img data-enlargable class="gallery-thumbnail card-img-top heic-image" src="{{$d->document_url}}"
                                                 itemprop="thumbnail" alt="Image description">

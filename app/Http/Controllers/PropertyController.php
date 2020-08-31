@@ -998,6 +998,9 @@ class PropertyController extends BaseController
         $total_count = 0;
         $lat_lng_url = '';
         $page = $request->page ?: 1;
+        $items_per_page = SEARCH_ITEM_COUNT;
+        $offset = ($page - 1) * $items_per_page;
+
         $room_types = DB::table('property_room_types')
             ->orderBy('name', 'ASC')
             ->get();
@@ -1011,8 +1014,6 @@ class PropertyController extends BaseController
             }
             $source_lat = $request->lat;
             $source_lng = $request->lng;
-            $items_per_page = 10;
-            $offset = ($page - 1) * $items_per_page;
             $property_list_obj = new PropertyList();
 
             $query = $property_list_obj
@@ -1025,7 +1026,7 @@ class PropertyController extends BaseController
                     'property_list.id',
                 )
                 ->leftjoin('property_blocking', 'property_blocking.property_id', '=', 'property_list.id')
-                ->select('property_list.*', 'property_room.*', 'property_short_term_pricing.*', 'property_blocking.*')
+                ->select('property_list.*', 'property_room.*', 'property_short_term_pricing.*')
                 ->where('property_list.is_complete', '=', ACTIVE)
                 ->where('property_list.status', '=', 1)
                 ->where('property_list.property_status', '=', 1);
@@ -1151,7 +1152,8 @@ class PropertyController extends BaseController
             ->with('request_data', $request_data)
             ->with('total_properties', count($nearby_properties))
             ->with('next', $page)
-            ->with('room_types', $room_types);
+            ->with('room_types', $room_types)
+            ->with('offset', $offset);
     }
 
     public function set_favourite($property_id, Request $request)

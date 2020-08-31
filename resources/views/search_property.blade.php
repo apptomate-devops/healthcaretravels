@@ -182,13 +182,13 @@
                     </div>
                     <div class="row with-forms button-container">
                         <div class="col-xs-6">
-                            <button onclick="nextpage({{$next-1}})" value="PREVIOUS" class="button">
+                            <button id="previous" onclick="nextpage({{$next-1}})" value="PREVIOUS" class="button" disabled>
                                 PREVIOUS
                             </button>
                         </div>
                         <div class="col-xs-6 text-right">
                             <input type="hidden" id="page" name="next" value="{{$next+1}}">
-                            <button id="next" onclick="nextpage({{$next+1}})" value="NEXT" class="button">
+                            <button id="next" onclick="nextpage({{$next+1}})" value="NEXT" class="button" disabled>
                                 NEXT
                             </button>
                         </div>
@@ -338,7 +338,10 @@
 
         $(function () {
             var properties = <?php echo json_encode($properties); ?>;
-            var request_data = <?php echo json_encode($request_data); ?>;
+            var requestData = <?php echo json_encode($request_data); ?>;
+            var pageNo = <?php echo json_encode($next); ?>;
+            var totalCount = <?php echo json_encode($total_count); ?>;
+            var offset = <?php echo json_encode($offset); ?>;
 
             if(properties.length) {
                 $('.no-properties').hide();
@@ -358,7 +361,7 @@
                 });
                 $('#search_criteria').text(criterias);
             } else {
-                if(Object.keys(request_data).length) {
+                if(Object.keys(requestData).length) {
                     $('.no-properties').show();
                 }
                 $('.search_container').show();
@@ -374,6 +377,13 @@
                 $('.search_container').hide();
                 $('.properties_container').show();
             });
+
+            if(pageNo > 1) {
+                $('#previous').prop("disabled", false);
+            }
+            if(totalCount > (offset + properties.length)) {
+                $('#next').prop("disabled", false);
+            }
 
             function get_price_range() {
                 var price_range = [
@@ -441,8 +451,8 @@
                 }
             });
 
-            if(request_data.room_type) {
-                show_current_occupacy(request_data.room_type);
+            if(requestData.room_type) {
+                show_current_occupacy(requestData.room_type);
             };
 
             $('#room_type').change(function () {

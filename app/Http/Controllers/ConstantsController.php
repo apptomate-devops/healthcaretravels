@@ -110,6 +110,7 @@ define('ETHNICITY', [
 //define("UPLOAD_CLOUD_NAME","dazx7zpzb");
 define("START_YEAR", "2018");
 define("END_YEAR", "2040");
+define("SEARCH_ITEM_COUNT", 10);
 $all_settings = Settings::all();
 foreach ($all_settings as $setting) {
     switch ($setting->param) {

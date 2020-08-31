@@ -14,15 +14,13 @@
                 <h4 class="card-title"><span class="field-label">Username:</span>{{$data->username}}</h4>
                 <h6 class="card-subtitle text-muted"><span class="field-label">Name:</span>{{$data->first_name ?? ''}} {{$data->last_name ?? ''}}</h6>
                 <br>
-                <h6 class="card-subtitle text-muted"><span class="field-label">Type:</span>@if($data->role_id==0)Traveler @elseif($data->role_id==1)
-                        Owner @else Travel Agency @endif
-                </h6>
+                <h6 class="card-subtitle text-muted"><span class="field-label">Type:</span>{{strtolower($data->role)}}</h6>
                 <br>
                 <h6 class="card-subtitle text-muted"><span class="field-label">Phone:</span>{{$data->phone ?? '-'}}</h6>
                 <br>
                 <h6 class="card-subtitle text-muted"><span class="field-label">Email:</span>{{$data->email ?? '-'}}</h6>
                 <br>
-                <h6 class="card-subtitle text-muted"><span class="field-label">Agency:</span>{{$data->other_agency ?? $data->name_of_agency ?? ""}}</h6>
+                <h6 class="card-subtitle text-muted"><span class="field-label">Name of Agency:</span>{{$data->other_agency ?? $data->name_of_agency ?? ""}}</h6>
                 <br>
                 <div class="text-center">
                     @if($data->facebook_url!='0')
@@ -61,7 +59,7 @@
                         href="{{BASE_URL}}admin/verify_profile/{{$data->id}}"
                         >
                         <span style="height:29px">
-                            Click here to Verify This @if($data->role_id==0) Traveler @elseif($data->role_id==1) Owner @else  Travel Agency @endif
+                            Click here to verify This {{strtolower($data->role)}}
                         </span>
                     </a>
                 @endif

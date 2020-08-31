@@ -545,6 +545,22 @@ class HomeController extends BaseController
         return view('Admin.mail-password-reset', ['password' => $password]);
     }
 
+    public function get_document($file_name, Request $request)
+    {
+        $encryptedFileName = $file_name . '.dat';
+        $qualifiedFilePath = storage_path('app/' . $encryptedFileName);
+        if (!\Storage::disk('local')->exists($encryptedFileName)) {
+            return abort('404');
+        }
+        $encryptedContents = \Storage::get($file_name . '.dat');
+        $decryptedContents = \Crypt::decrypt($encryptedContents);
+        $data = $this->get_encrypted_file($file_name);
+        return response()->make($data['content'], 200, [
+            'Content-Type' => $data['type'],
+            'Content-Disposition' => 'attachment; filename="' . pathinfo($file_name, PATHINFO_BASENAME) . '"',
+        ]);
+    }
+
     public function save_config(Request $request)
     {
         if ($request->id) {

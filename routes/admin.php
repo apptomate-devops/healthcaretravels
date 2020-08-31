@@ -11,10 +11,6 @@
  */
 use Illuminate\Http\Request;
 
-Route::middleware(['AdminCheck'])->group(function () {
-    Route::get('/documents/{file_name}', 'HomeController@get_document');
-});
-
 Route::group(['prefix' => 'admin'], function () {
     Route::GET('/', 'Admin\HomeController@index')->name('admin.login');
     Route::POST('/', 'Admin\HomeController@make_login')->name('admin.make_login');
@@ -24,6 +20,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::GET('/index', 'Admin\HomeController@dashboard')->name('admin.home');
         Route::GET('/settings', 'Admin\SettingsController@index');
         Route::POST('/settings', 'Admin\SettingsController@update');
+        Route::get('/documents/{file_name}', 'Admin\HomeController@get_document')->where(['file_name' => '.*']);
 
         //  User management routes
         Route::GET('/admin-users', 'Admin\UsersController@index');

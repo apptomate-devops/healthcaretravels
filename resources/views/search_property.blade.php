@@ -358,7 +358,7 @@
                 });
                 $('#search_criteria').text(criterias);
             } else {
-                if(request_data.length) {
+                if(Object.keys(request_data).length) {
                     $('.no-properties').show();
                 }
                 $('.search_container').show();

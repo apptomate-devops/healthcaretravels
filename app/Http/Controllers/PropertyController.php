@@ -1024,7 +1024,7 @@ class PropertyController extends BaseController
                     '=',
                     'property_list.id',
                 )
-                ->join('property_blocking', 'property_blocking.property_id', '=', 'property_list.id')
+                ->leftjoin('property_blocking', 'property_blocking.property_id', '=', 'property_list.id')
                 ->select('property_list.*', 'property_room.*', 'property_short_term_pricing.*', 'property_blocking.*')
                 ->where('property_list.is_complete', '=', ACTIVE)
                 ->where('property_list.status', '=', 1)

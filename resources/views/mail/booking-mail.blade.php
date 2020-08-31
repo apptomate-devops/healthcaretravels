@@ -159,8 +159,10 @@
                                     @endif
                                     <tr class="editable-fields" id="total_amount">
                                     <td colspan="2">
-                                        <div class="total_amount" style=" color: white; background-color: #e78016; font-weight: bold; padding: 10px; text-align: center;">
-                                            <a href="{{URL('/')}}" style="color: white" target="_blank">Accept Request</a>
+                                        <div class="total_amount" style="margin: 10px 0;color: white; background-color: #e78016; font-weight: bold; padding: 10px; text-align: center;">
+                                            <a href="{{BASE_URL}}owner/single-booking/{{$data->booking_id}}" style="color: white" target="_blank">
+                                                Accept Request
+                                            </a>
                                         </div>
                                     </td>
                                     </tr>
@@ -172,7 +174,6 @@
                                     @endif
                                 </tbody>
                             </table>
-                            <hr>
                         </section>
                     </div>
                 </section>

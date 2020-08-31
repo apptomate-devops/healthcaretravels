@@ -55,7 +55,11 @@ class OwnerController extends BaseController
     }
     public function single_user(Request $request)
     {
-        $data = $this->user::where('id', $request->id)->first();
+        $data = $this->user
+            ::leftJoin('user_role', 'users.role_id', '=', 'user_role.id')
+            ->select('users.*', 'user_role.role')
+            ->where('users.id', $request->id)
+            ->first();
         $document = DB::table('documents')
             ->where('user_id', $request->id)
             ->get();

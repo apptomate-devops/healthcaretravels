@@ -170,7 +170,7 @@
                                     <p id="letter" class="invalid-password">At least one lowercase letter</p>
                                     <p id="capital" class="invalid-password">At least one uppercase letter</p>
                                     <p id="number" class="invalid-password">At least one number</p>
-                                    <p id="special_character" class="invalid-password">At least one special character (@#^_+=:;><~$!%*?&)</p>
+                                    <p id="special_character" class="invalid-password">At least one special character (@#^_+=:;><~$!%*?&.)</p>
                                     <p id="length" class="invalid-password">At least 8 characters long</b></p>
                                 </div>
 
@@ -943,7 +943,7 @@
             $('#length').removeClass('valid-password').addClass('invalid-password');
         }
 
-        if (password.match(/(?=.*[!,%,&,@,#,$,^,*,?,_,~,<,>,])/)) {
+        if (password.match(/(?=.*[!,%,&,@,#,$,^,*,?,_,~,<,>,.])/)) {
             strength += 1;
             $('#special_character').removeClass('invalid-password').addClass('valid-password');
         } else {

@@ -82,6 +82,10 @@
                                         </div>
                                     @endif
                                     <div class="col-md-6">
+                                        <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
+                                        <input type="file" name="government_id" id="government_id" class="form-control" required accept="{{$filtypes}}" />
+                                    </div>
+                                    <div class="col-md-6">
                                         <label>Lease Agreement</label>
                                         <div class="caption-text">If approved by your state for subleasing</div>
                                         <input type="file" name="lease_agreement" id="lease_agreement" class="form-control" accept="{{$filtypes}}" />
@@ -90,10 +94,6 @@
                                         <label>Utility Bill</label>
                                         <div class="caption-text">With proof of name and listing address</div>
                                         <input type="file" name="utility_bill" id="utility_bill" class="form-control" accept="{{$filtypes}}" />
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control" required accept="{{$filtypes}}" />
                                     </div>
 
 
@@ -177,6 +177,13 @@
                                         </div>
                                     @endif
                                     <div class="col-md-6">
+                                        <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
+                                        <input type="file" name="government_id" id="government_id" class="form-control" accept="{{$filtypes}}" />
+                                        {{--                                        @if(isset($GOVERNMENT_ID->document_type))--}}
+                                        {{--                                            <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>--}}
+                                        {{--                                        @endif--}}
+                                    </div>
+                                    <div class="col-md-6">
                                         <label>Work Badge </label>
                                         <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept="{{$filtypes}}" />
                                         @if(isset($WORK_BADGE_ID->document_type))
@@ -189,13 +196,6 @@
                                         @if(isset($TRAVEL_CONTRACT_ID->document_type))
                                             <a href="{{$TRAVEL_CONTRACT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control" accept="{{$filtypes}}" />
-                                        {{--                                        @if(isset($GOVERNMENT_ID->document_type))--}}
-                                        {{--                                            <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>--}}
-                                        {{--                                        @endif--}}
                                     </div>
 
                                     {{------- Traveler or RV Traveler Verification ----- END ---------------}}

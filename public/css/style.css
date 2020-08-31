@@ -2065,6 +2065,13 @@ html.mm-blocking #mm-blocker::after {
     opacity: 1;
 }
 
+html.mm-opened.mm-blocking.mm-opening body {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
 .mm-menu.mm-offcanvas {
     z-index: 0;
     position: fixed;

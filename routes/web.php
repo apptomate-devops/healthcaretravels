@@ -142,6 +142,9 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::POST('/owner/add-new-property/6', 'PropertyController@property_next6');
     Route::POST('/owner/add-new-property/7', 'PropertyController@property_next7');
     Route::get('/owner/payment-method', 'OwnerController@payment_method_index');
+    Route::GET('/owner/my-bookings', 'OwnerController@my_bookings');
+    Route::GET('/owner/bookings', 'OwnerController@my_bookings');
+    Route::GET('/owner/single-booking/{id}', 'PropertyController@single_booking');
     Route::POST('/owner/property/file-upload', 'PropertyController@property_image_upload');
     Route::GET('/owner-update-booking', 'PropertyController@owner_update_booking');
     Route::get('/owner/update-property/{id}', 'PropertyController@update_property');
@@ -151,4 +154,7 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::GET('/owner/calender', 'OwnerController@calender');
     Route::get('/owner/chat/{id}', 'PropertyController@fire_chat');
     Route::GET('/ical/{id}', 'IcalController@ical');
+
+    // Payment and Invoices
+    Route::GET('/invoice/{id}', 'PDF_Controller@invoice');
 });

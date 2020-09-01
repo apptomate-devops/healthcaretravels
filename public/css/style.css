@@ -1140,9 +1140,9 @@ ul.top-bar-menu li i {
 
 @media (max-width: 1366px) and (min-width: 1240px) {
 
-    .user-menu {
-        max-width: 28%;
-    }
+    /*.user-menu {*/
+    /*    max-width: 28%;*/
+    /*}*/
 }
 
 @media (max-width: 1239px) and (min-width: 992px) {

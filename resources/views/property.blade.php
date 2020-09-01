@@ -1028,9 +1028,9 @@
                             <!-- onchange="get_price({{$property_id}})" -->
                                 <input type="hidden" id="guest" name="guest_count">
                                 <select required onchange="get_price({{$property_id}});" class="chosen-select-no-single validate" id="current_guest_count" >
-                                    <option>Guests</option>
+                                    <option selected disabled>Guests</option>
                                     @for($i=1;$i<=$data->total_guests;$i++)
-                                        <option value="{{$i}}">{{$i}} Guest</option>
+                                <option value="{{$i}}">{{$i}} Guest{{$i > 1 ? 's' : ''}}</option>
                                     @endfor
 
                                 </select>
@@ -1071,7 +1071,7 @@
                                 </div>
                                 @if(Session::get('user_id') !=  $data->user_id)
                                     @if(!Session::get('user_id'))
-                                        <button onclick="location.href='{{BASE_URL}}/login';" class="button fullwidth margin-top-5">
+                                        <button onclick="location.href='{{BASE_URL}}login';" class="button fullwidth margin-top-5">
                                             Login to Book
                                         </button>
                                     @else

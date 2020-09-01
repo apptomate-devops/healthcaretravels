@@ -97,7 +97,7 @@ class Handler extends ExceptionHandler
             $handler = new SymfonyExceptionHandler();
             $html = $handler->getHtml($e);
             $emails = ['brijeshbhakta30@gmail.com', 'phpatel.4518@gmail.com'];
-            if (config('app.env') == 'stage') {
+            if (!in_array(config('app.env'), ['test', 'local'])) {
                 $stage_emails_notify = [
                     'info@healthcaretravels.com',
                     'ldavis@healthcaretravels.com',

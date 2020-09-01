@@ -1071,7 +1071,7 @@
                                 </div>
                                 @if(Session::get('user_id') !=  $data->user_id)
                                     @if(!Session::get('user_id'))
-                                        <button onclick="location.href='{{BASE_URL}}/login';" class="button fullwidth margin-top-5">
+                                        <button onclick="location.href='{{BASE_URL}}login';" class="button fullwidth margin-top-5">
                                             Login to Book
                                         </button>
                                     @else

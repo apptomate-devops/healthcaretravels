@@ -46,7 +46,7 @@
                                         <select class="chosen-select-no-single validate" name="guest_count" id="guest_count" data-placeholder="How many guests can stay on your property?">
                                             <option label=""></option>
                                             @for($i=1;$i<=$guest_count;$i++)
-                                                <option value="{{$i}}">{{$i}} Guest</option>
+                                                <option value="{{$i}}">{{$i}} Guest{{$i > 1 ? 's' : ''}}</option>
                                             @endfor
                                         </select>
                                     </div>

@@ -3018,7 +3018,7 @@ class PropertyController extends BaseController
             $propertys = [];
             $propertysd = [];
             if (count($pd) > 0) {
-                if (isset($cover_img) && count($cover_img) == 1) {
+                if (isset($cover_img) && is_array($cover_img) && count($cover_img) == 1) {
                     $property->image_url = $cover_img->image_url;
                 } else {
                     $property->image_url = $pd[ZERO]->image_url;

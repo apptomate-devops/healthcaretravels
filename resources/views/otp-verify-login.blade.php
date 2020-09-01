@@ -159,7 +159,8 @@
             alert('Please Login to continue.');
             return;
         }
-        var url = '/sent_otp/' + phone_no + '/' + user_id;
+        var phone = $('.masked_phone_us').inputmask('unmaskedvalue');
+        var url = '/sent_otp/' + phone + '/' + user_id;
         $.ajax({
             type:'GET',
             url,

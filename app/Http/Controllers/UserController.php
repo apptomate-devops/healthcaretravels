@@ -552,8 +552,8 @@ class UserController extends BaseController
                 'required|email:rfc,dns|unique:users,email|regex:/^([\w\-.]+@(?!gmail.com)(?!yahoo.com)(?!hotmail.com)(?!yahoo.co.in)(?!aol.com)(?!abc.com)(?!xyz.com)(?!pqr.com)(?!rediffmail.com)(?!live.com)(?!outlook.com)(?!me.com)(?!msn.com)(?!ymail.com)([\w-]+\.)+[\w-]{2,4})?$/i';
             $rules["work"] = 'required';
             $rules["work_title"] = 'required';
-            $rules["occupation"] = 'required_without:other_occupation';
-            $rules["other_occupation"] = 'required_without:occupation';
+            //            $rules["occupation"] = 'required_without:other_occupation';
+            //            $rules["other_occupation"] = 'required_without:occupation';
             $rules["website"] = 'required|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
             $rules["name_of_agency"] = 'required_without:other_agency';
             $rules["other_agency"] = 'required_without:name_of_agency';
@@ -867,11 +867,13 @@ class UserController extends BaseController
                     ->where('phone', $phone_no)
                     ->where('client_id', '=', CLIENT_ID)
                     ->first();
-                if ($checkPhoneNumber) {
-                    return response()->json([
-                        'status' => 'Failure',
-                        'message' => 'Phone number is linked to another account. Try another phone number',
-                    ]);
+                if (APP_ENV != 'test' || APP_ENV != 'local') {
+                    if ($checkPhoneNumber) {
+                        return response()->json([
+                            'status' => 'Failure',
+                            'message' => 'Phone number is linked to another account. Try another phone number',
+                        ]);
+                    }
                 }
             }
             $OTP = rand(1111, 9999);

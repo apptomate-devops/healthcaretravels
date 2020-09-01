@@ -633,7 +633,7 @@
                 $('#pet_details').hide();
 
                 $('#email-label').text('Work Email Address:');
-                $('#email2').val('');
+                $('#email2').val("{{Session::get('mail')}}");
                 $('#address_label').text('Address:');
 
                 addressFields = [];

@@ -70,7 +70,7 @@
                             <input type="hidden" name="_token" value="{{csrf_token()}}" />
                             <div class="col-md-12 my-profile" style="padding-top: 15px;">
                                 <div class="info-text" style="margin-bottom: 20px;">
-                                    You must complete at least <b>three</b> verification methods in order to submit your profile for verification. Please submit within seven days to be granted full access to all of Health Care Travels' features.
+                                    You must complete at least <b>three</b> verification methods in order to submit your profile for verification. Please submit within <b>seven</b> days to be granted full access to all of Health Care Travels' features.
                                 </div>
                                 @if($user->role_id == 1)
 

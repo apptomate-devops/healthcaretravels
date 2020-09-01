@@ -243,12 +243,14 @@
 
 
         function responsiveRightSide() {
+            var rightSideMenu = $('.right-side').html(),
+                mmMenu = $('.mm-menu > .mm-panels > .mm-panel:first-child');
+
+            mmMenu.addClass('mm-right-side-menu');
+
             if ($(window).width() < 992) {
-                $('.right-side-menu-item').show().appendTo('#mm-1');
+                $('.mm-right-side-menu').append(rightSideMenu);
                 $('.sign-in').addClass('button');
-            } else {
-                $('.right-side-menu-item').show().appendTo('#right-side');
-                $('.sign-in').removeClass('button');
             }
         }
 

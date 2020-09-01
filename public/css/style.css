@@ -1218,6 +1218,7 @@ ul.top-bar-menu li i {
     .right-side{
         float: none;
         width: 100%;
+        position: relative;
     }
 
     #header {
@@ -1371,9 +1372,13 @@ ul.top-bar-menu li i {
         zoom: 0.7;
     }
 
-    .right-side-menu-item{
+    .right-side-menu-item {
         flex-direction: column;
         display: none;
+    }
+
+    .mm-right-side-menu .right-side-menu-item {
+        display: block;
     }
 
     .right-side-menu-item a {
@@ -2107,6 +2112,10 @@ html.mm-opened.mm-blocking.mm-opening body {
 
     .mmenu-trigger {
         display: block;
+    }
+
+    .header_double_height .mmenu-trigger {
+        top: 18px;
     }
 
     .mm-panels > .mm-panel.mm-hasnavbar .mm-navbar .mm-title {

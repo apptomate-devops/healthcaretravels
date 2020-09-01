@@ -13,7 +13,7 @@
     <!-- Header -->
     <div id="header">
         <div class="beta-banner">
-            Health Care Travels is currently in the beta phase. Please <a href="mailto:support@healthcaretravels.com">contact us</a> if you encounter any issues.
+            Health Care Travels is currently in the beta phase. Please <a href="/contact">contact us</a> if you encounter any issues.
         </div>
         <div class="container">
             <!-- Left Side Content -->

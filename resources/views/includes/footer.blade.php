@@ -27,7 +27,7 @@
                 <h4>Helpful Links</h4>
                 <ul class="footer-links">
                     <!-- https://docs.google.com/forms/d/e/1FAIpQLSfAqkiqDWb4SVrS9ySxpGTVRFDTqX2noe3ItyKiGFBYwFmqeg/viewform?fbclid=IwAR2t27UuX3zLHL3fAl3gAgL_qEdDgZv4vF3U_mzCvdHAs4dEOuZGunsVJHA -->
-                    <li><a href="{{url('/')}}/login" target="_blank" class="sign-in">Login</a></li>
+                    <li><a href="{{url('/')}}/login" target="_blank">Login</a></li>
                     {{-- <li><a href="{{url('/')}}/rv-register" target="_blank" class="sign-in">RV Login</a></li> --}}
                     {{-- <li><a href="#" target="_blank" class="sign-in">RV Login</a></li> --}}
                     <li><a href="{{url('/')}}/terms-of-use">Terms Of Use</a></li>

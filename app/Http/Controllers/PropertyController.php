@@ -2323,6 +2323,7 @@ class PropertyController extends BaseController
                 'trash_pickup_days' => $trash_pickup_days,
                 'lawn_service' => $request->lawn_service,
                 'pets_allowed' => $request->pets_allowed,
+                'stage' => 3,
             ]);
 
         $prop = DB::table('property_list')
@@ -2384,7 +2385,10 @@ class PropertyController extends BaseController
             $msg = "Price added successfully";
             $update_on_stage = DB::table('property_list')
                 ->where('id', $request->property_id)
-                ->update(['on_stage' => 4]);
+                ->update([
+                    'on_stage' => 4,
+                    'stage' => 4,
+                ]);
         } else {
             $update = DB::table('property_short_term_pricing')
                 ->where('property_id', $request->property_id)

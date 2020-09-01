@@ -2114,9 +2114,9 @@ html.mm-opened.mm-blocking.mm-opening body {
         display: block;
     }
 
-    .header_double_height .mmenu-trigger {
-        top: 18px;
-    }
+    /*.header_double_height .mmenu-trigger {*/
+    /*    top: 18px;*/
+    /*}*/
 
     .mm-panels > .mm-panel.mm-hasnavbar .mm-navbar .mm-title {
         display: none;

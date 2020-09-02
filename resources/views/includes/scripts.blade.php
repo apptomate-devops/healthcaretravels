@@ -157,7 +157,11 @@
         }
 
         var searchSelect = $('.search-container select, .search_container select');
-        searchSelect.addClass('has-placeholder');
+        searchSelect.each(function (e) {
+            if(!$(this).val()) {
+                searchSelect.addClass('has-placeholder');
+            }
+        })
         searchSelect.change(function() {
             $(this).removeClass('has-placeholder');
         });

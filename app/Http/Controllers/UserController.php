@@ -632,6 +632,10 @@ class UserController extends BaseController
         if (isset($request->is_pet_travelling)) {
             $petImage = $this->base_image_upload($request, 'pet_image', 'pets');
         }
+        $profileImage = '';
+        if (isset($request->profile_image)) {
+            $profileImage = $this->base_image_upload($request, 'profile_image', 'users');
+        }
         $insert = DB::table('users')->insert([
             'client_id' => $request->client_id,
             'role_id' => $role_id,
@@ -672,6 +676,7 @@ class UserController extends BaseController
             'pet_breed' => isset($request->is_pet_travelling) ? $request->pet_breed : '',
             'pet_weight' => isset($request->is_pet_travelling) ? $request->pet_weight : '',
             'pet_image' => isset($request->is_pet_travelling) ? $petImage : '',
+            'profile_image' => $profileImage,
         ]);
 
         $d = DB::table('users')

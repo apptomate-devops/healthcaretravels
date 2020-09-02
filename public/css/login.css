@@ -248,6 +248,21 @@
     color: #ffa74a;
 }
 
+#profile_image_field {
+    text-align: center;
+}
+#profile_image_field label{
+    text-align: left;
+    margin-bottom: 10px;
+}
+#profile_image_field img{
+    height: 100px;
+    width: 100px;
+    border: 1px solid #e78016;
+    border-radius: 100%;
+    object-fit: contain;
+    margin-bottom: 20px;
+}
 @media (max-width: 992px) {
     .login-page .right-side {
         display: none;

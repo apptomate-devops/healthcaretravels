@@ -592,7 +592,7 @@
                                 <div class="carousel-item">
                                     <div class="listing-item" style="text-align: center;">
                                         <!-- <div class="col-md-4" style="/*background-color: #f7f7f7;*/border:1px solid #DBDBDB !important;border-color: white;"> -->
-                                        <div style="/*background-color: #f7f7f7;*/border:1px solid #DBDBDB !important;border-color: white;height: 250px;">
+                                        <div style="/*background-color: #f7f7f7;*/border:1px solid #DBDBDB !important;border-color: white;min-height: 250px;">
                                             <div style="padding: 20px;">
                                                 <?php
                                                 $rooms = explode(",", $bedroom[0]->bed_types);

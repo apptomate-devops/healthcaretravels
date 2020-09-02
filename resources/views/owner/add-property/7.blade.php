@@ -218,6 +218,9 @@
                         $('#confirmationModal').modal('show');
                     }
                 },
+                selectOverlap: function(event) {
+                    return event.rendering === 'background';
+                },
                 events: [
                         @foreach($events as $event)
                     {
@@ -308,7 +311,6 @@
         function show_alert_message(msg = "Please fill all fields") {
             show_snackbar(msg);
             setTimeout(function(){ remove_snackbar(); }, 4000);
-            return false;
         };
 
         $("#add_ical").click(function(){
@@ -317,7 +319,10 @@
             var ical_name = $("#ical_name").val();
             var ical_url = $("#ical_url").val();
 
-            if(ical_name == "" || ical_url == "") { show_alert_message(); }
+            if(ical_name == "" || ical_url == "") {
+                show_alert_message();
+                return;
+            }
             var ajax_url = "{{BASE_URL}}"+"add-calender/"+property_id+"?ical_name="+ical_name+"&ical_url="+ical_url;
             $.ajax({
                 url:ajax_url,
@@ -335,7 +340,9 @@
                         show_alert_message();
                     }
                 },
-                error: function(){ show_alert_message(); }
+                error: function(){
+                    show_alert_message();
+                }
             });
 
         });

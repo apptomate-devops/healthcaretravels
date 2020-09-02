@@ -12,17 +12,16 @@ class CalenderController extends BaseController
     public function add_calender(Request $request, $property_id)
     {
         //
-        if ($request->ical_name || $request->ical_url || $property_id) {
-            return response()->json(['status' => 'FAILED', 'message' => 'Please fill all the details']);
+        if ($request->ical_name && $request->ical_url && $property_id) {
+            $data = [];
+            $data['property_id'] = $property_id;
+            $data['third_party_name'] = $request->ical_name;
+            $data['third_party_url'] = $request->ical_url;
+            $data['status'] = ONE;
+            DB::table('third_party_calender')->insert($data);
+            return response()->json(['status' => 'SUCCESS']);
         }
-
-        $data = [];
-        $data['property_id'] = $property_id;
-        $data['third_party_name'] = $request->ical_name;
-        $data['third_party_url'] = $request->ical_url;
-        $data['status'] = ONE;
-        DB::table('third_party_calender')->insert($data);
-        return response()->json(['status' => 'SUCCESS']);
+        return response()->json(['status' => 'FAILED', 'message' => 'Please fill all the details']);
     }
 
     public function test_mail(Request $request)

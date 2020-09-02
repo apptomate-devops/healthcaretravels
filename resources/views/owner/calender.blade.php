@@ -247,7 +247,7 @@
             <div class="col-md-8 card">
                 <label for="property" style="margin-top: 10px;">Select a property:</label>
                 <select class="chosen-select" id="property" onchange="property_change();">
-                    <option value="0" selected="">Please select a property from the dropdown menu</option>
+                    <option value="0" selected style="display: none;">Please select a property from the dropdown menu</option>
                     @foreach($properties as $property)
                         <option value="{{$property->id}}" @if($id == $property->id) selected="" @endif>
                             {{$property->title}}

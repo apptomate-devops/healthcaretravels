@@ -76,7 +76,7 @@
                                             <h5>Minimum Nightly Stay<span class="required">*</span></h5>
                                             <p class="caption-text">Minimum 30 days</p>
                                             {{-- <h5>Minimum Stay<span class="required">*</span></h5>  --}}
-                                            <input class="search-field validate" id="minimumstay" name="minimumstay" type="text" value="{{isset($property_details->min_days)?$property_details->min_days:'0'}}"  />
+                                            <input class="search-field validate" id="minimumstay" name="minimumstay" type="text" value="{{isset($property_details->min_days)?$property_details->min_days:'30'}}"  />
                                         </div>
                                     </div>
                                     <!--

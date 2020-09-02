@@ -246,7 +246,8 @@ class UserController extends BaseController
         $data = [];
         // TODO: Re-enable registration forms by removing the temp route
         // login_temp :: => Toggle as per requirements
-        return view('login', [
+        $login_view = APP_ENV == 'beta' ? 'login_temp' : 'login';
+        return view($login_view, [
             'constants' => $constants,
             'agency' => $agency,
             'data' => $data,

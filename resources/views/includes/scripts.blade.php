@@ -33,7 +33,7 @@
         uploadMultiple: true,
         autoProcessQueue: false,
         maxFiles: 10,
-        acceptedFiles: ".jpg, .jpeg, .png, .gif, .pdf",
+        acceptedFiles: ".jpg, .jpeg, .png",
         addRemoveLinks: true,
         dictInvalidFileType: "Invalid File Type",
         dictMaxFilesExceeded: "Only 10 files are allowed",
@@ -43,13 +43,20 @@
             $("#propertyImageSubmit").click(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-
+                var acceptedFiles = fileDropzone.files.filter(f => f.accepted);
                 if (fileDropzone.files.length) {
-                    $('#propertyImagesProgress').show();
-                    fileDropzone.processQueue();
+                    if(acceptedFiles.length) {
+                        $('#propertyImagesProgress').show();
+                        fileDropzone.processQueue();
+                    } else {
+                        alert('please select valid image')
+                    }
                 } else {
                     $("#property_submit_5").submit();
                 }
+            });
+            this.on("addedfiles", function(file) {
+                $('#propertyImageSubmit').attr('disabled',false);
             });
             this.on("successmultiple", function(file) {
                 // submit form
@@ -60,6 +67,18 @@
                 $('#propertyImagesProgress').hide();
                 console.log('errormultiple uploading property images', response);
             });
+            this.on("thumbnail", function(file) {
+                if (file.width < 1024 || file.height < 524) {
+                    file.rejectDimensions()
+                }
+                else {
+                    file.acceptDimensions();
+                }
+            });
+        },
+        accept: function(file, done) {
+            file.acceptDimensions = done;
+            file.rejectDimensions = function() { done("Please select image with minimum resolution of 1024 x 524"); };
         }
     });
 </script>

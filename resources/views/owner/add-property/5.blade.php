@@ -123,7 +123,7 @@
                     </form>
 
                     <div class="text-center">
-                        <button type="button" id="propertyImageSubmit" class="button preview">
+                        <button type="button" id="propertyImageSubmit" class="button preview" @if(count($property_images) == 0) disabled @endif>
                             SAVE
                             <i class="fa fa-arrow-circle-right"></i>
                         </button>

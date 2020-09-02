@@ -1591,6 +1591,7 @@ class PropertyController extends BaseController
             'status' => 'SUCCESS',
             'is_user' => $is_user,
             'current_user' => $current_user,
+            //  TODO: fix me, sometimes it causes error:: Original database id 4
             'bed_rooms' => $temp_bed_rooms,
             'data' => $result,
             'booked_dates' => $b_dates,

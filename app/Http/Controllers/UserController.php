@@ -244,6 +244,8 @@ class UserController extends BaseController
             ->orderBy('name', 'ASC')
             ->get();
         $data = [];
+        // TODO: Re-enable registration forms by removing the temp route
+        // login_temp :: => Toggle as per requirements
         return view('login', [
             'constants' => $constants,
             'agency' => $agency,

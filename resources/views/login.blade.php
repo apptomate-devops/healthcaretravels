@@ -201,6 +201,13 @@
                                 {!! $errors->first('last_name', '<p class="error-text">:message</p>') !!}
                             </p>
 
+                            <p class="form-row form-row-wide" id="profile_image_field" style="display: none;">
+                                <label for="profile_image">Profile Picture:</label>
+                                <label class="register-info">Upload a clear image of your face.</label>
+                                <img src="/user_profile_default.png" alt="" onclick="$('#profile_image').trigger('click'); return false;">
+                                <input style="display: none;" type="file" name="profile_image" id="profile_image" class="form-control" accept="image/*"/>
+                            </p>
+
                             <p class="form-row form-row-wide" id="ethnicity_filed" style="display: none;">
                                 <label for="ethnicity">Ethnicity:
                                     <label class="register-info" id="ethnicity-caption">We use this information for identity verification. It will not appear on your public profile.</label>
@@ -506,6 +513,7 @@
                 $('#tab2 .password-checkbox').show();
                 $('#first_name_field').show();
                 $('#last_name_field').show();
+                $('#profile_image_field').show();
                 $('#ethnicity_filed').show();
                 $('#ethnicity-caption').show();
                 $('#phone_number_field').show();
@@ -554,6 +562,7 @@
                 $('#tab2 .password-checkbox').show();
                 $('#first_name_field').show();
                 $('#last_name_field').show();
+                $('#profile_image_field').show();
                 $('#ethnicity_filed').show();
                 $('#ethnicity-caption').show();
                 $('#phone_number_field').show();
@@ -601,6 +610,7 @@
                 $('#tab2 .password-checkbox').show();
                 $('#first_name_field').show();
                 $('#last_name_field').show();
+                $('#profile_image_field').show();
                 $('#ethnicity_filed').show();
                 $('#ethnicity-caption').show();
                 $('#phone_number_field').show();
@@ -650,6 +660,7 @@
                 $('#tab2 .password-checkbox').hide();
                 $('#first_name_field').hide();
                 $('#last_name_field').hide();
+                $('#profile_image_field').hide();
                 $('#ethnicity_filed').hide();
                 $('#ethnicity-caption').hide();
                 $('#phone_number_field').hide();
@@ -815,7 +826,6 @@
         this.value = isNaN(value) ? 0 : value;
     });
 
-
     $('.price_float').keypress(function(event) {
         if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
             event.preventDefault();
@@ -828,6 +838,16 @@
         if (!regex.test(key)) {
             event.preventDefault();
             return false;
+        }
+    });
+
+    $('#profile_image').change(function () {
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#profile_image_field img').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(this.files[0]);
         }
     });
 

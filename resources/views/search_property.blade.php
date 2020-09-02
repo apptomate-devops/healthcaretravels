@@ -4,7 +4,11 @@
 @endsection
 
 <link rel="stylesheet" href="{{ URL::asset('css/listing_search.css') }}">
-
+<style>
+    .mmenu-trigger {
+        top: 18px;
+    }
+</style>
 @section('main_content')
 
     <!-- Content

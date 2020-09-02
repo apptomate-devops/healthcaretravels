@@ -313,8 +313,8 @@
     <!-- Banner data-background="/home.jpg"
       ================================================== -->
 
-    <div class="parallax home-slide" data-background="/background_blur.jpg" data-color="#36383e" data-color-opacity="0.5"
-         data-img-width="2500" data-img-height="1600">
+    <div class="parallax home-slide" data-background="/background_blur_crop.jpeg" data-color="#36383e" data-color-opacity="0.5"
+        data-img-width="1200" data-img-height="1000">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">

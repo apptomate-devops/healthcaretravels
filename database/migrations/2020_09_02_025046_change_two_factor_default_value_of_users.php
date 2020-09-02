@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddEnableTwoFectorAuthToUsers extends Migration
+class ChangeTwoFactorDefaultValueOfUsers extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,10 @@ class AddEnableTwoFectorAuthToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('enable_two_factor_auth')->default(1);
+            $table
+                ->string('enable_two_factor_auth')
+                ->default(0)
+                ->change();
         });
     }
 
@@ -26,7 +29,10 @@ class AddEnableTwoFectorAuthToUsers extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['enable_two_factor_auth']);
+            $table
+                ->string('enable_two_factor_auth')
+                ->default(1)
+                ->change();
         });
     }
 }

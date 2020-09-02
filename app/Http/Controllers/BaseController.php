@@ -131,6 +131,17 @@ class BaseController extends ConstantsController
         return '';
     }
 
+    public function base_image_upload_array($file, $path)
+    {
+        if ($file) {
+            $ext = $file->getClientOriginalExtension();
+            $imageName = self::generate_random_string() . '.' . $ext;
+            $path = $file->storeAs($path, $imageName);
+            return '/storage/' . $path;
+        }
+        return '';
+    }
+
     public function get_storage_file($filePath)
     {
         $qualifiedFilePath = storage_path('app/' . $filePath);

@@ -21,70 +21,82 @@
                     <div class="tabs-container">
                         <div id='wrap1'>
                             <label style="margin-top: 30px;">Select and drag to block out dates for this listing:</div>
-                            <center><div id='calendar' style="max-width: 600px;margin-top: 15px;margin-bottom: 15px;"></div></center>
-                        </div>
+                        <center><div id='calendar' style="max-width: 600px;margin-top: 15px;margin-bottom: 15px;"></div></center>
+                    </div>
 
-                        <div id="wrap2">
+                    <div id="wrap2">
 
-                            <form action="{{url('/')}}/owner/add-new-property/7" method="post" name="form-add-new">
+                        <form action="{{url('/')}}/owner/add-new-property/7" method="post" name="form-add-new">
 
-                                <div class="col-md-3"></div>
-                                <div class="col-md-6" style="padding-bottom: 50px;padding-top: 15px;">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-6" style="padding-bottom: 50px;padding-top: 15px;">
 
-                                    <div class="style-2">
-                                        <!-- Tabs Navigation -->
-                                        <ul class="tabs-nav">
-                                            <li class="active">
-                                                <a href="#tab1a">
-                                                    <i class="sl sl-icon-pin"></i>
-                                                    Keepers ICAL URL
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#tab2a">
-                                                    <i class="sl sl-icon-pin"></i>
-                                                    Add other ICAL URL
-                                                </a>
-                                            </li>
-                                        </ul>
+                                <div class="style-2">
+                                    <!-- Tabs Navigation -->
+                                    <ul class="tabs-nav">
+                                        <li class="active">
+                                            <a href="#tab1a">
+                                                <i class="sl sl-icon-pin"></i>
+                                                Keepers ICAL URL
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#tab2a">
+                                                <i class="sl sl-icon-pin"></i>
+                                                Add other ICAL URL
+                                            </a>
+                                        </li>
+                                    </ul>
 
-                                        <!-- Tabs Content -->
-                                        <div class="tabs-container">
-                                            <div class="tab-content" id="tab1a">
-                                                <center>
-                                                    <p>Ical URL :  <a href="{{BASE_URL}}ical/{{$property_details->id}}">{{BASE_URL}}ical/{{$property_details->id}}</a></p>
-                                                    <br>
-                                                    <input type="hidden" name="id" value="{{$property_details->id}}">
-                                                    <input type="hidden" name="_token" value="{{csrf_token()}}">
+                                    <!-- Tabs Content -->
+                                    <div class="tabs-container">
+                                        <div class="tab-content" id="tab1a">
+                                            <center>
+                                                <p>Ical URL :  <a href="{{BASE_URL}}ical/{{$property_details->id}}">{{BASE_URL}}ical/{{$property_details->id}}</a></p>
+                                                <br>
+                                                <input type="hidden" name="id" value="{{$property_details->id}}">
+                                                <input type="hidden" name="_token" value="{{csrf_token()}}">
 
-                                                </center>
-                                            </div>
-
-                                            <div class="tab-content" id="tab2a">
-                                                <form name="test" method="get" action="{{BASE_URL}}add-ical-url">
-                                                    <input type="hidden" id="property_id" name="property_id" value="{{$property_details->id}}">
-                                                    <input style="margin-left: 10px;max-width: 518px;" type="text" id="ical_name" placeholder="Enter Third party Name" name="ical_name">
-                                                    <input style="margin-left: 10px;max-width: 518px;" type="text" id="ical_url" placeholder="Enter Third party ICAL URL here" name="ical_url">
-                                                    <center>
-                                                        <button type="button" id="add_ical" class="button preview margin-top-5" style="margin-bottom: 20px;">
-                                                            Add
-                                                        </button>
-                                                    </center>
-                                                </form>
-                                            </div>
-
-
+                                            </center>
                                         </div>
 
-                                        <button type="submit" style="margin-bottom: 20px;float: right;" class="button preview margin-top-5" value="NEXT">FINISH</button>
+                                        <div class="tab-content" id="tab2a">
+                                            <form name="test" method="get" action="{{BASE_URL}}add-ical-url">
+                                                <input type="hidden" id="property_id" name="property_id" value="{{$property_details->id}}">
+                                                <input style="margin-left: 10px;max-width: 518px;" type="text" id="ical_name" placeholder="Enter Third party Name" name="ical_name">
+                                                <input style="margin-left: 10px;max-width: 518px;" type="text" id="ical_url" placeholder="Enter Third party ICAL URL here" name="ical_url">
+                                                <center>
+                                                    <button type="button" id="add_ical" class="button preview margin-top-5" style="margin-bottom: 20px;">
+                                                        Add
+                                                    </button>
+                                                </center>
+                                            </form>
+                                        </div>
+
+
                                     </div>
 
+                                    <button type="submit" style="margin-bottom: 20px;float: right;" class="button preview margin-top-5" value="NEXT">FINISH</button>
                                 </div>
 
+                            </div>
 
-                            </form>
 
-
+                        </form>
+                        <div class="modal fade in" id="confirmationModal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">
+                                            Are you sure you want to delete blocking for these dates?
+                                        </h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                        <button type="button" class="btn btn-default" id="btnDeleteEvent">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -94,6 +106,8 @@
             </div>
 
         </div>
+
+    </div>
 
     </div>
     </div>
@@ -157,50 +171,6 @@
                 titleFormat: 'MMM - YYYY',
                 allDaySlot: false,
                 selectHelper: true,
-                // select: function(start, end, allDay) {
-                //     var roomtxt = $('#selector1  option:selected').text();
-                //     var title = prompt('Block a Room', roomtxt);
-                //     if (title) {
-                //         calendar.fullCalendar('renderEvent',
-                //             {
-                //                 title: title,
-                //                 start: start,
-                //                 end: end,
-                //                 allDay: allDay,
-                //                 className: 'reserved',
-                //             },
-                //
-                //             false // make the event "stick"
-                //         );
-                //         // var room = $('#selector1  option:selected').val();
-                //         // $.ajax({
-                //         //     type: "POST",
-                //         //     url: 'calendarViewAjax',
-                //         //     data: {date: start , room: room },
-                //         //     success: function( result ) {
-                //         //         result = $.parseJSON(result);
-                //         //         $('#calendar').html('');
-                //         //         calendar = $("#calendar").fullCalendar({
-                //         //             events: result
-                //         //         });
-                //         //     }
-                //         // });
-                //
-                //         // $.ajax({
-                //         //     type: "POST",
-                //         //     url: 'calendarViewAjax',
-                //         //     data: {room: room },
-                //         //     success: function( result ) {
-                //         //         result = $.parseJSON(result);
-                //         //         $('#calendar').html('');
-                //         //         calendar = $("#calendar").fullCalendar({
-                //         //             events: result
-                //         //         });
-                //         //     }
-                //         // });
-                //     }
-                //     calendar.fullCalendar('unselect');
-                // },
                 select: function(start, end, allDay) {
                     var check_start=$('#start_date_hidden').val();
                     var start_date=convert(start);
@@ -229,21 +199,25 @@
                             url:ajax_url,
                             type:"GET",
                             success: function(data){
-                                calendar.fullCalendar('renderEvent',
-                                    { title, start, end, allDay: allDay, className: 'booked',},
-                                    true // make the event "stick"
-                                );
-                                // window.location.reload();
+                                if (data.status === 'SUCCESS' && data.event_id) {
+                                    calendar.fullCalendar('renderEvent', { title, start, end, allDay: allDay, className: 'booked', id: data.event_id});
+                                } else {
+                                    alert('Error while blocking date')
+                                }
                             },
                             error: function (error) {
                                 console.log('Error adding block dates: ', error);
                             }
                         });
                     }
-                    // calendar.fullCalendar('unselect');
                 },
-
-
+                eventClick: function(info) {
+                    var eventId = info.id;
+                    if (eventId) {
+                        $('#btnDeleteEvent').data({eventId});
+                        $('#confirmationModal').modal('show');
+                    }
+                },
                 events: [
                         @foreach($events as $event)
                     {
@@ -251,6 +225,7 @@
                         start: "{{$event->start_date}}",
                         end: "{{$event->end_date}}",
                         className: 'blocked',
+                        id: "{{$event->id}}"
                     },
                         @endforeach
                         @foreach($block_events as $eve)
@@ -259,11 +234,11 @@
                         start: "{{$eve->start_date}}",
                         end: "{{$eve->end_date}}",
                         className: 'booked',
+                        id: "{{$eve->id}}"
                     },
                     @endforeach
 
                 ],
-
                 droppable: true, // this allows things to be dropped onto the calendar !!!
                 drop: function(date, allDay) { // this function is called when something is dropped
 
@@ -287,6 +262,33 @@
                         $(this).remove();
                     }
                 }
+            });
+
+            $('#btnDeleteEvent').click(function () {
+                var btnData = $('#btnDeleteEvent').data();
+                $('#confirmationModal').modal('hide');
+                if(btnData.eventId) {
+                    var pro_id = $("#property_id").val();
+
+                    var ajax_url = `{{BASE_URL}}delete_block_booking?id=${btnData.eventId}&property_id=${pro_id}`;
+                    $.ajax({
+                        url:ajax_url,
+                        type:"GET",
+                        success: function(data){
+                            if (data.status === 'SUCCESS') {
+                                calendar.fullCalendar('removeEvents', btnData.eventId);
+                            } else {
+                                alert('Error while blocking date')
+                            }
+                        },
+                        error: function (error) {
+                            console.log('Error adding block dates: ', error);
+                        }
+                    });
+                }
+            })
+            $("#confirmationModal").on("hidden.bs.modal", function () {
+                $('#btnDeleteEvent').data();
             });
 
         });

@@ -78,7 +78,7 @@ class CalenderController extends BaseController
 
     public function block_booking(Request $request)
     {
-        DB::table('property_blocking')->insert([
+        $new_event_id = DB::table('property_blocking')->insertGetId([
             'client_id' => CLIENT_ID,
             'owner_id' => $request->session()->get('user_id'),
             'start_date' => $request->start,
@@ -90,5 +90,17 @@ class CalenderController extends BaseController
             ->where('client_id', '=', CLIENT_ID)
             ->where('property_id', '=', $request->pro_id)
             ->get();
+        return response()->json(['status' => 'SUCCESS', 'event_id' => $new_event_id]);
+    }
+
+    public function delete_block_booking(Request $request)
+    {
+        if ($request->id) {
+            DB::table('property_blocking')
+                ->where('id', $request->id)
+                ->delete();
+            return response()->json(['status' => 'SUCCESS']);
+        }
+        return response()->json(['status' => 'FAILED', 'message' => 'Error while deleting blocked event.']);
     }
 }

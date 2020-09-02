@@ -120,16 +120,17 @@
                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                         <input type="hidden" name="client_id" value="{{$client_id}}">
                         <input type="hidden" name="property_id" value="{{$property_details->id}}">
-                        <div class="text-center">
-                            <button type="button" id="propertyImageSubmit" class="button preview">
-                                SAVE
-                                <i class="fa fa-arrow-circle-right"></i>
-                            </button>
-                        </div>
                     </form>
+
+                    <div class="text-center">
+                        <button type="button" id="propertyImageSubmit" class="button preview">
+                            SAVE
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
-
+            <div id="propertyImagesProgress" class="loading style-2" style="display: none;"><div class="loading-wheel"></div></div>
         </div>
 
     </div>

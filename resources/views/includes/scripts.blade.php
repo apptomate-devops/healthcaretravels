@@ -30,6 +30,7 @@
     Dropzone.autoDiscover = false;
     $(".dropzone").dropzone({
         dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here or drop files to upload",
+        uploadMultiple: true,
         autoProcessQueue: false,
         maxFiles: 10,
         acceptedFiles: ".jpg, .jpeg, .png, .gif, .pdf",
@@ -44,24 +45,20 @@
                 e.stopPropagation();
 
                 if (fileDropzone.files.length) {
+                    $('#propertyImagesProgress').show();
                     fileDropzone.processQueue();
                 } else {
                     $("#property_submit_5").submit();
                 }
             });
-            // on success
-            this.on("success", function(file) {
-                // submit form
-                $("#property_submit_5").submit();
-            });
-            // on success multiple
             this.on("successmultiple", function(file) {
                 // submit form
+                $('#propertyImagesProgress').hide();
                 $("#property_submit_5").submit();
             });
-            // on error
-            this.on("error", function (file, response) {
-                console.log('error uploading property images', response);
+            this.on("errormultiple", function (file, response) {
+                $('#propertyImagesProgress').hide();
+                console.log('errormultiple uploading property images', response);
             });
         }
     });

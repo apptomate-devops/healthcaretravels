@@ -187,7 +187,7 @@
 
                                     <tr>
                                         <td>Total Nights:</td>
-                                        <td class="col-det">{{$data->total_days}}</td>
+                                        <td class="col-det">{{$data->min_days}}</td>
                                     </tr>
 
                                     <td>Room Fee:</td>
@@ -204,7 +204,7 @@
 
                                     <tr>
                                         <td> Subtotal amount:</td>
-                                        <td class="col-det">$ {{$data->total_days*$data->price_per_night}}</td>
+                                        <td class="col-det">$ {{$data->min_days*$data->price_per_night}}</td>
                                     </tr>
                                     <tr>
                                         <td>Service fee:</td>

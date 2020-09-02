@@ -164,17 +164,17 @@ li.sub-nav-title {
                     <tr>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                                Price per night <br> ( {{$data->total_days}} x $ {{$data->single_day_fare}} )
+                                Price per night <br> ( {{$data->min_days}} x $ {{$data->single_day_fare}} )
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                                $ {{$data->single_day_fare * $data->total_days}}
+                                $ {{$data->single_day_fare * $data->min_days}}
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                                {{$data->total_days}} Nights
+                                {{$data->min_days}} Nights
                             </p>
                         </th>
                     </tr>
@@ -229,7 +229,7 @@ li.sub-nav-title {
                                     @else
                                     0
                                     @endif
-                                  
+
                                 </p>
                             </th>
                             <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">

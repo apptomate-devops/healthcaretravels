@@ -76,7 +76,7 @@
                                             <h5>Minimum Nightly Stay<span class="required">*</span></h5>
                                             <p class="caption-text">Minimum 30 days</p>
                                             {{-- <h5>Minimum Stay<span class="required">*</span></h5>  --}}
-                                            <input class="search-field validate" id="minimumstay" name="minimumstay" type="text" value="{{isset($property_details->min_days)?$property_details->min_days:'0'}}"  />
+                                            <input class="search-field validate" id="minimumstay" name="minimumstay" type="text" value="{{isset($property_details->min_days)?$property_details->min_days:'30'}}"  />
                                         </div>
                                     </div>
                                     <!--
@@ -254,12 +254,12 @@
 
             $('#minimumstay').change(function(){
                 var value = parseInt(this.value);
-                this.value = isNaN(value) ? 0 : value;
+                this.value = isNaN(value) ? 30 : value;
             });
 
             $('#minimumstay').blur(function(){
                 var value = parseInt(this.value);
-                this.value = (value < 30) ? 0 : value;
+                this.value = (value < 30) ? 30 : value;
             });
 
             $('#minimumstay').keypress(function(event) {
@@ -378,6 +378,8 @@
         } ?>
 
         var is_instant = "{{$property_details->is_instant}}";
+        var min_days = "{{$property_details->min_days}}";
+        debugger
         if(is_instant === '1') {
             $('#booking_type_yes').attr('checked',true);
             $('#booking_type_no').attr('checked',false);

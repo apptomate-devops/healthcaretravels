@@ -1227,6 +1227,7 @@ class PropertyController extends BaseController
 
     public function single_property($property_id, Request $request)
     {
+        $temp_bed_rooms = [];
         if ($request->reviews) {
             $properties = DB::table('property_list')
                 ->leftjoin('users', 'users.id', '=', 'property_list.user_id')
@@ -1303,7 +1304,6 @@ class PropertyController extends BaseController
             $property_bedrooms = DB::table('property_bedrooms')
                 ->where('property_id', $property_id)
                 ->get();
-            $temp_bed_rooms = [];
             $temp_rooms = [];
             foreach ($property_bedrooms as $key => $value) {
                 $sql = "SELECT GROUP_CONCAT(bed_type,' - ',count) as bed_types FROM `property_bedrooms` WHERE `property_id` = $property_id AND `bedroom_number` = $value->bedroom_number AND `count` != 0";
@@ -1600,8 +1600,6 @@ class PropertyController extends BaseController
             'session' => $arr,
             'properties' => $properties,
         ];
-
-        //print_r($f_result);exit;
 
         if ($f_result['data']->pets_allowed == 1) {
             $pets = $this->yelp_pets($f_result['data']->lat, $f_result['data']->lng);
@@ -1934,13 +1932,13 @@ class PropertyController extends BaseController
                 return view('owner.add-property.2', [
                     'property_details' => $property_details,
                     'property_room' => $property_room,
+                    'property_bedrooms' => $final,
                 ])
                     ->with('stage', $stage)
                     ->with('property_data', $property_data)
                     ->with('client_id', $client_id)
                     ->with('room_types', $room_types)
                     ->with('property_types', $property_types)
-                    ->with('property_bedrooms', $final)
                     ->with('common_spc', isset($common_spc) ? $common_spc : [])
                     ->with('guest_count', isset($guest_count->value) ? $guest_count->value : '')
                     ->with('bed_count', isset($bed_count->value) ? $bed_count->value : '');
@@ -3044,15 +3042,22 @@ class PropertyController extends BaseController
     public function property_image_upload(Request $request)
     {
         //
-        $complete_url = $this->base_image_upload($request, 'file', 'properties');
         $property_id = $request->session()->get('property_id');
-        $insert = DB::table('property_images')->insert([
-            'client_id' => CLIENT_ID,
-            'property_id' => $property_id,
-            'image_url' => $complete_url,
-            'sort' => ONE,
-            'status' => ONE,
-        ]);
+        $complete_url = '';
+        if ($property_id) {
+            if ($request->hasfile('file')) {
+                foreach ($request->file('file') as $file) {
+                    $complete_url = $this->base_image_upload_array($file, 'properties');
+                    $insert = DB::table('property_images')->insert([
+                        'client_id' => CLIENT_ID,
+                        'property_id' => $property_id,
+                        'image_url' => $complete_url,
+                        'sort' => ONE,
+                        'status' => ONE,
+                    ]);
+                }
+            }
+        }
         return $complete_url;
     }
 

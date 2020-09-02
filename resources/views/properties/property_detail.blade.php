@@ -169,7 +169,7 @@
                                     </td>
                                     <td>
                                        &nbsp;
-                                       {{$data->total_days}}
+                                       {{$data->min_days}}
                                     </td>
                                  </tr>
                                  @if($data->coupon_value=="")
@@ -203,12 +203,12 @@
                                        <td class="name pos-rel" >
                                           <span class="lang-chang-label">
                                           $
-                                          </span>{{$data->single_day_fare}} x {{$data->total_days}} night
+                                          </span>{{$data->single_day_fare}} x {{$data->min_days}} night
                                           <span class='tooltips'><i style="color:black"  class='fa fa-question-circle'></i><span style="color: white!important" class='tooltiptext'>Price per night</span></span>
                                        </td>
                                        <td class="val text-right">
                                           <span class="lang-chang-label" >  $
-                                          </span><span >{{$data->single_day_fare*$data->total_days}}.00</span>
+                                          </span><span >{{$data->single_day_fare*$data->min_days}}.00</span>
                                        </td>
                                     </tr>
                                        @if($data->extra_guest!=0)

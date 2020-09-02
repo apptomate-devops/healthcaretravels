@@ -12,17 +12,43 @@ class CalenderController extends BaseController
     public function add_calender(Request $request, $property_id)
     {
         //
-        if ($request->ical_name || $request->ical_url || $property_id) {
-            return response()->json(['status' => 'FAILED', 'message' => 'Please fill all the details']);
+        if ($request->ical_name && $request->ical_url && $property_id) {
+            $data = [];
+            $data['property_id'] = $property_id;
+            $data['third_party_name'] = $request->ical_name;
+            $data['third_party_url'] = $request->ical_url;
+            $data['status'] = ONE;
+            DB::table('third_party_calender')->insert($data);
+            return response()->json(['status' => 'SUCCESS']);
         }
+        return response()->json(['status' => 'FAILED', 'message' => 'Please fill all the details']);
+    }
 
-        $data = [];
-        $data['property_id'] = $property_id;
-        $data['third_party_name'] = $request->ical_name;
-        $data['third_party_url'] = $request->ical_url;
-        $data['status'] = ONE;
-        DB::table('third_party_calender')->insert($data);
-        return response()->json(['status' => 'SUCCESS']);
+    public function update_calender(Request $request, $id)
+    {
+        //
+        if ($request->ical_name && $request->ical_url && $id) {
+            $data = [];
+            $data['third_party_name'] = $request->ical_name;
+            $data['third_party_url'] = $request->ical_url;
+            DB::table('third_party_calender')
+                ->where('id', $id)
+                ->update($data);
+            return response()->json(['status' => 'SUCCESS']);
+        }
+        return response()->json(['status' => 'FAILED', 'message' => 'Please fill all the details']);
+    }
+
+    public function delete_calender($id)
+    {
+        //
+        if ($id) {
+            DB::table('third_party_calender')
+                ->where('id', $id)
+                ->delete();
+            return back()->with('success', 'Calendar deleted successfully');
+        }
+        return back()->with('error', 'Error deleting calendar');
     }
 
     public function test_mail(Request $request)
@@ -78,7 +104,7 @@ class CalenderController extends BaseController
 
     public function block_booking(Request $request)
     {
-        DB::table('property_blocking')->insert([
+        $new_event_id = DB::table('property_blocking')->insertGetId([
             'client_id' => CLIENT_ID,
             'owner_id' => $request->session()->get('user_id'),
             'start_date' => $request->start,
@@ -90,5 +116,17 @@ class CalenderController extends BaseController
             ->where('client_id', '=', CLIENT_ID)
             ->where('property_id', '=', $request->pro_id)
             ->get();
+        return response()->json(['status' => 'SUCCESS', 'event_id' => $new_event_id]);
+    }
+
+    public function delete_block_booking(Request $request)
+    {
+        if ($request->id) {
+            DB::table('property_blocking')
+                ->where('id', $request->id)
+                ->delete();
+            return response()->json(['status' => 'SUCCESS']);
+        }
+        return response()->json(['status' => 'FAILED', 'message' => 'Error while deleting blocked event.']);
     }
 }

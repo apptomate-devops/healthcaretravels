@@ -30,13 +30,13 @@
 
         <div class="col-md-12">
             <div class="agent agent-page">
-                
+
                 <div class="agent-avatar">
 
                     <img src="{{($user->profile_image!=' ')?$user->profile_image:'https://img.freepik.com/free-icon/man-dark-avatar_318-9118.jpg?size=338&ext=jpg'}}" alt="" height="100px" width="100px">
                     <div class="listing-badges" style="float:left">
                                     <span class="featured" style="background-color: {{$user->is_verified==1?'green':''}}"> {{$user->is_verified==1?'Verified':'Not Verified'}}</span>
-                                    
+
                                 </div>
                 </div>
 
@@ -53,7 +53,7 @@
 
                         <h3>About me:</h3>
                         <p>
-                            {{$user->about_me}}
+                            {{($user->about_me != "0") ? $user->about_me : ''}}
                         </p>
 
                     </div>
@@ -118,16 +118,14 @@
 
                         <a href="{{url('/')}}/property/{{$property->property_id}}" class="listing-img-container">
 
-                        
-
                             <div class="listing-img-content">
-                                <span class="listing-price">${{$property->price_more_than_one_month * 30}} /Month</span>
+                                <span class="listing-price">${{$property->price_per_night * 30}} /Month</span>
                                 <span class="like-icon with-tip" data-tip-content="Add to Favourites"></span>
                             </div>
                            @if($property->verified==1)
                                 <div class="listing-badges">
                                     <span class="featured" style="background-color: {{$property->verified==1?'green':''}}"> {{$property->verified==1?'Verified':''}}</span>
-                                    
+
                                 </div>
                                 @endif
 
@@ -150,13 +148,13 @@
                         <div class="listing-content">
 
                             <div class="listing-title">
-                                <h4 style="min-height: 75px;">
+                                <h4>
                                     <a href="{{url('/')}}/property/{{$property->property_id}}">
                                         {{$property->title}}
                                     </a>
                                 </h4>
 
-                                <div style="min-height: 75px;">
+                                <div>
                                     <i class="fa fa-map-marker" style="color: #e78016;"></i>
                                     {{$property->city}},{{$property->state}}
                                 </div>
@@ -167,9 +165,6 @@
                                 <li>Bedrooms <span>{{$property->bed_count}}</span></li>
                                 <li>Bathrooms <span>{{$property->bathroom_count}}</span></li>
                             </ul>
-
-                            
-
                         </div>
 
                     </div>
@@ -201,7 +196,7 @@
                         <input name="comments"  placeholder="Comments"  type="text" style="width: 273px;" >
                     </div>
                 </div>
-                
+
                 <center>
                     <button class="button  margin-top-5"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
                                     Report

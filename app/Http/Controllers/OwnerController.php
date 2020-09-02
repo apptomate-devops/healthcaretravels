@@ -74,7 +74,7 @@ class OwnerController extends BaseController
                 if (date('m', $time) == $month) {
                     $list[$d]['date'] = date('Y-m-d', $time);
                 }
-                $list[$d]['price'] = $property_rate->price_per_night;
+                $list[$d]['price'] = $property_rate->price_per_night ?? 0;
             }
             $id = $request->id;
             $icals = DB::table('third_party_calender')

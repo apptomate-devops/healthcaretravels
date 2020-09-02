@@ -7,16 +7,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="google-site-verification" content="FLL3mad9UxnF2ohZAQRFW0w8TM5AyfRjoD4r31Pygq0" />
 
-
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-117530617-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-117530617-1');
-</script>
 <!-- CSS
 ================================================== -->
     <style type="text/css">

@@ -342,62 +342,62 @@
                                 @endif
                                 <br><hr> <br>
                                 <div id="cur_occupancy" @if($property_data->room_type === 'Entire Place') style="display: none;" @endif">
-                                    <div class="incremental-counter">
-                                        <div class="row with-forms">
-                                            <h4>Current Occupancy </h4>
-                                        </div>
-                                        <div class="row with-forms">
-                                            <p>How many others will be sharing the property with the booker?</p>
-                                        </div>
-                                        <div class="row with-forms">
-                                            <div class="counter-inputs">
-                                                <input type="hidden" name="cur_adults" id="input_cur_adults" value="@if(isset($property_data->cur_adults)) {{$property_data->cur_adults}} @else 0 @endif"/>
-                                                <div class="col-xs-6"><p> Adults </p> </div>
-                                                <div class="col-xs-6">
-                                                    <a onclick="cur_minus('adults');"><img src="{{BASE_URL}}minus.png"></a>
-                                                    <span id="cur_adults">@if(isset($property_data->cur_adults)){{$property_data->cur_adults}} @else 0 @endif</span>
-                                                    <a onclick="cur_plus('adults');"><img src="{{BASE_URL}}plus.png"></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row with-forms">
-                                            <div class="counter-inputs">
-                                                <input type="hidden" name="cur_child" id="input_cur_child" value="@if(isset($property_data->cur_child)) {{$property_data->cur_child}} @else 0 @endif"/>
-                                                <div class="col-xs-6"><p> Child </p> </div>
-                                                <div class="col-xs-6">
-                                                    <a onclick="cur_minus('child');"><img src="{{BASE_URL}}minus.png"></a>
-                                                    <span id="cur_child">@if(isset($property_data->cur_child)){{$property_data->cur_child}} @else 0 @endif</span>
-                                                    <a onclick="cur_plus('child');"><img src="{{BASE_URL}}plus.png"></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row with-forms">
-                                            <div class="counter-inputs">
-                                                <input type="hidden" name="cur_pets" id="input_cur_pets" value="@if(isset($property_data->cur_pets)) {{$property_data->cur_pets}} @else 0 @endif"/>
-                                                <div class="col-xs-6"><p> Pets </p> </div>
-                                                <div class="col-xs-6">
-                                                    <a onclick="cur_minus('pets');"><img src="{{BASE_URL}}minus.png"></a>
-                                                    <span id="cur_pets">@if(isset($property_data->cur_pets)){{$property_data->cur_pets}} @else 0 @endif</span>
-                                                    <a onclick="cur_plus('pets');"><img src="{{BASE_URL}}plus.png"></a>
-                                                </div>
+                                <div class="incremental-counter">
+                                    <div class="row with-forms">
+                                        <h4>Current Occupancy </h4>
+                                    </div>
+                                    <div class="row with-forms">
+                                        <p>How many others will be sharing the property with the booker?</p>
+                                    </div>
+                                    <div class="row with-forms">
+                                        <div class="counter-inputs">
+                                            <input type="hidden" name="cur_adults" id="input_cur_adults" value="@if(isset($property_data->cur_adults)) {{$property_data->cur_adults}} @else 0 @endif"/>
+                                            <div class="col-xs-6"><p> Adults </p> </div>
+                                            <div class="col-xs-6">
+                                                <a onclick="cur_minus('adults');"><img src="{{BASE_URL}}minus.png"></a>
+                                                <span id="cur_adults">@if(isset($property_data->cur_adults)){{$property_data->cur_adults}} @else 0 @endif</span>
+                                                <a onclick="cur_plus('adults');"><img src="{{BASE_URL}}plus.png"></a>
                                             </div>
                                         </div>
                                     </div>
-                                    <br><hr> <br>
+                                    <div class="row with-forms">
+                                        <div class="counter-inputs">
+                                            <input type="hidden" name="cur_child" id="input_cur_child" value="@if(isset($property_data->cur_child)) {{$property_data->cur_child}} @else 0 @endif"/>
+                                            <div class="col-xs-6"><p> Child </p> </div>
+                                            <div class="col-xs-6">
+                                                <a onclick="cur_minus('child');"><img src="{{BASE_URL}}minus.png"></a>
+                                                <span id="cur_child">@if(isset($property_data->cur_child)){{$property_data->cur_child}} @else 0 @endif</span>
+                                                <a onclick="cur_plus('child');"><img src="{{BASE_URL}}plus.png"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row with-forms">
+                                        <div class="counter-inputs">
+                                            <input type="hidden" name="cur_pets" id="input_cur_pets" value="@if(isset($property_data->cur_pets)) {{$property_data->cur_pets}} @else 0 @endif"/>
+                                            <div class="col-xs-6"><p> Pets </p> </div>
+                                            <div class="col-xs-6">
+                                                <a onclick="cur_minus('pets');"><img src="{{BASE_URL}}minus.png"></a>
+                                                <span id="cur_pets">@if(isset($property_data->cur_pets)){{$property_data->cur_pets}} @else 0 @endif</span>
+                                                <a onclick="cur_plus('pets');"><img src="{{BASE_URL}}plus.png"></a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="row with-forms text-center">
-                                    <button type="submit" id="button" class="button preview margin-top-5" value="NEXT">Save <i class="fa fa-arrow-circle-right"></i></button>
-                                </div>
-                            </form>
-
+                                <br><hr> <br>
                         </div>
-                    </div>
+                        <div class="row with-forms text-center">
+                            <button type="submit" id="button" class="button preview margin-top-5" value="NEXT">Save <i class="fa fa-arrow-circle-right"></i></button>
+                        </div>
+                        </form>
 
+                    </div>
                 </div>
 
             </div>
 
         </div>
+
+    </div>
 
     </div>
     </div>
@@ -414,25 +414,24 @@
                 }
             });
         }
-        <?php if (isset($property_room->bathroom_count)) { ?>
-        dynamic_rooms();
-        $("#bathrooms").val("{{$property_room->bathroom_count}}");
-        $("#bedrooms").val("{{$property_room->bedroom_count}}");
-        $("#guest_count").val("{{$property_data->total_guests}}");
-        <?php } ?>
         $(function(){
-                @if(isset($property_room->bedroom_count))
-            var beds={{$property_room->bedroom_count}};
-            for(var j=1;j<beds;j++){
-                $("#bedrooms option[value='"+ j + "']").attr('disabled', true);
-            }
+            @if(isset($property_room->bathroom_count))
+                $("#bathrooms").val("{{$property_room->bathroom_count}}");
+                $("#bedrooms").val("{{$property_room->bedroom_count}}");
+                $("#guest_count").val("{{$property_data->total_guests}}");
+                dynamic_rooms();
+            @endif
+            @if(isset($property_room->bedroom_count))
+                var beds={{$property_room->bedroom_count}};
+                for(var j=1;j<beds;j++){
+                    $("#bedrooms option[value='"+ j + "']").attr('disabled', true);
+                }
             @endif
         });
 
 
 
         function dynamic_rooms() {
-
             var count = $("#bedrooms").val();
             var bed_count = '{{isset($property_room->bedroom_count)?$property_room->bedroom_count:'+0+'}}';
 
@@ -492,7 +491,7 @@
                     <p>Single</p>
                     </div>
                     <div class="col-xs-6">
-                    <a onclick="single_minus(${j}});"><img src="{{BASE_URL}}minus.png"></a>
+                    <a onclick="single_minus(${j});"><img src="{{BASE_URL}}minus.png"></a>
                     <span id="single${j}">0</span>
                     <a onclick="single_plus(${j});"><img src="{{BASE_URL}}plus.png"></a>
                     </div>
@@ -505,7 +504,7 @@
                     <p>Sofa bed</p>
                 </div>
                 <div class="col-xs-6">
-                    <a onclick="sofa_minus(${j}});"><img src="{{BASE_URL}}minus.png"></a>
+                    <a onclick="sofa_minus(${j});"><img src="{{BASE_URL}}minus.png"></a>
                     <span id="sofa${j}">0</span>
                     <a onclick="sofa_plus(${j});"><img src="{{BASE_URL}}plus.png"></a>
                     </div>
@@ -518,7 +517,7 @@
                     <p>Bunk Bed</p>
                 </div>
                 <div class="col-xs-6">
-                    <a onclick="bunk_minus(${j}});"><img src="{{BASE_URL}}minus.png"></a>
+                    <a onclick="bunk_minus(${j});"><img src="{{BASE_URL}}minus.png"></a>
                     <span id="bunk${j}">0</span>
                     <a onclick="bunk_plus(${j});"><img src="{{BASE_URL}}plus.png"></a>
                     </div>

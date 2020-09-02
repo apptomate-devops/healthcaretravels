@@ -91,6 +91,7 @@ Route::GET('/property/get-price', 'PropertyController@get_price');
 Route::GET('/property/{id}', 'PropertyController@single_property');
 Route::GET('/add-calender/{id}', 'CalenderController@add_calender');
 Route::GET('/block_booking', 'CalenderController@block_booking');
+Route::GET('/delete_block_booking', 'CalenderController@delete_block_booking');
 
 // Property related :: Maps Controller
 Route::GET('/single-marker/{lat}/{lng}/{pets}', 'MapController@single_marker');

@@ -245,7 +245,8 @@ class UserController extends BaseController
             ->get();
         $data = [];
         // TODO: Re-enable registration forms by removing the temp route
-        return view('login_temp', [
+        // login_temp :: => Toggle as per requirements
+        return view('login', [
             'constants' => $constants,
             'agency' => $agency,
             'data' => $data,

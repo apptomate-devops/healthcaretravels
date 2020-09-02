@@ -255,6 +255,7 @@
             $('#minimumstay').change(function(){
                 var value = parseInt(this.value);
                 this.value = isNaN(value) ? 30 : value;
+                this.value = isNaN(value) ? 30 : value;
             });
 
             $('#minimumstay').blur(function(){

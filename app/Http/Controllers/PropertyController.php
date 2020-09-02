@@ -1228,7 +1228,6 @@ class PropertyController extends BaseController
     public function single_property($property_id, Request $request)
     {
         $temp_bed_rooms = [];
-
         if ($request->reviews) {
             $properties = DB::table('property_list')
                 ->leftjoin('users', 'users.id', '=', 'property_list.user_id')

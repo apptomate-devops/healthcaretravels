@@ -409,126 +409,14 @@
     <!-- Content
       ================================================== -->
 
-    <!-- How it Work Start
-    <section class="fullwidth margin-top-2 sec1" data-background-color="#f7f7f7" style="background: rgb(247, 247, 247);">
-
-  <!-- Box Headline
-  <h3 class="home-h3">What are you looking for?</h3>
-
-  <!-- Content
-  <div class="container">
-    <div class="row">
-
-      <div class="col-md-4 col-sm-4">
-        <!-- Icon Box
-        <div class="icon-box-1">
-
-          <div class="icon-container">
-            <i class="im im-icon-Office"></i>
-            <div class="icon-links">
-              <div style="color: #ff556a;">For Sale</div>
-              <div style="color: #ff556a;">For Rent</div>
-            </div>
-          </div>
-
-          <h3>Apartments</h3>
-          <p>Without any further customization you can right away start your Boat rental business effectively. With all the features from Airbnb along with the customized features for car rental business, it’s the right script for you to start business.</p>
-        </div>
-      </div>
-
-      <div class="col-md-4 col-sm-4">
-        <!-- Icon Box
-        <div class="icon-box-1">
-
-          <div class="icon-container">
-            <i class="im im-icon-Home-2"></i>
-            <div class="icon-links">
-              <div style="color: #ff556a;">For Sale</div>
-              <div style="color: #ff556a;">For Rent</div>
-            </div>
-          </div>
-
-          <h3>Houses</h3>
-          <p>Without any further customization you can right away start your house rental business effectively. With all the features from Airbnb along with the customized features for car rental business, it’s the right script for you to start business.</p>
-        </div>
-      </div>
-
-      <div class="col-md-4 col-sm-4">
-        <!-- Icon Box --
-        <div class="icon-box-1">
-
-          <div class="icon-container">
-            <i class="im im-icon-Car-3"></i>
-            <div class="icon-links">
-              <div style="color: #ff556a;">For Sale</div>
-              <div style="color: #ff556a;">For Rent</div>
-            </div>
-          </div>
-
-          <h3>Car Rental</h3>
-          <p>Without any further customization you can right away start your car rental business effectively. With all the features from Airbnb along with the customized features for car rental business, it’s the right script for you to start business.</p>
-        </div>
-      </div>
-
-
-
-    </div>
-  </div>
-</section>
-    <!-- How it Work  / End -->
-
     <!-- Featured -->
     <section class="fullwidth sec2">
-        <h3 class="home-h3" style="margin-top: -100px;">Latest Listings</h3>
+        <h3 class="home-h3 text-center">Latest Listings</h3>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
 
                     <!-- <h3 class="headline margin-bottom-25 margin-top-65" style="text-align:center">Latest Listings</h3> -->
-                </div>
-                <!-- Carousel -->
-                <div class="col-md-12">
-                    <div class="carousel">
-
-                    @foreach($latest_properties as $property)
-
-                        <!-- Listing Item -->
-                            <div class="carousel-item">
-                                <div class="listing-item compact">
-                                    <a href="{{url('/')}}/property/{{$property->property_id}}"
-                                       class="listing-img-container">
-                                        <div class="listing-badges">
-                                            <span class="featured">Latest</span>
-
-                                        </div>
-                                        <div class="listing-img-content">
-
-                                            @if($property->is_favourite == 0)
-                                                <span onclick="favourite({{$property->property_id}});"
-                                                      class="like-icon with-tip"
-                                                      data-tip-content="Add to Favorites"></span>
-                                            @else
-                                                <span onclick="favourite({{$property->property_id}});"
-                                                      class="like-icon with-tip liked"
-                                                      data-tip-content="Remove from Favorites"></span>
-                                            @endif
-
-                                            <span class="listing-compact-title">
-                    {{$property->title}} <i>${{$property->price_more_than_one_month}}</i></span>
-                                            <ul class="listing-hidden-content">
-                                                <li>Area <span>{{$property->property_size}} sq ft</span></li>
-
-                                        </div>
-
-                                    </a>
-                                </div>
-                            </div>
-                            <!-- Listing Item / End -->
-                        @endforeach
-
-
-                    </div>
-                    <!-- Carousel / End -->
                 </div>
                 <!-- Carousel -->
                 <div class="col-md-12">
@@ -553,7 +441,7 @@
 
                                         <div class="listing-img-content">
                                             <span
-                                                class="listing-price">$ {{$property->price_more_than_one_month}}/Month</i></span>
+                                                class="listing-price">$ {{$property->price_per_night * 30}}/Month</i></span>
                                             @if(Session::get('user_id'))
                                                 <span @if($property->is_favourite == "0") class="like-icon with-tip"
                                                       @else class="like-icon with-tip liked"
@@ -578,15 +466,12 @@
                                     <div class="listing-content">
 
                                         <div class="listing-title">
-                                            <h4 style="max-height: 70px;min-height: 70px;">
+                                            <h4>
                                                 <a href="{{url('/')}}/property/{{$property->property_id}}">{{$property->title}}</a>
                                             </h4>
-                                            <a href="{{url('/')}}/property/{{$property->property_id}}"
-                                               class="listing-address popup-gmaps">
+                                            <a href="{{url('/')}}/property/{{$property->property_id}}">
                                                 <i class="fa fa-map-marker"></i>
                                                 {{$property->city}},{{$property->state}}
-
-
                                             </a>
                                             @if($property->pets_allowed == 1)
                                                 <div style="float: right;" title="Pets Allowed">
@@ -630,7 +515,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h3 class="headline centered margin-bottom-35 home-h3" style="margin-top: -100px;">Featured Places
+                    <h3 class="headline centered margin-bottom-35 home-h3">Featured Places
                         <span>Search for your next short-term housing by City and State</span></h3>
                 </div>
 

@@ -134,17 +134,17 @@
                     <tr>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
                             <p style="color: #000;">
-                                Price per night <br> ( {{$data->total_days}} x $ {{$data->price_per_night}} )
+                                Price per night <br> ( {{$data->min_days}} x $ {{$data->price_per_night}} )
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
                             <p style="color: #000;">
-                                $ {{$data->price_per_night * $data->total_days}}
+                                $ {{$data->price_per_night * $data->min_days}}
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
                             <p style="color: #000;">
-                                {{$data->total_days}} Nights
+                                {{$data->min_days}} Nights
                             </p>
                         </th>
                     </tr>
@@ -203,12 +203,12 @@
                         </th>
                     </tr>
 
-                   
+
 
                     <tr>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
                             <p style="color: #000;">
-                                Service Fee 
+                                Service Fee
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
@@ -317,12 +317,12 @@
                     <center>
                         <br><br>
                     @if($data->status == 1)
-                    
-                    
+
+
                         <button class="button" onclick="owner_status_update(2)">Accept Request</button>
                         <button class="button" onclick="owner_status_update(4)" style="background-color: #e78016;">Decline Request</button>
                     <br><br>
-                        
+
                     @elseif($data->status == 2)
                         <button class="button" >Request Accepted</button><br><br>
                     @elseif($data->status == 3)
@@ -348,7 +348,7 @@
             }else{
                 var r = true;
             }
-            
+
             if (r == true) {
                 var url = window.location.protocol + "//" + window.location.host + "/owner-update-booking?booking_id="+id+"&status="+status;
                 $.ajax({
@@ -359,7 +359,7 @@
                         location.reload();
                     }
                 });
-                
+
             }
         }
     </script>

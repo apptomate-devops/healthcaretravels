@@ -140,11 +140,11 @@ class HomeController extends BaseController
             ->where('property_list.property_status', '=', 1)
             ->where('property_list.status', '=', 1)
             ->where('property_list.is_complete', '=', ACTIVE)
-            ->where('property_list.property_type_rv_or_home', '=', 2)
             ->select(
                 'property_short_term_pricing.price_per_night',
                 'property_short_term_pricing.price_more_than_one_month',
                 'property_list.title',
+                'property_list.min_days',
                 'property_list.location',
                 'property_room.bedroom_count',
                 'property_room.bathroom_count',

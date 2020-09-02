@@ -4539,6 +4539,11 @@ span.like-icon {
     font-size: 20px;
     color: #333;
     line-height: 31px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
 }
 
 .listing-title h4 a:hover {
@@ -4896,7 +4901,7 @@ section.fullwidth {
     width: 100%;
     display: block;
     position: relative;
-    padding: 90px 0;
+    padding: 20px 0;
     margin: 50px 0;
     background-color: #f7f7f7;
 }
@@ -7377,7 +7382,7 @@ body .carousel {
 
 .owl-theme .owl-controls .owl-buttons {
     position: absolute;
-    top: -60px;
+    top: -40px;
     right: 8px;
 }
 

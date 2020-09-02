@@ -55,17 +55,17 @@
     <tr>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
             <p style="color: #000;">
-                Price per night ( {{$data->total_days}} x $ {{$data->price_per_night}} )
+                Price per night ( {{$data->min_days}} x $ {{$data->price_per_night}} )
             </p>
         </th>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
             <p style="color: #000;">
-                $ {{$data->price_per_night * $data->total_days}}.00
+                $ {{$data->price_per_night * $data->min_days}}.00
             </p>
         </th>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
             <p style="color: #000;">
-                {{$data->total_days}} Nights
+                {{$data->min_days}} Nights
             </p>
         </th>
     </tr>
@@ -88,7 +88,7 @@
         </th>
     </tr>
 
-   
+
 
     <tr>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
@@ -132,7 +132,7 @@
     <tr>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
             <p style="color: #000;">
-                Service Fee 
+                Service Fee
             </p>
         </th>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
@@ -147,7 +147,7 @@
         </th>
     </tr>
 
-    
+
 
     <tr>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
@@ -160,7 +160,7 @@
                 <b>$  {{$data->total_amount}}.00</b>
             </p>
         </th>
-        
+
     </tr>
 
     {{-- <tr>
@@ -174,7 +174,7 @@
                 {{$data->total_amount - $serv_fare}}
             </p>
         </th>
-        
+
     </tr> --}}
 
 </table>
@@ -183,7 +183,7 @@
     <center>
         <div class="copyrights">© 2019 Health Care Travels. All Rights Reserved.</div>
     </center>
-    
+
 </div>
 </body>
 </html>

@@ -292,23 +292,24 @@
             @endif
 
             @foreach($icals as $ical)
-                <div class="col-md-4"></div>
-                <div class="col-md-8 card" style="margin-top: 20px;">
-                    <input type="hidden" id="property_id" name="property_id" value="{{$id}}">
-                    <label style="margin-top: 20px;" >Enter Third party Name</label>
-                    <input style="margin-left: 10px;max-width: 518px;" type="text" id="ical_name" value="{{$ical->third_party_name}}" name="ical_name">
-                    <label>Enter Third party ICAL URL here</label>
-                    <input style="margin-left: 10px;max-width: 518px;" type="text" id="ical_url" value="{{$ical->third_party_url}}" name="ical_url">
+                <form method="get" action="{{url('/')}}/delete-calender/{{$ical->id}}">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-8 card" style="margin-top: 20px;">
+                        <input type="hidden" id="property_id" name="property_id" value="{{$id}}">
+                        <label style="margin-top: 20px;" >Enter Third party Name</label>
+                        <input style="margin-left: 10px;max-width: 518px;" type="text" id="ical_name_{{$ical->id}}" value="{{$ical->third_party_name}}" name="ical_name">
+                        <label>Enter Third party ICAL URL here</label>
+                        <input style="margin-left: 10px;max-width: 518px;" type="text" id="ical_url_{{$ical->id}}" value="{{$ical->third_party_url}}" name="ical_url">
 
-                    <button type="button" id="update_ical" class="button preview margin-top-5" style="margin-bottom: 20px;float: right;">
-                        Delete
-                    </button>
+                        <button type="submit" id="delete_ical" class="button preview margin-top-5" style="margin-bottom: 20px;float: right;">
+                            Delete
+                        </button>
 
-                    <button type="button" id="update_ical" class="button preview margin-top-5" style="margin-bottom: 20px;float: right;">
-                        Update
-                    </button>
-
-                </div>
+                        <button type="button" id="update_ical" data-id="{{$ical->id}}" class="button preview margin-top-5" style="margin-bottom: 20px;float: right;">
+                            Update
+                        </button>
+                    </div>
+                </form>
             @endforeach
 
         </div>
@@ -353,7 +354,6 @@
         function show_alert_message(msg = "Please fill all fields") {
             show_snackbar(msg);
             setTimeout(function(){ remove_snackbar(); }, 4000);
-            return false;
         };
 
         $("#add_ical").click(function(){
@@ -362,8 +362,36 @@
             var ical_name = $("#ical_name").val();
             var ical_url = $("#ical_url").val();
 
-            if(ical_name == "" || ical_url == "") { show_alert_message(); }
+            if(ical_name == "" || ical_url == "") {
+                show_alert_message();
+                return;
+            }
             var ajax_url = "{{BASE_URL}}"+"add-calender/"+property_id+"?ical_name="+ical_name+"&ical_url="+ical_url;
+            $.ajax({
+                url:ajax_url,
+                type:"get",
+                success: function(data){
+                    if(data.status === 'SUCCESS') {
+                        location.reload();
+                    } else {
+                        show_alert_message();
+                    }
+                },
+                error: function(){ show_alert_message(); }
+            });
+
+        });
+        $("#update_ical").click(function(){
+
+            var id = $(this).data("id");
+            var ical_name = $(`#ical_name_${id}`).val();
+            var ical_url = $(`#ical_url_${id}`).val();
+            if(ical_name == "" || ical_url == "" || !id) {
+                show_alert_message();
+                return;
+            }
+
+            var ajax_url = "{{BASE_URL}}"+"update-calender/"+id+"?ical_name="+ical_name+"&ical_url="+ical_url;
             $.ajax({
                 url:ajax_url,
                 type:"get",
@@ -372,15 +400,14 @@
                 },
                 success: function(data){
                     if(data.status === 'SUCCESS') {
-                        $("#ical_name").val("");
-                        $("#ical_url").val("");
-                        $("#ical_name").focus();
-                        show_alert_message("Calender added successfully");
+                        show_alert_message("Calender updated successfully");
                     } else {
                         show_alert_message();
                     }
                 },
-                error: function(){ show_alert_message(); }
+                error: function(){
+                    show_alert_message();
+                }
             });
 
         });

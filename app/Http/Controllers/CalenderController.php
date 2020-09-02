@@ -24,6 +24,33 @@ class CalenderController extends BaseController
         return response()->json(['status' => 'FAILED', 'message' => 'Please fill all the details']);
     }
 
+    public function update_calender(Request $request, $id)
+    {
+        //
+        if ($request->ical_name && $request->ical_url && $id) {
+            $data = [];
+            $data['third_party_name'] = $request->ical_name;
+            $data['third_party_url'] = $request->ical_url;
+            DB::table('third_party_calender')
+                ->where('id', $id)
+                ->update($data);
+            return response()->json(['status' => 'SUCCESS']);
+        }
+        return response()->json(['status' => 'FAILED', 'message' => 'Please fill all the details']);
+    }
+
+    public function delete_calender($id)
+    {
+        //
+        if ($id) {
+            DB::table('third_party_calender')
+                ->where('id', $id)
+                ->delete();
+            return back()->with('success', 'Calendar deleted successfully');
+        }
+        return back()->with('error', 'Error deleting calendar');
+    }
+
     public function test_mail(Request $request)
     {
         $profile_pic = $request->profile_image;

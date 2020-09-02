@@ -24,25 +24,25 @@
                 <br>
                 <div class="text-center">
                     @if($data->facebook_url!='0')
-                        <a href="{{$data->facebook_url}}" target="_blank"
+                        <a href="{{$data->facebook_url}}" data-href="{{$data->facebook_url}}" target="_blank"
                            class="btn btn-social-icon parse-link-href mr-1 mb-1 btn-outline-facebook">
                             <span class="la la-facebook"></span>
                         </a>
                     @endif
                     @if($data->linkedin_url!='0')
-                        <a href="{{$data->linkedin_url}}" target="_blank"
+                        <a href="{{$data->linkedin_url}}" data-href="{{$data->linkedin_url}}" target="_blank"
                            class="btn btn-social-icon parse-link-href mb-1 btn-outline-linkedin">
                             <span class="la la-linkedin font-medium-4"></span>
                         </a>
                     @endif
                     @if($data->instagram_url!='0')
-                        <a href="{{$data->instagram_url}}" target="_blank"
+                        <a href="{{$data->instagram_url}}" data-href="{{$data->instagram_url}}" target="_blank"
                            class="btn btn-social-icon parse-link-href mb-1 btn-outline-linkedin">
                             <span class="la la-instagram font-medium-4"></span>
                         </a>
                     @endif
                     @if($data->twitter_url!='0')
-                        <a href="{{$data->twitter_url}}" target="_blank"
+                        <a href="{{$data->twitter_url}}" data-href="{{$data->twitter_url}}" target="_blank"
                            class="btn btn-social-icon parse-link-href mb-1 btn-outline-linkedin">
                             <span class="la la-twitter font-medium-4"></span>
                         </a>
@@ -126,7 +126,7 @@
             <div class="card-content">
                 <div class="card-body">
                     @foreach($user_links as $link => $link_name)
-                        @if($data->$link)<h5>{{$link_name.": "}}<a class="parse-link-href" target="_blank" href="{{$data->$link}}">{{$data->$link}}</a></h5>@endif
+                        @if($data->$link)<h5>{{$link_name.": "}}<a class="parse-link-href" target="_blank" href="{{$data->$link}}" data-href="{{$data->$link}}">{{$data->$link}}</a></h5>@endif
                     @endforeach
                 </div>
             </div>
@@ -284,7 +284,7 @@
         $(document).on('click', 'a.parse-link-href', function(event) {
             event.preventDefault();
             event.stopPropagation();
-            var URL = parseUrl(event.currentTarget.href);
+            var URL = parseUrl(event.currentTarget.dataset.href);
             window.open(URL, '_blank');
         });
         $(document).on('click', 'a.verification-response', function(event) {

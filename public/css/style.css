@@ -5473,7 +5473,7 @@ section.fullwidth.border-bottom {
     height: 180px;
     display: block;
     background: linear-gradient(rgba(255, 255, 255, 0), #fff 88%);
-    z-index: 9;
+    z-index: 1;
     opacity: 1;
     visibility: visible;
     transition: all 1s;
@@ -5495,7 +5495,7 @@ section.fullwidth.border-bottom {
     left: 0;
     margin-left: 50%;
     transform: translateX(-50.5%);
-    z-index: 10;
+    z-index: 2;
     text-align: center;
     display: block;
     opacity: 1;

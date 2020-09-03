@@ -40,7 +40,7 @@
   gtag('config', 'UA-117530617-1');
 </script>
 <!-- Hotjar Tracking Code for https://healthcaretravels.com/ -->
-<script>
+{{-- <script>
     (function(h,o,t,j,a,r){
         h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
         h._hjSettings={hjid:1973030,hjsv:6};
@@ -49,7 +49,7 @@
         r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
         a.appendChild(r);
     })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-</script>
+</script> --}}
 
 {{-- End Analytics codes --}}
 

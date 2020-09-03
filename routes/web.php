@@ -163,3 +163,5 @@ Route::middleware(['LoginCheck'])->group(function () {
     // Payment and Invoices
     Route::GET('/invoice/{id}', 'PDF_Controller@invoice');
 });
+
+Route::fallback('BaseController@not_found');

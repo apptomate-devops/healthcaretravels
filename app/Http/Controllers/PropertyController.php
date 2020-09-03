@@ -2952,6 +2952,7 @@ class PropertyController extends BaseController
             $data->occupation = $request->guest_occupation[$i];
             $data->phone_number = $request->phone_number[$i];
             $data->email = $request->email[$i];
+            $data->age = $request->age[$i];
             $data->save();
         }
         return redirect()->intended('/traveler/my-reservations');

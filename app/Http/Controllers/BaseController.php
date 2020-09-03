@@ -676,11 +676,10 @@ class BaseController extends ConstantsController
         }
         return strtoupper($randomString);
     }
-    // Not found error page
 
-    public function not_found()
+    public function general_error()
     {
-        return view('not_found');
+        return view('general_error');
     }
 
     public function yelp_hospitals($latitude, $longitude)

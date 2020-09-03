@@ -1,6 +1,4 @@
-
-
- @extends('layout.master') @section('title','Health Care Travels') @section('main_content')
+@extends('layout.master') @section('title','Health Care Travels') @section('main_content')
 
 
 <div class="container" style="margin-top: 35px;">
@@ -40,7 +38,6 @@
 .error-template a.button {
     width: 260px;
     margin-top: 40px;
-    height: 40px;
     background: #E78016;
 }
 .error-template a.button:hover {
@@ -50,24 +47,21 @@
 .error-actions {margin-top:15px;margin-bottom:15px;}
 .error-actions .btn { margin-right:10px; }
 </style>
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<!------ Include the above in your HEAD tag ---------->
 
 <div class="container">
     <div class="row">
 
         <div class="col-md-12">
             <div class="error-template">
-                <img src="/404.png" alt="">
-                <div class="detail-text">Something’s missing...</div>
+                @if (empty($hideImage))
+                    <img src="/404.png" alt="404 image">
+                @endif
+                <div class="detail-text">{{$title ?? 'Something’s missing...'}}</div>
                 <div class="error-details">
-                    We can’t find the page you’re looking for.
+                    {{$message ?? 'We can’t find the page you’re looking for.'}}
                 </div>
-
-                <a href="{{BASE_URL}}" class="button">
-                    <div>Go Back</div>
+                <a href="{{$url ?? BASE_URL}}" class="button">
+                <div>{{$buttonText ?? 'Go Back'}}</div>
                 </a>
                 <div class="error-actions" style="height:200px ">
 

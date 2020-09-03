@@ -11,7 +11,7 @@
 |
 */
 
-Route::GET('/not_found', 'BaseController@not_found');
+Route::GET('/not_found', 'BaseController@general_error');
 Route::get('/storage/{filePath}', 'BaseController@get_storage_file')->where(['filePath' => '.*']);
 
 // Logout Controller Routes
@@ -163,4 +163,4 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::GET('/invoice/{id}', 'PDF_Controller@invoice');
 });
 
-Route::fallback('BaseController@not_found');
+Route::fallback('BaseController@general_error');

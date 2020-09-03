@@ -1394,6 +1394,8 @@ class PropertyController extends BaseController
                 ->get();
             $properties->property_images = $pd;
             $location = $properties->location;
+        } else {
+            return view('general_error', ['message' => 'We can’t find the property you’re looking for.']);
         }
         $result = $properties;
 

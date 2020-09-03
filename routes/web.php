@@ -48,7 +48,6 @@ Route::get('/scout', 'HomeController@scout');
 Route::post('/become-a-scout-save', 'HomeController@save_become_a_scout');
 Route::get('/cancellationpolicy', 'HomeController@cancellation_policy');
 Route::get('/contact', 'HomeController@contact');
-// TODO: confirm if only logged in user can use contact us form.
 Route::POST('/contact_mail', 'HomeController@contact_mail');
 Route::get('/content-policy', 'HomeController@content');
 Route::get('/cookie-policy', 'HomeController@cookie_policy');

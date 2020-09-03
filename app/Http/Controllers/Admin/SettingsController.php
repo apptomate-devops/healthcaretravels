@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
-use App\Settings;
+use App\Models\Settings;
 
 class SettingsController extends BaseController
 {

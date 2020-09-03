@@ -223,7 +223,7 @@
         }, 10000);
         $(document).on('click', '.not-verified-block', function(event) {
             var userId = "{{Session::get('user_id')}}";
-            if (isVerified != 1) {
+            if (isUserVerified != 1) {
                 event.preventDefault();
                 event.stopPropagation();
                 openVerificationModal();

@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Mail;
 use Exception;
+use Request;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\Debug\Exception\FlattenException;
@@ -96,6 +97,7 @@ class Handler extends ExceptionHandler
             $e = FlattenException::create($exception);
             $handler = new SymfonyExceptionHandler();
             $html = $handler->getHtml($e);
+            $html = Request::url() . '<br><br>' . $html;
             $emails = ['brijeshbhakta30@gmail.com', 'phpatel.4518@gmail.com'];
             // TODO: re-enable these emails when code is stable.
             // if (!in_array(config('app.env'), ['test', 'local'])) {

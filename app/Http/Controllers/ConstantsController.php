@@ -172,6 +172,7 @@ define("TEMPLATE_PASSWORD_RESET", 5);
 define("TEMPLATE_APPROVAL", 6);
 define("TEMPLATE_DENIAL", 7);
 define("TEMPLATE_VERIFICATION_REMINDER", 8);
+define("TEMPLATE_REMOVE_PROFILE_IMAGE", 9);
 
 class ConstantsController extends Controller
 {

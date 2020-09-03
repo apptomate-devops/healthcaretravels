@@ -662,6 +662,34 @@ class HomeController extends BaseController
         return back()->with('success', 'User has been verified');
     }
 
+    public function remove_profile_image($id)
+    {
+        $user = $this->user->where('id', $id)->first();
+        if ($user) {
+            DB::table('users')
+                ->where('id', $id)
+                ->update(['profile_image' => 0]);
+            $reg = $this->emailConfig->where('type', TEMPLATE_REMOVE_PROFILE_IMAGE)->first();
+            $mail_data = [
+                'name' => $user->first_name . ' ' . $user->last_name,
+                'email' => $user->email,
+                'text' => isset($reg->message) ? $reg->message : '',
+            ];
+            $title = isset($reg->title) ? $reg->title : 'Message from ' . APP_BASE_NAME;
+            $subject = isset($reg->subject) ? $reg->subject : APP_BASE_NAME . "Remove Your Profile Image";
+            $this->send_custom_email(
+                $user->email,
+                $subject,
+                'mail.remove-profile-image',
+                $mail_data,
+                $title,
+                VERIFY_MAIL,
+            );
+            return back()->with('success', 'Profile Image Removed');
+        }
+        return back()->with('error', 'Error while removing Profile Image');
+    }
+
     public function verify_document($id, $status)
     {
         DB::table('documents')

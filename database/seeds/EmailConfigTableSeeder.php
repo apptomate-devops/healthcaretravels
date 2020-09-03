@@ -53,5 +53,18 @@ class EmailConfigTableSeeder extends Seeder
                 'updated_at' => date("Y-m-d H:i:s"),
             ],
         );
+        \App\Models\EmailConfig::updateOrCreate(
+            [
+                'type' => 9,
+            ],
+            [
+                'type' => 9,
+                'title' => 'Health Care Travels',
+                'subject' => 'Removing Profile Image',
+                'message' => "As your profile picture was inappropriate, it is removed by Health Care Travels",
+                'role_id' => 0,
+                'updated_at' => date("Y-m-d H:i:s"),
+            ],
+        );
     }
 }

@@ -106,6 +106,7 @@ Route::group(['prefix' => 'admin'], function () {
         // Route::POST('/save_booking_confirm_mail','Admin\HomeController@save_booking_confirm_mail');
         // Route::POST('/save_booking_cancel_mail','Admin\HomeController@save_booking_cancel_mail');
         //verify process
+        Route::GET('/remove_profile_image/{id}', 'Admin\HomeController@remove_profile_image');
         Route::GET('/verify_property/{id}', 'Admin\HomeController@verify_property');
         Route::GET('/verify_profile/{id}/{deny?}', 'Admin\HomeController@verify_profile');
         Route::GET('/verify_document/{id}/{status}', 'Admin\HomeController@verify_document');

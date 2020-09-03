@@ -1,6 +1,17 @@
 @extends('Admin.Layout.master')
-
-@section('title')  Rentals Slew Admin @endsection
+<style>
+    .user-profile {
+        height: 150px;
+        width: 150px;
+        border-radius: 50%;
+        border: 1px solid #e08716;
+        object-fit: contain;
+    }
+    .remove-profile-image {
+        position: absolute; height: 30px; width: 30px; top: 0; right: 0; background: red
+    }
+</style>
+@section('title') Rentals Slew Admin @endsection
 
 @section('content')
     <div class="card">
@@ -8,8 +19,13 @@
             <div class="card-body">
                 <img
                     src="@if($data->profile_image!=' ' &&  $data->profile_image!='0'){{$data->profile_image}}@else https://image.flaticon.com/icons/png/512/73/73199.png @endif"
-                    class="rounded-circle  height-150" alt="{{$data->username}} image">
+                    alt="{{$data->username}} image"
+                    class="user-profile">
             </div>
+            @if($data->profile_image!=' ' &&  $data->profile_image!='0')
+                <a class="btn btn-default btn-danger"
+                   href="{{BASE_URL}}admin/remove_profile_image/{{$data->id}}"><span style="height:29px">Click here to Remove Profile Image</span></a>
+            @endif
             <div class="card-body">
                 <h4 class="card-title"><span class="field-label">Username:</span>{{$data->username}}</h4>
                 <h6 class="card-subtitle text-muted"><span class="field-label">Name:</span>{{$data->first_name ?? ''}} {{$data->last_name ?? ''}}</h6>
@@ -49,15 +65,15 @@
                     @endif
                 </div>
                 @if ($data->is_verified==1)
-                        <span class="btn btn-default btn-success btn-block" style="background-color: green">Verified</span>
-                    @elseif ($data->is_verified==-1)
-                        <span class="btn btn-default btn-danger btn-block">Denied</span>
-                    @endif
+                    <span class="btn btn-default btn-success btn-block" style="background-color: green">Verified</span>
+                @elseif ($data->is_verified==-1)
+                    <span class="btn btn-default btn-danger btn-block">Denied</span>
+                @endif
                 @if($data->is_verified!=1)
                     <a
                         style="float:right" class="btn btn-default btn-primary btn-block"
                         href="{{BASE_URL}}admin/verify_profile/{{$data->id}}"
-                        >
+                    >
                         <span style="height:29px">
                             Click here to verify This {{strtolower($data->role)}}
                         </span>
@@ -83,7 +99,7 @@
         <div class="card-body">
             <div class="phone-wrapper">
                 <h4 class="card-title"> Verification Mobile Number
-                : {{$data->phone ?? 'Not Added'}}</h4>
+                    : {{$data->phone ?? 'Not Added'}}</h4>
                 @if ($data->otp_verified == 1)
                     <span class="btn btn-default btn-success" style="background-color: green">Verified</span>
                 @else
@@ -94,11 +110,11 @@
             @if(isset($data->phone))
                 @if($data->otp_verified == 0)
                     <a style="float:left" class="btn btn-default btn-success"
-                        href="{{BASE_URL}}admin/verify_mobile/{{$data->id}}/1"><span
-                        style="height:29px;width: 10px">Click here to Verify Phone Number</span></a>
+                       href="{{BASE_URL}}admin/verify_mobile/{{$data->id}}/1"><span
+                            style="height:29px;width: 10px">Click here to Verify Phone Number</span></a>
                 @elseif($data->otp_verified == 1)
                     <a style="float:left" class="btn btn-default btn-danger"
-                        href="{{BASE_URL}}admin/verify_mobile/{{$data->id}}/0"><span style="height:29px">Click here to Unverify Phone Number</span></a>
+                       href="{{BASE_URL}}admin/verify_mobile/{{$data->id}}/0"><span style="height:29px">Click here to Unverify Phone Number</span></a>
                 @endif
             @endif
         </div>
@@ -216,21 +232,21 @@
                                         @elseif (\Illuminate\Support\Str::endsWith(strtolower($d->document_url), '.heic'))
                                             <span class="file-loading">Loading...</span>
                                             <img data-enlargable class="gallery-thumbnail card-img-top heic-image" src="{{$d->document_url}}"
-                                                itemprop="thumbnail" alt="Image description">
+                                                 itemprop="thumbnail" alt="Image description">
                                         @else
                                             <img data-enlargable class="gallery-thumbnail card-img-top" src="{{$d->document_url}}"
-                                                itemprop="thumbnail" alt="Image description">
+                                                 itemprop="thumbnail" alt="Image description">
                                         @endif
                                         <div class="card-body px-0">
                                             @if($d->status == 0)
                                                 <a class="verification-response verification-approved btn btn-default btn-success btn-block"
-                                                    {{-- href="{{BASE_URL}}admin/verify_document/{{$d->id}}/1" --}}
-                                                    data-id="{{$d->id}}" data-status="1" data-title="{{ucfirst(str_replace("_"," ",$d->document_type))}}">
+                                                   {{-- href="{{BASE_URL}}admin/verify_document/{{$d->id}}/1" --}}
+                                                   data-id="{{$d->id}}" data-status="1" data-title="{{ucfirst(str_replace("_"," ",$d->document_type))}}">
                                                     <span style="height:30px">Verify This Document</span>
                                                 </a>
                                                 <a class="verification-response verification-denied btn btn-default btn-danger btn-block"
-                                                    {{-- href="{{BASE_URL}}admin/verify_document/{{$d->id}}/2" --}}
-                                                    data-id="{{$d->id}}" data-status="-1" data-title="{{ucfirst(str_replace("_"," ",$d->document_type))}}">
+                                                   {{-- href="{{BASE_URL}}admin/verify_document/{{$d->id}}/2" --}}
+                                                   data-id="{{$d->id}}" data-status="-1" data-title="{{ucfirst(str_replace("_"," ",$d->document_type))}}">
                                                     <span style="height:30px">Deny This Document</span>
                                                 </a>
                                                 <div class="form-group">
@@ -238,7 +254,7 @@
                                                 </div>
                                             @elseif($d->status == 1)
                                                 <span class="btn btn-default btn-success btn-block"
-                                                    style="background-color: green">Verified</span>
+                                                      style="background-color: green">Verified</span>
                                             @else
                                                 <span class="btn btn-default btn-danger btn-block">Unverified</span>
                                             @endif

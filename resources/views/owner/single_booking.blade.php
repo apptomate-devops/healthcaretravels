@@ -69,7 +69,8 @@
                             {{date('m-d-Y',strtotime($data->start_date))}} to {{date('m-d-Y',strtotime($data->end_date))}}
                         </th>
                     </tr>
-                    @if($data->role_id == 2)
+                    {{-- NOTE: Commented the recruiter details as noboday understands what it is! 🤷🏻‍♂️ 😀 --}}
+                    {{-- @if($data->role_id == 2)
                         <tr class="card">
                             <th style="width: 0;background-color: #e78016;">
                                 Recruiter name :
@@ -98,7 +99,7 @@
                                 {{date('m-d-Y',strtotime($data->contract_start_date))}} to {{date('m-d-Y',strtotime($data->contract_end_date))}}
                             </th>
                         </tr>
-                    @endif
+                    @endif --}}
 
                     <tr>
                         <th style="width: 0;background-color: #e78016;">

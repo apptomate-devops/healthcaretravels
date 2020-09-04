@@ -11,6 +11,41 @@ class EmailConfigTableSeeder extends Seeder
      */
     public function run()
     {
+        // Email type details:
+        // Type 3 Role 0: Normal Booking request
+        // Type 3 Tole 1: Instant Booking
+        // Type 6: Account verification email
+        // Type 7: Account verification failed email
+        // Type 8: Urgent verify your account email
+        // Type 9: Profile picture removal notice
+        \App\Models\EmailConfig::updateOrCreate(
+            [
+                'type' => 3,
+            ],
+            [
+                'type' => 3,
+                'title' => 'Health Care Travels',
+                'subject' =>
+                    'You have received a new booking request for the below property. Please log in to accept or deny the reservation.',
+                'message' => '',
+                'role_id' => 0,
+                'updated_at' => date("Y-m-d H:i:s"),
+            ],
+        );
+        \App\Models\EmailConfig::updateOrCreate(
+            [
+                'type' => 3,
+            ],
+            [
+                'type' => 3,
+                'role_id' => 1,
+                'title' => 'Health Care Travels',
+                'subject' =>
+                    'You have received a new booking for the below property. Please log in to view the details and contact the traveler.',
+                'message' => '',
+                'updated_at' => date("Y-m-d H:i:s"),
+            ],
+        );
         \App\Models\EmailConfig::updateOrCreate(
             [
                 'type' => 6,

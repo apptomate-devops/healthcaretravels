@@ -256,6 +256,7 @@ class PropertyController extends BaseController
                     '=',
                     'property_booking.id',
                 )
+                ->join('users', 'users.id', '=', 'property_booking.owner_id')
                 ->where('property_booking.client_id', CLIENT_ID)
                 ->where('property_booking.booking_id', $booking_id)
                 ->first();
@@ -271,7 +272,7 @@ class PropertyController extends BaseController
                 ->where('role_id', $bookingEmailType)
                 ->first();
             $mail_data = [
-                'name' => $user->first_name . " " . $user->last_name,
+                'name' => $data->first_name . " " . $data->last_name,
                 'text' => isset($welcome->message) ? $welcome->message : '',
                 'property' => $property,
                 'data' => $data,

@@ -3,32 +3,10 @@
     <div>
         Hi {{$name}},
     </div>
-    <div>
+    <div style="padding-top: 5px;">
         {{$text}}
-        <h3>Property Details</h3>
-        <table class="table table-xl mb-0">
-            <tr>
-                <td>Property Name</td>
-                <td><b>{{$property->title}}</b></td>
-                <td>Category</td>
-                <td><b>{{$property->property_category}}</b></td>
-            </tr>
-            <tr>
-                <td>Location</td>
-                <td><b>{{$property->location}}</b></td>
-                <td>Property Type</td>
-                <td><b>{{$property->room_type}}</b></td>
-            </tr>
-            <tr>
-                <td>Property Length</td>
-                <td><b>{{$property->property_size}} ft</b></td>
-            </tr>
-            <tr>
-                <td colspan="1">Description</td>
-                <td colspan="3"><b>{{$property->description}}</b></td>
-            </tr>
-        </table>
-        <br>
+    </div>
+    <div style="padding-top: 5px;">
         <h3>Property Pricing</h3>
         <div class="panel payments-listing payment_list_right">
             <div class="panel-body">

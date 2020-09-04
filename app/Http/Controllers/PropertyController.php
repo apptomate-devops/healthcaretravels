@@ -263,8 +263,13 @@ class PropertyController extends BaseController
                 "SELECT concat(first_name,last_name) as name FROM users WHERE id = $data->owner_id",
             );
             $data->traveller_name = $traveller[0]->name;
-
-            $welcome = EmailConfig::where('type', 3)->first();
+            $bookingEmailType = $data->is_instant;
+            if ($bookingEmailType != 0 || $bookingEmailType != 1) {
+                $bookingEmailType = 0;
+            }
+            $welcome = EmailConfig::where('type', 3)
+                ->where('role_id', $bookingEmailType)
+                ->first();
             $mail_data = [
                 'name' => $user->first_name . " " . $user->last_name,
                 'text' => isset($welcome->message) ? $welcome->message : '',

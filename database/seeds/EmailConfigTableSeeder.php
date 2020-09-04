@@ -27,9 +27,9 @@ class EmailConfigTableSeeder extends Seeder
                 'type' => 3,
                 'role_id' => 0,
                 'title' => 'Health Care Travels',
-                'subject' =>
+                'subject' => 'New booking Request from Health Care Travels',
+                'message' =>
                     'You have received a new booking request for the below property. Please log in to accept or deny the reservation.',
-                'message' => '',
                 'updated_at' => date("Y-m-d H:i:s"),
             ],
         );
@@ -42,9 +42,9 @@ class EmailConfigTableSeeder extends Seeder
                 'type' => 3,
                 'role_id' => 1,
                 'title' => 'Health Care Travels',
-                'subject' =>
+                'subject' => 'New booking Request from Health Care Travels',
+                'message' =>
                     'You have received a new booking for the below property. Please log in to view the details and contact the traveler.',
-                'message' => '',
                 'updated_at' => date("Y-m-d H:i:s"),
             ],
         );

@@ -145,11 +145,8 @@ li.sub-nav-title {
                             {{$data->guest_count}}
                         </th>
                     </tr>
-
                 </table>
-
                 <table class="manage-table responsive-table" style="border-spacing: 0px 8px;">
-
                     <tr>
                         <th style="width: 0;background-color: #0983b8;">
                             Cost
@@ -197,7 +194,6 @@ li.sub-nav-title {
                             </p>
                         </th>
                     </tr>
-
                     <tr>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
@@ -215,7 +211,6 @@ li.sub-nav-title {
                             </p>
                         </th>
                     </tr>
-
                     @if($data->extra_guest!=0)
                         <tr>
                             <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
@@ -323,10 +318,11 @@ li.sub-nav-title {
                     <?php $single_pay = $data->total_amount / $data->payment_splitup; ?>
                     <center>
                         @if($data->payment_done == 1)
-                            <button class="button" >Payment Done</button><br>
+                            <span class="txt-green">Payment Done</span><br>
                         @else
-                            <button class="button" >Not Paid</button><br>
+                            <span class="txt-blue">Not Paid</span><br>
                         @endif
+                        {{-- TODO: need to add pay now button here --}}
                     </center>
 
                     @if(isset($_GET['id']))

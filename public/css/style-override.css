@@ -135,6 +135,14 @@
     z-index: 1;
 }
 
+.txt-green {
+    color: green;
+}
+
+.txt-blue {
+    color: blue;
+}
+
 .check-in-out-wrapper {
     display: flex;
     border-radius: 3px;

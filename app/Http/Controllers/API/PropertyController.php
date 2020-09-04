@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\BaseController;
-use App\PropertyRating;
-use App\OwnerRating;
+use App\Models\PropertyRating;
+use App\Models\OwnerRating;
 use DB;
 
 class PropertyController extends BaseController

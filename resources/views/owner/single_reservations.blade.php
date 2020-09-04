@@ -102,7 +102,8 @@ li.sub-nav-title {
                         </th>
                     </tr>
 
-                    <tr class="card">
+                    {{-- NOTE: Commented the recruiter details as noboday understands what it is! 🤷🏻‍♂️ 😀 --}}
+                    {{-- <tr class="card">
                         <th style="width: 0;background-color: #e78016;">
                             Recruiter name :
                         </th>
@@ -129,7 +130,7 @@ li.sub-nav-title {
                         <th style="width: 0;background-color: #747777;">
                             {{date('m-d-Y',strtotime($data->contract_start_date))}} to {{date('m-d-Y',strtotime($data->contract_end_date))}}
                         </th>
-                    </tr>
+                    </tr> --}}
                     <tr class="card">
                         <th style="width: 0;background-color: #e78016;">
                             Total Payment :

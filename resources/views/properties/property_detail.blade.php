@@ -110,8 +110,7 @@
       padding:5px;
    }
    .total_amount{
-      color: white;
-      background-color: #e78016;
+      color: #e78016;
       font-weight: bold;
       padding: 10px;
       text-align: center;
@@ -125,6 +124,7 @@
    </div>
    <div class="container">
       <div class="row">
+          <form name="payment" action="{{URL('/')}}/save-guest-information" method="post">
          <div class="row">
             <div class="col-md-5 col-md-push-7 col-lg-4 col-lg-push-8 row-space-2 lang-ar-left tempClass">
                <div class="panel payments-listing payment_list_right">
@@ -281,10 +281,21 @@
                                        </td>
                                     </tr>
                                     @endif
+                                    {{-- TODO: add more details of how the payment will be deductued once request is accepted by owner --}}
                                     <tr class="editable-fields" id="total_amount">
-                                       <td colspan="2">
-                                      <div class="total_amount">Payable Amount $ {{$data->total_amount}}.00</div>
-                                       </td>
+                                        <td colspan="2">
+                                            <div class="total_amount">Payable Amount ${{$data->total_amount}}.00</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="editable-fields">
+                                        <td colspan="2">
+                                            <button class="btn btn-default btn-block bg-orange">Request Booking</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="editable-fields" id="total_amount">
+                                        <td colspan="2">
+                                            <div class="total_amount">User will not be charged until booking request is accepted</div>
+                                        </td>
                                     </tr>
                                     <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
                                       @if($data->coupon_value!="")
@@ -335,7 +346,7 @@
 
 
                <section id="head_scroll" class="checkout-main__section payment">
-                  <form name="payment" action="{{URL('/')}}/save-guest-information" method="post">
+
                      <input type="hidden" name="_token" value="{{csrf_token()}}">
                      <input type="hidden" name="booking_id" value="{{$data->booking_id}}">
                      <input type="hidden" name="guest_count" value="{{$data->guest_count}}">
@@ -347,7 +358,8 @@
                                        <p></p>
                                     </div>
                                  </div>
-                                 @if(Session::get('role_id') == 2)
+                                 {{-- NOTE: Commented the recruiter details as noboday understands what it is! 🤷🏻‍♂️ 😀 --}}
+                                 {{-- @if(Session::get('role_id') == 2)
                                     <h2>Basic Details</h2>
                                     <div class="row">
                                        <div class="control-group cc-first-name col-md-6">
@@ -382,7 +394,7 @@
                                        </div>
                                     </div>
                                     <hr>
-                                 @endif
+                                 @endif --}}
                                  <h2>Guest Details</h2>
                                  @for($i=0;$i< $data->guest_count;$i++)
                                  <h4>Enter Guest {{$i+1}} Details</h4>
@@ -391,7 +403,7 @@
                                        <label class="control-label" for="credit-card-first-name">
                                         Guest Name
                                        </label>
-                                       <input  name="guest_name[]" type="text" value="" required="required">
+                                       <input  name="guest_name[]" type="text" value="" required>
                                     </div>
                                     <div class="control-group cc-last-name col-md-6">
                                        <label class="control-label" for="credit-card-last-name">
@@ -411,11 +423,21 @@
                                        </label>
                                        <input  name="email[]" type="email" value="">
                                     </div>
+                                    <div class="control-group cc-last-name col-md-6">
+                                       <label class="control-label" for="credit-card-last-name">
+                                       Age
+                                       </label>
+                                       <select class="" name="age[]" data-placeholder="Select Age" required>
+                                            <option label="Select Age" value="" disabled selected>Select Age</option>
+                                            <option label="Adult" value="Adult"></option>
+                                            <option label="Child (Ages 2-12)" value="Child"></option>
+                                            <option label="Infant (Under 2)" value="Infant"></option>
+                                        </select>
+                                    </div>
                                  </div>
                                  @endfor
 
                            <hr>
-                           <button class="btn btn-default" style="background-color: #e78016;height:30px;color:white">Save Details</button>
                         </div>
                               </div>
 
@@ -428,7 +450,6 @@
                      </div>
                   </div>
                   <hr>
-                  </form>
                </section>
                <div style="height:200px"></div>
                <p>
@@ -436,6 +457,7 @@
                </p>
             </div>
          </div>
+        </form>
          <!-- Property Description -->
          <!-- Property Description / End -->
          <!-- Sidebar -->
@@ -467,6 +489,7 @@
 
 <script>
    $(document).ready(function(){
+    //    $('.age-select').chosen();
          date=new Date();
          $("#property_from_date").datepicker({
 

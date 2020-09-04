@@ -63,7 +63,7 @@ li.sub-nav-title {
                         <th><i class="fa fa-file-text"></i> Your Trips</th>
                         <th class="expire-date">{{-- <i class="fa fa-calendar"></i> Status --}} </th>
                         <th></th>
-                    </tr> 
+                    </tr>
 
                 @foreach($bookings as $booking)
                     <!-- Item starts -->
@@ -77,7 +77,7 @@ li.sub-nav-title {
                                     <span>From : {{$booking->start_date}}</span>
                                     <span>To : {{$booking->end_date}}</span>
                                     <span>Booking ID : <a href="{{BASE_URL}}owner/reservations/{{$booking->booking_id}}"> {{$booking->booking_id}} </a></span>
-                                    <span>Payment Status : 
+                                    <span>Payment Status :
                                         <a href="#">
                                         @if($booking->payment_done == 0)
                                         Not paid
@@ -87,7 +87,7 @@ li.sub-nav-title {
                                         Paid
                                         @endif
 
-                                        
+
                                         </a>
                                     </span>
                                 </div>
@@ -102,7 +102,7 @@ li.sub-nav-title {
                                 <p><mark style="color: #FFFF;" >Completed</mark></p>
                                 @elseif($booking->bookStatus == 4)
                                  <p><mark style="color: #FFFF;" >Cancelled</mark></p>
-                               
+
                                 @endif
 
                                 @if($booking->payment_done == 0)
@@ -111,14 +111,15 @@ li.sub-nav-title {
                                     <p><mark style="color: #FFFF;" >Payment Complete</mark></p>
                                 @endif --}}
                             </td>
-                            <td class="action" style="">
-                                
-                                @if($booking->bookStatus == 1 || $booking->bookStatus == 2)
-                                    <button class="button" href="#" style="min-width: 200px;">
-                                        Waiting for confirmation 
+                            <td class="action text-center">
+                                <span>
+                                    @if($booking->bookStatus == 1 || $booking->bookStatus == 2)
+                                        Waiting for confirmation
+                                    @endif
+                                </span>
+                                <button class="button" onclick="document.location.href='{{BASE_URL}}owner/reservations/{{$booking->booking_id}}';" style="min-width: 200px;">
+                                        View Details
                                     </button>
-                                @endif
-
                                 @if($booking->bookStatus == 3)
                                     <button class="button" onclick="document.location.href='{{BASE_URL}}owner/reservations/{{$booking->booking_id}}';" style="min-width: 200px;">
                                         View Invoice
@@ -148,7 +149,7 @@ li.sub-nav-title {
                                         You rated this booking
                                     </button><br><br><br>
                                 @endif
-                                
+
 
                                 {{-- @if($booking->bookStatus != 5)
                                 <button class="button" onclick="cancel_booking('{{$booking->booking_id}}')" style="min-width: 200px;background-color: #e78016;margin-top: 10%">

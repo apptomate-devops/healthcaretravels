@@ -21,20 +21,22 @@ class EmailConfigTableSeeder extends Seeder
         \App\Models\EmailConfig::updateOrCreate(
             [
                 'type' => 3,
+                'role_id' => 0,
             ],
             [
                 'type' => 3,
+                'role_id' => 0,
                 'title' => 'Health Care Travels',
                 'subject' =>
                     'You have received a new booking request for the below property. Please log in to accept or deny the reservation.',
                 'message' => '',
-                'role_id' => 0,
                 'updated_at' => date("Y-m-d H:i:s"),
             ],
         );
         \App\Models\EmailConfig::updateOrCreate(
             [
                 'type' => 3,
+                'role_id' => 1,
             ],
             [
                 'type' => 3,

@@ -15,9 +15,9 @@ class Logger
         $functionName = $functionCaller['function'];
         return $fileName . "(" . $functionName . "): ";
     }
-    public static function info($message)
+    public static function info($message, $context = [])
     {
-        Log::info(Logger::getFilePrefix() . $message);
+        Log::info(Logger::getFilePrefix() . $message, $context);
     }
     public static function error($message)
     {

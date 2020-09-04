@@ -3,6 +3,8 @@
 namespace App\Services;
 use App\Services\Logger;
 
+use GuzzleHttp;
+
 class Sendgrid
 {
     protected $api_key;
@@ -28,7 +30,7 @@ class Sendgrid
 
     public function setUp()
     {
-        $client = new GuzzleHttp\Client(['base_uri' => 'https://api.sendgrid.com/v3']);
+        $client = new GuzzleHttp\Client(['base_uri' => 'https://api.sendgrid.com/v3/']);
         return $client;
     }
 
@@ -41,7 +43,7 @@ class Sendgrid
             ],
         ];
         if (isset($body)) {
-            $options['body'] = $body;
+            $options['json'] = $body;
         }
         $res = $this->client->request($method, $path, $options);
         return $res;
@@ -49,7 +51,7 @@ class Sendgrid
 
     public function addUserToMarketingList($user)
     {
-        return $this->addUsersToLists($user, $this->list_id);
+        return $this->addUsersToLists((object) $user, $this->list_id);
     }
 
     public function addUsersToLists($users, $lists)
@@ -59,13 +61,14 @@ class Sendgrid
                 'list_ids' => is_array($lists) ? $lists : [$lists],
                 'contacts' => is_array($users) ? $users : [$users],
             ];
-            $res = $this->makeRequest('PUT', '/marketing/contacts', $body);
-            $code = $response->getStatusCode();
-            $body = $response->getBody();
-            Logger::info('Status code: ' . $code);
+            $res = $this->makeRequest('PUT', 'marketing/contacts', $body);
+            $code = $res->getStatusCode();
+            $resBody = $res->getBody();
             if ($code >= 400) {
+                Logger::info('Error Response body: ' . $resBody);
                 return false;
             }
+            Logger::info('User has been added to marketing list');
             return $res;
         } catch (\Exception $ex) {
             Logger::error('Error adding user to sendgrid list: EX: ' . $ex->getMessage());

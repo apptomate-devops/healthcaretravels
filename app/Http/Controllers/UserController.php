@@ -10,7 +10,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Models\EmailConfig;
 use App\Models\Users;
 use DB;
-use Log;
+use App\Services\Logger;
 use Mail;
 use Auth;
 
@@ -298,7 +298,7 @@ class UserController extends BaseController
                 return back()->with('error', 'This Email is not registered');
             }
         }
-        Log::info("Login with user hitted at :" . date('d-m-Y H:i:s'));
+        Logger::info("Login with user hitted at :" . date('d-m-Y H:i:s'));
         $this->validate($request, [
             'username' => 'required',
             'password' => 'required|min:4',
@@ -636,6 +636,7 @@ class UserController extends BaseController
         if (isset($request->profile_image)) {
             $profileImage = $this->base_image_upload($request, 'profile_image', 'users');
         }
+        $email_opt = isset($request->email_opt) ? 1 : 0;
         $insert = DB::table('users')->insert([
             'client_id' => $request->client_id,
             'role_id' => $role_id,
@@ -670,7 +671,7 @@ class UserController extends BaseController
             'login_type' => $login_type,
             'social_id' => $social_id,
             'otp' => $OTP,
-            'email_opt' => isset($request->email_opt) ? 1 : 0,
+            'email_opt' => $email_opt,
             'is_pet_travelling' => isset($request->is_pet_travelling) ? 1 : 0,
             'pet_name' => isset($request->is_pet_travelling) ? $request->pet_name : '',
             'pet_breed' => isset($request->is_pet_travelling) ? $request->pet_breed : '',
@@ -678,6 +679,17 @@ class UserController extends BaseController
             'pet_image' => isset($request->is_pet_travelling) ? $petImage : '',
             'profile_image' => $profileImage,
         ]);
+
+        // NOTE: Checking it as 0 as the value stored in database is inverted
+        if ($email_opt == 0) {
+            $this->sendgrid->addUserToMarketingList([
+                'email' => $request->email,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'city' => $request->city,
+                'postal_code' => $request->pin_code,
+            ]);
+        }
 
         $d = DB::table('users')
             ->where('client_id', '=', $request->client_id)
@@ -956,7 +968,7 @@ class UserController extends BaseController
             return back()->with('error', 'Passwords does not match');
         }
         $user_id = $request->session()->get('user_id');
-        LOG::info("update_password with user_id " . $user_id);
+        Logger::info("update_password with user_id " . $user_id);
         $client_id = $this->get_client_id();
         if ($request->old_password) {
             $check = DB::table('users')

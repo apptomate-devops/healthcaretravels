@@ -23,6 +23,7 @@ use App\Models\PropertyBookingPrice;
 use App\Models\EmailConfig;
 
 use App\Services\Twilio;
+use App\Services\Sendgrid;
 
 use Image;
 use DB;
@@ -83,7 +84,7 @@ class BaseController extends ConstantsController
         // $this->Couponecode=$Couponecode;
         $this->request = $request;
         $this->twilio = new Twilio();
-        //
+        $this->sendgrid = new Sendgrid();
     }
 
     public static function setEnvironmentValue($envKey, $envValue)

@@ -1208,6 +1208,7 @@ class PropertyController extends BaseController
                     'property_booking_price.*',
                     'property_booking.*',
                     'property_list.title',
+                    'property_list.min_days',
                     'property_short_term_pricing.price_per_night',
                     'property_short_term_pricing.city_fee_type',
                     'property_short_term_pricing.city_fee',

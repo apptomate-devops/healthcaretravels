@@ -269,7 +269,7 @@
     }
 
     var map;
-        @if(Request::path()=='short-term' || Request::path()=='properties')
+        @if(Request::path()=='properties')
     var markers = [
                 @foreach($properties as $propmap)
             {
@@ -291,7 +291,7 @@
     ];
     var mapMarkers = [];
     var mapMarkers1 = [];
-        @if(Request::path()=='short-term' || Request::path()=='properties')
+        @if(Request::path()=='properties')
     var latitude = 40.238856;
     var longitude = -101.909323;
         @else
@@ -496,9 +496,6 @@
             case 'owner/add-property':
             case 'verify-account':
                 initializeAddress();
-                break;
-            case 'short-term':
-                initMaps();
                 break;
             case 'properties':
                 initMaps();

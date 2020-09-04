@@ -116,29 +116,22 @@ li.sub-nav-title {
                                     @if($booking->bookStatus == 1 || $booking->bookStatus == 2)
                                         Waiting for confirmation
                                     @endif
+                                    @if($booking->bookStatus == 3)
+                                        View Invoice
+                                    @endif
+                                    @if($booking->bookStatus == 4)
+                                        Booking Cancelled by Owner
+                                    @endif
                                 </span>
                                 <button class="button" onclick="document.location.href='{{BASE_URL}}owner/reservations/{{$booking->booking_id}}';" style="min-width: 200px;">
-                                        View Details
-                                    </button>
-                                @if($booking->bookStatus == 3)
-                                    <button class="button" onclick="document.location.href='{{BASE_URL}}owner/reservations/{{$booking->booking_id}}';" style="min-width: 200px;">
-                                        View Invoice
-                                    </button>
-                                @endif
-
-                                @if($booking->bookStatus == 4)
-                                    <button class="button" onclick="document.location.href='{{BASE_URL}}owner/reservations/{{$booking->booking_id}}';" style="min-width: 200px;">
-                                        Booking Cancelled by Owner
-                                    </button>
-                                @endif
-
+                                    View Request
+                                </button>
                                 @if($booking->bookStatus == 5 || $booking->bookStatus == 6)
                                     <button class="button" onclick="document.location.href='{{BASE_URL}}traveller_ratings/{{$booking->booking_id}}';" style="min-width: 170px;">
                                         Rate your stay
                                     </button><br><br><br>
                                 @endif
-
-                                 @if($booking->bookStatus == 6)
+                                @if($booking->bookStatus == 6)
                                     <button class="button" style="min-width: 170px;">
                                         Owner rated your Stay
                                     </button><br><br><br>

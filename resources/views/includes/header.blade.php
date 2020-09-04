@@ -222,8 +222,8 @@
             });
         }, 10000);
         $(document).on('click', '.not-verified-block', function(event) {
-            var userId = "{{Session::get('user_id')}}";
-            if (isUserVerified != 1) {
+            var sessionVerified = "{{Session::has('is_verified') && Session::get('is_verified')}}";
+            if (isUserVerified != 1 && sessionVerified != "1") {
                 event.preventDefault();
                 event.stopPropagation();
                 openVerificationModal();

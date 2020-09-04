@@ -1,11 +1,8 @@
 @extends('layout.master')
 @section('title')
-
 {{APP_BASE_NAME}} | Owner Account | My Bookings page
-
 @endsection
 @section('main_content')
-
 
 <style>
 .card {
@@ -72,20 +69,20 @@ li.sub-nav-title {
                         <td><input type="text"  name="from_date" placeholder="Start Date" value="" autocomplete="off" id="start_date" /></td>
                         <td colspan="2"><input name="to_date"  type="text"  placeholder="End Date" value="" autocomplete="off" id="end_date" /></td>
                         <td  ><button class="button" id="search" >Search</button></td>
-                    </tr>  
+                    </tr>
                     <tr>
                         <th><i class="fa fa-file-text"></i> My Bookings</th>
                         <th class="expire-date"> Status </th>
                         <th colspan="2">Action</th>
                     </tr>
-                   
+
                     @foreach($bookings as $booking)
                     <!-- Item starts -->
                     <tr class="card" id="{{$booking->id}}">
                         <td class="title-container">
                             <img style="margin-left: 5%;" src="{{$booking->image_url}}" alt="">
                             <div class="title">
-                                <h4><a href="{{url('/')}}/property/{{$booking->property_id}}">{{$booking->title}}</a></h4>      
+                                <h4><a href="{{url('/')}}/property/{{$booking->property_id}}">{{$booking->title}}</a></h4>
                                 <span>Request by : <a href="{{BASE_URL}}owner-profile/{{$booking->traveller_id}}">{{$booking->traveller_name}}</a> </span>
                                 <span>From : {{date('m-d-Y',strtotime($booking->start_date))}}</span>
                                 <span>To : {{date('m-d-Y',strtotime($booking->end_date))}}</span>
@@ -97,65 +94,37 @@ li.sub-nav-title {
                                 <p><mark style="color: #FFFF;background-color: #e78016;" >Payment Done</mark></p>@else<p><mark style="color: #FFFF;background-color: #0983b8;" >Not Paid</mark></p>
                             @endif
                         </td>
-                        <td class="action" style="">
-
-                           @if($booking->status == 1 || $booking->status == 2)
-                                <button type="button" class="button" style="min-width: 170px;" onclick="document.location.href='{{BASE_URL}}owner/single-booking/{{$booking->booking_id}}';">
-                                    View Details
-                                </button><br><br><br>
-                            @endif
-                           
-                             @if($booking->status == 3 )
-                                <button type="button" class="button" style="min-width: 170px;" onclick="document.location.href='{{BASE_URL}}owner/single-booking/{{$booking->booking_id}}';">
+                        <td colspan="2" class="action" style="">
+                            <span>
+                                @if($booking->status == 3 )
                                     Invoice Sent
-                                </button><br><br><br>
-                            @endif
-                             @if($booking->status == 4)
-                                <button type="button" class="button" style="min-width: 170px;" >
+                                @endif
+                                @if($booking->status == 4)
                                     Request Cancelled by you
-                                </button><br><br><br>
-                            @endif
-
+                                @endif
+                                @if($booking->status == 8)
+                                    Booking Cancelled by you
+                                @endif
+                                @if($booking->status == 6)
+                                    You rated traveller
+                                @endif
+                                @if($booking->status == 7)
+                                    Traveller rated your property
+                                @endif
+                            </span>
+                            <button type="button" class="button" style="min-width: 170px;" onclick="document.location.href='{{BASE_URL}}owner/single-booking/{{$booking->booking_id}}';">
+                                View Request
+                            </button><br><br><br>
                             @if($booking->status == 5 || $booking->status == 6)
                                 <button class="button" onclick="document.location.href='{{BASE_URL}}property_ratings/{{$booking->booking_id}}';" style="min-width: 170px;">
                                     Rate Traveller
                                 </button><br><br><br>
                             @endif
-
-                            @if($booking->status == 6)
-                                <button class="button" style="min-width: 170px;">
-                                    You rated traveller
-                                </button><br><br><br>
-                            @endif
-
-                            @if($booking->status == 7)
-                                <button class="button" style="min-width: 170px;">
-                                    Traveller rated your property
-                                </button><br><br><br>
-                            @endif
-
                             @if(date('m-d-Y',strtotime($booking->end_date)) == date('m-d-Y') && $booking->status == 3 && $booking->payment_done == "1")
                                     <button class="button" id="reservation_completed" onclick="reservation_completed('{{$booking->booking_id}}')" style="min-width: 170px;">
                                         Reservation Completed
                                     </button><br>
                             @endif
-                            @if($booking->status != 8)
-                            <button class="button" onclick="cancel_booking('{{$booking->booking_id}}')" style="min-width: 170px;background-color: #e78016;margin-top: 10%">
-                                    Cancel Booking
-                            </button>
-                            @endif
-                            @if($booking->status == 8)
-                            <button class="button" onclick="cancel_booking('{{$booking->booking_id}}')" style="min-width: 170px;background-color: #e78016;margin-top: 10%">
-                                    Booking Cancelled by you
-                            </button>
-                            @endif
-                            
-
-                        </td>
-                        <td>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close" id="delete" onclick="delete_booking('{{$booking->id}}','{{$booking->booking_id}}')" title="Remove Booking">
-                                    <span aria-hidden="true"><i class="fa fa-trash"></i></span>
-                            </button>
                         </td>
                     </tr>
                     <!-- Item ends -->
@@ -173,31 +142,7 @@ li.sub-nav-title {
 
         </div>
     </div>
-
-     <script type="text/javascript">
-        function delete_booking(id,booking_id){
-            $('#'+id).toggle(500);
-            var url = window.location.protocol + "//" + window.location.host + "/delete-booking?id="+id+"&booking_id="+booking_id;
-            $.ajax({
-                type: 'GET',
-                url: url,
-                dataType: 'json',
-                success: function (data) {
-                    
-                }
-            });
-        }
-         
-      
-        function cancel_booking(id)
-        {
-            var r = confirm("Are you sure to cancel Booking..");
-            if (r == true) {
-                var url = '{{BASE_URL}}cancel-booking/'+id;
-                window.location = url;
-            }
-        }
-
+    <script type="text/javascript">
         function reservation_completed(id){
             var r = confirm("Are you sure this reservation is completed?");
             if (r == true) {
@@ -211,7 +156,6 @@ li.sub-nav-title {
                         window.location = url;
                     }
                 });
-                
             }
         }
         $("#start_date").datepicker({
@@ -224,9 +168,7 @@ li.sub-nav-title {
                 startDate: fDate,
                 autoclose: true
             });
-
         });
-
         $("#search").click(function(){
             var start_date = $("#start_date").val();
             var end_date = $("#end_date").val();
@@ -241,10 +183,8 @@ li.sub-nav-title {
                 $('#start_date').css('border','solid 2px grey');
                 $('#end_date').css('border','solid 2px grey');
                 var url = window.location.protocol + "//" + window.location.host +'/owner/bookings?start_date='+start_date+"&end_date="+end_date;
-                 window.location = url; 
+                 window.location = url;
             }
-
         });
     </script>
-
 @endsection

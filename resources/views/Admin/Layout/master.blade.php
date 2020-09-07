@@ -65,5 +65,8 @@
 <script
     src="https://pixinvent.com/modern-admin-clean-bootstrap-4-dashboard-html-template/app-assets/js/scripts/forms/select/form-select2.min.js"
     type="text/javascript"></script>
+    <script type="text/javascript">
+        document.addEventListener('contextmenu', event => event.preventDefault());
+    </script>
 </body>
 </html>

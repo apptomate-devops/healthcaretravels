@@ -49,3 +49,7 @@ canvas[data-enlargable] {
 .heic-image.file-converted {
     display: block;
 }
+
+.mb-15 {
+    margin-bottom: 15px;
+}

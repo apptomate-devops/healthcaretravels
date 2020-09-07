@@ -25,6 +25,7 @@ Route::group(['prefix' => 'admin'], function () {
         //  User management routes
         Route::GET('/admin-users', 'Admin\UsersController@index');
         Route::GET('/admin-user/add', 'Admin\UsersController@add');
+        Route::GET('/approve-all/{type}', 'Admin\UsersController@approve');
 
         // Property management routes
         Route::GET('/property', 'Admin\PropertyController@index');

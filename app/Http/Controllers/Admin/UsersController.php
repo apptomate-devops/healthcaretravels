@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
+use App\Models\Users;
 use DB;
+use Carbon\Carbon;
 
 class UsersController extends BaseController
 {
@@ -18,12 +20,20 @@ class UsersController extends BaseController
 
     public function add(Request $request)
     {
-        # code...
         $pages = DB::table('ad_pages')->get();
         return view('Admin.add-admin-user', compact('pages'));
     }
     public function change_status($id, $status)
     {
         echo $id;
+    }
+
+    public function approve($type)
+    {
+        $rowsUpdated = Users::where('role_id', '=', $type)
+            ->where('is_verified', '=', 0)
+            ->whereDate('created_at', Carbon::today())
+            ->update(['is_verified' => 1]);
+        return back()->with('approved', $rowsUpdated);
     }
 }

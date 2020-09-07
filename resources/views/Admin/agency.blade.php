@@ -43,10 +43,10 @@
                         <div class="card-content collapse show">
                             <div class="card-body card-dashboard">
                                 <div class="table-responsive">
+                                    @component('components.approve-all-by-user-role', ['user' => count($agencyes) > 0 ? $agencyes[0] : null])
+                                    @endcomponent
                                     <table class="table table-striped table-bordered zero-configuration">
                                         <thead>
-
-
                                         <tr>
                                             <th>Id</th>
                                             <th>Registered At</th>

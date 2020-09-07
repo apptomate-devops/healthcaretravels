@@ -209,6 +209,9 @@ class OwnerController extends BaseController
         $user = DB::table('users')
             ->where('id', $id)
             ->first();
+        if (empty($user)) {
+            return view('general_error', ['message' => 'We can’t find the profile you’re looking for.']);
+        }
         $properties = DB::table('property_list')
             ->join('property_room', 'property_room.property_id', '=', 'property_list.id')
             ->join('property_short_term_pricing', 'property_short_term_pricing.property_id', '=', 'property_list.id')

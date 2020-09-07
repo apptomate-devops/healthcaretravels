@@ -4,7 +4,6 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Services\Logger;
 
 class Kernel extends ConsoleKernel
 {
@@ -13,7 +12,7 @@ class Kernel extends ConsoleKernel
      *
      * @var array
      */
-    protected $commands = [Commands\SevenDayVerificationReminder::class];
+    protected $commands = [];
 
     /**
      * Define the application's command schedule.
@@ -24,6 +23,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('reminder:verification')->dailyAt('10:00');
+        $schedule->command('cron:log-check')->everyThirtyMinutes();
         $schedule->command(\Jorijn\LaravelSecurityChecker\Console\SecurityMailCommand::class)->weekly();
     }
 

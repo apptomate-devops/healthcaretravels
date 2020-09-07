@@ -45,7 +45,7 @@ class SevenDayVerificationReminder extends Command
      */
     public function handle()
     {
-        Logger::info('Running reminder job');
+        Logger::info('Running verification reminder email job');
         $users = DB::table('users')
             ->where('is_submitted_documents', 0)
             ->where('is_verified', 0)

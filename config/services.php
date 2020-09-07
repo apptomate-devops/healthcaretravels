@@ -12,6 +12,11 @@ return [
     | to have a conventional place to find your various credentials.
     |
     */
+    'dwolla' => [
+        'access_token' => env('DWOLLA_ACCESS_TOKEN'),
+        'env' => env('DWOLLA_ENV'),
+    ],
+
     'facebook' => [
         'client_id' => env('FACEBOOK_CLIENT_ID'),
         'client_secret' => env('FACEBOOK_CLIENT_SECRET'),

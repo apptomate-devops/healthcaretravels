@@ -6,8 +6,8 @@
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <tr>
                 <td align="center">
-                    <a href="{{BASE_URL}}" style="margin-top:0px">
-                        <img title="Logo" alt="Logo" src="{{BASE_URL}}uploads/keepers_logo.png" height="70px" width="100px" class="img-responsive logo-new">
+                    <a href="{{$BASE_URL ?? BASE_URL}}" style="margin-top:0px">
+                        <img title="Logo" alt="Logo" src="{{$BASE_URL ?? BASE_URL}}uploads/keepers_logo.png" height="70px" width="100px" class="img-responsive logo-new">
                     </a>
                 </td>
             </tr>

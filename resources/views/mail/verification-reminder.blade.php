@@ -10,7 +10,7 @@
         Please verify your profile at the link below within 48 hours
     </div>
     <div style="padding-top: 10px;">
-        <a href="{{BASE_URL}}verify-account" style="color: blue;text-decoration: underline;" target="_blank">
+        <a href="{{$BASE_URL ?? BASE_URL}}verify-account" style="color: blue;text-decoration: underline;" target="_blank">
             Verify here
         </a>
     </div>

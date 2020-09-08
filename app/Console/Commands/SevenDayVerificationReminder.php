@@ -8,10 +8,6 @@ use App\Services\Logger;
 use App\Models\EmailConfig;
 use Mail;
 
-$BASE_URL = config("app.url");
-define("BASE_URL", $BASE_URL . "/");
-define("APP_BASE_NAME", "Health Care Travels");
-
 class SevenDayVerificationReminder extends Command
 {
     /**
@@ -60,6 +56,7 @@ class SevenDayVerificationReminder extends Command
                 'email' => $user->email,
                 'text' => $reg->message,
                 'BASE_URL' => config('app.url') . '/',
+                'APP_BASE_NAME' => 'Health Care Travels',
             ];
             try {
                 Mail::send('mail.verification-reminder', $data, function ($message) use ($user, $reg) {

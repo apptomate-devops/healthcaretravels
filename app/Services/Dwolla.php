@@ -2,12 +2,16 @@
 
 namespace App\Services;
 use Request;
+use GuzzleHttp;
+use DwollaSwagger;
 use App\Services\Logger;
 use App\Models\Users;
 
 class Dwolla
 {
     protected $access_token;
+
+    protected $master_funding_source;
 
     protected $client;
 
@@ -21,17 +25,56 @@ class Dwolla
 
     public function __construct()
     {
-        $this->client = $this->setUp();
+        $this->access_token = config('services.dwolla.access_key');
+        $this->secret_key = config('services.dwolla.secret_key');
+        $this->master_funding_source = config('services.dwolla.master_funding_source');
+        $this->setUp();
     }
 
-    public function setUp()
+    public function setUp($forceNewAccessToken = false)
     {
-        $this->access_token = config('services.dwolla.access_token');
-        \DwollaSwagger\Configuration::$access_token = $this->access_token;
         $url = config('services.dwolla.env') == 'prod' ? 'https://api.dwolla.com/' : 'https://api-sandbox.dwolla.com/';
-        $client = new \DwollaSwagger\ApiClient($url);
-        $this->customersApi = new \DwollaSwagger\CustomersApi($client);
-        return $client;
+        $accessToken = config('services.dwolla.access_token');
+        Logger::info('accessToken from config value: ' . $accessToken);
+        Logger::info('Is force new access token? : ' . $forceNewAccessToken);
+        if ($forceNewAccessToken || !$accessToken) {
+            Logger::info('Requesting new accessToken from Dwolla:');
+            $accessToken = $this->setupAccessToken($url, $forceNewAccessToken);
+        }
+        if (!$accessToken) {
+            Logger::error('Error in getting new access token from Dwolla');
+            return false;
+        }
+        $this->client = new DwollaSwagger\ApiClient($url);
+        $this->customersApi = new DwollaSwagger\CustomersApi($this->client);
+        return $this->client;
+    }
+
+    public function setupAccessToken($url)
+    {
+        $guzzleClient = new GuzzleHttp\Client(['base_uri' => $url]);
+        $options = [
+            'auth' => [$this->access_token, $this->secret_key],
+            'form_params' => [
+                'grant_type' => 'client_credentials',
+            ],
+        ];
+        $res = $guzzleClient->request('POST', '/token', $options);
+        $code = $res->getStatusCode();
+        if ($code >= 400) {
+            Logger::error('Error in getting access token from Dwolla: ' . $resBody);
+            return false;
+        }
+        $resBody = json_decode($res->getBody()->getContents(), true);
+        if ($resBody) {
+            $accessToken = $resBody["access_token"];
+            Logger::info('Fetched access token from Dwolla: ' . $accessToken);
+            DwollaSwagger\Configuration::$access_token = $accessToken;
+            config(['services.dwolla.access_token' => $accessToken]);
+            Logger::info('After setting Config Value: ' . config('services.dwolla.access_token'));
+            return $accessToken;
+        }
+        return false;
     }
 
     public function createNewCustomer($user)

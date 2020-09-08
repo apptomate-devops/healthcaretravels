@@ -13,7 +13,9 @@ return [
     |
     */
     'dwolla' => [
-        'access_token' => env('DWOLLA_ACCESS_TOKEN'),
+        'access_key' => env('DWOLLA_ACCESS_KEY'),
+        'secret_key' => env('DWOLLA_SECRET_KEY'),
+        'master_funding_source' => env('DWOLLA_HCT_FUNDING_SOURCE'),
         'env' => env('DWOLLA_ENV'),
     ],
 

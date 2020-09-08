@@ -9,6 +9,8 @@ class Twilio
 
     protected $client;
 
+    protected $customersApi;
+
     /**
      * Create a new instance
      *
@@ -26,6 +28,12 @@ class Twilio
         \DwollaSwagger\Configuration::$access_token = $this->access_token;
         $url = config('services.dwolla.env') == 'prod' ? 'https://api.dwolla.com/' : 'https://api-sandbox.dwolla.com/';
         $client = new \DwollaSwagger\ApiClient($url);
+        $this->customersApi = new DwollaSwagger\CustomersApi($apiClient);
         return $client;
+    }
+
+    public function createNewCustomer($user)
+    {
+        return $customersApi->create($user);
     }
 }

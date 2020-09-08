@@ -198,7 +198,7 @@
 
                               <table id="billing-table" class="reso-info-table billing-table" style="width:95%">
                                  <tbody>
-                                    <h4>Property Details</h4>
+                                    <h4>Payment Details</h4>
                                     <tr class="row_border">
                                        <td class="name pos-rel" >
                                           <span class="lang-chang-label">

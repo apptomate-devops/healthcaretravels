@@ -278,7 +278,7 @@
 
                             <p class="form-row form-row-wide" id="occupation_field" style="display: none;">
                                 <label for="occupation">Occupation:
-                                    <select class="input-text validate" autocomplete="off" name="occupation" id="occupation">
+                                    <select class="input-text validate" autocomplete="off" name="occupation" id="occupation" onchange="on_occupation_change(this);">
                                         <option label="" value="">Select Occupation</option>
                                         @foreach($occupation as $a)
                                             <option value="{{$a->name}}" @if(Session::get('occupation')===$a->name) selected @endif>{{$a->name}}</option>
@@ -360,7 +360,7 @@
                                 </label>
                                 {!! $errors->first('pet_breed', '<p class="error-text">:message</p>') !!}
 
-                                <label for="pet_weight">Weight:
+                                <label for="pet_weight" class="weight-lb">Weight:
                                     <input type="text" class="price_float input-text validate {{ $errors->has('pet_weight') ? 'form-error' : ''}}" value="{{Session::get('pet_weight')}}" name="pet_weight" id="pet_weight" placeholder="Weight" autocomplete="off"/>
                                 </label>
                                 {!! $errors->first('pet_weight', '<p class="error-text">:message</p>') !!}
@@ -869,12 +869,20 @@
             $('#add_another_occupation').hide();
             $('#other_occupation').show();
             $('#other_occupation_cancel').show();
+            $('#occupation').val('Other');
         } else {
             $('#add_another_occupation').show();
             $('#other_occupation').hide();
             $('#other_occupation_cancel').hide();
             $('#other_occupation').val('');
+            $('#occupation').val('');
         }
+    }
+
+    function on_occupation_change(element) {
+        var isOther = $(element).val() == 'Other';
+        debugger
+        add_another_occupation(isOther);
     }
 
     function load_agencies() {

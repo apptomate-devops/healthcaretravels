@@ -176,19 +176,21 @@
                                             We were unable to verify your account. Please resubmit your information or contact support for more information. Attempts remaining: {{3 - $user->denied_count}}
                                         </div>
                                     @endif
-                                    <div class="col-md-6">
-                                        <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control" accept="{{$filtypes}}" />
-                                        {{--                                        @if(isset($GOVERNMENT_ID->document_type))--}}
-                                        {{--                                            <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>--}}
-                                        {{--                                        @endif--}}
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label>Work Badge </label>
-                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept="{{$filtypes}}" />
-                                        @if(isset($WORK_BADGE_ID->document_type))
-                                            <a href="{{$WORK_BADGE_ID->document_url}}" target="_blank" style="float: right;">view</a>
-                                        @endif
+                                    <div class="row m-0">
+                                        <div class="col-md-6">
+                                            <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
+                                            <input type="file" name="government_id" id="government_id" class="form-control" accept="{{$filtypes}}" />
+                                            {{--                                        @if(isset($GOVERNMENT_ID->document_type))--}}
+                                            {{--                                            <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>--}}
+                                            {{--                                        @endif--}}
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Work Badge </label>
+                                            <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept="{{$filtypes}}" />
+                                            @if(isset($WORK_BADGE_ID->document_type))
+                                                <a href="{{$WORK_BADGE_ID->document_url}}" target="_blank" style="float: right;">view</a>
+                                            @endif
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
                                         <label>Travel Contract </label>

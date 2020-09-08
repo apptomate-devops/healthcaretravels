@@ -405,6 +405,14 @@ button[disabled], html input[disabled] {
     text-decoration-line: underline;
 }
 
+.weight-lb:after {
+    content: 'lb';
+    position: absolute;
+    top: 45px;
+    right: .5em;
+    color: #888;
+}
+
 #header {
     position: fixed;
     top: 0;

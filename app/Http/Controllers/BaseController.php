@@ -24,6 +24,7 @@ use App\Models\EmailConfig;
 
 use App\Services\Twilio;
 use App\Services\Sendgrid;
+use App\Services\Dwolla;
 
 use Image;
 use DB;
@@ -85,6 +86,7 @@ class BaseController extends ConstantsController
         $this->request = $request;
         $this->twilio = new Twilio();
         $this->sendgrid = new Sendgrid();
+        $this->dwolla = new Dwolla();
     }
 
     public static function setEnvironmentValue($envKey, $envValue)

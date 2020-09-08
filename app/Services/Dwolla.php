@@ -46,6 +46,7 @@ class Dwolla
     {
         $user = Users::find($id);
         if (empty($user)) {
+            Logger::info('Tried to create Dwolla customer for user with missing information: ' . $id);
             return false;
         }
         try {
@@ -60,9 +61,30 @@ class Dwolla
             $res = $this->createNewCustomer($userPayload);
             $user->dwolla_customer = $res;
             $user->save();
+            Logger::info('Dwolla customer created for user: ' . $id);
             return $res;
         } catch (\Exception $ex) {
-            Logger::error('Error in creating new customer for user: ' . $id . ' . EX: ' . $ex->getResponseBody());
+            Logger::error('Error in creating new customer for user: ' . $id . '. EX: ' . $ex->getResponseBody());
+            return $ex;
+        }
+    }
+
+    public function getFundingSourceToken($id)
+    {
+        $user = Users::find($id);
+        if (empty($user) || (isset($user) && empty($user->dwolla_customer))) {
+            Logger::info('Tried to create Dwolla funding source token for user with missing information: ' . $id);
+            return false;
+        }
+        try {
+            Logger::info('Creating Dwolla funding source token for user: ' . $id);
+            $fsToken = $this->customersApi->createFundingSourcesTokenForCustomer($user->dwolla_customer);
+            Logger::info('Dwolla funding source created for user: ' . $id);
+            return $fsToken;
+        } catch (\Exception $ex) {
+            Logger::error(
+                'Error in creating funding source token for user: ' . $id . '. EX: ' . $ex->getResponseBody(),
+            );
             return $ex;
         }
     }

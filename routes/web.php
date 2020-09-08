@@ -163,4 +163,8 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::GET('/invoice/{id}', 'PDF_Controller@invoice');
 });
 
+// TODO: remove when implemented
+// Payment testing APIS
+Route::get('/dwolla/create_customer/{id}', 'PaymentController@create_customer');
+
 Route::fallback('BaseController@general_error');

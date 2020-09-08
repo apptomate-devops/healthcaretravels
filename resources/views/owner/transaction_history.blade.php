@@ -2,7 +2,7 @@
 //print_r($properties[0]); exit;
 ?>
 @extends('layout.master')
-@section('title','Transcation history | Keepers ')
+@section('title','Transcation history ')
 @section('main_content')
 
 <!-- Content
@@ -185,7 +185,7 @@
                             <div class="col-md-3">
                                 <select name="property_method" id="year" required class="chosen-select-no-single" >
                                     <option value="" selected disabled>Year</option>
-                                    
+
                                 </select>
                             </div>
                             <?php $months = unserialize(MONTHS); ?>

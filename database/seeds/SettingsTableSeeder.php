@@ -47,5 +47,15 @@ class SettingsTableSeeder extends Seeder
                 'value' => 'do-not-reply@healthcaretravels.com',
             ],
         );
+        \App\Models\Settings::updateOrCreate(
+            [
+                'param' => 'client_address',
+            ],
+            [
+                'param' => 'client_address',
+                'value' =>
+                    'Health Care Travels,  7075 Fm 1960 Rd West,  Suite 1010,  Houston, Texas 77069,  United States',
+            ],
+        );
     }
 }

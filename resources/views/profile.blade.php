@@ -118,7 +118,7 @@
                             @endif
                             @if($user_detail->role_id == 0 || $user_detail->role_id == 3)
                                 <label>Occupation</label>
-                                <select class="input-text validate" autocomplete="off" name="occupation" id="occupation" required style=" margin: 0 0 20px;">
+                                <select class="input-text validate" autocomplete="off" name="occupation" id="occupation" required style=" margin: 0 0 20px;" onchange="on_occupation_change(this);">
                                     <option label="" value="">Select Occupation</option>
                                     @foreach($occupation as $a)
                                         <option value="{{$a->name}}" @if(Session::get('occupation')===$a->name || $user_detail->occupation === $a->name) selected @endif>{{$a->name}}</option>
@@ -143,7 +143,7 @@
                                         <input type="text" class="input-text validate" value="{{Session::get('pet_breed') ?? $user_detail->pet_breed}}" name="pet_breed" id="pet_breed" placeholder="Breed" autocomplete="off"/>
                                     </label>
 
-                                    <label for="pet_weight">Weight:
+                                    <label for="pet_weight" class="weight-lb">Weight:
                                         <input type="text" class="price_float input-text validate" value="{{Session::get('pet_weight') ?? $user_detail->pet_weight}}" name="pet_weight" id="pet_weight" placeholder="Weight" autocomplete="off"/>
                                     </label>
 
@@ -367,12 +367,18 @@
                 $('#add_another_occupation').hide();
                 $('#other_occupation').show();
                 $('#other_occupation_cancel').show();
+                $('#occupation').val('Other');
             } else {
                 $('#add_another_occupation').show();
                 $('#other_occupation').hide();
                 $('#other_occupation_cancel').hide();
                 $('#other_occupation').val('');
+                $('#occupation').val('');
             }
+        }
+        function on_occupation_change(element) {
+            var isOther = $(element).val() == 'Other';
+            add_another_occupation(isOther);
         }
 
         function initialize() {

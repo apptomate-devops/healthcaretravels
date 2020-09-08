@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title','Change password - Owner Keepers')
+@section('title','Change password - Owner')
 @section('main_content')
 
 

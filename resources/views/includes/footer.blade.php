@@ -50,7 +50,7 @@
             <div class="col-md-3  col-sm-12">
                 <h4>Contact Us</h4>
                 <div class="text-widget">
-                    <span> <?php echo str_replace(',', ',<br />', CLIENT_ADDRESS); ?></span> <br>
+                    <span> <?php echo str_replace(',  ', '<br />', CLIENT_ADDRESS); ?></span> <br>
                     E-Mail:<span> <a href="mailto:{{CLIENT_MAIL}}" target="_blank"><span class="__cf_email__" data-cfemail="b0dfd6d6d9d3d5f0d5c8d1ddc0dcd59ed3dfdd">
   {{CLIENT_MAIL}}
 </span>

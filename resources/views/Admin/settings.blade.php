@@ -1,7 +1,7 @@
 @extends('Admin.Layout.master')
 
-@section('title') Keepers Admin @endsection
-
+@section('title') Admin @endsection
+{{--Keepers Admin--}}
 @section('content')
 
 

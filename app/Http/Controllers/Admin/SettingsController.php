@@ -25,7 +25,6 @@ class SettingsController extends BaseController
             if ($c & ($value != null)) {
                 if ($check->is_image == 1) {
                     $value = $this->base_image_upload_with_keys($request, 'logo');
-                    //unlink('public/keepers_logo.png');
                 } else {
                     $value = $value;
                 }

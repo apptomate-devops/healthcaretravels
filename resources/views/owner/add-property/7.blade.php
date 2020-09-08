@@ -37,7 +37,7 @@
                                         <li class="active">
                                             <a href="#tab1a">
                                                 <i class="sl sl-icon-pin"></i>
-                                                Keepers ICAL URL
+                                                ICAL URL
                                             </a>
                                         </li>
                                         <li>

@@ -110,7 +110,7 @@
 
                                     <p class="form-row">
                                         <input type="submit" id="button" class="button border margin-top-10" name="login" value="Reset Password" />
-                                        <a href="http://13.127.130.227/keepers/login" style="float: right;margin-top: 20px;">Back</a>
+                                        <a href="/login" style="float: right;margin-top: 20px;">Back</a>
                                     </p>
                                     @endif
 

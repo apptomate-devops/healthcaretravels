@@ -881,7 +881,6 @@
 
     function on_occupation_change(element) {
         var isOther = $(element).val() == 'Other';
-        debugger
         add_another_occupation(isOther);
     }
 

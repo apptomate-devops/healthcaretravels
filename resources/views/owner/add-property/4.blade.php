@@ -167,21 +167,21 @@
                                         </div>
                                         <br><br>
                                     </div>
-                                    <div class="row with-forms">
+{{--                                    <div class="row with-forms">--}}
 
-                                        <div class="col-md-12">
-                                            <h3>Allow Instant Booking :</h3>
-                                            <div class="checkboxes in-row">
+{{--                                        <div class="col-md-12">--}}
+{{--                                            <h3>Allow Instant Booking :</h3>--}}
+{{--                                            <div class="checkboxes in-row">--}}
 
-                                                <input id="booking_type_yes" name="booking_type" type="checkbox" value="1" >
-                                                <label for="booking_type_yes">Yes</label>
+{{--                                                <input id="booking_type_yes" name="booking_type" type="checkbox" value="1" >--}}
+{{--                                                <label for="booking_type_yes">Yes</label>--}}
 
-                                                <input id="booking_type_no" name="booking_type" type="checkbox" value="0" checked >
-                                                <label for="booking_type_no">No</label>
-                                            </div>
-                                        </div>
-                                        <br><br><br>
-                                    </div>
+{{--                                                <input id="booking_type_no" name="booking_type" type="checkbox" value="0" checked >--}}
+{{--                                                <label for="booking_type_no">No</label>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                        <br><br><br>--}}
+{{--                                    </div>--}}
 
                                     <!-- Row -->
 

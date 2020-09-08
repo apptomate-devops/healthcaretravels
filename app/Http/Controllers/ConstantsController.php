@@ -12,6 +12,7 @@ define("PROFILE_IMAGE", "https://demo.rentalslew.com/public/user_profile_default
 define("STATIC_IMAGE", "http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg");
 define("APP_BASE_NAME", "Health Care Travels");
 define("APP_ENV", env("APP_ENV", "local"));
+define("DWOLLA_ENV", config('services.dwolla.env'));
 
 define("APP_LOGO_URL", "https://demo.rentalslew.com/public/keepers_logo.png");
 define("TIMEZONE", "Asia/Kolkata");

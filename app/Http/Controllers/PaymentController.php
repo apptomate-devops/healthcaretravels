@@ -26,4 +26,17 @@ class PaymentController extends BaseController
         $res = $this->dwolla->getFundingSourceToken($id);
         dd($res);
     }
+
+    public function create_funding_source($id)
+    {
+        $user = Users::find($id);
+        if (empty($user)) {
+            return view('general_error', ['message' => 'The user you are looking for does not exists!']);
+        }
+        $res = $this->dwolla->getFundingSourceToken($id);
+        if ($res) {
+            return view('payment_test', ['token' => $res->token]);
+        }
+        return view('general_error', ['message' => 'There was an error creating funding source token for you']);
+    }
 }

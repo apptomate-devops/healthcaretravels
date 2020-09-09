@@ -98,8 +98,14 @@
 .mt-15 {
     margin-top: 15px;
 }
+.mb-5 {
+    margin-bottom: 5px !important;
+}
 .mb-10 {
     margin-bottom: 10px;
+}
+.lhi {
+    line-height: inherit;
 }
 .checkboxes label:before {
     top: 0;
@@ -143,6 +149,10 @@
     color: blue;
 }
 
+.txt-red {
+    color: #9d0000;
+}
+
 .check-in-out-wrapper {
     display: flex;
     border-radius: 3px;
@@ -153,4 +163,7 @@
     border-radius: 0 !important;
     height: 57px !important;
     text-align: center;
+}
+.form-error {
+    border-color: #9d0000 !important;
 }

@@ -91,18 +91,14 @@
     margin-top: -10px;
 }
 
-.form-error {
-    border-color: #9D0000 !important;
-}
-
 .error-text-accept {
     margin-top: 10px !important;
-    color: #9D0000;
+    color: #9d0000;
 }
 .error-text {
     margin-top: -25px !important;
     margin-bottom: 25px !important;
-    color: #9D0000;
+    color: #9d0000;
 }
 
 .label-margin {
@@ -251,11 +247,11 @@
 #profile_image_field {
     text-align: center;
 }
-#profile_image_field label{
+#profile_image_field label {
     text-align: left;
     margin-bottom: 10px;
 }
-#profile_image_field img{
+#profile_image_field img {
     height: 100px;
     width: 100px;
     border: 1px solid #e78016;
@@ -270,7 +266,6 @@
 }
 
 @media (max-width: 420px) {
-
     .my-account {
         width: 100%;
     }

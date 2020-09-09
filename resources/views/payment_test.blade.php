@@ -52,10 +52,34 @@
         }
         // TODO: send me to server to update me for user
         var fundingSource = res._links['funding-source'].href;
-        alert(fundingSource);
+        addFundingSourceToUser(fundingSource);
         $div.text(JSON.stringify(logValue));
         console.log(logValue);
         $('#logs').append($div);
+    }
+
+    function addFundingSourceToUser(fundingSource) {
+        var formData = {
+            id: getLastSagmentOfURL(window.location.pathname),
+            fundingSource: fundingSource,
+            _token: '{{ csrf_token() }}'
+        };
+        $.ajax({
+            url: "/dwolla/add_funding_source",
+            type: "POST",
+            data: formData,
+            json: true,
+            success: function(data, textStatus, jqXHR) {
+                if (data.success) {
+                    alert('User detail have been update successfully');
+                } else {
+                    alert('Error occured');
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert('Error occured');
+            }
+        });
     }
     $('#create-funding-source').on('submit', function (e) {
         e.preventDefault();

@@ -167,6 +167,7 @@ Route::middleware(['LoginCheck'])->group(function () {
 // Payment testing APIS
 Route::get('/dwolla/create_customer/{id}', 'PaymentController@create_customer');
 Route::get('/dwolla/get_funding_source_token/{id}', 'PaymentController@get_funding_source_token');
+Route::post('/dwolla/add_funding_source', 'PaymentController@add_funding_source');
 Route::get('/dwolla/create_funding_source/{id}', 'PaymentController@create_funding_source');
 
 Route::fallback('BaseController@general_error');

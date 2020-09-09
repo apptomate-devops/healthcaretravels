@@ -467,6 +467,9 @@
 </script>
 
 <script type="text/javascript">
+    function getLastSagmentOfURL(url) {
+        return url.substring(url.lastIndexOf('/') + 1);
+    }
     function limitNavigationUsingLinks() {
         $('.not-verified-block').toggleClass('not-verified-block');
         $('.notification-message').html('Verify otp to continue');

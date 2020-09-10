@@ -519,10 +519,6 @@ class UserController extends BaseController
             'website.regex' => 'Please enter valid URL',
             'numeric' => 'Please enter valid phone number',
             'digits' => 'Please enter valid phone number',
-            'pet_name' => 'The :attribute field is required when you are travelling with pet.',
-            'pet_breed' => 'The :attribute field is required when you are travelling with pet.',
-            'pet_weight' => 'The :attribute field is required when you are travelling with pet.',
-            'pet_image' => 'The :attribute field is required when you are travelling with pet.',
             'phone.unique' =>
                 'This phone number is already in use an another account. If this is an error, please contact <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com</a>.',
         ];
@@ -569,10 +565,6 @@ class UserController extends BaseController
             $rules["other_agency"] = 'required_without:name_of_agency';
             $rules["tax_home"] = 'required';
             $rules["address"] = 'required';
-            $rules["pet_name"] = 'required_with:is_pet_travelling';
-            $rules["pet_breed"] = 'required_with:is_pet_travelling';
-            $rules["pet_weight"] = 'required_with:is_pet_travelling';
-            $rules["pet_image"] = 'required_with:is_pet_travelling';
         }
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -609,11 +601,6 @@ class UserController extends BaseController
                 ->with('work', $request->work)
                 ->with('work_title', $request->work_title)
                 ->with('website', $request->website)
-                ->with('is_pet_travelling', $request->is_pet_travelling)
-                ->with('pet_name', $request->pet_name)
-                ->with('pet_breed', $request->pet_breed)
-                ->with('pet_weight', $request->pet_weight)
-                ->with('pet_image', $request->pet_image)
                 ->withErrors($validator);
         }
 
@@ -628,10 +615,6 @@ class UserController extends BaseController
 
         $OTP = rand(1111, 9999);
         $isOTPSent = $this->sendOTPMessage($request->phone, $OTP);
-        $petImage = '';
-        if (isset($request->is_pet_travelling)) {
-            $petImage = $this->base_image_upload($request, 'pet_image', 'pets');
-        }
         $profileImage = '';
         if (isset($request->profile_image)) {
             $profileImage = $this->base_image_upload($request, 'profile_image', 'users');
@@ -672,11 +655,6 @@ class UserController extends BaseController
             'social_id' => $social_id,
             'otp' => $OTP,
             'email_opt' => $email_opt,
-            'is_pet_travelling' => isset($request->is_pet_travelling) ? 1 : 0,
-            'pet_name' => isset($request->is_pet_travelling) ? $request->pet_name : '',
-            'pet_breed' => isset($request->is_pet_travelling) ? $request->pet_breed : '',
-            'pet_weight' => isset($request->is_pet_travelling) ? $request->pet_weight : '',
-            'pet_image' => isset($request->is_pet_travelling) ? $petImage : '',
             'profile_image' => $profileImage,
         ]);
 
@@ -1105,10 +1083,6 @@ class UserController extends BaseController
             'website.regex' => 'Please enter valid URL',
             'numeric' => 'Please enter valid phone number',
             'digits' => 'Please enter valid phone number',
-            'pet_name' => 'The :attribute field is required when you are travelling with pet.',
-            'pet_breed' => 'The :attribute field is required when you are travelling with pet.',
-            'pet_weight' => 'The :attribute field is required when you are travelling with pet.',
-            'pet_image' => 'The :attribute field is required when you are travelling with pet.',
         ];
 
         $rules = [
@@ -1136,9 +1110,6 @@ class UserController extends BaseController
             $rules["other_agency"] = 'required_without:name_of_agency';
             $rules["tax_home"] = 'required';
             $rules["address"] = 'required';
-            $rules["pet_name"] = 'required_with:is_pet_travelling';
-            $rules["pet_breed"] = 'required_with:is_pet_travelling';
-            $rules["pet_weight"] = 'required_with:is_pet_travelling';
         }
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -1167,18 +1138,11 @@ class UserController extends BaseController
                 ->with('work_title', $request->work_title)
                 ->with('website', $request->website)
                 ->with('enable_two_factor_auth', $request->enable_two_factor_auth)
-                ->with('pet_name', $request->pet_name)
-                ->with('pet_breed', $request->pet_breed)
-                ->with('pet_weight', $request->pet_weight)
                 ->withErrors($validator);
         }
 
         // Considered as Address_line_1
         $address = implode(", ", array_filter([$request->street_number, $request->route]));
-        $petImage = $user->pet_image;
-        if (isset($request->is_pet_travelling) && isset($request->pet_image)) {
-            $petImage = $this->base_image_upload($request, 'pet_image', 'pets');
-        }
         DB::table('users')
             ->where('id', $user_id)
             ->update([
@@ -1203,11 +1167,6 @@ class UserController extends BaseController
                 'work_title' => $request->work_title,
                 'website' => $request->website,
                 'enable_two_factor_auth' => isset($request->enable_two_factor_auth) ? 1 : 0,
-                'is_pet_travelling' => isset($request->is_pet_travelling) ? 1 : 0,
-                'pet_name' => isset($request->is_pet_travelling) ? $request->pet_name : '',
-                'pet_breed' => isset($request->is_pet_travelling) ? $request->pet_breed : '',
-                'pet_weight' => isset($request->is_pet_travelling) ? $request->pet_weight : '',
-                'pet_image' => isset($request->is_pet_travelling) ? $petImage : '',
             ]);
 
         return back()->with('success', 'Profile updated successfully');

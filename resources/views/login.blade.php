@@ -344,33 +344,6 @@
                             {{--                            </p>--}}
                             {{--                            <div class="error-text" id="listing_address_error" style="display: none;">Please select a valid address from the suggestions.</div>--}}
 
-                            <div id="is_pet" class="checkboxes in-row password-checkbox" style="margin-top: 0; display: none;">
-                                <input id="is_pet_checked" name="is_pet_travelling" type="checkbox" @if(Session::get('is_pet_travelling')) checked @endif>
-                                <label for="is_pet_checked">Do you travel with a pet?</label>
-                            </div>
-
-                            <div id="pet_details" style="display: none;">
-                                <label for="pet_name">Name:
-                                    <input type="text" class="input-text validate {{ $errors->has('pet_name') ? 'form-error' : ''}}" value="{{Session::get('pet_name')}}" name="pet_name" id="pet_name" placeholder="Name" autocomplete="off"/>
-                                </label>
-                                {!! $errors->first('pet_name', '<p class="error-text">:message</p>') !!}
-
-                                <label for="pet_breed">Breed:
-                                    <input type="text" class="input-text validate {{ $errors->has('pet_breed') ? 'form-error' : ''}}" value="{{Session::get('pet_breed')}}" name="pet_breed" id="pet_breed" placeholder="Breed" autocomplete="off"/>
-                                </label>
-                                {!! $errors->first('pet_breed', '<p class="error-text">:message</p>') !!}
-
-                                <label for="pet_weight" class="weight-lb">Weight:
-                                    <input type="text" class="price_float input-text validate {{ $errors->has('pet_weight') ? 'form-error' : ''}}" value="{{Session::get('pet_weight')}}" name="pet_weight" id="pet_weight" placeholder="Weight" autocomplete="off"/>
-                                </label>
-                                {!! $errors->first('pet_weight', '<p class="error-text">:message</p>') !!}
-
-                                <label for="pet_image">Pet Image:
-                                    <input type="file" name="pet_image" id="pet_image" class="form-control" accept="image/*" style="padding-top: 14px;"/>
-                                </label>
-                                {!! $errors->first('pet_image', '<p class="error-text">:message</p>') !!}
-                            </div>
-
                     </div>
                     <div class="checkboxes" id="email_opt_field" style="display: none;">
                         <input id="email_opt" type="checkbox" name="email_opt" @if(Session::has('email_opt')) checked @endif">
@@ -541,8 +514,6 @@
                 $('#work_title_field').hide();
                 $('#work_number_field').hide();
                 $('#website_field').hide();
-                $('#is_pet').show();
-                $('#pet_details').hide();
 
                 $('#email-label').text('Email Address:');
                 $('#address_label').text('Address:');
@@ -590,9 +561,6 @@
                 $('#work_title_field').hide();
                 $('#work_number_field').hide();
                 $('#website_field').hide();
-                $('#is_pet').hide();
-                $('#is_pet_checked').attr('checked', false);
-                $('#pet_details').hide();
 
                 $('#email-label').text('Email Address:');
                 $('#address_label').text('Mailing Address:');
@@ -638,9 +606,6 @@
                 $('#work_title_field').show();
                 $('#work_number_field').show();
                 $('#website_field').show();
-                $('#is_pet').hide();
-                $('#is_pet_checked').attr('checked', false);
-                $('#pet_details').hide();
 
                 $('#email-label').text('Work Email Address:');
                 $('#email2').val("{{Session::get('mail')}}");
@@ -688,9 +653,6 @@
                 $('#work_title_field').hide();
                 $('#work_number_field').hide();
                 $('#website_field').hide();
-                $('#is_pet').hide();
-                $('#is_pet_checked').attr('checked', false);
-                $('#pet_details').hide();
 
                 $('#email-label').text('Email Address:');
                 $('#address_label').text('Address:');
@@ -699,7 +661,6 @@
                 break;
         }
         initialize();
-        $("#is_pet_checked").trigger('change');
     }
 
     function initialize() {
@@ -811,15 +772,6 @@
         $('#btn_add_apt_number').show();
         $('#address_line_2').val('');
     }
-
-    $('#is_pet_checked').change(function () {
-        var isChecked= $(this).is(':checked');
-        if(isChecked) {
-            $('#pet_details').show();
-        } else {
-            $('#pet_details').hide();
-        }
-    });
 
     $('.price_float').change(function(){
         var value = parseFloat(this.value);

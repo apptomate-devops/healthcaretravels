@@ -313,7 +313,27 @@
                             @endforeach
                         </table>
                  @endif
-
+                @if(isset($pet_details) > 0)
+                    <h2>Pet Details</h2>
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Name</th>
+                            <th>Breed</th>
+                            <th>Weight (lb)</th>
+                            <th>Image</th>
+                        </tr>
+                        <tr>
+                            <td>{{$pet_details->pet_name}}</td>
+                            <td>{{$pet_details->pet_breed}}</td>
+                            <td>{{$pet_details->pet_weight}}</td>
+                            <td>
+                                <a href="{{$pet_details->pet_image}}" target="_blank">
+                                    <img src="{{$pet_details->pet_image}}" alt="">
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                @endif
                 <div>
                     <center>
                         <br><br>

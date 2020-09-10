@@ -196,7 +196,7 @@
                         </span>
                         <div class="property-price" style="font-size: 24px;color: #e78016;">
                             <font style="vertical-align: inherit;">
-                                $ {{$data->price_per_night * $data->min_days}}/Month
+                                $ {{$data->price_per_night * 30}}/Month
                             </font>
                         </div>
                     </div>
@@ -204,7 +204,7 @@
                     <center>
                         <div style="margin-left: 18%;" class="col-md-3 col-sm-6 col-xs-6 property-image hide-990">
                             <p>
-                                <img style="max-height: 85px;max-width: 85px;" src="{{$data->profile_image}}" alt="">
+                                <img style="max-height: 85px;max-width: 85px;" src="{{($data->profile_image != " " && $data->profile_image != 0) ? $data->profile_image : '/user_profile_default.png'}}" alt="">
                             </p>
                             <div class="sub-price">
                                 <a href="{{url('/')}}/owner-profile/{{$data->user_id}}">{{ucfirst($data->first_name)}} {{ucfirst($data->last_name)}}</a>
@@ -989,7 +989,7 @@
                                             <a href="#">
                                                 <font style="vertical-align: inherit;">
                                                     <font style="vertical-align: inherit;">
-                                                        $ {{$data->price_per_night * $data->min_days}}/Month
+                                                        $ {{$data->price_per_night * 30}}/Month
                                                     </font>
                                                 </font>
                                             </a>
@@ -1329,7 +1329,7 @@
                                     @endif
 
                                     <div class="listing-img-content">
-                                        <span class="listing-price">$ {{$data->price_per_night * $data->min_days}}/Month</i></span>
+                                        <span class="listing-price">$ {{$data->price_per_night * 30}}/Month</span>
                                         {{-- <span class="like-icon with-tip" data-tip-content="Add to Bookmarks"></span>
                                         <span class="compare-button with-tip" data-tip-content="Add to Compare"></span> --}}
                                     </div>

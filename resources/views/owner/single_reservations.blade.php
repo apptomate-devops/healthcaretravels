@@ -1,6 +1,6 @@
 @extends('layout.master')
 @section('title')
-{{APP_BASE_NAME}} | Owner Account | My Bookings page
+    {{APP_BASE_NAME}} | Owner Account | My Bookings page
 @endsection
 <style>
     table {
@@ -20,33 +20,33 @@
     }
 
     .card {
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-    width: 40%;
-    background-color: #f2f2f2;
-}
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        transition: 0.3s;
+        width: 40%;
+        background-color: #f2f2f2;
+    }
 
-.card:hover {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-}
+    .card:hover {
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
 
-.container {
-    padding: 2px 16px;
-}
+    .container {
+        padding: 2px 16px;
+    }
 
-td {
-    padding-top: .3em;
-    padding-bottom: .3em;
-}
+    td {
+        padding-top: .3em;
+        padding-bottom: .3em;
+    }
 
-ul.my-account-nav li a {
-    font-size: 14px;
-    line-height: 34px;
-    color: black;
-}
-li.sub-nav-title {
-    font-size: 16px;
-}
+    ul.my-account-nav li a {
+        font-size: 14px;
+        line-height: 34px;
+        color: black;
+    }
+    li.sub-nav-title {
+        font-size: 16px;
+    }
 
 </style>
 @section('main_content')
@@ -190,7 +190,7 @@ li.sub-nav-title {
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                               {{--  Cleaning fee type - {{$data->cleaning_fee_type}} , cost - $ {{$data->cleaning_fee}} --}}
+                                {{--  Cleaning fee type - {{$data->cleaning_fee_type}} , cost - $ {{$data->cleaning_fee}} --}}
                             </p>
                         </th>
                     </tr>
@@ -221,9 +221,9 @@ li.sub-nav-title {
                             <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                                 <p style="color: #000;">
                                     @if($data->extra_guest!=0)
-                                    {{$data->extra_guest_price}}
+                                        {{$data->extra_guest_price}}
                                     @else
-                                    0
+                                        0
                                     @endif
 
                                 </p>
@@ -239,13 +239,13 @@ li.sub-nav-title {
                     <tr>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                                <!-- Service Fee ( {{$data->service_fee_percentage}} % ) -->
+                            <!-- Service Fee ( {{$data->service_fee_percentage}} % ) -->
                                 Service Tax
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                                <!-- <?php $serv_fare = $data->service_fee_percentage * ($data->total_amount / 100); ?>
+                            <!-- <?php $serv_fare = $data->service_fee_percentage * ($data->total_amount / 100); ?>
                                 $ {{$serv_fare}} -->
 
                                 $ {{$data->service_tax}}
@@ -284,7 +284,7 @@ li.sub-nav-title {
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                               <b> $ {{$data->total_amount}}</b>
+                                <b> $ {{$data->total_amount}}</b>
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
@@ -313,6 +313,27 @@ li.sub-nav-title {
                         @endforeach
                     </table>
                 @endif
+                @if(isset($pet_details) > 0)
+                    <h2>Pet Details</h2>
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Name</th>
+                            <th>Breed</th>
+                            <th>Weight (lb)</th>
+                            <th>Image</th>
+                        </tr>
+                        <tr>
+                            <td>{{$pet_details->pet_name}}</td>
+                            <td>{{$pet_details->pet_breed}}</td>
+                            <td>{{$pet_details->pet_weight}}</td>
+                            <td>
+                                <a href="{{$pet_details->pet_image}}" target="_blank">
+                                    <img src="{{$pet_details->pet_image}}" alt="">
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                @endif
                 <div >
 
                     <?php $single_pay = $data->total_amount / $data->payment_splitup; ?>
@@ -326,7 +347,7 @@ li.sub-nav-title {
                     </center>
 
                     @if(isset($_GET['id']))
-                    <button class="button" onclick="document.location.href='{{BASE_URL}}owner/payment-success?id={{$data->booking_id}}';" style="margin-bottom: 80px;">Pay Now</button>
+                        <button class="button" onclick="document.location.href='{{BASE_URL}}owner/payment-success?id={{$data->booking_id}}';" style="margin-bottom: 80px;">Pay Now</button>
                     @endif
 
                     <a style="float: right;margin-bottom: 40px;" target="_blank" href="{{BASE_URL}}invoice/{{$data->booking_id}}" class="margin-top-40 button border">Print Invoice</a>

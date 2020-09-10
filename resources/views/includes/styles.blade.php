@@ -57,9 +57,11 @@
 
 {{-- Intercom integration --}}
 <script>
-    window.intercomSettings = {
-        app_id: "rq7sg7kx"
-    };
+    if("{{APP_ENV}}" !== 'local') {
+        window.intercomSettings = {
+            app_id: "rq7sg7kx"
+        };
+    }
 </script>
 
 <script>

@@ -380,7 +380,6 @@
 
         var is_instant = "{{$property_details->is_instant}}";
         var min_days = "{{$property_details->min_days}}";
-        debugger
         if(is_instant === '1') {
             $('#booking_type_yes').attr('checked',true);
             $('#booking_type_no').attr('checked',false);
@@ -397,7 +396,7 @@
             }
         });
 
-        <!--$("#cancellation_policy").val("{{isset($property_details->cancellation_policy)?$property_details->cancellation_policy:''}}");-->
+        $("#cancellation_policy").val("{{isset($property_details->cancellation_policy)?$property_details->cancellation_policy:''}}");
 {{--        $("#booking_type").val("{{isset($property_details->is_instant)?$property_details->is_instant:''}}");--}}
 <!--        $("#cleaning_fee_type").val("{{isset($price->cleaning_fee_type)?$price->cleaning_fee_type:''}}");-->
 

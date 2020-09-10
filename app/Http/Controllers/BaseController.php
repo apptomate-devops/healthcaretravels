@@ -563,7 +563,7 @@ class BaseController extends ConstantsController
      */
     public function sendTwilioMessage($number, $body)
     {
-        return $this->twilio->sendMessage($number, $body);
+        return $this->twilio->sendMessage(COUNTRY_CODE . $number, $body);
     }
 
     /** sendOTPMessage - Sends otp message to the specified number using twilio.

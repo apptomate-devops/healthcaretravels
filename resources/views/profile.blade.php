@@ -128,37 +128,6 @@
                                 <input type="text" style="display: none; margin: 0 0 20px;" class="input-text validate" name="other_occupation" id="other_occupation"  value="{{Session::get('other_occupation') ?? $user_detail->other_occupation}}" placeholder="Other Occupation" autocomplete="off">
                                 <div style="display: none;" id="other_occupation_cancel" class="add-another" onclick="add_another_occupation()" style="cursor: pointer;">Cancel</div>
 
-                                <div id="is_pet" class="checkboxes in-row password-checkbox" style="margin-bottom: 20px;">
-                                    <h4>Pet Details:</h4>
-                                    <input id="is_pet_checked" name="is_pet_travelling" type="checkbox" @if(Session::get('is_pet_travelling') ?? $user_detail->is_pet_travelling) checked @endif>
-                                    <label for="is_pet_checked">Do you travel with a pet?</label>
-                                </div>
-
-                                <div id="pet_details" style="display: none;">
-                                    <label for="pet_name">Name:
-                                        <input type="text" class="input-text validate" value="{{Session::get('pet_name') ?? $user_detail->pet_name}}" name="pet_name" id="pet_name" placeholder="Name" autocomplete="off"/>
-                                    </label>
-
-                                    <label for="pet_breed">Breed:
-                                        <input type="text" class="input-text validate" value="{{Session::get('pet_breed') ?? $user_detail->pet_breed}}" name="pet_breed" id="pet_breed" placeholder="Breed" autocomplete="off"/>
-                                    </label>
-
-                                    <label for="pet_weight" class="weight-lb">Weight:
-                                        <input type="text" class="price_float input-text validate" value="{{Session::get('pet_weight') ?? $user_detail->pet_weight}}" name="pet_weight" id="pet_weight" placeholder="Weight" autocomplete="off"/>
-                                    </label>
-
-                                    <label for="pet_image" style="margin: 20px 0;">
-                                        <div>Pet Image:</div>
-                                        @if($user_detail->pet_image)
-                                            <div id="petImage">
-                                                <img src="{{$user_detail->pet_image}}" alt="" style="height: 100px; width: 100px; border: 1px solid #e78016; border-radius: 100%; object-fit: contain;">
-                                                <input style="display: none;" type="file" name="pet_image" id="pet_image" class="form-control" accept="image/*"/>
-                                            </div>
-                                        @else
-                                            <input type="file" name="pet_image" id="pet_image" class="form-control" accept="image/*"/>
-                                        @endif
-                                    </label>
-                                </div>
 
                                 <div class="form-row form-row-wide" id="tax_home_field">
                                     <label for="tax_home">Tax Home:</label>
@@ -297,19 +266,6 @@
             if (address_line_2) {
                 on_add_address_line_2(undefined, address_line_2);
             }
-            var is_pet_travelling = "{{Session::get('is_pet_travelling') ?? $user_detail->is_pet_travelling}}";
-            if(is_pet_travelling) {
-                $("#is_pet_checked").trigger('change');
-            }
-        });
-
-        $('#is_pet_checked').change(function () {
-            var isChecked= $(this).is(':checked');
-            if(isChecked) {
-                $('#pet_details').show();
-            } else {
-                $('#pet_details').hide();
-            }
         });
 
         function set_max_date() {
@@ -332,17 +288,6 @@
                 $('#agency_name').attr('name','name_of_agency');
                 $('#others_show').attr('name','');
                 $('#others_show').hide();
-            }
-        });
-
-
-        $('#pet_image').change(function () {
-            if (this.files && this.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#petImage img').attr('src', e.target.result);
-                }
-                reader.readAsDataURL(this.files[0]);
             }
         });
 

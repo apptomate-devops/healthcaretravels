@@ -1,33 +1,27 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\PetInformation;
 use App\Models\PropertyBlocking;
 use App\Services\Logger;
 use Illuminate\Http\Request;
 use DB;
-use DateTime;
 use Session;
 use App\Models\Users;
 use App\Models\Propertyamenties;
 use App\Models\PropertyList;
-use App\Models\PropertyRating;
-use App\Models\OwnerRating;
-use App\Models\Couponecode;
-use App\Models\PropertyBookingPrice;
 use App\Models\EmailConfig;
 use App\Models\GuestsInformation;
 use App\Models\Propertybooking;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Log;
 use Mail;
 
 class PropertyController extends BaseController
 {
-    public function __construct(Users $users, PropertyList $property_list)
-    {
-        $this->users = $users;
-        $this->property_list = $property_list;
-    }
+    //    public function __construct(Users $users, PropertyList $property_list)
+    //    {
+    //        $this->users = $users;
+    //        $this->property_list = $property_list;
+    //    }
 
     public function book_now(Request $request)
     {
@@ -120,17 +114,17 @@ class PropertyController extends BaseController
             $week_end_days = ZERO;
 
             $normal_days = $weeks['total'];
-            if ($weeks['total'] > 30) {
-                $pricing_config->price_per_night = $pricing_config->price_more_than_one_month;
-                $booking_price['single_day_fare'] = $pricing_config->price_more_than_one_month;
-                $pricing_config->price_per_weekend = 0;
-                $price = $weeks['total'] * $pricing_config->price_per_night;
-            } else {
-                $pricing_config->price_per_night = $pricing_config->price_per_night;
-                $booking_price['single_day_fare'] = $pricing_config->price_per_night;
-                $pricing_config->price_per_weekend = 0;
-                $price = $weeks['total'] * $pricing_config->price_per_night;
-            }
+            //            if ($weeks['total'] > 30) {
+            //                $pricing_config->price_per_night = $pricing_config->price_more_than_one_month;
+            //                $booking_price['single_day_fare'] = $pricing_config->price_more_than_one_month;
+            //                $pricing_config->price_per_weekend = 0;
+            //                $price = $weeks['total'] * $pricing_config->price_per_night;
+            //            } else {
+            $pricing_config->price_per_night = $pricing_config->price_per_night;
+            $booking_price['single_day_fare'] = $pricing_config->price_per_night;
+            $pricing_config->price_per_weekend = 0;
+            $price = $weeks['total'] * $pricing_config->price_per_night;
+            //            }
 
             $city_fee_amount = ZERO;
 
@@ -271,18 +265,28 @@ class PropertyController extends BaseController
             $welcome = EmailConfig::where('type', 3)
                 ->where('role_id', $bookingEmailType)
                 ->first();
+            $owner_name = $data->first_name . " " . $data->last_name;
             $mail_data = [
-                'name' => $data->first_name . " " . $data->last_name,
+                'name' => $owner_name,
                 'text' => isset($welcome->message) ? $welcome->message : '',
                 'property' => $property,
                 'data' => $data,
-                'text' => isset($welcome->message) ? $welcome->message : '',
             ];
 
             $title = isset($welcome->title) ? $welcome->title : 'New booking from - ' . APP_BASE_NAME;
             $subject = isset($welcome->subject) ? $welcome->subject : "New booking from  - " . APP_BASE_NAME;
             $this->send_custom_email($property->email, $subject, 'mail.booking-mail', $mail_data, $title);
-
+            $text_message =
+                "Hi " .
+                $owner_name .
+                ", You received a property booking for " .
+                $property->title .
+                " for " .
+                $data->start_date .
+                " to " .
+                $data->end_date .
+                ". Please check your email or your Health Care Travels account to accept or deny the request.";
+            $this->sendTwilioMessage($data->phone, $text_message);
             return redirect()->intended('/booking_detail/' . $booking_id);
         } else {
             return response()->json(['status' => 'FAILED', 'message' => 'This property not available']);
@@ -294,7 +298,7 @@ class PropertyController extends BaseController
      *
      *@param booking_id int
      *
-     *@return Booking details of thar property
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|\Illuminate\View\View
      */
     public function booking_detail($booking_id, Request $request)
     {
@@ -311,10 +315,19 @@ class PropertyController extends BaseController
             ->where('property_booking.client_id', CLIENT_ID)
             ->where('property_booking.booking_id', $booking_id)
             ->first();
+        $guests = DB::table('guest_informations')
+            ->where('booking_id', $booking_id)
+            ->get();
+        $pet_details = DB::table('pet_information')
+            ->where('booking_id', $booking_id)
+            ->first();
         $traveller = DB::select("SELECT concat(first_name,last_name) as name FROM users WHERE id = $data->owner_id");
         $data->traveller_name = $traveller[0]->name;
-        // print_r($data);exit;
-        return view('properties.property_detail', ['data' => $data]);
+        return view('properties.property_detail', [
+            'data' => $data,
+            'guests' => $guests,
+            'pet_details' => $pet_details,
+        ]);
     }
 
     public function cancel_booking(Request $request, $id)
@@ -713,19 +726,19 @@ class PropertyController extends BaseController
             $normal_days = $weeks['total'];
 
             // $normal_days = $normal_days - 1;
-            if ($weeks['total'] > 30) {
-                $pricing_config->price_per_night = $pricing_config->price_more_than_one_month;
-                $booking_price['single_day_fare'] = $pricing_config->price_more_than_one_month;
-                $pricing_config->price_per_weekend = 0;
-                $week_end_days = 0;
-                $price = $weeks['total'] * $pricing_config->price_per_night;
-                $booking_price['normal_days'] = $weeks['total'];
-            } else {
-                $week_end_days = 0;
-                $booking_price['normal_days'] = $weeks['total'];
-                $booking_price['normal_days'] = $normal_days;
-                $price = $normal_days * $pricing_config->price_per_night;
-            }
+            //            if ($weeks['total'] > 30) {
+            //                $pricing_config->price_per_night = $pricing_config->price_more_than_one_month;
+            //                $booking_price['single_day_fare'] = $pricing_config->price_more_than_one_month;
+            //                $pricing_config->price_per_weekend = 0;
+            //                $week_end_days = 0;
+            //                $price = $weeks['total'] * $pricing_config->price_per_night;
+            //                $booking_price['normal_days'] = $weeks['total'];
+            //            } else {
+            $week_end_days = 0;
+            $booking_price['normal_days'] = $weeks['total'];
+            //                $booking_price['normal_days'] = $normal_days;
+            $price = $normal_days * $pricing_config->price_per_night;
+            //            }
 
             $booking_price['week_end_days'] = $week_end_days;
 
@@ -1220,13 +1233,18 @@ class PropertyController extends BaseController
                 "SELECT first_name,last_name,role_id,name_of_agency FROM users WHERE id = $data->traveller_id",
             );
             $guest_info = GuestsInformation::where('booking_id', $booking_id)->get();
+            $pet_details = PetInformation::where('booking_id', $booking_id)->first();
             $data->role_id = $traveller[0]->role_id;
             if ($traveller[0]->role_id == 2) {
                 $data->traveller_name = $traveller[0]->name_of_agency;
             } else {
                 $data->traveller_name = $traveller[0]->first_name . " " . $traveller[0]->last_name;
             }
-            return view('owner.single_booking', ['data' => $data, 'guest_info' => $guest_info]);
+            return view('owner.single_booking', [
+                'data' => $data,
+                'guest_info' => $guest_info,
+                'pet_details' => $pet_details,
+            ]);
         } catch (Exception $e) {
             return back()->with('error', 'Unable to handle');
         }
@@ -1646,7 +1664,12 @@ class PropertyController extends BaseController
             $data->traveller_name = $traveller[0]->first_name . " " . $traveller[0]->last_name;
         }
         $guest_info = GuestsInformation::where('booking_id', $booking_id)->get();
-        return view('owner.single_reservations', ['data' => $data, 'guest_info' => $guest_info]);
+        $pet_details = PetInformation::where('booking_id', $booking_id)->first();
+        return view('owner.single_reservations', [
+            'data' => $data,
+            'guest_info' => $guest_info,
+            'pet_details' => $pet_details,
+        ]);
     }
 
     public function traveller_fire_chat($id, Request $request)
@@ -2954,7 +2977,11 @@ class PropertyController extends BaseController
         $booking->save();
 
         for ($i = 0; $i < count($request->guest_name); $i++) {
-            $data = new GuestsInformation();
+            if ($request->guest_id[$i]) {
+                $data = GuestsInformation::find($request->guest_id[$i]);
+            } else {
+                $data = new GuestsInformation();
+            }
             $data->booking_id = $request->booking_id;
             $data->guest_count = $request->guest_count;
             $data->name = $request->guest_name[$i];
@@ -2963,6 +2990,21 @@ class PropertyController extends BaseController
             $data->email = $request->email[$i];
             $data->age = $request->age[$i];
             $data->save();
+        }
+        $pet_detail = PetInformation::where('booking_id', $request->booking_id)->first();
+        if (!$pet_detail) {
+            $pet_detail = new PetInformation();
+        }
+        if ($request->is_pet_travelling) {
+            $petImage = $this->base_image_upload($request, 'pet_image', 'pets');
+            $pet_detail->booking_id = $request->booking_id;
+            $pet_detail->pet_name = $request->pet_name;
+            $pet_detail->pet_breed = $request->pet_breed;
+            $pet_detail->pet_weight = $request->pet_weight;
+            $pet_detail->pet_image = $petImage;
+            $pet_detail->save();
+        } else {
+            $pet_detail->delete();
         }
         return redirect()->intended('/traveler/my-reservations');
     }

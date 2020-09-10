@@ -408,8 +408,8 @@ button[disabled], html input[disabled] {
 .weight-lb:after {
     content: 'lb';
     position: absolute;
-    top: 45px;
-    right: .5em;
+    top: 38px;
+    right: 23px;
     color: #888;
 }
 

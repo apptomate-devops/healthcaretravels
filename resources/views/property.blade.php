@@ -1075,13 +1075,13 @@
                                             Login to Book
                                         </button>
                                     @else
-                                        <button class="button fullwidth margin-top-5 booking_button"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
-                                                    Book Now </font></font>
+                                        <button class="button fullwidth margin-top-5 booking_button">
+                                            Book Now
                                         </button>
                                     @endif
                                 @endif
 
-                                <div class="alert" style="background-color: red;color: white;text-align: center;margin-top: 5%;">
+                                <div class="alert" style="display: none;background-color: red;color: white;text-align: center;margin-top: 5%;">
                                     Property is not available
                                 </div>
 

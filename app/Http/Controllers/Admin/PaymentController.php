@@ -16,7 +16,6 @@ class PaymentController extends BaseController
             ->join('users as traveller', 'traveller.id', '=', 'property_booking.traveller_id')
             ->join('users as owner', 'owner.id', '=', 'property_booking.owner_id')
             ->join('property_room', 'property_room.property_id', '=', 'property_list.id')
-            ->join('property_short_term_pricing', 'property_short_term_pricing.property_id', '=', 'property_list.id')
             ->where('property_booking.payment_done', '=', ONE)
             ->select(
                 'property_booking.*',
@@ -31,8 +30,6 @@ class PaymentController extends BaseController
                 'traveller.last_name as traveller_lname',
                 'property_booking.id as p_id',
                 'property_booking.status as booking_status',
-                'property_short_term_pricing.price_per_extra_guest',
-                'property_short_term_pricing.*',
             )
             ->get();
         return view('Admin.completedpayment', compact('data'));
@@ -47,7 +44,6 @@ class PaymentController extends BaseController
             ->join('users as traveller', 'traveller.id', '=', 'property_booking.traveller_id')
             ->join('users as owner', 'owner.id', '=', 'property_booking.owner_id')
             ->join('property_room', 'property_room.property_id', '=', 'property_list.id')
-            ->join('property_short_term_pricing', 'property_short_term_pricing.property_id', '=', 'property_list.id')
             ->where('property_booking.payment_done', '=', 2)
             ->select(
                 'property_booking.*',
@@ -64,8 +60,6 @@ class PaymentController extends BaseController
                 'traveller.last_name as traveller_lname',
                 'property_booking.id as p_id',
                 'property_booking.status as booking_status',
-                'property_short_term_pricing.price_per_extra_guest',
-                'property_short_term_pricing.*',
             )
             ->get();
         return view('Admin.cancelledpayment', compact('data'));

@@ -143,7 +143,6 @@ class HomeController extends BaseController
             ->join('users as traveller', 'traveller.id', '=', 'property_booking.traveller_id')
             ->join('users as owner', 'owner.id', '=', 'property_booking.owner_id')
             ->join('property_room', 'property_room.property_id', '=', 'property_list.id')
-            ->join('property_short_term_pricing', 'property_short_term_pricing.property_id', '=', 'property_list.id')
             ->where('property_booking.status', '=', THREE)
             ->select(
                 'property_booking.*',
@@ -158,8 +157,6 @@ class HomeController extends BaseController
                 'traveller.last_name as traveller_lname',
                 'property_booking.id as p_id',
                 'property_booking.status as booking_status',
-                'property_short_term_pricing.price_per_extra_guest',
-                'property_short_term_pricing.*',
             )
             ->get();
 
@@ -218,20 +215,14 @@ class HomeController extends BaseController
     {
         $data = DB::table('property_booking')
             ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
-            ->join(
-                'property_short_term_pricing',
-                'property_short_term_pricing.property_id',
-                '=',
-                'property_booking.property_id',
-            )
             ->join('property_booking_price', 'property_booking_price.property_booking_id', '=', 'property_booking.id')
             ->where('property_booking.client_id', CLIENT_ID)
             ->where('property_booking.booking_id', $booking_id)
             ->select(
                 'property_list.title',
+                'property_list.monthly_rate',
                 'property_booking_price.*',
                 'property_booking.*',
-                'property_short_term_pricing.*',
                 'property_booking.status as booking_status',
             )
             ->first();
@@ -490,7 +481,6 @@ class HomeController extends BaseController
         $property_id = $id;
         $property = DB::table('property_list')
             ->leftjoin('users', 'users.id', '=', 'property_list.user_id')
-            ->join('property_short_term_pricing', 'property_short_term_pricing.property_id', '=', 'property_list.id')
             ->where('property_list.id', '=', $property_id)
             ->get();
 
@@ -721,7 +711,6 @@ class HomeController extends BaseController
             ->join('users as traveller', 'traveller.id', '=', 'property_booking.traveller_id')
             ->join('users as owner', 'owner.id', '=', 'property_booking.owner_id')
             ->join('property_room', 'property_room.property_id', '=', 'property_list.id')
-            ->join('property_short_term_pricing', 'property_short_term_pricing.property_id', '=', 'property_list.id')
             ->where('property_booking.status', '=', THREE)
             ->select(
                 'property_booking.*',
@@ -736,8 +725,6 @@ class HomeController extends BaseController
                 'traveller.last_name as traveller_lname',
                 'property_booking.id as p_id',
                 'property_booking.status as booking_status',
-                'property_short_term_pricing.price_per_extra_guest',
-                'property_short_term_pricing.*',
             )
             ->get();
 

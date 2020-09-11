@@ -94,71 +94,24 @@
                                     <div class="col-md-6">
 
                                         <h5>How Many Bedrooms<span class="required">*</span></h5>
-                                        @if($property_data->property_type == BLOCK)
-                                            <select onchange="dynamic_rooms();" class="chosen-select-no-single validate"
-                                                    id="bedrooms" name="no_of_bedrooms">
+                                        <select onchange="dynamic_rooms();" class="chosen-select-no-single validate"
+                                                id="bedrooms" name="no_of_bedrooms">
+                                            <option value=0>Select Bedrooms</option>
+                                            @for($i=1;$i<=$guest_count;$i++)
+                                                @if($i == 1)
+                                                    <option value="{{$i}}">{{$i}} Bedroom</option>
                                                 @else
-                                                    <select class="chosen-select-no-single"
-                                                            id="bedrooms" name="bedroom_count">
-                                                        @endif
-                                                        {{--    @for($i= $property_room->bedroom_count-1;$i<) --}}
-                                                        <option value=0>Select Bedrooms</option>
-                                                        @for($i=1;$i<=$guest_count;$i++)
-                                                            @if($i == 1)
-                                                                <option value="{{$i}}">{{$i}} Bedroom</option>
-                                                            @else
-                                                                <option value="{{$i}}">{{$i}} Bedrooms</option>
-                                                            @endif
-                                                        @endfor
-                                                    </select>
+                                                    <option value="{{$i}}">{{$i}} Bedrooms</option>
+                                                @endif
+                                            @endfor
+                                        </select>
 
-                                                    <h5></h5>
-                                                    <input class="search-field validate" type="hidden" value="1" id="value" name="common_spaces"/>
+                                        <h5></h5>
+                                        <input class="search-field validate" type="hidden" value="1" id="value" name="common_spaces"/>
                                     </div>
 
                                 </div>
 
-
-                                <!--  <div class="row with-forms">
-
-                                     <div class="col-md-3">
-
-                                     </div>
-
-                                     <div class="col-md-3">
-                                         <h5>Number of Halls :</h5>
-                                         <input class="search-field validate" type="text" value="" id="value"
-                                                name="halls_count"/>
-                                     </div>
-
-
-
-                                 </div> -->
-
-                            <!-- @if($property_data->property_type == BLOCK)
-                                <div class="row with-forms">
-
-                                    <div class="col-md-3">
-
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <h5>Check in hour :</h5>
-                                        <input class="search-field validate" placeholder="00:00" type="text" value=""
-                                               id="timepicker" name="check_in_time"/>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <h5>Check out hour :</h5>
-                                        <input class="search-field validate" placeholder="00:00" type="text" value=""
-                                               id="timepicker1" name="check_out_time"/>
-                                    </div>
-
-                                </div>
-@else
-                                <input type="hidden" name="check_in_time" value="00:00" />
-                                <input type="hidden" name="check_out_time" value="00:00" />
-@endif -->
 
 
                                 <div class="row with-forms">
@@ -169,17 +122,6 @@
 
                                     </div>
 
-                                <!-- @if($property_data->property_type == BLOCK)
-                                    <div class="col-md-3">
-
-                                        <h5>How many beds available for guest :</h5>
-                                        <input disabled class="search-field validate" type="text" value="0" id="bed_count"
-                                               name="bed_count"/>
-
-                                    </div>
-@else
-
-                                @endif -->
 
                                 </div>
                                 <input type="hidden" value="@if(count($property_bedrooms) > 0) {{$property_room->bed_count}} @else 0 @endif" id="bed_count" name="bed_count"/>
@@ -416,16 +358,16 @@
         }
         $(function(){
             @if(isset($property_room->bathroom_count))
-                $("#bathrooms").val("{{$property_room->bathroom_count}}");
-                $("#bedrooms").val("{{$property_room->bedroom_count}}");
-                $("#guest_count").val("{{$property_data->total_guests}}");
-                dynamic_rooms();
-            @endif
-            @if(isset($property_room->bedroom_count))
-                var beds={{$property_room->bedroom_count}};
-                for(var j=1;j<beds;j++){
-                    $("#bedrooms option[value='"+ j + "']").attr('disabled', true);
-                }
+            $("#bathrooms").val("{{$property_room->bathroom_count}}");
+            $("#bedrooms").val("{{$property_room->bedroom_count}}");
+            $("#guest_count").val("{{$property_data->total_guests}}");
+            dynamic_rooms();
+                @endif
+                @if(isset($property_room->bedroom_count))
+            var beds={{$property_room->bedroom_count}};
+            for(var j=1;j<beds;j++){
+                $("#bedrooms option[value='"+ j + "']").attr('disabled', true);
+            }
             @endif
         });
 

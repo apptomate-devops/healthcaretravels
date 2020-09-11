@@ -16,10 +16,7 @@ use App\Models\Paymentgateway;
 use App\Models\Couponecode;
 use App\Models\PropertyRoom;
 use App\Models\PropertyBedrooms;
-use App\Models\ShortTermPricing;
-use App\Models\Settings;
 use App\Models\BecomeScout;
-use App\Models\PropertyBookingPrice;
 use App\Models\EmailConfig;
 
 use App\Services\Twilio;
@@ -60,7 +57,6 @@ class BaseController extends ConstantsController
         DB $db,
         Log $log,
         Propertyamenties $property_amenities,
-        ShortTermPricing $shor_term_pricing,
         BecomeScout $BecomeScout,
         EmailConfig $emailConfig,
         Request $request
@@ -69,7 +65,6 @@ class BaseController extends ConstantsController
         $this->db = $db;
         $this->log = $log;
         $this->user = $user;
-        $this->shor_term_pricing = $shor_term_pricing;
         $this->property_amenities = $property_amenities;
         $this->propertylist = $propertylist;
         $this->become_owner = $become_owner;

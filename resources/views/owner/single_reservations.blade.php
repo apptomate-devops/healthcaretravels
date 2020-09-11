@@ -162,12 +162,12 @@
                     <tr>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                                Price per night <br> ( {{$data->min_days}} x $ {{$data->single_day_fare}} )
+                                Price per night <br> ( {{$data->total_days}} x $ {{number_format($data->single_day_fare, 2)}} )
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                                $ {{$data->single_day_fare * $data->min_days}}
+                                $ {{number_format($data->single_day_fare * $data->total_days, 2)}}
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
@@ -185,7 +185,7 @@
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                                $ {{$data->cleaning_fare}}
+                                $ {{number_format($data->cleaning_fee, 2)}}
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
@@ -202,7 +202,7 @@
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                                $ {{$data->security_deposit}}
+                                $ {{number_format($data->security_deposit, 2)}}
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
@@ -239,16 +239,12 @@
                     <tr>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                            <!-- Service Fee ( {{$data->service_fee_percentage}} % ) -->
                                 Service Tax
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                            <!-- <?php $serv_fare = $data->service_fee_percentage * ($data->total_amount / 100); ?>
-                                $ {{$serv_fare}} -->
-
-                                $ {{$data->service_tax}}
+                                $ {{number_format($data->service_tax, 2)}}
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
@@ -284,7 +280,7 @@
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                                <b> $ {{$data->total_amount}}</b>
+                                <b> $ {{number_format($data->total_amount, 2)}}</b>
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">

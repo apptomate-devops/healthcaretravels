@@ -273,7 +273,7 @@
     var markers = [
                 @foreach($properties as $propmap)
             {
-                property_details: '<div style="background: white;width: 405px;padding-left: 2px;padding-bottom: 5px;    border-radius: 10px;"><div>@if(isset($propmap->image_url) != "")<img src="{{$propmap->image_url}}" style="width: 400px;">@endif<p style="font-size: 30px;font-weight: 600;margin-top: -45px;background-color: rgba(74,74,76,0.7);position: absolute;width: 400px;color: white;height: 45px;padding-left: 20px;width: 400px;">$ {{$propmap->price_per_night}}</p></div><div><h4 style="font-size: 22px;font-weight: bold;padding-left: 5px;">{{$propmap->title}}</h4></div><div><p style="font-size: 15px;font-weight: 600;width: 400px;padding-left: 5px;"><i class="fa fa-map-marker"></i><?php
+                property_details: '<div style="background: white;width: 405px;padding-left: 2px;padding-bottom: 5px;    border-radius: 10px;"><div>@if(isset($propmap->image_url) != "")<img src="{{$propmap->image_url}}" style="width: 400px;">@endif<p style="font-size: 30px;font-weight: 600;margin-top: -45px;background-color: rgba(74,74,76,0.7);position: absolute;width: 400px;color: white;height: 45px;padding-left: 20px;width: 400px;">$ {{$propmap->monthly_rate}}</p></div><div><h4 style="font-size: 22px;font-weight: bold;padding-left: 5px;">{{$propmap->title}}</h4></div><div><p style="font-size: 15px;font-weight: 600;width: 400px;padding-left: 5px;"><i class="fa fa-map-marker"></i><?php
                 $location = explode(',', $propmap->location);
                 $getLoc = end($location);
                 echo $getLoc;

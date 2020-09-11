@@ -174,7 +174,7 @@
                                             </div>
                                         @endif
                                         <div class="listing-img-content">
-                                            <span class="listing-compact-title">{{$property->title}}<i>${{$property->price_per_night * $property->min_days}}/Month</i></span>
+                                            <span class="listing-compact-title">{{$property->title}}<i>${{$property->monthly_rate}}/Month</i></span>
 
                                         </div>
                                         <img style="height: 100%; width: 100%;" src="{{$property->image_url}}" alt="">

@@ -142,7 +142,7 @@
                                         @endif
                                         <li><a href="{{url('/')}}/owner/inbox" class="not-verified-block"><i class="fa fa-inbox"></i> Inbox</a></li>
                                         <li><a href="{{url('/')}}/owner/invoices"><i class="sl sl-icon-note"></i> Transaction History </a></li>
-                                        <li><a href="{{url('/')}}/owner/special_price"><i class="sl sl-icon-star"></i> Special Pricing </a></li>
+{{--                                        <li><a href="{{url('/')}}/owner/special_price"><i class="sl sl-icon-star"></i> Special Pricing </a></li>--}}
                                         {{-- <li><a href="{{url('/')}}/delete_account/"><i class="sl sl-icon-trash"></i> Delete Account </a></li> --}}
                                         <li><a href="{{url('/')}}/logout" onclick="signOut();" id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
                                     </ul>

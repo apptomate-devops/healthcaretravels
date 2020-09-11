@@ -69,37 +69,6 @@
                             {{date('m-d-Y',strtotime($data->start_date))}} to {{date('m-d-Y',strtotime($data->end_date))}}
                         </th>
                     </tr>
-                    {{-- NOTE: Commented the recruiter details as noboday understands what it is! 🤷🏻‍♂️ 😀 --}}
-                    {{-- @if($data->role_id == 2)
-                        <tr class="card">
-                            <th style="width: 0;background-color: #e78016;">
-                                Recruiter name :
-                            </th>
-                            <th style="width: 0;background-color: #747777;">
-                                {{$data->recruiter_name}}
-                            </th>
-                            <th style="width: 0;background-color: #e78016;">
-                                Recruiter Phone number :
-                            </th>
-                            <th style="width: 0;background-color: #747777;">
-                                {{$data->recruiter_phone_number}}
-                            </th>
-                        </tr>
-                        <tr class="card">
-                            <th style="width: 0;background-color: #e78016;">
-                               Recruiter Email :
-                            </th>
-                            <th style="width: 0;background-color: #747777;">
-                                {{$data->recruiter_email}}
-                            </th>
-                            <th style="width: 0;background-color: #e78016;">
-                                Contract Period :
-                            </th>
-                            <th style="width: 0;background-color: #747777;">
-                                {{date('m-d-Y',strtotime($data->contract_start_date))}} to {{date('m-d-Y',strtotime($data->contract_end_date))}}
-                            </th>
-                        </tr>
-                    @endif --}}
 
                     <tr>
                         <th style="width: 0;background-color: #e78016;">
@@ -135,17 +104,17 @@
                     <tr>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
                             <p style="color: #000;">
-                                Price per night <br> ( {{$data->min_days}} x $ {{$data->price_per_night}} )
+                                Price per night <br> $ {{Helper::get_daily_price($data->monthly_rate)}}
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
                             <p style="color: #000;">
-                                $ {{$data->price_per_night * $data->min_days}}
+                                $ {{number_format(Helper::get_daily_price($data->monthly_rate) * $data->total_days, 2)}}
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
                             <p style="color: #000;">
-                                {{$data->min_days}} Nights
+                                {{$data->total_days}} Nights
                             </p>
                         </th>
                     </tr>
@@ -158,34 +127,12 @@
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
                             <p style="color: #000;">
-                                $ {{$data->cleaning_fare}}
+                                $ {{number_format($data->cleaning_fee, 2)}}
                             </p>
                         </th>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                               {{--  Cleaning fee type - {{$data->cleaning_fee_type}} , cost - $ {{$data->cleaning_fee}} --}}
-                            </p>
-                        </th>
+
                     </tr>
 
-                    <!-- <tr>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                City Fee
-                            </p>
-                        </th>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                $ {{$data->city_fare}}
-                            </p>
-                        </th>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                City fee type - {{$data->city_fee_type}} , cost - $ {{$data->city_fee}}
-                            </p>
-                        </th>
-                    </tr>
- -->
                     <tr>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
                             <p style="color: #000;">
@@ -194,7 +141,7 @@
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
                             <p style="color: #000;">
-                                $ {{$data->security_deposit}}
+                                $ {{number_format($data->security_deposit, 2)}}
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
@@ -214,7 +161,7 @@
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
                             <p style="color: #000;">
-                                $ {{$data->service_tax}}
+                                $ {{number_format($data->service_tax, 2)}}
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
@@ -224,41 +171,7 @@
                         </th>
                     </tr>
 
-                    <!-- <tr>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                Tax
-                            </p>
-                        </th>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                $ {{$data->tax_amount}}
-                            </p>
-                        </th>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
 
-                            </p>
-                        </th>
-                    </tr>
- -->
-                   {{--  <tr>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                Traveler Pays
-                            </p>
-                        </th>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                {{$data->total_amount}}
-                            </p>
-                        </th>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-
-                            </p>
-                        </th>
-                    </tr> --}}
 
                     <tr>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
@@ -268,7 +181,7 @@
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
                             <p style="color: #000;">
-                                $ {{$data->total_amount - ($data->service_tax + $data->admin_commision)}}
+                                $ {{number_format($data->total_amount - ($data->service_tax + $data->admin_commision), 2)}}
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
@@ -278,22 +191,6 @@
                         </th>
                     </tr>
 
-                   {{--  <tr>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                Discount :
-                            </p>
-                            <input type="text" name="discount" id="disount">
-                        </th>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <button class="button" style="margin-top: 33px;">Add</button>
-                        </th>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-
-                            </p>
-                        </th>
-                    </tr> --}}
 
                 </table>
                 @if(count($guest_info) > 0)

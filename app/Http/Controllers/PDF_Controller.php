@@ -12,12 +12,6 @@ class PDF_Controller extends BaseController
     {
         $data = DB::table('property_booking')
             ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
-            ->join(
-                'property_short_term_pricing',
-                'property_short_term_pricing.property_id',
-                '=',
-                'property_booking.property_id',
-            )
             ->join('property_booking_price', 'property_booking_price.property_booking_id', '=', 'property_booking.id')
             ->where('property_booking.client_id', CLIENT_ID)
             ->where('property_booking.booking_id', $booking_id)

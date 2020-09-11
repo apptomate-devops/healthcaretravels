@@ -43,12 +43,6 @@ class PropertyController extends BaseController
             ->leftjoin('users', 'users.id', '=', 'property_list.user_id')
             ->leftjoin('property_images', 'property_images.property_id', '=', 'property_list.id')
             ->leftjoin('property_room', 'property_room.property_id', '=', 'property_list.id')
-            ->leftjoin(
-                'property_short_term_pricing',
-                'property_short_term_pricing.property_id',
-                '=',
-                'property_list.id',
-            )
             ->where('property_list.client_id', '=', $request->header('clientId'))
             ->where('property_list.id', '=', $property_id)
             ->select(
@@ -59,7 +53,6 @@ class PropertyController extends BaseController
                 'property_list.total_guests',
                 'property_list.lat',
                 'property_list.lng',
-                'property_list.location',
                 'property_list.description',
                 'property_list.verified',
                 'property_list.status',
@@ -76,33 +69,14 @@ class PropertyController extends BaseController
                 'property_room.bedroom_count',
                 'property_room.bed_count',
                 'property_room.common_spaces',
-                'property_short_term_pricing.price_per_night',
-                'property_short_term_pricing.price_more_than_one_week',
-                'property_short_term_pricing.price_more_than_one_month',
-                'property_short_term_pricing.price_per_weekend',
-                'property_short_term_pricing.price_per_weekend',
-                'property_short_term_pricing.cleaning_fee',
-                'property_short_term_pricing.cleaning_fee_type',
-                'property_short_term_pricing.city_fee_type',
-                'property_short_term_pricing.city_fee',
-                'property_short_term_pricing.security_deposit',
-                'property_short_term_pricing.check_in',
-                'property_short_term_pricing.check_out',
-                'property_short_term_pricing.check_out',
                 'users.languages_known',
-                'property_short_term_pricing.weekend_days',
                 'property_list.pets_allowed',
             )
             ->first();
 
-        // ->select('property_list.property_category','property_list.room_type','property_list.title','property_list.total_guests','property_list.address','property_list.lat','property_list.lng','property_list.location')
-        $sql = "UPDATE `property_list` SET `view_count` = `view_count` + 1 WHERE `id` = $property_id";
-        DB::select($sql);
-        //print_r($properties);exit;
+        //        $sql = "UPDATE `property_list` SET `view_count` = `view_count` + 1 WHERE `id` = $property_id";
+        //        DB::select($sql);
 
-        // $location = explode(',', $properties->location);
-        // $properties->location = end($location);
-        // echo $location;exit;
         foreach ($properties as $key => $value) {
             if (is_null($value)) {
                 $array[$key] = "";
@@ -218,12 +192,6 @@ class PropertyController extends BaseController
                 ->select('property_images.image_url')
                 ->get();
             $properties->property_images = $pd;
-            $location = $properties->location;
-
-            //        if(!$properties->location){
-            //            $properties_near = array();
-            //            return response()->json(['status'=>'SUCCESS','data'=>$properties,'properties_near'=>$properties_near]);
-            //        }
 
             $property_booking = DB::table('property_list')
                 ->join('property_booking', 'property_booking.property_id', '=', 'property_list.id')
@@ -269,34 +237,14 @@ class PropertyController extends BaseController
                 }
             }
             $properties->icals = $third_party;
-            $special_price = DB::table('property_special_pricing')
-                ->where('client_id', '=', CLIENT_ID)
-                ->where('property_id', '=', $property_id)
-                ->get();
-
-            //print_r($special_price);
-            $sp_dates = [];
-
-            for ($i = 0; $i < count($special_price); $i++) {
-                $sp_dates[$i]['date'] = date('d/m/Y H:i:s', strtotime($special_price[$i]->start_date));
-                $sp_dates[$i]['price'] = $special_price[$i]->price_per_night;
-            }
-            $properties->sp_dates = $sp_dates;
         }
         $result = $properties;
 
         $properties = DB::table('property_list')
-            ->leftjoin(
-                'property_short_term_pricing',
-                'property_short_term_pricing.property_id',
-                '=',
-                'property_list.id',
-            )
             ->leftjoin('property_room', 'property_room.property_id', '=', 'property_list.id')
             ->where('property_list.client_id', '=', $request->header('clientId'))
             ->select(
                 'property_list.property_category',
-                'property_short_term_pricing.price_per_night',
                 'property_room.bed_count',
                 'property_list.room_type',
                 'property_list.room_type',
@@ -304,7 +252,6 @@ class PropertyController extends BaseController
                 'property_list.total_guests',
                 'property_list.verified',
                 'property_list.id',
-                'property_list.location',
                 'property_list.lat',
                 'property_list.lng',
             )
@@ -312,17 +259,10 @@ class PropertyController extends BaseController
         if ($request->price_high_to_low) {
             $properties = DB::table('property_list')
                 ->where('property_list.client_id', '=', $request->header('clientId'))
-                ->leftjoin(
-                    'property_short_term_pricing',
-                    'property_short_term_pricing.property_id',
-                    '=',
-                    'property_list.id',
-                )
                 ->leftjoin('property_room', 'property_room.property_id', '=', 'property_list.id')
                 ->where('property_list.client_id', '=', $request->header('clientId'))
                 ->select(
                     'property_list.property_category',
-                    'property_short_term_pricing.price_per_night',
                     'property_room.bed_count',
                     'property_list.room_type',
                     'property_list.room_type',
@@ -330,25 +270,16 @@ class PropertyController extends BaseController
                     'property_list.total_guests',
                     'property_list.verified',
                     'property_list.id',
-                    'property_list.location',
                 )
-                ->orderBy('price_per_weekend', 'DESC')
                 ->get();
         }
         if ($request->price_low_to_high) {
             $properties = DB::table('property_list')
                 ->where('property_list.client_id', '=', $request->header('clientId'))
-                ->leftjoin(
-                    'property_short_term_pricing',
-                    'property_short_term_pricing.property_id',
-                    '=',
-                    'property_list.id',
-                )
                 ->leftjoin('property_room', 'property_room.property_id', '=', 'property_list.id')
                 ->where('property_list.client_id', '=', $request->header('clientId'))
                 ->select(
                     'property_list.property_category',
-                    'property_short_term_pricing.price_per_night',
                     'property_room.bed_count',
                     'property_list.room_type',
                     'property_list.room_type',
@@ -356,9 +287,7 @@ class PropertyController extends BaseController
                     'property_list.total_guests',
                     'property_list.verified',
                     'property_list.id',
-                    'property_list.location',
                 )
-                ->orderBy('price_per_weekend', 'ASC')
                 ->get();
         }
         //price_per_weekend
@@ -489,7 +418,7 @@ class PropertyController extends BaseController
     {
         $data = $this->propertyList
             ->where('id', $request->property_id)
-            ->select('user_id', 'country', 'state', 'location', 'city', 'address', 'lat', 'lng', 'zip_code')
+            ->select('user_id', 'country', 'state', 'city', 'address', 'lat', 'lng', 'zip_code')
             ->first();
 
         return response()->json(['status' => true, 'data' => $data]);
@@ -498,15 +427,7 @@ class PropertyController extends BaseController
     public function get_property2(Request $request)
     {
         # code...
-        $select = [
-            'property_category as property_type',
-            'room_type',
-            'total_guests as guest_count',
-            'property_size',
-            'cur_adults',
-            'cur_child',
-            'cur_pets',
-        ];
+        $select = ['room_type', 'total_guests as guest_count', 'property_size', 'cur_adults', 'cur_child', 'cur_pets'];
 
         $data = $this->propertyList
             ->where('property_list.id', '=', $request->property_id)
@@ -551,13 +472,11 @@ class PropertyController extends BaseController
     public function get_property4(Request $request)
     {
         $data = $this->propertyList
-            ->join('property_short_term_pricing', 'property_short_term_pricing.property_id', '=', 'property_list.id')
             ->where('property_list.id', '=', $request->property_id)
             ->select(
-                'property_short_term_pricing.*',
                 'property_list.cancellation_policy',
+                'property_list.monthly_rate',
                 'property_list.min_days',
-                'property_list.cleaning_type as cleaning_fee_type',
                 'property_list.is_instant as booking_type',
                 'property_list.house_rules',
             )
@@ -585,13 +504,12 @@ class PropertyController extends BaseController
         $ins_array['state'] = $request->state;
         $ins_array['city'] = $request->city;
         $ins_array['address'] = $request->address;
-        $ins_array['location'] = $request->location;
         $ins_array['zip_code'] = $request->zip_code;
         $ins_array['lat'] = $request->lat;
         $ins_array['lng'] = $request->lng;
         if (!$request->property_id) {
             $insert = DB::table('property_list')->insertGetId($ins_array);
-            $update_on_stage = $this->propertyList->where('id', $insert)->update(['on_stage' => 1]);
+            $update_on_stage = $this->propertyList->where('id', $insert)->update(['stage' => 1]);
         } else {
             $update = DB::table('property_list')
                 ->where('id', $request->property_id)
@@ -630,7 +548,6 @@ class PropertyController extends BaseController
 
         $this->propertyList->where('id', $request->property_id)->update([
             'room_type' => $request->room_type,
-            'property_category' => $request->property_type,
             'property_size' => $request->property_size,
             'total_guests' => $request->guest_count,
             'cur_adults' => $request->cur_adults,
@@ -807,8 +724,8 @@ class PropertyController extends BaseController
         if ($is_old) {
             # code...
         } else {
-            if ($p_list->on_stage < 2) {
-                $update_on_stage = $this->propertyList->where('id', $request->property_id)->update(['on_stage' => 2]);
+            if ($p_list->stage < 2) {
+                $update_on_stage = $this->propertyList->where('id', $request->property_id)->update(['stage' => 2]);
             }
         }
 
@@ -822,8 +739,8 @@ class PropertyController extends BaseController
     public function add_property3(Request $request)
     {
         $prop = $this->propertyList->where('id', $request->property_id)->first();
-        if ($prop->on_stage < 3) {
-            $update_on_stage = $this->propertyList->where('id', $request->property_id)->update(['on_stage' => 3]);
+        if ($prop->stage < 3) {
+            $update_on_stage = $this->propertyList->where('id', $request->property_id)->update(['stage' => 3]);
         }
         $update = DB::table('property_list')
             ->where('id', $request->property_id)
@@ -844,7 +761,6 @@ class PropertyController extends BaseController
     public function add_property4(Request $request)
     {
         # code...
-        //property_short_term_pricing cancellation_policy
         $this->propertyList
             ->where('id', $request->property_id)
             ->update(['cancellation_policy' => $request->cancellation_policy, 'min_days' => $request->min_days]);
@@ -881,16 +797,12 @@ class PropertyController extends BaseController
         $val_count = $this->shor_term_pricing->where('property_id', $request->property_id)->count();
         if ($val_count == ZERO) {
             $insert = $this->shor_term_pricing->insert($ins);
-            $this->propertyList
-                ->where('id', $request->property_id)
-                ->update(['cleaning_type' => $request->cleaning_fee_type, 'house_rules' => $request->house_rules]);
+            $this->propertyList->where('id', $request->property_id)->update(['house_rules' => $request->house_rules]);
             $msg = "Price added successfully";
-            $update_on_stage = $this->propertyList->where('id', $request->property_id)->update(['on_stage' => 4]);
+            $update_on_stage = $this->propertyList->where('id', $request->property_id)->update(['stage' => 4]);
         } else {
             $update = $this->shor_term_pricing->where('property_id', $request->property_id)->update($ins);
-            $this->propertyList
-                ->where('id', $request->property_id)
-                ->update(['cleaning_type' => $request->cleaning_fee_type, 'house_rules' => $request->house_rules]);
+            $this->propertyList->where('id', $request->property_id)->update(['house_rules' => $request->house_rules]);
             $msg = "Price updated successfully";
         }
         return response()->json(['status' => true, 'success_message' => 'Price updated successfully']);
@@ -995,6 +907,8 @@ class PropertyController extends BaseController
             $where .= " ORDER BY bedroom_count ASC";
         }
 
+        // TODO: remove property_short_term_pricing from query, use monthly_rate from property_list
+
         $sql =
             "SELECT A.*,B.price_per_night,B.property_id,
 (SELECT room.bed_count FROM property_room room WHERE room.property_id = A.id LIMIT 1) AS bed_count,
@@ -1006,9 +920,7 @@ class PropertyController extends BaseController
 (SELECT IFNULL(AVG(rating),0) FROM property_rating rating_avg WHERE rating_avg.property_id = A.id) AS property_rating
 FROM `property_list` A , `property_short_term_pricing` B WHERE  A.status = '1'  AND A.property_status = '1'  AND A.id = B.property_id AND A.is_complete = " .
             ONE .
-            " AND (A.location like '%" .
-            $location .
-            "%' OR A.city like '%" .
+            " AND (A.city like '%" .
             $location .
             "%' OR A.country like '%" .
             $location .
@@ -1046,14 +958,10 @@ FROM `property_list` A , `property_short_term_pricing` B WHERE  A.status = '1'  
             $source_location = $location;
 
             $source_location = urlencode($source_location);
-            $loc = $property->location;
-            $property->location = urlencode($property->location);
             $properties_near[] = $property;
             $url =
                 "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" .
                 $source_location .
-                "&destinations=" .
-                $property->location .
                 "&key=AIzaSyCGX6aGjOeMptlBNc0WF3vhm0SPMl1vNBE"; //exit;
             // LOG::info("distance matrix url ".$url);
             // $ch = curl_init();

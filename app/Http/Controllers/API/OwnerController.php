@@ -14,15 +14,8 @@ class OwnerController extends BaseController
         $user_id = $request->header('authId');
 
         $properties = DB::table('property_list')
-            ->leftjoin(
-                'property_short_term_pricing',
-                'property_short_term_pricing.property_id',
-                '=',
-                'property_list.id',
-            )
             ->where('property_list.client_id', '=', CLIENT_ID)
             ->where('property_list.user_id', '=', $user_id)
-            ->where('property_list.property_type', '=', ZERO)
             ->get();
 
         $properties_near = [];

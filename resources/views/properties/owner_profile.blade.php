@@ -119,7 +119,7 @@
                         <a href="{{url('/')}}/property/{{$property->property_id}}" class="listing-img-container">
 
                             <div class="listing-img-content">
-                                <span class="listing-price">${{$property->price_per_night * 30}} /Month</span>
+                                <span class="listing-price">${{$property->monthly_rate}} /Month</span>
                                 <span class="like-icon with-tip" data-tip-content="Add to Favourites"></span>
                             </div>
                            @if($property->verified==1)

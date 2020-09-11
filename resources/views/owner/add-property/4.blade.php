@@ -67,9 +67,9 @@
 {{--                                        </div>--}}
 
                                         <div class="col-md-6">
-                                            <h5>Daily Rate (USD)<span class="required">*</span></h5>
+                                            <h5>Monthly Rate (USD)<span class="required">*</span></h5>
                                             <p class="caption-text">Booking prices will be calculated based on this rate, starting at a minimum of 30 days.</p>
-                                            <input class="search-field validate price_float" type="text" name="price_per_night" id="price_per_night" value="{{isset($price->price_per_night)?$price->price_per_night:''}}" />
+                                            <input class="search-field validate price_float" type="text" name="monthly_rate" id="monthly_rate" value="{{isset($property_details->monthly_rate)?$property_details->monthly_rate:''}}" />
                                         </div>
 
                                         <div class="col-md-6">
@@ -133,18 +133,18 @@
                                         <div class="col-md-6" style="padding: 0;">
                                             <div class="col-md-6">
                                                 <h5>Check In<span class="required">*</span></h5>
-                                                <input class="search-field validate" name="check_in" id="property_from_date" type="text" value="{{isset($price->check_in)?$price->check_in:''}}" />
+                                                <input class="search-field validate" name="check_in" id="property_from_date" type="text" value="{{isset($property_details->check_in)?$property_details->check_in:''}}" />
                                             </div>
                                             <div class="col-md-6">
                                                 <h5>Check Out<span class="required">*</span></h5>
-                                                <input class="search-field validate" name="check_out" id="property_to_date" type="text" value="{{isset($price->check_out)?$price->check_out:''}}" />
+                                                <input class="search-field validate" name="check_out" id="property_to_date" type="text" value="{{isset($property_details->check_out)?$property_details->check_out:''}}" />
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <h5>Cleaning Fees<span class="required">*</span></h5>
                                             <p class="caption-text">This fee will be charged once per stay</p>
-                                            <input class="search-field price_float validate" id="cleaning_fee" name="cleaning_fee" type="text" value="{{isset($price->cleaning_fee)?$price->cleaning_fee:'0'}}"   />
+                                            <input class="search-field price_float validate" id="cleaning_fee" name="cleaning_fee" type="text" value="{{isset($property_details->cleaning_fee)?$property_details->cleaning_fee:'0'}}"   />
                                         </div>
                                     </div>
 
@@ -163,7 +163,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <h5>Security Deposit<span class="required">*</span></h5>
-                                            <input class="search-field price_float validate" id="security_deposit" name="security_deposit" type="text" value="{{isset($price->security_deposit)?$price->security_deposit:'0'}}"   />
+                                            <input class="search-field price_float validate" id="security_deposit" name="security_deposit" type="text" value="{{isset($property_details->security_deposit)?$property_details->security_deposit:'0'}}"   />
                                         </div>
                                         <br><br>
                                     </div>

@@ -73,11 +73,11 @@
                 <i class="sl sl-icon-note"></i> Transcation History
             </a>
         </li>
-        <li>
-            <a href="{{url('/')}}/owner/special_price" {{{ (Request::is('/owner/special_price') ? 'class=current' : '') }}}>
-                <i class="sl sl-icon-star"></i>  Special Pricing
-            </a>
-        </li>
+{{--        <li>--}}
+{{--            <a href="{{url('/')}}/owner/special_price" {{{ (Request::is('/owner/special_price') ? 'class=current' : '') }}}>--}}
+{{--                <i class="sl sl-icon-star"></i>  Special Pricing--}}
+{{--            </a>--}}
+{{--        </li>--}}
 
     </ul>
 

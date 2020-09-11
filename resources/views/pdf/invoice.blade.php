@@ -55,17 +55,17 @@
     <tr>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
             <p style="color: #000;">
-                Price per night ( {{$data->min_days}} x $ {{$data->price_per_night}} )
+                Price per night ( $ {{Helper::get_daily_price($data->monthly_rate)}} )
             </p>
         </th>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
             <p style="color: #000;">
-                $ {{$data->price_per_night * $data->min_days}}.00
+                $ {{number_format(Helper::get_daily_price($data->monthly_rate) * $data->total_days, 2)}}
             </p>
         </th>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
             <p style="color: #000;">
-                {{$data->min_days}} Nights
+                {{$data->total_days}} Nights
             </p>
         </th>
     </tr>
@@ -78,12 +78,7 @@
         </th>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
             <p style="color: #000;">
-                $ {{$data->cleaning_fare}}.00
-            </p>
-        </th>
-        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-            <p style="color: #000;">
-                {{-- Cleaning fee type - {{$data->cleaning_fee_type}} , cost - $ {{$data->cleaning_fee}} --}}
+                $ {{number_format($data->cleaning_fee, 2)}}
             </p>
         </th>
     </tr>
@@ -98,7 +93,7 @@
         </th>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
             <p style="color: #000;">
-                $ {{$data->security_deposit}}.00
+                $ {{number_format($data->security_deposit, 2)}}
             </p>
         </th>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
@@ -108,16 +103,16 @@
         </th>
     </tr>
 
-    @if($data->minimum_guests < $data->guest_count)
+    @if($data->total_guests < $data->guest_count)
         <tr>
             <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
                 <p style="color: #000;">
-                    Extra guest ( {{$data->guest_count - $data->minimum_guests}} x $ {{$data->price_per_extra_guest}} )
+                    Extra guest ( {{$data->guest_count - $data->total_guests}} x $ {{$data->price_per_extra_guest}} )
                 </p>
             </th>
             <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
                 <p style="color: #000;">
-                    <?php $extra_guests = $data->guest_count - $data->minimum_guests; ?>
+                    <?php $extra_guests = $data->guest_count - $data->total_guests; ?>
                     $ {{$extra_guests * $data->price_per_extra_guest}}.00
                 </p>
             </th>
@@ -137,7 +132,7 @@
         </th>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
             <p style="color: #000;">
-                $ {{$data->service_tax}}.00
+                $ {{number_format($data->service_tax, 2)}}
             </p>
         </th>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
@@ -157,7 +152,7 @@
         </th>
         <th colspan="2" style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
             <p style="color: #000;font-size: 35px;">
-                <b>$  {{$data->total_amount}}.00</b>
+                <b>$  {{number_format($data->total_amount, 2)}}</b>
             </p>
         </th>
 

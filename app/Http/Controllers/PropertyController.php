@@ -35,6 +35,7 @@ class PropertyController extends BaseController
         }
         $check_in = date('Y-m-d', strtotime($request->check_in));
         $check_out = date('Y-m-d', strtotime($request->check_out));
+        $guest_count = $request->guest_count == 0 ? 20 : $request->guest_count;
         $sql =
             "SELECT count(*) as is_available,B.total_guests FROM `property_booking` A, `property_list` B WHERE (A.start_date BETWEEN '" .
             $check_in .
@@ -44,26 +45,11 @@ class PropertyController extends BaseController
             $check_in .
             "' AND '" .
             $check_out .
-            "')  AND B.minimum_guests < " .
+            "')  AND B.total_guests < " .
             $request->guest_count .
             " AND A.payment_done = 1 AND A.is_instant = B.is_instant AND A.property_id = " .
             $request->property_id .
             "";
-
-        $s_price =
-            "SELECT count(*) as is_available,A.* FROM `property_special_pricing` A, `property_list` B WHERE (A.start_date  BETWEEN '" .
-            $check_in .
-            "' AND '" .
-            $check_out .
-            "') AND (A.end_date  BETWEEN '" .
-            $check_in .
-            "' AND '" .
-            $check_out .
-            "') AND A.property_id = " .
-            $request->property_id .
-            "";
-
-        $special_price = DB::select($s_price);
 
         $is_available = DB::select($sql);
 
@@ -93,156 +79,50 @@ class PropertyController extends BaseController
 
             $weeks = $this->get_weekend_count($check_in, $check_out);
             $weeks['total'] = $weeks['total'] - 1;
-            $pricing_config = DB::table('property_short_term_pricing')
-                ->where('client_id', CLIENT_ID)
-                ->where('property_id', $request->property_id)
-                ->first();
+            $single_day_fare = $property_details->monthly_rate / 30;
 
-            if ($special_price[ZERO]->is_available != ZERO) {
-                $pricing_config->price_per_night = $special_price[ZERO]->price_per_night;
-            }
-            if (!$pricing_config) {
-                return response()->json(['status' => false, 'error_message' => 'Property cannot be finished']);
-            }
             $booking_price = [];
             $booking_price['client_id'] = CLIENT_ID;
-            $booking_price['single_day_fare'] = $pricing_config->price_per_night;
+            $booking_price['single_day_fare'] = $single_day_fare;
             $booking_price['property_booking_id'] = $property_booking_id;
-            $booking_price['single_day_fare'] = $pricing_config->price_per_night;
             $booking_price['total_days'] = $weeks['total'];
             $total_days = $weeks['total'];
             $week_end_days = ZERO;
 
-            $normal_days = $weeks['total'];
-            //            if ($weeks['total'] > 30) {
-            //                $pricing_config->price_per_night = $pricing_config->price_more_than_one_month;
-            //                $booking_price['single_day_fare'] = $pricing_config->price_more_than_one_month;
-            //                $pricing_config->price_per_weekend = 0;
-            //                $price = $weeks['total'] * $pricing_config->price_per_night;
-            //            } else {
-            $pricing_config->price_per_night = $pricing_config->price_per_night;
-            $booking_price['single_day_fare'] = $pricing_config->price_per_night;
-            $pricing_config->price_per_weekend = 0;
-            $price = $weeks['total'] * $pricing_config->price_per_night;
-            //            }
-
-            $city_fee_amount = ZERO;
-
-            $booking_price['city_fare'] = $city_fee_amount;
-            Logger::info("city_fee_type: " . $pricing_config->city_fee_type);
-            Logger::info("city_fee: " . $city_fee_amount);
-
-            $cleaning_fee_amount = ZERO;
-
-            if ($total_days <= 30) {
-                $service_tax = DB::table('settings')
-                    ->where('param', 'traveller_below_30_days')
-                    ->first();
-                $admin_commision = DB::table('settings')
-                    ->where('param', 'traveller_below_30_days')
-                    ->first();
-            } else {
-                $service_tax = DB::table('settings')
-                    ->where('param', 'traveler_above_30_days')
-                    ->first();
-                $admin_commision = DB::table('settings')
-                    ->where('param', 'traveler_above_30_days')
-                    ->first();
-            }
-            switch ($pricing_config->cleaning_fee_type) {
-                case "Flat Rate Fee":
-                    $cleaning_fee_amount = $service_tax->value;
-                    break;
-
-                case "Per Day":
-                    $cleaning_fee_amount = $weeks['total'] * $pricing_config->cleaning_fee;
-                    break;
-
-                case "Per Month":
-                    $cleaning_fee_amount = $pricing_config->cleaning_fee;
-                    break;
-            }
-            $cleaning_fee_amount = $service_tax->value;
-            $booking_price['cleaning_fare'] = $service_tax->value;
-
-            Logger::info("cleaning_fare _type: " . $pricing_config->cleaning_fee_type);
-            Logger::info("cleaning_fare: " . $cleaning_fee_amount);
-            $extra_guest = 0;
-            $extra_guest_price = 0;
-            $booking_price['extra_guest_price'] = $extra_guest_price;
-            if ($total_days <= 30) {
-                $service_tax = DB::table('settings')
-                    ->where('param', 'traveller_below_30_days')
-                    ->first();
-                $admin_commision = DB::table('settings')
-                    ->where('param', 'traveller_below_30_days')
-                    ->first();
-            } else {
-                $service_tax = DB::table('settings')
-                    ->where('param', 'traveler_above_30_days')
-                    ->first();
-                $admin_commision = DB::table('settings')
-                    ->where('param', 'traveler_above_30_days')
-                    ->first();
-            }
-
-            $adminCommision = $admin_commision->value + $service_tax->value;
-
+            $price = $weeks['total'] * $single_day_fare;
+            $service_tax = DB::table('settings')
+                ->where('param', 'service_tax')
+                ->first();
             $total_price =
-                $price +
-                $cleaning_fee_amount +
-                $city_fee_amount +
-                $pricing_config->security_deposit +
-                $service_tax->value;
+                $price + $property_details->cleaning_fee + $property_details->security_deposit + $service_tax->value;
 
-            Logger::info("Deposit: " . $pricing_config->security_deposit);
-            $total_price = $total_price;
-            $due_now = $this->get_percentage($pricing_config->first_payment_percentage, $total_price);
-            $booking_price['cleaning_fare'] = $service_tax->value;
-            $booking_price['city_fare'] = $city_fee_amount;
+            //            $due_now = $this->get_percentage($pricing_config->first_payment_percentage, $total_price);
             $booking_price['service_tax'] = $service_tax->value;
-            $booking_price['initial_pay'] = $due_now;
+            $booking_price['initial_pay'] = 0; // TODO: check with $due_now;
             $booking_price['total_amount'] = $total_price;
-            $booking_price['temp_amount'] = $pricing_config->price_per_weekend;
+            $booking_price['temp_amount'] = 0; // TODO: $pricing_config->price_per_weekend;
             $booking_price['week_end_days'] = $week_end_days;
-            $booking_price['admin_commision'] = $adminCommision;
-            $booking_price['security_deposit'] = $pricing_config->security_deposit;
-            $booking_price['weekend_fare'] = $pricing_config->price_per_weekend;
+            $booking_price['security_deposit'] = $property_details->security_deposit;
+            $booking_price['weekend_fare'] = 0; // TODO: $pricing_config->price_per_weekend;
 
-            $log_data = json_encode($booking_price);
-            Logger::info("final array: " . $log_data);
             DB::table('property_booking_price')->insert($booking_price);
 
             $insert_data = DB::table('property_booking_price')
                 ->orderBy('id', 'desc')
                 ->first();
-            $insert_data->min_guests = $property_details->minimum_guests;
             $insert_data->calc_price = $price;
 
-            $insert_data->service_amount = $this->get_percentage($pricing_config->service_fee_percentage, $total_price);
-            $user_id = $request->session()->get('user_id');
-            $user = Users::where('id', $user_id)->first();
+            //            $insert_data->service_amount = $this->get_percentage($pricing_config->service_fee_percentage, $total_price);
+            //            $user_id = $request->session()->get('user_id');
+            //            $user = Users::where('id', $user_id)->first();
             $property_id = $request->property_id;
             $property = DB::table('property_list')
                 ->leftjoin('users', 'users.id', '=', 'property_list.user_id')
-                ->join(
-                    'property_short_term_pricing',
-                    'property_short_term_pricing.property_id',
-                    '=',
-                    'property_list.id',
-                )
                 ->where('property_list.id', '=', $property_id)
                 ->first();
-            // print_r($property);exit;
 
             $data = DB::table('property_booking')
                 ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
-                ->join(
-                    'property_short_term_pricing',
-                    'property_short_term_pricing.property_id',
-                    '=',
-                    'property_booking.property_id',
-                )
                 ->join('property_images', 'property_images.property_id', '=', 'property_booking.property_id')
                 ->join(
                     'property_booking_price',
@@ -293,6 +173,106 @@ class PropertyController extends BaseController
         }
     }
 
+    public function get_price(Request $request)
+    {
+        $guest_count = $request->guest_count == 0 ? 20 : $request->guest_count;
+        $request->adults_count = $guest_count;
+        $check_in = date('Y-m-d', strtotime($request->check_in));
+        $check_out = date('Y-m-d', strtotime($request->check_out));
+
+        $sql =
+            "SELECT count(*) as is_available,B.total_guests FROM `property_booking` A, `property_list` B WHERE (A.start_date BETWEEN '" .
+            $check_in .
+            "' AND '" .
+            $check_out .
+            "') AND (A.end_date BETWEEN '" .
+            $check_in .
+            "' AND '" .
+            $check_out .
+            "')  AND B.total_guests < " .
+            $guest_count .
+            " AND A.payment_done = 1 AND A.is_instant = B.is_instant AND A.property_id = " .
+            $request->property_id;
+
+        $is_available = DB::select($sql);
+
+        $property_details = DB::table('property_list')
+            ->where('client_id', CLIENT_ID)
+            ->where('id', $request->property_id)
+            ->first();
+
+        $booking_count = DB::table('property_booking')
+            ->where('client_id', CLIENT_ID)
+            ->where('property_id', $request->property_id)
+            ->count();
+
+        $weeks = $this->get_weekend_count($check_in, $check_out);
+        $weeks['total'] = $weeks['total'] - 1;
+
+        if ($weeks['total'] < $property_details->min_days) {
+            return response()->json([
+                'status' => 'FAILED',
+                'message' => 'Please Select Minimum days ',
+                'status_code' => ONE,
+            ]);
+        }
+
+        if ($is_available[ZERO]->is_available == ZERO || $booking_count == ZERO) {
+            try {
+                $single_day_fare = $property_details->monthly_rate / 30;
+
+                $booking_price = [];
+                $booking_price['client_id'] = CLIENT_ID;
+                $booking_price['single_day_fare'] = $single_day_fare;
+                $booking_price['total_days'] = $weeks['total'];
+                $normal_days = $weeks['total'];
+                $week_end_days = 0;
+                $booking_price['normal_days'] = $weeks['total'];
+                $price = $normal_days * $single_day_fare;
+                $booking_price['week_end_days'] = $week_end_days;
+
+                $weekend_price = $single_day_fare;
+
+                $booking_price['price_per_weekend'] = $single_day_fare;
+                $booking_price['weekend_total'] = $weekend_price * $week_end_days;
+
+                $service_tax = DB::table('settings')
+                    ->where('param', 'service_tax')
+                    ->first();
+
+                $total_price =
+                    $price +
+                    $property_details->cleaning_fee +
+                    $property_details->security_deposit +
+                    $service_tax->value;
+
+                $booking_price['service_tax'] = $service_tax->value;
+                $booking_price['initial_pay'] = 0; // TODO: check this later $due_now;
+                $booking_price['total_amount'] = $total_price;
+                $booking_price['check_in'] = $check_in;
+                $booking_price['check_out'] = $check_out;
+                $booking_price['cleaning_fee'] = $property_details->cleaning_fee;
+                $booking_price['security_deposit'] = $property_details->security_deposit;
+                $booking_price['sub_total'] = $total_price;
+                $booking_price['price'] = $price;
+
+                return response()->json(['status' => 'SUCCESS', 'data' => $booking_price, 'status_code' => ONE]);
+            } catch (\Exception $ex) {
+                return response()->json([
+                    'status' => 'FAILED',
+                    'message' => $ex->getMessage(),
+                    'status_code' => ZERO,
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => 'FAILED',
+                'message' => 'This property not available',
+                'status_code' => ZERO,
+            ]);
+        }
+    }
+
     /**
      *Get booking details of that property
      *
@@ -304,12 +284,6 @@ class PropertyController extends BaseController
     {
         $data = DB::table('property_booking')
             ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
-            ->join(
-                'property_short_term_pricing',
-                'property_short_term_pricing.property_id',
-                '=',
-                'property_booking.property_id',
-            )
             ->join('property_images', 'property_images.property_id', '=', 'property_booking.property_id')
             ->join('property_booking_price', 'property_booking_price.property_booking_id', '=', 'property_booking.id')
             ->where('property_booking.client_id', CLIENT_ID)
@@ -533,12 +507,6 @@ class PropertyController extends BaseController
 
         $properties = DB::table('user_favourites')
             ->join('property_list', 'property_list.id', '=', 'user_favourites.property_id')
-            ->join(
-                'property_short_term_pricing',
-                'property_short_term_pricing.property_id',
-                '=',
-                'user_favourites.property_id',
-            )
             ->join('property_room', 'property_room.property_id', '=', 'user_favourites.property_id')
             ->where('property_list.client_id', '=', CLIENT_ID)
             ->where('user_favourites.user_id', '=', $user_id)
@@ -605,215 +573,6 @@ class PropertyController extends BaseController
             ->where('id', $property->owner_id)
             ->first();
         return view('owner.fire_chat', ['owner' => $owner, 'traveller' => $traveller, 'id' => $id]);
-    }
-
-    public function get_price(Request $request)
-    {
-        $guest_count = $request->guest_count == "Guests" ? 20 : $request->guest_count;
-        $request->adults_count = $guest_count;
-        $check_in = date('Y-m-d', strtotime($request->check_in));
-        $check_out = date('Y-m-d', strtotime($request->check_out));
-
-        $sql =
-            "SELECT count(*) as is_available,B.total_guests FROM `property_booking` A, `property_list` B WHERE (A.start_date BETWEEN '" .
-            $check_in .
-            "' AND '" .
-            $check_out .
-            "') AND (A.end_date BETWEEN '" .
-            $check_in .
-            "' AND '" .
-            $check_out .
-            "')  AND B.minimum_guests < " .
-            $guest_count .
-            " AND A.payment_done = 1 AND A.is_instant = B.is_instant AND A.property_id = " .
-            $request->property_id;
-
-        $s_price =
-            "SELECT count(*) as is_available,A.* FROM `property_special_pricing` A, `property_list` B WHERE (A.start_date  BETWEEN '" .
-            $check_in .
-            "' AND '" .
-            $check_out .
-            "') AND (A.end_date  BETWEEN '" .
-            $check_in .
-            "' AND '" .
-            $check_out .
-            "') AND A.property_id = " .
-            $request->property_id;
-
-        $pricing_config = DB::table('property_short_term_pricing')
-            ->where('client_id', CLIENT_ID)
-            ->where('property_id', $request->property_id)
-            ->first();
-
-        $special_price = DB::select($s_price);
-
-        $is_available = DB::select($sql);
-
-        $property_details = DB::table('property_list')
-            ->where('client_id', CLIENT_ID)
-            ->where('id', $request->property_id)
-            ->first();
-
-        $booking_count = DB::table('property_booking')
-            ->where('client_id', CLIENT_ID)
-            ->where('property_id', $request->property_id)
-            ->count();
-
-        $weeks = $this->get_weekend_count($check_in, $check_out);
-        $weeks['total'] = $weeks['total'] - 1;
-
-        if ($weeks['total'] < $property_details->min_days) {
-            return response()->json([
-                'status' => 'FAILED',
-                'message' => 'Please Select Minimum days ',
-                'status_code' => ONE,
-            ]);
-        }
-
-        if ($is_available[ZERO]->is_available == ZERO || $booking_count == ZERO) {
-            $booking_price = [];
-            $booking_price['client_id'] = CLIENT_ID;
-            $booking_price['single_day_fare'] = $pricing_config->price_per_night;
-            // $booking_price['single_day_fare'] = $pricing_config->price_per_night;
-            $booking_price['total_days'] = $weeks['total'];
-            //            $booking_price['price_per_extra_guest'] = $pricing_config->price_per_extra_guest;
-
-            $total_days = $weeks['total'];
-
-            // // edited By Karthik for Extra Guest systems.
-            //     if($pricing_config->is_extra_guest!=0){
-            //          $booking_price['no_extra_guest'] = 0;
-            //         if($property_details->total_guests <$request->guest_count){
-            //             $extra_guest=$request->guest_count-$property_details->total_guests;
-            //             $extra_guest_price=$pricing_config->price_per_extra_guest*$extra_guest;
-            //               $booking_price['is_extra_guest'] = 1;
-            //         }else{
-            //             $extra_guest=0;
-            //             $extra_guest_price=0;
-            //               $booking_price['is_extra_guest'] = 0;
-            //         }
-            //     }else{
-            //         $extra_guest=0;
-            //             $extra_guest_price=0;
-            //         $booking_price['no_extra_guest'] = 1;
-            //     }
-            //     $booking_price['extra_guest'] = $extra_guest;
-
-            // $booking_price['extra_guest_price'] = $extra_guest_price;
-
-            // $week_end_pre = explode(",", $pricing_config->weekend_days);
-            // $check_out_day = date('D', strtotime($request->check_out));
-            // $check_in_day = date('D', strtotime($request->check_in));
-            // $week_end_days = ZERO;
-            // foreach ($week_end_pre as $week_day) {
-            //     if(!in_array($check_out_day, $week_end_pre)){
-            //         switch ($week_day) {
-            //             case 'Fri';
-            //                 $week_end_days = $week_end_days + $weeks['friday_count'];
-            //                 break;
-
-            //             case 'Sat';
-            //                 $week_end_days = $week_end_days + $weeks['saturday_count'];
-            //                 break;
-
-            //             case 'Sun';
-            //                 $week_end_days = $week_end_days + $weeks['sunday_count'];
-            //                 break;
-            //         }
-            //     }
-            // }
-
-            $normal_days = $weeks['total'];
-
-            // $normal_days = $normal_days - 1;
-            //            if ($weeks['total'] > 30) {
-            //                $pricing_config->price_per_night = $pricing_config->price_more_than_one_month;
-            //                $booking_price['single_day_fare'] = $pricing_config->price_more_than_one_month;
-            //                $pricing_config->price_per_weekend = 0;
-            //                $week_end_days = 0;
-            //                $price = $weeks['total'] * $pricing_config->price_per_night;
-            //                $booking_price['normal_days'] = $weeks['total'];
-            //            } else {
-            $week_end_days = 0;
-            $booking_price['normal_days'] = $weeks['total'];
-            //                $booking_price['normal_days'] = $normal_days;
-            $price = $normal_days * $pricing_config->price_per_night;
-            //            }
-
-            $booking_price['week_end_days'] = $week_end_days;
-
-            $weekend_price = (int) $pricing_config->price_per_weekend;
-
-            $booking_price['price_per_weekend'] = $weekend_price;
-            $booking_price['weekend_total'] = $weekend_price * $week_end_days;
-
-            $cleaning_fee_amount = ZERO;
-            $city_fee_amount = ZERO;
-            if ($total_days <= 30) {
-                $service_tax = DB::table('settings')
-                    ->where('param', 'traveller_below_30_days')
-                    ->first();
-                $admin_commision = DB::table('settings')
-                    ->where('param', 'traveller_below_30_days')
-                    ->first();
-            } else {
-                $service_tax = DB::table('settings')
-                    ->where('param', 'traveler_above_30_days')
-                    ->first();
-                $admin_commision = DB::table('settings')
-                    ->where('param', 'traveler_above_30_days')
-                    ->first();
-            }
-
-            $adminCommision = $admin_commision->value + $service_tax->value;
-            // switch ($pricing_config->cleaning_fee_type) {
-            //     case "Flat Rate Fee";
-            //      $cleaning_fee_amount = $service_tax->value;
-            //         break;
-
-            //     case "Per Day";
-            //         $cleaning_fee_amount = $weeks['total'] * $pricing_config->cleaning_fee;
-            //         break;
-
-            //     case "Per Month";
-            //         $cleaning_fee_amount = $pricing_config->cleaning_fee;
-            //         break;
-
-            // }
-            $cleaning_fee_amount = $service_tax->value;
-            $booking_price['cleaning_fare'] = $service_tax->value;
-
-            /*
-             * Cleaning fee calculation ended
-             */
-
-            /*
-             *
-             * Total amount calculation
-             */
-            $total_price = $price + $cleaning_fee_amount + $pricing_config->security_deposit + $service_tax->value;
-            //$tax_value = $this->get_percentage($pricing_config->tax, $total_price);
-            $due_now = $this->get_percentage($pricing_config->first_payment_percentage, $total_price);
-            $booking_price['service_tax'] = $service_tax->value;
-            //$booking_price['tax_amount'] = $tax_value;
-            $booking_price['initial_pay'] = $due_now;
-            //$booking_price['total_amount'] = $total_price + $tax_value;
-            $booking_price['total_amount'] = $total_price;
-            $booking_price['check_in'] = $check_in;
-            $booking_price['check_out'] = $check_out;
-            $booking_price['city_fee_amount'] = $city_fee_amount;
-            $booking_price['security_deposit'] = $pricing_config->security_deposit;
-            $booking_price['sub_total'] = $total_price;
-            $booking_price['price'] = $price;
-
-            return response()->json(['status' => 'SUCCESS', 'data' => $booking_price, 'status_code' => ONE]);
-        } else {
-            return response()->json([
-                'status' => 'FAILED',
-                'message' => 'This property not available',
-                'status_code' => ZERO,
-            ]);
-        }
     }
 
     public function inbox(Request $request)
@@ -1038,14 +797,8 @@ class PropertyController extends BaseController
             $query = $property_list_obj
                 ->join('users', 'users.id', '=', 'property_list.user_id')
                 ->join('property_room', 'property_room.property_id', '=', 'property_list.id')
-                ->join(
-                    'property_short_term_pricing',
-                    'property_short_term_pricing.property_id',
-                    '=',
-                    'property_list.id',
-                )
                 ->leftjoin('property_blocking', 'property_blocking.property_id', '=', 'property_list.id')
-                ->select('property_list.*', 'property_room.*', 'property_short_term_pricing.*')
+                ->select('property_list.*', 'property_room.*')
                 ->where('property_list.is_complete', '=', ACTIVE)
                 ->where('property_list.status', '=', 1)
                 ->where('property_list.property_status', '=', 1);
@@ -1102,15 +855,11 @@ class PropertyController extends BaseController
 
             if ($request->minprice != "" && $request->maxprice != "") {
                 $where[] =
-                    'property_short_term_pricing.price_per_night BETWEEN "' .
-                    $request->minprice .
-                    '" and "' .
-                    $request->maxprice .
-                    '" ';
+                    'property_list.monthly_rate BETWEEN "' . $request->minprice . '" and "' . $request->maxprice . '" ';
             } elseif ($request->minprice != "" && $request->maxprice == "") {
-                $where[] = 'property_short_term_pricing.price_per_night <= "' . $request->minprice . '" ';
+                $where[] = 'property_list.monthly_rate <= "' . $request->minprice . '" ';
             } elseif ($request->minprice == "" && $request->maxprice != "") {
-                $where[] = 'property_short_term_pricing.price_per_night <= "' . $request->maxprice . '" ';
+                $where[] = 'property_list.monthly_rate <= "' . $request->maxprice . '" ';
             }
             $from = strtotime($request->from_date);
             $to = strtotime($request->to_date);
@@ -1206,12 +955,6 @@ class PropertyController extends BaseController
             $data = DB::table('property_booking')
                 ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
                 ->join(
-                    'property_short_term_pricing',
-                    'property_short_term_pricing.property_id',
-                    '=',
-                    'property_booking.property_id',
-                )
-                ->join(
                     'property_booking_price',
                     'property_booking_price.property_booking_id',
                     '=',
@@ -1222,9 +965,9 @@ class PropertyController extends BaseController
                     'property_booking.*',
                     'property_list.title',
                     'property_list.min_days',
-                    'property_short_term_pricing.price_per_night',
-                    'property_short_term_pricing.city_fee_type',
-                    'property_short_term_pricing.city_fee',
+                    'property_list.monthly_rate',
+                    'property_list.security_deposit',
+                    'property_list.cleaning_fee',
                 )
                 ->where('property_booking.client_id', CLIENT_ID)
                 ->where('property_booking.booking_id', $booking_id)
@@ -1258,26 +1001,15 @@ class PropertyController extends BaseController
                 ->leftjoin('users', 'users.id', '=', 'property_list.user_id')
                 ->leftjoin('property_images', 'property_images.property_id', '=', 'property_list.id')
                 ->leftjoin('property_room', 'property_room.property_id', '=', 'property_list.id')
-                ->leftjoin(
-                    'property_short_term_pricing',
-                    'property_short_term_pricing.property_id',
-                    '=',
-                    'property_list.id',
-                )
-                ->leftjoin('property_video', 'property_video.property_id', '=', 'property_list.id')
-                ->leftjoin('country', 'country.id', 'property_list.country')
                 ->where('property_list.client_id', '=', CLIENT_ID)
                 ->where('property_list.id', '=', $property_id)
                 ->select(
                     'property_images.*',
                     'property_room.*',
-                    'property_short_term_pricing.*',
-                    'property_video.*',
                     'property_list.*',
                     'users.*',
                     'property_list.state as prop_state',
                     'property_list.city as prop_city',
-                    'country.country_name',
                 )
                 ->first();
             //print_r($properties);exit;
@@ -1306,8 +1038,6 @@ class PropertyController extends BaseController
             ->leftjoin('users', 'users.id', '=', 'property_list.user_id')
             ->leftjoin('property_images', 'property_images.property_id', '=', 'property_list.id')
             ->leftjoin('property_room', 'property_room.property_id', '=', 'property_list.id')
-            ->join('property_short_term_pricing', 'property_short_term_pricing.property_id', '=', 'property_list.id')
-            ->leftjoin('property_video', 'property_video.property_id', '=', 'property_list.id')
             ->where('property_list.client_id', '=', CLIENT_ID)
             ->where('property_list.id', '=', $property_id)
             ->select(
@@ -1316,10 +1046,8 @@ class PropertyController extends BaseController
                 'users.last_name',
                 'users.profile_image',
                 'users.device_token',
-                'property_short_term_pricing.*',
                 'property_images.image_url',
                 'property_room.*',
-                'property_video.url',
             )
             ->first();
 
@@ -1418,7 +1146,6 @@ class PropertyController extends BaseController
                 ->select('property_images.image_url')
                 ->get();
             $properties->property_images = $pd;
-            $location = $properties->location;
         } else {
             return view('general_error', ['message' => 'We can’t find the property you’re looking for.']);
         }
@@ -1427,24 +1154,18 @@ class PropertyController extends BaseController
         if ($request->price_high_to_low) {
             $properties = DB::table('property_list')
                 ->where('property_list.client_id', '=', CLIENT_ID)
-                ->orderBy('price_per_weekend', 'DESC')
+                ->orderBy('monthly_rate', 'DESC')
                 ->get();
         }
         if ($request->price_low_to_high) {
             $properties = DB::table('property_list')
                 ->where('property_list.client_id', '=', CLIENT_ID)
-                ->orderBy('price_per_weekend', 'ASC')
+                ->orderBy('monthly_rate', 'ASC')
                 ->get();
         }
 
         $latest_properties = DB::table('property_list')
             ->leftjoin('users', 'users.id', '=', 'property_list.user_id')
-            ->leftjoin(
-                'property_short_term_pricing',
-                'property_short_term_pricing.property_id',
-                '=',
-                'property_list.id',
-            )
             ->leftjoin('property_room', 'property_room.property_id', '=', 'property_list.id')
             ->where('property_list.client_id', '=', CLIENT_ID)
             ->where('property_list.is_complete', '=', ACTIVE)
@@ -1452,10 +1173,7 @@ class PropertyController extends BaseController
             ->where('property_list.status', '=', 1)
             ->where('property_list.id', '!=', $property_id)
             ->select(
-                'property_short_term_pricing.price_per_night',
-                'property_short_term_pricing.price_more_than_one_month',
                 'property_list.title',
-                'property_list.location',
                 'property_room.bedroom_count',
                 'property_room.bathroom_count',
                 'property_list.property_size',
@@ -1467,6 +1185,7 @@ class PropertyController extends BaseController
                 'property_list.state',
                 'property_list.city',
                 'property_list.pets_allowed',
+                'property_list.monthly_rate',
             )
             ->get();
         foreach ($latest_properties as $property) {
@@ -1523,18 +1242,11 @@ class PropertyController extends BaseController
             }
 
             if ($properties) {
-                $source_location = $properties[0]->location; //$location;
-                $source_location = urlencode($source_location);
-                $loc = $property->location;
-                $location = explode(',', $property->location);
-                $getLoc = end($location);
-                $property->property_country = $getLoc;
-                $property->location = urlencode($property->location);
+                $location = $property->state;
                 $url =
                     "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" .
-                    $source_location .
                     "&destinations=" .
-                    $property->location .
+                    $location .
                     "&key=AIzaSyCD_0PVfhwHKvGcB4SUFq2ZBT0GOW900Bg"; //exit;
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url);
@@ -1545,7 +1257,6 @@ class PropertyController extends BaseController
                     // echo $response->rows[0]->elements[0]->distance->text;exit;
                     // $distance = (float) $response->rows[0]->elements[0]->distance->text;
                     if (isset($response->rows[0]->elements[0]->distance->text) <= $this->get_radius()) {
-                        $property->location = $loc;
                         $property->property_id = $property->property_id;
                         $properties_near[] = $property;
                     } else {
@@ -1644,12 +1355,6 @@ class PropertyController extends BaseController
     {
         $data = DB::table('property_booking')
             ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
-            ->join(
-                'property_short_term_pricing',
-                'property_short_term_pricing.property_id',
-                '=',
-                'property_booking.property_id',
-            )
             ->join('property_booking_price', 'property_booking_price.property_booking_id', '=', 'property_booking.id')
             ->where('property_booking.client_id', CLIENT_ID)
             ->where('property_booking.booking_id', $booking_id)
@@ -1852,7 +1557,7 @@ class PropertyController extends BaseController
                 $stage_update = DB::table('property_list')
                     ->where('client_id', '=', CLIENT_ID)
                     ->where('id', '=', $property_id)
-                    ->update(['on_stage' => 2]);
+                    ->update(['stage' => 2]);
 
                 $room_types = DB::table('property_room_types')
                     ->orderBy('name', 'ASC')
@@ -1945,11 +1650,6 @@ class PropertyController extends BaseController
                     }
                 }
 
-                //print_r($final);exit;
-
-                // print_r($property_details);exit;
-                //print_r($final);exit;
-                $array = json_decode(json_encode($property_bedrooms), true);
                 $guest_count = DB::table('settings')
                     ->where('param', 'guest_count')
                     ->select('value')
@@ -1958,9 +1658,7 @@ class PropertyController extends BaseController
                     ->where('param', 'bedroom_count')
                     ->select('value')
                     ->first();
-                //print_r($common_spc);exit;
 
-                // print_r($property_data);exit;
                 return view('owner.add-property.2', [
                     'property_details' => $property_details,
                     'property_room' => $property_room,
@@ -1986,7 +1684,7 @@ class PropertyController extends BaseController
                 $stage_update = DB::table('property_list')
                     ->where('client_id', '=', CLIENT_ID)
                     ->where('id', '=', $property_id)
-                    ->update(['on_stage' => 3]);
+                    ->update(['stage' => 3]);
                 $client_id = CLIENT_ID;
                 //code to be executed if n=label2;
                 return view('owner.add-property.3', ['property_details' => $property_details])
@@ -1999,20 +1697,15 @@ class PropertyController extends BaseController
                 $stage_update = DB::table('property_list')
                     ->where('client_id', '=', CLIENT_ID)
                     ->where('id', '=', $property_id)
-                    ->update(['on_stage' => 4]);
+                    ->update(['stage' => 4]);
                 $property_data = DB::table('property_list')
                     ->where('client_id', '=', CLIENT_ID)
                     ->where('id', '=', $property_id)
                     ->first();
 
-                $price = DB::table('property_short_term_pricing')
-                    ->where('property_id', $request->property_id)
-                    ->first();
-                // print_r($price);exit;
                 $client_id = CLIENT_ID;
-                //code to be executed if n=label3;
                 return view('owner.add-property.4', [
-                    'price' => $price,
+                    'price' => $property_data->monthly_rate,
                     'property_details' => $property_details,
                     'property_data' => $property_data,
                 ])
@@ -2024,24 +1717,15 @@ class PropertyController extends BaseController
                 $stage_update = DB::table('property_list')
                     ->where('client_id', '=', CLIENT_ID)
                     ->where('id', '=', $property_id)
-                    ->update(['on_stage' => 5]);
+                    ->update(['stage' => 5]);
                 $client_id = CLIENT_ID;
                 $property_images = DB::table('property_images')
                     ->where('client_id', '=', CLIENT_ID)
                     ->where('property_id', '=', $property_id)
                     ->get();
-                //code to be executed if n=label3;
-                $country = DB::table('country')
-                    ->where('client_id', '=', CLIENT_ID)
-                    ->get();
-                $state = DB::table('state')
-                    ->where('client_id', '=', CLIENT_ID)
-                    ->get();
                 //var_dump($property_details); exit;
                 return view('owner.add-property.5', [
                     'property_details' => $property_details,
-                    'country' => $country,
-                    'state' => $state,
                 ])
                     ->with('stage', $stage)
                     ->with('client_id', $client_id)
@@ -2053,7 +1737,7 @@ class PropertyController extends BaseController
                 $stage_update = DB::table('property_list')
                     ->where('client_id', '=', CLIENT_ID)
                     ->where('id', '=', $property_id)
-                    ->update(['on_stage' => 6]);
+                    ->update(['stage' => 6]);
                 $client_id = CLIENT_ID;
                 //code to be executed if n=label3;
                 // print_r($amenties);exit;
@@ -2068,12 +1752,12 @@ class PropertyController extends BaseController
                 $stage_update = DB::table('property_list')
                     ->where('client_id', '=', CLIENT_ID)
                     ->where('id', '=', $property_id)
-                    ->update(['on_stage' => 7]);
+                    ->update(['stage' => 7]);
 
                 if ($property_id) {
-                    $property_rate = DB::table('property_short_term_pricing')
-                        ->where('property_id', $property_id)
-                        ->select('price_per_night')
+                    $property_rate = DB::table('property_list')
+                        ->where('id', $property_id)
+                        ->select('monthly_rate')
                         ->first();
 
                     $list = [];
@@ -2086,7 +1770,7 @@ class PropertyController extends BaseController
                         if (date('m', $time) == $month) {
                             $list[$d]['date'] = date('Y-m-d', $time);
                         }
-                        $list[$d]['price'] = $property_rate->price_per_night;
+                        $list[$d]['price'] = $property_rate;
                     }
                     $icals = DB::table('third_party_calender')
                         ->where('property_id', '=', $property_id)
@@ -2099,27 +1783,10 @@ class PropertyController extends BaseController
                         ->where('client_id', '=', CLIENT_ID)
                         ->where('property_id', '=', $property_id)
                         ->get();
-                    $special_price = DB::table('property_special_pricing')
-                        ->where('client_id', '=', CLIENT_ID)
-                        ->where('property_id', '=', $property_id)
-                        ->get();
 
-                    //print_r($special_price);
-                    $dates = [];
-
-                    for ($i = 0; $i < count($special_price); $i++) {
-                        $dates[$i]['date'] = $special_price[$i]->start_date;
-                        $dates[$i]['price'] = $special_price[$i]->price_per_night;
-                    }
-
-                    //print_r($dates);exit;
-
-                    $finn = [];
-                    $finn = array_merge($dates, $list);
-                    // print_r($finn);exit;
                     $res = [];
                     $val = [];
-                    foreach ($finn as $key => $index) {
+                    foreach ($list as $key => $index) {
                         if (!in_array($index['date'], $val)) {
                             if ($index['date']) {
                                 $val[] = $index['date'];
@@ -2138,8 +1805,7 @@ class PropertyController extends BaseController
                 } else {
                     $events = [];
                     $icals = [];
-                    $property_rate = new stdClass();
-                    $property_rate->price_per_night = 0;
+                    $property_rate = 0;
                     $res = [];
                     $block_events = [];
                 }
@@ -2160,9 +1826,6 @@ class PropertyController extends BaseController
 
     public function property_next2(Request $request)
     {
-        // print_r($request->all());exit;
-        // print_r($request->all());exit;
-        //$new_property = App\PropertyList::find($request->property_id); //new PropertyList($request->property_id);
         DB::table('property_bedrooms')
             ->where('client_id', CLIENT_ID)
             ->where('property_id', $request->property_id)
@@ -2199,11 +1862,7 @@ class PropertyController extends BaseController
             'property_id' => $request->property_id,
             'property_size' => $request->property_size ? $request->property_size : 0,
             'bathroom_count' => $request->bathroom_count ? $request->bathroom_count : 0,
-            //            'check_in_time' => $request->check_in_time ? $request->check_in_time : 0,
-            //            'check_out_time' => $request->check_out_time ? $request->check_out_time : 0,
             'bedroom_count' => $request->no_of_bedrooms,
-            //            'bedroom_count' => count($request->double_bed),
-            //            'bed_count' => $request->bed_count,
             'common_spaces' => $request->common_spaces ? $request->common_spaces : 0,
             'status' => ACTIVE,
         ]);
@@ -2337,9 +1996,6 @@ class PropertyController extends BaseController
 
     public function property_next3(Request $request)
     {
-        // print_r($request->all());exit;
-        // $insert = DB::table('property_video')
-        //         ->insert(['client_id' => CLIENT_ID, 'property_id' => $request->property_id, 'source' => $request->source, 'url' => $request->url, 'sort' => 1, 'status' => 1,]);
         $trash_pickup_days = "";
         if ($request->trash_pickup_days) {
             $trash_pickup_days = implode(',', $request->trash_pickup_days);
@@ -2360,8 +2016,8 @@ class PropertyController extends BaseController
         $prop = DB::table('property_list')
             ->where('id', $request->property_id)
             ->first();
-        if ($prop->on_stage < 3) {
-            $update_on_stage = $this->propertyList->where('id', $request->property_id)->update(['on_stage' => 3]);
+        if ($prop->stage < 3) {
+            $update_on_stage = $this->propertyList->where('id', $request->property_id)->update(['stage' => 3]);
         }
 
         $url = BASE_URL . 'owner/add-new-property/4/' . $request->property_id;
@@ -2370,65 +2026,21 @@ class PropertyController extends BaseController
 
     public function property_next4(Request $request)
     {
-        //print_r($request->all());exit;
-
-        DB::table('property_list')
-            ->where('id', $request->property_id)
-            ->update(['cancellation_policy' => $request->cancellation_policy, 'min_days' => $request->minimumstay]);
-
-        // echo $request->booking_type;exit;
-        // if ($request->booking_type) {
-        //  echo $request->booking_type;exit;
-
-        // }
-        $request->booking_type = (int) $request->booking_type;
-        $update_on_stage = DB::table('property_list')
-            ->where('id', $request->property_id)
-            ->update(['is_instant' => $request->booking_type]);
-
         $ins = [];
         $ins['client_id'] = CLIENT_ID;
-        $ins['property_id'] = $request->property_id;
-        $ins['price_per_night'] = $request->price_per_night;
-        // $ins['price_more_than_one_week'] = $request->price_more_than_one_week;
-        //        $ins['price_more_than_one_month'] = $request->price_more_than_one_month;
-        // $ins['price_per_weekend'] = $request->price_per_weekend;
-
-        // $ins['weekend_days'] = implode(",",$request->weekendays);
-        // $ins['tax'] = $request->tax;
+        $ins['monthly_rate'] = $request->monthly_rate;
         $ins['cleaning_fee'] = $request->cleaning_fee;
-        // $ins['cleaning_fee_type'] = (string) $request->cleaning_fee_type;
-        //        $ins['city_fee'] = $request->city_fee;
-        //        $ins['city_fee_type'] = $request->city_fee_type;
-        //        $ins['is_extra_guest'] = $request->is_extra_guest ? $request->is_extra_guest : '0';
-        //        $ins['price_per_extra_guest'] = $request->price_per_extra_guest;
         $ins['security_deposit'] = $request->security_deposit;
         $ins['check_in'] = $request->check_in;
         $ins['check_out'] = $request->check_out;
-        $val_count = DB::table('property_short_term_pricing')
-            ->where('property_id', $request->property_id)
-            ->count();
-        if ($val_count == ZERO) {
-            $insert = DB::table('property_short_term_pricing')->insert($ins);
-            DB::table('property_list')
-                ->where('id', $request->property_id)
-                ->update(['cleaning_type' => $request->cleaning_fee_type]);
-            $msg = "Price added successfully";
-            $update_on_stage = DB::table('property_list')
-                ->where('id', $request->property_id)
-                ->update([
-                    'on_stage' => 4,
-                    'stage' => 4,
-                ]);
-        } else {
-            $update = DB::table('property_short_term_pricing')
-                ->where('property_id', $request->property_id)
-                ->update($ins);
-            DB::table('property_list')
-                ->where('id', $request->property_id)
-                ->update(['cleaning_type' => $request->cleaning_fee_type]);
-            $msg = "Price updated successfully";
-        }
+        $ins['cancellation_policy'] = $request->cancellation_policy;
+        $ins['min_days'] = $request->minimumstay;
+        $ins['is_instant'] = (int) $request->booking_type;
+        $ins['stage'] = 4;
+
+        $update_rate = DB::table('property_list')
+            ->where('id', $request->property_id)
+            ->update($ins);
 
         $url = BASE_URL . 'owner/add-new-property/6/' . $request->property_id;
         return redirect($url);
@@ -2448,11 +2060,6 @@ class PropertyController extends BaseController
             ->first();
 
         if ($property_id) {
-            $property_rate = DB::table('property_short_term_pricing')
-                ->where('property_id', $property_id)
-                ->select('price_per_night')
-                ->first();
-
             $list = [];
 
             $month = date('m');
@@ -2463,7 +2070,7 @@ class PropertyController extends BaseController
                 if (date('m', $time) == $month) {
                     $list[$d]['date'] = date('Y-m-d', $time);
                 }
-                $list[$d]['price'] = $property_rate->price_per_night;
+                $list[$d]['price'] = $property_details->monthly_rate;
             }
             $icals = DB::table('third_party_calender')
                 ->where('property_id', '=', $property_id)
@@ -2476,27 +2083,11 @@ class PropertyController extends BaseController
                 ->where('client_id', '=', CLIENT_ID)
                 ->where('property_id', '=', $property_id)
                 ->get();
-            $special_price = DB::table('property_special_pricing')
-                ->where('client_id', '=', CLIENT_ID)
-                ->where('property_id', '=', $property_id)
-                ->get();
-
-            //print_r($special_price);
             $dates = [];
 
-            for ($i = 0; $i < count($special_price); $i++) {
-                $dates[$i]['date'] = $special_price[$i]->start_date;
-                $dates[$i]['price'] = $special_price[$i]->price_per_night;
-            }
-
-            //print_r($dates);exit;
-
-            $finn = [];
-            $finn = array_merge($dates, $list);
-            // print_r($finn);exit;
             $res = [];
             $val = [];
-            foreach ($finn as $key => $index) {
+            foreach ($list as $key => $index) {
                 if (!in_array($index['date'], $val)) {
                     if ($index['date']) {
                         $val[] = $index['date'];
@@ -2515,8 +2106,7 @@ class PropertyController extends BaseController
         } else {
             $events = [];
             $icals = [];
-            $property_rate = new stdClass();
-            $property_rate->price_per_night = 0;
+            $property_rate = 0;
             $res = [];
             $block_events = [];
         }
@@ -2866,12 +2456,6 @@ class PropertyController extends BaseController
             ->where('client_id', '=', CLIENT_ID)
             ->where('id', $request->property_id)
             ->update(['stage' => 6]);
-        //        if ($c_data->property_type == BLOCK) {
-        //            $url = BASE_URL . 'owner/add-new-property/7/' . $request->property_id;
-        //        } else {
-        //            // DB::table('property_list')->where('client_id', '=', CLIENT_ID)->where('id', $request->property_id)->update(['is_complete' => 1]);
-        //            $url = BASE_URL . "owner/my-properties";
-        //        }
 
         if (isset($request->save)) {
             session()->forget('property_id');
@@ -2976,20 +2560,22 @@ class PropertyController extends BaseController
         }
         $booking->save();
 
-        for ($i = 0; $i < count($request->guest_name); $i++) {
-            if ($request->guest_id[$i]) {
-                $data = GuestsInformation::find($request->guest_id[$i]);
-            } else {
-                $data = new GuestsInformation();
+        if ($request->guest_name) {
+            for ($i = 0; $i < count($request->guest_name); $i++) {
+                if ($request->guest_id[$i]) {
+                    $data = GuestsInformation::find($request->guest_id[$i]);
+                } else {
+                    $data = new GuestsInformation();
+                }
+                $data->booking_id = $request->booking_id;
+                $data->guest_count = $request->guest_count;
+                $data->name = $request->guest_name[$i];
+                $data->occupation = $request->guest_occupation[$i];
+                $data->phone_number = $request->phone_number[$i];
+                $data->email = $request->email[$i];
+                $data->age = $request->age[$i];
+                $data->save();
             }
-            $data->booking_id = $request->booking_id;
-            $data->guest_count = $request->guest_count;
-            $data->name = $request->guest_name[$i];
-            $data->occupation = $request->guest_occupation[$i];
-            $data->phone_number = $request->phone_number[$i];
-            $data->email = $request->email[$i];
-            $data->age = $request->age[$i];
-            $data->save();
         }
         $pet_detail = PetInformation::where('booking_id', $request->booking_id)->first();
         if (!$pet_detail) {
@@ -3014,7 +2600,6 @@ class PropertyController extends BaseController
         $data = DB::table('property_list')
             ->where('id', '=', $property_id)
             ->first();
-        $stage = $data->on_stage;
         $stage = 2;
 
         $url = BASE_URL . 'owner/add-new-property/' . $stage . '/' . $data->id;
@@ -3026,28 +2611,14 @@ class PropertyController extends BaseController
     {
         $user_id = $request->session()->get('user_id');
         $properties = DB::table('property_list')
-            ->leftjoin(
-                'property_short_term_pricing',
-                'property_short_term_pricing.property_id',
-                '=',
-                'property_list.id',
-            )
             ->where('property_list.client_id', '=', CLIENT_ID)
             ->where('property_list.user_id', '=', $user_id)
             ->where('property_list.is_complete', '=', 1)
             ->where('property_list.status', '=', 1)
-            ->select(
-                'property_list.*',
-                'property_short_term_pricing.*',
-                'property_list.id as propertyId',
-                'property_list.status as propertyStatus',
-            )
+            ->select('property_list.*', 'property_list.id as propertyId', 'property_list.status as propertyStatus')
             ->get();
         $properties_near = [];
         foreach ($properties as $property) {
-            $property->description = substr($property->description, 0, 170);
-            $property->description .= '...';
-
             $pd = DB::table('property_images')
                 ->where('property_images.client_id', '=', CLIENT_ID)
                 ->where('property_images.property_id', '=', $property->propertyId)
@@ -3059,8 +2630,6 @@ class PropertyController extends BaseController
                 ->where('property_images.property_id', '=', $property->propertyId)
                 ->where('property_images.is_cover', '=', 1)
                 ->first();
-            // print_r($cover_img);
-            // echo count($cover_img)."----".$cover_img->image_url."<br>";
             foreach ($pd as $images) {
                 $img_url = $images->image_url;
                 $property->image_url = $img_url;

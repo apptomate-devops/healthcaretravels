@@ -27,7 +27,6 @@ class HandlePublicURLSeeder extends Seeder
         $cs = 'https://healthcaretravels.com/public'; // Common Subject
         $this->updatePathFields(\App\Models\AmenitiesList::class, 'icon_url', 'public/');
         $this->updatePathFields(\App\Models\Documents::class, 'document_url', $cs);
-        $this->updatePathFields(\App\Models\HomeImages::class, 'image_url', $cs);
         $this->updatePathFields(\App\Models\HomeListing::class, 'image_url', $cs);
         $this->updatePathFields(\App\Models\Propertyamenties::class, 'amenties_icon', $cs);
         $this->updatePathFields(\App\Models\Propertyimage::class, 'image_url', $cs);

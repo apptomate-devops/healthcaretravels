@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Helper\Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Users;
@@ -37,10 +38,6 @@ class OwnerController extends BaseController
             ->orderBy('name', 'ASC')
             ->get();
 
-        $country_codes = DB::table('country_code')
-            ->where('client_id', '=', $client_id)
-            ->get();
-
         return view('profile', [
             'user_detail' => $user_detail,
             'country_codes' => $country_codes,
@@ -58,11 +55,9 @@ class OwnerController extends BaseController
             ->get();
 
         if ($request->id) {
-            $property_rate = DB::table('property_short_term_pricing')
-                ->where('property_id', $request->id)
-                ->select('price_per_night')
+            $property_details = DB::table('property_list')
+                ->where('id', $request->id)
                 ->first();
-            // print_r($property_rate);exit;
 
             $list = [];
 
@@ -74,7 +69,7 @@ class OwnerController extends BaseController
                 if (date('m', $time) == $month) {
                     $list[$d]['date'] = date('Y-m-d', $time);
                 }
-                $list[$d]['price'] = $property_rate->price_per_night ?? 0;
+                $list[$d]['price'] = Helper::get_daily_price($property_details->monthly_rate);
             }
             $id = $request->id;
             $icals = DB::table('third_party_calender')
@@ -88,27 +83,10 @@ class OwnerController extends BaseController
                 ->where('client_id', '=', CLIENT_ID)
                 ->where('property_id', '=', $id)
                 ->get();
-            $special_price = DB::table('property_special_pricing')
-                ->where('client_id', '=', CLIENT_ID)
-                ->where('property_id', '=', $id)
-                ->get();
 
-            //print_r($special_price);
-            $dates = [];
-
-            for ($i = 0; $i < count($special_price); $i++) {
-                $dates[$i]['date'] = $special_price[$i]->start_date;
-                $dates[$i]['price'] = $special_price[$i]->price_per_night;
-            }
-
-            //print_r($dates);exit;
-
-            $finn = [];
-            $finn = array_merge($dates, $list);
-            // print_r($finn);exit;
             $res = [];
             $val = [];
-            foreach ($finn as $key => $index) {
+            foreach ($list as $key => $index) {
                 if (!in_array($index['date'], $val)) {
                     if ($index['date']) {
                         $val[] = $index['date'];
@@ -134,11 +112,6 @@ class OwnerController extends BaseController
         $property_rate->price_per_night = 0;
         $res = [];
         $block_events = [];
-        $special_price = [];
-        //print_r($events);exit;
-        // print_r($icals);
-        // print_r($properties);
-        // echo $id;exit;
         return view('owner.calender', compact('properties', 'id', 'events', 'icals', 'block_events', 'res'));
     }
 
@@ -214,7 +187,6 @@ class OwnerController extends BaseController
         }
         $properties = DB::table('property_list')
             ->join('property_room', 'property_room.property_id', '=', 'property_list.id')
-            ->join('property_short_term_pricing', 'property_short_term_pricing.property_id', '=', 'property_list.id')
             ->where('property_list.user_id', $id)
             ->get();
         $current_date = date('Y-m-d H:i:s');
@@ -249,14 +221,6 @@ class OwnerController extends BaseController
             ->where('is_complete', 1)
             ->orderBy('title', 'ASC')
             ->get();
-        $special_price = DB::table('property_special_pricing')
-            ->where('property_special_pricing.client_id', CLIENT_ID)
-            ->join('property_list', 'property_special_pricing.property_id', '=', 'property_list.id')
-            ->where('property_special_pricing.owner_id', $request->session()->get('user_id'))
-            ->select('property_special_pricing.*', 'property_list.title')
-            ->limit(5)
-            ->orderBy('property_special_pricing.id', 'desc')
-            ->get();
         $blocking = DB::table('property_blocking')
             ->where('property_blocking.client_id', CLIENT_ID)
             ->join('property_list', 'property_blocking.property_id', '=', 'property_list.id')
@@ -267,25 +231,18 @@ class OwnerController extends BaseController
             ->get();
         return view('owner.special-pricing', [
             'properties' => $properties,
-            'special_price' => $special_price,
             'blocking' => $blocking,
         ]);
     }
 
     public function special_price_details(Request $request)
     {
-        $special_price = DB::table('property_special_pricing')
-            ->where('property_special_pricing.client_id', CLIENT_ID)
-            ->join('property_list', 'property_special_pricing.property_id', '=', 'property_list.id')
-            ->where('property_special_pricing.owner_id', $request->session()->get('user_id'))
-            ->select('property_special_pricing.*', 'property_list.title')
-            ->get();
         $blocking = DB::table('property_blocking')
             ->where('property_blocking.client_id', CLIENT_ID)
             ->join('property_list', 'property_blocking.property_id', '=', 'property_list.id')
             ->where('property_blocking.owner_id', $request->session()->get('user_id'))
             ->select('property_blocking.*', 'property_list.title')
             ->get();
-        return view('owner.special_price_details', ['special_price' => $special_price, 'blocking' => $blocking]);
+        return view('owner.special_price_details', ['blocking' => $blocking]);
     }
 }

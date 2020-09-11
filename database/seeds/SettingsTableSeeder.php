@@ -57,5 +57,14 @@ class SettingsTableSeeder extends Seeder
                     'Health Care Travels,  7075 Fm 1960 Rd West,  Suite 1010,  Houston, Texas 77069,  United States',
             ],
         );
+        \App\Models\Settings::updateOrCreate(
+            [
+                'param' => 'service_tax',
+            ],
+            [
+                'param' => 'service_tax',
+                'value' => 50,
+            ],
+        );
     }
 }

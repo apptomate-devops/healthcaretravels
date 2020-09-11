@@ -124,22 +124,22 @@ li.sub-nav-title {
                     <td><strong>Amount</strong></td>
                     <td><strong>Action</strong></td>
                 </tr>
-                @foreach($special_price as $property)
-                <tr>
-                    <td >{{$property->start_date}} </td>
-                    <td >{{$property->title}} </td>
-                    <td >{{$property->price_per_night}}</td>
-                    <td >
-                        <a href="{{url('/')}}/owner/delete_special_price/{{$property->id}}" class="delete"><i class="fa fa-remove"></i> Delete</a>
-                    </td>
-                </tr>
-                @endforeach
+{{--                @foreach($special_price as $property)--}}
+{{--                <tr>--}}
+{{--                    <td >{{$property->start_date}} </td>--}}
+{{--                    <td >{{$property->title}} </td>--}}
+{{--                    <td >{{$property->price_per_night}}</td>--}}
+{{--                    <td >--}}
+{{--                        <a href="{{url('/')}}/owner/delete_special_price/{{$property->id}}" class="delete"><i class="fa fa-remove"></i> Delete</a>--}}
+{{--                    </td>--}}
+{{--                </tr>--}}
+{{--                @endforeach--}}
 
 
             </table>
-            @if(count($special_price) >= 5)
-                <a href="{{url('/')}}/owner/special_price_details" class="margin-top-40 button" style="float:right;">Show more</a>
-            @endif
+{{--            @if(count($special_price) >= 5)--}}
+{{--                <a href="{{url('/')}}/owner/special_price_details" class="margin-top-40 button" style="float:right;">Show more</a>--}}
+{{--            @endif--}}
             <br>
         </div>
         <div class="col-md-4"></div>
@@ -173,9 +173,9 @@ li.sub-nav-title {
 
 
             </table>
-            @if(count($blocking) >= 5)
-                <a href="{{url('/')}}/owner/special_price_details" class="margin-top-40 button" style="float:right;">Show more</a>
-            @endif
+{{--            @if(count($blocking) >= 5)--}}
+{{--                <a href="{{url('/')}}/owner/special_price_details" class="margin-top-40 button" style="float:right;">Show more</a>--}}
+{{--            @endif--}}
             {{-- <a href="{{url('/')}}/owner/add-property" class="margin-top-40 button">Submit New Property</a> --}}
         </div>
 

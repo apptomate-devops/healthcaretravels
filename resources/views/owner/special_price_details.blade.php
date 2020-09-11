@@ -6,7 +6,7 @@
   div::-webkit-scrollbar {
     width: 12px;
 }
-        
+
 div::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     border-radius: 10px;
@@ -109,7 +109,7 @@ div::-webkit-scrollbar-thumb {
 
 
 </style>
-   
+
 <div class="container">
     <div class="row">
         <br><br>
@@ -130,16 +130,16 @@ div::-webkit-scrollbar-thumb {
                     <td><strong>Amount</strong></td>
                     <td><strong>Action</strong></td>
                 </tr>
-                @foreach($special_price as $property)
-                <tr>
-                    <td >{{$property->start_date}} </td>
-                    <td >{{$property->title}} </td>
-                    <td >{{$property->price_per_night}}</td>
-                    <td >
-                        <a href="{{url('/')}}/owner/delete_special_price/{{$property->id}}" class="delete"><i class="fa fa-remove"></i> Delete</a>
-                    </td>
-                </tr>
-                @endforeach
+{{--                @foreach($special_price as $property)--}}
+{{--                <tr>--}}
+{{--                    <td >{{$property->start_date}} </td>--}}
+{{--                    <td >{{$property->title}} </td>--}}
+{{--                    <td >{{$property->price_per_night}}</td>--}}
+{{--                    <td >--}}
+{{--                        <a href="{{url('/')}}/owner/delete_special_price/{{$property->id}}" class="delete"><i class="fa fa-remove"></i> Delete</a>--}}
+{{--                    </td>--}}
+{{--                </tr>--}}
+{{--                @endforeach--}}
             </table>
         </div>
         <div class="col-md-12">
@@ -169,12 +169,12 @@ div::-webkit-scrollbar-thumb {
                 </tr>
                 @endforeach
             </table>
-           
+
             {{-- <a href="{{url('/')}}/owner/add-property" class="margin-top-40 button">Submit New Property</a> --}}
         </div>
     </div>
 </div>
 
 <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> -->
-   
+
 @endsection

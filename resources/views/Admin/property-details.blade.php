@@ -126,17 +126,17 @@
                                 <table class="table table-xl mb-0">
                                     <tr>
                                         <td>Price per day</td>
-                                        <td><b>{{CURRENCY}} {{$property[0]->price_per_night}}</b></td>
+                                        <td><b>{{CURRENCY}} {{($property[0]->monthly_rate) / 30}}</b></td>
 
                                     </tr>
-                                    <tr>
-                                        <td>Price per Week</td>
-                                        <td><b>{{CURRENCY}} {{$property[0]->price_more_than_one_week}}</b></td>
+{{--                                    <tr>--}}
+{{--                                        <td>Price per Week</td>--}}
+{{--                                        <td><b>{{CURRENCY}} {{$property[0]->price_more_than_one_week}}</b></td>--}}
 
-                                    </tr>
+{{--                                    </tr>--}}
                                     <tr>
                                         <td>Price per Month</td>
-                                        <td><b>{{CURRENCY}} {{$property[0]->price_more_than_one_month}}</b></td>
+                                        <td><b>{{CURRENCY}} {{$property[0]->monthly_rate}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Cleaning fee</td>

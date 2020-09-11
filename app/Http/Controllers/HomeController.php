@@ -127,25 +127,16 @@ class HomeController extends BaseController
     public function index(Request $request)
     {
         $latest_properties = DB::table('property_list')
-            ->leftjoin(
-                'property_short_term_pricing',
-                'property_short_term_pricing.property_id',
-                '=',
-                'property_list.id',
-            )
             ->leftjoin('property_room', 'property_room.property_id', '=', 'property_list.id')
             ->leftjoin('users', 'users.id', '=', 'property_list.user_id')
-            ->leftjoin('country', 'country.id', 'property_list.country')
             ->where('property_list.client_id', '=', CLIENT_ID)
             ->where('property_list.property_status', '=', 1)
             ->where('property_list.status', '=', 1)
             ->where('property_list.is_complete', '=', ACTIVE)
             ->select(
-                'property_short_term_pricing.price_per_night',
-                'property_short_term_pricing.price_more_than_one_month',
                 'property_list.title',
+                'property_list.monthly_rate',
                 'property_list.min_days',
-                'property_list.location',
                 'property_room.bedroom_count',
                 'property_room.bathroom_count',
                 'property_list.property_size',
@@ -192,7 +183,7 @@ class HomeController extends BaseController
             }
         }
         $categories = DB::select(
-            "SELECT A.image_url,A.location,A.title FROM `home_listings` A, `home_category` B WHERE A.category_id = B.id",
+            "SELECT A.image_url,A.title FROM `home_listings` A, `home_category` B WHERE A.category_id = B.id",
         );
         $room_types = DB::table('property_room_types')
             ->orderBy('name', 'ASC')

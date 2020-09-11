@@ -20,10 +20,7 @@ class PropertyController extends BaseController
                 'owner.first_name',
                 'owner.last_name',
                 'property_list.room_type',
-                'property_list.on_recomended',
-                'property_list.on_popular',
                 'property_list.created_at',
-                'property_list.view_count',
                 'property_list.property_status',
                 'property_list.verified',
             )

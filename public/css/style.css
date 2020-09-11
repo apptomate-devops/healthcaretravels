@@ -977,7 +977,6 @@ ul.top-bar-menu li i {
 .user-menu .user-name {
     transition: 0.2s;
     color: #444;
-    transition: 0.2s;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -5477,7 +5476,7 @@ section.fullwidth.border-bottom {
     max-height: 240px;
     overflow: hidden;
     position: relative;
-    transition: max-height 1s;
+    transition: max-height 0.3s;
 }
 
 .show-more:after {
@@ -5492,11 +5491,15 @@ section.fullwidth.border-bottom {
     z-index: 1;
     opacity: 1;
     visibility: visible;
-    transition: all 1s;
+    transition: all 0.3s;
 }
 
 .show-more.visible {
     max-height: 2000px;
+}
+
+.show-more.visible p {
+    word-break: break-all;
 }
 
 .show-more.visible:after,
@@ -5668,9 +5671,10 @@ table.manage-table .title-container {
 }
 
 table.manage-table .title-container img {
-    width: 30%;
+    height: 120px;
+    width: 160px;
+    object-fit: cover;
     border-radius: 3px;
-    flex: 1.1;
     margin-right: 26px;
 }
 
@@ -5692,8 +5696,14 @@ table.manage-table .title-container .title h4 a:hover {
     color: #66676b;
 }
 
-table.manage-table .title-container .title span {
-    display: block;
+table.manage-table .title-container .description {
+    display: grid;
+    width: 100%;
+}
+table.manage-table .title-container .description span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 table.manage-table .title-container .title .table-property-price {

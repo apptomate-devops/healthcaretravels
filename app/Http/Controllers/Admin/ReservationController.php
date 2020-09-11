@@ -18,7 +18,6 @@ class ReservationController extends BaseController
             ->join('users as traveller', 'traveller.id', '=', 'property_booking.traveller_id')
             ->join('users as owner', 'owner.id', '=', 'property_booking.owner_id')
             ->join('property_room', 'property_room.property_id', '=', 'property_list.id')
-            ->join('property_short_term_pricing', 'property_short_term_pricing.property_id', '=', 'property_list.id')
             ->where('property_booking.is_instant', '=', ZERO)
             ->where('property_booking.status', '>=', 2)
             ->select(
@@ -34,8 +33,6 @@ class ReservationController extends BaseController
                 'traveller.last_name as traveller_lname',
                 'property_booking.id as p_id',
                 'property_booking.status as booking_status',
-                'property_short_term_pricing.price_per_extra_guest',
-                'property_short_term_pricing.*',
                 'traveller.role_id as traveller_role',
                 'traveller.name_of_agency',
             )
@@ -60,7 +57,6 @@ class ReservationController extends BaseController
             ->update(['status' => 3]);
         $property = DB::table('property_list')
             ->leftjoin('users', 'users.id', '=', 'property_list.user_id')
-            ->join('property_short_term_pricing', 'property_short_term_pricing.property_id', '=', 'property_list.id')
             ->where('property_list.id', '=', $property_id)
             ->get();
         $property->images = DB::table('property_images')
@@ -74,12 +70,6 @@ class ReservationController extends BaseController
             ->get();
         $data = DB::table('property_booking')
             ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
-            ->join(
-                'property_short_term_pricing',
-                'property_short_term_pricing.property_id',
-                '=',
-                'property_booking.property_id',
-            )
             ->join('property_images', 'property_images.property_id', '=', 'property_booking.property_id')
             ->join('property_booking_price', 'property_booking_price.property_booking_id', '=', 'property_booking.id')
             ->where('property_booking.client_id', CLIENT_ID)

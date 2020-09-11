@@ -1,6 +1,3 @@
-<?php
-//echo json_encode($data);exit;
-?>
 @extends('layout.master') @section('title',$data->title) @section('main_content')
     <style type="text/css">
         div::-webkit-scrollbar {
@@ -116,7 +113,7 @@
         <div class="container">
 
             <div class="row" style="padding-top: 2%;background-color: #f2f2f2;margin-bottom: 20px;">
-                <form name="test" action="{{url('/')}}/properties" method="post" utocomplete="off">
+                <form name="test" action="{{BASE_URL}}properties" method="post" utocomplete="off">
                     <div class="col-md-7">
                         <input type="text" class="form-control" name="search" id="pac-input" style="height: 57px;" />
                     </div>
@@ -158,7 +155,7 @@
                             <img style="max-height: 85px;max-width: 85px;" src="{{$data->profile_image}}" alt="">
                         </p>
                         <div class="sub-price">
-                            <a href="{{url('/')}}/owner-profile/{{$data->user_id}}">{{$data->first_name}} {{$data->last_name}}</a><br>
+                            <a href="{{BASE_URL}}owner-profile/{{$data->user_id}}">{{$data->first_name}} {{$data->last_name}}</a><br>
 
                         </div>
 
@@ -196,7 +193,7 @@
                         </span>
                         <div class="property-price" style="font-size: 24px;color: #e78016;">
                             <font style="vertical-align: inherit;">
-                                $ {{$data->price_per_night * 30}}/Month
+                                $ {{$data->monthly_rate}}/Month
                             </font>
                         </div>
                     </div>
@@ -207,15 +204,15 @@
                                 <img style="max-height: 85px;max-width: 85px;" src="{{($data->profile_image != " " && $data->profile_image != 0) ? $data->profile_image : '/user_profile_default.png'}}" alt="">
                             </p>
                             <div class="sub-price">
-                                <a href="{{url('/')}}/owner-profile/{{$data->user_id}}">{{ucfirst($data->first_name)}} {{ucfirst($data->last_name)}}</a>
+                                <a href="{{BASE_URL}}owner-profile/{{$data->user_id}}">{{ucfirst($data->first_name)}} {{ucfirst($data->last_name)}}</a>
                             </div>
                             <div class="sub-price">
                                 @if(Session::get('user_id'))
-                                    {{--  <a href="{{URL('/')}}/create_chat/{{$property_id}}" target="_blank"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8" >Message Host</span></h3></a> --}}
+                                    {{--  <a href="{{BASE_URL}}create_chat/{{$property_id}}" target="_blank"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8" >Message Host</span></h3></a> --}}
 
                                     <a><h3 id="contact_host"><span class="property-badge"  id="chat_host">Message Host</span></h3></a>
                                 @else
-                                    <a href="{{URL('/')}}/login" target="_blank"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8">Login to Chat</span></h3></a>
+                                    <a href="{{BASE_URL}}login" target="_blank"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8">Login to Chat</span></h3></a>
                                 @endif
                             </div>
 
@@ -287,9 +284,9 @@
                     <!-- <textarea id="cont_message"></textarea> -->
                     <!-- <div id="hide" style="padding: 10px;">Your message sent successfully.</div> -->
                     @if(!Session::get('role_id'))
-                     <a href="{{URL('/')}}/login"><button id="" class="button" style="float :right;margin-top: 15px;">Login to Chat</button></a>
+                     <a href="{{BASE_URL}}login"><button id="" class="button" style="float :right;margin-top: 15px;">Login to Chat</button></a>
                     @else
-                    <a href="{{URL('/')}}/create_chat/{{$property_id}}" target="_blank"><button id="" class="button" style="float :right;margin-top: 15px;">Send Message</button></a>
+                    <a href="{{BASE_URL}}create_chat/{{$property_id}}" target="_blank"><button id="" class="button" style="float :right;margin-top: 15px;">Send Message</button></a>
                     @endif
                 </div> --}}
 
@@ -306,11 +303,8 @@
                                 <font style="vertical-align: inherit;">
                                     {{$data->description}}
                                 </font>
-
                                 <br>
                                 <span id="show_less" style="cursor: pointer;color: #e78016;margin-left: 340px;">Show less</span>
-
-
                             </font>
                         </p>
 
@@ -319,10 +313,10 @@
                                 $(".show-more").removeClass("visible");
                             });
                         </script>
-                        <a href="#" class="show-more-button">
-                            <font style="vertical-align: inherit;">
-                                <font style="vertical-align: inherit;">show more </font>
-                            </font><i class="fa fa-angle-down"></i></a>
+                        <p id="show_more" class="show-more-button">
+                            <span id="show_more" style="cursor: pointer;color: #e78016;">Show More</span>
+                            <i class="fa fa-angle-down"></i>
+                        </p>
                     </div>
                     <!-- <a href="#"><h3>Contact host</h3></a> -->
                     <!-- Details -->
@@ -470,7 +464,7 @@
                         </li>
                         <li>
                             <font style="vertical-align: inherit;">
-                                <font style="vertical-align: inherit;">Cancellation Policy: {{$data->cancellation_policy}}<a href="{{URL('/')}}/cancellationpolicy">&nbsp;&nbsp;Read more</a></font>
+                                <font style="vertical-align: inherit;">Cancellation Policy: {{$data->cancellation_policy}}<a href="{{BASE_URL}}cancellationpolicy">&nbsp;&nbsp;Read more</a></font>
                             </font>
                         </li>
                         <li>
@@ -680,7 +674,7 @@
 
                             <tr>
                                 <td style="text-align: center;">Price per day</td>
-                                <td style="text-align: center; width: 50%">$ {{$data->price_per_night}}</td>
+                                <td style="text-align: center; width: 50%">$ {{Helper::get_daily_price($data->monthly_rate)}}</td>
                             </tr>
 
                             {{-- <tr>
@@ -736,7 +730,7 @@
                                                     @if($hospitals->businesses[$j]->image_url != '')
                                                         <img src="{{$hospitals->businesses[$j]->image_url}}" class="yelp_img">
                                                     @else
-                                                        <img src="{{url('/')}}/no-image-icon.png" class="yelp_img">
+                                                        <img src="{{BASE_URL}}no-image-icon.png" class="yelp_img">
                                                     @endif
                                                 </td>
                                                 <td><a href="{{$hospitals->businesses[$j]->url}}"><strong>{{$hospitals->businesses[$j]->name}}&nbsp;&nbsp;</strong></a>(<strong>{{round($hospitals->businesses[$j]->distance * 0.00062137)}}&nbsp;Miles</strong>)<br>
@@ -758,7 +752,7 @@
                                                     @if($hospitals->businesses[$j]->image_url != '')
                                                         <img src="{{$hospitals->businesses[$j]->image_url}}" class="yelp_img">
                                                     @else
-                                                        <img src="{{url('/')}}/no-image-icon.png" class="yelp_img">
+                                                        <img src="{{BASE_URL}}no-image-icon.png" class="yelp_img">
                                                     @endif
                                                 </td>
                                                 <td><a href="{{$hospitals->businesses[$j]->url}}"><strong>{{$hospitals->businesses[$j]->name}}&nbsp;&nbsp;</strong></a>(<strong>{{round($hospitals->businesses[$j]->distance * 0.00062137)}}&nbsp;Miles</strong>)<br>
@@ -778,7 +772,7 @@
                                 </table>
                                 @if(count($hospitals->businesses) > 4)
                                     <center>
-                                        <a href="{{URL('/')}}/list_pets_health/{{$data->lat}}/{{$data->lng}}/{{$property_id}}" class="button  margin-top-5" target="_blank">
+                                        <a href="{{BASE_URL}}list_pets_health/{{$data->lat}}/{{$data->lng}}/{{$property_id}}" class="button  margin-top-5" target="_blank">
                                             show more
                                         </a>
                                     </center>
@@ -800,7 +794,7 @@
                                                     @if($pets->businesses[$j]->image_url != '')
                                                         <img src="{{$pets->businesses[$j]->image_url}}" class="yelp_img">
                                                     @else
-                                                        <img src="{{url('/')}}/no-image-icon.png" class="yelp_img">
+                                                        <img src="{{BASE_URL}}no-image-icon.png" class="yelp_img">
                                                     @endif
                                                 </td>
                                                 <td><a href="{{$pets->businesses[$j]->url}}"><strong>{{$pets->businesses[$j]->name}}&nbsp;&nbsp;</strong></a>(<strong>{{round($pets->businesses[$j]->distance * 0.00062137)}}&nbsp;Miles</strong>)<br>
@@ -822,7 +816,7 @@
                                                     @if($pets->businesses[$j]->image_url != '')
                                                         <img src="{{$pets->businesses[$j]->image_url}}" class="yelp_img">
                                                     @else
-                                                        <img src="{{url('/')}}/no-image-icon.png" class="yelp_img">
+                                                        <img src="{{BASE_URL}}no-image-icon.png" class="yelp_img">
                                                     @endif
                                                 </td>
                                                 <td><a href="{{$pets->businesses[$j]->url}}"><strong>{{$pets->businesses[$j]->name}}&nbsp;&nbsp;</strong></a>(<strong>{{round($pets->businesses[$j]->distance * 0.00062137)}}&nbsp;Miles</strong>)<br>
@@ -842,7 +836,7 @@
                                 </table>
                                 @if(count($pets->businesses) > 4)
                                     <center>
-                                        <a href="{{URL('/')}}/list_pets_health/{{$data->lat}}/{{$data->lng}}/{{$property_id}}" class="button  margin-top-5" target="_blank">
+                                        <a href="{{BASE_URL}}list_pets_health/{{$data->lat}}/{{$data->lng}}/{{$property_id}}" class="button  margin-top-5" target="_blank">
                                             show more
                                         </a>
                                     </center>
@@ -933,16 +927,6 @@
 
 
                     </section>
-                <!-- Video
-                    <h3 class="desc-headline no-border">
-                        <font style="vertical-align: inherit;">
-                            <font style="vertical-align: inherit;">Property Video</font>
-                        </font>
-                    </h3>
-                    <div class="responsive-iframe">
-                        {{--<iframe width="560" height="315" src="{{$data->url}}" frameborder="0" allowfullscreen=""></iframe>--}}
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/{{$data->url}}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                    </div> -->
 
 
                 </div><br><br><br><br>
@@ -983,13 +967,13 @@
                             <div class="agent-widget" ><!-- style="overflow-y: auto;max-height: 400px;" -->
                                 <div class="agent-title">
                                     {{--
-                                    <div class="agent-photo"><img src="{{url('/')}}/public/images/agent-avatar.jpg" alt=""></div> --}}
+                                    <div class="agent-photo"><img src="{{BASE_URL}}public/images/agent-avatar.jpg" alt=""></div> --}}
                                     <div class="agent-details">
                                         <h4>
                                             <a href="#">
                                                 <font style="vertical-align: inherit;">
                                                     <font style="vertical-align: inherit;">
-                                                        $ {{$data->price_per_night * 30}}/Month
+                                                        $ {{$data->monthly_rate}}/Month
                                                     </font>
                                                 </font>
                                             </a>
@@ -1187,7 +1171,7 @@
                                                             </font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">1</font></font></span></li>
                                                     </ul>
                                                 </div>
-                                                <img src="{{url('/')}}/public/images/listing-01.jpg" alt="">
+                                                <img src="{{BASE_URL}}public/images/listing-01.jpg" alt="">
                                             </a>
                                         </div>
                                     </div>
@@ -1221,7 +1205,7 @@
                                                             </font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">1</font></font></span></li>
                                                     </ul>
                                                 </div>
-                                                <img src="{{url('/')}}/public/images/listing-02.jpg" alt="">
+                                                <img src="{{BASE_URL}}public/images/listing-02.jpg" alt="">
                                             </a>
                                         </div>
                                     </div>
@@ -1255,7 +1239,7 @@
                                                             </font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">1</font></font></span></li>
                                                     </ul>
                                                 </div>
-                                                <img src="{{url('/')}}/public/images/listing-03.jpg" alt="">
+                                                <img src="{{BASE_URL}}public/images/listing-03.jpg" alt="">
                                             </a>
                                         </div>
                                     </div>
@@ -1294,7 +1278,7 @@
                 <h2>{{$data->first_name}} {{$data->last_name}}</h2>
                 <p>A Family Man. Father of a cute little angel. a host that always longs to say, “Be my guest”. An IT professional by career, a vacation host by choice! I live in New Jersey, have rental interests in a few places in East Cost of US.</p>
                 <a href="#" style="color:white" class="button">See Owner Profile</a><br>
-                <a href="{{url('/')}}/owner/chat" style="color:white" class="button">Contact Owner</a>
+                <a href="{{BASE_URL}}owner/chat" style="color:white" class="button">Contact Owner</a>
                 <br><br>
             </div>
         </div> --}}
@@ -1319,7 +1303,7 @@
                         <div class="carousel-item">
                             <div class="listing-item">
 
-                                <a href="{{url('/')}}/property/{{$property->property_id}}" class="listing-img-container">
+                                <a href="{{BASE_URL}}property/{{$property->property_id}}" class="listing-img-container">
 
                                     @if($property->verified==1)
                                         <div class="listing-badges">
@@ -1329,7 +1313,7 @@
                                     @endif
 
                                     <div class="listing-img-content">
-                                        <span class="listing-price">$ {{$data->price_per_night * 30}}/Month</span>
+                                        <span class="listing-price">$ {{$data->monthly_rate}}/Month</span>
                                         {{-- <span class="like-icon with-tip" data-tip-content="Add to Bookmarks"></span>
                                         <span class="compare-button with-tip" data-tip-content="Add to Compare"></span> --}}
                                     </div>
@@ -1347,9 +1331,9 @@
 
                                     <div class="listing-title">
                                         <h4 style="max-height: 70px;min-height: 70px;">
-                                            <a href="{{url('/')}}/property/{{$property->property_id}}">{{$property->title}}</a>
+                                            <a href="{{BASE_URL}}property/{{$property->property_id}}">{{$property->title}}</a>
                                         </h4>
-                                        <a style="min-height: 70px;max-height: 70px;" href="{{url('/')}}/property/{{$property->property_id}}" class="listing-address popup-gmaps">
+                                        <a style="min-height: 70px;max-height: 70px;" href="{{BASE_URL}}property/{{$property->property_id}}" class="listing-address popup-gmaps">
                                             <i class="fa fa-map-marker"></i>
 
                                             {{$property->city}},{{$property->state}}
@@ -1368,7 +1352,7 @@
                                     </ul>
 
                                     <div class="listing-footer">
-                                        <a href="{{url('/')}}/owner-profile/{{$property->owner_id}}">
+                                        <a href="{{BASE_URL}}owner-profile/{{$property->owner_id}}">
                                             <i class="fa fa-user"></i> {{$property->first_name}} {{$property->last_name}}
                                         </a>
                                         {{-- <span><i class="fa fa-calendar-o"></i> 1 day ago</span> --}}
@@ -1412,8 +1396,8 @@
                     <h4 class="modal-title" id="exampleModalLabel">Chat to Host</h4>
                 </div>
                 <div class="modal-body">
-                    {{--  <a href="{{URL('/')}}/create_chat/{{$property_id}}" target="_blank"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8" >Message Host</span></h3></a> --}}
-                    <form action="{{URL('/')}}/create_chat/{{$property_id}}" method="post">
+                    {{--  <a href="{{BASE_URL}}create_chat/{{$property_id}}" target="_blank"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8" >Message Host</span></h3></a> --}}
+                    <form action="{{BASE_URL}}create_chat/{{$property_id}}" method="post">
                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                         <div id="check_in_div">
                             <div class="form-group">
@@ -1617,8 +1601,8 @@
 
             console.log(<?php echo json_encode($booked_dates); ?>	);
             $(".alert").hide();
-            console.log('{{url('/')}}/loader.gif');
-            var loader = '<img src="{{url('/')}}/loader.gif" height="30" width="30">';
+            console.log('{{BASE_URL}}loader.gif');
+            var loader = '<img src="{{BASE_URL}}loader.gif" height="30" width="30">';
             date=new Date();
             $("#property_from_date").datepicker({
                 startDate: date,
@@ -1727,7 +1711,8 @@
 
             var from_date = $("#property_from_date").val();
             var to_date = $("#property_to_date").val();
-            var guest_count = $("#current_guest_count").val();
+            var guestCount = parseInt($("#current_guest_count").val());
+            var guest_count =isNaN(guestCount) ? 0 : guestCount;
             var totalguestcount=parseInt($('#total_guest_count').val());
             totalguestcount = isNaN(totalguestcount) ? 0 : totalguestcount;
 
@@ -1791,13 +1776,14 @@
                         // }
                         tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Service Fee &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>This fee helps us run our platform and offer our services </span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.service_tax+".00</td></tr>";
 
-                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Cleaning Fee&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'> fee charged by host to cover the cost of cleaning their space.</span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.cleaning_fare+".00</td></tr>";
+                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Cleaning Fee&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'> fee charged by host to cover the cost of cleaning their space.</span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.cleaning_fee+"</td></tr>";
                         // tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Tax&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Average Nightly rate is Rounded</span></span></td><td style='text-align: left;color:black;padding:5px'>$ "+data.data.tax_amount+".00</td></tr>";
 
                         tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Security Deposit &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Deposit collected by host in case of damages. Refundable based on Cancellation Policy</span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.security_deposit+"</td></tr>";
 
 
                         tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Total &nbsp;</td><td style='text-align: right;color:black;padding:5px'><b  id='total_booking_price'>$ "+data.data.total_amount+".00</b></td></tr>";
+
                         if(data.data.no_extra_guest==1){
                             if(totalguestcount < guest_count){
                                 $('.booking_button').attr('disabled',true);

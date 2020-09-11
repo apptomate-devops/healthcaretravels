@@ -37,11 +37,13 @@
                                     <img src="{{$property->image_url}}" alt="">
                                     <div class="title">
                                         <h4><a href="{{BASE_URL}}property/{{$property->propertyId}}">{{$property->title}}</a></h4>
-                                        <span>{{$property->description}} </span>
-                                        @if($property->price_per_night == ZERO)
+                                        <div class="description">
+                                            <span>{{$property->description}} </span>
+                                        </div>
+                                        @if($property->monthly_rate == ZERO)
                                             <span class="table-property-price">Price not set</span>
                                         @else
-                                            <span class="table-property-price">${{$property->price_per_night}} / per night</span>
+                                            <span class="table-property-price">${{$property->monthly_rate}} / Month</span>
                                         @endif
 
                                     </div>

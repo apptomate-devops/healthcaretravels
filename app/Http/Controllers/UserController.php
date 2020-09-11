@@ -448,13 +448,8 @@ class UserController extends BaseController
             ->orderBy('name', 'ASC')
             ->get();
 
-        $country_codes = DB::table('country_code')
-            ->where('client_id', '=', $client_id)
-            ->get();
-
         return view('profile', [
             'user_detail' => $user_detail,
-            'country_codes' => $country_codes,
             'agency' => $agency,
             'occupation' => $occupation,
         ]);
@@ -597,7 +592,6 @@ class UserController extends BaseController
                 ->with('state', $request->state)
                 ->with('pin_code', $request->pin_code)
                 ->with('country', $request->country)
-                //                ->with('listing_address', $request->listing_address)
                 ->with('work', $request->work)
                 ->with('work_title', $request->work_title)
                 ->with('website', $request->website)
@@ -644,7 +638,6 @@ class UserController extends BaseController
             'state' => $request->state,
             'pin_code' => $request->pin_code,
             'country' => $request->country,
-            //            'listing_address' => $request->listing_address,
             'status' => 1,
             'work' => $request->work,
             'work_title' => $request->work_title,

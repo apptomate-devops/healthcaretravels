@@ -7,6 +7,18 @@
         <div class="col-md-12">
             <form id="create-funding-source">
                 <div>
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" placeholder="First Name" required />
+                </div>
+                <div>
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" placeholder="Last Name" required />
+                </div>
+                <div>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="email@example.com" required />
+                </div>
+                <div>
                     <label for="password">Routing number</label>
                     <input type="text" id="routingNumber" placeholder="273222226" required />
                 </div>
@@ -57,7 +69,6 @@
         console.log(logValue);
         $('#logs').append($div);
     }
-
     function addFundingSourceToUser(fundingSource) {
         var formData = {
             id: getLastSagmentOfURL(window.location.pathname),
@@ -81,19 +92,48 @@
             }
         });
     }
+    function createCustomerForUserAndGetToken(userInfo, cb) {
+        var formData = userInfo;
+        formData.id = getLastSagmentOfURL(window.location.pathname);
+        formData._token = '{{ csrf_token() }}';
+        $.ajax({
+            url: "/dwolla/create_customer_and_funding_source_token",
+            type: "POST",
+            data: formData,
+            json: true,
+            success: function(data, textStatus, jqXHR) {
+                cb(null, data);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                cb(errorThrown);
+            }
+        });
+    }
     $('#create-funding-source').on('submit', function (e) {
         e.preventDefault();
         e.stopPropagation();
         $(".form-error").removeClass('form-error');
         $(".form-error-message").hide();
-        var token = '{{$token}}';
+        var token = '{{$token ?? ''}}';
         var bankInfo = {
             routingNumber: $('#routingNumber').val(),
             accountNumber: $('#accountNumber').val(),
             type: $('#type').val(),
             name: $('#name').val(),
         };
-        dwolla.fundingSources.create(token, bankInfo, fundingSourcecallback);
+        var userInfo = {
+            dwolla_first_name: $('#firstName').val(),
+            dwolla_last_name: $('#lastName').val(),
+            dwolla_email: $('#email').val(),
+        }
+        createCustomerForUserAndGetToken(userInfo, function(error, data) {
+            if (data && data.success) {
+                dwolla.fundingSources.create(data.token, bankInfo, fundingSourcecallback);
+            } else {
+                console.error(error || data);
+                alert('Error occured:');
+            }
+        });
         return false;
     });
 </script>

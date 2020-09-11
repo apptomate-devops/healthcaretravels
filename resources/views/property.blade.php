@@ -1075,7 +1075,7 @@
                                             Login to Book
                                         </button>
                                     @else
-                                        <button class="button fullwidth margin-top-5 booking_button">
+                                        <button disabled id="btn_book_now" class="button fullwidth margin-top-5 booking_button">
                                             Book Now
                                         </button>
                                     @endif
@@ -1724,22 +1724,20 @@
         }
 
         function get_price(id) {
-
             var from_date = $("#property_from_date").val();
             var to_date = $("#property_to_date").val();
             var guest_count = $("#current_guest_count").val();
             var totalguestcount=parseInt($('#total_guest_count').val());
             totalguestcount = isNaN(totalguestcount) ? 0 : totalguestcount;
+            guest_count = isNaN(guest_count) ? 0 : guest_count;
 
-            $("#pricing_details").show();
             $('.guest').show();
 
-            if(!id || !from_date || !to_date) {
+            if(!id || !from_date || !to_date || !guest_count) {
                 return;
             }
+            $('#btn_book_now').prop("disabled", false);
             var url = 'get-price?property_id='+id+"&check_in="+from_date+"&check_out="+to_date+"&guest_count="+guest_count;
-
-
             $.ajax({
                 "type": "get",
                 "url" : url,
@@ -1767,6 +1765,7 @@
                         $(".alert").hide();
                         $('.booking_button').attr('disabled',false);
                         $('.booking_button').css('background','#0983b8');
+                        $("#pricing_details").show();
                     }
 
 

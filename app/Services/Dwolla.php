@@ -85,18 +85,20 @@ class Dwolla
     /**
      * Creates a Dwolla customer by user id
      */
-    public function createCustomerForUser($id)
+    public function createCustomerForUser($id, $user = null)
     {
-        $user = Users::find($id);
         if (empty($user)) {
-            Logger::info('Tried to create Dwolla customer for user with missing information: ' . $id);
-            return false;
+            $user = Users::find($id);
+            if (empty($user)) {
+                Logger::info('Tried to create Dwolla customer for user with missing information: ' . $id);
+                return false;
+            }
         }
         try {
             $userPayload = [
-                'firstName' => $user->first_name,
-                'lastName' => $user->last_name,
-                'email' => $user->email,
+                'firstName' => $user->dwolla_first_name ?? $user->first_name,
+                'lastName' => $user->dwolla_last_name ?? $user->last_name,
+                'email' => $user->dwolla_email ?? $user->email,
                 'ipAddress' => Request::ip(),
                 'correlationId' => $user->id,
             ];

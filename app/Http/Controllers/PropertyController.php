@@ -194,11 +194,12 @@ class PropertyController extends BaseController
                 $check_in .
                 '" between start_date and end_date',
         )->get();
-        if ($isBlocked) {
+        if (count($isBlocked)) {
             return response()->json([
                     'status' => 'FAILED',
                     'message' => 'Property is not available at the given dates',
                     'status_code' => ZERO,
+                    'is_blocked' => ONE,
                 ]);
         }
         $sql =

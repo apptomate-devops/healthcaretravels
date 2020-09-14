@@ -7,13 +7,12 @@
         {{$text}}
     </div>
     <div style="padding-top: 5px;">
-        <h3>Property Pricing</h3>
         <div class="panel payments-listing payment_list_right">
             <div class="panel-body">
                 <section id="your-trip" class="your-trip">
                     <div class="hosting-info">
                         <div class="payments-listing-name h4 row-space-1" style="word-wrap: break-word;">
-                            {{$data->title}}
+                            <h4>{{$data->title}}</h4>
                             <p style="font-weight: normal; font-size: 14px; margin: 10px 0px !important;">{{$data->location}}</p>
                         </div>
                         <div class="">

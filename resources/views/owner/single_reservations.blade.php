@@ -2,57 +2,11 @@
 @section('title')
     {{APP_BASE_NAME}} | Owner Account | My Bookings page
 @endsection
-<style>
-    table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-    }
-
-    tr:nth-child(even) {
-        background-color: #dddddd;
-    }
-
-    .card {
-        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-        transition: 0.3s;
-        width: 40%;
-        background-color: #f2f2f2;
-    }
-
-    .card:hover {
-        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-    }
-
-    .container {
-        padding: 2px 16px;
-    }
-
-    td {
-        padding-top: .3em;
-        padding-bottom: .3em;
-    }
-
-    ul.my-account-nav li a {
-        font-size: 14px;
-        line-height: 34px;
-        color: black;
-    }
-    li.sub-nav-title {
-        font-size: 16px;
-    }
-
-</style>
 @section('main_content')
 
+    <link rel="stylesheet" href="{{ URL::asset('css/bookings.css') }}">
 
-    <div class="container" style="margin-top: 35px;">
+    <div class="container single_bookings">
         <div class="row">
 
 
@@ -70,82 +24,22 @@
             </div>
 
             <div class="col-md-8">
-                <table id="print_table" class="manage-table responsive-table" style="border-spacing: 0px 8px;">
-
-                    <tr class="card">
-                        <th style="width: 0;background-color: #e78016;">
-                            Booking id :
-                        </th>
-                        <th style="width: 0;background-color: #747777;">
-                            {{$data->booking_id}}
-                        </th>
-                        <th style="width: 0;background-color: #e78016;">
-                            Property Name :
-                        </th>
-                        <th style="width: 0;background-color: #747777;">
-                            {{$data->title}}
-                        </th>
-                    </tr>
-
-                    <tr class="card">
-                        <th style="width: 0;background-color: #e78016;">
-                            Owner :
-                        </th>
-                        <th style="width: 0;background-color: #747777;">
-                            {{ucfirst($data->traveller_name)}}
-                        </th>
-                        <th style="width: 0;background-color: #e78016;">
-                            Date period :
-                        </th>
-                        <th style="width: 0;background-color: #747777;">
-                            {{date('m-d-Y',strtotime($data->start_date))}} to {{date('m-d-Y',strtotime($data->end_date))}}
-                        </th>
-                    </tr>
-
-                    {{-- NOTE: Commented the recruiter details as noboday understands what it is! 🤷🏻‍♂️ 😀 --}}
-                    {{-- <tr class="card">
-                        <th style="width: 0;background-color: #e78016;">
-                            Recruiter name :
-                        </th>
-                        <th style="width: 0;background-color: #747777;">
-                            {{$data->recruiter_name}}
-                        </th>
-                        <th style="width: 0;background-color: #e78016;">
-                            Recruiter Phone number :
-                        </th>
-                        <th style="width: 0;background-color: #747777;">
-                            {{$data->recruiter_phone_number}}
-                        </th>
-                    </tr>
-                    <tr class="card">
-                        <th style="width: 0;background-color: #e78016;">
-                           Recruiter Email :
-                        </th>
-                        <th style="width: 0;background-color: #747777;">
-                            {{$data->recruiter_email}}
-                        </th>
-                        <th style="width: 0;background-color: #e78016;">
-                            Contract Period :
-                        </th>
-                        <th style="width: 0;background-color: #747777;">
-                            {{date('m-d-Y',strtotime($data->contract_start_date))}} to {{date('m-d-Y',strtotime($data->contract_end_date))}}
-                        </th>
-                    </tr> --}}
-                    <tr class="card">
-                        <th style="width: 0;background-color: #e78016;">
-                            Total Payment :
-                        </th>
-                        <th style="width: 0;background-color: #747777;">
-                            $ {{$data->total_amount}}
-                        </th>
-                        <th style="width: 0;background-color: #e78016;">
-                            Total Guests :
-                        </th>
-                        <th style="width: 0;background-color: #747777;">
-                            {{$data->guest_count}}
-                        </th>
-                    </tr>
-                </table>
+                <div class="booking-details">
+                    <h3>Details:</h3>
+                    <div>Booking ID : <span>{{$data->booking_id}}</span></div>
+                    <div>Property Name : <span>{{$data->title}}</span></div>
+                    <div>Requested By :
+                        <img src="{{($data->traveller_profile_image != " " && $data->traveller_profile_image != 0) ? $data->traveller_profile_image : '/user_profile_default.png'}}"/>
+                        <span>{{$data->traveller_name}}</span>
+                    </div>
+                    <div>Owner :
+                        <img src="{{($data->owner_profile_image != " " && $data->owner_profile_image != 0) ? $data->owner_profile_image : '/user_profile_default.png'}}"/>
+                        <span>{{$data->owner_name}}</span>
+                    </div>
+                    <div>Date period : <span>{{date('m-d-Y',strtotime($data->start_date))}} to {{date('m-d-Y',strtotime($data->end_date))}}</span></div>
+                    <div>Total Payment : <span>$ {{number_format($data->total_amount, 2)}}</span></div>
+                    <div>Total Guests : <span>{{$data->guest_count}}</span></div>
+                </div>
                 <table class="manage-table responsive-table" style="border-spacing: 0px 8px;">
                     <tr>
                         <th style="width: 0;background-color: #0983b8;">

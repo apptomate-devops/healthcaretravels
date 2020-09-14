@@ -1,26 +1,10 @@
 @extends('layout.master')
 @section('title',APP_BASE_NAME.' | Owner Account | My Bookings page')
-<style>
-    table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-    }
-
-    tr:nth-child(even) {
-        background-color: #dddddd;
-    }
-</style>
 @section('main_content')
+    <link rel="stylesheet" href="{{ URL::asset('css/bookings.css') }}">
 
 
-    <div class="container" style="margin-top: 35px;">
+    <div class="container single_bookings">
         <div class="row">
 
 
@@ -38,54 +22,23 @@
             </div>
 
             <div class="col-md-8">
-                <table id="print_table" class="manage-table responsive-table" style="border-spacing: 0px 8px;">
+                <div class="booking-details">
+                    <h3>Details:</h3>
+                    <div>Booking ID : <span>{{$data->booking_id}}</span></div>
+                    <div>Property Name : <span>{{$data->title}}</span></div>
+                    <div>Requested By :
+                        <img src="{{($data->traveller_profile_image != " " && $data->traveller_profile_image != 0) ? $data->traveller_profile_image : '/user_profile_default.png'}}"/>
+                        <span>{{$data->traveller_name}}</span>
+                    </div>
+                    <div>Owner :
+                        <img src="{{($data->owner_profile_image != " " && $data->owner_profile_image != 0) ? $data->owner_profile_image : '/user_profile_default.png'}}"/>
+                        <span>{{$data->owner_name}}</span>
+                    </div>
+                    <div>Date period : <span>{{date('m-d-Y',strtotime($data->start_date))}} to {{date('m-d-Y',strtotime($data->end_date))}}</span></div>
+                    <div>Total Payment : <span>$ {{number_format($data->total_amount, 2)}}</span></div>
+                    <div>Total Guests : <span>{{$data->guest_count}}</span></div>
+                </div>
 
-                    <tr>
-                        <th style="width: 0;background-color: #e78016;">
-                            Booking ID :
-                        </th>
-                        <th style="width: 0;background-color: #747777;" >
-                            {{$data->booking_id}}
-                        </th>
-                        <th style="width: 0;background-color: #e78016;">
-                            Property Name :
-                        </th>
-                        <th style="width: 0;background-color: #747777;">
-                            {{$data->title}}
-                        </th>
-                    </tr>
-
-                    <tr>
-                        <th style="width: 0;background-color: #e78016;">
-                            Requested By :
-                        </th>
-                        <th style="width: 0;background-color: #747777;">
-                            {{$data->traveller_name}}
-                        </th>
-                        <th style="width: 0;background-color: #e78016;">
-                            Date period :
-                        </th>
-                        <th style="width: 0;background-color: #747777;">
-                            {{date('m-d-Y',strtotime($data->start_date))}} to {{date('m-d-Y',strtotime($data->end_date))}}
-                        </th>
-                    </tr>
-
-                    <tr>
-                        <th style="width: 0;background-color: #e78016;">
-                            Total Payment :
-                        </th>
-                        <th style="width: 0;background-color: #747777;">
-                            $ {{$data->total_amount}}
-                        </th>
-                        <th style="width: 0;background-color: #e78016;">
-                            Total Guests :
-                        </th>
-                        <th style="width: 0;background-color: #747777;">
-                            {{$data->guest_count}}
-                        </th>
-                    </tr>
-
-                </table>
                 <input type="hidden" id="booking_id" value="{{$data->booking_id}}">
                 <table class="manage-table responsive-table" style="border-spacing: 0px 8px;">
 

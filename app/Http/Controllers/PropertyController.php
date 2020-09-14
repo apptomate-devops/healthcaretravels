@@ -181,7 +181,9 @@ class PropertyController extends BaseController
         $check_out = date('Y-m-d', strtotime($request->check_out));
 
         $isBlocked = PropertyBlocking::whereRaw(
-            'property_id = "' . $request->property_id .'" and start_date between "' .
+            'property_id = "' .
+                $request->property_id .
+                '" and start_date between "' .
                 $check_in .
                 '" and "' .
                 $check_out .
@@ -196,11 +198,11 @@ class PropertyController extends BaseController
         )->get();
         if (count($isBlocked)) {
             return response()->json([
-                    'status' => 'FAILED',
-                    'message' => 'Property is not available at the given dates',
-                    'status_code' => ZERO,
-                    'is_blocked' => ONE,
-                ]);
+                'status' => 'FAILED',
+                'message' => 'Property is not available at the given dates',
+                'status_code' => ZERO,
+                'is_blocked' => ONE,
+            ]);
         }
         $sql =
             "SELECT count(*) as is_available,B.total_guests FROM `property_booking` A, `property_list` B WHERE (A.start_date BETWEEN '" .
@@ -996,16 +998,24 @@ class PropertyController extends BaseController
                 ->where('property_booking.booking_id', $booking_id)
                 ->first();
             $traveller = DB::select(
-                "SELECT first_name,last_name,role_id,name_of_agency FROM users WHERE id = $data->traveller_id",
+                "SELECT username,profile_image,role_id,name_of_agency FROM users WHERE id = $data->traveller_id",
+            );
+            $owner = DB::select(
+                "SELECT username,profile_image,role_id,name_of_agency FROM users WHERE id = $data->owner_id",
             );
             $guest_info = GuestsInformation::where('booking_id', $booking_id)->get();
             $pet_details = PetInformation::where('booking_id', $booking_id)->first();
             $data->role_id = $traveller[0]->role_id;
-            if ($traveller[0]->role_id == 2) {
-                $data->traveller_name = $traveller[0]->name_of_agency;
-            } else {
-                $data->traveller_name = $traveller[0]->first_name . " " . $traveller[0]->last_name;
-            }
+            $data->traveller_profile_image = $traveller[0]->profile_image;
+            //            if ($traveller[0]->role_id == 2) {
+            //                $data->traveller_name = $traveller[0]->name_of_agency;
+            //            } else {
+            $data->traveller_name = $traveller[0]->username;
+            //            }
+            $data->owner_role_id = $owner[0]->role_id;
+            $data->owner_profile_image = $owner[0]->profile_image;
+            $data->owner_name = $owner[0]->username;
+
             return view('owner.single_booking', [
                 'data' => $data,
                 'guest_info' => $guest_info,
@@ -1382,17 +1392,26 @@ class PropertyController extends BaseController
             ->where('property_booking.client_id', CLIENT_ID)
             ->where('property_booking.booking_id', $booking_id)
             ->first();
+
         $traveller = DB::select(
-            "SELECT first_name,last_name,role_id,name_of_agency FROM users WHERE id = $data->owner_id",
+            "SELECT username,profile_image,role_id,name_of_agency FROM users WHERE id = $data->traveller_id",
         );
-        $data->role_id = $traveller[0]->role_id;
-        if ($traveller[0]->role_id == 2) {
-            $data->traveller_name = $traveller[0]->name_of_agency;
-        } else {
-            $data->traveller_name = $traveller[0]->first_name . " " . $traveller[0]->last_name;
-        }
+        $owner = DB::select(
+            "SELECT username,profile_image,role_id,name_of_agency FROM users WHERE id = $data->owner_id",
+        );
         $guest_info = GuestsInformation::where('booking_id', $booking_id)->get();
         $pet_details = PetInformation::where('booking_id', $booking_id)->first();
+        $data->role_id = $traveller[0]->role_id;
+        $data->traveller_profile_image = $traveller[0]->profile_image;
+        //            if ($traveller[0]->role_id == 2) {
+        //                $data->traveller_name = $traveller[0]->name_of_agency;
+        //            } else {
+        $data->traveller_name = $traveller[0]->username;
+        //            }
+        $data->owner_role_id = $owner[0]->role_id;
+        $data->owner_profile_image = $owner[0]->profile_image;
+        $data->owner_name = $owner[0]->username;
+
         return view('owner.single_reservations', [
             'data' => $data,
             'guest_info' => $guest_info,

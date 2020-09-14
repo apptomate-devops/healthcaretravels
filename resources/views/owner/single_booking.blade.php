@@ -227,7 +227,9 @@
                     url: url,
                     dataType: 'json',
                     success: function (data) {
-                        location.reload();
+                        if(data.status === 'SUCCESS') {
+                            location.reload();
+                        }
                     }
                 });
 

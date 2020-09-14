@@ -737,39 +737,42 @@ class PropertyController extends BaseController
 
     public function owner_update_booking(Request $request)
     {
-        DB::table('property_booking')
+        $booking = DB::table('property_booking')
             ->where('booking_id', $request->booking_id)
-            ->update(['status' => $request->status]);
-        if ($request->status == 4) {
-            $booking = DB::table('property_booking')
+            ->leftjoin('property_list', 'property_list.id', '=', 'property_booking.property_id')
+            ->leftjoin('users', 'users.id', '=', 'property_booking.traveller_id')
+            ->select('users.first_name', 'users.last_name', 'property_list.title', 'property_booking.*', 'users.email')
+            ->first();
+        $user_id = $request->session()->get('user_id');
+
+        if ($user_id && $booking && $booking->owner_id == $user_id) {
+            DB::table('property_booking')
                 ->where('booking_id', $request->booking_id)
-                ->leftjoin('property_list', 'property_list.id', '=', 'property_booking.property_id')
-                ->leftjoin('users', 'users.id', '=', 'property_booking.traveller_id')
-                ->select(
-                    'users.first_name',
-                    'users.last_name',
-                    'property_list.title',
-                    'property_booking.*',
-                    'users.email',
-                )
-                ->first();
-            $user = DB::table('users')
-                ->where('client_id', CLIENT_ID)
-                ->where('id', $booking->owner_id)
-                ->first();
-            $mail_data = [
-                'owner_name' => $user->first_name . " " . $user->last_name,
-                'booking_id' => $booking->booking_id,
-                'property' => $booking->title,
-                'mail_to' => 'traveller',
-                'traveler' => $booking->first_name . " " . $booking->last_name,
-            ];
-            $this->send_email($booking->email, 'mail.cancel_booking', $mail_data);
+                ->update(['status' => $request->status]);
+            if ($request->status == 4) {
+                $user = DB::table('users')
+                    ->where('client_id', CLIENT_ID)
+                    ->where('id', $booking->owner_id)
+                    ->first();
+                $mail_data = [
+                    'owner_name' => $user->first_name . " " . $user->last_name,
+                    'booking_id' => $booking->booking_id,
+                    'property' => $booking->title,
+                    'mail_to' => 'traveller',
+                    'traveler' => $booking->first_name . " " . $booking->last_name,
+                ];
+                $this->send_email($booking->email, 'mail.cancel_booking', $mail_data);
+            }
+            if ($request->link == 1) {
+                return $this->single_booking($request->booking_id, $request);
+            }
+            return response()->json(['status' => 'SUCCESS']);
         }
         if ($request->link == 1) {
-            return $this->single_booking($request->booking_id, $request);
+            $url = $this->get_base_url() . 'login';
+            return redirect($url)->with('error', 'Login with Owner account');
         }
-        return response()->json(['status' => 'SUCCESS']);
+        return response()->json(['status' => 'ERROR']);
     }
 
     public function reservations(Request $request)

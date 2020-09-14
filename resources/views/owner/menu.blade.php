@@ -45,7 +45,7 @@
             </li>
             <li>
                 <a href="{{url('/')}}/owner/my-bookings" {{{ (Request::is('owner/my-bookings') ? 'class=current not-verified-block' : 'class=not-verified-block') }}}>
-                    <i class="sl sl-icon-basket"></i> My Bookings
+                    <i class="sl sl-icon-basket"></i> Booking Requests
                 </a><i class="fa fa-bell" id="owner_booking"></i>
             </li>
         @endif

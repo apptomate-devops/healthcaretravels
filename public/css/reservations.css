@@ -1,0 +1,58 @@
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    background-color: #f2f2f2;
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.my-reservations.container {
+    padding: 2px 16px;
+    margin-top: 35px;
+}
+.my-reservations .search-container {
+    width: 200px;
+    margin-left: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    margin-top: 0;
+}
+
+.my-reservations table {
+    border-spacing: 0 1em;
+}
+
+.my-reservations table .title-container .title h4 {
+    width: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+td {
+    padding-top: .5em;
+    padding-bottom: .5em;
+}
+
+ul.my-account-nav li a {
+    font-size: 14px;
+    line-height: 34px;
+    color: black;
+}
+li.sub-nav-title {
+    font-size: 16px;
+}
+.close {
+    float: right;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1;
+    color: #f70606 !important;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=20);
+    opacity: 2 !important;
+}

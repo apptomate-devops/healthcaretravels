@@ -117,20 +117,38 @@ class OwnerController extends BaseController
 
     public function my_bookings(Request $request)
     {
-        $from = date("Y-m-d", strtotime($request->start_date));
-        $to = date("Y-m-d", strtotime($request->end_date));
+        $from = strtotime($request->start_date);
+        $to = strtotime($request->end_date);
         DB::table('property_booking')
             ->where('property_booking.owner_id', $request->session()->get('user_id'))
             ->update(['owner_notify' => 0]);
         $data = DB::table('property_booking')
             ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
             ->where('property_booking.owner_id', $request->session()->get('user_id'));
-        if ($request->start_date && $request->end_date) {
-            $data->whereBetween('property_booking.start_date', [$from, $to]);
+        if ($from && $to) {
+            $fromDate = date('Y-m-d', $from);
+            $toDate = date('Y-m-d', $to);
+
+            $data->whereRaw(
+                'property_booking.start_date between "' .
+                    $fromDate .
+                    '" and "' .
+                    $toDate .
+                    '" OR
+                             property_booking.end_date between "' .
+                    $fromDate .
+                    '" and "' .
+                    $toDate .
+                    '" OR
+                             "' .
+                    $fromDate .
+                    '" between property_booking.start_date and property_booking.end_date',
+            );
+            // TODO: check if date should fall between selected range then change line to (property_booking.start_date <= $fromDate AND property_booking.end_date >= $toDate)
+            //            $data->whereBetween('property_booking.start_date', [$from, $to]);
         }
         $data = $data->select('property_list.title', 'property_booking.*')->get();
 
-        // print_r($data);exit;
         foreach ($data as $datum) {
             $traveller = DB::table('users')
                 ->where('client_id', CLIENT_ID)
@@ -147,7 +165,6 @@ class OwnerController extends BaseController
                 $datum->traveller_name = $traveller->name_of_agency;
             }
         }
-        // print_r($data);exit;
 
         return view('owner.my_bookings')->with('bookings', $data);
     }

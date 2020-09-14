@@ -989,7 +989,7 @@
                                     <div class="form-group">
                                         <!-- Date input -->
                                         <label class="control-label" for="property_from_date">Check In</label>
-                                        <input name="check_in" required value="@if(count($session)!=0) {{$session['fromDate']}} @endif" id="property_from_date" placeholder="Check In date" onchange="get_price({{$property_id}})" type="text" style="width: 273px;" >
+                                        <input name="check_in" required value="@if(count($session)!=0) {{$session['fromDate']}} @endif" id="property_from_date" placeholder="Check In date" onchange="get_price()" type="text" style="width: 273px;" >
                                     </div>
                                 </div>
                                 <!-- <label>Check Out</label>
@@ -998,20 +998,13 @@
                                     <div class="form-group">
                                         <!-- Date input -->
                                         <label class="control-label" for="date">Check Out</label>
-                                        <input name="check_out" value="@if(count($session)!=0) {{$session['toDate']}} @endif"  required id="property_to_date" onchange="get_price({{$property_id}})" placeholder="Check Out date" type="text" style="width: 273px;" >
+                                        <input name="check_out" value="@if(count($session)!=0) {{$session['toDate']}} @endif"  required id="property_to_date" onchange="get_price()" placeholder="Check Out date" type="text" style="width: 273px;" >
 
                                         <input name="property_id" type="hidden" value="{{$property_id}}" >
                                     </div>
                                 </div>
-                                <!-- <div class="form-group">
-
-                                    <label class="control-label" for="messages">Message</label>
-                                    <textarea name="message" required id="messages" type="text" style="width: 273px;"></textarea>
-
-                                </div> -->
-                            <!-- onchange="get_price({{$property_id}})" -->
                                 <input type="hidden" id="guest" name="guest_count">
-                                <select required onchange="get_price({{$property_id}});" class="chosen-select-no-single validate" id="current_guest_count" >
+                                <select required onchange="get_price();" class="chosen-select-no-single validate" id="current_guest_count" >
                                     <option selected disabled>Guests</option>
                                     @for($i=1;$i<=$data->total_guests;$i++)
                                 <option value="{{$i}}">{{$i}} Guest{{$i > 1 ? 's' : ''}}</option>
@@ -1707,7 +1700,8 @@
             });
         }
 
-        function get_price(id) {
+        function get_price() {
+            var id = "{{$property_id}}";
             var from_date = $("#property_from_date").val();
             var to_date = $("#property_to_date").val();
             var guestCount = parseInt($("#current_guest_count").val());

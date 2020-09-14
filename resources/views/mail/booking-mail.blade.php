@@ -12,8 +12,8 @@
                 <section id="your-trip" class="your-trip">
                     <div class="hosting-info">
                         <div class="payments-listing-name h4 row-space-1" style="word-wrap: break-word;">
-                            <h4>{{$data->title}}</h4>
-                            <p style="font-weight: normal; font-size: 14px; margin: 10px 0px !important;">{{$data->location}}</p>
+                            <h2>{{$data->title}}</h2>
+                            <p style="font-weight: normal; font-size: 14px; margin: 10px 0px !important;">{{$data->city}} ,{{$data->state}}</p>
                         </div>
                         <div class="">
                             <hr>
@@ -96,7 +96,7 @@
                                     <td class="val text-left">
                                         <span class="lang-chang-label">
                                         $
-                                        </span><span>{{$data->cleaning_fare}}</span>
+                                        </span><span>{{$data->cleaning_fee}}</span>
                                     </td>
                                     </tr>
 
@@ -135,10 +135,15 @@
                                     </tr>
                                     @endif
                                     <tr class="editable-fields" id="total_amount">
-                                    <td colspan="2">
-                                        <div class="total_amount" style="margin: 10px 0;color: white; background-color: #e78016; font-weight: bold; padding: 10px; text-align: center;">
-                                            <a href="{{BASE_URL}}owner/single-booking/{{$data->booking_id}}" style="color: white" target="_blank">
+                                    <td colspan="2" style="display: flex;">
+                                        <div class="total_amount" style="max-width: 400px; margin: 10px;color: white; background-color: #e78016; font-weight: bold; padding: 10px; text-align: center;">
+                                            <a href="{{BASE_URL}}owner-update-booking?booking_id={{$data->booking_id}}&status=2&link=1" style="color: white" target="_blank">
                                                 Accept Request
+                                            </a>
+                                        </div>
+                                        <div class="total_amount" style="max-width: 400px; margin: 10px;color: white; background-color: #808080; font-weight: bold; padding: 10px; text-align: center;">
+                                            <a href="{{BASE_URL}}owner-update-booking?booking_id={{$data->booking_id}}&status=4&link=1" style="color: white" target="_blank">
+                                                Deny Request
                                             </a>
                                         </div>
                                     </td>

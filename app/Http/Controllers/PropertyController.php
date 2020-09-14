@@ -766,6 +766,9 @@ class PropertyController extends BaseController
             ];
             $this->send_email($booking->email, 'mail.cancel_booking', $mail_data);
         }
+        if ($request->link == 1) {
+            return $this->single_booking($request->booking_id, $request);
+        }
         return response()->json(['status' => 'SUCCESS']);
     }
 

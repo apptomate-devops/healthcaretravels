@@ -11,6 +11,8 @@ class Dwolla
 {
     protected $access_token;
 
+    protected $master_account;
+
     protected $master_funding_source;
 
     protected $client;
@@ -27,7 +29,6 @@ class Dwolla
     {
         $this->access_token = config('services.dwolla.access_key');
         $this->secret_key = config('services.dwolla.secret_key');
-        $this->master_funding_source = config('services.dwolla.master_funding_source');
         $this->setUp();
     }
 
@@ -47,6 +48,27 @@ class Dwolla
         }
         $this->client = new DwollaSwagger\ApiClient($url);
         $this->customersApi = new DwollaSwagger\CustomersApi($this->client);
+        $this->rootApi = new DwollaSwagger\RootApi($this->client);
+        $this->accountsApi = new DwollaSwagger\AccountsApi($this->client);
+        $this->fsApi = new DwollaSwagger\FundingsourcesApi($this->client);
+        $master_account = config('services.dwolla.master_account');
+        if (!$master_account) {
+            Logger::info('Requesting master account details');
+            $rootDetails = $this->rootApi->root();
+            $this->master_account = $rootDetails->_links['account']->href;
+            $fundingSourcesRes = $this->fsApi->getAccountFundingSources($this->master_account);
+            $fundingSources = $fundingSourcesRes->_embedded->{'funding-sources'};
+            $balanceFundingSource = current(array_filter($fundingSources, function($e) {
+                return $e->type == 'balance' && $e->removed == false;
+            }));
+            if (!$balanceFundingSource) {
+                Logger::error('Error in finding master funding source!!');
+            }
+            $this->master_funding_source = $balanceFundingSource->_links->self->href;
+            config(['services.dwolla.master_account' => $this->master_account]);
+            config(['services.dwolla.master_account_id' => basename($this->master_account)]);
+            config(['services.dwolla.master_funding_source' => $this->master_funding_source]);
+        }
         return $this->client;
     }
 

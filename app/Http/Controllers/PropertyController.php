@@ -180,6 +180,27 @@ class PropertyController extends BaseController
         $check_in = date('Y-m-d', strtotime($request->check_in));
         $check_out = date('Y-m-d', strtotime($request->check_out));
 
+        $isBlocked = PropertyBlocking::whereRaw(
+            'property_id = "' . $request->property_id .'" and start_date between "' .
+                $check_in .
+                '" and "' .
+                $check_out .
+                '" OR end_date between "' .
+                $check_in .
+                '" and "' .
+                $check_out .
+                '" OR
+                    "' .
+                $check_in .
+                '" between start_date and end_date',
+        )->get();
+        if ($isBlocked) {
+            return response()->json([
+                    'status' => 'FAILED',
+                    'message' => 'Property is not available at the given dates',
+                    'status_code' => ZERO,
+                ]);
+        }
         $sql =
             "SELECT count(*) as is_available,B.total_guests FROM `property_booking` A, `property_list` B WHERE (A.start_date BETWEEN '" .
             $check_in .
@@ -191,7 +212,8 @@ class PropertyController extends BaseController
             $check_out .
             "')  AND B.total_guests < " .
             $guest_count .
-            " AND A.payment_done = 1 AND A.is_instant = B.is_instant AND A.property_id = " .
+            // TODO: Question if we need to block booking based on dates or dates + payment
+            " AND A.payment_done = 1 AND A.property_id = " .
             $request->property_id;
 
         $is_available = DB::select($sql);

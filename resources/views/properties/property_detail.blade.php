@@ -115,6 +115,10 @@
             padding: 10px;
             text-align: center;
         }
+        .total_amount.total_amount_gray {
+            color: #adadad;
+            font-weight: normal;
+        }
     </style>
     <div id="" class="property-titlebar margin-bottom-0">
 
@@ -127,11 +131,11 @@
                 <form name="payment" action="{{URL('/')}}/save-guest-information" method="post" enctype="multipart/form-data" >
                     <div class="row">
                         <div class="col-md-5 col-md-push-7 col-lg-4 col-lg-push-8 row-space-2 lang-ar-left tempClass">
-                            <div class="panel payments-listing payment_list_right">
+                            <div class="panel payments-listing payment_list_right border-0 shadow-none mb-0">
                                 <div class="media-photo media-photo-block text-center payments-listing-image">
                                     <img src="{{$data->image_url}}" class="img-responsive-height" alt="Chambre accueillante chezl habitant">
                                 </div>
-                                <div class="panel-body">
+                                <div class="px-15">
                                     <section id="your-trip" class="your-trip">
                                         <div class="hosting-info">
                                             <div class="payments-listing-name h4 row-space-1" style="word-wrap: break-word;">
@@ -152,7 +156,7 @@
                                                 </div>
                                             </div>
                                             <hr>
-                                            <table class="reso-info-table">
+                                            <table class="reso-info-table" style="width:95%">
                                                 <tbody>
                                                 <tr>
                                                     <td>Cancellation Policy</td>
@@ -179,11 +183,10 @@
                                                             Coupon Code
                                                             <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Please input coupon code given by us</span></span>
                                                         </td>
-                                                        <td class="val text-left">
-                                          <span class="lang-chang-label">
-                                             <input type="text" name="coupon_code" id="coupon_code" onchange="apply_coupon(
-                                                 '{{$data->property_booking_id}}')">
-
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2" >
+                                                            <input type="text" name="coupon_code" id="coupon_code" onchange="apply_coupon('{{$data->property_booking_id}}')">
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -294,10 +297,9 @@
                                                     </tr>
                                                     <tr class="editable-fields" id="total_amount">
                                                         <td colspan="2">
-                                                            <div class="total_amount">User will not be charged until booking request is accepted</div>
+                                                            <div class="total_amount total_amount_gray">User will not be charged until booking request is accepted</div>
                                                         </td>
                                                     </tr>
-                                                    <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
                                                     @if($data->coupon_value!="")
                                                         <tr>
                                                             <td colspan="2"style="color:green;font-weight: bold"><center> Coupon Code is Applied<b>({{$data->coupon_code}})</b></center></td>
@@ -333,8 +335,6 @@
                                                      </tr> -->
                                                     </tbody>
                                                 </table>
-                                                <hr>
-
                                             </section>
                                         </div>
                                     </section>

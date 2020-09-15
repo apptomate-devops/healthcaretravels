@@ -14,6 +14,7 @@ use App\Models\EmailConfig;
 use App\Models\GuestsInformation;
 use App\Models\Propertybooking;
 use Mail;
+use App\Helper\Helper;
 
 class PropertyController extends BaseController
 {
@@ -275,43 +276,7 @@ class PropertyController extends BaseController
 
         if ($is_available[ZERO]->is_available == ZERO || $booking_count == ZERO) {
             try {
-                $single_day_fare = $property_details->monthly_rate / 30;
-
-                $booking_price = [];
-                $booking_price['client_id'] = CLIENT_ID;
-                $booking_price['single_day_fare'] = round($single_day_fare, 2);
-                $booking_price['total_days'] = $weeks['total'];
-                $normal_days = $weeks['total'];
-                $week_end_days = 0;
-                $booking_price['normal_days'] = $weeks['total'];
-                $price = $normal_days * $single_day_fare;
-                $booking_price['week_end_days'] = $week_end_days;
-
-                $weekend_price = $single_day_fare;
-
-                $booking_price['price_per_weekend'] = $single_day_fare;
-                $booking_price['weekend_total'] = $weekend_price * $week_end_days;
-
-                $service_tax = DB::table('settings')
-                    ->where('param', 'service_tax')
-                    ->first();
-
-                $total_price =
-                    $price +
-                    $property_details->cleaning_fee +
-                    $property_details->security_deposit +
-                    $service_tax->value;
-
-                $booking_price['service_tax'] = $service_tax->value;
-                $booking_price['initial_pay'] = 0; // TODO: check this later $due_now;
-                $booking_price['total_amount'] = $total_price;
-                $booking_price['check_in'] = $check_in;
-                $booking_price['check_out'] = $check_out;
-                $booking_price['cleaning_fee'] = $property_details->cleaning_fee;
-                $booking_price['security_deposit'] = $property_details->security_deposit;
-                $booking_price['sub_total'] = $total_price;
-                $booking_price['price'] = $price;
-
+                $booking_price = Helper::get_price_details($property_details, $weeks, $check_in, $check_out);
                 return response()->json(['status' => 'SUCCESS', 'data' => $booking_price, 'status_code' => ONE]);
             } catch (\Exception $ex) {
                 return response()->json([

@@ -15,6 +15,10 @@ return [
     'dwolla' => [
         'access_key' => env('DWOLLA_ACCESS_KEY'),
         'secret_key' => env('DWOLLA_SECRET_KEY'),
+        'access_token' => env('DWOLLA_ACCESS_TOKEN'),
+        'master_account' => env('DWOLLA_MASTER_ACCOUNT'),
+        'master_account_id' => env('DWOLLA_MASTER_ACCOUNT_ID'),
+        'master_funding_source' => env('DWOLLA_MASTER_FUNDING_SOURCE'),
         'env' => env('DWOLLA_ENV'),
     ],
 

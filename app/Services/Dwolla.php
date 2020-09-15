@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Services;
+use Carbon\Carbon;
 use Request;
 use GuzzleHttp;
 use DwollaSwagger;
 use App\Services\Logger;
 use App\Models\Users;
+use Helper;
 
 class Dwolla
 {
@@ -27,75 +29,94 @@ class Dwolla
 
     public function __construct()
     {
-        $this->access_token = config('services.dwolla.access_key');
+        $this->access_key = config('services.dwolla.access_key');
         $this->secret_key = config('services.dwolla.secret_key');
+        $this->access_token = config('services.dwolla.access_token');
         $this->setUp();
     }
 
     public function setUp($forceNewAccessToken = false)
     {
         $url = config('services.dwolla.env') == 'prod' ? 'https://api.dwolla.com/' : 'https://api-sandbox.dwolla.com/';
-        $accessToken = config('services.dwolla.access_token');
-        Logger::info('accessToken from config value: ' . $accessToken);
-        Logger::info('Is force new access token? : ' . $forceNewAccessToken);
-        if ($forceNewAccessToken || !$accessToken) {
-            Logger::info('Requesting new accessToken from Dwolla:');
-            $accessToken = $this->setupAccessToken($url, $forceNewAccessToken);
+        if (!$this->access_token) {
+            $this->access_token = $this->setupAccessToken($url);
+            if (!$this->access_token) {
+                Logger::error('Error in getting new access token from Dwolla');
+                return false;
+            }
         }
-        if (!$accessToken) {
-            Logger::error('Error in getting new access token from Dwolla');
-            return false;
-        }
+        DwollaSwagger\Configuration::$access_token = $accessToken;
         $this->client = new DwollaSwagger\ApiClient($url);
         $this->customersApi = new DwollaSwagger\CustomersApi($this->client);
         $this->rootApi = new DwollaSwagger\RootApi($this->client);
         $this->accountsApi = new DwollaSwagger\AccountsApi($this->client);
         $this->fsApi = new DwollaSwagger\FundingsourcesApi($this->client);
         $master_account = config('services.dwolla.master_account');
-        // TODO: Enable when implemented as a provider
-        if (false && !$master_account) {
-            Logger::info('Requesting master account details');
-            $rootDetails = $this->rootApi->root();
-            $this->master_account = $rootDetails->_links['account']->href;
-            $fundingSourcesRes = $this->fsApi->getAccountFundingSources($this->master_account);
-            $fundingSources = $fundingSourcesRes->_embedded->{'funding-sources'};
-            $balanceFundingSource = current(
-                array_filter($fundingSources, function ($e) {
-                    return $e->type == 'balance' && $e->removed == false;
-                }),
-            );
-            if (!$balanceFundingSource) {
-                Logger::error('Error in finding master funding source!!');
+        if (!$master_account) {
+            try {
+                $this->getMasterAccountDetails();
+            } catch (\Exception $ex) {
+                Logger::error('Error in getting master account details. EX: ' . $ex->getResponseBody());
+                return $ex;
             }
-            $this->master_funding_source = $balanceFundingSource->_links->self->href;
-            config(['services.dwolla.master_account' => $this->master_account]);
-            config(['services.dwolla.master_account_id' => basename($this->master_account)]);
-            config(['services.dwolla.master_funding_source' => $this->master_funding_source]);
         }
         return $this->client;
     }
 
+    public function getMasterAccountDetails()
+    {
+        Logger::info('Requesting master account details');
+        $rootDetails = $this->rootApi->root();
+        $this->master_account = $rootDetails->_links['account']->href;
+        $fundingSourcesRes = $this->fsApi->getAccountFundingSources($this->master_account);
+        $fundingSources = $fundingSourcesRes->_embedded->{'funding-sources'};
+        $balanceFundingSource = current(
+            array_filter($fundingSources, function ($e) {
+                return $e->type == 'balance' && $e->removed == false;
+            }),
+        );
+        if (!$balanceFundingSource) {
+            Logger::error('Error in finding master funding source!!');
+        }
+        $this->master_funding_source = $balanceFundingSource->_links->self->href;
+        $envData = [
+            'DWOLLA_MASTER_ACCOUNT' => $this->master_account,
+            'DWOLLA_MASTER_ACCOUNT_ID' => basename($this->master_account),
+            'DWOLLA_MASTER_FUNDING_SOURCE' => $this->master_funding_source,
+        ];
+        Helper::changeEnv($envData);
+    }
+
     public function setupAccessToken($url)
     {
+        $accessToken = config('services.dwolla.access_token');
+        if ($accessToken) {
+            Logger::info('Found accessToken from Config value:');
+            return $accessToken;
+        }
+        Logger::info('Requesting new accessToken from Dwolla:');
         $guzzleClient = new GuzzleHttp\Client(['base_uri' => $url]);
         $options = [
-            'auth' => [$this->access_token, $this->secret_key],
+            'auth' => [$this->access_key, $this->secret_key],
             'form_params' => [
                 'grant_type' => 'client_credentials',
             ],
         ];
         $res = $guzzleClient->request('POST', '/token', $options);
         $code = $res->getStatusCode();
+        $resBody = json_decode($res->getBody()->getContents(), true);
         if ($code >= 400) {
             Logger::error('Error in getting access token from Dwolla: ' . $resBody);
             return false;
         }
-        $resBody = json_decode($res->getBody()->getContents(), true);
         if ($resBody) {
             $accessToken = $resBody["access_token"];
             Logger::info('Fetched access token from Dwolla: ' . $accessToken);
             DwollaSwagger\Configuration::$access_token = $accessToken;
-            config(['services.dwolla.access_token' => $accessToken]);
+            $envData = [
+                'DWOLLA_ACCESS_TOKEN' => $accessToken,
+            ];
+            Helper::changeEnv($envData);
             Logger::info('After setting Config Value: ' . config('services.dwolla.access_token'));
             return $accessToken;
         }

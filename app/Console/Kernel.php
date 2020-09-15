@@ -22,9 +22,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call('\App\Http\Controllers\BaseController@generate_dwolla_token')->cron('*/50 * * * *');
         $schedule->command('reminder:verification')->dailyAt('10:00');
         $schedule->command('cron:log-check')->everyThirtyMinutes();
+        $schedule->command('dwolla:generate_access_token')->everyMinute();
+        $schedule->command('dwolla:refresh_access_token')->cron('*/50 * * * *');
         $schedule->command(\Jorijn\LaravelSecurityChecker\Console\SecurityMailCommand::class)->weekly();
     }
 

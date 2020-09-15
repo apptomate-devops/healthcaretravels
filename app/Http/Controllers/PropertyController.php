@@ -119,6 +119,7 @@ class PropertyController extends BaseController
             $property = DB::table('property_list')
                 ->leftjoin('users', 'users.id', '=', 'property_list.user_id')
                 ->where('property_list.id', '=', $property_id)
+                ->select('property_list.*', 'users.email', 'users.first_name', 'users.last_name', 'users.email')
                 ->first();
 
             $data = DB::table('property_booking')
@@ -134,10 +135,8 @@ class PropertyController extends BaseController
                 ->where('property_booking.client_id', CLIENT_ID)
                 ->where('property_booking.booking_id', $booking_id)
                 ->first();
-            $traveller = DB::select(
-                "SELECT concat(first_name,last_name) as name FROM users WHERE id = $data->owner_id",
-            );
-            $data->traveller_name = $traveller[0]->name;
+
+            // Owner Mail
             $bookingEmailType = $data->is_instant;
             if ($bookingEmailType != 0 || $bookingEmailType != 1) {
                 $bookingEmailType = 0;
@@ -145,6 +144,7 @@ class PropertyController extends BaseController
             $welcome = EmailConfig::where('type', 3)
                 ->where('role_id', $bookingEmailType)
                 ->first();
+
             $owner_name = $data->first_name . " " . $data->last_name;
             $mail_data = [
                 'name' => $owner_name,
@@ -156,6 +156,37 @@ class PropertyController extends BaseController
             $title = isset($welcome->title) ? $welcome->title : 'New booking from - ' . APP_BASE_NAME;
             $subject = isset($welcome->subject) ? $welcome->subject : "New booking from  - " . APP_BASE_NAME;
             $this->send_custom_email($property->email, $subject, 'mail.booking-mail', $mail_data, $title);
+            // Owner Mail
+            $traveller = DB::select(
+                "SELECT concat(first_name,last_name) as name, email FROM users WHERE id = $user_id",
+            );
+
+            $data->traveller_name = $traveller[0]->name;
+            $mail_traveler = EmailConfig::where('type', 4)
+                ->where('role_id', 0)
+                ->first();
+
+            $mail_data_traveler = [
+                'name' => $traveller[0]->name,
+                'text' => isset($mail_traveler->message) ? $mail_traveler->message : '',
+                'property' => $property,
+                'data' => $data,
+            ];
+
+            $title_traveler = isset($mail_traveler->title)
+                ? $mail_traveler->title
+                : 'New booking from - ' . APP_BASE_NAME;
+            $subject_traveler = isset($mail_traveler->subject)
+                ? $mail_traveler->subject
+                : "New booking from  - " . APP_BASE_NAME;
+            $this->send_custom_email(
+                $traveller[0]->email,
+                $subject_traveler,
+                'mail.booking-mail-traveler',
+                $mail_data_traveler,
+                $title_traveler,
+            );
+
             $text_message =
                 "Hi " .
                 $owner_name .
@@ -749,19 +780,19 @@ class PropertyController extends BaseController
             DB::table('property_booking')
                 ->where('booking_id', $request->booking_id)
                 ->update(['status' => $request->status]);
-            if ($request->status == 4) {
-                $user = DB::table('users')
-                    ->where('client_id', CLIENT_ID)
-                    ->where('id', $booking->owner_id)
-                    ->first();
+
+            if ($request->status == 2 || $request->status == 4) {
+                // SEND MAIL TO TRAVELLER FOR BOOKING ACCEPTED/CANCELLED
                 $mail_data = [
-                    'owner_name' => $user->first_name . " " . $user->last_name,
-                    'booking_id' => $booking->booking_id,
                     'property' => $booking->title,
+                    'booking_id' => $booking->booking_id,
+                    'start_date' => $booking->start_date,
+                    'end_date' => $booking->end_date,
                     'mail_to' => 'traveller',
                     'traveler' => $booking->first_name . " " . $booking->last_name,
                 ];
-                $this->send_email($booking->email, 'mail.cancel_booking', $mail_data);
+                $mail_copy = $request->status == 2 ? 'mail.accepted_booking' : 'mail.cancel_booking';
+                $this->send_email($booking->email, $mail_copy, $mail_data);
             }
             if ($request->link == 1) {
                 return $this->single_booking($request->booking_id, $request);

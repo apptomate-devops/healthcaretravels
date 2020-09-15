@@ -82,7 +82,7 @@
                                 @endif
                             </span>
                                 <button type="button" class="button" style="min-width: 170px;" onclick="document.location.href='{{BASE_URL}}owner/single-booking/{{$booking->booking_id}}';">
-                                    View Details
+                                    View Request
                                 </button><br><br><br>
                                 @if($booking->status == 5 || $booking->status == 6)
                                     <button class="button" onclick="document.location.href='{{BASE_URL}}property_ratings/{{$booking->booking_id}}';" style="min-width: 170px;">

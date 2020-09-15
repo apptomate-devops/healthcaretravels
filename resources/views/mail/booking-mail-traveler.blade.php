@@ -38,7 +38,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                    Days
+                                    Nights
                                     </td>
                                     <td>
                                     &nbsp;
@@ -56,8 +56,8 @@
                                     <td class="name pos-rel" >
                                         <span class="lang-chang-label">
                                         $
-                                        </span>{{$data->single_day_fare}} x {{$data->total_days}} day
-                                        <span class='tooltips'><i style="color:black"  class='fa fa-question-circle'></i><span style="color: white!important" class='tooltiptext'>Average Daily rate is Rounded</span></span>
+                                        </span>{{$data->single_day_fare}} x {{$data->total_days}} night
+                                        <span class='tooltips'><i style="color:black"  class='fa fa-question-circle'></i><span style="color: white!important" class='tooltiptext'>Average Nightly rate is Rounded</span></span>
                                     </td>
                                     <td class="val text-left">
                                         <span class="lang-chang-label">  $
@@ -68,7 +68,7 @@
                                     <tr style=" border-bottom: 1px solid lightgrey;">
                                     <td class="name">
                                         Extra Guest {{$data->extra_guest}} X {{$data->extra_guest_price/$data->extra_guest}}
-                                        <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Average Daily rate is Rounded</span></span>
+                                        <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Average Nightly rate is Rounded</span></span>
                                     </td>
                                     <td class="val text-left">
                                         <span class="lang-chang-label">
@@ -80,7 +80,7 @@
                                     <tr style=" border-bottom: 1px solid lightgrey;">
                                     <td class="name pos-rel">
                                         Service Tax
-                                        <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Average Daily rate is Rounded</span></span>
+                                        <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Average Nightly rate is Rounded</span></span>
                                     </td>
                                     <td class="val text-left">
                                         <span class="lang-chang-label">         $
@@ -91,7 +91,7 @@
                                     <tr style=" border-bottom: 1px solid lightgrey;">
                                     <td class="name">
                                         Cleaning fee
-                                        <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Average Daily rate is Rounded</span></span>
+                                        <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Average Nightly rate is Rounded</span></span>
                                     </td>
                                     <td class="val text-left">
                                         <span class="lang-chang-label">
@@ -134,22 +134,6 @@
                                     </td>
                                     </tr>
                                     @endif
-                                    <tr class="editable-fields" id="total_amount">
-                                    <td colspan="2" style="display: flex;">
-                                        <div style="display: flex;">
-                                            <div class="total_amount" style="flex: 1; display: inline-block; width: 100%; max-width: 400px; margin: 10px;color: white; background-color: #e78016; font-weight: bold; padding: 10px; text-align: center;">
-                                                <a href="{{BASE_URL}}owner-update-booking?booking_id={{$data->booking_id}}&status=2&link=1" style="color: white" target="_blank">
-                                                    Accept Request
-                                                </a>
-                                            </div>
-                                            <div class="total_amount" style="flex: 1; display: inline-block; width: 100%; max-width: 400px; margin: 10px;color: white; background-color: #808080; font-weight: bold; padding: 10px; text-align: center;">
-                                                <a href="{{BASE_URL}}owner-update-booking?booking_id={{$data->booking_id}}&status=4&link=1" style="color: white" target="_blank">
-                                                    Deny Request
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    </tr>
                                     <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
                                     @if($data->coupon_value!="")
                                     <tr>

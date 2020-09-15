@@ -193,12 +193,14 @@
                             <th>S.no</th>
                             <th>Name</th>
                             <th>Occupation</th>
+                            <th>Age</th>
                         </tr>
                         @foreach($guest_info as $key => $g)
                             <tr>
                                 <td>{{$key+1}}</td>
                                 <td>{{$g->name}}</td>
                                 <td>{{$g->occupation}}</td>
+                                <td>{{$g->age}}</td>
                             </tr>
                         @endforeach
                     </table>
@@ -231,7 +233,7 @@
                         @if($data->payment_done == 1)
                             <span class="txt-green">Payment Done</span><br>
                         @else
-                            <span class="txt-blue">Not Paid</span><br>
+                            <span class="txt-red">Not Paid</span><br>
                         @endif
                         {{-- TODO: need to add pay now button here --}}
                     </center>

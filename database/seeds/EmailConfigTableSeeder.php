@@ -50,6 +50,20 @@ class EmailConfigTableSeeder extends Seeder
         );
         \App\Models\EmailConfig::updateOrCreate(
             [
+                'type' => 4,
+                'role_id' => 0,
+            ],
+            [
+                'type' => 4,
+                'role_id' => 0,
+                'title' => 'Health Care Travels',
+                'subject' => 'Booking Request Submitted',
+                'message' => 'You have submitted a new booking request for the below property.',
+                'updated_at' => date("Y-m-d H:i:s"),
+            ],
+        );
+        \App\Models\EmailConfig::updateOrCreate(
+            [
                 'type' => 6,
             ],
             [

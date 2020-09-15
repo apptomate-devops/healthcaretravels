@@ -264,7 +264,6 @@ class PropertyController extends BaseController
             ->count();
 
         $weeks = $this->get_weekend_count($check_in, $check_out);
-        $weeks['total'] = $weeks['total'] - 1;
 
         if ($weeks['total'] < $property_details->min_days) {
             return response()->json([
@@ -276,7 +275,7 @@ class PropertyController extends BaseController
 
         if ($is_available[ZERO]->is_available == ZERO || $booking_count == ZERO) {
             try {
-                $booking_price = Helper::get_price_details($property_details, $weeks, $check_in, $check_out);
+                $booking_price = Helper::get_price_details($property_details, $check_in, $check_out);
                 return response()->json(['status' => 'SUCCESS', 'data' => $booking_price, 'status_code' => ONE]);
             } catch (\Exception $ex) {
                 return response()->json([

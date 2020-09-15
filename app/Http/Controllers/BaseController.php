@@ -28,6 +28,7 @@ use DB;
 use Log;
 use Mail;
 use finfo;
+use Carbon\Carbon;
 
 define('FB_URL', 'https://health-care-travels.firebaseio.com/');
 // define('CLIENT_MAIL', 'info@healthcaretravels.com');
@@ -605,32 +606,9 @@ class BaseController extends ConstantsController
 
     public function get_weekend_count($start, $end)
     {
-        $current = $start;
-        $end = date('Y-m-d', strtotime($end . ' +1 day'));
-        $friday_count = 0;
-        $saturday_count = 0;
-        $sunday_count = 0;
-        $total = 0;
-        while ($current != $end) {
-            if (date('l', strtotime($current)) == 'Friday') {
-                $friday_count++;
-            }
-            if (date('l', strtotime($current)) == 'Saturday') {
-                $saturday_count++;
-            }
-            if (date('l', strtotime($current)) == 'Sunday') {
-                $sunday_count++;
-            }
-            $total++;
-            $current = date('Y-m-d', strtotime($current . ' +1 day'));
-        }
-
-        $result = [];
-        $result['friday_count'] = $friday_count;
-        $result['saturday_count'] = $saturday_count;
-        $result['sunday_count'] = $sunday_count;
-        $result['total'] = $total;
-
+        $current = Carbon::parse($start);
+        $end = Carbon::parse($end);
+        $result = ['total' => $end->diffInDays($current)];
         return $result;
     }
 

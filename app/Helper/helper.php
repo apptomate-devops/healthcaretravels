@@ -10,10 +10,12 @@ class Helper
     {
         return $money ? number_format($money, 2) : 0;
     }
-    public static function get_price_details($property_details, $weeks, $check_in, $check_out)
+    public static function get_price_details($property_details, $check_in, $check_out)
     {
+        $current = Carbon::parse($check_in);
+        $end = Carbon::parse($check_out);
         $single_day_fare = Helper::get_daily_price($property_details->monthly_rate);
-        $total_days = $weeks['total'];
+        $total_days = $end->diffInDays($current);
         $normal_days = $total_days;
         $price = $total_days * $single_day_fare;
         $service_tax_row = DB::table('settings')

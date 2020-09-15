@@ -1731,7 +1731,7 @@
 
                     }
                     if (data.status == 'FAILED' && data.status_code == 1) {
-                        $(".alert").html("Please review the house rules for Minimum night stay.");
+                        $(".alert").html("Please review the house rules for Minimum days stay.");
                         $(".alert").show();
                         $("#table_body").html("");
                         $('.booking_button').attr('disabled',true);
@@ -1758,25 +1758,11 @@
                     if(data.data) {
                         var tr;
                         var tr_data="";
-                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'> $ "+data.data.single_day_fare+" X "+data.data.normal_days+" Night &nbsp;</td><td style='text-align: right;color:black;padding:5px'> $ "+data.data.single_day_fare*data.data.normal_days+".00</td></tr>";
-                        // if(data.data.extra_guest>0){
-                        //     //edited By Karthik for Extra Guest systems.
-                        //     tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Extra guest "+data.data.extra_guest+" X "+data.data.price_per_extra_guest+"  &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Average Nightly rate is Rounded</span></span></td><td style='text-align: right;color:black;padding:5px'> $ "+data.data.extra_guest_price+".00</td></tr>";
-                        //    }
-                        // if(data.data.week_end_days > 0){
-
-                        //  tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>"+data.data.price_per_weekend+" X "+data.data.week_end_days+"Night &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Weekend Price</span></span></td><td style='text-align: right;color:black;padding:5px'> $ "+data.data.weekend_total+".00</td></tr>";
-                        // }
+                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'> $ "+data.data.single_day_fare+" X "+data.data.normal_days+" Days &nbsp;</td><td style='text-align: right;color:black;padding:5px'> $ "+data.data.single_day_fare*data.data.normal_days+"</td></tr>";
                         tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Service Fee &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>This fee helps us run our platform and offer our services </span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.service_tax+".00</td></tr>";
-
                         tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Cleaning Fee&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'> fee charged by host to cover the cost of cleaning their space.</span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.cleaning_fee+"</td></tr>";
-                        // tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Tax&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Average Nightly rate is Rounded</span></span></td><td style='text-align: left;color:black;padding:5px'>$ "+data.data.tax_amount+".00</td></tr>";
-
                         tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Security Deposit &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Deposit collected by host in case of damages. Refundable based on Cancellation Policy</span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.security_deposit+"</td></tr>";
-
-
                         tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Total &nbsp;</td><td style='text-align: right;color:black;padding:5px'><b  id='total_booking_price'>$ "+data.data.total_amount+".00</b></td></tr>";
-
                         if(data.data.no_extra_guest==1){
                             if(totalguestcount < guest_count){
                                 $('.booking_button').attr('disabled',true);
@@ -1797,7 +1783,7 @@
                         // tr_data +="<tr></tr>"
                         // tr_data +="<tr></tr>"
 
-                        tr += "<tr><td style='text-align: center;' class='tooltips'>Price Per night<span class='tooltiptext'>Price for single night base fare</span></td><td style='text-align: center;'>$ "+data.data.single_day_fare+".00</td></tr>";
+                        tr += "<tr><td style='text-align: center;' class='tooltips'>Price Per day<span class='tooltiptext'>Price for single day base fare</span></td><td style='text-align: center;'>$ "+data.data.single_day_fare+".00</td></tr>";
                         tr += "<tr><td style='text-align: center;'>City Fee</td><td style='text-align: center;'>$ "+data.data.city_fare+".00</td></tr>";
                         tr += "<tr><td style='text-align: center;'>Cleaning Fee</td><td style='text-align: center;'>$ "+data.data.city_fee_amount+".00</td></tr>";
                         // tr += "<tr><td style='text-align: center;'>Tax Amount</td><td style='text-align: center;'>$ "+data.data.tax_amount+".00</td></tr>";

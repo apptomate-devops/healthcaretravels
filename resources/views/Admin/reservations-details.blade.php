@@ -186,7 +186,7 @@
                                     </tr>
 
                                     <tr>
-                                        <td>Total Nights:</td>
+                                        <td>Total Days:</td>
                                         <td class="col-det">{{$data->min_days}}</td>
                                     </tr>
 

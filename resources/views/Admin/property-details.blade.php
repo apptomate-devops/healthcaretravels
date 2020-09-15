@@ -109,7 +109,7 @@
 
                                     <tr>
                                         <td>Guests</td>
-                                        <td><b>{{$property[0]->total_guests}} /Night</b></td>
+                                        <td><b>{{$property[0]->total_guests}} /Day</b></td>
                                         <td>Property Length</td>
                                         <td><b>{{$property[0]->property_size}} ft</b></td>
                                     </tr>
@@ -140,7 +140,7 @@
                                     </tr>
                                     <tr>
                                         <td>Cleaning fee</td>
-                                        <td><b>{{CURRENCY}} {{$property[0]->cleaning_fee}} /Night</b></td>
+                                        <td><b>{{CURRENCY}} {{$property[0]->cleaning_fee}} /Day</b></td>
 
                                     </tr>
                                     <tr>

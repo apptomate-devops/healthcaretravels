@@ -94,7 +94,7 @@
                                     <th>S. No.</th>
                                     <th>Property Name</th>
                                     <th class="text-center">Number Of Days</th>
-                                    <th class="text-center">Rate Per Night</th>
+                                    <th class="text-center">Rate Per Day</th>
                                     <th class="text-center">Total</th>
                                 </tr>
                                 </tr>

@@ -58,7 +58,7 @@
                                 Traveler cancels a booking that coincides with an existing booking, Health Care Travels
                                 shall not refund the service fee.
                             </li>
-                            <li>The accommodation fees, which is the total nightly fees the Traveler paid to the host
+                            <li>The accommodation fees, which is the total daily fees the Traveler paid to the host
                                 can be refunded in specific situations including:
                             </li>
                             <li>If either party has a complaint, Health Care Travels must be notified within 24 hours of
@@ -128,7 +128,7 @@
                                 coincides with an existing booking, Health Care Travels shall not refund the service
                                 fee.
                             </li>
-                            <li>The accommodation fees, i.e., the total nightly fees the Traveler paid to the host can
+                            <li>The accommodation fees, i.e., the total daily fees the Traveler paid to the host can
                                 be refunded in specific situations including:
                             </li>
                             <li>If either party has a complaint, Health Care Travels must be notified within 24 hours of
@@ -153,11 +153,11 @@
                                 previous Sunday before the time of check-in.
                             </li>
                             <li>If the cancellation was made less than 5 days before check-in, we would not refund the
-                                first night, but we will refund 50 percent of the accommodation fees for the remaining
-                                nights.
+                                first day, but we will refund 50 percent of the accommodation fees for the remaining
+                                days.
                             </li>
                             <li>If the Traveler decides to leave before the end of their reservation, Health Care
-                                Travels will refund 50 percent of the accommodation fees for the unspent nights 24 hours
+                                Travels will refund 50 percent of the accommodation fees for the unspent days 24 hours
                                 after the Traveler canceled.
                             </li>
                         </ul>

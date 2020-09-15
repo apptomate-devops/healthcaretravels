@@ -56,7 +56,7 @@
                     <tr>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                                Price per night <br> ( {{$data->total_days}} x $ {{number_format($data->single_day_fare, 2)}} )
+                                Price per day <br> ( {{$data->total_days}} x $ {{number_format($data->single_day_fare, 2)}} )
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
@@ -66,7 +66,7 @@
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                                {{$data->min_days}} Nights
+                                {{$data->min_days}} Days
                             </p>
                         </th>
                     </tr>

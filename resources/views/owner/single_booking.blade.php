@@ -57,7 +57,7 @@
                     <tr>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
                             <p style="color: #000;">
-                                Price per night <br> $ {{Helper::get_daily_price($data->monthly_rate)}}
+                                Price per day <br> $ {{Helper::get_daily_price($data->monthly_rate)}}
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
@@ -67,7 +67,7 @@
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
                             <p style="color: #000;">
-                                {{$data->total_days}} Nights
+                                {{$data->total_days}} Days
                             </p>
                         </th>
                     </tr>

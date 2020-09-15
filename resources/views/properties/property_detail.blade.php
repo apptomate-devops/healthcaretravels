@@ -165,7 +165,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        Nights
+                                                        Days
                                                     </td>
                                                     <td>
                                                         &nbsp;
@@ -203,8 +203,8 @@
                                                         <td class="name pos-rel" >
                                           <span class="lang-chang-label">
                                           $
-                                          </span>{{$data->single_day_fare}} x {{$data->total_days}} night
-                                                            <span class='tooltips'><i style="color:black"  class='fa fa-question-circle'></i><span style="color: white!important" class='tooltiptext'>Price per night</span></span>
+                                          </span>{{$data->single_day_fare}} x {{$data->total_days}} days
+                                                            <span class='tooltips'><i style="color:black"  class='fa fa-question-circle'></i><span style="color: white!important" class='tooltiptext'>Price per day</span></span>
                                                         </td>
                                                         <td class="val text-right">
                                           <span class="lang-chang-label" >  $
@@ -249,7 +249,7 @@
 
                                                     <tr class="row_border">
                                                         <td class="name">
-                                                            Security Deposit <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Average Nightly rate is Rounded</span></span>
+                                                            Security Deposit <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Average Daily rate is Rounded</span></span>
                                                         </td>
                                                         <td class="val text-right" >
                                           <span class="lang-chang-label">
@@ -396,49 +396,111 @@
                                    <hr>
                                 @endif --}}
                                 <h2>Guest Details</h2>
-                                @for($i=0;$i< $data->guest_count;$i++)
-                                    <?php $guest_data = $guests[$i] ?? []; ?>
 
-                                    <h4>Enter Guest {{$i+1}} Details</h4>
-                                    <div class="row">
-                                        <input  name="guest_id[]" type="hidden" value="{{$guest_data->id ?? ''}}" required>
-                                        <div class="control-group cc-first-name col-md-6">
-                                            <label class="control-label" for="credit-card-first-name">
-                                                Guest Name
-                                            </label>
-                                            <input  name="guest_name[]" type="text" value="{{$guest_data->name ?? ''}}" required>
+                                {{-- <div class="wrapper center-block">
+                                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading active" role="tab" id="headingOne">
+                                            <h4 class="panel-title">
+                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                Collapsible Group Item #1
+                                                </a>
+                                            </h4>
+                                            </div>
+                                            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                            <div class="panel-body">
+                                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                            </div>
+                                            </div>
                                         </div>
-                                        <div class="control-group cc-last-name col-md-6">
-                                            <label class="control-label" for="credit-card-last-name">
-                                                Occupation
-                                            </label>
-                                            <input  name="guest_occupation[]" type="text" value="{{$guest_data->occupation ?? ''}}">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingTwo">
+                                            <h4 class="panel-title">
+                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                Collapsible Group Item #2
+                                                </a>
+                                            </h4>
+                                            </div>
+                                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                            <div class="panel-body">
+                                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                            </div>
+                                            </div>
                                         </div>
-                                        <div class="control-group cc-last-name col-md-6">
-                                            <label class="control-label" for="credit-card-last-name">
-                                                Phone number
-                                            </label>
-                                            <input  name="phone_number[]" type="text" value="{{$guest_data->phone_number?? ''}}">
-                                        </div>
-                                        <div class="control-group cc-last-name col-md-6">
-                                            <label class="control-label" for="credit-card-last-name">
-                                                Email
-                                            </label>
-                                            <input  name="email[]" type="email" value="{{$guest_data->email ?? ''}}">
-                                        </div>
-                                        <div class="control-group cc-last-name col-md-6">
-                                            <label class="control-label" for="credit-card-last-name">
-                                                Age
-                                            </label>
-                                            <select class="" name="age[]" data-placeholder="Select Age" required>
-                                                <option label="Select Age" value="" disabled selected>Select Age</option>
-                                                <option label="Adult" value="Adult" @if($guest_data && $guest_data->age == 'Adult') selected @endif></option>
-                                                <option label="Child (Ages 2-12)" value="Child" @if($guest_data && $guest_data->age == 'Child') selected @endif></option>
-                                                <option label="Infant (Under 2)" value="Infant" @if($guest_data && $guest_data->age == 'Infant') selected @endif></option>
-                                            </select>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingThree">
+                                            <h4 class="panel-title">
+                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                Collapsible Group Item #3
+                                                </a>
+                                            </h4>
+                                            </div>
+                                            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                                            <div class="panel-body">
+                                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                            </div>
+                                            </div>
                                         </div>
                                     </div>
-                                @endfor
+                                </div> --}}
+
+
+                                <div class="wrapper center-block">
+                                    <div class="panel-group" id="guest-accordian" role="tablist" aria-multiselectable="true">
+                                        @for($i=0;$i< $data->guest_count;$i++)
+                                            <?php $guest_data = $guests[$i] ?? []; ?>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab" id="guest-heading-{{$i+1}}">
+                                                    <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-parent="#guest-accordian" href="#guest-collapse{{$i+1}}" aria-expanded="true" aria-controls="guest-collapse{{$i+1}}">
+                                                            Enter Guest {{$i+1}} Details
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="guest-collapse{{$i+1}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="guest-heading-{{$i+1}}">
+                                                <div class="panel-body">
+                                                    <input  name="guest_id[]" type="hidden" value="{{$guest_data->id ?? ''}}" required>
+                                                        <div class="control-group cc-first-name col-md-6">
+                                                            <label class="control-label" for="credit-card-first-name">
+                                                                Guest Name
+                                                            </label>
+                                                            <input  name="guest_name[]" type="text" value="{{$guest_data->name ?? ''}}" required>
+                                                        </div>
+                                                        <div class="control-group cc-last-name col-md-6">
+                                                            <label class="control-label" for="credit-card-last-name">
+                                                                Occupation
+                                                            </label>
+                                                            <input  name="guest_occupation[]" type="text" value="{{$guest_data->occupation ?? ''}}">
+                                                        </div>
+                                                        <div class="control-group cc-last-name col-md-6">
+                                                            <label class="control-label" for="credit-card-last-name">
+                                                                Phone number
+                                                            </label>
+                                                            <input  name="phone_number[]" type="text" value="{{$guest_data->phone_number?? ''}}">
+                                                        </div>
+                                                        <div class="control-group cc-last-name col-md-6">
+                                                            <label class="control-label" for="credit-card-last-name">
+                                                                Email
+                                                            </label>
+                                                            <input  name="email[]" type="email" value="{{$guest_data->email ?? ''}}">
+                                                        </div>
+                                                        <div class="control-group cc-last-name col-md-6">
+                                                            <label class="control-label" for="credit-card-last-name">
+                                                                Age
+                                                            </label>
+                                                            <select class="" name="age[]" data-placeholder="Select Age" required>
+                                                                <option label="Select Age" value="" disabled selected>Select Age</option>
+                                                                <option label="Adult" value="Adult" @if($guest_data && $guest_data->age == 'Adult') selected @endif></option>
+                                                                <option label="Child (Ages 2-12)" value="Child" @if($guest_data && $guest_data->age == 'Child') selected @endif></option>
+                                                                <option label="Infant (Under 2)" value="Infant" @if($guest_data && $guest_data->age == 'Infant') selected @endif></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endfor
+                                    </div>
+                                </div>
 
                                 <div id="is_pet" class="checkboxes in-row" style="margin-bottom: 20px;">
                                     <h3>Do you travel with a pet?</h3>

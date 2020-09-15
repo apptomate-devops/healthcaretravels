@@ -99,7 +99,7 @@ class PropertyController extends BaseController
             //            $due_now = $this->get_percentage($pricing_config->first_payment_percentage, $total_price);
             $booking_price['service_tax'] = $service_tax->value;
             $booking_price['initial_pay'] = 0; // TODO: check with $due_now;
-            $booking_price['total_amount'] = $total_price;
+            $booking_price['total_amount'] = round($total_price, 2);
             $booking_price['temp_amount'] = 0; // TODO: $pricing_config->price_per_weekend;
             $booking_price['week_end_days'] = $week_end_days;
             $booking_price['security_deposit'] = $property_details->security_deposit;
@@ -248,7 +248,7 @@ class PropertyController extends BaseController
 
                 $booking_price = [];
                 $booking_price['client_id'] = CLIENT_ID;
-                $booking_price['single_day_fare'] = $single_day_fare;
+                $booking_price['single_day_fare'] = round($single_day_fare, 2);
                 $booking_price['total_days'] = $weeks['total'];
                 $normal_days = $weeks['total'];
                 $week_end_days = 0;

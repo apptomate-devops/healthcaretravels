@@ -52,7 +52,7 @@ class Dwolla
         $this->accountsApi = new DwollaSwagger\AccountsApi($this->client);
         $this->fsApi = new DwollaSwagger\FundingsourcesApi($this->client);
         $master_account = config('services.dwolla.master_account');
-        if (!$master_account) {
+        if (false && !$master_account) {
             Logger::info('Requesting master account details');
             $rootDetails = $this->rootApi->root();
             $this->master_account = $rootDetails->_links['account']->href;

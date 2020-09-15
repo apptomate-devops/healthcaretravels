@@ -94,8 +94,8 @@ li.sub-nav-title {
                         </div>
 
                         <div id="per_night" style="display: none;">
-                            <label>Price Per Night</label>
-                            <input value=""  type="text" name="per_night" name="per_night1" placeholder="Price Per Night" onchange="this.value=parseFloat(parseFloat(this.value)).toFixed(2);">
+                            <label>Price Per Day</label>
+                            <input value=""  type="text" name="per_night" name="per_night1" placeholder="Price Per Day" onchange="this.value=parseFloat(parseFloat(this.value)).toFixed(2);">
                         </div>
                         <div id="description" style="display: none;">
                             <label>Description</label>

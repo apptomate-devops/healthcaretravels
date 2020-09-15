@@ -38,7 +38,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                    Nights
+                                    Days
                                     </td>
                                     <td>
                                     &nbsp;
@@ -56,8 +56,8 @@
                                     <td class="name pos-rel" >
                                         <span class="lang-chang-label">
                                         $
-                                        </span>{{$data->single_day_fare}} x {{$data->total_days}} night
-                                        <span class='tooltips'><i style="color:black"  class='fa fa-question-circle'></i><span style="color: white!important" class='tooltiptext'>Average Nightly rate is Rounded</span></span>
+                                        </span>{{$data->single_day_fare}} x {{$data->total_days}} day
+                                        <span class='tooltips'><i style="color:black"  class='fa fa-question-circle'></i><span style="color: white!important" class='tooltiptext'>Average Daily rate is Rounded</span></span>
                                     </td>
                                     <td class="val text-left">
                                         <span class="lang-chang-label">  $
@@ -68,7 +68,7 @@
                                     <tr style=" border-bottom: 1px solid lightgrey;">
                                     <td class="name">
                                         Extra Guest {{$data->extra_guest}} X {{$data->extra_guest_price/$data->extra_guest}}
-                                        <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Average Nightly rate is Rounded</span></span>
+                                        <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Average Daily rate is Rounded</span></span>
                                     </td>
                                     <td class="val text-left">
                                         <span class="lang-chang-label">
@@ -80,7 +80,7 @@
                                     <tr style=" border-bottom: 1px solid lightgrey;">
                                     <td class="name pos-rel">
                                         Service Tax
-                                        <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Average Nightly rate is Rounded</span></span>
+                                        <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Average Daily rate is Rounded</span></span>
                                     </td>
                                     <td class="val text-left">
                                         <span class="lang-chang-label">         $
@@ -91,7 +91,7 @@
                                     <tr style=" border-bottom: 1px solid lightgrey;">
                                     <td class="name">
                                         Cleaning fee
-                                        <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Average Nightly rate is Rounded</span></span>
+                                        <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Average Daily rate is Rounded</span></span>
                                     </td>
                                     <td class="val text-left">
                                         <span class="lang-chang-label">

@@ -52,15 +52,18 @@ class Dwolla
         $this->accountsApi = new DwollaSwagger\AccountsApi($this->client);
         $this->fsApi = new DwollaSwagger\FundingsourcesApi($this->client);
         $master_account = config('services.dwolla.master_account');
+        // TODO: Enable when implemented as a provider
         if (false && !$master_account) {
             Logger::info('Requesting master account details');
             $rootDetails = $this->rootApi->root();
             $this->master_account = $rootDetails->_links['account']->href;
             $fundingSourcesRes = $this->fsApi->getAccountFundingSources($this->master_account);
             $fundingSources = $fundingSourcesRes->_embedded->{'funding-sources'};
-            $balanceFundingSource = current(array_filter($fundingSources, function($e) {
-                return $e->type == 'balance' && $e->removed == false;
-            }));
+            $balanceFundingSource = current(
+                array_filter($fundingSources, function ($e) {
+                    return $e->type == 'balance' && $e->removed == false;
+                }),
+            );
             if (!$balanceFundingSource) {
                 Logger::error('Error in finding master funding source!!');
             }

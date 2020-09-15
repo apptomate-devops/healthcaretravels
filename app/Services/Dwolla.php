@@ -45,7 +45,7 @@ class Dwolla
                 return false;
             }
         }
-        DwollaSwagger\Configuration::$access_token = $accessToken;
+        DwollaSwagger\Configuration::$access_token = $this->access_token;
         $this->client = new DwollaSwagger\ApiClient($url);
         $this->customersApi = new DwollaSwagger\CustomersApi($this->client);
         $this->rootApi = new DwollaSwagger\RootApi($this->client);

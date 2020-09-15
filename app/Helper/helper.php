@@ -68,8 +68,9 @@ class Helper
         if (count($data) > 0) {
             // Read .env-file
             $env = file_get_contents(base_path() . '/.env');
-            // Split string on every " " and write into array
-            $env = preg_split('/\s+/', $env);
+            // Split string on every new line and write into array
+            // $env = preg_split('/\s(?=[^"]*("[^"]*"[^"]*)*$)/', $env);
+            $env = preg_split('/\n/', $env);
             // Loop through given data
             foreach ((array) $data as $key => $value) {
                 $isWritten = false;

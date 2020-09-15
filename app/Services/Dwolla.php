@@ -56,7 +56,7 @@ class Dwolla
             try {
                 $this->getMasterAccountDetails();
             } catch (\Exception $ex) {
-                Logger::error('Error in getting master account details. EX: ' . $ex->getResponseBody());
+                Logger::error('Error in getting master account details. EX: ' . $ex->getMessage());
                 return $ex;
             }
         }

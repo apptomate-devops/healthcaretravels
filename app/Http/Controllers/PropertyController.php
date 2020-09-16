@@ -12,7 +12,7 @@ use App\Models\Propertyamenties;
 use App\Models\PropertyList;
 use App\Models\EmailConfig;
 use App\Models\GuestsInformation;
-use App\Models\Propertybooking;
+use App\Models\PropertyBooking;
 use Mail;
 use App\Helper\Helper;
 
@@ -2585,7 +2585,7 @@ class PropertyController extends BaseController
      */
     public function save_guest_information(Request $request)
     {
-        $booking = Propertybooking::where('booking_id', $request->booking_id)->first();
+        $booking = PropertyBooking::where('booking_id', $request->booking_id)->first();
         if ($request->recruiter_name) {
             $booking->recruiter_name = $request->recruiter_name;
         }

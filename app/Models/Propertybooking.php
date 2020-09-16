@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Propertybooking extends Model
+class PropertyBooking extends Model
 {
     protected $table = 'property_booking';
     protected $primaryKey = 'id';

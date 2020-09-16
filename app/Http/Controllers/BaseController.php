@@ -10,7 +10,7 @@ use App\Models\Users;
 use App\Models\PropertyList;
 use App\Models\Propertyamenties;
 use App\Models\Becomeowner;
-use App\Models\Propertybooking;
+use App\Models\PropertyBooking;
 use App\Models\Propertyimage;
 use App\Models\Paymentgateway;
 use App\Models\Couponecode;
@@ -50,7 +50,7 @@ class BaseController extends ConstantsController
         PropertyList $propertylist,
         Propertyimage $PropertyImage,
         Becomeowner $become_owner,
-        Propertybooking $property_booking,
+        PropertyBooking $property_booking,
         Paymentgateway $payment_gateway,
         Couponecode $coupone_code,
         PropertyRoom $propertyRoom,

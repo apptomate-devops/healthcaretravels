@@ -232,7 +232,7 @@
                                             <div class="caption-text" style="margin-bottom: 20px;">This information is required as one of your three verification items.</div>
 
                                             <h4 style="margin-bottom: 20px;">1. Co-Host Agreement Form<span class="required">*</span></h4>
-{{--                                            <label>Signed HCT Co-hosting Agreement<span class="required">*</span></label>--}}
+{{--                                            <label>Signed HCT Co-Hosting Agreement<span class="required">*</span></label>--}}
                                             <div class="caption-text">Only the HCT Standard Agreement will be accepted.</div>
                                             <input type="file" name="co-hosting_agreement_id" id="co-hosting_agreement_id" class="form-control" required accept="{{$filtypes}}" />
                                             @if(isset($COHOSTING_AGREEMENT_ID->document_type))

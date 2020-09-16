@@ -348,7 +348,7 @@
                             communications with Guests, and the provision of any Co-Host Services.</p>
                         <p>&nbsp;</p>
                         <p>Unless agreed otherwise by Host and Co-Host, Host and Co-Host may terminate the Co-Host
-                            agreement at any time. In addition, both Host and Co-Host acknowledge that their Co-hosting
+                            agreement at any time. In addition, both Host and Co-Host acknowledge that their Co-Hosting
                             relationship will terminate in the event that HCT (i) terminates the Co-Host service or (ii)
                             terminates either party’s participation in the Co-Host service. When the Co-Host agreement
                             is terminated, the Host will remain responsible for all of the Co-Host’s actions prior to

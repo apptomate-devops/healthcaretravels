@@ -91,7 +91,7 @@
                             or Host Services, (ii) reality or precision of any Listing portrayals, Ratings, Reviews, or
                             other User Content (as described below), or (iii) the execution or lead of any User or third
                             party. HCT does not support any User, Listing or Host Services. Any references to a
-                            Host/CoHost being “verified” (or similar reference) merely demonstrate that (1) the Host has
+                            Host/Co-Host being “verified” (or similar reference) merely demonstrate that (1) the Host has
                             finished a pertinent confirmation or distinguishing proof process; &nbsp;or (2) the Host has
                             been Scouted (as described below). Any such description isn’t a support, confirmation or
                             certification by HCT about any User, including of the User’s personality or foundation or

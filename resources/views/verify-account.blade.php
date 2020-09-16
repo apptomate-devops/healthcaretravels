@@ -150,7 +150,7 @@
 
                                 @elseif($user->role_id==4)
 
-                                    {{----- Cohost Verification ----- START ---------------}}
+                                    {{----- Co-Host Verification ----- START ---------------}}
 
                                     @if ($user->is_verified == -1)
                                         <div class="info-text text-error padding-top-10">
@@ -164,7 +164,7 @@
                                         {{--                                            <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>--}}
                                         {{--                                        @endif--}}
                                     </div>
-                                    {{------- Cohost Traveler Verification ----- END ---------------}}
+                                    {{------- Co-Host Traveler Verification ----- END ---------------}}
 
                                 @else
 
@@ -234,7 +234,7 @@
                                             <h4 style="margin-bottom: 20px;">1. Co-Host Agreement Form<span class="required">*</span></h4>
 {{--                                            <label>Signed HCT Co-hosting Agreement<span class="required">*</span></label>--}}
                                             <div class="caption-text">Only the HCT Standard Agreement will be accepted.</div>
-                                            <input type="file" name="cohosting_agreement_id" id="cohosting_agreement_id" class="form-control" required accept="{{$filtypes}}" />
+                                            <input type="file" name="co-hosting_agreement_id" id="co-hosting_agreement_id" class="form-control" required accept="{{$filtypes}}" />
                                             @if(isset($COHOSTING_AGREEMENT_ID->document_type))
                                                 <a href="{{$COHOSTING_AGREEMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                             @endif
@@ -465,7 +465,7 @@
 
                         var invalid = false;
 
-                        $('#government_id, #cohosting_agreement_id, #homeowner_first_name, #homeowner_last_name, #homeowner_email, #homeowner_phone_number').each(function () {
+                        $('#government_id, #co-hosting_agreement_id, #homeowner_first_name, #homeowner_last_name, #homeowner_email, #homeowner_phone_number').each(function () {
                             if(!$(this).val()) {
                                 $(this).css('border-color', '#ff0000');
                                 $(window).scrollTop($(this).offset().top-50);

@@ -536,7 +536,7 @@ class UserController extends BaseController
             $rules["password2"] = 'required|same:password1';
         }
         if ($request->user_type === "1" || $request->user_type === "4") {
-            // Owner or Cohost
+            // Owner or Co-Host
             $rules["email"] = 'required|email:rfc,dns|unique:users,email';
             $rules["address"] = 'required';
             //            $rules["listing_address"] = 'required';
@@ -904,7 +904,7 @@ class UserController extends BaseController
             "property_tax_document",
             "utility_bill",
             "traveler_contract_id",
-            "cohosting_agreement_id",
+            "co-hosting_agreement_id",
             "lease_agreement",
         ];
         $all_documents = [];
@@ -1087,7 +1087,7 @@ class UserController extends BaseController
             'languages_known' => 'required',
         ];
         if ($user->role_id == "1" || $user->role_id == "4") {
-            // Owner or Cohost
+            // Owner or Co-Host
             $rules["address"] = 'required';
         } elseif ($user->role_id == "2") {
             // Travel Agency

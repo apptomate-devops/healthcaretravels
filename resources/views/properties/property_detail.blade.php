@@ -176,7 +176,8 @@
                                                         {{$data->total_days}}
                                                     </td>
                                                 </tr>
-                                                @if($data->coupon_value=="")
+                                                {{-- Hiding coupon details as of now --}}
+                                                @if(false && $data->coupon_value=="")
                                                     <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
                                                     <tr class="" style="margin-top:5px">
                                                         <td class="name pos-rel">

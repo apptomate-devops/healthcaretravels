@@ -136,6 +136,20 @@ class Dwolla
         return $this->customersApi->create($user);
     }
 
+    public function updateCustomer($user, $id)
+    {
+        return $this->customersApi->updateCustomer($user, $id);
+    }
+
+    public function findCustomerByEmail($email)
+    {
+        $customer_result = $this->customersApi->_list(null, null, null, null, null, $email);
+        if (count($customer_result->_embedded->customers) > 0) {
+            return $customer_result->_embedded->customers[0];
+        }
+        return null;
+    }
+
     /**
      * Creates a Dwolla customer by user id
      */
@@ -181,9 +195,7 @@ class Dwolla
             Logger::info('Dwolla funding source created for user: ' . $id);
             return $fsToken;
         } catch (\Exception $ex) {
-            Logger::error(
-                'Error in creating funding source token for user: ' . $id . '. EX: ' . $ex->getResponseBody(),
-            );
+            Logger::error('Error in creating funding source token for user: ' . $id . '. EX: ' . $ex->getMessage());
             return $ex;
         }
     }

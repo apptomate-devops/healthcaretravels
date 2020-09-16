@@ -173,6 +173,10 @@ Route::post(
     '/dwolla/create_customer_and_funding_source_token',
     'PaymentController@create_customer_and_funding_source_token',
 );
+Route::post(
+    '/dwolla/create_customer_and_funding_source_token_with_validations',
+    'PaymentController@create_customer_and_funding_source_token_with_validations',
+);
 Route::get('/dwolla/create_funding_source/{id}', 'PaymentController@create_funding_source_token');
 Route::get('/dwolla/test_transfer', 'PaymentController@transfer');
 

@@ -123,6 +123,11 @@
             color: #adadad;
             font-weight: normal;
         }
+        #general_errors {
+            text-align: center;
+            color: red;
+            font-weight: 500;
+        }
     </style>
     <div id="" class="property-titlebar margin-bottom-0">
         <div class="property_details container">
@@ -330,6 +335,15 @@
                                         <p></p>
                                     </div>
                                 </div>
+
+                                <h2>Payment Details</h2>
+                                @if($traveller->default_funding_source)
+                                    <div>Default funding source: {{$traveller->default_funding_source}}</div>
+                                    @else
+                                    <div>You haven't added any account details yet.</div>
+                                @endif
+                                <div class="link" data-toggle="modal" data-target="#account_details_modal">Add Account Details</div>
+
                                 <h2>Guest Details</h2>
                                 <div class="wrapper center-block">
                                     <div class="panel-group" id="guest-accordian" role="tablist" aria-multiselectable="true">
@@ -435,35 +449,70 @@
 
 
                 </form>
+                <div id="account_details_modal" class="modal fade in" role="dialog">
+                    <div class="modal-dialog modal-lg">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Account Details</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <form id="create-funding-source">
+                                            <input type="hidden" id="travellerId" value="{{$traveller->id ?? ''}}">
+                                            <div class="col-md-6">
+                                                <label for="firstName">First Name</label>
+                                                <input type="text" id="firstName" placeholder="First Name" value="{{$traveller->first_name ?? ''}}" required autocomplete="off" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="lastName">Last Name</label>
+                                                <input type="text" id="lastName" placeholder="Last Name" value="{{$traveller->last_name ?? ''}}" required autocomplete="off"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="email">Email</label>
+                                                <input type="email" id="email" placeholder="email@example.com" value="{{$traveller->email ?? ''}}" required autocomplete="off"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label>Bank Account name</label>
+                                                <input type="text" id="name" placeholder="Name" value="my funding 1" required autocomplete="off"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label>Account number</label>
+                                                <input type="text" id="accountNumber" placeholder="Account number" value="3456" required autocomplete="off"/>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="password">Routing number</label>
+                                                <input type="text" id="routingNumber" placeholder="273222226" value="021001208" required autocomplete="off"/>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="password">Account Type</label>
+                                                <select name="type" id="type">
+                                                    <option value="checking">Checking</option>
+                                                    <option value="savings">Savings</option>
+                                                </select>
+                                            </div>
+                                            <div class="w-100 text-center">
+                                                <input type="submit" value="Add Details" class="btn btn-default bg-orange margin-top-15 margin-bottom-15" />
+                                            </div>
+                                        </form>
+                                        <div id="general_errors"></div>
+                                        <div id="logs"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         $(document).ready(function(){
-            //    $('.age-select').chosen();
-            date=new Date();
-            $("#property_from_date").datepicker({
-
-                autoclose: true
-            });
-
-
-            $("#property_from_date").change(function(){
-
-                var fDate = $("#property_from_date").val();
-                // alert(fDate);
-
-
-                // $("#property_to_date").foucs();
-                $("#property_to_date").datepicker('remove');
-                $("#property_to_date").datepicker({
-                    startDate: fDate,
-                    autoclose: true
-                });
-
-            });
-
             var $pet_details = "{{isset($pet_details)}}" ? 1 : 0;
             change_pet_travelling($pet_details);
 
@@ -515,7 +564,6 @@
                         $('#message').css('font-size',17);
                         $('#message').html('* '+ data.message);
                         $('#message').css('display','block');
-                        // alert(data.message);
                         window.location.reload();
                     }else{
                         $('#message').css('color','red');
@@ -528,5 +576,108 @@
 
             });
         }
+    </script>
+    <script src="https://cdn.dwolla.com/1/dwolla.js"></script>
+    <script>
+        // Dwolla: Account details
+        dwolla.configure('{{DWOLLA_ENV}}');
+        function fundingSourcecallback(err, res) {
+            var $div = $("<div />");
+            var logValue = {
+                error: err,
+                response: res,
+            };
+            if (err && err._embedded) {
+                var errors = err._embedded.errors;
+                errors.forEach(function (errDetail) {
+                    var errorField = errDetail.path.substring(1);
+                    var fieldNode = $('#' + errorField);
+                    fieldNode.addClass('form-error');
+                    $('<p class="txt-red mb-5 form-error-message">' + errDetail.message + '</p>').insertAfter(fieldNode);
+                });
+                return false;
+            } else if(err) {
+                $('#general_errors').text(err.message);
+                // TODO: err.code = "DuplicateResource", save fundingSource from err_links.about.href
+                return false;
+            }
+            // TODO: send me to server to update me for user
+            var fundingSource = res._links['funding-source'].href;
+            addFundingSourceToUser(fundingSource);
+            $div.text(JSON.stringify(logValue));
+            console.log(logValue);
+            $('#logs').append($div);
+        }
+        function addFundingSourceToUser(fundingSource) {
+            var formData = {
+                // id: getLastSagmentOfURL(window.location.pathname),
+                id: $('#travellerId').val(),
+                fundingSource: fundingSource,
+                _token: '{{ csrf_token() }}'
+            };
+            $.ajax({
+                url: "/dwolla/add_funding_source",
+                type: "POST",
+                data: formData,
+                json: true,
+                success: function(data, textStatus, jqXHR) {
+                    if (data.success) {
+                        alert('User detail have been update successfully');
+                    } else {
+                        $('#general_errors').text(data.error);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    $('#general_errors').text('Error occurred');
+                }
+            });
+        }
+        function createCustomerForUserAndGetToken(userInfo, cb) {
+            var formData = userInfo;
+            // formData.id = getLastSagmentOfURL(window.location.pathname); // added id for traveller instead
+
+            formData._token = '{{ csrf_token() }}';
+            $.ajax({
+                url: "/dwolla/create_customer_and_funding_source_token_with_validations",
+                type: "POST",
+                data: formData,
+                json: true,
+                success: function(data, textStatus, jqXHR) {
+                    cb(null, data);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    cb(errorThrown);
+                }
+            });
+        }
+        $('#create-funding-source').on('submit', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(".form-error").removeClass('form-error');
+            $(".form-error-message").hide();
+            var token = '{{$token ?? ''}}';
+            var bankInfo = {
+                routingNumber: $('#routingNumber').val(),
+                accountNumber: $('#accountNumber').val(),
+                type: $('#type').val(),
+                name: $('#name').val(),
+            };
+            var userInfo = {
+                id: $('#travellerId').val(),
+                dwolla_first_name: $('#firstName').val(),
+                dwolla_last_name: $('#lastName').val(),
+                dwolla_email: $('#email').val(),
+            }
+
+            createCustomerForUserAndGetToken(userInfo, function(error, data) {
+                if (data && data.success) {
+                    console.log('creating funding source with info', data.token, '----', bankInfo);
+                    dwolla.fundingSources.create(data.token, bankInfo, fundingSourcecallback);
+                } else {
+                    $('#general_errors').text(error || data.error);
+                }
+            });
+            return false;
+        });
     </script>
 @endsection

@@ -159,9 +159,14 @@ span.required {
     color: #e78016;
 }
 
-a:focus, a:hover {
+.link {
+    color: #e78016;
+}
+
+.link:focus, .link:hover, a:focus, a:hover {
     color: #e78016;
     text-decoration: underline;
+    cursor: pointer;
 }
 
 .alert-success {

@@ -60,7 +60,7 @@
                                         <thead>
                                         <tr>
                                             <th>Id</th>
-                                            <th>Registered At</th>
+                                            <th>Registered On</th>
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Phone</th>
@@ -90,32 +90,31 @@
                                                         <center>-</center>@endif
                                                 </td>
                                                 <td>
-                                                    @if($traveller->phone!='0'){{$traveller->phone}}@else
-                                                        <center>-</center>@endif
+                                                    @if($traveller->phone!='0')
+                                                        <span class="masked_phone_us_text">{{$traveller->phone}}</span>
+                                                    @else
+                                                    <center>-</center>
+                                                    @endif
                                                 </td>
                                                 <td>
-                                                    <center>
-                                                        @if($traveller->gender =! '0')
-                                                            @if ($traveller->gender == '1')
-                                                                Male
-                                                            @elseif($traveller->gender == '2')
-                                                                Female
-                                                            @else
-                                                                {{$traveller->gender}}
-                                                            @endif
+                                                    @if($traveller->gender =! '0')
+                                                        @if ($traveller->gender == '1')
+                                                            Male
+                                                        @elseif($traveller->gender == '2')
+                                                            Female
                                                         @else
-                                                            -
+                                                            {{$traveller->gender}}
                                                         @endif
-                                                    </center>
+                                                    @else
+                                                    <center>-</center>
+                                                    @endif
                                                 </td>
                                                 <td>
-                                                    <center>
-                                                        @if($traveller->date_of_birth!='0')
-                                                            {{date('m-d-Y',strtotime($traveller->date_of_birth))}}
-                                                        @else
-                                                            -
-                                                        @endif
-                                                    </center>
+                                                    @if($traveller->date_of_birth!='0')
+                                                        {{date('m-d-Y',strtotime($traveller->date_of_birth))}}
+                                                    @else
+                                                    <center>-</center>
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     @if($traveller->status == 0)
@@ -291,6 +290,5 @@
                 $("#btnMap").html("Show on map");
             }
         });
-    </script>
-
+    </script>  
 @endsection

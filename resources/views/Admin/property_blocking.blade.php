@@ -159,7 +159,7 @@
                                                 <td>{{$key+1}}</td>
                                                 <td>{{$d->title}}</td>
                                                 <td>{{$d->first_name}}&nbsp;{{$d->last_name}}</td>
-                                                <td>{{$d->start_date}}</td>
+                                                <td>{{date('m-d-Y',strtotime($d->start_date))}}</td>
                                                 <td>
                                                     <a class="btn btn-default btn-danger "
                                                        href="delete-blocked-date/{{$d->id}}" style="color:white"><i

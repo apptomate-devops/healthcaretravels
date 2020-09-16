@@ -60,7 +60,7 @@
                                         <thead>
                                         <tr>
                                             <th>Id</th>
-                                            <th>Registered At</th>
+                                            <th>Registered On</th>
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Phone</th>
@@ -90,7 +90,7 @@
                                                         <center>-</center>@endif
                                                 </td>
                                                 <td>
-                                                    @if($traveller->phone!='0'){{$traveller->phone}}@else
+                                                    @if($traveller->phone!='0')<span class="masked_phone_us_text">{{$traveller->phone}}</span>@else
                                                         <center>-</center>@endif
                                                 </td>
                                                 <td>

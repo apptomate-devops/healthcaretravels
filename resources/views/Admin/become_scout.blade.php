@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 @extends('Admin.Layout.master')
 
 @section('title')  Rentals Slew Admin @endsection
@@ -87,7 +86,7 @@
                                                     {{$scout->email}}
                                                 </td>
                                                 <td>
-                                                    {{$scout->phone}}
+                                                    <span class="masked_phone_us_text">{{$scout->phone}}</span>
                                                 </td>
                                                 <td>
                                                     {{$scout->days}}
@@ -239,7 +238,6 @@
         });
     </script>
 
-    =======
     @extends('Admin.Layout.master')
 
 @section('title')  Rentals Slew Admin @endsection
@@ -479,6 +477,4 @@
             }
         });
     </script>
-
-    >>>>>>> 9780f4d597805bbd719091658f0c562aa3f6ec95
 @endsection

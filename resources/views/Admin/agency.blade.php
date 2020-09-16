@@ -49,7 +49,7 @@
                                         <thead>
                                         <tr>
                                             <th>Id</th>
-                                            <th>Registered At</th>
+                                            <th>Registered On</th>
                                             <th>Agency Name</th>
                                             <th>Email</th>
                                             <th>Phone</th>
@@ -77,7 +77,7 @@
                                                         <center>-</center>@endif
                                                 </td>
                                                 <td>
-                                                    @if($agency->phone!='0'){{$agency->phone}}@else
+                                                    @if($agency->phone!='0')<span class="masked_phone_us_text">{{$agency->phone}}</span>@else
                                                         <center>-</center>@endif
                                                 </td>
 

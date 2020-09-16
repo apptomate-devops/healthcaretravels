@@ -152,11 +152,12 @@
                     <!-- <a href="listings-list-with-sidebar.html" class="back-to-listings"></a> -->
                     <div class="col-md-3 col-sm-12 col-xs-6 property-image show-990">
                         <p>
-                            <img style="max-height: 85px;max-width: 85px;" src="{{$data->profile_image}}" alt="">
+                            <img style="max-height: 85px;max-width: 85px;"
+                                 src="{{isset($data->profile_image) ? $data->profile_image : '/user_profile_default.png'}}"
+                                 alt="">
                         </p>
                         <div class="sub-price">
                             <a href="{{BASE_URL}}owner-profile/{{$data->user_id}}">{{$data->first_name}} {{$data->last_name}}</a><br>
-
                         </div>
 
                     </div>
@@ -201,7 +202,9 @@
                     <center>
                         <div style="margin-left: 18%;" class="col-md-3 col-sm-6 col-xs-6 property-image hide-990">
                             <p>
-                                <img style="max-height: 85px;max-width: 85px;" src="{{($data->profile_image != " " && $data->profile_image != 0) ? $data->profile_image : '/user_profile_default.png'}}" alt="">
+                                <img style="max-height: 85px;max-width: 85px;"
+                                     src="{{isset($data->profile_image) ? $data->profile_image : '/user_profile_default.png'}}"
+                                     alt="">
                             </p>
                             <div class="sub-price">
                                 <a href="{{BASE_URL}}owner-profile/{{$data->user_id}}">{{ucfirst($data->first_name)}} {{ucfirst($data->last_name)}}</a>

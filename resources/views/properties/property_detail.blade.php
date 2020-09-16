@@ -3,6 +3,10 @@
 ?>
 @extends('layout.master') @section('title',$data->title) @section('main_content')
     <style type="text/css">
+        .property_details.container {
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
         div::-webkit-scrollbar {
             width: 12px;
         }
@@ -121,12 +125,7 @@
         }
     </style>
     <div id="" class="property-titlebar margin-bottom-0">
-
-        <div class="container">
-            <div class="row margin-bottom-50">
-            </div>
-        </div>
-        <div class="container">
+        <div class="property_details container">
             <div class="row">
                 <form name="payment" action="{{URL('/')}}/save-guest-information" method="post" enctype="multipart/form-data" >
                     <div class="row">
@@ -212,7 +211,7 @@
                                                         </td>
                                                         <td class="val text-right">
                                           <span class="lang-chang-label" >  $
-                                          </span><span >{{$data->single_day_fare*$data->total_days}}.00</span>
+                                          </span><span >{{$data->single_day_fare*$data->total_days}}</span>
                                                         </td>
                                                     </tr>
                                                     @if($data->extra_guest!=0)
@@ -224,7 +223,7 @@
                                                             <td class="val text-right" >
                                           <span class="lang-chang-label">
                                           $
-                                          </span><span>{{$data->extra_guest_price}}.00</span>
+                                          </span><span>{{$data->extra_guest_price}}</span>
                                                             </td>
                                                         </tr>
                                                     @endif
@@ -235,7 +234,7 @@
                                                         </td>
                                                         <td class="val text-right" >
                                           <span class="lang-chang-label">         $
-                                          </span><span>{{$data->service_tax}}.00</span>
+                                          </span><span>{{$data->service_tax}}</span>
                                                         </td>
                                                     </tr>
 
@@ -258,7 +257,7 @@
                                                         <td class="val text-right" >
                                           <span class="lang-chang-label">
                                           $
-                                          </span><span>{{$data->security_deposit}}.00</span>
+                                          </span><span>{{$data->security_deposit}}</span>
                                                         </td>
                                                     </tr>
 
@@ -270,7 +269,7 @@
                                                         <td class="val text-right" >
                                           <span class="lang-chang-label">
                                           $
-                                          </span><span><b>{{$data->total_amount+$data->coupon_value}}.00</b></span>
+                                          </span><span><b>{{$data->total_amount+$data->coupon_value}}</b></span>
                                                         </td>
                                                     </tr>
                                                     @if($data->coupon_value!="")
@@ -288,7 +287,7 @@
                                                     {{-- TODO: add more details of how the payment will be deductued once request is accepted by owner --}}
                                                     <tr class="editable-fields" id="total_amount">
                                                         <td colspan="2">
-                                                            <div class="total_amount">Payable Amount ${{$data->total_amount}}.00</div>
+                                                            <div class="total_amount">Payable Amount ${{$data->total_amount}}</div>
                                                         </td>
                                                     </tr>
                                                     <tr class="editable-fields">
@@ -306,34 +305,6 @@
                                                             <td colspan="2"style="color:green;font-weight: bold"><center> Coupon Code is Applied<b>({{$data->coupon_code}})</b></center></td>
                                                         </tr>
                                                     @endif
-                                                    <!--  <tr class="coupon">
-                                       <td class="name">
-                                          <span class="without-applied-coupon">
-                                          <span class="coupon-section-link" id="after_apply_coupon" style="display:none;">
-                                          Coupon
-                                          </span>
-                                          </span>
-                                          <span class="without-applied-coupon" id="restric_apply">
-                                          <a href="javascript:;" class="open-coupon-section-link" style="display:Block;">Coupon Code</a>
-                                          </span>
-                                       </td>
-                                       <td class="val text-left">
-                                          <div class="without-applied-coupon label label-success" id="after_apply_amount" style="display:none;">
-                                             -$<span id="applied_coupen_amount">0</span>
-                                          </div>
-                                       </td>
-                                    </tr> -->
-                                                    <!--  <tr id="after_apply_remove" style="display:none;">
-                                                        <td>
-                                                           <a data-prevent-default="true" href="javascript:void(0);" id="remove_coupon">
-                                                           <span>
-                                                           Remove coupon
-                                                           </span>
-                                                           </a>
-                                                        </td>
-                                                        <td>
-                                                        </td>
-                                                     </tr> -->
                                                     </tbody>
                                                 </table>
                                             </section>
@@ -359,93 +330,7 @@
                                         <p></p>
                                     </div>
                                 </div>
-                                {{-- NOTE: Commented the recruiter details as noboday understands what it is! 🤷🏻‍♂️ 😀 --}}
-                                {{-- @if(Session::get('role_id') == 2)
-                                   <h2>Basic Details</h2>
-                                   <div class="row">
-                                      <div class="control-group cc-first-name col-md-6">
-                                         <label class="control-label" for="credit-card-first-name">
-                                         Recruiter Name
-                                         </label>
-                                         <input  name="recruiter_name" type="text" value="" required="required">
-                                      </div>
-                                      <div class="control-group cc-last-name col-md-6">
-                                         <label class="control-label" for="credit-card-last-name">
-                                         Recruiter Phone Number
-                                         </label>
-                                         <input  name="recruiter_phone_number" type="number" value="">
-                                      </div>
-                                      <div class="control-group cc-last-name col-md-6">
-                                         <label class="control-label" for="credit-card-last-name">
-                                         Recruiter Email
-                                         </label>
-                                         <input  name="recruiter_email" type="email" value="">
-                                      </div>
-                                      <div class="control-group cc-last-name col-md-6">
-                                         <label class="control-label" for="credit-card-last-name" >
-                                         Contract Start Date
-                                            </label>
-                                         <input  name="contract_start_date" type="text" value="" id="property_from_date" >
-                                      </div>
-                                      <div class="control-group cc-last-name col-md-6">
-                                         <label class="control-label" for="credit-card-last-name">
-                                         Contract End Date
-                                            </label>
-                                         <input  name="contract_end_date" type="text" value="" id="property_to_date">
-                                      </div>
-                                   </div>
-                                   <hr>
-                                @endif --}}
                                 <h2>Guest Details</h2>
-
-                                {{-- <div class="wrapper center-block">
-                                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading active" role="tab" id="headingOne">
-                                            <h4 class="panel-title">
-                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                Collapsible Group Item #1
-                                                </a>
-                                            </h4>
-                                            </div>
-                                            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                                            <div class="panel-body">
-                                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                            </div>
-                                            </div>
-                                        </div>
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading" role="tab" id="headingTwo">
-                                            <h4 class="panel-title">
-                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                Collapsible Group Item #2
-                                                </a>
-                                            </h4>
-                                            </div>
-                                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                                            <div class="panel-body">
-                                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                            </div>
-                                            </div>
-                                        </div>
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading" role="tab" id="headingThree">
-                                            <h4 class="panel-title">
-                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                                Collapsible Group Item #3
-                                                </a>
-                                            </h4>
-                                            </div>
-                                            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                                            <div class="panel-body">
-                                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                            </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> --}}
-
-
                                 <div class="wrapper center-block">
                                     <div class="panel-group" id="guest-accordian" role="tablist" aria-multiselectable="true">
                                         @for($i=0;$i< $data->guest_count;$i++)
@@ -453,14 +338,14 @@
                                             <div class="panel panel-default">
                                                 <div class="panel-heading" role="tab" id="guest-heading-{{$i+1}}">
                                                     <h4 class="panel-title">
-                                                    <a role="button" data-toggle="collapse" data-parent="#guest-accordian" href="#guest-collapse{{$i+1}}" aria-expanded="true" aria-controls="guest-collapse{{$i+1}}">
+                                                        <a role="button" data-toggle="collapse" data-parent="#guest-accordian" href="#guest-collapse{{$i+1}}" aria-expanded="true" aria-controls="guest-collapse{{$i+1}}">
                                                             Enter Guest {{$i+1}} Details
                                                         </a>
                                                     </h4>
                                                 </div>
                                                 <div id="guest-collapse{{$i+1}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="guest-heading-{{$i+1}}">
-                                                <div class="panel-body">
-                                                    <input  name="guest_id[]" type="hidden" value="{{$guest_data->id ?? ''}}" required>
+                                                    <div class="panel-body">
+                                                        <input  name="guest_id[]" type="hidden" value="{{$guest_data->id ?? ''}}" required>
                                                         <div class="control-group cc-first-name col-md-6">
                                                             <label class="control-label" for="credit-card-first-name">
                                                                 Guest Name
@@ -542,53 +427,16 @@
                                     </div>
                                 </div>
                                 <hr>
+                            </section>
                         </div>
                     </div>
 
+                    <div style="height:200px"></div>
 
+
+                </form>
             </div>
-
-
         </div>
-
-    </div>
-    </div>
-    <hr>
-    </section>
-    <div style="height:200px"></div>
-    <p>
-    </p>
-    </p>
-    </div>
-    </div>
-    </form>
-    <!-- Property Description -->
-    <!-- Property Description / End -->
-    <!-- Sidebar -->
-    <!-- Widget / End -->
-    <!-- Widget -->
-
-    <!-- Widget / End -->
-    <!-- Widget -->
-
-    <!-- Widget / End -->
-    </div>
-    </div>
-    <!-- Sidebar / End -->
-    </div>
-    {{--
-    <div class="row" style="background-color:#75a627;color:white;">
-       <div class="col-md-1">
-       </div>
-       <div class="col-md-11">
-          <h2>{{$data->first_name}} {{$data->last_name}}</h2>
-          <p>A Family Man. Father of a cute little angel. a host that always longs to say, “Be my guest”. An IT professional by career, a vacation host by choice! I live in New Jersey, have rental interests in a few places in East Cost of US.</p>
-          <a href="#" style="color:white" class="button">See Owner Profile</a><br>
-          <a href="{{url('/')}}/owner/chat" style="color:white" class="button">Contact Owner</a>
-          <br><br>
-       </div>
-    </div>
-    --}}
     </div>
 
     <script>

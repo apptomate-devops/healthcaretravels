@@ -29,7 +29,7 @@ class Helper
             'client_id' => CLIENT_ID,
             'single_day_fare' => $single_day_fare,
             'total_days' => $total_days,
-            'service_tax' => $service_tax,
+            'service_tax' => Helper::format_money($service_tax),
             'initial_pay' => 0, // TODO: check this later $due_now
             'total_amount' => Helper::format_money($total_price),
             'check_in' => $check_in,

@@ -317,6 +317,8 @@ class PropertyController extends BaseController
             ->first();
         $traveller = DB::select("SELECT concat(first_name,last_name) as name FROM users WHERE id = $data->owner_id");
         $data->traveller_name = $traveller[0]->name;
+        $booking_price = Helper::get_price_details($data, $data->start_date, $data->end_date);
+        $data = (object) array_merge((array) $data, (array) $booking_price);
         return view('properties.property_detail', [
             'data' => $data,
             'guests' => $guests,

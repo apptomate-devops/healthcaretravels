@@ -1017,7 +1017,7 @@
 
                                 <div id="pricing_details" style="margin-bottom: 10px;">
 
-                                    <table cellpadding="1" cellspacing="1" border="1" style="width: 100%;margin-top: 10px; border-top: 1px solid lightgrey; border-bottom:  1px solid lightgrey;
+                                    <table cellpadding="1" cellspacing="1" border="1" style="width: 100%; border-top: 1px solid lightgrey; border-bottom:  1px solid lightgrey;
                                  border-left: 1px solid white;
                                  border-right: 1px solid white" id="pricing">
                                         <thead>
@@ -1052,7 +1052,7 @@
                                             Login to Book
                                         </button>
                                     @else
-                                        <button disabled id="btn_book_now" class="button fullwidth margin-top-5 booking_button">
+                                        <button disabled id="btn_book_now" class="button fullwidth mt-10 booking_button">
                                             Book Now
                                         </button>
                                     @endif
@@ -1756,7 +1756,6 @@
                     //               </div>
 
                     if(data.data) {
-                        var tr;
                         var tr_data="";
                         tr_data +="<tr><td style='text-align: left;color:black;padding:5px'> $ "+data.data.single_day_fare+" X "+data.data.total_days+" Days &nbsp;</td><td style='text-align: right;color:black;padding:5px'> $ "+data.data.price+"</td></tr>";
                         tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Service Fee &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>This fee helps us run our platform and offer our services </span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.service_tax+".00</td></tr>";
@@ -1779,17 +1778,6 @@
                             $("#guest_alert").hide();
                             $('#guest').val(guest_count);
                         }
-
-                        // tr_data +="<tr></tr>"
-                        // tr_data +="<tr></tr>"
-
-                        tr += "<tr><td style='text-align: center;' class='tooltips'>Price Per day<span class='tooltiptext'>Price for single day base fare</span></td><td style='text-align: center;'>$ "+data.data.single_day_fare+".00</td></tr>";
-                        tr += "<tr><td style='text-align: center;'>City Fee</td><td style='text-align: center;'>$ "+data.data.city_fare+".00</td></tr>";
-                        tr += "<tr><td style='text-align: center;'>Cleaning Fee</td><td style='text-align: center;'>$ "+data.data.city_fee_amount+".00</td></tr>";
-                        // tr += "<tr><td style='text-align: center;'>Tax Amount</td><td style='text-align: center;'>$ "+data.data.tax_amount+".00</td></tr>";
-                        tr += "<tr><td style='text-align: center;'>Initial Pay</td><td style='text-align: center;'>$ "+data.data.initial_pay+".00</td></tr>";
-                        tr += "<tr><td style='text-align: center;' >Total Amount</td><td style='text-align: center;' >$ "+data.data.total_amount+".00</td></tr>";
-
                         $("#table_body").html(tr_data);
 
                     }

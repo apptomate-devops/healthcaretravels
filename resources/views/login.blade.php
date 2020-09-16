@@ -784,7 +784,7 @@
         }
     });
 
-    $('#phone, #work_number_field').on('keypress', function(event) {
+    $('#phone, #work_number_field').keypress(function(event) {
         var regex = new RegExp("^[0-9+]$");
         var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
         if (!regex.test(key)) {

@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Services;
+use App\Services\Logger;
 use Carbon\Carbon;
 use Request;
 use GuzzleHttp;
 use DwollaSwagger;
-use App\Services\Logger;
 use App\Models\Users;
 use Helper;
 
@@ -136,6 +136,20 @@ class Dwolla
         return $this->customersApi->create($user);
     }
 
+    /**
+     * @param $id
+     * Check if customer is verified and if not updates the customer to verified
+     * @return customer id
+     */
+    public function verifyCustomer($id, $userPayload)
+    {
+        $customer_details = $this->customersApi->getCustomer($id);
+        if ($customer_details->status == 'unverified') {
+            $this->updateCustomer($userPayload, $id);
+        }
+        return $id;
+    }
+
     public function updateCustomer($user, $id)
     {
         return $this->customersApi->updateCustomer($user, $id);
@@ -163,13 +177,7 @@ class Dwolla
             }
         }
         try {
-            $userPayload = [
-                'firstName' => $user->dwolla_first_name ?? $user->first_name,
-                'lastName' => $user->dwolla_last_name ?? $user->last_name,
-                'email' => $user->dwolla_email ?? $user->email,
-                'ipAddress' => Request::ip(),
-                'correlationId' => $user->id,
-            ];
+            $userPayload = $this->getCustomerPayload($user);
             Logger::info('Creating Dwolla customer for user: ' . $id);
             $res = $this->createNewCustomer($userPayload);
             $user->dwolla_customer = $res;
@@ -180,6 +188,25 @@ class Dwolla
             Logger::error('Error in creating new customer for user: ' . $id . '. EX: ' . $ex->getResponseBody());
             return $ex;
         }
+    }
+
+    public function getCustomerPayload($user, $request_data)
+    {
+        return [
+            'firstName' => $user->first_name,
+            'lastName' => $user->last_name,
+            'email' => $user->email,
+            'dateOfBirth' => $user->date_of_birth,
+            'phone' => $user->phone,
+            'correlationId' => $user->id,
+            'ipAddress' => Request::ip(),
+            'type' => 'personal',
+            'address1' => $request_data->dwolla_address ?? $user->address,
+            'city' => $request_data->dwolla_city ?? $user->city,
+            'state' => $request_data->dwolla_state ?? $user->state,
+            'postalCode' => $request_data->dwolla_pin_code ?? $user->pin_code,
+            'ssn' => $request_data->dwolla_ssn,
+        ];
     }
 
     public function getFundingSourceToken($id)
@@ -198,6 +225,12 @@ class Dwolla
             Logger::error('Error in creating funding source token for user: ' . $id . '. EX: ' . $ex->getMessage());
             return $ex;
         }
+    }
+
+    public function getFundingSourcesForUser($customerId)
+    {
+        $fundingSources = $this->fsApi->getCustomerFundingSources($customerId);
+        return $fundingSources->_embedded->{'funding-sources'};
     }
 
     public function createTransferToMasterDwolla($source, $amount, $clearance = 'next-available')

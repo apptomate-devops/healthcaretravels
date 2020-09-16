@@ -339,7 +339,7 @@
                                 <h2>Payment Details</h2>
                                 @if($traveller->default_funding_source)
                                     <div>Default funding source: {{$traveller->default_funding_source}}</div>
-                                    @else
+                                @else
                                     <div>You haven't added any account details yet.</div>
                                 @endif
                                 <div class="link" data-toggle="modal" data-target="#account_details_modal">Add Account Details</div>
@@ -463,38 +463,67 @@
                                     <div class="col-md-12">
                                         <form id="create-funding-source">
                                             <input type="hidden" id="travellerId" value="{{$traveller->id ?? ''}}">
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <label for="firstName">First Name</label>
-                                                <input type="text" id="firstName" placeholder="First Name" value="{{$traveller->first_name ?? ''}}" required autocomplete="off" />
+                                                <input type="text" id="firstName" placeholder="First Name" value="{{$traveller->first_name ?? ''}}" disabled autocomplete="off" />
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <label for="lastName">Last Name</label>
-                                                <input type="text" id="lastName" placeholder="Last Name" value="{{$traveller->last_name ?? ''}}" required autocomplete="off"/>
+                                                <input type="text" id="lastName" placeholder="Last Name" value="{{$traveller->last_name ?? ''}}" disabled autocomplete="off"/>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <label for="email">Email</label>
-                                                <input type="email" id="email" placeholder="email@example.com" value="{{$traveller->email ?? ''}}" required autocomplete="off"/>
+                                                <input type="email" id="email" placeholder="email@example.com" value="{{$traveller->email ?? ''}}" disabled autocomplete="off"/>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
+                                                <label for="phone">Phone</label>
+                                                <input type="text" id="phone" value="{{$traveller->phone ?? ''}}" disabled autocomplete="off"/>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="date_of_birth">Date of Birth</label>
+                                                <input type="text" id="date_of_birth" value="{{$traveller->date_of_birth ?? ''}}" disabled autocomplete="off"/>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="address">Address</label>
+                                                <input type="text" id="address" placeholder="Address" value="{{$traveller->address ?? ''}}" @if($traveller->address) disabled @endif required autocomplete="off"/>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="state">State</label>
+                                                <input type="text" id="state" placeholder="State" value="{{$traveller->state ?? ''}}" @if($traveller->state) disabled @endif required autocomplete="off"/>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="city">City</label>
+                                                <input type="text" id="city" placeholder="City" value="{{$traveller->city ?? ''}}" @if($traveller->city) disabled @endif required autocomplete="off"/>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="pin_code">Postal Code</label>
+                                                <input type="text" id="pin_code" placeholder="Postal Code" value="{{$traveller->pin_code ?? ''}}" @if($traveller->pin_code) disabled @endif required autocomplete="off"/>
+                                            </div>
+                                            <div class="col-md-8">
                                                 <label>Bank Account name</label>
-                                                <input type="text" id="name" placeholder="Name" value="my funding 1" required autocomplete="off"/>
+                                                <input type="text" id="name" placeholder="Name" required autocomplete="off"/>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <label>Account number</label>
-                                                <input type="text" id="accountNumber" placeholder="Account number" value="3456" required autocomplete="off"/>
+                                                <input type="text" class="numbers_only" id="accountNumber" placeholder="Account number" required autocomplete="off"/>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-4">
+                                                <label>SSN number</label>
+                                                <input type="text" class="numbers_only" id="ssnNumber" placeholder="SSN number" maxlength="4" minlength="4" required autocomplete="off"/>
+                                                <div class="caption-text" style="font-size: 14px; margin-top: -10px;">Enter last 4 digits of your SSN Number.</div>
+                                            </div>
+                                            <div class="col-md-4">
                                                 <label for="password">Routing number</label>
-                                                <input type="text" id="routingNumber" placeholder="273222226" value="021001208" required autocomplete="off"/>
+                                                <input type="text" class="numbers_only" id="routingNumber" placeholder="273222226" maxlength="9" minlength="9" required autocomplete="off"/>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-4">
                                                 <label for="password">Account Type</label>
                                                 <select name="type" id="type">
                                                     <option value="checking">Checking</option>
                                                     <option value="savings">Savings</option>
                                                 </select>
                                             </div>
-                                            <div class="w-100 text-center">
+                                            <div class="col-md-12 text-center">
                                                 <input type="submit" value="Add Details" class="btn btn-default bg-orange margin-top-15 margin-bottom-15" />
                                             </div>
                                         </form>
@@ -542,6 +571,14 @@
         $('.price_float').keypress(function(event) {
             if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
                 event.preventDefault();
+            }
+        });
+        $('.numbers_only').keypress(function(event) {
+            var regex = new RegExp("^[0-9+]$");
+            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+            if (!regex.test(key)) {
+                event.preventDefault();
+                return false;
             }
         });
 
@@ -604,13 +641,14 @@
             // TODO: send me to server to update me for user
             var fundingSource = res._links['funding-source'].href;
             addFundingSourceToUser(fundingSource);
+
+            $("#account_details_modal").modal('hide');
+
             $div.text(JSON.stringify(logValue));
-            console.log(logValue);
             $('#logs').append($div);
         }
         function addFundingSourceToUser(fundingSource) {
             var formData = {
-                // id: getLastSagmentOfURL(window.location.pathname),
                 id: $('#travellerId').val(),
                 fundingSource: fundingSource,
                 _token: '{{ csrf_token() }}'
@@ -622,7 +660,8 @@
                 json: true,
                 success: function(data, textStatus, jqXHR) {
                     if (data.success) {
-                        alert('User detail have been update successfully');
+                        // alert('User detail have been update successfully');
+                        window.location.reload();
                     } else {
                         $('#general_errors').text(data.error);
                     }
@@ -634,8 +673,6 @@
         }
         function createCustomerForUserAndGetToken(userInfo, cb) {
             var formData = userInfo;
-            // formData.id = getLastSagmentOfURL(window.location.pathname); // added id for traveller instead
-
             formData._token = '{{ csrf_token() }}';
             $.ajax({
                 url: "/dwolla/create_customer_and_funding_source_token_with_validations",
@@ -662,16 +699,23 @@
                 type: $('#type').val(),
                 name: $('#name').val(),
             };
+
             var userInfo = {
                 id: $('#travellerId').val(),
                 dwolla_first_name: $('#firstName').val(),
                 dwolla_last_name: $('#lastName').val(),
                 dwolla_email: $('#email').val(),
+                dwolla_phone: $('#phone').val(),
+                dwolla_dob: $('#date_of_birth').val(),
+                dwolla_address: $('#address').val(),
+                dwolla_city: $('#city').val(),
+                dwolla_state: $('#state').val(),
+                dwolla_pin_code: $('#pin_code').val(),
+                dwolla_ssn: $('#ssnNumber').val(),
             }
 
             createCustomerForUserAndGetToken(userInfo, function(error, data) {
                 if (data && data.success) {
-                    console.log('creating funding source with info', data.token, '----', bankInfo);
                     dwolla.fundingSources.create(data.token, bankInfo, fundingSourcecallback);
                 } else {
                     $('#general_errors').text(error || data.error);

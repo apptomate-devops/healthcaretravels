@@ -73,31 +73,45 @@ class PaymentController extends BaseController
 
     public function create_customer_and_funding_source_token_with_validations(Request $request)
     {
+        $user_id = $request->session()->get('user_id');
+
+        if ($user_id != $request->id) {
+            // Do not allow other user to access booking details
+            return view('general_error', ['message' => 'Invalid Access']);
+        }
+
         $user = Users::find($request->id);
         if (empty($user)) {
             return response()->json(['success' => false, 'error' => 'The user you are looking for does not exists!']);
         }
+
+        $userPayload = $this->dwolla->getCustomerPayload($user, $request);
         if ($user->dwolla_customer) {
+            // Customer has been created already and id is stored in DB
             $resCustomer = new \stdClass();
-            $resCustomer->id = $user->dwolla_customer;
+            $customer_id = $this->dwolla->verifyCustomer($user->dwolla_customer, $userPayload);
+            $resCustomer->id = $customer_id;
         } else {
+            // Check if email already registered on Dwolla
             $isExistingCustomer = $this->dwolla->findCustomerByEmail($request->dwolla_emaill);
             if ($isExistingCustomer) {
                 $resCustomer = $isExistingCustomer;
-                $user->dwolla_customer = $isExistingCustomer->id;
+                $customer_id = $this->dwolla->verifyCustomer($isExistingCustomer->id, $userPayload);
+                $user->dwolla_customer = $customer_id;
                 $user->save();
-                // TODO: update customer details if we allow user to modify it's detail while adding bank account
             } else {
-                $user->dwolla_first_name = $request->dwolla_first_name;
-                $user->dwolla_last_name = $request->dwolla_last_name;
-                $user->dwolla_email = $request->dwolla_email;
+                $user->dwolla_address = $request->dwolla_address;
+                $user->dwolla_city = $request->dwolla_city;
+                $user->dwolla_state = $request->dwolla_state;
+                $user->dwolla_pin_code = $request->dwolla_pin_code;
+                $user->dwolla_ssn = $request->dwolla_ssn;
+                // TODO: to be used with user payload
                 $resCustomer = $this->dwolla->createCustomerForUser($request->id, $user);
             }
         }
 
         if (isset($resCustomer) && $resCustomer->id) {
             $res = $this->dwolla->getFundingSourceToken($request->id);
-            Logger::info(' =========================== ' . json_encode($res));
             if ($res && isset($res->token)) {
                 return response()->json(['success' => true, 'token' => $res->token]);
             }

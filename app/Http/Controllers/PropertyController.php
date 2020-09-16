@@ -317,7 +317,6 @@ class PropertyController extends BaseController
             ->first();
         $traveller = DB::table('users')
             ->where('id', $data->traveller_id)
-            ->select('id', 'first_name', 'last_name', 'email', 'dwolla_customer', 'default_funding_source')
             ->first();
         $booking_price = Helper::get_price_details($data, $data->start_date, $data->end_date);
         $data = (object) array_merge((array) $data, (array) $booking_price);

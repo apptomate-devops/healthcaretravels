@@ -31,19 +31,24 @@ class Dwolla
     {
         $this->access_key = config('services.dwolla.access_key');
         $this->secret_key = config('services.dwolla.secret_key');
-        $this->access_token = config('services.dwolla.access_token');
+        $this->master_account = config('services.dwolla.master_account');
+        $this->master_account = config('services.dwolla.master_account');
+        $this->master_funding_source = config('services.dwolla.master_funding_source');
+        $this->access_token = env('DWOLLA_ACCESS_TOKEN');
         $this->setUp();
+        Logger::info('Initializing Dwolla');
     }
 
     public function setUp($forceNewAccessToken = false)
     {
         $url = config('services.dwolla.env') == 'prod' ? 'https://api.dwolla.com/' : 'https://api-sandbox.dwolla.com/';
         if (!$this->access_token) {
-            $this->access_token = $this->setupAccessToken($url);
-            if (!$this->access_token) {
+            $accessToken = $this->setupAccessToken($url);
+            if (!$accessToken) {
                 Logger::error('Error in getting new access token from Dwolla');
                 return false;
             }
+            $this->access_token = $accessToken;
         }
         DwollaSwagger\Configuration::$access_token = $this->access_token;
         $this->client = new DwollaSwagger\ApiClient($url);
@@ -51,11 +56,14 @@ class Dwolla
         $this->rootApi = new DwollaSwagger\RootApi($this->client);
         $this->accountsApi = new DwollaSwagger\AccountsApi($this->client);
         $this->fsApi = new DwollaSwagger\FundingsourcesApi($this->client);
-        $master_account = config('services.dwolla.master_account');
-        if (!$master_account) {
+        $this->transfersApi = new DwollaSwagger\TransfersApi($this->client);
+
+        if (!$this->master_account) {
             try {
+                Logger::info('AccessToken set in Dwolla:: ' . DwollaSwagger\Configuration::$access_token);
                 $this->getMasterAccountDetails();
             } catch (\Exception $ex) {
+                dd($ex);
                 Logger::error('Error in getting master account details. EX: ' . $ex->getMessage());
                 return $ex;
             }
@@ -89,7 +97,7 @@ class Dwolla
 
     public function setupAccessToken($url)
     {
-        $accessToken = config('services.dwolla.access_token');
+        $accessToken = env('DWOLLA_ACCESS_TOKEN');
         if ($accessToken) {
             Logger::info('Found accessToken from Config value:');
             return $accessToken;
@@ -177,6 +185,34 @@ class Dwolla
                 'Error in creating funding source token for user: ' . $id . '. EX: ' . $ex->getResponseBody(),
             );
             return $ex;
+        }
+    }
+
+    public function createTransferToMasterDwolla($source, $amount, $clearance = 'next-available')
+    {
+        $payload = [
+            '_links' => [
+                'source' => [
+                    'href' => $source,
+                ],
+                'destination' => [
+                    'href' => $this->master_funding_source,
+                ],
+            ],
+            'amount' => [
+                'currency' => 'USD',
+                'value' => $amount,
+            ],
+            'clearing' => [
+                'destination' => $clearance,
+            ],
+        ];
+        try {
+            $transfer = $this->transfersApi->create($payload);
+            return $transfer;
+        } catch (\Throwable $th) {
+            var_dump($payload);
+            dd($th);
         }
     }
 }

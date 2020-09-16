@@ -64,7 +64,10 @@ class PaymentController extends BaseController
                 return response()->json(['success' => true, 'token' => $res->token]);
             }
         }
-        return response()->json(['success' => false, 'error' => 'There was an error creating funding source token for you']);
+        return response()->json([
+            'success' => false,
+            'error' => 'There was an error creating funding source token for you',
+        ]);
     }
 
     public function add_funding_source(Request $request)
@@ -79,5 +82,12 @@ class PaymentController extends BaseController
         $user->default_funding_source = $default_funding_source;
         $user->save();
         return response()->json(['success' => true]);
+    }
+
+    public function transfer(Request $request)
+    {
+        $user = Users::find(27);
+        $transferDetails = $this->dwolla->createTransferToMasterDwolla($user->default_funding_source, 1000);
+        return response()->json(['success' => true, 'transfer' => $transferDetails]);
     }
 }

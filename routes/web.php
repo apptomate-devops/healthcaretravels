@@ -169,7 +169,11 @@ Route::get('/dwolla/create_customer/{id}', 'PaymentController@create_customer');
 Route::get('/dwolla/create/{id}', 'PaymentController@create');
 Route::get('/dwolla/get_funding_source_token/{id}', 'PaymentController@get_funding_source_token');
 Route::post('/dwolla/add_funding_source', 'PaymentController@add_funding_source');
-Route::post('/dwolla/create_customer_and_funding_source_token', 'PaymentController@create_customer_and_funding_source_token');
+Route::post(
+    '/dwolla/create_customer_and_funding_source_token',
+    'PaymentController@create_customer_and_funding_source_token',
+);
 Route::get('/dwolla/create_funding_source/{id}', 'PaymentController@create_funding_source_token');
+Route::get('/dwolla/test_transfer', 'PaymentController@transfer');
 
 Route::fallback('BaseController@general_error');

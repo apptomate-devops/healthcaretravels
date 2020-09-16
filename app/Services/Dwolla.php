@@ -190,6 +190,12 @@ class Dwolla
 
     public function createTransferToMasterDwolla($source, $amount, $clearance = 'next-available')
     {
+        // Balance account
+        // 'href' => 'https://api-sandbox.dwolla.com/funding-sources/180d546c-56c8-47b8-b3e7-6b52e184a72f',
+
+        // Bank account
+        // 'href' => 'https://api-sandbox.dwolla.com/funding-sources/d82be601-ed1e-4346-834e-72254fd96d77',
+
         $payload = [
             '_links' => [
                 'source' => [
@@ -201,7 +207,7 @@ class Dwolla
             ],
             'amount' => [
                 'currency' => 'USD',
-                'value' => $amount,
+                'value' => "20.00",
             ],
             'clearing' => [
                 'destination' => $clearance,

@@ -758,6 +758,9 @@ class PropertyController extends BaseController
                 $mail_copy = $request->status == 2 ? 'mail.accepted_booking' : 'mail.cancel_booking';
                 $this->send_email($booking->email, $mail_copy, $mail_data);
             }
+            if ($request->status == 2) {
+                // TODO: add make payment here and generate payment schedules and add to db.
+            }
             if ($request->link == 1) {
                 return $this->single_booking($request->booking_id, $request);
             }

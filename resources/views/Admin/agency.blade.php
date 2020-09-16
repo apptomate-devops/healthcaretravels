@@ -48,7 +48,7 @@
                                     <table class="table table-striped table-bordered zero-configuration">
                                         <thead>
                                         <tr>
-                                            <th>Id</th>
+                                            <th>ID</th>
                                             <th>Registered On</th>
                                             <th>Agency Name</th>
                                             <th>Email</th>

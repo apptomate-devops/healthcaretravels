@@ -35,8 +35,8 @@
                                         <thead>
                                         <tr>
                                             <th>S.no</th>
-                                            <th>Booking Id</th>
-                                            <th>Transaction Id</th>
+                                            <th>Booking ID</th>
+                                            <th>Transaction ID</th>
                                             <th>Travellers Name</th>
                                             <th>Host Name</th>
                                             <th>Security Deposit</th>
@@ -93,8 +93,8 @@
                                         <tfoot>
                                         <tr>
                                             <th>S.no</th>
-                                            <th>Booking Id</th>
-                                            <th>Transaction Id</th>
+                                            <th>Booking ID</th>
+                                            <th>Transaction ID</th>
                                             <th>Travellers Name</th>
                                             <th>Host Name</th>
                                             <th>Security Deposit</th>

@@ -61,9 +61,9 @@
                                    placeholder="Location">
                         </fieldset>
                         <fieldset class="form-group floating-label-form-group">
-                            <label for="email">Category Id</label>
+                            <label for="email">Category ID</label>
                             <input type="text" required name="category_id" value="1" class="form-control"
-                                   id="category_id" placeholder="Category Id">
+                                   id="category_id" placeholder="Category ID">
                         </fieldset>
                         <fieldset class="form-group floating-label-form-group">
                             <label for="email">Image</label>
@@ -108,9 +108,9 @@
                                        class="form-control" id="location" placeholder="Location">
                             </fieldset>
                             <fieldset class="form-group floating-label-form-group">
-                                <label for="email">Category Id</label>
+                                <label for="email">Category ID</label>
                                 <input type="text" name="category_id" value="{{$d->category_id}}" class="form-control"
-                                       id="category_id" placeholder="Category Id" required>
+                                       id="category_id" placeholder="Category ID" required>
                             </fieldset>
                             <fieldset class="form-group floating-label-form-group">
                                 <label for="email">Image</label>

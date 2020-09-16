@@ -54,8 +54,8 @@
                                 <table class="table table-striped table-bordered zero-configuration">
                                     <thead>
                                     <tr>
-                                        <th>Id</th>
-                                        <th>Reservation Id</th>
+                                        <th>ID</th>
+                                        <th>Reservation ID</th>
                                         <th>Room Name</th>
                                         <th>Review By</th>
                                         <th>Comments</th>
@@ -105,8 +105,8 @@
 
                                     <tfoot>
                                     <tr>
-                                        <th>Id</th>
-                                        <th>Reservation Id</th>
+                                        <th>ID</th>
+                                        <th>Reservation ID</th>
                                         <th>Room Name</th>
                                         <th>Review By</th>
                                         <th>Comments</th>

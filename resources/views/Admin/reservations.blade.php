@@ -53,7 +53,7 @@
                                             <th>S.No</th>
                                             <th>Hosts Name</th>
                                             <th>Travelers Name</th>
-                                            <th>Booking Id</th>
+                                            <th>Booking ID</th>
                                             <th>Total Amount</th>
                                             <th>Status</th>
                                             <th>Request Date</th>
@@ -153,7 +153,7 @@
                                             <th>S.No</th>
                                             <th>Hosts Name</th>
                                             <th>Travellers Name</th>
-                                            <th>Booking Id</th>
+                                            <th>Booking ID</th>
                                             <th>Total Amount</th>
                                             <th>Status</th>
                                             <th>Request Date</th>

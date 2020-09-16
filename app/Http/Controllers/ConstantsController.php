@@ -160,6 +160,9 @@ foreach ($all_settings as $setting) {
         case 'instagram':
             define("INSTAGRAM", $setting->value);
             break;
+        case 'service_tax':
+            define("SERVICE_TAX", $setting->value);
+            break;
         default:
             break;
     }

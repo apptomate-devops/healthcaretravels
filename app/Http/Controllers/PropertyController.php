@@ -215,18 +215,17 @@ class PropertyController extends BaseController
         $isBlocked = PropertyBlocking::whereRaw(
             'property_id = "' .
                 $request->property_id .
-                '" and start_date between "' .
+                '" AND ((start_date BETWEEN "' .
                 $check_in .
-                '" and "' .
+                '" AND "' .
                 $check_out .
-                '" OR end_date between "' .
+                '") OR (end_date BETWEEN "' .
                 $check_in .
-                '" and "' .
+                '" AND "' .
                 $check_out .
-                '" OR
-                    "' .
+                '") OR ("' .
                 $check_in .
-                '" between start_date and end_date',
+                '" BETWEEN start_date AND end_date))',
         )->get();
         if (count($isBlocked)) {
             return response()->json([
@@ -234,6 +233,7 @@ class PropertyController extends BaseController
                 'message' => 'Property is not available at the given dates',
                 'status_code' => ZERO,
                 'is_blocked' => ONE,
+                'blocked_data' => $isBlocked,
             ]);
         }
         $sql =

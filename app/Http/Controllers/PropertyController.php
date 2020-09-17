@@ -247,7 +247,6 @@ class PropertyController extends BaseController
             $check_out .
             "')  AND B.total_guests < " .
             $guest_count .
-            // TODO: Question if we need to block booking based on dates or dates + payment
             " AND A.payment_done = 1 AND A.property_id = " .
             $request->property_id;
 
@@ -1013,6 +1012,9 @@ class PropertyController extends BaseController
                 ->where('property_booking.client_id', CLIENT_ID)
                 ->where('property_booking.booking_id', $booking_id)
                 ->first();
+            if (empty($data)) {
+                return view('general_error', ['message' => 'We can’t find the booking you’re looking for.']);
+            }
             $traveller = DB::select(
                 "SELECT username,profile_image,role_id,name_of_agency FROM users WHERE id = $data->traveller_id",
             );

@@ -175,6 +175,16 @@ class Dwolla
         }
     }
 
+    public function getFundingSourceDetails($fundingSourceUrl)
+    {
+        try {
+            return $fundingSource = $this->fsApi->id($fundingSourceUrl);
+        } catch (\Exception $ex) {
+            Logger::error('Error in getFundingSourceDetails: ' . $fundingSourceUrl . '. EX: ' . $ex->getResponseBody());
+            return false;
+        }
+    }
+
     public function getCustomerPayload($user)
     {
         return [

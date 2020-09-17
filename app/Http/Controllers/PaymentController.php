@@ -135,6 +135,16 @@ class PaymentController extends BaseController
         return response()->json(['success' => true]);
     }
 
+    public function get_funding_source_details(Request $request)
+    {
+        $fsUrl = $request->url;
+        $transferDetails = $this->dwolla->getFundingSourceDetails($fsUrl);
+        if ($transferDetails) {
+            return response()->json(['success' => true, 'data' => $transferDetails]);
+        }
+        return response()->json(['success' => false]);
+    }
+
     public function transfer(Request $request)
     {
         $user = Users::find(27);

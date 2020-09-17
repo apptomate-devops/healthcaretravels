@@ -391,7 +391,7 @@
                                                             <label class="control-label" for="credit-card-last-name">
                                                                 Age
                                                             </label>
-                                                            <select class="chosen-select-no-single" name="age[]" data-placeholder="Select Age" required>
+                                                            <select name="age[]" data-placeholder="Select Age" required>
                                                                 <option label="Select Age" value="" disabled selected>Select Age</option>
                                                                 <option label="Adult" value="Adult" @if($guest_data && $guest_data->age == 'Adult') selected @endif></option>
                                                                 <option label="Child (Ages 2-12)" value="Child" @if($guest_data && $guest_data->age == 'Child') selected @endif></option>
@@ -467,6 +467,7 @@
                     </div>
                 </div>
             </div>
+            <div id="addDetailsProgress" class="loading style-2" style="display: none;"><div class="loading-wheel"></div></div>
         </div>
     </div>
 
@@ -570,22 +571,51 @@
                 ],
                 microDeposits: false,
                 fallbackToMicroDeposits: true,
+                subscriber: ({ currentPage, error }) => {
+                    $('#addDetailsProgress').hide();
+                    console.log("currentPage:", currentPage, "error:", JSON.stringify(error));
+                },
             };
             dwolla.iav.start(iavToken, config, function(err, res) {
+                $('#addDetailsProgress').hide();
                 if(err) {
-                    // TODO: simulate error flow
+                    console.log('Error creating IAV funding source', err.message, 'with code', err.code);
                     return false
                 }
-                setTimeout(function (e) {
-                    $("#bank_verification_modal").modal('hide');
-                    window.location.reload();
-                }, 3000);
                 var fundingSource = res._links['funding-source'].href;
+                getFundingSourceDetails(fundingSource, function (err, data) {
+                    $("#bank_verification_modal").modal('hide');
+                    if(data.success) {
+                        console.log('data.success', data.success);
+                        $('#fundingSource').append($('<option>', {
+                            value: fundingSource,
+                            text: data.data.name,
+                        }));
+                        $('#fundingSource').val(fundingSource);
+                    }
+                });
                 addDefaultFundingSourceToUser(fundingSource);
             });
-
         };
 
+        function getFundingSourceDetails(fundingSource, cb) {
+            var formData = {
+                url: fundingSource,
+                _token: '{{ csrf_token() }}'
+            };
+            $.ajax({
+                url: "/dwolla/get_funding_source_details",
+                type: "POST",
+                data: formData,
+                json: true,
+                success: function(response, textStatus, jqXHR) {
+                    cb(null, response);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    cb(errorThrown);
+                }
+            });
+        };
         function addDefaultFundingSourceToUser(fundingSource) {
             var formData = {
                 id: {{$traveller->id}},
@@ -611,6 +641,7 @@
         };
 
         $('#create-funding-source').on('click', function (e) {
+            $('#addDetailsProgress').show();
             var userInfo = {
                 id: {{$traveller->id}},
                 _token: '{{ csrf_token() }}'
@@ -622,14 +653,15 @@
                 data: userInfo,
                 json: true,
                 success: function(response, textStatus, jqXHR) {
-                    debugger
                     if(response && response.success) {
                         getFundingSourceFromIAV(response.token);
                     } else {
+                        $('#addDetailsProgress').hide();
                         console.log('Error while generating IAV token');
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
+                    $('#addDetailsProgress').hide();
                     console.log('Error while generating IAV token');
                 }
             });

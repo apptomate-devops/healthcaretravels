@@ -36,7 +36,6 @@ class Dwolla
         $this->master_funding_source = config('services.dwolla.master_funding_source');
         $this->access_token = env('DWOLLA_ACCESS_TOKEN');
         $this->setUp();
-        Logger::info('Initializing Dwolla');
     }
 
     public function setUp($forceNewAccessToken = false)

@@ -100,7 +100,9 @@ class Helper
 
             // And overwrite the .env with the new data
             file_put_contents(base_path() . '/.env', $env);
+            \Artisan::call("config:cache");
             \Artisan::call("config:clear");
+            \Artisan::call("cache:clear");
 
             return true;
         } else {

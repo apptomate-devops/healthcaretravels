@@ -247,17 +247,20 @@ class Dwolla
 
     public function createTransferToMasterDwolla($source, $amount, $clearance = 'next-available')
     {
-        // Balance account
+        // Master Balance account
         // 'href' => 'https://api-sandbox.dwolla.com/funding-sources/180d546c-56c8-47b8-b3e7-6b52e184a72f',
 
-        // Bank account
+        // Master Bank account
         // 'href' => 'https://api-sandbox.dwolla.com/funding-sources/d82be601-ed1e-4346-834e-72254fd96d77',
+
+        // Customer bank account
         // 'href' => 'https://api-sandbox.dwolla.com/funding-sources/31a091a3-f731-4203-9ff6-7c7dd045634a',
+        // "https://api-sandbox.dwolla.com/funding-sources/914d31a8-458a-4d13-bd94-39aab09cb7a0"
 
         $payload = [
             '_links' => [
                 'source' => [
-                    'href' => "https://api-sandbox.dwolla.com/funding-sources/914d31a8-458a-4d13-bd94-39aab09cb7a0",
+                    'href' => $source,
                 ],
                 'destination' => [
                     'href' => $this->master_funding_source,

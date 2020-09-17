@@ -588,7 +588,7 @@
 
         function addDefaultFundingSourceToUser(fundingSource) {
             var formData = {
-                id: $('#travellerId').val(),
+                id: {{$traveller->id}},
                 fundingSource: fundingSource,
                 _token: '{{ csrf_token() }}'
             };
@@ -597,22 +597,22 @@
                 type: "POST",
                 data: formData,
                 json: true,
-                success: function(data, textStatus, jqXHR) {
-                    if (data.success) {
+                success: function(response, textStatus, jqXHR) {
+                    if (response.success) {
                         console.log('Default funding source stored');
                     } else {
-                        console.log('Error saving Default funding source', data);
+                        console.log('Error saving Default funding source');
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    console.log('Error saving Default funding source', data);
+                    console.log('Error saving Default funding source');
                 }
             });
         };
 
         $('#create-funding-source').on('click', function (e) {
             var userInfo = {
-                id: $('#travellerId').val(),
+                id: {{$traveller->id}},
                 _token: '{{ csrf_token() }}'
             };
 
@@ -621,11 +621,12 @@
                 type: "POST",
                 data: userInfo,
                 json: true,
-                success: function(data, textStatus, jqXHR) {
-                    if(data && data.success) {
-                        getFundingSourceFromIAV(data.token);
+                success: function(response, textStatus, jqXHR) {
+                    debugger
+                    if(response && response.success) {
+                        getFundingSourceFromIAV(response.token);
                     } else {
-                        console.log('Error while generating IAV token', data);
+                        console.log('Error while generating IAV token');
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {

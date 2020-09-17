@@ -77,7 +77,10 @@ class PaymentController extends BaseController
 
         if ($user_id != $request->id) {
             // Do not allow other user to access booking details
-            return view('general_error', ['message' => 'Invalid Access']);
+            return response()->json([
+                'success' => false,
+                'error' => 'Invalid user access',
+            ]);
         }
 
         $user = Users::find($request->id);

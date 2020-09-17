@@ -13,8 +13,10 @@ use App\Models\PropertyList;
 use App\Models\EmailConfig;
 use App\Models\GuestsInformation;
 use App\Models\PropertyBooking;
+use App\Models\BookingPayments;
 use Mail;
 use App\Helper\Helper;
+use Carbon\Carbon;
 
 class PropertyController extends BaseController
 {
@@ -747,7 +749,16 @@ class PropertyController extends BaseController
             ->where('booking_id', $request->booking_id)
             ->leftjoin('property_list', 'property_list.id', '=', 'property_booking.property_id')
             ->leftjoin('users', 'users.id', '=', 'property_booking.traveller_id')
-            ->select('users.first_name', 'users.last_name', 'property_list.title', 'property_booking.*', 'users.email')
+            ->select(
+                'users.first_name',
+                'users.last_name',
+                'property_list.title',
+                'property_list.monthly_rate',
+                'property_list.security_deposit',
+                'property_list.cleaning_fee',
+                'property_booking.*',
+                'users.email',
+            )
             ->first();
         $user_id = $request->session()->get('user_id');
 
@@ -770,8 +781,58 @@ class PropertyController extends BaseController
                 $this->send_email($booking->email, $mail_copy, $mail_data);
             }
             if ($request->status == 2) {
-                // TODO: add make payment here and generate payment schedules and add to db.
+                $start_date = Carbon::parse($booking->start_date);
+                $end_date = Carbon::parse($booking->end_date);
+                $accepted_date = Carbon::now();
+                $scheduler_date = Carbon::parse($booking->start_date);
+                // Getting total days
+                $diffInDays = $start_date->diffInDays($end_date);
+                // Finding Partial month days
+                $lastMonthRenew = Carbon::parse($booking->end_date);
+                if ($lastMonthRenew->day < $start_date->day) {
+                    $lastMonthRenew->subMonth();
+                }
+                $lastMonthRenew->day = $start_date->day;
+                $partialDays = $end_date->diffInDays($lastMonthRenew);
+                // Getting total payment Cycles
+                $totalCycles = $start_date->diffInMonths($end_date);
+                $isPartial = $partialDays > 0;
+                if ($isPartial) {
+                    $totalCycles++;
+                }
+                // Generating payment schedules that can be used to process payments and keep track of them.
+                $scheduled_payments = [];
+                for ($i = 1; $i <= $totalCycles; $i += 1) {
+                    $tax = $i == 1 ? SERVICE_TAX : SERVICE_TAX_SECOND;
+                    $data = [
+                        'payment_cycle' => $i,
+                        'service_tax' => SERVICE_TAX_SECOND,
+                        'partial_days' => $partialDays,
+                        'booking_id' => $booking->booking_id, // Represents booking id used all over the application
+                        'booking_row_id' => $booking->id, // Represents primary key id of booking table
+                        'cleaning_fee' => $booking->cleaning_fee,
+                        'security_deposit' => $booking->security_deposit,
+                        'monthly_rate' => $booking->monthly_rate,
+                    ];
+                    if ($i == 1) {
+                        $data['service_tax'] = SERVICE_TAX;
+                        $data['total_amount'] =
+                            $data['monthly_rate'] + $data['cleaning_fee'] + $data['security_deposit'];
+                        $data['due_date'] = $accepted_date;
+                    } else {
+                        $data['total_amount'] = $data['monthly_rate'];
+                        $scheduler_date->addMonth();
+                        $data['due_date'] = $scheduler_date;
+                    }
+                    if ($i == $totalCycles && $isPartial) {
+                        $data['total_amount'] = $data['monthly_rate'] / $partialDays;
+                    }
+                    $data['due_date'] = $data['due_date']->toDateString();
+                    array_push($scheduled_payments, $data);
+                }
+                BookingPayments::insert($scheduled_payments);
             }
+            // TODO: Process 1st payment for this booking from user to dwolla master account
             if ($request->link == 1) {
                 return $this->single_booking($request->booking_id, $request);
             }

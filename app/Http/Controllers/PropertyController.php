@@ -320,11 +320,19 @@ class PropertyController extends BaseController
             ->first();
         $booking_price = Helper::get_price_details($data, $data->start_date, $data->end_date);
         $data = (object) array_merge((array) $data, (array) $booking_price);
+
+        $all_funding_sources = $this->dwolla->getFundingSourcesForCustomer($traveller->dwolla_customer);
+        $funding_sources = array_filter($all_funding_sources, function ($source) {
+            if ($source->status == 'verified') {
+                return true;
+            }
+        });
         return view('properties.property_detail', [
             'data' => $data,
             'guests' => $guests,
             'pet_details' => $pet_details,
             'traveller' => $traveller,
+            'funding_sources' => $funding_sources,
         ]);
     }
 

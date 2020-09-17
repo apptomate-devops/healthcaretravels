@@ -227,10 +227,18 @@ class Dwolla
         }
     }
 
-    public function getFundingSourcesForUser($customerId)
+    public function getFundingSourcesForCustomer($customerId)
     {
-        $fundingSources = $this->fsApi->getCustomerFundingSources($customerId);
-        return $fundingSources->_embedded->{'funding-sources'};
+        if (!$customerId) {
+            return [];
+        }
+        try {
+            $fundingSources = $this->fsApi->getCustomerFundingSources($customerId);
+            return $fundingSources->_embedded->{'funding-sources'};
+        } catch (\Exception $ex) {
+            Logger::error('Error in getFundingSourcesForCustomer ' . $ex->getMessage());
+            return [];
+        }
     }
 
     public function createTransferToMasterDwolla($source, $amount, $clearance = 'next-available')

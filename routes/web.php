@@ -161,6 +161,12 @@ Route::middleware(['LoginCheck'])->group(function () {
 
     // Payment and Invoices
     Route::GET('/invoice/{id}', 'PDF_Controller@invoice');
+
+    // Dwolla Payment Routes
+    Route::post(
+        '/dwolla/create_customer_and_funding_source_token_with_validations',
+        'PaymentController@create_customer_and_funding_source_token_with_validations',
+    );
 });
 
 // TODO: remove when implemented
@@ -173,10 +179,7 @@ Route::post(
     '/dwolla/create_customer_and_funding_source_token',
     'PaymentController@create_customer_and_funding_source_token',
 );
-Route::post(
-    '/dwolla/create_customer_and_funding_source_token_with_validations',
-    'PaymentController@create_customer_and_funding_source_token_with_validations',
-);
+
 Route::get('/dwolla/create_funding_source/{id}', 'PaymentController@create_funding_source_token');
 Route::get('/dwolla/test_transfer', 'PaymentController@transfer');
 

@@ -337,12 +337,17 @@
                                 </div>
 
                                 <h2>Payment Details</h2>
-                                @if($traveller->default_funding_source)
-                                    <div>Default funding source: {{$traveller->default_funding_source}}</div>
+                                @if(count($funding_sources) > 0)
+                                    <select name="fundingSource" id="fundingSource">
+                                        <option value="">Select Account</option>
+                                        @foreach($funding_sources as $source)
+                                            <option label="{{$source->name}}" value="">{{$source->name}}</option>
+                                        @endforeach
+                                    </select>
                                 @else
                                     <div>You haven't added any account details yet.</div>
                                 @endif
-                                <div class="link" data-toggle="modal" data-target="#account_details_modal">Add Account Details</div>
+                                <span class="link" data-toggle="modal" data-target="#account_details_modal">Add Account Details</span>
 
                                 <h2>Guest Details</h2>
                                 <div class="wrapper center-block">

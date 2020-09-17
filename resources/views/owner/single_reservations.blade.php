@@ -37,7 +37,7 @@
                         <span>{{$data->owner_name}}</span>
                     </div>
                     <div>Date period : <span>{{date('m-d-Y',strtotime($data->start_date))}} to {{date('m-d-Y',strtotime($data->end_date))}}</span></div>
-                    <div>Total Payment : <span>$ {{number_format($data->total_amount, 2)}}</span></div>
+                    <div>Total Payment : <span>$ {{$data->total_amount}}</span></div>
                     <div>Total Guests : <span>{{$data->guest_count}}</span></div>
                 </div>
                 <table class="manage-table responsive-table" style="border-spacing: 0px 8px;">
@@ -56,12 +56,12 @@
                     <tr>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                                Price per day <br> ( {{$data->total_days}} x $ {{number_format($data->single_day_fare, 2)}} )
+                                Price per day <br> ( {{$data->total_days}} x $ {{$data->single_day_fare}} )
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                                $ {{number_format($data->single_day_fare * $data->total_days, 2)}}
+                                $ {{$data->single_day_fare * $data->total_days}}
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
@@ -79,7 +79,7 @@
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                                $ {{number_format($data->cleaning_fee, 2)}}
+                                $ {{$data->cleaning_fee}}
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
@@ -96,7 +96,7 @@
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                                $ {{number_format($data->security_deposit, 2)}}
+                                $ {{$data->security_deposit}}
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
@@ -138,7 +138,7 @@
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                                $ {{number_format($data->service_tax, 2)}}
+                                $ {{$data->service_tax}}
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
@@ -174,7 +174,7 @@
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">
                             <p style="color: #000;">
-                                <b> $ {{number_format($data->total_amount, 2)}}</b>
+                                <b> $ {{$data->total_amount}}</b>
                             </p>
                         </th>
                         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid lightgrey">

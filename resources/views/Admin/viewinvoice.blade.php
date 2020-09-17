@@ -108,7 +108,7 @@
                                     </td>
                                     <td class="text-center">10</td>
                                     <td class="text-center">$ 200</td>
-                                    <td class="text-center">$ 2,000.00</td>
+                                    <td class="text-center">$ 2,000</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -149,12 +149,12 @@
                                     <tbody>
                                     <tr>
                                         <td>Sub Total</td>
-                                        <td class="text-right">$ 2,000.00</td>
+                                        <td class="text-right">$ 2,000</td>
                                     </tr>
 
                                     <tr class="bg-grey bg-lighten-4">
                                         <td class="text-bold-800">Cleaning Fee</td>
-                                        <td class="text-bold-800 text-right">$ 100.00</td>
+                                        <td class="text-bold-800 text-right">$ 100</td>
                                     </tr>
                                     <tr>
                                         <td>TAX (10%)</td>

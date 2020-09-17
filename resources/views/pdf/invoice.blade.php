@@ -60,7 +60,7 @@
         </th>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
             <p style="color: #000;">
-                $ {{number_format(Helper::get_daily_price($data->monthly_rate) * $data->total_days, 2)}}
+                $ {{Helper::get_daily_price($data->monthly_rate) * $data->total_days}}
             </p>
         </th>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
@@ -78,7 +78,7 @@
         </th>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
             <p style="color: #000;">
-                $ {{number_format($data->cleaning_fee, 2)}}
+                $ {{$data->cleaning_fee}}
             </p>
         </th>
     </tr>
@@ -93,7 +93,7 @@
         </th>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
             <p style="color: #000;">
-                $ {{number_format($data->security_deposit, 2)}}
+                $ {{$data->security_deposit}}
             </p>
         </th>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
@@ -132,7 +132,7 @@
         </th>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
             <p style="color: #000;">
-                $ {{number_format($data->service_tax, 2)}}
+                $ {{$data->service_tax, 2}}
             </p>
         </th>
         <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
@@ -152,7 +152,7 @@
         </th>
         <th colspan="2" style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
             <p style="color: #000;font-size: 35px;">
-                <b>$  {{number_format($data->total_amount, 2)}}</b>
+                <b>$  {{$data->total_amount}}</b>
             </p>
         </th>
 

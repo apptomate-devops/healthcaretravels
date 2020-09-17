@@ -182,5 +182,6 @@ Route::post(
 
 Route::get('/dwolla/create_funding_source/{id}', 'PaymentController@create_funding_source_token');
 Route::get('/dwolla/test_transfer', 'PaymentController@transfer');
+Route::get('/dwolla/get_funding_source/{id}', 'PaymentController@get_funding_source')->where(['id' => '.*']);
 
 Route::fallback('BaseController@general_error');

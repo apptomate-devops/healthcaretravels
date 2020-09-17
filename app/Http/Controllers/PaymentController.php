@@ -141,4 +141,14 @@ class PaymentController extends BaseController
         $transferDetails = $this->dwolla->createTransferToMasterDwolla($user->default_funding_source, 1000);
         return response()->json(['success' => true, 'transfer' => $transferDetails]);
     }
+
+    public function get_funding_source($fundingSourceUrl)
+    {
+        try {
+            $fundingSource = $this->dwolla->fsApi->id($fundingSourceUrl);
+            dd($fundingSource);
+        } catch (\Throwable $th) {
+            dd($th);
+        }
+    }
 }

@@ -66,5 +66,14 @@ class SettingsTableSeeder extends Seeder
                 'value' => 50,
             ],
         );
+        \App\Models\Settings::updateOrCreate(
+            [
+                'param' => 'service_tax_second',
+            ],
+            [
+                'param' => 'service_tax_second',
+                'value' => 10,
+            ],
+        );
     }
 }

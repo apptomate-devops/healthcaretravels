@@ -163,6 +163,9 @@ foreach ($all_settings as $setting) {
         case 'service_tax':
             define("SERVICE_TAX", $setting->value);
             break;
+        case 'service_tax_second':
+            define("SERVICE_TAX_SECOND", $setting->value);
+            break;
         default:
             break;
     }

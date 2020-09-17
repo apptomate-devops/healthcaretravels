@@ -295,7 +295,7 @@
                                                     </tr>
                                                     <tr class="editable-fields">
                                                         <td colspan="2">
-                                                            <button class="btn btn-default btn-block bg-orange">Request Booking</button>
+                                                            <button id="requestBooking" class="btn btn-default btn-block bg-orange" disabled>Request Booking</button>
                                                         </td>
                                                     </tr>
                                                     <tr class="editable-fields" id="total_amount">
@@ -336,16 +336,16 @@
 
                                 <h2>Payment Details</h2>
                                 @if(count($funding_sources) > 0)
-                                    <select name="fundingSource" id="fundingSource">
-                                        <option value="">Select Account</option>
+                                    <select name="funding_source" id="fundingSource" class="chosen-select-no-single">
+                                        <option selected disabled>Select Account</option>
                                         @foreach($funding_sources as $source)
-                                            <option label="{{$source->name}}" value="">{{$source->name}}</option>
+                                            <option label="{{$source->name}}" value="{{$source->_links->self->href}}">{{$source->name}}</option>
                                         @endforeach
                                     </select>
                                 @else
                                     <div>You haven't added any account details yet.</div>
                                 @endif
-                                <span class="link" data-toggle="modal" data-target="#account_details_modal">Add Account Details</span>
+                                <span class="link" id="create-funding-source">Add Account Details</span>
 
                                 <h2>Guest Details</h2>
                                 <div class="wrapper center-block">
@@ -391,7 +391,7 @@
                                                             <label class="control-label" for="credit-card-last-name">
                                                                 Age
                                                             </label>
-                                                            <select class="" name="age[]" data-placeholder="Select Age" required>
+                                                            <select class="chosen-select-no-single" name="age[]" data-placeholder="Select Age" required>
                                                                 <option label="Select Age" value="" disabled selected>Select Age</option>
                                                                 <option label="Adult" value="Adult" @if($guest_data && $guest_data->age == 'Adult') selected @endif></option>
                                                                 <option label="Child (Ages 2-12)" value="Child" @if($guest_data && $guest_data->age == 'Child') selected @endif></option>
@@ -452,91 +452,18 @@
 
 
                 </form>
-                <div id="account_details_modal" class="modal fade in" role="dialog">
+                <div id="bank_verification_modal" data-backdrop="static" data-keyboard="false" class="modal fade in" role="dialog">
                     <div class="modal-dialog modal-lg">
-
                         <!-- Modal content-->
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">Account Details</h4>
+                                <h4 class="modal-title">Bank Verification</h4>
                             </div>
                             <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <form id="create-funding-source">
-                                            <input type="hidden" id="travellerId" value="{{$traveller->id ?? ''}}">
-                                            <div class="col-md-4">
-                                                <label for="firstName">First Name</label>
-                                                <input type="text" id="firstName" placeholder="First Name" value="{{$traveller->first_name ?? ''}}" disabled autocomplete="off" />
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label for="lastName">Last Name</label>
-                                                <input type="text" id="lastName" placeholder="Last Name" value="{{$traveller->last_name ?? ''}}" disabled autocomplete="off"/>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label for="email">Email</label>
-                                                <input type="email" id="email" placeholder="email@example.com" value="{{$traveller->email ?? ''}}" disabled autocomplete="off"/>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label for="phone">Phone</label>
-                                                <input type="text" id="phone" value="{{$traveller->phone ?? ''}}" disabled autocomplete="off"/>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label for="date_of_birth">Date of Birth</label>
-                                                <input type="text" id="date_of_birth" value="{{$traveller->date_of_birth ?? ''}}" disabled autocomplete="off"/>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label for="address">Address</label>
-                                                <input type="text" id="address" placeholder="Address" value="{{$traveller->address ?? ''}}" @if($traveller->address) disabled @endif required autocomplete="off"/>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label for="state">State</label>
-                                                <input type="text" id="state" placeholder="State" value="{{$traveller->state ?? ''}}" @if($traveller->state) disabled @endif required autocomplete="off"/>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label for="city">City</label>
-                                                <input type="text" id="city" placeholder="City" value="{{$traveller->city ?? ''}}" @if($traveller->city) disabled @endif required autocomplete="off"/>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label for="pin_code">Postal Code</label>
-                                                <input type="text" id="pin_code" placeholder="Postal Code" value="{{$traveller->pin_code ?? ''}}" @if($traveller->pin_code) disabled @endif required autocomplete="off"/>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <label>Bank Account name</label>
-                                                <input type="text" id="name" placeholder="Name" required autocomplete="off"/>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label>Account number</label>
-                                                <input type="text" class="numbers_only" id="accountNumber" placeholder="Account number" required autocomplete="off"/>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label>SSN number</label>
-                                                <input type="text" class="numbers_only" id="ssnNumber" placeholder="SSN number" maxlength="4" minlength="4" required autocomplete="off"/>
-                                                <div class="caption-text" style="font-size: 14px; margin-top: -10px;">Enter last 4 digits of your SSN Number.</div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label for="password">Routing number</label>
-                                                <input type="text" class="numbers_only" id="routingNumber" placeholder="273222226" maxlength="9" minlength="9" required autocomplete="off"/>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label for="password">Account Type</label>
-                                                <select name="type" id="type">
-                                                    <option value="checking">Checking</option>
-                                                    <option value="savings">Savings</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-12 text-center">
-                                                <input type="submit" value="Add Details" class="btn btn-default bg-orange margin-top-15 margin-bottom-15" />
-                                            </div>
-                                        </form>
-                                        <div id="general_errors"></div>
-                                        <div id="logs"></div>
-                                    </div>
-                                </div>
+                                <div id="iavContainer"></div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -545,8 +472,20 @@
 
     <script>
         $(document).ready(function(){
-            var $pet_details = "{{isset($pet_details)}}" ? 1 : 0;
-            change_pet_travelling($pet_details);
+            var defaultFundingSource = "{{$traveller->default_funding_source}}";
+            $('#fundingSource').val(defaultFundingSource);
+            if($('#fundingSource').val()) {
+                $('#requestBooking').attr('disabled',false);
+            }
+
+            $('#fundingSource').change(function (e) {
+                if($('#fundingSource').val()) {
+                    $('#requestBooking').attr('disabled',false);
+                }
+            });
+
+            var pet_details = "{{isset($pet_details)}}" ? 1 : 0;
+            change_pet_travelling(pet_details);
 
             $('#is_pet_travelling_yes,#is_pet_travelling_no').change(function(){
                 change_pet_travelling($(this).val());
@@ -621,36 +560,33 @@
     <script>
         // Dwolla: Account details
         dwolla.configure('{{DWOLLA_ENV}}');
-        function fundingSourcecallback(err, res) {
-            var $div = $("<div />");
-            var logValue = {
-                error: err,
-                response: res,
+
+        function getFundingSourceFromIAV(iavToken) {
+            $("#bank_verification_modal").modal('show');
+            var config = {
+                container: 'iavContainer',
+                stylesheets: [
+                    'https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext'
+                ],
+                microDeposits: false,
+                fallbackToMicroDeposits: true,
             };
-            if (err && err._embedded) {
-                var errors = err._embedded.errors;
-                errors.forEach(function (errDetail) {
-                    var errorField = errDetail.path.substring(1);
-                    var fieldNode = $('#' + errorField);
-                    fieldNode.addClass('form-error');
-                    $('<p class="txt-red mb-5 form-error-message">' + errDetail.message + '</p>').insertAfter(fieldNode);
-                });
-                return false;
-            } else if(err) {
-                $('#general_errors').text(err.message);
-                // TODO: err.code = "DuplicateResource", save fundingSource from err_links.about.href
-                return false;
-            }
-            // TODO: send me to server to update me for user
-            var fundingSource = res._links['funding-source'].href;
-            addFundingSourceToUser(fundingSource);
+            dwolla.iav.start(iavToken, config, function(err, res) {
+                if(err) {
+                    // TODO: simulate error flow
+                    return false
+                }
+                setTimeout(function (e) {
+                    $("#bank_verification_modal").modal('hide');
+                    window.location.reload();
+                }, 3000);
+                var fundingSource = res._links['funding-source'].href;
+                addDefaultFundingSourceToUser(fundingSource);
+            });
 
-            $("#account_details_modal").modal('hide');
+        };
 
-            $div.text(JSON.stringify(logValue));
-            $('#logs').append($div);
-        }
-        function addFundingSourceToUser(fundingSource) {
+        function addDefaultFundingSourceToUser(fundingSource) {
             var formData = {
                 id: $('#travellerId').val(),
                 fundingSource: fundingSource,
@@ -663,68 +599,39 @@
                 json: true,
                 success: function(data, textStatus, jqXHR) {
                     if (data.success) {
-                        // alert('User detail have been update successfully');
-                        window.location.reload();
+                        console.log('Default funding source stored');
                     } else {
-                        $('#general_errors').text(data.error);
+                        console.log('Error saving Default funding source', data);
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    $('#general_errors').text('Error occurred');
+                    console.log('Error saving Default funding source', data);
                 }
             });
-        }
-        function createCustomerForUserAndGetToken(userInfo, cb) {
-            var formData = userInfo;
-            formData._token = '{{ csrf_token() }}';
+        };
+
+        $('#create-funding-source').on('click', function (e) {
+            var userInfo = {
+                id: $('#travellerId').val(),
+                _token: '{{ csrf_token() }}'
+            };
+
             $.ajax({
                 url: "/dwolla/create_customer_and_funding_source_token_with_validations",
                 type: "POST",
-                data: formData,
+                data: userInfo,
                 json: true,
                 success: function(data, textStatus, jqXHR) {
-                    cb(null, data);
+                    if(data && data.success) {
+                        getFundingSourceFromIAV(data.token);
+                    } else {
+                        console.log('Error while generating IAV token', data);
+                    }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    cb(errorThrown);
+                    console.log('Error while generating IAV token');
                 }
             });
-        }
-        $('#create-funding-source').on('submit', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $(".form-error").removeClass('form-error');
-            $(".form-error-message").hide();
-            var token = '{{$token ?? ''}}';
-            var bankInfo = {
-                routingNumber: $('#routingNumber').val(),
-                accountNumber: $('#accountNumber').val(),
-                type: $('#type').val(),
-                name: $('#name').val(),
-            };
-
-            var userInfo = {
-                id: $('#travellerId').val(),
-                dwolla_first_name: $('#firstName').val(),
-                dwolla_last_name: $('#lastName').val(),
-                dwolla_email: $('#email').val(),
-                dwolla_phone: $('#phone').val(),
-                dwolla_dob: $('#date_of_birth').val(),
-                dwolla_address: $('#address').val(),
-                dwolla_city: $('#city').val(),
-                dwolla_state: $('#state').val(),
-                dwolla_pin_code: $('#pin_code').val(),
-                dwolla_ssn: $('#ssnNumber').val(),
-            }
-
-            createCustomerForUserAndGetToken(userInfo, function(error, data) {
-                if (data && data.success) {
-                    dwolla.fundingSources.create(data.token, bankInfo, fundingSourcecallback);
-                } else {
-                    $('#general_errors').text(error || data.error);
-                }
-            });
-            return false;
         });
     </script>
 @endsection

@@ -135,20 +135,6 @@ class Dwolla
         return $this->customersApi->create($user);
     }
 
-    /**
-     * @param $id
-     * Check if customer is verified and if not updates the customer to verified
-     * @return customer id
-     */
-    public function verifyCustomer($id, $userPayload)
-    {
-        $customer_details = $this->customersApi->getCustomer($id);
-        if ($customer_details->status == 'unverified') {
-            $this->updateCustomer($userPayload, $id);
-        }
-        return $id;
-    }
-
     public function updateCustomer($user, $id)
     {
         return $this->customersApi->updateCustomer($user, $id);
@@ -179,32 +165,25 @@ class Dwolla
             $userPayload = $this->getCustomerPayload($user);
             Logger::info('Creating Dwolla customer for user: ' . $id);
             $res = $this->createNewCustomer($userPayload);
-            $user->dwolla_customer = $res;
+            Logger::info('Dwolla customer created for user: ' . $res);
+            $customer_id = basename($res);
+            $user->dwolla_customer = $customer_id;
             $user->save();
-            Logger::info('Dwolla customer created for user: ' . $id);
-            return $res;
+            return $customer_id;
         } catch (\Exception $ex) {
             Logger::error('Error in creating new customer for user: ' . $id . '. EX: ' . $ex->getResponseBody());
             return $ex;
         }
     }
 
-    public function getCustomerPayload($user, $request_data)
+    public function getCustomerPayload($user)
     {
         return [
             'firstName' => $user->first_name,
             'lastName' => $user->last_name,
             'email' => $user->email,
-            'dateOfBirth' => $user->date_of_birth,
-            'phone' => $user->phone,
             'correlationId' => $user->id,
             'ipAddress' => Request::ip(),
-            'type' => 'personal',
-            'address1' => $request_data->dwolla_address ?? $user->address,
-            'city' => $request_data->dwolla_city ?? $user->city,
-            'state' => $request_data->dwolla_state ?? $user->state,
-            'postalCode' => $request_data->dwolla_pin_code ?? $user->pin_code,
-            'ssn' => $request_data->dwolla_ssn,
         ];
     }
 
@@ -222,6 +201,23 @@ class Dwolla
             return $fsToken;
         } catch (\Exception $ex) {
             Logger::error('Error in creating funding source token for user: ' . $id . '. EX: ' . $ex->getMessage());
+            return $ex;
+        }
+    }
+
+    public function getIAVToken($customerId)
+    {
+        if (empty($customerId)) {
+            Logger::info('Tried to create Dwolla IAV token for user with missing information: ' . $customerId);
+            return false;
+        }
+        try {
+            Logger::info('Creating Dwolla IAV token for user: ' . $customerId);
+            $IAVToken = $this->customersApi->getCustomerIavToken($customerId);
+            Logger::info('Dwolla IAV created for user: ' . json_encode($IAVToken));
+            return $IAVToken;
+        } catch (\Exception $ex) {
+            Logger::error('Error in creating IAV token for user: ' . $customerId . '. EX: ' . $ex->getMessage());
             return $ex;
         }
     }
@@ -247,11 +243,12 @@ class Dwolla
 
         // Bank account
         // 'href' => 'https://api-sandbox.dwolla.com/funding-sources/d82be601-ed1e-4346-834e-72254fd96d77',
+        // 'href' => 'https://api-sandbox.dwolla.com/funding-sources/31a091a3-f731-4203-9ff6-7c7dd045634a',
 
         $payload = [
             '_links' => [
                 'source' => [
-                    'href' => $source,
+                    'href' => "https://api-sandbox.dwolla.com/funding-sources/914d31a8-458a-4d13-bd94-39aab09cb7a0",
                 ],
                 'destination' => [
                     'href' => $this->master_funding_source,

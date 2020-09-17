@@ -310,6 +310,12 @@ class PropertyController extends BaseController
             ->where('property_booking.client_id', CLIENT_ID)
             ->where('property_booking.booking_id', $booking_id)
             ->first();
+        $user_id = $request->session()->get('user_id');
+
+        if ($user_id != $data->traveller_id) {
+            // Do not allow other user to access booking details
+            return view('general_error', ['message' => 'Invalid Access']);
+        }
         $guests = DB::table('guest_informations')
             ->where('booking_id', $booking_id)
             ->get();
@@ -324,10 +330,11 @@ class PropertyController extends BaseController
 
         $all_funding_sources = $this->dwolla->getFundingSourcesForCustomer($traveller->dwolla_customer);
         $funding_sources = array_filter($all_funding_sources, function ($source) {
-            if ($source->status == 'verified') {
+            if ($source->status == 'verified' && $source->type != 'balance') {
                 return true;
             }
         });
+
         return view('properties.property_detail', [
             'data' => $data,
             'guests' => $guests,
@@ -2664,6 +2671,7 @@ class PropertyController extends BaseController
     public function save_guest_information(Request $request)
     {
         $booking = PropertyBooking::where('booking_id', $request->booking_id)->first();
+
         if ($request->recruiter_name) {
             $booking->recruiter_name = $request->recruiter_name;
         }
@@ -2679,6 +2687,7 @@ class PropertyController extends BaseController
         if ($request->contract_end_date) {
             $booking->contract_end_date = date('Y-m-d', strtotime($request->contract_end_date));
         }
+        $booking->funding_source = $request->funding_source;
         $booking->save();
 
         if ($request->guest_name) {

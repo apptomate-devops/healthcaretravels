@@ -88,34 +88,30 @@ class PaymentController extends BaseController
         $userPayload = $this->dwolla->getCustomerPayload($user, $request);
         if ($user->dwolla_customer) {
             // Customer has been created already and id is stored in DB
-            $resCustomer = new \stdClass();
-            $customer_id = $this->dwolla->verifyCustomer($user->dwolla_customer, $userPayload);
-            $resCustomer->id = $customer_id;
+            $customer_id = $user->dwolla_customer;
         } else {
             // Check if email already registered on Dwolla
-            $isExistingCustomer = $this->dwolla->findCustomerByEmail($request->dwolla_emaill);
+            $isExistingCustomer = $this->dwolla->findCustomerByEmail($user->email);
             if ($isExistingCustomer) {
-                $resCustomer = $isExistingCustomer;
-                $customer_id = $this->dwolla->verifyCustomer($isExistingCustomer->id, $userPayload);
+                $customer_id = $isExistingCustomer->id;
                 $user->dwolla_customer = $customer_id;
                 $user->save();
             } else {
-                $user->dwolla_address = $request->dwolla_address;
-                $user->dwolla_city = $request->dwolla_city;
-                $user->dwolla_state = $request->dwolla_state;
-                $user->dwolla_pin_code = $request->dwolla_pin_code;
-                $user->dwolla_ssn = $request->dwolla_ssn;
+                // Creating new customer
                 // TODO: to be used with user payload
-                $resCustomer = $this->dwolla->createCustomerForUser($request->id, $user);
+                $customer_id = $this->dwolla->createCustomerForUser($request->id, $user);
             }
         }
 
-        if (isset($resCustomer) && $resCustomer->id) {
-            $res = $this->dwolla->getFundingSourceToken($request->id);
+        Logger::info('CUSTOMER CREATION RESPONSE' . json_encode($customer_id));
+        if (isset($customer_id) && is_string($customer_id)) {
+            $res = $this->dwolla->getIAVToken($customer_id);
             if ($res && isset($res->token)) {
+                Logger::info('GOT IAV TOKEN:' . $res->token);
                 return response()->json(['success' => true, 'token' => $res->token]);
             }
         }
+
         return response()->json([
             'success' => false,
             'error' => 'There was an error creating funding source token for you',

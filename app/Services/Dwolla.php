@@ -32,9 +32,8 @@ class Dwolla
         $this->access_key = config('services.dwolla.access_key');
         $this->secret_key = config('services.dwolla.secret_key');
         $this->master_account = config('services.dwolla.master_account');
-        $this->master_account = config('services.dwolla.master_account');
         $this->master_funding_source = config('services.dwolla.master_funding_source');
-        $this->access_token = env('DWOLLA_ACCESS_TOKEN');
+        $this->access_token = config('services.dwolla.access_token');
         $this->setUp();
     }
 
@@ -96,7 +95,7 @@ class Dwolla
 
     public function setupAccessToken($url)
     {
-        $accessToken = env('DWOLLA_ACCESS_TOKEN');
+        $accessToken = config('services.dwolla.access_token');
         if ($accessToken) {
             Logger::info('Found accessToken from Config value:');
             return $accessToken;

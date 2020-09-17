@@ -103,6 +103,8 @@ class Helper
             \Artisan::call("config:cache");
             \Artisan::call("config:clear");
             \Artisan::call("cache:clear");
+            \Artisan::call("route:clear");
+            \Artisan::call("view:clear");
 
             return true;
         } else {

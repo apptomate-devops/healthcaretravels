@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AdminUsersTableSeeder::class);
         $this->call(SettingsTableSeeder::class);
         $this->call(PropertyListingRoomTypesSeeder::class);
+        $this->call(MinDaysPropertyListTableSeeder::class);
         $this->call(HandlePublicURLSeeder::class);
     }
 }

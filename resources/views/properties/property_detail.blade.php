@@ -274,22 +274,20 @@
                                                         <td class="val text-right" >
                                           <span class="lang-chang-label">
                                           $
-                                          </span><span><b>{{$data->total_amount+$data->coupon_value}}</b></span>
+                                          </span><span><b>{{$data->total_amount}}</b></span>
                                                         </td>
                                                     </tr>
-                                                    @if($data->coupon_value!="")
+                                                    @if(false && $data->coupon_value!="")
                                                         <tr class="row_border">
                                                             <td class="name" style="color:green;font-weight: bold">
                                                                 Discount(Coupon)
                                                             </td>
                                                             <td class="val text-right">
-                                          <span class="lang-chang-label" style="color:green;font-weight: bold">
-                                         $
-                                          </span><span style="color:green;font-weight: bold">{{$data->coupon_value}}</span>
+                                                                <span class="lang-chang-label" style="color:green;font-weight: bold">$</span>
+                                                                <span style="color:green;font-weight: bold">{{$data->coupon_value}}</span>
                                                             </td>
                                                         </tr>
                                                     @endif
-                                                    {{-- TODO: add more details of how the payment will be deductued once request is accepted by owner --}}
                                                     <tr class="editable-fields" id="total_amount">
                                                         <td colspan="2">
                                                             <div class="total_amount">Payable Amount ${{$data->total_amount}}</div>

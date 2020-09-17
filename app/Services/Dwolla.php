@@ -278,8 +278,7 @@ class Dwolla
             $transfer = $this->transfersApi->create($payload);
             return $transfer;
         } catch (\Throwable $th) {
-            var_dump($payload);
-            dd($th);
+            throw $th;
         }
     }
 }

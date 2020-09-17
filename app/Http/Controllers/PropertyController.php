@@ -839,7 +839,39 @@ class PropertyController extends BaseController
                 }
                 BookingPayments::insert($scheduled_payments);
             }
-            // TODO: Process 1st payment for this booking from user to dwolla master account
+            $firstPayment = BookingPayments::where('booking_id', $booking->booking_id)
+                ->where('payment_cycle', 1)
+                ->first();
+            try {
+                // Processing first payment cycle from user's side
+                Logger::info('Initiating transfer for booking: ' . $booking->booking_id . ' for payment cycle 1');
+                $fundingSource = $firstPayment->booking->funding_source;
+                $transferDetails = $this->dwolla->createTransferToMasterDwolla(
+                    $fundingSource,
+                    $firstPayment->total_amount,
+                );
+                Logger::info('Transfer success for booking: ' . $booking->booking_id . ' for payment cycle 1');
+                $firstPayment->transfer_id = $transferDetails;
+                $firstPayment->processed_time = Carbon::now()->toDateTimeString();
+                $firstPayment->is_processed = 1;
+                $firstPayment->save();
+                // TODO: Send payment success email here
+            } catch (\Exception $ex) {
+                $message = $ex->getMessage();
+                if (method_exists($ex, 'getResponseBody')) {
+                    $message = $ex->getResponseBody();
+                }
+                Logger::info('Transfer failed for booking: ' . $booking->booking_id . ' for payment cycle 1');
+                Logger::info('Transfer failed ex: ' . $message);
+                $firstPayment->processed_time = Carbon::now()->toDateTimeString();
+                $firstPayment->failed_time = Carbon::now()->toDateTimeString();
+                $firstPayment->is_processed = 1;
+                $firstPayment->failed_reason = $message;
+                $firstPayment->save();
+                // TODO: Send payment failure email here
+                return response()->json(['status' => 'ERROR', 'message' => $message]);
+            }
+
             if ($request->link == 1) {
                 return $this->single_booking($request->booking_id, $request);
             }

@@ -24,6 +24,8 @@ use App\Services\Twilio;
 use App\Services\Sendgrid;
 use App\Services\Dwolla;
 
+use App\Jobs\ProcessEmail;
+
 use Image;
 use DB;
 use Log;
@@ -252,6 +254,15 @@ class BaseController extends ConstantsController
             Logger::error('Error sending email to: ' . $email);
             return false;
         }
+    }
+
+    public function send_scheduled_email($to, $template, $subject, $data, $delayInSeconds)
+    {
+        $data = array_merge($data, [
+            'BASE_URL' => BASE_URL,
+            'APP_BASE_NAME' => APP_BASE_NAME,
+        ]);
+        ProcessEmail::dispatch($to, $template, $subject, $data)->delay(now()->addSeconds($delayInSeconds));
     }
 
     public function send_custom_email($email, $subject, $view_name, $data, $title, $from = GENERAL_MAIL)

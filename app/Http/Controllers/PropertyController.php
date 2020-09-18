@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\PetInformation;
 use App\Models\PropertyBlocking;
 use App\Services\Logger;
@@ -787,6 +788,7 @@ class PropertyController extends BaseController
                 'property_list.cleaning_fee',
                 'property_booking.*',
                 'users.email',
+                'users.phone',
             )
             ->first();
         $user_id = $request->session()->get('user_id');
@@ -821,6 +823,70 @@ class PropertyController extends BaseController
                     );
                 }
                 $paymentRes = $this->process_booking_payment($booking->booking_id, 1);
+                ///here
+
+                $owner = $booking->owner;
+                $owner_mail_data = [
+                    'name' => $owner->first_name . " " . $owner->last_name,
+                    'propertyName' => $booking->title,
+                    'travelerName' => $booking->first_name . " " . $booking->last_name,
+                    'travelerPhone' => $booking->phone,
+                ];
+                $start_delay = 0;
+                $end_delay = 0;
+                $start_date = Carbon::parse($booking->start_date);
+                $start_date_with_padding = $start_date->subDays(1);
+                $end_date = Carbon::parse($booking->end_date);
+                $end_date_with_padding = $end_date->subDay(1);
+                $current_date = Carbon::now();
+
+                // if there is no padding of 24 hr send email right away.
+                if ($start_date_with_padding->gt($current_date)) {
+                    $start_delay = $start_date_with_padding->floatDiffInSeconds($current_date);
+                }
+
+                if ($end_date_with_padding->gt($current_date)) {
+                    $end_delay = $end_date_with_padding->floatDiffInSeconds($current_date);
+                }
+
+                $subject = 'Your Booking is Starting Soon';
+                $this->send_scheduled_email(
+                    $owner->email,
+                    'owner-24hr-before-checkin',
+                    $subject,
+                    $owner_mail_data,
+                    $start_delay,
+                );
+                $subject = 'Your Booking at ' . $booking->title . ' is Ending';
+                $this->send_scheduled_email(
+                    $owner->email,
+                    'owner-24hr-before-checkout',
+                    $subject,
+                    $owner_mail_data,
+                    $end_delay,
+                );
+
+                $traveler_mail_data = [
+                    'name' => $booking->first_name . " " . $booking->last_name,
+                    'propertyName' => $booking->title,
+                ];
+                $subject = 'Your Stay at ' . $booking->title;
+                $this->send_scheduled_email(
+                    $owner->email,
+                    'traveler-24hr-before-checkin',
+                    $subject,
+                    $traveler_mail_data,
+                    $start_delay,
+                );
+                $subject = 'Your Stay at ' . $booking->title . ' is Ending';
+                $this->send_scheduled_email(
+                    $owner->email,
+                    'traveler-24hr-before-checkout',
+                    $subject,
+                    $traveler_mail_data,
+                    $end_delay,
+                );
+
                 if (!$paymentRes['success']) {
                     return response()->json(['status' => 'ERROR', 'message' => $paymentRes['message']]);
                 }

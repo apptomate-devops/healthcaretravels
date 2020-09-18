@@ -32,4 +32,12 @@ class PropertyBooking extends Model
     {
         return $this->belongsTo('App\Models\Users', 'traveller_id', 'id');
     }
+
+    /**
+     * Get the Owner of the booking property
+     */
+    public function owner()
+    {
+        return $this->belongsTo('App\Models\Users', 'owner_id', 'id');
+    }
 }

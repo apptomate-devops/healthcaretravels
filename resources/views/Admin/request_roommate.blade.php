@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 @extends('Admin.Layout.master')
 
 @section('title')  Rentals Slew Admin @endsection
@@ -91,11 +90,11 @@
                                                     {{$roommate->email}}
                                                 </td>
                                                 <td>
-                                                    {{$roommate->phone}}
+                                                    <span class="masked_phone_us_text">{{$roommate->phone}}</span>
                                                 </td>
                                                 <td>
-                                                    {{$roommate->startdate}} <br> to<br>
-                                                    {{$roommate->enddate}}
+                                                    {{date('m-d-Y',strtotime($roommate->startdate))}} <br> to<br>
+                                                    {{date('m-d-Y',strtotime($roommate->enddate))}}
                                                 </td>
                                                 <td>
                                                     {{$roommate->gender}}
@@ -261,7 +260,6 @@
         });
     </script>
 
-    =======
     @extends('Admin.Layout.master')
 
 @section('title')  Rentals Slew Admin @endsection
@@ -523,6 +521,4 @@
             }
         });
     </script>
-
-    >>>>>>> 9780f4d597805bbd719091658f0c562aa3f6ec95
 @endsection

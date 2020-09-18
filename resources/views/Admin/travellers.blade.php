@@ -59,13 +59,13 @@
                                     <table class="table table-striped table-bordered zero-configuration">
                                         <thead>
                                         <tr>
-                                            <th>Id</th>
-                                            <th>Registered At</th>
+                                            <th>ID</th>
+                                            <th>Registered On</th>
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Phone</th>
                                             <th>Gender</th>
-                                            <th>Date of birth</th>
+                                            <th>Date of Birth</th>
                                             <th>Status</th>
                                             <th>View Documents</th>
                                             <th>Action &nbsp;</th>
@@ -90,16 +90,32 @@
                                                         <center>-</center>@endif
                                                 </td>
                                                 <td>
-                                                    @if($traveller->phone!='0'){{$traveller->phone}}@else
+                                                    @if($traveller->phone!='0')<span class="masked_phone_us_text">{{$traveller->phone}}</span>@else
                                                         <center>-</center>@endif
                                                 </td>
                                                 <td>
-                                                    @if($traveller->gender=!'0'){{$traveller->gender}}@else
-                                                        <center>-</center>@endif
+                                                    <center>
+                                                        @if($traveller->gender=!'0')
+                                                            @if ($traveller->gender == '1')
+                                                                Male
+                                                            @elseif($traveller->gender == '2')
+                                                                Female
+                                                            @else
+                                                                {{$traveller->gender}}
+                                                            @endif
+                                                        @else
+                                                            -
+                                                        @endif
+                                                    </center>
                                                 </td>
                                                 <td>
-                                                    @if($traveller->date_of_birth!='0'){{date('d-m-Y',strtotime($traveller->date_of_birth))}}@else
-                                                        <center>-</center>@endif
+                                                    <center>
+                                                        @if($traveller->date_of_birth!='0')
+                                                                {{date('m-d-Y',strtotime($traveller->date_of_birth))}}
+                                                            @else
+                                                                -
+                                                            @endif
+                                                    </center>
                                                 </td>
                                                 <td>
                                                     @if($traveller->status == 0)

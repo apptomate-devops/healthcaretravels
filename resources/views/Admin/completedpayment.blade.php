@@ -48,7 +48,7 @@
 
                                             <tr>
                                                 <th>S.no</th>
-                                                <th>Booking Id</th>
+                                                <th>Booking ID</th>
                                                 <th>Host Name</th>
                                                 <th>Travellers Name</th>
                                                 <th>Amount</th>

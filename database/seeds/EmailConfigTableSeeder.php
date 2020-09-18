@@ -18,6 +18,12 @@ class EmailConfigTableSeeder extends Seeder
         // Type 7: Account verification failed email
         // Type 8: Urgent verify your account email
         // Type 9: Profile picture removal notice
+        // Type 10: Traveler has a booking with checkin in less than 24 hours
+        // Type 11: Owner has stay in less than 24 hours
+        // Type 12: Traveler has a booking ending in less than 24 hours
+        // Type 13: Owner has stay ending in less than 24 hours
+        // Type 14: Security deposit deposited back into traveler's account
+
         \App\Models\EmailConfig::updateOrCreate(
             [
                 'type' => 3,
@@ -113,6 +119,76 @@ class EmailConfigTableSeeder extends Seeder
                 'title' => 'Health Care Travels',
                 'subject' => 'Removing Profile Image',
                 'message' => "As your profile picture was inappropriate, it is removed by Health Care Travels",
+                'role_id' => 0,
+                'updated_at' => date("Y-m-d H:i:s"),
+            ],
+        );
+        \App\Models\EmailConfig::updateOrCreate(
+            [
+                'type' => 10,
+            ],
+            [
+                'type' => 10,
+                'title' => 'Health Care Travels',
+                'subject' => 'Your Stay at {{propertyName}}',
+                'message' =>
+                    "Your stay at Property Name is starting in 24 hours. Please be sure to contact the property owner to discuss how to enter the property and begin your stay. ",
+                'role_id' => 0,
+                'updated_at' => date("Y-m-d H:i:s"),
+            ],
+        );
+        \App\Models\EmailConfig::updateOrCreate(
+            [
+                'type' => 11,
+            ],
+            [
+                'type' => 11,
+                'title' => 'Health Care Travels',
+                'subject' => 'Your Booking is Starting Soon',
+                'message' =>
+                    "Traveler username's stay at your property name is starting in less than 24 hours. Make sure you contact each other beforehand to coordinate entry.",
+                'role_id' => 0,
+                'updated_at' => date("Y-m-d H:i:s"),
+            ],
+        );
+        \App\Models\EmailConfig::updateOrCreate(
+            [
+                'type' => 12,
+            ],
+            [
+                'type' => 12,
+                'title' => 'Health Care Travels',
+                'subject' => 'Your Stay at {{propertyName}} is Ending',
+                'message' =>
+                    "Your stay at Property Name is ending in 24 hours. Please be sure to contact the property owner to do a walk-through of the home before you leave. If the property owner finds no damage you will receive your full security deposit three days after check-out.",
+                'role_id' => 0,
+                'updated_at' => date("Y-m-d H:i:s"),
+            ],
+        );
+        \App\Models\EmailConfig::updateOrCreate(
+            [
+                'type' => 13,
+            ],
+            [
+                'type' => 13,
+                'title' => 'Health Care Travels',
+                'subject' => 'Your Booking at {{propertyName}} is Ending',
+                'message' =>
+                    "Your booking with Traveler username at Property Name is ending in 24 hours. Please be sure to contact the traveler to do a walk-through of the home before you leave. If you find any damage, be sure to contact us immediately.",
+                'role_id' => 0,
+                'updated_at' => date("Y-m-d H:i:s"),
+            ],
+        );
+        \App\Models\EmailConfig::updateOrCreate(
+            [
+                'type' => 14,
+            ],
+            [
+                'type' => 14,
+                'title' => 'Health Care Travels',
+                'subject' => 'Security Deposit Return',
+                'message' =>
+                    "Your security deposit has been returned in full and deposited into your bank account. We hope you enjoyed your stay!",
                 'role_id' => 0,
                 'updated_at' => date("Y-m-d H:i:s"),
             ],

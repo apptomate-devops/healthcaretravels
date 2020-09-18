@@ -91,7 +91,7 @@
                             or Host Services, (ii) reality or precision of any Listing portrayals, Ratings, Reviews, or
                             other User Content (as described below), or (iii) the execution or lead of any User or third
                             party. HCT does not support any User, Listing or Host Services. Any references to a
-                            Host/CoHost being “verified” (or similar reference) merely demonstrate that (1) the Host has
+                            Host/Co-Host being “verified” (or similar reference) merely demonstrate that (1) the Host has
                             finished a pertinent confirmation or distinguishing proof process; &nbsp;or (2) the Host has
                             been Scouted (as described below). Any such description isn’t a support, confirmation or
                             certification by HCT about any User, including of the User’s personality or foundation or
@@ -348,7 +348,7 @@
                             communications with Guests, and the provision of any Co-Host Services.</p>
                         <p>&nbsp;</p>
                         <p>Unless agreed otherwise by Host and Co-Host, Host and Co-Host may terminate the Co-Host
-                            agreement at any time. In addition, both Host and Co-Host acknowledge that their Co-hosting
+                            agreement at any time. In addition, both Host and Co-Host acknowledge that their Co-Hosting
                             relationship will terminate in the event that HCT (i) terminates the Co-Host service or (ii)
                             terminates either party’s participation in the Co-Host service. When the Co-Host agreement
                             is terminated, the Host will remain responsible for all of the Co-Host’s actions prior to

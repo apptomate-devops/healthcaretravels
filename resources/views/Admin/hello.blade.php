@@ -45,7 +45,7 @@
                                         <thead>
                                         <tr>
                                             <th>S.no</th>
-                                            <th>Booking Id</th>
+                                            <th>Booking ID</th>
                                             <th>Host Name</th>
                                             <th>Total Amount</th>
                                             <th>Admin Commision</th>

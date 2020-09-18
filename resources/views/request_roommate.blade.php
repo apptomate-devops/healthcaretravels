@@ -90,11 +90,11 @@
                                 {{$roommate->email}}
                               </td>
                               <td>
-                                {{$roommate->phone}}
+                                <span class="masked_phone_us_text">{{$roommate->phone}}</span>
                               </td>
                               <td>
-                              {{$roommate->startdate}} <br> to<br>
-                              {{$roommate->enddate}}
+                              {{date('m-d-Y',strtotime($roommate->startdate))}} <br> to<br>
+                              {{date('m-d-Y',strtotime($roommate->enddate))}}
                               </td>
                               <td>
                               {{$roommate->gender}}

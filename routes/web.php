@@ -167,6 +167,8 @@ Route::middleware(['LoginCheck'])->group(function () {
         '/dwolla/create_customer_and_funding_source_token_with_validations',
         'PaymentController@create_customer_and_funding_source_token_with_validations',
     );
+    Route::post('/dwolla/get_funding_source_details', 'PaymentController@get_funding_source_details');
+    Route::post('/dwolla/add_funding_source', 'PaymentController@add_funding_source');
 });
 
 // TODO: remove when implemented
@@ -174,7 +176,6 @@ Route::middleware(['LoginCheck'])->group(function () {
 Route::get('/dwolla/create_customer/{id}', 'PaymentController@create_customer');
 Route::get('/dwolla/create/{id}', 'PaymentController@create');
 Route::get('/dwolla/get_funding_source_token/{id}', 'PaymentController@get_funding_source_token');
-Route::post('/dwolla/add_funding_source', 'PaymentController@add_funding_source');
 Route::post(
     '/dwolla/create_customer_and_funding_source_token',
     'PaymentController@create_customer_and_funding_source_token',

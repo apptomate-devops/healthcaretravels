@@ -60,7 +60,7 @@
 
 {{--                                        <div class="col-md-6">--}}
 {{--                                            <h5>Nightly price for stays more than 1 month (30+ days)<span class="required">*</span></h5>--}}
-{{--                                            <input class="search-field validate price_float" id="price_more_than_one_month" name="price_more_than_one_month" type="text" value="{{isset($price->price_more_than_one_month)?$price->price_more_than_one_month:''}}" />--}}
+{{--                                            <input class="search-field validate price_int" id="price_more_than_one_month" name="price_more_than_one_month" type="text" value="{{isset($price->price_more_than_one_month)?$price->price_more_than_one_month:''}}" />--}}
 {{--                                            <div id="set_location"></div>--}}
 
 
@@ -69,14 +69,14 @@
                                         <div class="col-md-6">
                                             <h5>Monthly Rate (USD)<span class="required">*</span></h5>
                                             <p class="caption-text">Booking prices will be calculated based on this rate, starting at a minimum of 30 days.</p>
-                                            <input class="search-field validate price_float" type="text" name="monthly_rate" id="monthly_rate" value="{{isset($property_details->monthly_rate)?$property_details->monthly_rate:''}}" />
+                                            <input class="search-field validate price_int" type="text" name="monthly_rate" id="monthly_rate" value="{{isset($property_details->monthly_rate)?$property_details->monthly_rate:''}}" autocomplete="off"/>
                                         </div>
 
                                         <div class="col-md-6">
                                             <h5>Minimum Daily Stay<span class="required">*</span></h5>
                                             <p class="caption-text">Minimum 30 days</p>
                                             {{-- <h5>Minimum Stay<span class="required">*</span></h5>  --}}
-                                            <input class="search-field validate" id="minimumstay" name="minimumstay" type="text" value="{{isset($property_details->min_days)?$property_details->min_days:'30'}}"  />
+                                            <input class="search-field validate" id="minimumstay" name="minimumstay" type="text" value="{{isset($property_details->min_days)?$property_details->min_days:'30'}}" autocomplete="off" />
                                         </div>
                                     </div>
                                     <!--
@@ -84,7 +84,7 @@
 
                                                                             <div class="col-md-6">
                                                                                 <h5>City Fee</h5>
-                                                                                <input class="search-field validate price_float" name="city_fee" type="text" value="" />
+                                                                                <input class="search-field validate price_int" name="city_fee" type="text" value="" />
 
                                                                             </div>
 
@@ -110,7 +110,7 @@
                                         <div class="col-md-6">
 
                                             <h5>Cleaning Fee</h5>
-                                            <input class="search-field price_float" name="cleaning_fee" type="text" value="{{isset($price->cleaning_fee)?$price->cleaning_fee:''}}" />
+                                            <input class="search-field price_int" name="cleaning_fee" type="text" value="{{isset($price->cleaning_fee)?$price->cleaning_fee:''}}" />
                                         </div>
                                          <div class="col-md-6">
                                             <h5>Cleaning Fee Type </h5>
@@ -144,7 +144,7 @@
                                         <div class="col-md-6">
                                             <h5>Cleaning Fees<span class="required">*</span></h5>
                                             <p class="caption-text">This fee will be charged once per stay</p>
-                                            <input class="search-field price_float validate" id="cleaning_fee" name="cleaning_fee" type="text" value="{{isset($property_details->cleaning_fee)?$property_details->cleaning_fee:'0'}}"   />
+                                            <input class="search-field price_int validate" id="cleaning_fee" name="cleaning_fee" type="text" value="{{isset($property_details->cleaning_fee)?$property_details->cleaning_fee:'0'}}" autocomplete="off"  />
                                         </div>
                                     </div>
 
@@ -163,7 +163,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <h5>Security Deposit<span class="required">*</span></h5>
-                                            <input class="search-field price_float validate" id="security_deposit" name="security_deposit" type="text" value="{{isset($property_details->security_deposit)?$property_details->security_deposit:'0'}}"   />
+                                            <input class="search-field price_int validate" id="security_deposit" name="security_deposit" type="text" value="{{isset($property_details->security_deposit)?$property_details->security_deposit:'0'}}" autocomplete="off"  />
                                         </div>
                                         <br><br>
                                     </div>
@@ -263,7 +263,7 @@
                 this.value = (value < 30) ? 30 : value;
             });
 
-            $('#minimumstay').keypress(function(event) {
+            $('#minimumstay, .price_int').keypress(function(event) {
                 var regex = new RegExp("^[0-9+]$");
                 var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
                 if (!regex.test(key)) {
@@ -271,19 +271,6 @@
                     return false;
                 }
             });
-
-            $('.price_float').change(function(){
-                var value = parseFloat(parseFloat(this.value)).toFixed(2);
-                this.value = isNaN(value) ? 0 : value;
-            });
-
-
-            $('.price_float').keypress(function(event) {
-                if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
-                    event.preventDefault();
-                }
-            });
-
 
             $('#property_from_date').timepicker({ 'timeFormat': 'H:i:s' });
             $('#property_to_date').timepicker({ 'timeFormat': 'H:i:s' });

@@ -6,10 +6,6 @@ use DB;
 
 class Helper
 {
-    public static function format_money($money)
-    {
-        return $money ? number_format($money, 2) : 0;
-    }
     public static function get_price_details($property_details, $check_in, $check_out)
     {
         $current = Carbon::parse($check_in);
@@ -29,22 +25,22 @@ class Helper
             'client_id' => CLIENT_ID,
             'single_day_fare' => $single_day_fare,
             'total_days' => $total_days,
-            'service_tax' => Helper::format_money($service_tax),
+            'service_tax' => $service_tax,
             'initial_pay' => 0, // TODO: check this later $due_now
-            'total_amount' => Helper::format_money($total_price),
+            'total_amount' => $total_price,
             'check_in' => $check_in,
             'check_out' => $check_out,
-            'cleaning_fee' => Helper::format_money($cleaning_fee),
-            'security_deposit' => Helper::format_money($security_deposit),
-            'sub_total' => Helper::format_money($total_price),
-            'price' => Helper::format_money($price),
+            'cleaning_fee' => $cleaning_fee,
+            'security_deposit' => $security_deposit,
+            'sub_total' => $total_price,
+            'price' => $price,
         ];
         return $booking_price;
     }
 
     public static function get_daily_price($monthly_price)
     {
-        return Helper::format_money($monthly_price / 30);
+        return round($monthly_price / 30);
     }
     public static function get_stay_status($booking_data)
     {

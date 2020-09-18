@@ -886,9 +886,9 @@ class PropertyController extends BaseController
                 );
 
                 // TODO: clear if we want to allow accepting booking request if the payment fails for a reason.
-                if (!$paymentRes['success']) {
-                    return response()->json(['status' => 'ERROR', 'message' => $paymentRes['message']]);
-                }
+                // if (!$paymentRes['success']) {
+                //     return response()->json(['status' => 'ERROR', 'message' => $paymentRes['message']]);
+                // }
             }
             if ($request->link == 1) {
                 return $this->single_booking($request->booking_id, $request);

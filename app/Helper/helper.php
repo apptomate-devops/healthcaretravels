@@ -82,6 +82,16 @@ class Helper
         return 'Pending Stay';
     }
 
+    public static function reloadEnv()
+    {
+        $dotenvLoader = new \Dotenv\Dotenv(base_path());
+        $dotenvLoader->overload();
+        config([
+            'services.dwolla.master_account' => env('DWOLLA_MASTER_ACCOUNT'),
+            'services.dwolla.master_funding_source' => env('DWOLLA_MASTER_FUNDING_SOURCE'),
+            'services.dwolla.access_token' => env('DWOLLA_ACCESS_TOKEN'),
+        ]);
+    }
     public static function changeEnv($data = [])
     {
         if (count($data) > 0) {

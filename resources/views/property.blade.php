@@ -1123,7 +1123,7 @@
                 success: function(data) {
                     // console.log("room ",data);
                     if (data.status == 'FAILED' && data.status_code == 0) {
-                        $(".alert").html("Property not available");
+                        $(".alert").html("Sorry! This property is not available during all of your selected dates. Try changing your dates or finding another property.");
                         $(".alert").show();
                         $("#table_body").html("");
                         $('.booking_button').attr('disabled',true);

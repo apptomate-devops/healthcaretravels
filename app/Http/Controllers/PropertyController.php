@@ -338,6 +338,9 @@ class PropertyController extends BaseController
             // Do not allow other user to access booking details
             return view('general_error', ['message' => 'Invalid Access']);
         }
+        $agency = DB::table('agency')
+            ->orderBy('name', 'ASC')
+            ->get();
         $guests = DB::table('guest_informations')
             ->where('booking_id', $booking_id)
             ->get();
@@ -363,6 +366,7 @@ class PropertyController extends BaseController
             'pet_details' => $pet_details,
             'traveller' => $traveller,
             'funding_sources' => $funding_sources,
+            'agency' => $agency,
         ]);
     }
 
@@ -2672,6 +2676,12 @@ class PropertyController extends BaseController
         }
         if ($request->contract_end_date) {
             $booking->contract_end_date = date('Y-m-d', strtotime($request->contract_end_date));
+        }
+        if ($request->name_of_agency) {
+            $booking->name_of_agency = $request->name_of_agency;
+        }
+        if ($request->other_agency) {
+            $booking->other_agency = $request->other_agency;
         }
         $booking->funding_source = $request->funding_source;
         $booking->save();

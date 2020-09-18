@@ -110,10 +110,10 @@
                                     <label for="agency_name">Agency you work for:</label>
                                     <p class="register-info">Select as many agencies that you have worked for in the last 12 months.</p>
                                     <span class="autocomplete-select"></span>
-                                    <div id="add_another_agency" class="add-another" onclick="add_another_agency()" style="cursor: pointer;">Can't find it? Add it here.</div>
+                                    <div id="add_another_agency" class="add-another" onclick="add_another_agency(true)" style="cursor: pointer;">Can't find it? Add it here.</div>
                                     <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
                                     <label for="other_agency_name" id="other_agency_name" style="display: none;">Other Angency:</label>
-                                    <input type="text" style="display: none;" class="input-text validate" name="other_agency" id="other_agency" value="{{Session::get('other_agency') ?? $user_detail->other_agency}}" placeholder="Other agency" autocomplete="off">
+                                    <input type="text" style="display: none;" class="input-text validate" name="other_agency" id="other_agency" onclick="add_another_agency()" value="{{Session::get('other_agency') ?? $user_detail->other_agency}}" placeholder="Other agency" autocomplete="off">
                                 </div>
                             @endif
                             @if($user_detail->role_id == 0 || $user_detail->role_id == 3)
@@ -126,7 +126,7 @@
                                 </select>
                                 <div id="add_another_occupation" class="add-another" onclick="add_another_occupation(true)" style="cursor: pointer;">Can't find it? Add it here.</div>
                                 <input type="text" style="display: none; margin: 0 0 20px;" class="input-text validate" name="other_occupation" id="other_occupation"  value="{{Session::get('other_occupation') ?? $user_detail->other_occupation}}" placeholder="Other Occupation" autocomplete="off">
-                                <div style="display: none;" id="other_occupation_cancel" class="add-another" onclick="add_another_occupation()" style="cursor: pointer;">Cancel</div>
+                                <div style="display: none;" id="other_occupation_cancel" class="add-another" onclick="add_another_occupation(false, true)" style="cursor: pointer;">Cancel</div>
 
 
                                 <div class="form-row form-row-wide" id="tax_home_field">
@@ -260,7 +260,7 @@
 
             var otherAgencies = "{{Session::get('other_agency') ?? $user_detail->other_agency}}";
             if(otherAgencies) {
-                add_another_agency(otherAgencies);
+                add_another_agency(true, otherAgencies);
             }
             var address_line_2 = "{{Session::get('address_line_2') ?? $user_detail->address_line_2}}";
             if (address_line_2) {
@@ -274,22 +274,6 @@
             let yyyy = new Date().getFullYear();
             document.getElementById("dob").max = `${yyyy}-${ mm<10 ? '0'+mm : mm }-${ dd<10 ? '0'+dd : dd }`;
         }
-
-        $('#agency_name').change(function(){
-            var value=$(this).val();
-            if(value=="Others"){
-                $('#agency,#agency_show_single').hide();
-                $('#others_show').show();
-                $('#agency').attr('name','');
-                $('#others_show').attr('name','name_of_agency');
-                $('#agency_name').attr('name','');
-
-            }else{
-                $('#agency_name').attr('name','name_of_agency');
-                $('#others_show').attr('name','');
-                $('#others_show').hide();
-            }
-        });
 
         function on_dob_change(value) {
             const dateString = value;
@@ -307,7 +291,7 @@
             }
         }
 
-        function add_another_occupation(show = false) {
+        function add_another_occupation(show = false, isCancel = false) {
             if(show) {
                 $('#add_another_occupation').hide();
                 $('#other_occupation').show();
@@ -318,7 +302,9 @@
                 $('#other_occupation').hide();
                 $('#other_occupation_cancel').hide();
                 $('#other_occupation').val('');
-                $('#occupation').val('');
+                if(isCancel) {
+                    $('#occupation').val('');
+                }
             }
         }
         function on_occupation_change(element) {
@@ -414,11 +400,20 @@
             $('#btn_add_apt_number').show();
             $('#address_line_2').val('');
         }
-        function add_another_agency(value = '') {
-            $('#add_another_agency').hide();
-            $('#other_agency_name').show();
-            $('#other_agency').show();
-            $('#other_agency').val(value);
+        function add_another_agency(show = false, value = '') {
+            if(show) {
+                $('#add_another_agency').hide();
+                $('#other_agency').show();
+                $('#other_agency_cancel').show();
+                $('#other_agency_name').show();
+                $('#other_agency').val(value);
+            } else {
+                $('#add_another_agency').show();
+                $('#other_agency').hide();
+                $('#other_agency_cancel').hide();
+                $('#other_agency_name').hide();
+                $('#other_agency').val('');
+            }
         }
 
         function load_agencies() {

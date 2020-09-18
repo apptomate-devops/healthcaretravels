@@ -2,6 +2,7 @@
 //echo json_encode($data);exit;
 ?>
 @extends('layout.master') @section('title',$data->title) @section('main_content')
+    <link rel="stylesheet" href="{{ URL::asset('css/select-pure.css') }}">
     <style type="text/css">
         .property_details.container {
             margin-top: 50px;
@@ -20,6 +21,12 @@
         }
         .property-title h2 {
             font-size: 26px !important;
+        }
+        .add-another {
+            font-size: 12px;
+            color: #e78016;
+            text-align: right;
+            margin: -10px 10px 20px 0;
         }
         @media only screen and (min-width: 990px) {
             .property-image p {
@@ -123,16 +130,14 @@
             color: #adadad;
             font-weight: normal;
         }
-        #general_errors {
-            text-align: center;
+        .error-text {
             color: red;
-            font-weight: 500;
         }
     </style>
     <div id="" class="property-titlebar margin-bottom-0">
         <div class="property_details container">
             <div class="row">
-                <form name="payment" action="{{URL('/')}}/save-guest-information" method="post" enctype="multipart/form-data" >
+                <form name="payment" action="{{URL('/')}}/save-guest-information" method="post" enctype="multipart/form-data" onsubmit="return validate_submit()" autocomplete="off" onkeydown="return event.key != 'Enter';" >
                     <div class="row">
                         <div class="col-md-5 col-md-push-7 col-lg-4 col-lg-push-8 row-space-2 lang-ar-left tempClass">
                             <div class="panel payments-listing payment_list_right border-0 shadow-none mb-0">
@@ -355,7 +360,7 @@
                                             <div class="panel panel-default">
                                                 <div class="panel-heading" role="tab" id="guest-heading-{{$i+1}}">
                                                     <h4 class="panel-title">
-                                                        <a role="button" data-toggle="collapse" data-parent="#guest-accordian" href="#guest-collapse{{$i+1}}" aria-expanded="true" aria-controls="guest-collapse{{$i+1}}">
+                                                        <a id="guest-collapse-{{$i}}" role="button" data-toggle="collapse" data-parent="#guest-accordian" href="#guest-collapse{{$i+1}}" @if($i == 0) aria-expanded="true" @endif aria-controls="guest-collapse{{$i+1}}">
                                                             Enter Guest {{$i+1}} Details
                                                         </a>
                                                     </h4>
@@ -405,18 +410,10 @@
                                     </div>
                                 </div>
 
-                                <div id="is_pet" class="checkboxes in-row" style="margin-bottom: 20px;">
-                                    <h3>Do you travel with a pet?</h3>
-                                    <div class="checkboxes in-row">
-                                        <input id="is_pet_travelling_yes" name="is_pet_travelling" type="checkbox" value="1" >
-                                        <label for="is_pet_travelling_yes">Yes</label>
-
-                                        <input id="is_pet_travelling_no" name="is_pet_travelling" type="checkbox" value="0" >
-                                        <label for="is_pet_travelling_no">No</label>
-                                    </div>
-
-                                </div>
-
+                                <hr>
+                                <button id="add_pet" class="btn bg-orange" style="margin-bottom: 20px; width: auto;">
+                                    Add a Pet
+                                </button>
                                 <div class="row" id="pet_details" style="display: none;">
                                     <div class="control-group cc-last-name col-md-6">
                                         <label for="pet_name">Name:
@@ -442,8 +439,21 @@
                                             <input type="file" name="pet_image" id="pet_image" class="form-control" accept="image/*"/>
                                         </label>
                                     </div>
+                                    <div id="remove_pet" class="add-another">Don't want to add a pet?</div>
                                 </div>
                                 <hr>
+
+                                <div class="form-row form-row-wide" id="agency_show">
+                                    <label for="agency_name">Agency you work for:</label>
+                                    <p class="register-info">Select as many agencies that you have worked for in the last 12 months.</p>
+                                    <span class="autocomplete-select"></span>
+                                    <p id="agency_error" class="error-text" style="display: none;">Select at least 1 agency</p>
+                                    <div id="add_another_agency" class="add-another" onclick="add_another_agency(true)" style="cursor: pointer;">Can't find it? Add it here.</div>
+                                    <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
+                                    <label for="other_agency_name" id="other_agency_name" style="display: none;">Other Angency:</label>
+                                    <input type="text" style="display: none;" class="input-text validate" name="other_agency" id="other_agency" value="{{$traveller->other_agency}}" placeholder="Other agency" autocomplete="off">
+                                    <div style="display: none;" id="other_agency_cancel" class="add-another" onclick="add_another_agency()" style="cursor: pointer;">Cancel</div>
+                                </div>
                             </section>
                         </div>
                     </div>
@@ -472,6 +482,9 @@
     </div>
 
     <script>
+        var allAgencies = [];
+        var agencyAutoComplete;
+
         $(document).ready(function(){
             var defaultFundingSource = "{{$traveller->default_funding_source}}";
             $('#fundingSource').val(defaultFundingSource);
@@ -485,27 +498,91 @@
                 }
             });
 
+            load_agencies();
+            var otherAgencies = "{{$traveller->other_agency}}";
+            if(otherAgencies) {
+                add_another_agency(true, otherAgencies);
+            }
+
             var pet_details = "{{isset($pet_details)}}" ? 1 : 0;
             change_pet_travelling(pet_details);
 
-            $('#is_pet_travelling_yes,#is_pet_travelling_no').change(function(){
-                change_pet_travelling($(this).val());
+            $('#add_pet').click(function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                change_pet_travelling(1);
             });
-
-            function change_pet_travelling(value) {
-                if(value == 1) {
-                    $('#is_pet_travelling_yes').attr('checked',true);
-                    $('#is_pet_travelling_no').attr('checked',false);
-                    $('#pet_details').show();
-                    $('#pet_name, #pet_weight, #pet_breed, #pet_image').attr('required', true);
-                } else {
-                    $('#is_pet_travelling_yes').attr('checked',false);
-                    $('#is_pet_travelling_no').attr('checked',true);
-                    $('#pet_name, #pet_weight, #pet_breed, #pet_image').attr('required', false);
-                    $('#pet_details').hide();
-                }
-            }
+            $('#remove_pet').click(function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                change_pet_travelling(0);
+            });
         });
+        function change_pet_travelling(value) {
+            if(value) {
+                $('#pet_details').show();
+                $('#pet_name, #pet_weight, #pet_breed, #pet_image').attr('required', true);
+            } else {
+                $('#pet_name, #pet_weight, #pet_breed, #pet_image').attr('required', false);
+                $('#pet_details').hide();
+            }
+        }
+        function add_another_agency(show = false, value = '') {
+            if(show) {
+                $('#add_another_agency').hide();
+                $('#other_agency').show();
+                $('#other_agency').attr('required', true);
+                $('#other_agency_cancel').show();
+                $('#other_agency_name').show();
+                $('#other_agency').val(value);
+            } else {
+                $('#add_another_agency').show();
+                $('#other_agency').hide();
+                $('#other_agency').attr('required', false);
+                $('#other_agency_cancel').hide();
+                $('#other_agency_name').hide();
+                $('#other_agency').val('');
+            }
+        }
+        function load_agencies() {
+            var agencies = <?php echo json_encode($agency); ?>;
+            allAgencies = agencies;
+            initPureSelect(agencies);
+        }
+
+        function initPureSelect(agencies, selected) {
+            var selected_agencies = "{{$traveller->name_of_agency}}";
+            selected_agencies = selected_agencies ? selected_agencies.split(',') : [];
+            if (selected) {
+                selected_agencies = selected;
+            }
+            var mappedData = agencies.map(a => ({
+                label: a.name,
+                value: a.name
+            }));
+            $('.autocomplete-select').empty();
+            var autocomplete = new SelectPure(".autocomplete-select", {
+                options: mappedData,
+                value: selected_agencies,
+                multiple: true,
+                autocomplete: true,
+                icon: "fa fa-times",
+                placeholder: "Select Agencies",
+                onChange: function (e) {
+                    $('#agency_error').hide();
+                }
+            });
+            agencyAutoComplete = autocomplete;
+        }
+
+        function validate_submit() {
+            $('#name_of_agency').val(agencyAutoComplete.value());
+            if($('#other_agency').val() || (agencyAutoComplete.value().length && agencyAutoComplete.value().length)) {
+                return true;
+            }
+            $('#agency_error').show();
+            return false
+        }
         $('.price_float').change(function(){
             var value = parseFloat(this.value);
             this.value = isNaN(value) ? 0 : value;

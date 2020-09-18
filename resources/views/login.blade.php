@@ -287,7 +287,7 @@
                                 </label>
                             <div id="add_another_occupation" class="add-another" onclick="add_another_occupation(true)" style="cursor: pointer;">Can't find it? Add it here.</div>
                             <input type="text" style="display: none;" class="input-text validate" name="other_occupation" id="other_occupation"  value="{{Session::get('other_occupation')}}" placeholder="Other Occupation" autocomplete="off">
-                            <div style="display: none;" id="other_occupation_cancel" class="add-another" onclick="add_another_occupation()" style="cursor: pointer;">Cancel</div>
+                            <div style="display: none;" id="other_occupation_cancel" class="add-another" onclick="add_another_occupation(false, true)" style="cursor: pointer;">Cancel</div>
                             {!! $errors->first('occupation', '<p class="error-text">:message</p>') !!}
                             </p>
 
@@ -816,7 +816,7 @@
         }
     }
 
-    function add_another_occupation(show = false) {
+    function add_another_occupation(show = false, isCancel = false) {
         if(show) {
             $('#add_another_occupation').hide();
             $('#other_occupation').show();
@@ -827,7 +827,9 @@
             $('#other_occupation').hide();
             $('#other_occupation_cancel').hide();
             $('#other_occupation').val('');
-            $('#occupation').val('');
+            if(isCancel) {
+                $('#occupation').val('');
+            }
         }
     }
 

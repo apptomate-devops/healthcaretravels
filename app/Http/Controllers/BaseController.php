@@ -267,7 +267,7 @@ class BaseController extends ConstantsController
 
     public function send_custom_email($email, $subject, $view_name, $data, $title, $from = GENERAL_MAIL)
     {
-        $mail_title = $title;
+        $mail_title = $title ?? 'Health Care Travels';
         $mail_from = $from ? $from : GENERAL_MAIL;
         try {
             Mail::send($view_name, $data, function ($message) use ($email, $mail_title, $subject, $mail_from) {
@@ -803,6 +803,15 @@ class BaseController extends ConstantsController
         if (empty($payment)) {
             return ['success' => false, 'message' => 'No such payment exists!'];
         }
+        $traveler = $payment->booking->traveler;
+        $name = $traveler->first_name . ' ' . $traveler->last_name;
+        $fundingSourceDetails = null;
+        $subjectDate = Carbon::now()->format('m/d');
+        $data = [
+            'name' => $name,
+            'amount' => $payment->total_amount,
+            'booking_id' => $booking_id,
+        ];
         try {
             // Processing first payment cycle from user's side
             Logger::info('Initiating transfer for booking: ' . $booking_id . ' :: paymentCycle: ' . $payment_cycle);
@@ -813,7 +822,11 @@ class BaseController extends ConstantsController
             $payment->processed_time = Carbon::now()->toDateTimeString();
             $payment->is_processed = 1;
             $payment->save();
-            // TODO: Send payment success email here
+            $fundingSourceDetails = $this->dwolla->getFundingSourceDetails($fundingSource);
+            $subject = 'Payment Successfully Processed on ' . $subjectDate;
+            $data['accountName'] = $fundingSourceDetails->name;
+            //send_custom_email($email, $subject, $view_name, $data, $title, $from = GENERAL_MAIL)
+            $this->send_custom_email($traveler->email, $subject, 'mail.payment-success', $data, 'Payment Processed');
             return ['success' => true, 'message' => 'Payment has been processed successfully!'];
         } catch (\Exception $ex) {
             $message = $ex->getMessage();
@@ -827,7 +840,12 @@ class BaseController extends ConstantsController
             $payment->is_processed = 1;
             $payment->failed_reason = $message;
             $payment->save();
-            // TODO: Send payment failure email here
+            if (empty($fundingSourceDetails)) {
+                $fundingSourceDetails = $this->dwolla->getFundingSourceDetails($fundingSource);
+            }
+            $data['accountName'] = $fundingSourceDetails->name;
+            $subject = 'URGENT: Payment Failure on ' . $subjectDate;
+            $this->send_custom_email($traveler->email, $subject, 'mail.payment-failure', $data, 'Payment Processed');
             return ['success' => false, 'message' => $message];
         }
     }

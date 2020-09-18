@@ -823,8 +823,6 @@ class PropertyController extends BaseController
                     );
                 }
                 $paymentRes = $this->process_booking_payment($booking->booking_id, 1);
-                ///here
-
                 $owner = $booking->owner;
                 $owner_mail_data = [
                     'name' => $owner->first_name . " " . $owner->last_name,
@@ -887,6 +885,7 @@ class PropertyController extends BaseController
                     $end_delay,
                 );
 
+                // TODO: clear if we want to allow accepting booking request if the payment fails for a reason.
                 if (!$paymentRes['success']) {
                     return response()->json(['status' => 'ERROR', 'message' => $paymentRes['message']]);
                 }

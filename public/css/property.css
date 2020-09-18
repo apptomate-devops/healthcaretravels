@@ -84,6 +84,13 @@
     max-width: 100%;
     width: 60%;
 }
+.pay-caption {
+    text-align: center;
+    font-size: 17px;
+    color: black;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
 div::-webkit-scrollbar {
     width: 12px;
 }

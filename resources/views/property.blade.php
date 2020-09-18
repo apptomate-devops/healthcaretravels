@@ -704,18 +704,18 @@
                                     <div class="clearfix"></div>
                                 </div>
 
-                                <div id="check_in_div">
+                                <div id="check_in_div" class="p-0">
                                     <div class="form-group">
                                         <!-- Date input -->
                                         <label class="control-label" for="check_in_date">Check In</label>
-                                        <input name="check_in" required value="@if(count($session)!=0) {{$session['fromDate']}} @endif" id="booking_date_range_picker" placeholder="Check In date" onchange="get_price()" type="text" style="width: 273px;" autocomplete="off">
+                                        <input name="check_in" required value="@if(count($session)!=0) {{$session['fromDate']}} @endif" id="booking_date_range_picker" placeholder="Check In date" type="text" autocomplete="off">
                                     </div>
                                 </div>
-                                <div id="check_out_div">
+                                <div id="check_out_div" class="p-0">
                                     <div class="form-group">
                                         <!-- Date input -->
                                         <label class="control-label" for="check_out_date">Check Out</label>
-                                        <input name="check_out" value="@if(count($session)!=0) {{$session['toDate']}} @endif"  required id="booking_date_range_picker" onchange="get_price()" placeholder="Check Out date" type="text" style="width: 273px;" autocomplete="off" >
+                                        <input name="check_out" value="@if(count($session)!=0) {{$session['toDate']}} @endif"  required id="booking_date_range_picker" placeholder="Check Out date" type="text" autocomplete="off" >
 
                                         <input name="property_id" type="hidden" value="{{$property_id}}" >
                                     </div>
@@ -763,6 +763,7 @@
                                     @endif
 
                                 </div>
+                                <p class="pay-caption"></p>
                                 @if(Session::get('user_id') !=  $data->user_id)
                                     @if(!Session::get('user_id'))
                                         <button onclick="location.href='{{BASE_URL}}login';" class="button fullwidth margin-top-5">
@@ -1088,6 +1089,7 @@
             $('input[id="booking_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
                 $('input[id="booking_date_range_picker"][name="check_in"]').val(picker.startDate.format('MM/DD/YYYY'));
                 $('input[id="booking_date_range_picker"][name="check_out"]').val(picker.endDate.format('MM/DD/YYYY'));
+                get_price();
             });
 
             $('input[id="booking_date_range_picker"]').on('cancel.daterangepicker', function (ev, picker) {
@@ -1106,7 +1108,6 @@
                 guest_count = isNaN(guest_count) ? 0 : guest_count;
 
                 $('.guest').show();
-
                 if(!id || !from_date || !to_date || !guest_count) {
                     return;
                 }
@@ -1146,8 +1147,12 @@
                         console.log("Set favourite success ====:"+JSON.stringify(data));
 
                         if(data.data) {
+                            var dayCount = data.data.day_count;
+                            var daysLabel = dayCount.months + (dayCount.months > 1 ? ' Months' : ' Month') + (dayCount.days ? ', ' + dayCount.days + (dayCount.days > 1 ? ' Days' : ' Day') : '');
+
                             var tr_data="";
-                            tr_data +="<tr><td style='text-align: left;color:black;padding:5px'> $ "+data.data.single_day_fare+" X "+data.data.total_days+" Days &nbsp;</td><td style='text-align: right;color:black;padding:5px'> $ "+data.data.price+"</td></tr>";
+
+                            tr_data +="<tr><td style='text-align: left;color:black;padding:5px'> "+daysLabel+" &nbsp;</td><td style='text-align: right;color:black;padding:5px'> $ "+data.data.price+"</td></tr>";
                             tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Service Fee &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>This fee helps us run our platform and offer our services </span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.service_tax+"</td></tr>";
                             tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Cleaning Fee&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'> fee charged by host to cover the cost of cleaning their space.</span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.cleaning_fee+"</td></tr>";
                             tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Security Deposit &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Deposit collected by host in case of damages. Refundable based on Cancellation Policy</span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.security_deposit+"</td></tr>";
@@ -1170,6 +1175,7 @@
                             }
                             $("#table_body").html(tr_data);
 
+                            $('.pay-caption').text(`Pay now: $${data.data.pay_now}, Total: $${data.data.total_amount}`);
                         }
                     },
                     error: function (e) {

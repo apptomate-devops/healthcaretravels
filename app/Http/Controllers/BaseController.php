@@ -764,10 +764,4 @@ class BaseController extends ConstantsController
         }
         return $icsDates;
     }
-
-    public function generate_dwolla_token()
-    {
-        Logger::info('Re-initializing Dwolla access token');
-        $this->dwolla->setUp(true);
-    }
 }

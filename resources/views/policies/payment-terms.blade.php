@@ -366,7 +366,7 @@
 
                             <br>Any number thanks to Health Care Travels (e.g., like a consequence of one's
                             reservations, reserving Functions, cancellations, or alternative activities including being
-                            a visitor, Co-Payer, either Host or even cohost or consumer from this Health Care Travels
+                            a visitor, Co-Payer, either Host or even Co-Host or consumer from this Health Care Travels
                             Platform), for example compensation for fees prepaid by Health Care Travels for your
                             benefit, by simply charging some Payment method on document on your Health Care Travels
                             Account (if you don't have taken off the consent to bill these kinds of Payment
@@ -392,7 +392,7 @@
                             Use (e.g., should, like a bunch, you terminate a confirmed reservation). Health Care Travels
                             payments will probably qualify to recoup the sum of penalties in you personally, such as by
                             devoting such repay sum away of almost any prospective pay-outs for you personally.<br>
-                            <br>Fees paid for you because of a Bunch or even Co Host. If, being a bunch or even cohost,
+                            <br>Fees paid for you because of a Bunch or even Co Host. If, being a bunch or even Co-Host,
                             your Client cancels a confirmed reservation or Health Care Travels decides it's critical to
                             terminate a reservation, and also Health Care Travels problems a refund into this visitor in
                             compliance using all the Health Care Travels Terms of Use, Traveler Refund Policy,

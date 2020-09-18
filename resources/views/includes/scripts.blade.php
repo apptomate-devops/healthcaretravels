@@ -105,12 +105,7 @@
         $('input[name="from_date"], input[name="to_date"]').val('');
     });
 </script>
-
-<script>
-    $('.masked_phone_us').inputmask('(999) 999-9999', {
-        removeMaskOnSubmit: true
-    });
-</script>
+@include('includes.mask')
 <style type="text/css">
     .uploading {
         color: #ffffff;

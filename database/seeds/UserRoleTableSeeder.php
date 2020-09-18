@@ -11,7 +11,7 @@ class UserRoleTableSeeder extends Seeder
      */
     public function run()
     {
-        $roles = ['HEALTHCARE TRAVELER', 'PROPERTY OWNER', 'AGENCY', 'RV HEALTHCARE TRAVELER', 'COHOST'];
+        $roles = ['HEALTHCARE TRAVELER', 'PROPERTY OWNER', 'AGENCY', 'RV HEALTHCARE TRAVELER', 'CO-HOST'];
         foreach ($roles as $id => $role) {
             \App\Models\UserRole::updateOrCreate(
                 [

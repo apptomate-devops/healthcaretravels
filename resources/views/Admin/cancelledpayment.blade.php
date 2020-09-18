@@ -47,7 +47,7 @@
 
                                         <tr>
                                             <th>S.no</th>
-                                            <th>Transaction Id</th>
+                                            <th>Transaction ID</th>
                                             <th>Traveler Name</th>
                                             <th>Host Name</th>
                                             <th>Amount</th>
@@ -85,7 +85,7 @@
                                         <tfoot>
                                         <tr>
                                             <th>S.no</th>
-                                            <th>Transaction Id</th>
+                                            <th>Transaction ID</th>
                                             <th>Traveler Name</th>
                                             <th>Host Name</th>
                                             <th>Payment Method</th>

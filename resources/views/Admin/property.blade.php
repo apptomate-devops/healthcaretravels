@@ -41,7 +41,7 @@
                                        class="table table-white-space table-bordered row-grouping display no-wrap icheck table-middle">
                                     <thead>
                                     <tr>
-                                        <th>Id</th>
+                                        <th>ID</th>
                                         <th>Posted At</th>
                                         <th>Property Name</th>
                                         <th>Host Name</th>

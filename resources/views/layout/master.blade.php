@@ -92,6 +92,7 @@
 ================================================== -->
 
 @include('includes.scripts')
+@include('includes.mask')
 
 
 <script type="text/javascript">

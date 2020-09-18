@@ -38,6 +38,7 @@
 
 @include('Admin.Includes.head')
 
+
 <!-- ////////////////////////////////////////////////////////////////////////////-->
 @include('Admin.Includes.nav')
 
@@ -58,7 +59,7 @@
 
 
 @yield('scripts')
-
+@include('../includes/mask')
 <script
     src="https://pixinvent.com/modern-admin-clean-bootstrap-4-dashboard-html-template/app-assets/vendors/js/forms/select/select2.full.min.js"
     type="text/javascript"></script>

@@ -30,34 +30,42 @@
                 <h4 class="card-title"><span class="field-label">Username:</span>{{$data->username}}</h4>
                 <h6 class="card-subtitle text-muted"><span class="field-label">Name:</span>{{$data->first_name ?? ''}} {{$data->last_name ?? ''}}</h6>
                 <br>
-                <h6 class="card-subtitle text-muted"><span class="field-label">Type:</span>{{strtolower($data->role)}}</h6>
+                <h6 class="card-subtitle text-muted"><span class="field-label">Type:</span>
+                @if(strtolower($data->role) == 'co-host') 
+                    Co-Host
+                @else
+                    {{ucwords(strtolower($data->role))}}
+                @endif
+                </h6>
                 <br>
-                <h6 class="card-subtitle text-muted"><span class="field-label">Phone:</span>{{$data->phone ?? '-'}}</h6>
+                <h6 class="card-subtitle text-muted"><span class="field-label">Phone:</span><span class="masked_phone_us_text">{{$data->phone ?? '-'}}</span></h6>
                 <br>
                 <h6 class="card-subtitle text-muted"><span class="field-label">Email:</span>{{$data->email ?? '-'}}</h6>
                 <br>
-                <h6 class="card-subtitle text-muted"><span class="field-label">Name of Agency:</span>{{$data->other_agency ?? $data->name_of_agency ?? ""}}</h6>
+                @if(strtolower($data->role) != 'co-host' && strtolower($data->role) != 'property owner')
+                    <h6 class="card-subtitle text-muted"><span class="field-label">Name of Agency:</span>{{$data->other_agency ?? $data->name_of_agency ?? ""}}</h6>
+                @endif
                 <br>
                 <div class="text-center">
-                    @if($data->facebook_url!='0')
+                    @if($data->facebook_url!='0' && strlen($data->facebook_url) > 0)
                         <a href="{{$data->facebook_url}}" data-href="{{$data->facebook_url}}" target="_blank"
                            class="btn btn-social-icon parse-link-href mr-1 mb-1 btn-outline-facebook">
                             <span class="la la-facebook"></span>
                         </a>
                     @endif
-                    @if($data->linkedin_url!='0')
+                    @if($data->linkedin_url!='0' && strlen($data->linkedin_url) > 0)
                         <a href="{{$data->linkedin_url}}" data-href="{{$data->linkedin_url}}" target="_blank"
                            class="btn btn-social-icon parse-link-href mb-1 btn-outline-linkedin">
                             <span class="la la-linkedin font-medium-4"></span>
                         </a>
                     @endif
-                    @if($data->instagram_url!='0')
+                    @if($data->instagram_url!='0' && strlen($data->instagram_url) > 0)
                         <a href="{{$data->instagram_url}}" data-href="{{$data->instagram_url}}" target="_blank"
                            class="btn btn-social-icon parse-link-href mb-1 btn-outline-linkedin">
                             <span class="la la-instagram font-medium-4"></span>
                         </a>
                     @endif
-                    @if($data->twitter_url!='0')
+                    @if($data->twitter_url!='0' && strlen($data->twitter_url) > 0)
                         <a href="{{$data->twitter_url}}" data-href="{{$data->twitter_url}}" target="_blank"
                            class="btn btn-social-icon parse-link-href mb-1 btn-outline-linkedin">
                             <span class="la la-twitter font-medium-4"></span>
@@ -75,7 +83,7 @@
                         href="{{BASE_URL}}admin/verify_profile/{{$data->id}}"
                     >
                         <span style="height:29px">
-                            Click here to verify This {{strtolower($data->role)}}
+                            Click here to verify this {{strtolower($data->role)}}
                         </span>
                     </a>
                 @endif
@@ -86,7 +94,7 @@
                         href="{{BASE_URL}}admin/verify_profile/{{$data->id}}/true"
                         >
                         <span style="height:29px">
-                            Click here to Deny This @if($data->role_id==0) Traveler @elseif($data->role_id==1) Owner @else  Travel Agency @endif
+                            Click here to deny this @if($data->role_id==0) traveler @elseif($data->role_id==1) owner @else  travel agency @endif
                         </span>
                     </a>
                 @endif --}}
@@ -99,7 +107,14 @@
         <div class="card-body">
             <div class="phone-wrapper">
                 <h4 class="card-title"> Verification Mobile Number
-                    : {{$data->phone ?? 'Not Added'}}</h4>
+                    : @if($data->phone) 
+                        <span class="masked_phone_us_text">
+                            {{$data->phone}}
+                        </span>
+                      @else 
+                        <span>Not Added</span> 
+                      @endif
+                </h4>
                 @if ($data->otp_verified == 1)
                     <span class="btn btn-default btn-success" style="background-color: green">Verified</span>
                 @else
@@ -240,12 +255,12 @@
                                         <div class="card-body px-0">
                                             @if($d->status == 0)
                                                 <a class="verification-response verification-approved btn btn-default btn-success btn-block"
-                                                   {{-- href="{{BASE_URL}}admin/verify_document/{{$d->id}}/1" --}}
+                                                   
                                                    data-id="{{$d->id}}" data-status="1" data-title="{{ucfirst(str_replace("_"," ",$d->document_type))}}">
-                                                    <span style="height:30px">Verify This Document</span>
+                                                    <span style="height:30px">Approve This Document</span>
                                                 </a>
                                                 <a class="verification-response verification-denied btn btn-default btn-danger btn-block"
-                                                   {{-- href="{{BASE_URL}}admin/verify_document/{{$d->id}}/2" --}}
+                                                   
                                                    data-id="{{$d->id}}" data-status="-1" data-title="{{ucfirst(str_replace("_"," ",$d->document_type))}}">
                                                     <span style="height:30px">Deny This Document</span>
                                                 </a>
@@ -326,7 +341,7 @@
                 // Show reason box and add to data;
                 reasonInput.fadeIn();
                 denyNode.find('span').html('Document will be denied');
-                approveNode.find('span').html('Verify This Document');
+                approveNode.find('span').html('Approve This Document');
             }
         });
         $(document).on('change', '.denial-reason', function (event) {
@@ -409,9 +424,6 @@
                 }, 1000);
             } else if (isValid) {
                 setError();
-                if (!deniedLength) {
-                    return window.location.href = "/admin/verify_profile/" + userId;
-                }
 
                 $.ajax({
                     url: "/admin/verify_all_documents/" + userId,

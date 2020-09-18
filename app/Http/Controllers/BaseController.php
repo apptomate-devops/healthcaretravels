@@ -771,9 +771,12 @@ class BaseController extends ConstantsController
         $payment = BookingPayments::where('booking_id', $booking_id)
             ->where('payment_cycle', $payment_cycle)
             ->first();
+        if (empty($payment)) {
+            return ['success' => false, 'message' => 'No such payment exists!'];
+        }
         try {
             // Processing first payment cycle from user's side
-            Logger::info('Initiating transfer for booking: ' . $booking_id . ' for payment cycle 1');
+            Logger::info('Initiating transfer for booking: ' . $booking_id . ' :: paymentCycle: ' . $payment_cycle);
             $fundingSource = $payment->booking->funding_source;
             $transferDetails = $this->dwolla->createTransferToMasterDwolla($fundingSource, $payment->total_amount);
             Logger::info('Transfer success for booking: ' . $booking_id . ' for payment cycle: ' . $payment_cycle);

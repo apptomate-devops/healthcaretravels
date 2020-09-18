@@ -1,114 +1,5 @@
 @extends('layout.master') @section('title',$data->title) @section('main_content')
-    <style type="text/css">
-        div::-webkit-scrollbar {
-            width: 12px;
-        }
-
-        div::-webkit-scrollbar-track {
-            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-            border-radius: 10px;
-        }
-
-        div::-webkit-scrollbar-thumb {
-            border-radius: 10px;
-            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-        }
-
-        .property-title h2 {
-            font-size: 26px !important;
-        }
-        @media only screen and (min-width: 990px) {
-            .property-image p {
-                text-align: right;
-            }
-            .property-pricing {
-                margin-top: 40px;
-            }
-            .property-image .sub-price a {
-                text-align: right;
-            }
-            .show-990{
-                display: none;
-            }
-        }
-        @media only screen and (max-width: 989px) {
-
-            .show-990{
-                display: show;
-            }
-            .hide-990{
-                display: none;
-            }
-            .property-image p {
-                text-align: center;
-            }
-            .property-pricing {
-                margin-top: 40px;
-            }
-            .property-image .sub-price a {
-                text-align: center;
-            }
-        }
-        @media only screen and (max-width: 767px) {
-            .show-990{
-                display: none !important;
-            }
-            .hide-990{
-                display: show !important;
-            }
-        }
-        .property-image .sub-price a {
-            display: block;
-            font-size: 19px;
-            font-weight: 600;
-        }
-        .property-image p img {
-            border-radius: 50%;
-            width: 100px;
-            margin-bottom: 0px;
-        }
-
-        .property-pricing {
-            margin-top: 40px;
-        }
-        .comments {
-            margin: -10px 0 0 0;
-        }
-        .td {
-            padding: 10px;
-        }
-
-        #map_container{
-            position: relative;
-        }
-        #map{
-            height: 0;
-            overflow: hidden;
-            padding-bottom: 22.25%;
-            padding-top: 30px;
-            position: relative;
-        }
-
-        #contact_host{
-            color: #e78016;
-            text-decoration: underline;
-            cursor: pointer;
-        }
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            border-bottom: 1px dotted black;
-        }
-
-        .yelp_img{
-            max-width: 100%;
-            width: 60%;
-        }
-
-
-
-
-    </style>
+    <link rel="stylesheet" href="{{ URL::asset('css/property.css') }}">
     <div id="titlebar" class="property-titlebar margin-bottom-0">
         <div class="container">
 
@@ -125,31 +16,19 @@
                             <input type="text" name="to_date"
                                    placeholder="Check out"
                                    id="date_range_picker" autocomplete="off"/>
-                            <!-- <input type="text"  name="from_date" onchange="set_to_date();" placeholder="Check in" value="" id="from_date" /> -->
-{{--                            <input type="text"  name="from_date" placeholder="Check in" value="" autocomplete="off" id="from_date" />--}}
                         </div>
                     </div>
-
-{{--                    <div class="col-md-2 col-sm-6 col-xs-6">--}}
-{{--                        <div class="main-search-input">--}}
-{{--                            <input name="to_date"  type="text"  placeholder="Check out" value="" autocomplete="off" id="to_date" />--}}
-{{--                            <!-- <input name="to_date"  type="text" onchange="check_to_date();" placeholder="Check out" value="" id="to_date" /> -->--}}
-
-{{--                        </div>--}}
-{{--                    </div>--}}
 
                     <div class="col-md-2 text-center">
                         <button class="button" type="submit" style="width: 100%; margin: 5px 0 20px;" >Search</button>
                     </div>
                     <div id="search_location"></div>
-
                 </form>
             </div>
 
 
             <div class="row">
                 <div class="col-md-12">
-                    <!-- <a href="listings-list-with-sidebar.html" class="back-to-listings"></a> -->
                     <div class="col-md-3 col-sm-12 col-xs-6 property-image show-990">
                         <p>
                             <img style="max-height: 85px;max-width: 85px;"
@@ -211,8 +90,6 @@
                             </div>
                             <div class="sub-price">
                                 @if(Session::get('user_id'))
-                                    {{--  <a href="{{BASE_URL}}create_chat/{{$property_id}}" target="_blank"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8" >Message Host</span></h3></a> --}}
-
                                     <a><h3 id="contact_host"><span class="property-badge"  id="chat_host">Message Host</span></h3></a>
                                 @else
                                     <a href="{{BASE_URL}}login" target="_blank"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8">Login to Chat</span></h3></a>
@@ -221,11 +98,6 @@
 
                         </div>
                     </center>
-                    {{-- <div class="property-pricing col-md-3 col-sm-3 col-xs-5"> ucfirst("hello world!");
-                        <div class="property-price">
-                                <font style="vertical-align: inherit;">$ {{$data->price_per_night}}</font><br>Per Night</font>
-                        </div>
-                    </div> --}}
                 </div>
             </div>
         </div>
@@ -282,18 +154,6 @@
                         </li>
                     </ul>
 
-
-                {{-- <div id="contact_host_form">
-                    <!-- <textarea id="cont_message"></textarea> -->
-                    <!-- <div id="hide" style="padding: 10px;">Your message sent successfully.</div> -->
-                    @if(!Session::get('role_id'))
-                     <a href="{{BASE_URL}}login"><button id="" class="button" style="float :right;margin-top: 15px;">Login to Chat</button></a>
-                    @else
-                    <a href="{{BASE_URL}}create_chat/{{$property_id}}" target="_blank"><button id="" class="button" style="float :right;margin-top: 15px;">Send Message</button></a>
-                    @endif
-                </div> --}}
-
-                <!-- Description -->
                     <h3 class="desc-headline">
                         <font style="vertical-align: inherit;">
                             <font style="vertical-align: inherit;">About Home</font>
@@ -321,7 +181,6 @@
                             <i class="fa fa-angle-down"></i>
                         </p>
                     </div>
-                    <!-- <a href="#"><h3>Contact host</h3></a> -->
                     <!-- Details -->
                     <h3 class="desc-headline">
                         <font style="vertical-align: inherit;">
@@ -432,15 +291,6 @@
                         <br>
                     @endif
 
-                    {{-- <h4>
-
-                    Surveillance camera inside and outside :
-                    @if(isset($data->is_camera) == 0)
-                        No
-                    @else
-                        Yes
-                    @endif
-                    </h4> --}}
                     <br>
                     <h3 class="desc-headline">
                         <font style="vertical-align: inherit;">
@@ -477,106 +327,8 @@
                         </li>
                     </ul>
 
-                    <!-- Floorplans -->
-                    {{--
-                    <h3 class="desc-headline no-border">Floorplans</h3>
-                    <!-- Accordion -->
-                    <div class="style-1 fp-accordion">
-                        <div class="accordion">
 
-                            <h3>First Floor <span>460 sq ft</span> <i class="fa fa-angle-down"></i> </h3>
-                            <div>
-                                <a class="floor-pic mfp-image" href="../../../i.imgur.com/kChy7IU.jpg">
-                              <img src="../../../i.imgur.com/kChy7IU.jpg" alt="">
-                            </a>
-                                <p>Mauris mauris ante, blandit et, ultrices a, susceros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate aliquam egestas litora torquent conubia.</p>
-                            </div>
-
-                            <h3>Second Floor <span>440 sq ft</span> <i class="fa fa-angle-down"></i></h3>
-                            <div>
-                                <a class="floor-pic mfp-image" href="../../../i.imgur.com/l2VNlwu.jpg">
-                                <img src="../../../i.imgur.com/l2VNlwu.jpg" alt="">
-                              </a>
-                                <p>Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit, faucibus interdum tellus libero ac justo. Vivamus non quam. Nullam laoreet,
-                                    velit ut taciti sociosqu condimentum feugiat.</p>
-                            </div>
-
-                            <h3>Garage <span>140 sq ft</span> <i class="fa fa-angle-down"></i></h3>
-                            <div>
-                                <a class="floor-pic mfp-image" href="../../../i.imgur.com/0zJYERy.jpg">
-                                <img src="../../../i.imgur.com/0zJYERy.jpg" alt="">
-                              </a>
-                            </div>
-
-                        </div>
-                    </div> --}}
                     <h3 class="desc-headline no-border">Sleeping Arrangements</h3>
-
-
-                <!--    <div class="col-md-12" style="margin-bottom: 20px;">
-                        @foreach($bed_rooms as $key => $bedroom)
-                    <div class="col-md-4" style="/*background-color: #f7f7f7;*/border:1px solid #DBDBDB !important;border-color: white;">
-                        <div>
-                            <div> -->
-                        <?php
-//$rooms = explode(",",$bedroom[0]->bed_types);
-
-// foreach($rooms as $room)
-// {
-//  $room = substr($room, 0, strpos($room, "-"));
-//  $room = str_replace(" ","",$room);
-
-//  switch ($room) {
-//      case "double_bed";
-//          echo '<img src="'.DOUBLE_BED.'" style="margin-left: 10px;margin-top: 10px;
-//                                                    height: 24px;width: 24px;fill: currentcolor;" />';
-
-//          break;
-//      case "queen_bed";
-//          echo '<img src="'.QUEEN_BED.'" style="margin-left: 10px;margin-top: 10px;
-//                                                    height: 24px;width: 24px;fill: currentcolor;" />';
-
-//          break;
-//      case "single_bed";
-//          echo '<img src="'.SINGLE_BED.'" style="margin-left: 10px;margin-top: 10px;
-//                                                    height: 24px;width: 24px;fill: currentcolor;" />';
-
-//          break;
-//      case "sofa_bed";
-//          echo '<img src="'.SOFA_BED.'" style="margin-left: 10px;margin-top: 10px;
-//                                                    height: 24px;width: 24px;fill: currentcolor;" />';
-
-//          break;
-//      case "bunk_bed";
-//          echo '<img src="'.BUNK_BED.'" style="margin-left: 10px;margin-top: 10px;
-//                                                    height: 24px;width: 24px;fill: currentcolor;" />';
-//          break;
-//      default:
-//          echo '<img src="'.COMMON_SPACE_BED.'" style="margin-left: 10px;margin-top: 10px;
-//                                                    height: 24px;width: 24px;fill: currentcolor;" />';
-//  }
-// }
-?>
-                    <!-- </div>
-
-                        <h4>Bedroom {{$key+1}}</h4> -->
-
-                        <?php
-// $rooms = explode(",",$bedroom[0]->bed_types);
-// foreach($rooms as $room){
-//  $room = str_replace("_"," ",$room);
-//  echo $room = ucfirst($room).',';
-// }
-// $room_string = implode(",",$rooms);
-// $bd = str_replace("_"," ",$room_string);
-//$bd = ucfirst($bd);
-?>
-                    <!--  </div>
-                        </div> -->
-                        <!-- <div class="display">&nbsp;&nbsp;</div> -->
-                    <!--    @endforeach
-
-                    </div> -->
 
                     <!-- Carousel -->
                     <div class="col-md-12" id="">
@@ -588,7 +340,6 @@
                             <!-- Listing Item -->
                                 <div class="carousel-item">
                                     <div class="listing-item" style="text-align: center;">
-                                        <!-- <div class="col-md-4" style="/*background-color: #f7f7f7;*/border:1px solid #DBDBDB !important;border-color: white;"> -->
                                         <div style="/*background-color: #f7f7f7;*/border:1px solid #DBDBDB !important;border-color: white;min-height: 250px;">
                                             <div style="padding: 20px;">
                                                 <?php
@@ -654,13 +405,9 @@
                                                 }
                                                 $room_string = implode(",", $rooms);
                                                 $bd = str_replace("_", " ", $room_string);
-
-//$bd = ucfirst($bd);
-?>
+                                                ?>
                                             </div>
                                         </div>
-                                        <!-- </div> -->
-                                        <!-- <div class="display">&nbsp;&nbsp;</div> -->
                                     </div>
                                 </div>
                                 <!-- Listing Item / End -->
@@ -680,16 +427,6 @@
                                 <td style="text-align: center; width: 50%">$ {{Helper::get_daily_price($data->monthly_rate)}}</td>
                             </tr>
 
-                            {{-- <tr>
-                                <td style="text-align: center;">Price per night (7day+)</td>
-                                <td style="text-align: center; width: 50%">$ {{$data->price_more_than_one_week}}</td>
-                            </tr> --}}
-
-{{--                            <tr>--}}
-{{--                                <td style="text-align: center;">Price per night (30day+)</td>--}}
-{{--                                <td style="text-align: center; width: 50%">$ {{$data->price_more_than_one_month}}</td>--}}
-{{--                            </tr>--}}
-
                             <tr>
                                 <td style="text-align: center;">Security Deposit</td>
                                 <td style="text-align: center; width: 50%">$ {{$data->security_deposit}}</td>
@@ -699,23 +436,6 @@
                                 <td style="text-align: center;">Cleaning fee</td>
                                 <td style="text-align: center; width: 50%">$ {{$data->cleaning_fee}}</td>
                             </tr>
-
-                            {{--
-
-                            <tr>
-                                <td style="text-align: center;">Security Deposit</td>
-                                <td style="text-align: center;">$ {{$data->security_deposit}}</td>
-                            </tr>
-
-                            <tr>
-                                <td style="text-align: center;">Price per weekend</td>
-                                <td style="text-align: center;">$ {{$data->price_per_weekend}}&nbsp;(&nbsp;{{$data->weekend_days}}&nbsp;)</td>
-                            </tr>
-
-                            <tr>
-                                <td style="text-align: center;">Minimum no of days</td>
-                                <td style="text-align: center;">{{$data->min_days}}</td>
-                            </tr> --}}
                             </tbody>
                         </table>
                     </div>
@@ -881,7 +601,7 @@
                                         @for($j=0;$j<=4;$j++)
                                             <tr>
                                                 <td style="width: 21%;"><img src="{{$data->prop_full_rating[$j]->profile_image}}" style="border-radius: 85px;width: 58%;"></td>
-                                                <td><strong>{{$data->prop_full_rating[$j]->first_name}}&nbsp;{{$data->prop_full_rating[$j]->last_name}}</strong></a><br>
+                                                <td><strong>{{$data->prop_full_rating[$j]->first_name}}&nbsp;{{$data->prop_full_rating[$j]->last_name}}</strong><br>
                                                     {{$data->prop_full_rating[$j]->comments}}
                                                     <br>
                                                     @for($i=1;$i<=$data->prop_full_rating[$j]->rating;$i++)
@@ -969,8 +689,6 @@
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
                             <div class="agent-widget" ><!-- style="overflow-y: auto;max-height: 400px;" -->
                                 <div class="agent-title">
-                                    {{--
-                                    <div class="agent-photo"><img src="{{BASE_URL}}public/images/agent-avatar.jpg" alt=""></div> --}}
                                     <div class="agent-details">
                                         <h4>
                                             <a href="#">
@@ -986,22 +704,18 @@
                                     <div class="clearfix"></div>
                                 </div>
 
-                                <!--  <label>Check In</label>
-                                    <input type="date" placeholder="Your Phone"> -->
-                                <div id="check_in_div">
+                                <div id="check_in_div" class="p-0">
                                     <div class="form-group">
                                         <!-- Date input -->
-                                        <label class="control-label" for="property_from_date">Check In</label>
-                                        <input name="check_in" required value="@if(count($session)!=0) {{$session['fromDate']}} @endif" id="property_from_date" placeholder="Check In date" onchange="get_price()" type="text" style="width: 273px;" >
+                                        <label class="control-label" for="check_in_date">Check In</label>
+                                        <input name="check_in" required value="@if(count($session)!=0) {{$session['fromDate']}} @endif" id="booking_date_range_picker" placeholder="Check In date" type="text" autocomplete="off">
                                     </div>
                                 </div>
-                                <!-- <label>Check Out</label>
-                                    <input type="date" placeholder="Your Phone"> -->
-                                <div id="check_out_div">
+                                <div id="check_out_div" class="p-0">
                                     <div class="form-group">
                                         <!-- Date input -->
-                                        <label class="control-label" for="date">Check Out</label>
-                                        <input name="check_out" value="@if(count($session)!=0) {{$session['toDate']}} @endif"  required id="property_to_date" onchange="get_price()" placeholder="Check Out date" type="text" style="width: 273px;" >
+                                        <label class="control-label" for="check_out_date">Check Out</label>
+                                        <input name="check_out" value="@if(count($session)!=0) {{$session['toDate']}} @endif"  required id="booking_date_range_picker" placeholder="Check Out date" type="text" autocomplete="off" >
 
                                         <input name="property_id" type="hidden" value="{{$property_id}}" >
                                     </div>
@@ -1010,7 +724,7 @@
                                 <select required onchange="get_price();" class="chosen-select-no-single validate" id="current_guest_count" >
                                     <option selected disabled>Guests</option>
                                     @for($i=1;$i<=$data->total_guests;$i++)
-                                <option value="{{$i}}">{{$i}} Guest{{$i > 1 ? 's' : ''}}</option>
+                                        <option value="{{$i}}">{{$i}} Guest{{$i > 1 ? 's' : ''}}</option>
                                     @endfor
 
                                 </select>
@@ -1049,6 +763,7 @@
                                     @endif
 
                                 </div>
+                                <p class="pay-caption"></p>
                                 @if(Session::get('user_id') !=  $data->user_id)
                                     @if(!Session::get('user_id'))
                                         <button onclick="location.href='{{BASE_URL}}login';" class="button fullwidth margin-top-5">
@@ -1064,220 +779,15 @@
                                 <div class="alert" style="display: none;background-color: red;color: white;text-align: center;margin-top: 5%;">
                                     Property is not available
                                 </div>
-
-
-
-
-                                <!--   <h6 style="text-align: center;">OR</h6>
-                                  <div class="form-group">  -->
-                                <!-- Date input -->
-                                <!--      <label class="control-label" for="date">Message</label>
-                                   <textarea name="message"></textarea>
-                               </div> -->
-                                <!--  <button class="button fullwidth margin-top-5"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
-                                             Contact HOST
-                                         </font></font></button> -->
                             </div>
                             <!-- Agent Widget / End -->
                         </form>
                     </div>
                     <!-- Widget / End -->
-                    <!-- Widget -->
-                {{--
-                <div class="widget">
-                    <h3 class="margin-bottom-30 margin-top-30">
-                        <font style="vertical-align: inherit;">
-                            <font style="vertical-align: inherit;">Mortgage Calculator</font>
-                        </font>
-                    </h3>
-                    <!-- Mortgage Calculator -->
-                    <form action="javascript:void(0);" autocomplete="off" class="mortgageCalc" data-calc-currency="USD">
-                        <div class="calc-input">
-                            <div class="pick-price tip" data-tip-content="Set This Property Price">
-                                <div class="tip-content">
-                                    <font style="vertical-align: inherit;">
-                                        <font style="vertical-align: inherit;">This set Property Price</font>
-                                    </font>
-                                </div>
-                            </div>
-                            <input type="text" id="amount" name="amount" placeholder="Sale Price" required="">
-                            <label for="amount" class="fa fa-usd"></label>
-                        </div>
-                        <div class="calc-input">
-                            <input type="text" id="downpayment" placeholder="Down Payment">
-                            <label for="downpayment" class="fa fa-usd"></label>
-                        </div>
-                        <div class="calc-input">
-                            <input type="text" id="years" placeholder="Loan Term (Years)" required="">
-                            <label for="years" class="fa fa-calendar-o"></label>
-                        </div>
-                        <div class="calc-input">
-                            <input type="text" id="interest" placeholder="Interest Rate" required="">
-                            <label for="interest" class="fa fa-percent"></label>
-                        </div>
-                        <button class="button calc-button" formvalidate=""><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Calculate</font></font></button>
-                        <div class="calc-output-container">
-                            <div class="notification success">
-                                <font style="vertical-align: inherit;">
-                                    <font style="vertical-align: inherit;">Monthly payment: </font>
-                                </font><strong class="calc-output"></strong></div>
-                        </div>
-                    </form>
-                    <!-- Mortgage Calculator / End -->
-                </div> --}}
-                <!-- Widget / End -->
-                    <!-- Widget -->
-                {{--
-                <div class="widget">
-                    <h3 class="margin-bottom-35">
-                        <font style="vertical-align: inherit;">
-                            <font style="vertical-align: inherit;">Find Properties</font>
-                        </font>
-                    </h3>
-                    <div class="listing-carousel outer owl-carousel owl-theme" style="opacity: 1; display: block;">
-                        <!-- Item -->
-                        <div class="owl-wrapper-outer">
-                            <div class="owl-wrapper" style="width: 1878px; left: 0px; display: block; transition: all 0ms ease; transform: translate3d(0px, 0px, 0px);">
-                                <div class="owl-item" style="width: 313px;">
-                                    <div class="item">
-                                        <div class="listing-item compact">
-                                            <a href="#" class="listing-img-container">
-                                                <div class="listing-badges">
-                                                    <span class="featured"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Featured </font></font></span>
-                                                    <span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">for sale</font></font></span>
-                                                </div>
-                                                <div class="listing-img-content">
-                                                    <span class="listing-compact-title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Eagle Apartments, </font></font><i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">$ 275,000</font></font></i></span>
-                                                    <ul class="listing-hidden-content">
-                                                        <li>
-                                                            <font style="vertical-align: inherit;">
-                                                                <font style="vertical-align: inherit;">Area of </font>
-                                                            </font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">530 sq ft</font></font></span></li>
-                                                        <li>
-                                                            <font style="vertical-align: inherit;">
-                                                                <font style="vertical-align: inherit;">rooms </font>
-                                                            </font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">3</font></font></span></li>
-                                                        <li>
-                                                            <font style="vertical-align: inherit;">
-                                                                <font style="vertical-align: inherit;">Beds </font>
-                                                            </font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">1</font></font></span></li>
-                                                        <li>
-                                                            <font style="vertical-align: inherit;">
-                                                                <font style="vertical-align: inherit;">Temple </font>
-                                                            </font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">1</font></font></span></li>
-                                                    </ul>
-                                                </div>
-                                                <img src="{{BASE_URL}}public/images/listing-01.jpg" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="owl-item" style="width: 313px;">
-                                    <div class="item">
-                                        <div class="listing-item compact">
-                                            <a href="#" class="listing-img-container">
-                                                <div class="listing-badges">
-                                                    <span class="featured"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Featured </font></font></span>
-                                                    <span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">for sale</font></font></span>
-                                                </div>
-                                                <div class="listing-img-content">
-                                                    <span class="listing-compact-title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Selway Apartments, </font></font><i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">$ 245,000</font></font></i></span>
-                                                    <ul class="listing-hidden-content">
-                                                        <li>
-                                                            <font style="vertical-align: inherit;">
-                                                                <font style="vertical-align: inherit;">Area of </font>
-                                                            </font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">530 sq ft</font></font></span></li>
-                                                        <li>
-                                                            <font style="vertical-align: inherit;">
-                                                                <font style="vertical-align: inherit;">rooms </font>
-                                                            </font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">3</font></font></span></li>
-                                                        <li>
-                                                            <font style="vertical-align: inherit;">
-                                                                <font style="vertical-align: inherit;">Beds </font>
-                                                            </font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">1</font></font></span></li>
-                                                        <li>
-                                                            <font style="vertical-align: inherit;">
-                                                                <font style="vertical-align: inherit;">Temple </font>
-                                                            </font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">1</font></font></span></li>
-                                                    </ul>
-                                                </div>
-                                                <img src="{{BASE_URL}}public/images/listing-02.jpg" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="owl-item" style="width: 313px;">
-                                    <div class="item">
-                                        <div class="listing-item compact">
-                                            <a href="#" class="listing-img-container">
-                                                <div class="listing-badges">
-                                                    <span class="featured"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Featured </font></font></span>
-                                                    <span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">for sale</font></font></span>
-                                                </div>
-                                                <div class="listing-img-content">
-                                                    <span class="listing-compact-title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Oak Tree Houses </font></font><i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">$ 325,000</font></font></i></span>
-                                                    <ul class="listing-hidden-content">
-                                                        <li>
-                                                            <font style="vertical-align: inherit;">
-                                                                <font style="vertical-align: inherit;">Area of </font>
-                                                            </font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">530 sq ft</font></font></span></li>
-                                                        <li>
-                                                            <font style="vertical-align: inherit;">
-                                                                <font style="vertical-align: inherit;">rooms </font>
-                                                            </font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">3</font></font></span></li>
-                                                        <li>
-                                                            <font style="vertical-align: inherit;">
-                                                                <font style="vertical-align: inherit;">Beds </font>
-                                                            </font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">1</font></font></span></li>
-                                                        <li>
-                                                            <font style="vertical-align: inherit;">
-                                                                <font style="vertical-align: inherit;">Temple </font>
-                                                            </font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">1</font></font></span></li>
-                                                    </ul>
-                                                </div>
-                                                <img src="{{BASE_URL}}public/images/listing-03.jpg" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Item / End -->
-                        <!-- Item -->
-                        <!-- Item / End -->
-                        <!-- Item -->
-                        <!-- Item / End -->
-                        <div class="owl-controls clickable">
-                            <div class="owl-pagination">
-                                <div class="owl-page active"><span class=""></span></div>
-                                <div class="owl-page"><span class=""></span></div>
-                                <div class="owl-page"><span class=""></span></div>
-                            </div>
-                            <div class="owl-buttons">
-                                <div class="owl-prev"></div>
-                                <div class="owl-next"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
-                <!-- Widget / End -->
                 </div>
             </div>
             <!-- Sidebar / End -->
         </div>
-        {{--
-        <div class="row" style="background-color:#75a627;color:white;">
-            <div class="col-md-1">
-            </div>
-            <div class="col-md-11">
-
-                <h2>{{$data->first_name}} {{$data->last_name}}</h2>
-                <p>A Family Man. Father of a cute little angel. a host that always longs to say, “Be my guest”. An IT professional by career, a vacation host by choice! I live in New Jersey, have rental interests in a few places in East Cost of US.</p>
-                <a href="#" style="color:white" class="button">See Owner Profile</a><br>
-                <a href="{{BASE_URL}}owner/chat" style="color:white" class="button">Contact Owner</a>
-                <br><br>
-            </div>
-        </div> --}}
 
     </div>
 
@@ -1310,8 +820,6 @@
 
                                     <div class="listing-img-content">
                                         <span class="listing-price">$ {{$data->monthly_rate}}/Month</span>
-                                        {{-- <span class="like-icon with-tip" data-tip-content="Add to Bookmarks"></span>
-                                        <span class="compare-button with-tip" data-tip-content="Add to Compare"></span> --}}
                                     </div>
 
                                     <!-- <div class="listing-carousel"> -->
@@ -1423,11 +931,7 @@
             </div>
         </div>
     </div>
-
-    <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> -->
     <script>
-
-
         $('input').attr('autocomplete', 'off');
 
         $("#contact_host").click(function(){
@@ -1547,290 +1051,141 @@
         });
 
         $( document ).ready(function() {
-
-            var dateFormat = "mm/dd/yy";
-            var date_today = new Date();
-            var date_today_next_month = new Date();
-            date_today_next_month.setMonth(date_today_next_month.getMonth() + 1);
-            var fromOptions = {
-                startDate: date_today,
-                changeMonth: true,
-            };
-            var toOptions = {
-                startDate: date_today_next_month,
-                changeMonth: true,
-            };
-            var from = $("#from_date")
-                .datepicker(fromOptions)
-                .on("change", function () {
-                    var selectedDate = getDate(this);
-                    if (selectedDate) {
-                        selectedDate.setMonth(selectedDate.getMonth() + 1);
-                        toOptions.startDate = selectedDate;
-                        toOptions.minDate = selectedDate;
-                        to.datepicker("destroy");
-                        to.datepicker(toOptions);
-                    }
-                });
-            var to = $("#to_date").datepicker(toOptions)
-                .on("change", function () {
-                    var selectedDate = getDate(this);
-                });
-            function getDate(element) {
-                var date;
-                try {
-                    date = new Date(element.value);
-                } catch (error) {
-                    date = null;
-                }
-                return date;
-            }
-
-            console.log(<?php echo json_encode($data); ?>);
-            $('#stars').on('starrr:change', function(e, value){
-                $('#count').html(value);
-            });
-
-            $('#stars-existing').on('starrr:change', function(e, value){
-                $('#count-existing').val(value);
-            });
-
-            console.log(<?php echo json_encode($booked_dates); ?>	);
-            $(".alert").hide();
-            console.log('{{BASE_URL}}loader.gif');
-            var loader = '<img src="{{BASE_URL}}loader.gif" height="30" width="30">';
-            date=new Date();
-            $("#property_from_date").datepicker({
-                startDate: date,
-                autoclose: true,
-                datesDisabled:[ @foreach($booked_dates as $d) "{{$d['dates']}}" ,@endforeach ]
-            });
-
-
-            $("#property_from_date").change(function(){
-
-                var fDate = $("#property_from_date").val();
-                // alert(fDate);
-
-
-                // $("#property_to_date").foucs();
-                $("#property_to_date").datepicker('remove');
-                $("#property_to_date").datepicker({
-                    startDate: fDate,
-                    autoclose: true,
-                    datesDisabled: [ @foreach($booked_dates as $d) "{{$d['dates']}}",@endforeach ]
-                });
-
-            });
-
-
-
-
             var fav_id = '{{$data->is_favourite}}';
-            if(fav_id == 1)
-            {
+            if (fav_id == 1) {
                 $("#yes_favourite").show();
                 $("#not_favourite").hide();
             }
-            if(fav_id == 0)
-            {
+            if (fav_id == 0) {
                 $("#yes_favourite").hide();
                 $("#not_favourite").show();
             }
-            moment.locale('tr');
-//var ahmet = moment("25/04/2012","DD/MM/YYYY").year();
-            var date = new Date();
-            bugun = moment(date).format("DD/MM/YYYY");
 
-            var date_input=$('input[name="date"]'); //our date input has the name "date"
-            var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-            var options={
-                //startDate: '+1d',
-                //endDate: '+0d',
-                container: container,
-                todayHighlight: true,
-                autoclose: true,
-                format: 'dd/mm/yyyy',
-                language: 'tr',
-                //defaultDate: moment().subtract(15, 'days')
-                //setStartDate : "<DATETIME STRING HERE>"
-            };
-            date_input.val(bugun);
-            date_input.datepicker(options).on('focus', function(date_input){
-                // $("h3").html("focus event");
-            }); ;
-
-
-            date_input.change(function () {
-                var deger = $(this).val();
-                // $("h3").html("<font color=green>" + deger + "</font>");
-            });
-
-
-
-            $('.input-group').find('.glyphicon-calendar').on('click', function(){
-//date_input.trigger('focus');
-//date_input.datepicker('show');
-                //$("h3").html("event : click");
-
-
-                if( !date_input.data('datepicker').picker.is(":visible"))
-                {
-                    date_input.trigger('focus');
-                    // $("h3").html("Ok");
-
-                    //$('.input-group').find('.glyphicon-calendar').blur();
-                    //date_input.trigger('blur');
-                    //$("h3").html("görünür");
-                } else {
-                }
-
-
-            });
-
-
-        });
-
-        function favourite(id) {
-            var url = 'set-favourite/'+id;
-            $.ajax({
-                "type": "get",
-                "url" : url,
-                success: function(data) {
-                    console.log("Set favourite success ====:"+data);
-                    location.reload();
-                }
-            });
-        }
-
-        function get_price() {
-            var id = "{{$property_id}}";
-            var from_date = $("#property_from_date").val();
-            var to_date = $("#property_to_date").val();
-            var guestCount = parseInt($("#current_guest_count").val());
-            var guest_count =isNaN(guestCount) ? 0 : guestCount;
-            var totalguestcount=parseInt($('#total_guest_count').val());
-            totalguestcount = isNaN(totalguestcount) ? 0 : totalguestcount;
-            guest_count = isNaN(guest_count) ? 0 : guest_count;
-
-            $('.guest').show();
-
-            if(!id || !from_date || !to_date || !guest_count) {
-                return;
+            function favourite(id) {
+                var url = 'set-favourite/' + id;
+                $.ajax({
+                    "type": "get",
+                    "url": url,
+                    success: function (data) {
+                        console.log("Set favourite success ====:" + data);
+                        location.reload();
+                    }
+                });
             }
-            $('#btn_book_now').prop("disabled", false);
-            var url = 'get-price?property_id='+id+"&check_in="+from_date+"&check_out="+to_date+"&guest_count="+guest_count;
-            $.ajax({
-                "type": "get",
-                "url" : url,
-                success: function(data) {
-                    // console.log("room ",data);
-                    if (data.status == 'FAILED' && data.status_code == 0) {
-                        $(".alert").html("Property not available");
-                        $(".alert").show();
-                        $("#table_body").html("");
-                        $('.booking_button').attr('disabled',true);
-                        $('.booking_button').css('background','lightgrey');
 
-                    }
-                    if (data.status == 'FAILED' && data.status_code == 1) {
-                        $(".alert").html("Please review the house rules for Minimum days stay.");
-                        $(".alert").show();
-                        $("#table_body").html("");
-                        $('.booking_button').attr('disabled',true);
-                        $('.booking_button').css('background','lightgrey');
-
-                    }
-
-                    if(data.status == 'SUCCESS'){
-                        $(".alert").html("");
-                        $(".alert").hide();
-                        $('.booking_button').attr('disabled',false);
-                        $('.booking_button').css('background','#0983b8');
-                        $("#pricing_details").show();
-                    }
-
-
-                    console.log("Set favourite success ====:"+JSON.stringify(data));
-                    //location.reload();{"client_id":"15465793","single_day_fare":5000,"total_days":2,"city_fare":0,
-                    // "cleaning_fare":0,"tax_amount":1100,"initial_pay":2200,"total_amount":11000
-                    // <div class="tooltips">Hover over me
-                    //                 <span class="tooltiptext">Tooltip text</span>
-                    //               </div>
-
-                    if(data.data) {
-                        var tr_data="";
-                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'> $ "+data.data.single_day_fare+" X "+data.data.total_days+" Days &nbsp;</td><td style='text-align: right;color:black;padding:5px'> $ "+data.data.price+"</td></tr>";
-                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Service Fee &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>This fee helps us run our platform and offer our services </span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.service_tax+"</td></tr>";
-                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Cleaning Fee&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'> fee charged by host to cover the cost of cleaning their space.</span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.cleaning_fee+"</td></tr>";
-                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Security Deposit &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Deposit collected by host in case of damages. Refundable based on Cancellation Policy</span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.security_deposit+"</td></tr>";
-                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Total &nbsp;</td><td style='text-align: right;color:black;padding:5px'><b  id='total_booking_price'>$ "+data.data.total_amount+"</b></td></tr>";
-                        if(data.data.no_extra_guest==1){
-                            if(totalguestcount < guest_count){
-                                $('.booking_button').attr('disabled',true);
-                                $('.booking_button').css('background','lightgrey');
-                            }else{
-                                $('.booking_button').attr('disabled',false);
-                                $('.booking_button').css('background','#{{BASE_COLOR}}');
-                            }
-                            // document.getElementById('guest_count').value=totalguestcount;
-                            $('#guest').val(totalguestcount);
-                            $("#guest_alert").html(" * Only "+totalguestcount+ " Guests Allowed");
-                            $("#guest_alert").show();
-                        }else{
-                            $("#guest_alert").hide();
-                            $('#guest').val(guest_count);
-                        }
-                        $("#table_body").html(tr_data);
-
-                    }
+            // Book Now: Date Range Picker
+            $('input[id="booking_date_range_picker"]').daterangepicker({
+                minDate: new Date(),
+                opens: 'center',
+                minSpan: {
+                    "days": ({{$data->min_days ?? 30}} + 1)
                 },
-                error: function (e) {
-                    console.log('Error in Get_price', e);
+                autoUpdateInput: false,
+                locale: {
+                    cancelLabel: 'Clear'
                 }
             });
-        }
 
-        $("#pricing_details").hide();
+            $('input[id="booking_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
+                $('input[id="booking_date_range_picker"][name="check_in"]').val(picker.startDate.format('MM/DD/YYYY'));
+                $('input[id="booking_date_range_picker"][name="check_out"]').val(picker.endDate.format('MM/DD/YYYY'));
+                get_price();
+            });
+
+            $('input[id="booking_date_range_picker"]').on('cancel.daterangepicker', function (ev, picker) {
+                $('input[id="booking_date_range_picker"][name="check_in"]').val();
+                $('input[id="booking_date_range_picker"][name="check_out"]').val();
+            });
+        });
+            function get_price() {
+                var id = "{{$property_id}}";
+                var from_date =$('input[id="booking_date_range_picker"][name="check_in"]').val();
+                var to_date = $('input[id="booking_date_range_picker"][name="check_out"]').val();
+                var guestCount = parseInt($("#current_guest_count").val());
+                var guest_count =isNaN(guestCount) ? 0 : guestCount;
+                var totalguestcount=parseInt($('#total_guest_count').val());
+                totalguestcount = isNaN(totalguestcount) ? 0 : totalguestcount;
+                guest_count = isNaN(guest_count) ? 0 : guest_count;
+
+                $('.guest').show();
+                if(!id || !from_date || !to_date || !guest_count) {
+                    return;
+                }
+                $('#btn_book_now').prop("disabled", false);
+                var url = 'get-price?property_id='+id+"&check_in="+from_date+"&check_out="+to_date+"&guest_count="+guest_count;
+                $.ajax({
+                    "type": "get",
+                    "url" : url,
+                    success: function(data) {
+                        // console.log("room ",data);
+                        if (data.status == 'FAILED' && data.status_code == 0) {
+                            $(".alert").html("Property not available");
+                            $(".alert").show();
+                            $("#table_body").html("");
+                            $('.booking_button').attr('disabled',true);
+                            $('.booking_button').css('background','lightgrey');
+
+                        }
+                        if (data.status == 'FAILED' && data.status_code == 1) {
+                            $(".alert").html("Please review the house rules for Minimum days stay.");
+                            $(".alert").show();
+                            $("#table_body").html("");
+                            $('.booking_button').attr('disabled',true);
+                            $('.booking_button').css('background','lightgrey');
+
+                        }
+
+                        if(data.status == 'SUCCESS'){
+                            $(".alert").html("");
+                            $(".alert").hide();
+                            $('.booking_button').attr('disabled',false);
+                            $('.booking_button').css('background','#0983b8');
+                            $("#pricing_details").show();
+                        }
+
+
+                        console.log("Set favourite success ====:"+JSON.stringify(data));
+
+                        if(data.data) {
+                            var dayCount = data.data.day_count;
+                            var daysLabel = dayCount.months + (dayCount.months > 1 ? ' Months' : ' Month') + (dayCount.days ? ', ' + dayCount.days + (dayCount.days > 1 ? ' Days' : ' Day') : '');
+
+                            var tr_data="";
+
+                            tr_data +="<tr><td style='text-align: left;color:black;padding:5px'> "+daysLabel+" &nbsp;</td><td style='text-align: right;color:black;padding:5px'> $ "+data.data.price+"</td></tr>";
+                            tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Service Fee &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>This fee helps us run our platform and offer our services </span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.service_tax+"</td></tr>";
+                            tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Cleaning Fee&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'> fee charged by host to cover the cost of cleaning their space.</span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.cleaning_fee+"</td></tr>";
+                            tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Security Deposit &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Deposit collected by host in case of damages. Refundable based on Cancellation Policy</span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.security_deposit+"</td></tr>";
+                            tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Total &nbsp;</td><td style='text-align: right;color:black;padding:5px'><b  id='total_booking_price'>$ "+data.data.total_amount+"</b></td></tr>";
+                            if(data.data.no_extra_guest==1){
+                                if(totalguestcount < guest_count){
+                                    $('.booking_button').attr('disabled',true);
+                                    $('.booking_button').css('background','lightgrey');
+                                }else{
+                                    $('.booking_button').attr('disabled',false);
+                                    $('.booking_button').css('background','#{{BASE_COLOR}}');
+                                }
+                                // document.getElementById('guest_count').value=totalguestcount;
+                                $('#guest').val(totalguestcount);
+                                $("#guest_alert").html(" * Only "+totalguestcount+ " Guests Allowed");
+                                $("#guest_alert").show();
+                            }else{
+                                $("#guest_alert").hide();
+                                $('#guest').val(guest_count);
+                            }
+                            $("#table_body").html(tr_data);
+
+                            $('.pay-caption').text(`Pay now: $${data.data.pay_now}, Total: $${data.data.total_amount}`);
+                        }
+                    },
+                    error: function (e) {
+                        console.log('Error in Get_price', e);
+                    }
+                });
+            }
+
+            $("#pricing_details").hide();
     </script>
-    <script>
-
-        //            var fixmeTop = $('#booking_form').offset().top;
-        //            var fixmeTop1 = $('#location').offset().top;
-        // $(window).scroll(function() {
-        //     var currentScroll = $(window).scrollTop();
-
-        //     if (currentScroll >= fixmeTop) {
-        //         $('#booking_form').css({
-        //             position: 'fixed',
-        //             top: '0'
-        //         });
-        //     } else {
-        //         $('#booking_form').css({
-        //             position: 'static'
-        //         });
-        //     }
-        // });
-        // boxPosition = $(".booking-form-widget").offset().top;
-        // boxPosition1 = $("#location").offset();
-        // boxPosition11 = $(".workfrom").offset().top;
-        // var a = $("#location").scrollTop;
-        // $(window).scroll(function(){
-        // boxPosition1 = $("#location").offset().top;
-        // console.log(boxPosition1);
-        //    var isFixed = $(".booking-form-widget").css("position") === "fixed";
-        //    if($(window).scrollTop() > boxPosition && !isFixed){
-        //             $(".booking-form-widget").css({position:"fixed", top: "180px"});
-        //    }else if($(window).scrollTop() < boxPosition11){
-        //         $(".booking-form-widget").css({position:"static"});
-        //    }
-        //    if($(window).scrollTop() > boxPosition1){
-        //     $(".booking-form-widget").css({position:"absolute", top: "0px"});
-        //     }
-        // });
-
-    </script>
-    {{-- <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script> --}}
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script>
         $("#share").click(function(){
@@ -1856,10 +1211,6 @@
             $("#chat_from_date").change(function(){
 
                 var fDate = $("#chat_from_date").val();
-                // alert(fDate);
-
-
-                // $("#property_to_date").foucs();
                 $("#chat_to_date").datepicker('remove');
                 $("#chat_to_date").datepicker({
                     startDate: fDate,
@@ -1916,9 +1267,6 @@
 
                 boxPosition1 = $("#scroll_stop").offset().top;
 
-                // console.log("simi "+boxPosition1);
-
-                // console.log("post -> "+ $(window).width() );
                 var isFixed = $(".tempClass").css("position") === "fixed";
                 if($(window).scrollTop() > boxPosition && !isFixed){
                     $(".tempClass").css({position:"fixed", top: "5px" ,bottom:'55px', left:"840px"});
@@ -1936,8 +1284,6 @@
                     $("#check_in_div").removeClass('col-md-6');
                     $("#check_out_div").removeClass('col-md-6');
                 }
-
-                // //$('.tempClass').addClass('fixed-top');
             });
         }
 

@@ -12,7 +12,6 @@ class Helper
         $end = Carbon::parse($check_out);
         $single_day_fare = Helper::get_daily_price($property_details->monthly_rate);
         $total_days = $end->diffInDays($current);
-        $normal_days = $total_days;
         $price = $total_days * $single_day_fare;
         $service_tax_row = DB::table('settings')
             ->where('param', 'service_tax')
@@ -21,6 +20,8 @@ class Helper
         $cleaning_fee = $property_details->cleaning_fee;
         $security_deposit = $property_details->security_deposit;
         $total_price = $price + $cleaning_fee + $security_deposit + $service_tax;
+        $pay_now = $property_details->monthly_rate + $cleaning_fee + $security_deposit + $service_tax;
+        $day_count = Helper::get_months_and_days($current, $end);
         $booking_price = [
             'client_id' => CLIENT_ID,
             'single_day_fare' => $single_day_fare,
@@ -32,16 +33,38 @@ class Helper
             'check_out' => $check_out,
             'cleaning_fee' => $cleaning_fee,
             'security_deposit' => $security_deposit,
+            'pay_now' => $pay_now,
             'sub_total' => $total_price,
             'price' => $price,
+            'day_count' => $day_count,
         ];
         return $booking_price;
+    }
+
+    public static function get_months_and_days($start, $end)
+    {
+        $start_date = Carbon::parse($start);
+        $end_date = Carbon::parse($end);
+
+        // Finding Partial month days
+        $lastMonthRenew = Carbon::parse($end);
+        if ($lastMonthRenew->day < $start_date->day) {
+            $lastMonthRenew->subMonth();
+        }
+        $lastMonthRenew->day = $start_date->day;
+        $partialDays = $end_date->diffInDays($lastMonthRenew);
+        $totalMonths = $start_date->diffInMonths($end_date);
+        return [
+            'months' => $totalMonths,
+            'days' => $partialDays,
+        ];
     }
 
     public static function get_daily_price($monthly_price)
     {
         return round($monthly_price / 30);
     }
+
     public static function get_stay_status($booking_data)
     {
         $now = Carbon::now()->startOfDay();

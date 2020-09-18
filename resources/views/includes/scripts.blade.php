@@ -16,8 +16,8 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.60/inputmask/jquery.inputmask.js"></script>
 
 {{-- Date Range Picker--}}
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script type="text/javascript" src="{{URL::asset('js/date-range-picker.js')}}"></script>
+<link rel="stylesheet" type="text/css" href="{{URL::asset('css/date-range-picker.css')}}" />
 
 <!-- DropZone | Documentation: http://dropzonejs.com -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/min/dropzone.min.css" rel="stylesheet">

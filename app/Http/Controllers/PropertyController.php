@@ -39,15 +39,22 @@ class PropertyController extends BaseController
         $check_in = date('Y-m-d', strtotime($request->check_in));
         $check_out = date('Y-m-d', strtotime($request->check_out));
         $guest_count = $request->guest_count == 0 ? 20 : $request->guest_count;
+
+        // Padding 24 hours for property owner
+        $c_in = Carbon::parse($check_in);
+        $c_out = Carbon::parse($check_out);
+        $check_in_date = $c_in->subDay()->toDateString();
+        $check_out_date = $c_out->addDay()->toDateString();
+
         $sql =
             "SELECT count(*) as is_available,B.total_guests FROM `property_booking` A, `property_list` B WHERE (A.start_date BETWEEN '" .
-            $check_in .
+            $check_in_date .
             "' AND '" .
-            $check_out .
+            $check_out_date .
             "') AND (A.end_date BETWEEN '" .
-            $check_in .
+            $check_in_date .
             "' AND '" .
-            $check_out .
+            $check_out_date .
             "')  AND B.total_guests < " .
             $request->guest_count .
             " AND A.payment_done = 1 AND A.is_instant = B.is_instant AND A.property_id = " .
@@ -203,7 +210,11 @@ class PropertyController extends BaseController
             $this->sendTwilioMessage($data->phone, $text_message);
             return redirect()->intended('/booking_detail/' . $booking_id);
         } else {
-            return response()->json(['status' => 'FAILED', 'message' => 'This property not available']);
+            return response()->json([
+                'status' => 'FAILED',
+                'message' =>
+                    'Sorry! This property is not available during all of your selected dates. Try changing your dates or finding another property.',
+            ]);
         }
     }
 
@@ -232,21 +243,30 @@ class PropertyController extends BaseController
         if (count($isBlocked)) {
             return response()->json([
                 'status' => 'FAILED',
-                'message' => 'Property is not available at the given dates',
+                'message' =>
+                    'Sorry! This property is not available during all of your selected dates. Try changing your dates or finding another property.',
                 'status_code' => ZERO,
                 'is_blocked' => ONE,
                 'blocked_data' => $isBlocked,
             ]);
         }
+
+        // Padding 24 hours for property owner
+
+        $c_in = Carbon::parse($check_in);
+        $c_out = Carbon::parse($check_out);
+        $check_in_date = $c_in->subDay()->toDateString();
+        $check_out_date = $c_out->addDay()->toDateString();
+
         $sql =
             "SELECT count(*) as is_available,B.total_guests FROM `property_booking` A, `property_list` B WHERE (A.start_date BETWEEN '" .
-            $check_in .
+            $check_in_date .
             "' AND '" .
-            $check_out .
+            $check_out_date .
             "') AND (A.end_date BETWEEN '" .
-            $check_in .
+            $check_in_date .
             "' AND '" .
-            $check_out .
+            $check_out_date .
             "')  AND B.total_guests < " .
             $guest_count .
             " AND A.payment_done = 1 AND A.property_id = " .
@@ -269,7 +289,8 @@ class PropertyController extends BaseController
         if ($weeks['total'] < $property_details->min_days) {
             return response()->json([
                 'status' => 'FAILED',
-                'message' => 'Please Select Minimum days ',
+                'message' =>
+                    'Sorry! This property is not available during all of your selected dates. Try changing your dates or finding another property.',
                 'status_code' => ONE,
             ]);
         }
@@ -288,7 +309,8 @@ class PropertyController extends BaseController
         } else {
             return response()->json([
                 'status' => 'FAILED',
-                'message' => 'This property not available',
+                'message' =>
+                    'Sorry! This property is not available during all of your selected dates. Try changing your dates or finding another property.',
                 'status_code' => ZERO,
             ]);
         }

@@ -1383,24 +1383,25 @@ class PropertyController extends BaseController
 
         $b_dates = [];
         foreach ($booked_dates as $booked_date) {
-            $strDateFrom = date("Y-m-d", strtotime($booked_date->start_date));
-            $strDateTo = date("Y-m-d", strtotime($booked_date->end_date));
-            $dates_list = $this->createDateRangeArray($strDateFrom, $strDateTo);
-            foreach ($dates_list as $item) {
-                $item = date("m/d/Y", strtotime($item));
-                $b_dates[] = ["dates" => $item];
-            }
+            // Padding 24 hours for property owner
+
+            $booking_start = Carbon::parse($booked_date->start_date);
+            $booking_end = Carbon::parse($booked_date->end_date);
+            $booking_start_date = $booking_start->subDay()->toDateString();
+            $booking_end_date = $booking_end->addDay()->toDateString();
+            $dates_list = $this->getDatesBetweenRange($booking_start_date, $booking_end_date);
+            $b_dates = array_merge($b_dates, $dates_list);
         }
 
         $blocked_dates = DB::table('property_blocking')
             ->where('property_blocking.client_id', '=', CLIENT_ID)
             ->where('property_blocking.property_id', '=', $property_id)
-            ->select('start_date')
+            ->select('start_date', 'end_date')
             ->get();
 
-        foreach ($blocked_dates as $item) {
-            $item = date("m/d/Y", strtotime($item->start_date));
-            $b_dates[] = ["dates" => $item];
+        foreach ($blocked_dates as $blocked_date) {
+            $blocked_dates_list = $this->getDatesBetweenRange($blocked_date->start_date, $blocked_date->end_date);
+            $b_dates = array_merge($b_dates, $blocked_dates_list);
         }
         // print_r($b_dates);exit;
         $user_id = $request->session()->get('user_id');

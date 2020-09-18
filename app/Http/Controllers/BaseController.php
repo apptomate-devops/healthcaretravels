@@ -30,6 +30,7 @@ use Log;
 use Mail;
 use finfo;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 define('FB_URL', 'https://health-care-travels.firebaseio.com/');
 // define('CLIENT_MAIL', 'info@healthcaretravels.com');
@@ -637,6 +638,23 @@ class BaseController extends ConstantsController
             while ($iDateFrom < $iDateTo) {
                 $iDateFrom += 86400; // add 24 hours
                 array_push($aryRange, date('Y-m-d', $iDateFrom));
+            }
+        }
+        return $aryRange;
+    }
+
+    public function getDatesBetweenRange($start, $end)
+    {
+        // takes two dates formatted as YYYY-MM-DD and creates an
+        // inclusive array of the dates between the from and to dates.
+        // could test validity of dates here but I'm already doing
+        // that in the main script
+        $period = CarbonPeriod::create($start, $end);
+
+        $aryRange = [];
+        foreach ($period as $date) {
+            if (!$date->isPast() || $date->isToday()) {
+                $aryRange[] = $date->toDateString();
             }
         }
         return $aryRange;

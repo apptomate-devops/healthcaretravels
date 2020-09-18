@@ -1083,6 +1083,10 @@
                 autoUpdateInput: false,
                 locale: {
                     cancelLabel: 'Clear'
+                },
+                isInvalidDate: function(date){
+                    var disableDates = <?php echo json_encode($booked_dates); ?>;
+                    return disableDates.includes(date.format('YYYY-MM-DD'));
                 }
             });
 
@@ -1097,94 +1101,94 @@
                 $('input[id="booking_date_range_picker"][name="check_out"]').val();
             });
         });
-            function get_price() {
-                var id = "{{$property_id}}";
-                var from_date =$('input[id="booking_date_range_picker"][name="check_in"]').val();
-                var to_date = $('input[id="booking_date_range_picker"][name="check_out"]').val();
-                var guestCount = parseInt($("#current_guest_count").val());
-                var guest_count =isNaN(guestCount) ? 0 : guestCount;
-                var totalguestcount=parseInt($('#total_guest_count').val());
-                totalguestcount = isNaN(totalguestcount) ? 0 : totalguestcount;
-                guest_count = isNaN(guest_count) ? 0 : guest_count;
+        function get_price() {
+            var id = "{{$property_id}}";
+            var from_date =$('input[id="booking_date_range_picker"][name="check_in"]').val();
+            var to_date = $('input[id="booking_date_range_picker"][name="check_out"]').val();
+            var guestCount = parseInt($("#current_guest_count").val());
+            var guest_count =isNaN(guestCount) ? 0 : guestCount;
+            var totalguestcount=parseInt($('#total_guest_count').val());
+            totalguestcount = isNaN(totalguestcount) ? 0 : totalguestcount;
+            guest_count = isNaN(guest_count) ? 0 : guest_count;
 
-                $('.guest').show();
-                if(!id || !from_date || !to_date || !guest_count) {
-                    return;
-                }
-                $('#btn_book_now').prop("disabled", false);
-                var url = 'get-price?property_id='+id+"&check_in="+from_date+"&check_out="+to_date+"&guest_count="+guest_count;
-                $.ajax({
-                    "type": "get",
-                    "url" : url,
-                    success: function(data) {
-                        // console.log("room ",data);
-                        if (data.status == 'FAILED' && data.status_code == 0) {
-                            $(".alert").html("Property not available");
-                            $(".alert").show();
-                            $("#table_body").html("");
-                            $('.booking_button').attr('disabled',true);
-                            $('.booking_button').css('background','lightgrey');
-
-                        }
-                        if (data.status == 'FAILED' && data.status_code == 1) {
-                            $(".alert").html("Please review the house rules for Minimum days stay.");
-                            $(".alert").show();
-                            $("#table_body").html("");
-                            $('.booking_button').attr('disabled',true);
-                            $('.booking_button').css('background','lightgrey');
-
-                        }
-
-                        if(data.status == 'SUCCESS'){
-                            $(".alert").html("");
-                            $(".alert").hide();
-                            $('.booking_button').attr('disabled',false);
-                            $('.booking_button').css('background','#0983b8');
-                            $("#pricing_details").show();
-                        }
-
-
-                        console.log("Set favourite success ====:"+JSON.stringify(data));
-
-                        if(data.data) {
-                            var dayCount = data.data.day_count;
-                            var daysLabel = dayCount.months + (dayCount.months > 1 ? ' Months' : ' Month') + (dayCount.days ? ', ' + dayCount.days + (dayCount.days > 1 ? ' Days' : ' Day') : '');
-
-                            var tr_data="";
-
-                            tr_data +="<tr><td style='text-align: left;color:black;padding:5px'> "+daysLabel+" &nbsp;</td><td style='text-align: right;color:black;padding:5px'> $ "+data.data.price+"</td></tr>";
-                            tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Service Fee &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>This fee helps us run our platform and offer our services </span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.service_tax+"</td></tr>";
-                            tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Cleaning Fee&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'> fee charged by host to cover the cost of cleaning their space.</span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.cleaning_fee+"</td></tr>";
-                            tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Security Deposit &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Deposit collected by host in case of damages. Refundable based on Cancellation Policy</span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.security_deposit+"</td></tr>";
-                            tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Total &nbsp;</td><td style='text-align: right;color:black;padding:5px'><b  id='total_booking_price'>$ "+data.data.total_amount+"</b></td></tr>";
-                            if(data.data.no_extra_guest==1){
-                                if(totalguestcount < guest_count){
-                                    $('.booking_button').attr('disabled',true);
-                                    $('.booking_button').css('background','lightgrey');
-                                }else{
-                                    $('.booking_button').attr('disabled',false);
-                                    $('.booking_button').css('background','#{{BASE_COLOR}}');
-                                }
-                                // document.getElementById('guest_count').value=totalguestcount;
-                                $('#guest').val(totalguestcount);
-                                $("#guest_alert").html(" * Only "+totalguestcount+ " Guests Allowed");
-                                $("#guest_alert").show();
-                            }else{
-                                $("#guest_alert").hide();
-                                $('#guest').val(guest_count);
-                            }
-                            $("#table_body").html(tr_data);
-
-                            $('.pay-caption').text(`Pay now: $${data.data.pay_now}, Total: $${data.data.total_amount}`);
-                        }
-                    },
-                    error: function (e) {
-                        console.log('Error in Get_price', e);
-                    }
-                });
+            $('.guest').show();
+            if(!id || !from_date || !to_date || !guest_count) {
+                return;
             }
+            $('#btn_book_now').prop("disabled", false);
+            var url = 'get-price?property_id='+id+"&check_in="+from_date+"&check_out="+to_date+"&guest_count="+guest_count;
+            $.ajax({
+                "type": "get",
+                "url" : url,
+                success: function(data) {
+                    // console.log("room ",data);
+                    if (data.status == 'FAILED' && data.status_code == 0) {
+                        $(".alert").html("Property not available");
+                        $(".alert").show();
+                        $("#table_body").html("");
+                        $('.booking_button').attr('disabled',true);
+                        $('.booking_button').css('background','lightgrey');
 
-            $("#pricing_details").hide();
+                    }
+                    if (data.status == 'FAILED' && data.status_code == 1) {
+                        $(".alert").html("Please review the house rules for Minimum days stay.");
+                        $(".alert").show();
+                        $("#table_body").html("");
+                        $('.booking_button').attr('disabled',true);
+                        $('.booking_button').css('background','lightgrey');
+
+                    }
+
+                    if(data.status == 'SUCCESS'){
+                        $(".alert").html("");
+                        $(".alert").hide();
+                        $('.booking_button').attr('disabled',false);
+                        $('.booking_button').css('background','#0983b8');
+                        $("#pricing_details").show();
+                    }
+
+
+                    console.log("Set favourite success ====:"+JSON.stringify(data));
+
+                    if(data.data) {
+                        var dayCount = data.data.day_count;
+                        var daysLabel = dayCount.months + (dayCount.months > 1 ? ' Months' : ' Month') + (dayCount.days ? ', ' + dayCount.days + (dayCount.days > 1 ? ' Days' : ' Day') : '');
+
+                        var tr_data="";
+
+                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'> "+daysLabel+" &nbsp;</td><td style='text-align: right;color:black;padding:5px'> $ "+data.data.price+"</td></tr>";
+                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Service Fee &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>This fee helps us run our platform and offer our services </span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.service_tax+"</td></tr>";
+                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Cleaning Fee&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'> fee charged by host to cover the cost of cleaning their space.</span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.cleaning_fee+"</td></tr>";
+                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Security Deposit &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Deposit collected by host in case of damages. Refundable based on Cancellation Policy</span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.security_deposit+"</td></tr>";
+                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Total &nbsp;</td><td style='text-align: right;color:black;padding:5px'><b  id='total_booking_price'>$ "+data.data.total_amount+"</b></td></tr>";
+                        if(data.data.no_extra_guest==1){
+                            if(totalguestcount < guest_count){
+                                $('.booking_button').attr('disabled',true);
+                                $('.booking_button').css('background','lightgrey');
+                            }else{
+                                $('.booking_button').attr('disabled',false);
+                                $('.booking_button').css('background','#{{BASE_COLOR}}');
+                            }
+                            // document.getElementById('guest_count').value=totalguestcount;
+                            $('#guest').val(totalguestcount);
+                            $("#guest_alert").html(" * Only "+totalguestcount+ " Guests Allowed");
+                            $("#guest_alert").show();
+                        }else{
+                            $("#guest_alert").hide();
+                            $('#guest').val(guest_count);
+                        }
+                        $("#table_body").html(tr_data);
+
+                        $('.pay-caption').text(`Pay now: $${data.data.pay_now}, Total: $${data.data.total_amount}`);
+                    }
+                },
+                error: function (e) {
+                    console.log('Error in Get_price', e);
+                }
+            });
+        }
+
+        $("#pricing_details").hide();
     </script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script>
@@ -1205,7 +1209,7 @@
             $("#chat_from_date").datepicker({
                 startDate: date,
                 autoclose: true,
-                datesDisabled:[ @foreach($booked_dates as $d) "{{$d['dates']}}" ,@endforeach ]
+                {{--datesDisabled:[ @foreach($booked_dates as $d) "{{$d['dates']}}" ,@endforeach ]--}}
             });
 
             $("#chat_from_date").change(function(){
@@ -1215,7 +1219,7 @@
                 $("#chat_to_date").datepicker({
                     startDate: fDate,
                     autoclose: true,
-                    datesDisabled: [ @foreach($booked_dates as $d) "{{$d['dates']}}",@endforeach ]
+                    {{--datesDisabled: [ @foreach($booked_dates as $d) "{{$d['dates']}}",@endforeach ]--}}
                 });
 
             });

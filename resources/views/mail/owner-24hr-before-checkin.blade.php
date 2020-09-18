@@ -1,4 +1,3 @@
-Health Care Travels Team
 @extends('layout.mail')
 @section('content')
     <div>

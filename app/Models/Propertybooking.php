@@ -25,4 +25,11 @@ class PropertyBooking extends Model
         'created_at',
         'updated_at',
     ];
+    /**
+     * Get the Traveler who made the booking.
+     */
+    public function traveler()
+    {
+        return $this->belongsTo('App\Models\Users', 'traveller_id', 'id');
+    }
 }

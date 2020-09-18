@@ -18,6 +18,7 @@ use App\Models\PropertyRoom;
 use App\Models\PropertyBedrooms;
 use App\Models\BecomeScout;
 use App\Models\EmailConfig;
+use App\Models\BookingPayments;
 
 use App\Services\Twilio;
 use App\Services\Sendgrid;
@@ -29,6 +30,7 @@ use Log;
 use Mail;
 use finfo;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 define('FB_URL', 'https://health-care-travels.firebaseio.com/');
 // define('CLIENT_MAIL', 'info@healthcaretravels.com');
@@ -641,6 +643,23 @@ class BaseController extends ConstantsController
         return $aryRange;
     }
 
+    public function getDatesBetweenRange($start, $end)
+    {
+        // takes two dates formatted as YYYY-MM-DD and creates an
+        // inclusive array of the dates between the from and to dates.
+        // could test validity of dates here but I'm already doing
+        // that in the main script
+        $period = CarbonPeriod::create($start, $end);
+
+        $aryRange = [];
+        foreach ($period as $date) {
+            if (!$date->isPast() || $date->isToday()) {
+                $aryRange[] = $date->toDateString();
+            }
+        }
+        return $aryRange;
+    }
+
     public function generate_random_string()
     {
         $length = 10;
@@ -763,5 +782,42 @@ class BaseController extends ConstantsController
             }
         }
         return $icsDates;
+    }
+
+    public function process_booking_payment($booking_id, $payment_cycle)
+    {
+        $payment = BookingPayments::where('booking_id', $booking_id)
+            ->where('payment_cycle', $payment_cycle)
+            ->first();
+        if (empty($payment)) {
+            return ['success' => false, 'message' => 'No such payment exists!'];
+        }
+        try {
+            // Processing first payment cycle from user's side
+            Logger::info('Initiating transfer for booking: ' . $booking_id . ' :: paymentCycle: ' . $payment_cycle);
+            $fundingSource = $payment->booking->funding_source;
+            $transferDetails = $this->dwolla->createTransferToMasterDwolla($fundingSource, $payment->total_amount);
+            Logger::info('Transfer success for booking: ' . $booking_id . ' for payment cycle: ' . $payment_cycle);
+            $payment->transfer_id = $transferDetails;
+            $payment->processed_time = Carbon::now()->toDateTimeString();
+            $payment->is_processed = 1;
+            $payment->save();
+            // TODO: Send payment success email here
+            return ['success' => true, 'message' => 'Payment has been processed successfully!'];
+        } catch (\Exception $ex) {
+            $message = $ex->getMessage();
+            if (method_exists($ex, 'getResponseBody')) {
+                $message = $ex->getResponseBody();
+            }
+            Logger::info('Transfer failed for booking: ' . $booking_id . ' for payment cycle: ' . $payment_cycle);
+            Logger::info('Transfer failed ex: ' . $message);
+            $payment->processed_time = Carbon::now()->toDateTimeString();
+            $payment->failed_time = Carbon::now()->toDateTimeString();
+            $payment->is_processed = 1;
+            $payment->failed_reason = $message;
+            $payment->save();
+            // TODO: Send payment failure email here
+            return ['success' => false, 'message' => $message];
+        }
     }
 }

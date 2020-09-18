@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Settings;
+use Helper;
 
+Helper::reloadEnv();
 $BASE_URL = config("app.url");
 
 define("MAP_MARKER_ICON", "http://api.estatevue2.com/cdn/img/marker-green.png");

@@ -8,7 +8,18 @@ class BookingPayments extends Model
 {
     protected $table = 'booking_payments';
     protected $primaryKey = 'id';
-
+    protected $fillable = [
+        'payment_cycle',
+        'service_tax',
+        'partial_days',
+        'booking_row_id',
+        'booking_id',
+        'cleaning_fee',
+        'security_deposit',
+        'monthly_rate',
+        'total_amount',
+        'due_date',
+    ];
     /**
      * Get the Booking that owns the payments.
      */

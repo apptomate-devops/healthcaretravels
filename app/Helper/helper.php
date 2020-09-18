@@ -82,6 +82,59 @@ class Helper
         return 'Pending Stay';
     }
 
+    public static function generate_booking_payments($booking)
+    {
+        $start_date = Carbon::parse($booking->start_date);
+        $end_date = Carbon::parse($booking->end_date);
+        $accepted_date = Carbon::now();
+        $scheduler_date = Carbon::parse($booking->start_date);
+        // Getting total days
+        $diffInDays = $start_date->diffInDays($end_date);
+        // Finding Partial month days
+        $lastMonthRenew = Carbon::parse($booking->end_date);
+        if ($lastMonthRenew->day < $start_date->day) {
+            $lastMonthRenew->subMonth();
+        }
+        $lastMonthRenew->day = $start_date->day;
+        $partialDays = $end_date->diffInDays($lastMonthRenew);
+        // Getting total payment Cycles
+        $totalCycles = $start_date->diffInMonths($end_date);
+        $isPartial = $partialDays > 0;
+        if ($isPartial) {
+            $totalCycles++;
+        }
+        // Generating payment schedules that can be used to process payments and keep track of them.
+        $scheduled_payments = [];
+        for ($i = 1; $i <= $totalCycles; $i += 1) {
+            $tax = $i == 1 ? SERVICE_TAX : SERVICE_TAX_SECOND;
+            $data = [
+                'payment_cycle' => $i,
+                'service_tax' => SERVICE_TAX_SECOND,
+                'partial_days' => $partialDays,
+                'booking_id' => $booking->booking_id, // Represents booking id used all over the application
+                'booking_row_id' => $booking->id, // Represents primary key id of booking table
+                'cleaning_fee' => $booking->cleaning_fee,
+                'security_deposit' => $booking->security_deposit,
+                'monthly_rate' => $booking->monthly_rate,
+            ];
+            if ($i == 1) {
+                $data['service_tax'] = SERVICE_TAX;
+                $data['total_amount'] = $data['monthly_rate'] + $data['cleaning_fee'] + $data['security_deposit'];
+                $data['due_date'] = $accepted_date;
+            } else {
+                $data['total_amount'] = $data['monthly_rate'];
+                $scheduler_date->addMonth();
+                $data['due_date'] = $scheduler_date;
+            }
+            if ($i == $totalCycles && $isPartial) {
+                $data['total_amount'] = $data['monthly_rate'] / $partialDays;
+            }
+            $data['due_date'] = $data['due_date']->toDateString();
+            array_push($scheduled_payments, $data);
+        }
+        return $scheduled_payments;
+    }
+
     public static function reloadEnv()
     {
         $dotenvLoader = new \Dotenv\Dotenv(base_path());
@@ -92,6 +145,7 @@ class Helper
             'services.dwolla.access_token' => env('DWOLLA_ACCESS_TOKEN'),
         ]);
     }
+
     public static function changeEnv($data = [])
     {
         if (count($data) > 0) {

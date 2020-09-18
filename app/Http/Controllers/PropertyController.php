@@ -810,90 +810,21 @@ class PropertyController extends BaseController
                 $this->send_email($booking->email, $mail_copy, $mail_data);
             }
             if ($request->status == 2) {
-                $start_date = Carbon::parse($booking->start_date);
-                $end_date = Carbon::parse($booking->end_date);
-                $accepted_date = Carbon::now();
-                $scheduler_date = Carbon::parse($booking->start_date);
-                // Getting total days
-                $diffInDays = $start_date->diffInDays($end_date);
-                // Finding Partial month days
-                $lastMonthRenew = Carbon::parse($booking->end_date);
-                if ($lastMonthRenew->day < $start_date->day) {
-                    $lastMonthRenew->subMonth();
+                $scheduled_payments = Helper::generate_booking_payments($booking);
+                foreach ($scheduled_payments as $payment) {
+                    BookingPayments::updateOrCreate(
+                        [
+                            'booking_id' => $payment['booking_id'],
+                            'payment_cycle' => $payment['payment_cycle'],
+                        ],
+                        $payment,
+                    );
                 }
-                $lastMonthRenew->day = $start_date->day;
-                $partialDays = $end_date->diffInDays($lastMonthRenew);
-                // Getting total payment Cycles
-                $totalCycles = $start_date->diffInMonths($end_date);
-                $isPartial = $partialDays > 0;
-                if ($isPartial) {
-                    $totalCycles++;
+                $paymentRes = $this->process_booking_payment($booking->booking_id, 1);
+                if (!$paymentRes['success']) {
+                    return response()->json(['status' => 'ERROR', 'message' => $paymentRes['message']]);
                 }
-                // Generating payment schedules that can be used to process payments and keep track of them.
-                $scheduled_payments = [];
-                for ($i = 1; $i <= $totalCycles; $i += 1) {
-                    $tax = $i == 1 ? SERVICE_TAX : SERVICE_TAX_SECOND;
-                    $data = [
-                        'payment_cycle' => $i,
-                        'service_tax' => SERVICE_TAX_SECOND,
-                        'partial_days' => $partialDays,
-                        'booking_id' => $booking->booking_id, // Represents booking id used all over the application
-                        'booking_row_id' => $booking->id, // Represents primary key id of booking table
-                        'cleaning_fee' => $booking->cleaning_fee,
-                        'security_deposit' => $booking->security_deposit,
-                        'monthly_rate' => $booking->monthly_rate,
-                    ];
-                    if ($i == 1) {
-                        $data['service_tax'] = SERVICE_TAX;
-                        $data['total_amount'] =
-                            $data['monthly_rate'] + $data['cleaning_fee'] + $data['security_deposit'];
-                        $data['due_date'] = $accepted_date;
-                    } else {
-                        $data['total_amount'] = $data['monthly_rate'];
-                        $scheduler_date->addMonth();
-                        $data['due_date'] = $scheduler_date;
-                    }
-                    if ($i == $totalCycles && $isPartial) {
-                        $data['total_amount'] = $data['monthly_rate'] / $partialDays;
-                    }
-                    $data['due_date'] = $data['due_date']->toDateString();
-                    array_push($scheduled_payments, $data);
-                }
-                BookingPayments::insert($scheduled_payments);
             }
-            $firstPayment = BookingPayments::where('booking_id', $booking->booking_id)
-                ->where('payment_cycle', 1)
-                ->first();
-            try {
-                // Processing first payment cycle from user's side
-                Logger::info('Initiating transfer for booking: ' . $booking->booking_id . ' for payment cycle 1');
-                $fundingSource = $firstPayment->booking->funding_source;
-                $transferDetails = $this->dwolla->createTransferToMasterDwolla(
-                    $fundingSource,
-                    $firstPayment->total_amount,
-                );
-                Logger::info('Transfer success for booking: ' . $booking->booking_id . ' for payment cycle 1');
-                $firstPayment->transfer_id = $transferDetails;
-                $firstPayment->processed_time = Carbon::now()->toDateTimeString();
-                $firstPayment->is_processed = 1;
-                $firstPayment->save();
-                // TODO: Send payment success email here
-            } catch (\Exception $ex) {
-                $message = $ex->getMessage();
-                if (method_exists($ex, 'getResponseBody')) {
-                    $message = $ex->getResponseBody();
-                }
-                Logger::info('Transfer failed for booking: ' . $booking->booking_id . ' for payment cycle 1');
-                Logger::info('Transfer failed ex: ' . $message);
-                $firstPayment->processed_time = Carbon::now()->toDateTimeString();
-                $firstPayment->failed_time = Carbon::now()->toDateTimeString();
-                $firstPayment->is_processed = 1;
-                $firstPayment->failed_reason = $message;
-                $firstPayment->save();
-                // TODO: Send payment failure email here
-                return response()->json(['status' => 'ERROR', 'message' => $message]);
-            }
-
             if ($request->link == 1) {
                 return $this->single_booking($request->booking_id, $request);
             }

@@ -18,6 +18,7 @@ use App\Models\PropertyRoom;
 use App\Models\PropertyBedrooms;
 use App\Models\BecomeScout;
 use App\Models\EmailConfig;
+use App\Models\BookingPayments;
 
 use App\Services\Twilio;
 use App\Services\Sendgrid;
@@ -763,5 +764,39 @@ class BaseController extends ConstantsController
             }
         }
         return $icsDates;
+    }
+
+    public function process_booking_payment($booking_id, $payment_cycle)
+    {
+        $payment = BookingPayments::where('booking_id', $booking_id)
+            ->where('payment_cycle', $payment_cycle)
+            ->first();
+        try {
+            // Processing first payment cycle from user's side
+            Logger::info('Initiating transfer for booking: ' . $booking_id . ' for payment cycle 1');
+            $fundingSource = $payment->booking->funding_source;
+            $transferDetails = $this->dwolla->createTransferToMasterDwolla($fundingSource, $payment->total_amount);
+            Logger::info('Transfer success for booking: ' . $booking_id . ' for payment cycle: ' . $payment_cycle);
+            $payment->transfer_id = $transferDetails;
+            $payment->processed_time = Carbon::now()->toDateTimeString();
+            $payment->is_processed = 1;
+            $payment->save();
+            // TODO: Send payment success email here
+            return ['success' => true, 'message' => 'Payment has been processed successfully!'];
+        } catch (\Exception $ex) {
+            $message = $ex->getMessage();
+            if (method_exists($ex, 'getResponseBody')) {
+                $message = $ex->getResponseBody();
+            }
+            Logger::info('Transfer failed for booking: ' . $booking_id . ' for payment cycle: ' . $payment_cycle);
+            Logger::info('Transfer failed ex: ' . $message);
+            $payment->processed_time = Carbon::now()->toDateTimeString();
+            $payment->failed_time = Carbon::now()->toDateTimeString();
+            $payment->is_processed = 1;
+            $payment->failed_reason = $message;
+            $payment->save();
+            // TODO: Send payment failure email here
+            return ['success' => false, 'message' => $message];
+        }
     }
 }

@@ -10,53 +10,86 @@ class Helper
     {
         $current = Carbon::parse($check_in);
         $end = Carbon::parse($check_out);
-        $single_day_fare = Helper::get_daily_price($property_details->monthly_rate);
-        $total_days = $end->diffInDays($current);
-        $price = $total_days * $single_day_fare;
+
         $service_tax_row = DB::table('settings')
             ->where('param', 'service_tax')
             ->first();
         $service_tax = $service_tax_row->value;
         $cleaning_fee = $property_details->cleaning_fee;
         $security_deposit = $property_details->security_deposit;
-        $total_price = $price + $cleaning_fee + $security_deposit + $service_tax;
-        $pay_now = $property_details->monthly_rate + $cleaning_fee + $security_deposit + $service_tax;
-        $day_count = Helper::get_months_and_days($current, $end);
+
+        $property_details->start_date = $check_in;
+        $property_details->end_date = $check_out;
+        $property_details->booking_id = '';
+
+        $scheduled_payment_details = Helper::get_months_and_days($property_details);
+
+        $neatAmount = $scheduled_payment_details['neat_amount'];
+        $pay_now = $scheduled_payment_details['pay_now'];
+        $total_price = $neatAmount + $cleaning_fee + $service_tax;
+        $due_on_approve = $total_price - $pay_now;
+
         $booking_price = [
             'client_id' => CLIENT_ID,
-            'single_day_fare' => $single_day_fare,
-            'total_days' => $total_days,
             'service_tax' => $service_tax,
-            'initial_pay' => 0, // TODO: check this later $due_now
-            'total_amount' => $total_price,
+            'initial_pay' => 0,
             'check_in' => $check_in,
             'check_out' => $check_out,
             'cleaning_fee' => $cleaning_fee,
             'security_deposit' => $security_deposit,
             'pay_now' => $pay_now,
-            'sub_total' => $total_price,
-            'price' => $price,
-            'day_count' => $day_count,
+            'due_on_approve' => $due_on_approve,
+            'total_price' => $total_price,
+            'neat_amount' => $neatAmount,
+            'count_label' => $scheduled_payment_details['count_label'],
+            'scheduled_payments' => $scheduled_payment_details['scheduled_payments'],
         ];
         return $booking_price;
     }
 
-    public static function get_months_and_days($start, $end)
+    public static function get_months_and_days($booking)
     {
-        $start_date = Carbon::parse($start);
-        $end_date = Carbon::parse($end);
+        $all_scheduled_payments = Helper::generate_booking_payments($booking);
+        $months = 0;
+        $pay_now = 0;
+        $scheduled_payments = [];
+        foreach ($all_scheduled_payments as $payment) {
+            $day = date("F d, Y", strtotime($payment['due_date']));
 
-        // Finding Partial month days
-        $lastMonthRenew = Carbon::parse($end);
-        if ($lastMonthRenew->day < $start_date->day) {
-            $lastMonthRenew->subMonth();
+            if (isset($payment['is_partial_days'])) {
+                $partialDayDetails = $payment;
+                $price = $payment['total_amount'];
+            } else {
+                $months++;
+                $price = $payment['monthly_rate'];
+                if ($payment['payment_cycle'] == 1) {
+                    $day = 'On Approval';
+                    $pay_now = $payment['total_amount'];
+                }
+            }
+
+            array_push($scheduled_payments, [
+                'day' => $day,
+                'price' => $price,
+            ]);
         }
-        $lastMonthRenew->day = $start_date->day;
-        $partialDays = $end_date->diffInDays($lastMonthRenew);
-        $totalMonths = $start_date->diffInMonths($end_date);
+
+        $remaining_days_amount = 0;
+        $day_count_label = $months . ' month' . ($months > 1 ? 's' : '');
+
+        if (isset($partialDayDetails)) {
+            $remaining_days = $partialDayDetails['is_partial_days'];
+            $remaining_days_amount = $partialDayDetails['total_amount'];
+            $day_count_label = $day_count_label . ', ' . $remaining_days . ' day' . ($remaining_days > 1 ? 's' : '');
+        }
+
+        $neat_amount = round($months * $booking->monthly_rate + $remaining_days_amount);
+
         return [
-            'months' => $totalMonths,
-            'days' => $partialDays,
+            'count_label' => $day_count_label,
+            'neat_amount' => $neat_amount,
+            'scheduled_payments' => $scheduled_payments,
+            'pay_now' => $pay_now,
         ];
     }
 
@@ -106,7 +139,6 @@ class Helper
         // Generating payment schedules that can be used to process payments and keep track of them.
         $scheduled_payments = [];
         for ($i = 1; $i <= $totalCycles; $i += 1) {
-            $tax = $i == 1 ? SERVICE_TAX : SERVICE_TAX_SECOND;
             $data = [
                 'payment_cycle' => $i,
                 'service_tax' => SERVICE_TAX_SECOND,
@@ -119,15 +151,18 @@ class Helper
             ];
             if ($i == 1) {
                 $data['service_tax'] = SERVICE_TAX;
-                $data['total_amount'] = $data['monthly_rate'] + $data['cleaning_fee'] + $data['security_deposit'];
+                $data['total_amount'] = round(
+                    $data['monthly_rate'] + $data['cleaning_fee'] + $data['security_deposit'],
+                );
                 $data['due_date'] = $accepted_date;
             } else {
-                $data['total_amount'] = $data['monthly_rate'];
+                $data['total_amount'] = round($data['monthly_rate']);
                 $scheduler_date->addMonth();
                 $data['due_date'] = $scheduler_date;
             }
             if ($i == $totalCycles && $isPartial) {
-                $data['total_amount'] = $data['monthly_rate'] / $partialDays;
+                $data['total_amount'] = round($data['monthly_rate'] / $partialDays);
+                $data['is_partial_days'] = $partialDays;
             }
             $data['due_date'] = $data['due_date']->toDateString();
             array_push($scheduled_payments, $data);

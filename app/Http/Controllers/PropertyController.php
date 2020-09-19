@@ -290,8 +290,7 @@ class PropertyController extends BaseController
         if ($weeks['total'] < $property_details->min_days) {
             return response()->json([
                 'status' => 'FAILED',
-                'message' =>
-                    'Sorry! This property is not available during all of your selected dates. Try changing your dates or finding another property.',
+                'message' => 'Please review the house rules for Minimum days stay.',
                 'status_code' => ONE,
             ]);
         }
@@ -339,6 +338,7 @@ class PropertyController extends BaseController
             // Do not allow other user to access booking details
             return view('general_error', ['message' => 'Invalid Access']);
         }
+
         $agency = DB::table('agency')
             ->orderBy('name', 'ASC')
             ->get();

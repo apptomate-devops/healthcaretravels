@@ -1123,7 +1123,7 @@
                 success: function(data) {
                     // console.log("room ",data);
                     if (data.status == 'FAILED' && data.status_code == 0) {
-                        $(".alert").html("Sorry! This property is not available during all of your selected dates. Try changing your dates or finding another property.");
+                        $(".alert").html(data.message || "Sorry! This property is not available during all of your selected dates. Try changing your dates or finding another property.");
                         $(".alert").show();
                         $("#table_body").html("");
                         $('.booking_button').attr('disabled',true);
@@ -1131,7 +1131,7 @@
 
                     }
                     if (data.status == 'FAILED' && data.status_code == 1) {
-                        $(".alert").html("Please review the house rules for Minimum days stay.");
+                        $(".alert").html(data.message || "Please review the house rules for Minimum days stay.");
                         $(".alert").show();
                         $("#table_body").html("");
                         $('.booking_button').attr('disabled',true);
@@ -1151,16 +1151,13 @@
                     console.log("Set favourite success ====:"+JSON.stringify(data));
 
                     if(data.data) {
-                        var dayCount = data.data.day_count;
-                        var daysLabel = dayCount.months + (dayCount.months > 1 ? ' Months' : ' Month') + (dayCount.days ? ', ' + dayCount.days + (dayCount.days > 1 ? ' Days' : ' Day') : '');
 
                         var tr_data="";
 
-                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'> "+daysLabel+" &nbsp;</td><td style='text-align: right;color:black;padding:5px'> $ "+data.data.price+"</td></tr>";
+                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'> "+data.data.count_label+" &nbsp;</td><td style='text-align: right;color:black;padding:5px'> $ "+ data.data.neat_amount +"</td></tr>";
                         tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Service Fee &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>This fee helps us run our platform and offer our services </span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.service_tax+"</td></tr>";
                         tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Cleaning Fee&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'> fee charged by host to cover the cost of cleaning their space.</span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.cleaning_fee+"</td></tr>";
-                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Security Deposit &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Deposit collected by host in case of damages. Refundable based on Cancellation Policy</span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.security_deposit+"</td></tr>";
-                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Total &nbsp;</td><td style='text-align: right;color:black;padding:5px'><b  id='total_booking_price'>$ "+data.data.total_amount+"</b></td></tr>";
+                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Total &nbsp;</td><td style='text-align: right;color:black;padding:5px'><b  id='total_booking_price'>$ "+data.data.total_price+"</b></td></tr>";
                         if(data.data.no_extra_guest==1){
                             if(totalguestcount < guest_count){
                                 $('.booking_button').attr('disabled',true);
@@ -1179,7 +1176,11 @@
                         }
                         $("#table_body").html(tr_data);
 
-                        $('.pay-caption').text(`Pay now: $${data.data.pay_now}, Total: $${data.data.total_amount}`);
+                        $('.pay-caption').text(`Pay now: $${data.data.pay_now}, Total: $${data.data.total_price}`);
+
+                        var toolTip = '<span class="tooltips"><i class="fa fa-question-circle"></i><span class="tooltiptext">Deposit collected by host in case of damages. Refundable based on Cancellation Policy</span></span>';
+
+                        $('<div style="color: black;">+ $ '+data.data.security_deposit+' refundable security deposit '+toolTip+'</div>').insertAfter('.pay-caption');
                     }
                 },
                 error: function (e) {

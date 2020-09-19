@@ -3,137 +3,7 @@
 ?>
 @extends('layout.master') @section('title',$data->title) @section('main_content')
     <link rel="stylesheet" href="{{ URL::asset('css/select-pure.css') }}">
-    <style type="text/css">
-        .property_details.container {
-            margin-top: 50px;
-            margin-bottom: 50px;
-        }
-        div::-webkit-scrollbar {
-            width: 12px;
-        }
-        div::-webkit-scrollbar-track {
-            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-            border-radius: 10px;
-        }
-        div::-webkit-scrollbar-thumb {
-            border-radius: 10px;
-            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-        }
-        .property-title h2 {
-            font-size: 26px !important;
-        }
-        .add-another {
-            font-size: 12px;
-            color: #e78016;
-            text-align: right;
-            margin: -10px 10px 20px 0;
-        }
-        @media only screen and (min-width: 990px) {
-            .property-image p {
-                text-align: right;
-            }
-            .property-pricing {
-                margin-top: 40px;
-            }
-            .property-image .sub-price a {
-                text-align: right;
-            }
-            .show-990{
-                display: none;
-            }
-        }
-        @media only screen and (max-width: 989px) {
-            .show-990{
-                display: show;
-            }
-            .-990{
-            display: none;
-        }
-            .property-image p {
-                text-align: center;
-            }
-            .property-pricing {
-                margin-top: 40px;
-            }
-            .property-image .sub-price a {
-                text-align: center;
-            }
-        }
-        @media only screen and (max-width: 767px) {
-            .show-990{
-                display: none !important;
-            }
-            .-990{
-            display: show !important;
-        }
-        }
-        .property-image .sub-price a {
-            display: block;
-            font-size: 19px;
-            font-weight: 600;
-        }
-        .property-image p img {
-            border-radius: 50%;
-            width: 100px;
-            margin-bottom: 0px;
-        }
-        .property-pricing {
-            margin-top: 40px;
-        }
-        .comments {
-            margin: -10px 0 0 0;
-        }
-        .td {
-            padding: 10px;
-        }
-        #map_container{
-            position: relative;
-        }
-        #map{
-            height: 0;
-            overflow: hidden;
-            padding-bottom: 22.25%;
-            padding-top: 30px;
-            position: relative;
-        }
-        #contact_host{
-            color: #e78016;
-            text-decoration: underline;
-            cursor: pointer;
-        }
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            border-bottom: 1px dotted black;
-        }
-        .row_border{
-            /*padding: 10px;*/
-            /*margin-bottom: 5px;*/
-            border-bottom: 1px solid lightgrey;
-
-
-        }
-        .name{
-            padding: 10px;
-        }
-        .tempClass{
-            border: 1px solid lightgrey;
-            padding:5px;
-        }
-        .total_amount{
-            color: #e78016;
-            font-weight: bold;
-            padding: 10px;
-            text-align: center;
-        }
-        .total_amount.total_amount_gray {
-            color: #adadad;
-            font-weight: normal;
-        }
-        .error-text {
-            color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ URL::asset('css/bookings.css') }}">
     <div id="" class="property-titlebar margin-bottom-0">
         <div class="property_details container">
             <div class="row">
@@ -207,44 +77,37 @@
                                             </table>
                                             <hr>
                                             <section id="billing-summary" class="billing-summary">
-
-
                                                 <table id="billing-table" class="reso-info-table billing-table" style="width:95%">
                                                     <tbody>
                                                     <h4>Payment Details</h4>
-                                                    <tr class="row_border">
+                                                    <tr>
                                                         <td class="name pos-rel" >
-                                          <span class="lang-chang-label">
-                                          $
-                                          </span>{{$data->single_day_fare}} x {{$data->total_days}} days
-                                                            <span class='tooltips'><i style="color:black"  class='fa fa-question-circle'></i><span style="color: white!important" class='tooltiptext'>Price per day</span></span>
+                                                                <span class="lang-chang-label">
+                                                                    {{$data->count_label}}
+                                                                </span>
+                                                            <span class='tooltips'><i style="color:black"  class='fa fa-question-circle'></i><span style="color: white!important" class='tooltiptext'>Total price</span></span>
                                                         </td>
-                                                        <td class="val text-right">
-                                          <span class="lang-chang-label" >  $
-                                          </span><span >{{$data->single_day_fare*$data->total_days}}</span>
+                                                        <td class="val text-right" id="neat_amount">
+                                                            $ {{$data->neat_amount}}
                                                         </td>
                                                     </tr>
-                                                    @if($data->extra_guest!=0)
-                                                        <tr class="row_border">
+                                                    @foreach($data->scheduled_payments as $payment)
+                                                        <tr class="payment_sections">
                                                             <td class="name">
-                                                                Extra Guest {{$data->extra_guest}} X {{$data->extra_guest_price/$data->extra_guest}}
-                                                                <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">price per extra guest </span></span>
+                                                                {{$payment['day']}}
                                                             </td>
-                                                            <td class="val text-right" >
-                                          <span class="lang-chang-label">
-                                          $
-                                          </span><span>{{$data->extra_guest_price}}</span>
+                                                            <td class="val text-right">
+                                                                $ {{$payment['price']}}
                                                             </td>
                                                         </tr>
-                                                    @endif
-                                                    <tr class="row_border">
+                                                    @endforeach
+                                                    <tr class="row_border row_border_top">
                                                         <td class="name pos-rel">
                                                             Service Fee
                                                             <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">General Service Charges</span></span>
                                                         </td>
                                                         <td class="val text-right" >
-                                          <span class="lang-chang-label">         $
-                                          </span><span>{{$data->service_tax}}</span>
+                                                            $ {{$data->service_tax}}
                                                         </td>
                                                     </tr>
 
@@ -254,32 +117,29 @@
                                                             <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">General Cleaning Charges</span></span>
                                                         </td>
                                                         <td class="val text-right" >
-                                          <span class="lang-chang-label">
-                                          $
-                                          </span><span>{{$data->cleaning_fee}}</span>
+                                                            $ {{$data->cleaning_fee}}
                                                         </td>
                                                     </tr>
 
-                                                    <tr class="row_border">
+                                                    <tr>
                                                         <td class="name">
-                                                            Security Deposit <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Average Daily rate is Rounded</span></span>
+                                                            Total Amount
                                                         </td>
                                                         <td class="val text-right" >
-                                          <span class="lang-chang-label">
-                                          $
-                                          </span><span>{{$data->security_deposit}}</span>
+                                                            $ {{$data->total_price}}
                                                         </td>
                                                     </tr>
-
-
-                                                    <tr class="row_border">
+                                                    <tr>
                                                         <td class="name">
-                                                            <b>Total Amount </b>
+                                                            <b>Due on Approval</b>
                                                         </td>
                                                         <td class="val text-right" >
-                                          <span class="lang-chang-label">
-                                          $
-                                          </span><span><b>{{$data->total_amount}}</b></span>
+                                                            <b>$ {{$data->due_on_approve}}</b>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="name">
+                                                            + $ {{$data->security_deposit}} refundable security deposit <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Refunded after completion</span></span>
                                                         </td>
                                                     </tr>
                                                     @if(false && $data->coupon_value!="")
@@ -293,11 +153,6 @@
                                                             </td>
                                                         </tr>
                                                     @endif
-                                                    <tr class="editable-fields" id="total_amount">
-                                                        <td colspan="2">
-                                                            <div class="total_amount">Payable Amount ${{$data->total_amount}}</div>
-                                                        </td>
-                                                    </tr>
                                                     <tr class="editable-fields">
                                                         <td colspan="2">
                                                             <button id="requestBooking" class="btn btn-default btn-block bg-orange" disabled>Request Booking</button>
@@ -305,10 +160,10 @@
                                                     </tr>
                                                     <tr class="editable-fields" id="total_amount">
                                                         <td colspan="2">
-                                                            <div class="total_amount total_amount_gray">User will not be charged until booking request is accepted</div>
+                                                            <div class="total_amount total_amount_gray">You won't be charged until the property owner confirms your request</div>
                                                         </td>
                                                     </tr>
-                                                    @if($data->coupon_value!="")
+                                                    @if(false && $data->coupon_value!="")
                                                         <tr>
                                                             <td colspan="2"style="color:green;font-weight: bold"><center> Coupon Code is Applied<b>({{$data->coupon_code}})</b></center></td>
                                                         </tr>
@@ -322,8 +177,6 @@
                             </div>
                         </div>
                         <div id="content-container" class="col-md-7 col-md-pull-5 col-lg-pull-4 lang-ar-right">
-
-
 
                             <section id="head_scroll" class="checkout-main__section payment">
 
@@ -339,7 +192,7 @@
                                     </div>
                                 </div>
 
-                                <h2>Payment Details</h2>
+                                <h2>Account Details</h2>
                                 @if(count($funding_sources) > 0)
                                     <select name="funding_source" id="fundingSource" class="chosen-select-no-single">
                                         <option selected disabled>Select Account</option>
@@ -518,6 +371,7 @@
                 change_pet_travelling(0);
             });
         });
+
         function change_pet_travelling(value) {
             if(value) {
                 $('#pet_details').show();
@@ -527,6 +381,7 @@
                 $('#pet_details').hide();
             }
         }
+
         function add_another_agency(show = false, value = '') {
             if(show) {
                 $('#add_another_agency').hide();
@@ -544,6 +399,7 @@
                 $('#other_agency').val('');
             }
         }
+
         function load_agencies() {
             var agencies = <?php echo json_encode($agency); ?>;
             allAgencies = agencies;
@@ -583,11 +439,11 @@
             $('#agency_error').show();
             return false
         }
+
         $('.price_float').change(function(){
             var value = parseFloat(this.value);
             this.value = isNaN(value) ? 0 : value;
         });
-
         $('.price_float').keypress(function(event) {
             if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
                 event.preventDefault();
@@ -601,7 +457,12 @@
                 return false;
             }
         });
-
+        $('#neat_amount').click(function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            $('.payment_sections').toggleClass('active');
+            $(this).toggleClass('active');
+        })
         function apply_coupon(id){
 
             var coupon_code=document.getElementById('coupon_code').value;

@@ -55,6 +55,11 @@
     <!-- AngularFire -->
     <script src="https://cdn.firebase.com/libs/angularfire/1.1.2/angularfire.min.js"></script>
     <div class="container" style="margin-top: 100px;">
+    <div class="row text-center">
+        <div class="col" style="margin-bottom: 10px">
+        To protect your payment, always communicate and pay through Health Care Travels.
+        </div>
+    </div>
         <div class="row">
             <!-- Widget -->
             <div class="col-md-4">

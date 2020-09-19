@@ -21,6 +21,9 @@
             height: 33px !important;
             border-radius: 50%;
         }
+        #chat {
+            max-height: 500px;
+        }
         .text-white {
             color: white;
         }
@@ -83,11 +86,15 @@
                             <!--  <div class="md-card-dropdown" data-uk-dropdown="{pos:'bottom-right'}"><i class="md-icon material-icons">&#xE3B7;</i><div class="uk-dropdown"><ul class="uk-nav" id="chat_colors"><li class="uk-nav-header">Message Colors</li><li class="uk-active"><a href="#" data-chat-color="chat_box_colors_a">Grey/Green</a></li><li><a href="#" data-chat-color="chat_box_colors_b">Blue/Dark Blue</a></li><li><a href="#" data-chat-color="chat_box_colors_c">Orange/Light Gray</a></li><li><a href="#" data-chat-color="chat_box_colors_d">Deep Purple/Light Grey</a></li></ul></div></div> -->
                             <i class="material-icons">&#xE314;</i>
                         </div>
-                        <h3 class="md-card-toolbar-heading-text large">
-                            <span class="uk-text-muted">Chat with</span>
-                            <a href="#">{{$owner->first_name}} {{$owner->last_name}}</a>
-
-                        </h3>
+                        <div class="" style="display: flex; align-items: center;">
+                            <div class="chat_user_avatar" style="margin-right: 6px">
+                                <img class="md-user-image" src="{{$owner->profile_image}}" onerror="this.onerror=null;this.src='http://127.0.0.1:8000/user_profile_default.png';" alt=""/>
+                            </div>
+                            <h3 class="md-card-toolbar-heading-text large">
+                                <span class="uk-text-muted">Chat with</span>
+                                <a href="#">{{$owner->first_name}} {{$owner->last_name}}</a>
+                            </h3>
+                        </div>
                     </div>
                     <div class="md-card-content padding-reset">
                         <div class="chat_box_wrapper">

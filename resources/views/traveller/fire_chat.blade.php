@@ -7,6 +7,9 @@
 @section('main_content')
 
 <style type="text/css">
+        /* .header_double_height {
+            padding-top: 130px;
+        } */
         .chat_box.chat_box_colors_a .chat_message_wrapper.chat_message_right ul.chat_message>li {
             background: #0983b8 !important;
         }
@@ -17,6 +20,15 @@
             width: 34px !important;
             height: 33px !important;
             border-radius: 50%;
+        }
+        .text-white {
+            color: white;
+        }
+        .chat-input-wrapper {
+            display: flex !important;
+            justify-content: space-between;
+            align-items: baseline;
+            width: 100%;
         }
         ul.my-account-nav li a {
             font-size: 14px;
@@ -42,7 +54,7 @@
 
     <!-- AngularFire -->
     <script src="https://cdn.firebase.com/libs/angularfire/1.1.2/angularfire.min.js"></script>
-    <div class="container" style="margin-top: 35px;">
+    <div class="container" style="margin-top: 100px;">
         <div class="row">
             <!-- Widget -->
             <div class="col-md-4">
@@ -87,9 +99,9 @@
                                 <div class="chat_message_wrapper" ng-show="message.sent_by != userid">
                                     <div class="chat_user_avatar">
                                         @if($owner->profile_image != " ")
-                                            <img class="md-user-image" src="{{$owner->profile_image}}" alt=""/>
+                                            <img class="md-user-image" src="{{$owner->profile_image}}" onerror="this.onerror=null;this.src='http://127.0.0.1:8000/user_profile_default.png';" alt=""/>
                                         @else
-                                            <img class="md-user-image" src="https://cdn1.iconfinder.com/data/icons/flat-business-icons/128/user-512.png" alt=""/>
+                                            <img class="md-user-image" src="http://127.0.0.1:8000/user_profile_default.png" alt=""/>
                                         @endif
                                     </div>
                                     <ul class="chat_message">
@@ -106,9 +118,9 @@
                                 <div class="chat_message_wrapper chat_message_right" ng-show="message.sent_by == userid">
                                     <div class="chat_user_avatar">
                                         @if($traveller->profile_image != " ")
-                                            <img class="md-user-image" src="{{$traveller->profile_image}}" alt=""/>
+                                            <img class="md-user-image" src="{{$traveller->profile_image}}" onerror="this.onerror=null;this.src='http://127.0.0.1:8000/user_profile_default.png';" alt=""/>
                                         @else
-                                            <img class="md-user-image" src="https://cdn1.iconfinder.com/data/icons/flat-business-icons/128/user-512.png" alt=""/>
+                                            <img class="md-user-image" src="http://127.0.0.1:8000/user_profile_default.png" alt=""/>
                                         @endif
 
                                     </div>
@@ -130,14 +142,17 @@
 
                             </div>
                             <div class="chat_submit_box" id="chat_submit_box">
-                                <div class="uk-input-group">
+                                <div class="uk-input-group chat-input-wrapper">
 
-                                    <input type="text" class="md-input" ng-model="messageSend" name="submit_message" id="submit_message" placeholder="Send message" onchange="youFunction(this.value);" onkeyup="youFunction(this.value);" >
-                                    <span style="cursor: pointer;"  id="send_msg" class="uk-input-group-addon" ng-click="addMessage()">
-
-																											<i class="material-icons md-24">&#xE163;</i>
-
-																									</span>
+                                    
+                                    <div style="width:80%">
+                                        <input type="text" class="md-input mb-0" ng-model="messageSend" name="submit_message" id="submit_message" placeholder="Send message" onchange="checkNotAllowedText(this.value);" onkeyup="checkNotAllowedText(this.value);">
+                                    </div>
+                                    <div>
+                                        <button style="cursor: pointer;" id="send_msg" class="btn btn-primary" ng-click="addMessage()">
+                                            <i class="material-icons md-24 text-white">&#xE163;</i> Send
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -194,7 +209,7 @@
 ================================================== -->
     <script type="text/javascript">
 
-        function youFunction(msg){
+        function checkNotAllowedText(msg){
 
             var matches = msg.match(/\d+/g);
             if(matches == null){
@@ -229,7 +244,7 @@
         //     return re.test(text);
         // }
 
-
+        
 
 
         var app = angular.module('myApp', ['firebase'], function($interpolateProvider) {
@@ -244,6 +259,7 @@
         app.controller('ListController', ['$scope', '$firebaseArray', '$firebaseObject', 'FBURL', function($scope,$firebaseArray, $firebaseObject, FBURL){
 
             var request_id = {{$id}};
+            console.log('request_id',request_id);
             var current_date = "{{date('m/d/Y H:i A')}}";
             //current_date = current_date.toString();
             var url_string = window.location.href; //window.location.href
@@ -260,6 +276,7 @@
             //alert($scope.loader);
 
             $scope.userid = {{$traveller_id}};
+            console.log($scope.userid);
             $scope.removeProduct = function(id) {
                 var ref = new Firebase('{{FB_URL}}'+node_name+'/'+request_id+'/' + id);
                 var product = $firebaseObject(ref)
@@ -284,7 +301,11 @@
 
             };
 
-
+        document.addEventListener('keydown',function(event){
+            if(event.keyCode === 13 && document.getElementById('send_msg').style.display != 'none') {
+                $scope.addMessage();
+            }
+        });
 
         }]);
 

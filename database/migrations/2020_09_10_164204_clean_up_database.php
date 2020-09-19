@@ -25,8 +25,8 @@ class CleanUpDatabase extends Migration
         Schema::dropIfExists('property_special_pricing');
         Schema::dropIfExists('property_video');
         Schema::dropIfExists('recent_locations');
-        Schema::dropIfExists('request_chat');
-        Schema::dropIfExists('request_chat_details');
+        // Schema::dropIfExists('request_chat');
+        // Schema::dropIfExists('request_chat_details');
         Schema::dropIfExists('room_types');
         Schema::dropIfExists('state');
         Schema::dropIfExists('verify_mobile');

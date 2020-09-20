@@ -24,6 +24,9 @@ class PropertyBooking extends Model
         'status',
         'created_at',
         'updated_at',
+        'name_of_agency',
+        'other_agency',
+        'funding_source',
     ];
     /**
      * Get the Traveler who made the booking.
@@ -39,5 +42,13 @@ class PropertyBooking extends Model
     public function owner()
     {
         return $this->belongsTo('App\Models\Users', 'owner_id', 'id');
+    }
+
+    /**
+     * Get the Property who owns this property booking.
+     */
+    public function property()
+    {
+        return $this->belongsTo('App\Models\PropertyList', 'property_id', 'id');
     }
 }

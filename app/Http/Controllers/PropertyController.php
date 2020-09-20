@@ -790,6 +790,8 @@ class PropertyController extends BaseController
                 'property_list.monthly_rate',
                 'property_list.security_deposit',
                 'property_list.cleaning_fee',
+                'property_list.check_in',
+                'property_list.check_out',
                 'property_booking.*',
                 'users.email',
                 'users.phone',
@@ -830,28 +832,33 @@ class PropertyController extends BaseController
                     );
                 }
                 $paymentRes = $this->process_booking_payment($booking->booking_id, 1);
-                $owner = $booking->owner;
+                $bookingModel = PropertyBooking::find($booking->id);
+                $owner = $bookingModel->owner;
+                $traveler = $bookingModel->traveler;
+                $property = $bookingModel->property;
+                $propertyTitle = $property->title;
+                $travelerName = $traveler->first_name . " " . $traveler->last_name;
                 $owner_mail_data = [
                     'name' => $owner->first_name . " " . $owner->last_name,
-                    'propertyName' => $booking->title,
-                    'travelerName' => $booking->first_name . " " . $booking->last_name,
-                    'travelerPhone' => $booking->phone,
+                    'propertyName' => $property->title,
+                    'travelerName' => $travelerName,
+                    'travelerPhone' => $traveler->phone,
                 ];
                 $start_delay = 0;
                 $end_delay = 0;
-                $start_date = Carbon::parse($booking->start_date);
+                $start_date = Carbon::parse($bookingModel->start_date);
                 $start_date_with_padding = $start_date->subDays(1);
-                $end_date = Carbon::parse($booking->end_date);
+                $end_date = Carbon::parse($bookingModel->end_date);
                 $end_date_with_padding = $end_date->subDay(1);
                 $current_date = Carbon::now();
 
                 // if there is no padding of 24 hr send email right away.
                 if ($start_date_with_padding->gt($current_date)) {
-                    $start_delay = $start_date_with_padding->floatDiffInSeconds($current_date);
+                    $start_delay = $start_date_with_padding->diffInSeconds($current_date);
                 }
 
                 if ($end_date_with_padding->gt($current_date)) {
-                    $end_delay = $end_date_with_padding->floatDiffInSeconds($current_date);
+                    $end_delay = $end_date_with_padding->diffInSeconds($current_date);
                 }
 
                 $subject = 'Your Booking is Starting Soon';
@@ -862,7 +869,7 @@ class PropertyController extends BaseController
                     $owner_mail_data,
                     $start_delay,
                 );
-                $subject = 'Your Booking at ' . $booking->title . ' is Ending';
+                $subject = 'Your Booking at ' . $propertyTitle . ' is Ending';
                 $this->send_scheduled_email(
                     $owner->email,
                     'owner-24hr-before-checkout',
@@ -872,10 +879,10 @@ class PropertyController extends BaseController
                 );
 
                 $traveler_mail_data = [
-                    'name' => $booking->first_name . " " . $booking->last_name,
-                    'propertyName' => $booking->title,
+                    'name' => $travelerName,
+                    'propertyName' => $propertyTitle,
                 ];
-                $subject = 'Your Stay at ' . $booking->title;
+                $subject = 'Your Stay at ' . $propertyTitle;
                 $this->send_scheduled_email(
                     $owner->email,
                     'traveler-24hr-before-checkin',
@@ -883,7 +890,7 @@ class PropertyController extends BaseController
                     $traveler_mail_data,
                     $start_delay,
                 );
-                $subject = 'Your Stay at ' . $booking->title . ' is Ending';
+                $subject = 'Your Stay at ' . $propertyTitle . ' is Ending';
                 $this->send_scheduled_email(
                     $owner->email,
                     'traveler-24hr-before-checkout',

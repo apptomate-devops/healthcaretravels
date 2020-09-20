@@ -14,7 +14,6 @@ class AddAgencyToPropertyBooking extends Migration
     public function up()
     {
         Schema::table('property_booking', function (Blueprint $table) {
-            //
             $table->string('name_of_agency')->nullable();
             $table->string('other_agency')->nullable();
         });
@@ -28,7 +27,6 @@ class AddAgencyToPropertyBooking extends Migration
     public function down()
     {
         Schema::table('property_booking', function (Blueprint $table) {
-            //
             $table->dropColumn(['name_of_agency', 'other_agency']);
         });
     }

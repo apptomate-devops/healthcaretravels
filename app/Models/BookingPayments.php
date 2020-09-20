@@ -19,6 +19,9 @@ class BookingPayments extends Model
         'monthly_rate',
         'total_amount',
         'due_date',
+        'is_owner',
+        'transfer_url',
+        'job_id',
     ];
     /**
      * Get the Booking that owns the payments.

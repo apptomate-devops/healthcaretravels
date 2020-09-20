@@ -11,8 +11,5 @@ class VerifyCsrfToken extends BaseVerifier
      *
      * @var array
      */
-    protected $except = [
-        //
-        'properties',
-    ];
+    protected $except = ['properties', 'dwolla-webhooks'];
 }

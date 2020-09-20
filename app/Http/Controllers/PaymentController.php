@@ -95,8 +95,9 @@ class PaymentController extends BaseController
         } else {
             // Check if email already registered on Dwolla
             $isExistingCustomer = $this->dwolla->findCustomerByEmail($user->email);
-            if ($isExistingCustomer) {
-                $customer_id = $isExistingCustomer->id;
+            $activeStatus = ['verified', 'unverified'];
+            if ($isExistingCustomer && in_array($isExistingCustomer->status, $activeStatus)) {
+                $customer_id = $isExistingCustomer->_links->self->href;
                 $user->dwolla_customer = $customer_id;
                 $user->save();
             } else {
@@ -135,6 +136,34 @@ class PaymentController extends BaseController
         return response()->json(['success' => true]);
     }
 
+    public function dwolla_webhook(Request $request)
+    {
+        $proposedSignature = $request->header('X-Request-Signature-SHA-256');
+        $eventType = $request->header('x-dwolla-topic');
+        $payloadBody = json_encode($request->all());
+        $requiredEvents = ['transfer_completed', 'transfer_cancelled', 'transfer_failed'];
+        if (!in_array($eventType, $requiredEvents)) {
+            return response()->json(['success' => true, 'message' => 'Unused event received']);
+        }
+        Logger::info('Webhook called: eventType: ' . $eventType);
+        Logger::info('ProposedSignature: ' . $proposedSignature);
+        Logger::info('payload: ' . $payloadBody);
+        $isValidRequest = $this->dwolla->verify_gateway_signature($proposedSignature, $payloadBody);
+        switch ($eventType) {
+            case 'transfer_cancelled':
+            case 'transfer_failed':
+                Logger::info('Handle Error use case');
+                break;
+            case 'transfer_completed':
+                Logger::info('Handle transfer complete use case');
+                break;
+            default:
+                Logger::info('Not required event received');
+                break;
+        }
+        return response()->json(['isValidRequest' => $isValidRequest]);
+    }
+
     public function get_funding_source_details(Request $request)
     {
         $fsUrl = $request->url;
@@ -148,8 +177,17 @@ class PaymentController extends BaseController
     public function transfer(Request $request)
     {
         $user = Users::find(27);
-        $transferDetails = $this->dwolla->createTransferToMasterDwolla($user->default_funding_source, 1000);
-        return response()->json(['success' => true, 'transfer' => $transferDetails]);
+        try {
+            $transferDetails = $this->dwolla->createTransferToMasterDwolla($user->default_funding_source, 1000);
+            return response()->json(['success' => true, 'transfer' => $transferDetails]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+            if (method_exists($th, 'getResponseBody')) {
+                $message = $th->getResponseBody();
+            }
+            Logger::error('Ex in transfer payment data: ex: ', $message);
+            return response()->json(['success' => false, 'message' => $message]);
+        }
     }
 
     public function get_funding_source($fundingSourceUrl)

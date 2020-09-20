@@ -34,6 +34,7 @@ class Dwolla
         $this->master_account = config('services.dwolla.master_account');
         $this->master_funding_source = config('services.dwolla.master_funding_source');
         $this->access_token = config('services.dwolla.access_token');
+        $this->webhook_secret = config('services.dwolla.webhook_secret');
         $this->setUp();
     }
 
@@ -165,10 +166,9 @@ class Dwolla
             Logger::info('Creating Dwolla customer for user: ' . $id);
             $res = $this->createNewCustomer($userPayload);
             Logger::info('Dwolla customer created for user: ' . $res);
-            $customer_id = basename($res);
-            $user->dwolla_customer = $customer_id;
+            $user->dwolla_customer = $res;
             $user->save();
-            return $customer_id;
+            return $res;
         } catch (\Exception $ex) {
             Logger::error('Error in creating new customer for user: ' . $id . '. EX: ' . $ex->getResponseBody());
             return $ex;
@@ -256,7 +256,9 @@ class Dwolla
         // Customer bank account
         // 'href' => 'https://api-sandbox.dwolla.com/funding-sources/31a091a3-f731-4203-9ff6-7c7dd045634a',
         // "https://api-sandbox.dwolla.com/funding-sources/914d31a8-458a-4d13-bd94-39aab09cb7a0"
-
+        if (empty($source)) {
+            throw new \Exception('Invalid source value');
+        }
         $payload = [
             '_links' => [
                 'source' => [
@@ -268,7 +270,7 @@ class Dwolla
             ],
             'amount' => [
                 'currency' => 'USD',
-                'value' => "20.00",
+                'value' => $amount,
             ],
             'clearing' => [
                 'destination' => $clearance,
@@ -280,5 +282,12 @@ class Dwolla
         } catch (\Throwable $th) {
             throw $th;
         }
+    }
+
+    public function verify_gateway_signature($proposedSignature, $payloadBody)
+    {
+        $signature = hash_hmac('sha256', $payloadBody, $this->webhook_secret);
+        Logger::info('GeneratedSignature: ' . $signature);
+        return $signature == $proposedSignature;
     }
 }

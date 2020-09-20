@@ -171,6 +171,8 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::post('/dwolla/add_funding_source', 'PaymentController@add_funding_source');
 });
 
+Route::post('/dwolla-webhooks', 'PaymentController@dwolla_webhook');
+
 // TODO: remove when implemented
 // Payment testing APIS
 Route::get('/dwolla/create_customer/{id}', 'PaymentController@create_customer');

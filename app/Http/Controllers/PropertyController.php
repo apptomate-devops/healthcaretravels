@@ -1940,7 +1940,7 @@ class PropertyController extends BaseController
                 if ($property_id) {
                     $property_rate = DB::table('property_list')
                         ->where('id', $property_id)
-                        ->select('monthly_rate')
+                        ->select('title', 'monthly_rate')
                         ->first();
 
                     $list = [];
@@ -1958,9 +1958,17 @@ class PropertyController extends BaseController
                     $icals = DB::table('third_party_calender')
                         ->where('property_id', '=', $property_id)
                         ->get();
-                    $events = DB::table('property_booking')
-                        ->where('client_id', '=', CLIENT_ID)
-                        ->where('property_id', '=', $property_id)
+                    $booked_events = DB::table('property_booking')
+                        ->leftjoin('users as traveller', 'traveller.id', '=', 'property_booking.traveller_id')
+                        ->where('property_booking.client_id', '=', CLIENT_ID)
+                        ->where('property_booking.property_id', '=', $property_id)
+                        //                        ->where('property_booking.payment_done', '=', 1) // TODO: confirm if what to display only confirmed bookings
+                        ->select(
+                            'property_booking.is_instant',
+                            DB::raw('DATE_FORMAT(property_booking.start_date, "%M %d, %Y") as start_date'),
+                            DB::raw('DATE_FORMAT(property_booking.end_date, "%M %d, %Y") as end_date'),
+                            'traveller.username',
+                        )
                         ->get();
                     $block_events = DB::table('property_blocking')
                         ->where('client_id', '=', CLIENT_ID)
@@ -1978,7 +1986,7 @@ class PropertyController extends BaseController
                         }
                     }
 
-                    foreach ($events as $key => $value) {
+                    foreach ($booked_events as $key => $value) {
                         if ($value->is_instant < 2) {
                             $value->booked_on = APP_BASE_NAME;
                         } else {
@@ -1986,7 +1994,7 @@ class PropertyController extends BaseController
                         }
                     }
                 } else {
-                    $events = [];
+                    $booked_events = [];
                     $icals = [];
                     $property_rate = 0;
                     $res = [];
@@ -1995,7 +2003,7 @@ class PropertyController extends BaseController
                 //                print_r($block_events);exit();
                 return view(
                     'owner.add-property.7',
-                    compact('property_details', 'events', 'icals', 'block_events', 'res'),
+                    compact('property_details', 'booked_events', 'icals', 'block_events', 'res'),
                 )
                     ->with('stage', $stage)
                     ->with('client_id', CLIENT_ID);
@@ -2258,9 +2266,17 @@ class PropertyController extends BaseController
             $icals = DB::table('third_party_calender')
                 ->where('property_id', '=', $property_id)
                 ->get();
-            $events = DB::table('property_booking')
-                ->where('client_id', '=', CLIENT_ID)
-                ->where('property_id', '=', $property_id)
+            $booked_events = DB::table('property_booking')
+                ->leftjoin('users as traveller', 'traveller.id', '=', 'property_booking.traveller_id')
+                ->where('property_booking.client_id', '=', CLIENT_ID)
+                ->where('property_booking.property_id', '=', $property_id)
+                //              ->where('property_booking.payment_done', '=', 1) // TODO: confirm if what to display only confirmed bookings
+                ->select(
+                    'property_booking.is_instant',
+                    DB::raw('DATE_FORMAT(property_booking.start_date, "%M %d, %Y") as start_date'),
+                    DB::raw('DATE_FORMAT(property_booking.end_date, "%M %d, %Y") as end_date'),
+                    'traveller.username',
+                )
                 ->get();
             $block_events = DB::table('property_blocking')
                 ->where('client_id', '=', CLIENT_ID)
@@ -2279,7 +2295,7 @@ class PropertyController extends BaseController
                 }
             }
 
-            foreach ($events as $key => $value) {
+            foreach ($booked_events as $key => $value) {
                 if ($value->is_instant < 2) {
                     $value->booked_on = APP_BASE_NAME;
                 } else {
@@ -2287,7 +2303,7 @@ class PropertyController extends BaseController
                 }
             }
         } else {
-            $events = [];
+            $booked_events = [];
             $icals = [];
             $property_rate = 0;
             $res = [];
@@ -2302,7 +2318,7 @@ class PropertyController extends BaseController
             $url = BASE_URL . 'owner/add-new-property/7/' . $request->property_id;
         }
 
-        return redirect($url)->with(compact('property_details', 'events', 'icals', 'block_events', 'res'));
+        return redirect($url)->with(compact('property_details', 'booked_events', 'icals', 'block_events', 'res'));
     }
 
     public function property_next6(Request $request)

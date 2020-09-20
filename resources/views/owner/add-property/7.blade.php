@@ -200,7 +200,7 @@
                             type:"GET",
                             success: function(data){
                                 if (data.status === 'SUCCESS' && data.event_id) {
-                                    calendar.fullCalendar('renderEvent', { title, start, end, allDay: allDay, className: 'booked', id: data.event_id});
+                                    calendar.fullCalendar('renderEvent', { title, start, end, allDay: allDay, className: 'blocked', id: data.event_id});
                                 } else {
                                     alert('Error while blocking date')
                                 }
@@ -222,13 +222,12 @@
                     return event.rendering === 'background';
                 },
                 events: [
-                        @foreach($events as $event)
+                        @foreach($booked_events as $event)
                     {
-                        title: "{{$event->booked_on}}",
+                        title: "{{$property_details->title}} booked by {{$event->username}} from {{$event->start_date}} to {{$event->end_date}}",
                         start: "{{$event->start_date}}",
                         end: "{{$event->end_date}}",
-                        className: 'blocked',
-                        id: "{{$event->id}}"
+                        className: 'booked',
                     },
                         @endforeach
                         @foreach($block_events as $eve)
@@ -236,7 +235,7 @@
                         title: "{{$eve->booked_on}}",
                         start: "{{$eve->start_date}}",
                         end: "{{$eve->end_date}}",
-                        className: 'booked',
+                        className: 'blocked',
                         id: "{{$eve->id}}"
                     },
                     @endforeach

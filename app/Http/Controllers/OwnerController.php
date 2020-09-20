@@ -58,7 +58,7 @@ class OwnerController extends BaseController
             $property_details = DB::table('property_list')
                 ->where('id', $request->id)
                 ->first();
-
+            $property_title = $property_details->title ?? '';
             $list = [];
 
             $month = date('m');
@@ -75,13 +75,25 @@ class OwnerController extends BaseController
             $icals = DB::table('third_party_calender')
                 ->where('property_id', '=', $id)
                 ->get();
-            $events = DB::table('property_booking')
-                ->where('client_id', '=', CLIENT_ID)
-                ->where('property_id', '=', $id)
+            $booked_events = DB::table('property_booking')
+                ->leftjoin('users as traveller', 'traveller.id', '=', 'property_booking.traveller_id')
+                ->where('property_booking.client_id', '=', CLIENT_ID)
+                ->where('property_booking.property_id', '=', $id)
+                ->where('property_booking.payment_done', '=', 1)
+                ->select(
+                    DB::raw('DATE_FORMAT(property_booking.start_date, "%M %d, %Y") as start_date'),
+                    DB::raw('DATE_FORMAT(property_booking.end_date, "%M %d, %Y") as end_date'),
+                    'traveller.username',
+                )
                 ->get();
             $block_events = DB::table('property_blocking')
                 ->where('client_id', '=', CLIENT_ID)
                 ->where('property_id', '=', $id)
+                ->select(
+                    'property_booking.is_instant',
+                    DB::raw('DATE_FORMAT(property_blocking.start_date, "%M %d, %Y") as start_date'),
+                    DB::raw('DATE_FORMAT(property_blocking.end_date, "%M %d, %Y") as end_date'),
+                )
                 ->get();
 
             $res = [];
@@ -95,7 +107,7 @@ class OwnerController extends BaseController
                 }
             }
 
-            foreach ($events as $key => $value) {
+            foreach ($booked_events as $key => $value) {
                 if ($value->is_instant < 2) {
                     $value->booked_on = APP_BASE_NAME;
                 } else {
@@ -103,16 +115,23 @@ class OwnerController extends BaseController
                 }
             }
 
-            return view('owner.calender', compact('properties', 'id', 'events', 'icals', 'block_events', 'res'));
+            return view(
+                'owner.calender',
+                compact('properties', 'id', 'booked_events', 'icals', 'block_events', 'res', 'property_title'),
+            );
         }
-        $events = [];
+        $booked_events = [];
         $icals = [];
         $id = 0;
         $property_rate = new stdClass();
         $property_rate->price_per_night = 0;
         $res = [];
         $block_events = [];
-        return view('owner.calender', compact('properties', 'id', 'events', 'icals', 'block_events', 'res'));
+        $property_title = '';
+        return view(
+            'owner.calender',
+            compact('properties', 'id', 'booked_events', 'icals', 'block_events', 'res', 'property_title'),
+        );
     }
 
     public function my_bookings(Request $request)

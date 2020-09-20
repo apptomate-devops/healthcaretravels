@@ -20,7 +20,7 @@ class Helper
 
         $property_details->start_date = $check_in;
         $property_details->end_date = $check_out;
-        $property_details->booking_id = '';
+        $property_details->booking_id = $property_details->booking_id ?? '';
 
         $scheduled_payment_details = Helper::get_months_and_days($property_details);
 

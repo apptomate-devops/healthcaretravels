@@ -44,38 +44,19 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
-            //$('#cale').hide();
-            var date = new Date();
-            var d = date.getDate();
-            var m = date.getMonth();
-            var y = date.getFullYear();
-
-            /*  className colors
-
-            className: default(transparent), important(red), chill(pink), success(green), info(blue)
-
-            */
-
-
             /* initialize the external events
             -----------------------------------------------------------------*/
 
             $('#external-events div.external-event').each(function() {
 
-                // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
-                // it doesn't need to have a start or end
                 var eventObject = {
-                    title: $.trim($(this).text()) // use the element's text as the event title
+                    title: $.trim($(this).text())
                 };
-
-                // store the Event Object in the DOM element so we can get to it later
                 $(this).data('eventObject', eventObject);
-
-                // make the event draggable using jQuery UI
                 $(this).draggable({
                     zIndex: 999,
-                    revert: true,      // will cause the event to go back to its
-                    revertDuration: 0  //  original position after the drag
+                    revert: true,
+                    revertDuration: 0
                 });
 
             });
@@ -102,70 +83,14 @@
 
                 allDaySlot: false,
                 selectHelper: false,
-                {{--select: function(start, end, allDay) {--}}
-                {{--    var check_start=$('#start_date_hidden').val();--}}
-                {{--    if(check_start==0)--}}
-                {{--    {--}}
-                {{--        var s_date=convert(start);--}}
-                {{--        $('#start_date_hidden').val(convert(start));--}}
-                {{--        $("[data-date='" + s_date + "']").attr("id", "start_date");--}}
-                {{--    }--}}
-
-                {{--    if($('#start_date_hidden').val()!=convert(start))--}}
-                {{--    {--}}
-                {{--        debugger--}}
-
-                {{--        var e_date=convert(end);--}}
-                {{--        $("[data-date='" + e_date + "']").attr("id", "start_date");--}}
-                {{--        var roomtxt = $('#selector1  option:selected').text();--}}
-                {{--        //var title = prompt('Block a Room', roomtxt);--}}
-                {{--        var title = prompt('Block a Room', roomtxt);--}}
-                {{--        var pro_id = $("#property").val();--}}
-                {{--        if(pro_id == 0 || pro_id == " "){--}}
-                {{--            alert("Please Select Property");--}}
-                {{--            return false;--}}
-                {{--        }--}}
-
-
-                {{--        if (title) {--}}
-                {{--            // alert(title);--}}
-
-                {{--            // alert(allDay);--}}
-                {{--            var start_date=$('#start_date_hidden').val();--}}
-                {{--            var end_date=convert(end);--}}
-                {{--            var ajax_url = "{{BASE_URL}}"+"block_booking?title="+title+"&start="+start_date+"&end="+end_date+"&pro_id="+pro_id;--}}
-                {{--            $.ajax({--}}
-                {{--                url:ajax_url,--}}
-                {{--                type:"GET",--}}
-                {{--                success: function(data){--}}
-                {{--                    window.location.reload();--}}
-                {{--                }--}}
-
-                {{--            });--}}
-
-                {{--            calendar.fullCalendar('renderEvent',--}}
-                {{--                {--}}
-                {{--                    title: title,--}}
-                {{--                    start: start,--}}
-                {{--                    end: end,--}}
-                {{--                    allDay: allDay,--}}
-                {{--                    className: 'reserved',--}}
-                {{--                },--}}
-
-                {{--                true // make the event "stick"--}}
-                {{--            );--}}
-                {{--        }--}}
-                {{--    }--}}
-                {{--    calendar.fullCalendar('unselect');--}}
-                {{--},--}}
                 events: [
                     // place the added events
-                        @foreach($events as $event)
+                        @foreach($booked_events as $event)
                     {
-                        title: "Manual Dates - Property Not Available",
+                        title: "{{$property_title}} booked by {{$event->username}} from {{$event->start_date}} to {{$event->end_date}}",
                         start: "{{$event->start_date}}",
                         end: "{{$event->end_date}}",
-                        className: 'blocked',
+                        className: 'booked',
                     },
                         @endforeach
                         @foreach($block_events as $eve)
@@ -173,10 +98,9 @@
                         title: "Manual Dates - Property Not Available",
                         start: "{{$eve->start_date}}",
                         end: "{{$eve->end_date}}",
-                        className: 'booked',
+                        className: 'blocked',
                     },
                         @endforeach
-
                         @for($i=0;$i<count($res);$i++)
 
                     {
@@ -338,16 +262,10 @@
     <script type="text/javascript">
 
         function property_change() {
-            // body...
             var id = $("#property").val();
-
             var url = window.location.protocol + "//" + window.location.host + "/owner/calender?id="+id;
             document.location = url;
         }
-        // setInterval(function(){
-        //     $(".fc-event-inner").css("background-color", "#ff556a");
-        // }, 100);
-
     </script>
 
     <script type="text/javascript">

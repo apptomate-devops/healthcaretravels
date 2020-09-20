@@ -95,8 +95,9 @@ class PaymentController extends BaseController
         } else {
             // Check if email already registered on Dwolla
             $isExistingCustomer = $this->dwolla->findCustomerByEmail($user->email);
-            if ($isExistingCustomer) {
-                $customer_id = $isExistingCustomer->id;
+            $activeStatus = ['verified', 'unverified'];
+            if ($isExistingCustomer && in_array($isExistingCustomer->status, $activeStatus)) {
+                $customer_id = $isExistingCustomer->_links->self->href;
                 $user->dwolla_customer = $customer_id;
                 $user->save();
             } else {

@@ -165,10 +165,9 @@ class Dwolla
             Logger::info('Creating Dwolla customer for user: ' . $id);
             $res = $this->createNewCustomer($userPayload);
             Logger::info('Dwolla customer created for user: ' . $res);
-            $customer_id = basename($res);
-            $user->dwolla_customer = $customer_id;
+            $user->dwolla_customer = $res;
             $user->save();
-            return $customer_id;
+            return $res;
         } catch (\Exception $ex) {
             Logger::error('Error in creating new customer for user: ' . $id . '. EX: ' . $ex->getResponseBody());
             return $ex;

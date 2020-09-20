@@ -284,6 +284,36 @@ class Dwolla
         }
     }
 
+    public function createTransferToCustomer($destination, $amount, $clearance = 'next-available')
+    {
+        if (empty($destination)) {
+            throw new \Exception('Invalid source value');
+        }
+        $payload = [
+            '_links' => [
+                'source' => [
+                    'href' => $this->master_funding_source,
+                ],
+                'destination' => [
+                    'href' => $destination,
+                ],
+            ],
+            'amount' => [
+                'currency' => 'USD',
+                'value' => $amount,
+            ],
+            'clearing' => [
+                'destination' => $clearance,
+            ],
+        ];
+        try {
+            $transfer = $this->transfersApi->create($payload);
+            return $transfer;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
     public function verify_gateway_signature($proposedSignature, $payloadBody)
     {
         $signature = hash_hmac('sha256', $payloadBody, $this->webhook_secret);

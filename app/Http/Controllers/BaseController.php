@@ -795,10 +795,11 @@ class BaseController extends ConstantsController
         return $icsDates;
     }
 
-    public function process_booking_payment($booking_id, $payment_cycle)
+    public function process_booking_payment($booking_id, $payment_cycle, $is_owner = 0)
     {
         $payment = BookingPayments::where('booking_id', $booking_id)
             ->where('payment_cycle', $payment_cycle)
+            ->where('is_owner', $is_owner)
             ->first();
         if (empty($payment)) {
             return ['success' => false, 'message' => 'No such payment exists!'];
@@ -814,18 +815,35 @@ class BaseController extends ConstantsController
         ];
         try {
             // Processing first payment cycle from user's side
-            Logger::info('Initiating transfer for booking: ' . $booking_id . ' :: paymentCycle: ' . $payment_cycle);
+            Logger::info(
+                'Initiating transfer for booking: ' .
+                    $booking_id .
+                    ' :: paymentCycle: ' .
+                    $payment_cycle .
+                    ($is_owner ? ' To Owner' : ' From Traveler'),
+            );
             $fundingSource = $payment->booking->funding_source;
-            $transferDetails = $this->dwolla->createTransferToMasterDwolla($fundingSource, $payment->total_amount);
+            // Total amount is rent - service for traveler
+            $amount = $payment->total_amount + $payment->service_tax;
+            if ($is_owner) {
+                // Total amount is rent - service for traveler
+                $amount = $payment->total_amount - $payment->service_tax;
+            }
+            $transferDetails = null;
+            if ($is_owner) {
+                $transferDetails = $this->dwolla->createTransferToCustomer($fundingSource, $amount);
+            } else {
+                $transferDetails = $this->dwolla->createTransferToMasterDwolla($fundingSource, $amount);
+            }
             Logger::info('Transfer success for booking: ' . $booking_id . ' for payment cycle: ' . $payment_cycle);
-            $payment->transfer_id = $transferDetails;
+            $payment->transfer_url = $transferDetails;
+            $payment->transfer_id = basename($transferDetails);
             $payment->processed_time = Carbon::now()->toDateTimeString();
             $payment->is_processed = 1;
             $payment->save();
             $fundingSourceDetails = $this->dwolla->getFundingSourceDetails($fundingSource);
             $subject = 'Payment Successfully Processed on ' . $subjectDate;
             $data['accountName'] = $fundingSourceDetails->name;
-            //send_custom_email($email, $subject, $view_name, $data, $title, $from = GENERAL_MAIL)
             $this->send_custom_email($traveler->email, $subject, 'mail.payment-success', $data, 'Payment Processed');
             return ['success' => true, 'message' => 'Payment has been processed successfully!'];
         } catch (\Exception $ex) {

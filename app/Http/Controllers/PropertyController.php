@@ -816,12 +816,15 @@ class PropertyController extends BaseController
                 $this->send_email($booking->email, $mail_copy, $mail_data);
             }
             if ($request->status == 2) {
-                $scheduled_payments = Helper::generate_booking_payments($booking);
+                $scheduled_payments_traveler = Helper::generate_booking_payments($booking);
+                $scheduled_payments_owner = Helper::generate_booking_payments($booking, 1);
+                $scheduled_payments = array_merge($scheduled_payments_traveler, $scheduled_payments_owner);
                 foreach ($scheduled_payments as $payment) {
                     BookingPayments::updateOrCreate(
                         [
                             'booking_id' => $payment['booking_id'],
                             'payment_cycle' => $payment['payment_cycle'],
+                            'is_owner' => $payment['is_owner'],
                         ],
                         $payment,
                     );

@@ -115,7 +115,7 @@ class Helper
         return 'Pending Stay';
     }
 
-    public static function generate_booking_payments($booking)
+    public static function generate_booking_payments($booking, $is_owner = 0)
     {
         $start_date = Carbon::parse($booking->start_date);
         $end_date = Carbon::parse($booking->end_date);
@@ -148,6 +148,7 @@ class Helper
                 'cleaning_fee' => $booking->cleaning_fee,
                 'security_deposit' => $booking->security_deposit,
                 'monthly_rate' => $booking->monthly_rate,
+                'is_owner' => $is_owner,
             ];
             if ($i == 1) {
                 $data['service_tax'] = SERVICE_TAX;
@@ -155,10 +156,24 @@ class Helper
                     $data['monthly_rate'] + $data['cleaning_fee'] + $data['security_deposit'],
                 );
                 $data['due_date'] = $accepted_date;
+                if ($is_owner) {
+                    $dd = Carbon::parse($booking->start_date)->addHours(48);
+                    $timeSplit = explode(':', $booking->check_in);
+                    $dd->hour = $timeSplit[0];
+                    $dd->minute = $timeSplit[1];
+                    $dd->second = 0;
+                    // Because security deposit is handled at the end of checkout by admin or auto deposit
+                    $data['total_amount'] = round($data['monthly_rate'] + $data['cleaning_fee']);
+                    $data['due_date'] = $dd;
+                }
             } else {
                 $data['total_amount'] = round($data['monthly_rate']);
                 $scheduler_date->addMonth();
                 $data['due_date'] = $scheduler_date;
+                if ($is_owner) {
+                    $dd = Carbon::parse($scheduler_date->toDateTimeString())->addHours(48);
+                    $data['due_date'] = $dd;
+                }
             }
             if ($i == $totalCycles && $isPartial) {
                 $data['total_amount'] = round($data['monthly_rate'] / $partialDays);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\Logger;
 use Illuminate\Http\Request;
 use App\Models\Users;
+use App\Models\BookingPayments;
 
 class PaymentController extends BaseController
 {
@@ -149,13 +150,26 @@ class PaymentController extends BaseController
         Logger::info('ProposedSignature: ' . $proposedSignature);
         Logger::info('payload: ' . $payloadBody);
         $isValidRequest = $this->dwolla->verify_gateway_signature($proposedSignature, $payloadBody);
+        $resourceId = $request->resourceId;
+        $payment = BookingPayments::getByTransactionId($resourceId);
+        if (empty($payment)) {
+            return response()->json(['success' => false, 'message' => 'resource id does not exists!']);
+        }
         switch ($eventType) {
             case 'transfer_cancelled':
             case 'transfer_failed':
                 Logger::info('Handle Error use case');
+                // TODO: ask if we want to send another email notifying user that payment failed for some reason.
+                $payment->failed_time = Carbon::parse($request->timestamp)->toDateTimeString();
+                $payment->is_cleared = -1;
+                $payment->save();
                 break;
             case 'transfer_completed':
                 Logger::info('Handle transfer complete use case');
+                $payment->confirmed_time = Carbon::parse($request->timestamp)->toDateTimeString();
+                $payment->is_cleared = 1;
+                $payment->save();
+                // TODO: ask if we want to send another email confirming that payment went through.
                 break;
             default:
                 Logger::info('Not required event received');

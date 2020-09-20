@@ -22,6 +22,7 @@ class BookingPayments extends Model
         'is_owner',
         'transfer_url',
         'job_id',
+        'is_cleared',
     ];
     /**
      * Get the Booking that owns the payments.
@@ -29,5 +30,10 @@ class BookingPayments extends Model
     public function booking()
     {
         return $this->belongsTo('App\Models\PropertyBooking', 'booking_id', 'booking_id');
+    }
+
+    public function scopeGetByTransactionId($query, $transaction)
+    {
+        return $query->where('transfer_id', $transaction)->get();
     }
 }

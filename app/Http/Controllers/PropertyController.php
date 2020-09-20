@@ -1513,7 +1513,6 @@ class PropertyController extends BaseController
             'status' => 'SUCCESS',
             'is_user' => $is_user,
             'current_user' => $current_user,
-            //  TODO: fix me, sometimes it causes error:: Original database id 4
             'bed_rooms' => $temp_bed_rooms,
             'data' => $result,
             'booked_dates' => $b_dates,
@@ -1972,7 +1971,7 @@ class PropertyController extends BaseController
                         ->leftjoin('users as traveller', 'traveller.id', '=', 'property_booking.traveller_id')
                         ->where('property_booking.client_id', '=', CLIENT_ID)
                         ->where('property_booking.property_id', '=', $property_id)
-                        //                        ->where('property_booking.payment_done', '=', 1) // TODO: confirm if what to display only confirmed bookings
+                        ->where('property_booking.status', '=', 2)
                         ->select(
                             'property_booking.is_instant',
                             DB::raw('DATE_FORMAT(property_booking.start_date, "%M %d, %Y") as start_date'),
@@ -2280,7 +2279,7 @@ class PropertyController extends BaseController
                 ->leftjoin('users as traveller', 'traveller.id', '=', 'property_booking.traveller_id')
                 ->where('property_booking.client_id', '=', CLIENT_ID)
                 ->where('property_booking.property_id', '=', $property_id)
-                //              ->where('property_booking.payment_done', '=', 1) // TODO: confirm if what to display only confirmed bookings
+                ->where('property_booking.status', '=', 2)
                 ->select(
                     'property_booking.is_instant',
                     DB::raw('DATE_FORMAT(property_booking.start_date, "%M %d, %Y") as start_date'),

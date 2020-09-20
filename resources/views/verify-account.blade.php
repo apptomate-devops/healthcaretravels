@@ -490,8 +490,6 @@
                         if(property_address.value && property_address.dataset.isValid) {
 
                             var address_components = JSON.parse(property_address.dataset.isValid);
-                            // TODO: add address
-
                             var componentForm = {
                                 street_number: { type: 'short_name' },
                                 route: { type: 'long_name' },

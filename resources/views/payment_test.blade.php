@@ -62,7 +62,6 @@
             });
             return false;
         }
-        // TODO: send me to server to update me for user
         var fundingSource = res._links['funding-source'].href;
         addFundingSourceToUser(fundingSource);
         $div.text(JSON.stringify(logValue));

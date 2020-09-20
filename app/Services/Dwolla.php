@@ -256,7 +256,9 @@ class Dwolla
         // Customer bank account
         // 'href' => 'https://api-sandbox.dwolla.com/funding-sources/31a091a3-f731-4203-9ff6-7c7dd045634a',
         // "https://api-sandbox.dwolla.com/funding-sources/914d31a8-458a-4d13-bd94-39aab09cb7a0"
-
+        if (empty($source)) {
+            throw new \Exception('Invalid source value');
+        }
         $payload = [
             '_links' => [
                 'source' => [
@@ -268,7 +270,7 @@ class Dwolla
             ],
             'amount' => [
                 'currency' => 'USD',
-                'value' => "20.00",
+                'value' => $amount,
             ],
             'clearing' => [
                 'destination' => $clearance,

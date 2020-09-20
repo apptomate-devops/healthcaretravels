@@ -19,6 +19,7 @@ return [
         'master_account' => env('DWOLLA_MASTER_ACCOUNT'),
         'master_account_id' => env('DWOLLA_MASTER_ACCOUNT_ID'),
         'master_funding_source' => env('DWOLLA_MASTER_FUNDING_SOURCE'),
+        'webhook_secret' => env('DWOLLA_WEBHOOK_SECRET'),
         'env' => env('DWOLLA_ENV'),
     ],
 

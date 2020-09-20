@@ -34,6 +34,7 @@ class Dwolla
         $this->master_account = config('services.dwolla.master_account');
         $this->master_funding_source = config('services.dwolla.master_funding_source');
         $this->access_token = config('services.dwolla.access_token');
+        $this->webhook_secret = config('services.dwolla.webhook_secret');
         $this->setUp();
     }
 
@@ -281,5 +282,12 @@ class Dwolla
         } catch (\Throwable $th) {
             throw $th;
         }
+    }
+
+    public function verify_gateway_signature($proposedSignature, $payloadBody)
+    {
+        $signature = hash_hmac('sha256', $payloadBody, $this->webhook_secret);
+        Logger::info('GeneratedSignature: ' . $signature);
+        return $signature == $proposedSignature;
     }
 }

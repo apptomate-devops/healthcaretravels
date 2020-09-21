@@ -1,3 +1,21 @@
+<!-- START - Facebook Open Graph, Google+ and Twitter Card Tags 99.99.99 -->
+<meta name="description"
+    content="Health Care Travels is committed to delivering a high level of expertise, customer service, and attention to detail to the market of accommodation booking." />
+<meta property="og:locale" content="en_US" />
+<meta property="og:image" content="https://healthcaretravels.com/healthcaretravel.png">
+<meta property="og:site_name" content="The best place to rent/book properties to/for healthcare workers | Health Care Travels" />
+<meta property="og:title" content="The best place to rent/book properties to/for healthcare workers | Health Care Travels" />
+<meta itemprop="name" content="The best place to rent/book properties to/for healthcare workers | Health Care Travels" />
+<meta name="twitter:title" content="The best place to rent/book properties to/for healthcare workers | Health Care Travels" />
+<meta property="og:url" content="https://healthcaretravels.com/" />
+<meta property="og:type" content="website" />
+<meta property="og:description"
+    content="Health Care Travels is committed to delivering a high level of expertise, customer service, and attention to detail to the market of accommodation booking." />
+<meta itemprop="description"
+    content="Health Care Travels is committed to delivering a high level of expertise, customer service, and attention to detail to the market of accommodation booking." />
+<meta name="twitter:card" content="summary_large_image" />
+<!-- END - Facebook Open Graph, Google+ and Twitter Card Tags -->
+
 <link rel="shortcut icon" href="{{URL::asset('favicon.ico')}}" type="image/x-icon">
 
 <link rel="stylesheet" href="{{ URL::asset('css/bootstrap.min.css') }}">

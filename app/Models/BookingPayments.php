@@ -32,8 +32,8 @@ class BookingPayments extends Model
         return $this->belongsTo('App\Models\PropertyBooking', 'booking_id', 'booking_id');
     }
 
-    public function scopeGetByTransactionId($query, $transaction)
+    public static function getByTransactionId($transaction)
     {
-        return $query->where('transfer_id', $transaction)->get();
+        return BookingPayments::where('transfer_id', $transaction)->first();
     }
 }

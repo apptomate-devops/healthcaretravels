@@ -33,12 +33,11 @@
                 </div>
                 <table class="manage-table responsive-table" style="border-spacing: 0 1em;" id="booking_table">
                     <tr>
-                        <th><i class="fa fa-file-text"></i> My Bookings</th>
+                        <th><i class="fa fa-file-text"></i> Booking Requests</th>
                         <th class="expire-date"> Status </th>
                         <th colspan="2">Action</th>
                     </tr>
-
-                @foreach($bookings as $booking)
+                @foreach($booking_requests as $booking)
                     <!-- Item starts -->
                         <tr class="card" id="{{$booking->id}}">
                             <td class="title-container">
@@ -53,7 +52,7 @@
                             </td>
                             <td class="expire-date">
                                 <span>
-                                    {{Helper::get_traveller_status($booking->status, $booking->start_date, $booking->end_date)}}
+                                    {{$booking->bookStatus}}
                                 </span>
                             </td>
                             <td colspan="2" class="action" style="width: 1%">
@@ -75,12 +74,58 @@
                         <!-- Item ends -->
 
                     @endforeach
-
-
                 </table>
 
-                @if(count($bookings) == 0)
-                    <center>No Bookings found</center>
+                @if(count($booking_requests) == 0)
+                    <center>No Booking Requests found</center>
+                @endif
+
+                <table class="manage-table responsive-table" style="border-spacing: 0 1em;" id="booking_table">
+                    <tr>
+                        <th><i class="fa fa-file-text"></i> My Bookings</th>
+                        <th class="expire-date"> Status </th>
+                        <th colspan="2">Action</th>
+                    </tr>
+                @foreach($my_bookings as $booking)
+                    <!-- Item starts -->
+                        <tr class="card" id="{{$booking->id}}">
+                            <td class="title-container">
+                                <img style="margin-left: 5%;" src="{{$booking->image_url}}" alt="">
+                                <div class="title">
+                                    <h4><a href="/property/{{$booking->property_id}}" target="_blank">{{$booking->title}}</a></h4>
+                                    <div><b>Traveler</b><a href="{{BASE_URL}}owner-profile/{{$booking->traveller_id}}"> {{$booking->traveller_name}} </a></div>
+                                    <div><b>Check-in</b> {{$booking->start_date}}</div>
+                                    <div><b>Check-out</b> {{$booking->end_date}}</div>
+                                    <div><b>Booking ID</b><a href="{{BASE_URL}}owner/reservations/{{$booking->booking_id}}"> {{$booking->booking_id}} </a></div>
+                                </div>
+                            </td>
+                            <td class="expire-date">
+                                <span>
+                                    {{$booking->bookStatus}}
+                                </span>
+                            </td>
+                            <td colspan="2" class="action" style="width: 1%">
+                                <button type="button" class="button" style="min-width: 170px;" onclick="document.location.href='{{BASE_URL}}owner/single-booking/{{$booking->booking_id}}';">
+                                    View Request
+                                </button>
+                                {{--                                @if($booking->status == 5 || $booking->status == 6)--}}
+                                {{--                                    <button class="button" onclick="document.location.href='{{BASE_URL}}property_ratings/{{$booking->booking_id}}';" style="min-width: 170px;">--}}
+                                {{--                                        Rate Traveller--}}
+                                {{--                                    </button><br><br><br>--}}
+                                {{--                                @endif--}}
+                                {{--                                @if(date('m-d-Y',strtotime($booking->end_date)) == date('m-d-Y') && $booking->status == 3 && $booking->payment_done == "1")--}}
+                                {{--                                    <button class="button" id="reservation_completed" onclick="reservation_completed('{{$booking->booking_id}}')" style="min-width: 170px;">--}}
+                                {{--                                        Reservation Completed--}}
+                                {{--                                    </button><br>--}}
+                                {{--                                @endif--}}
+                            </td>
+                        </tr>
+                        <!-- Item ends -->
+
+                    @endforeach
+                </table>
+                @if(count($my_bookings) == 0)
+                    <center>No Booking Requests found</center>
                 @endif
                 {{-- <button style="float: right;margin-bottom: 40px;" onclick="location.href='{{BASE_URL}}owner/create-booking';" class="margin-top-40 button border">Create Own Booking</button> --}}
             </div>

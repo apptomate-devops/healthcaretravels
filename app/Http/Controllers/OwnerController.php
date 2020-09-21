@@ -169,6 +169,8 @@ class OwnerController extends BaseController
         }
         $data = $data->select('property_list.title', 'property_booking.*')->get();
 
+        $booking_requests = [];
+        $my_bookings = [];
         foreach ($data as $datum) {
             $traveller = DB::table('users')
                 ->where('client_id', CLIENT_ID)
@@ -180,15 +182,21 @@ class OwnerController extends BaseController
                 ->first();
             $datum->image_url = $image->image_url;
             if ($traveller->role_id != 2) {
-                $datum->traveller_name = $traveller->first_name . ' ' . $traveller->last_name;
+                $datum->traveller_name = $traveller->username;
             } else {
                 $datum->traveller_name = $traveller->name_of_agency;
             }
             $datum->start_date = Carbon::parse($datum->start_date)->format('m/d/Y');
             $datum->end_date = Carbon::parse($datum->end_date)->format('m/d/Y');
+            $datum->bookStatus = Helper::get_traveller_status($datum->status, $datum->start_date, $datum->end_date);
+            if ($datum->status < 2) {
+                array_push($booking_requests, $datum);
+            } else {
+                array_push($my_bookings, $datum);
+            }
         }
 
-        return view('owner.my_bookings')->with('bookings', $data);
+        return view('owner.my_bookings')->with(compact('booking_requests', 'my_bookings'));
     }
 
     public function payment_default($id, Request $request)

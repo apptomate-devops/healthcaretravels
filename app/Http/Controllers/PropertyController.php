@@ -942,7 +942,7 @@ class PropertyController extends BaseController
             ->update(['traveler_notify' => 0]);
         foreach ($data as $datum) {
             $traveller = DB::select(
-                "SELECT concat(first_name,last_name) as name,id FROM users WHERE client_id = CLIENT_ID AND id = $datum->owner_id LIMIT 1",
+                "SELECT username as name,id FROM users WHERE client_id = CLIENT_ID AND id = $datum->owner_id LIMIT 1",
             );
 
             $image = DB::table('property_images')

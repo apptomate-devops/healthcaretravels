@@ -376,76 +376,88 @@ class PropertyController extends BaseController
 
     public function cancel_booking(Request $request, $id)
     {
-        $user_id = $request->session()->get('user_id');
-        if (!$user_id) {
-            return redirect()->intended('login');
-        }
-        if ($request->session()->get('role_id') == 1) {
+        try {
             $user_id = $request->session()->get('user_id');
-            $user = DB::table('users')
-                ->where('client_id', CLIENT_ID)
-                ->where('id', $user_id)
-                ->first();
-            $booking = DB::table('property_booking')
+            if (!$user_id) {
+                return redirect()->intended('login');
+            }
+            $traveller = DB::table('property_booking')
                 ->where('booking_id', $id)
-                ->leftjoin('property_list', 'property_list.id', '=', 'property_booking.property_id')
-                ->leftjoin('users', 'users.id', '=', 'property_booking.traveller_id')
-                ->select(
-                    'users.first_name',
-                    'users.last_name',
-                    'property_list.title',
-                    'property_booking.*',
-                    'users.email',
-                )
+                ->select('traveller_id')
                 ->first();
-            // print_r($booking);exit;
-            $mail_data = [
-                'owner_name' => $user->first_name . " " . $user->last_name,
-                'booking_id' => $booking->booking_id,
-                'property' => $booking->title,
-                'start_date' => date("m-d-Y", strtotime($booking->start_date)),
-                'end_date' => date("m-d-Y", strtotime($booking->end_date)),
-                'mail_to' => 'admin',
-                'traveler' => $booking->first_name . " " . $booking->last_name,
-            ];
-            // $this->send_email('guru@sparkouttech.com', 'mail.cancel_booking', $mail_data);
-            $this->send_email('info@healthcaretravels.com', 'mail.cancel_booking', $mail_data);
-            if ($booking->email) {
-                $mail_data1 = [
-                    'owner_name' => $user->first_name . " " . $user->last_name,
-                    'booking_id' => $booking->booking_id,
-                    'property' => $booking->title,
-                    'start_date' => date("m-d-Y", strtotime($booking->start_date)),
-                    'end_date' => date("m-d-Y", strtotime($booking->end_date)),
-                    'mail_to' => 'traveller',
-                    'traveler' => $booking->first_name . " " . $booking->last_name,
-                ];
-                $this->send_email($booking->email, 'mail.cancel_booking', $mail_data1);
+            // TODO: check if owner can cancel stay
+            //        if ($request->session()->get('role_id') == 1) {
+            //            $user_id = $request->session()->get('user_id');
+            //            $user = DB::table('users')
+            //                ->where('client_id', CLIENT_ID)
+            //                ->where('id', $user_id)
+            //                ->first();
+            //            $booking = DB::table('property_booking')
+            //                ->where('booking_id', $id)
+            //                ->leftjoin('property_list', 'property_list.id', '=', 'property_booking.property_id')
+            //                ->leftjoin('users', 'users.id', '=', 'property_booking.traveller_id')
+            //                ->select(
+            //                    'users.first_name',
+            //                    'users.last_name',
+            //                    'property_list.title',
+            //                    'property_booking.*',
+            //                    'users.email',
+            //                )
+            //                ->first();
+            //            // print_r($booking);exit;
+            //            $mail_data = [
+            //                'owner_name' => $user->first_name . " " . $user->last_name,
+            //                'booking_id' => $booking->booking_id,
+            //                'property' => $booking->title,
+            //                'start_date' => date("m-d-Y", strtotime($booking->start_date)),
+            //                'end_date' => date("m-d-Y", strtotime($booking->end_date)),
+            //                'mail_to' => 'admin',
+            //                'traveler' => $booking->first_name . " " . $booking->last_name,
+            //            ];
+            //            // $this->send_email('guru@sparkouttech.com', 'mail.cancel_booking', $mail_data);
+            //            $this->send_email('info@healthcaretravels.com', 'mail.cancel_booking', $mail_data);
+            //            if ($booking->email) {
+            //                $mail_data1 = [
+            //                    'owner_name' => $user->first_name . " " . $user->last_name,
+            //                    'booking_id' => $booking->booking_id,
+            //                    'property' => $booking->title,
+            //                    'start_date' => date("m-d-Y", strtotime($booking->start_date)),
+            //                    'end_date' => date("m-d-Y", strtotime($booking->end_date)),
+            //                    'mail_to' => 'traveller',
+            //                    'traveler' => $booking->first_name . " " . $booking->last_name,
+            //                ];
+            //                $this->send_email($booking->email, 'mail.cancel_booking', $mail_data1);
+            //            }
+            //
+            //            if ($user->email) {
+            //                $mail_data2 = [
+            //                    'owner_name' => $user->first_name . " " . $user->last_name,
+            //                    'booking_id' => $booking->booking_id,
+            //                    'property' => $booking->title,
+            //                    'start_date' => date("m-d-Y", strtotime($booking->start_date)),
+            //                    'end_date' => date("m-d-Y", strtotime($booking->end_date)),
+            //                    'mail_to' => 'owner',
+            //                    'traveler' => $user->first_name . " " . $booking->last_name,
+            //                ];
+            //                $this->send_email($user->email, 'mail.cancel_booking', $mail_data2);
+            //            }
+            //
+            //            DB::table('property_booking')
+            //                ->where('booking_id', $id)
+            //                ->update(['status' => 8]);
+            //            return response()->json(['status' => 'SUCCESS', 'message' => 'Booking Cancelled successfully!']);
+            //        }
+            if ($user_id != $traveller->traveller_id) {
+                // Do not allow other user to cancel booking
+                return response()->json(['status' => 'FAILED', 'message' => 'Invalid Access']);
             }
-
-            if ($user->email) {
-                $mail_data2 = [
-                    'owner_name' => $user->first_name . " " . $user->last_name,
-                    'booking_id' => $booking->booking_id,
-                    'property' => $booking->title,
-                    'start_date' => date("m-d-Y", strtotime($booking->start_date)),
-                    'end_date' => date("m-d-Y", strtotime($booking->end_date)),
-                    'mail_to' => 'owner',
-                    'traveler' => $user->first_name . " " . $booking->last_name,
-                ];
-                $this->send_email($user->email, 'mail.cancel_booking', $mail_data2);
-            }
-
-            $upd = DB::table('property_booking')
+            DB::table('property_booking')
                 ->where('booking_id', $id)
                 ->update(['status' => 8]);
-        } else {
-            $upd = DB::table('property_booking')
-                ->where('booking_id', $id)
-                ->update(['status' => 8]);
+            return response()->json(['status' => 'SUCCESS', 'message' => 'Booking Cancelled successfully!']);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'FAILED', 'message' => $e->getMessage()]);
         }
-
-        return back()->with('success', 'Booking Cancelled successfully!');
     }
 
     public function create_chat($property_id, Request $request)
@@ -940,6 +952,8 @@ class PropertyController extends BaseController
             $datum->image_url = $image->image_url;
             $datum->owner_name = $traveller[0]->name;
             $datum->owner_id = $traveller[0]->id;
+            $datum->start_date = Carbon::parse($datum->start_date)->format('m/d/Y');
+            $datum->end_date = Carbon::parse($datum->end_date)->format('m/d/Y');
         }
         return view('owner.reservations', ['bookings' => $data]);
     }

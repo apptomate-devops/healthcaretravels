@@ -115,6 +115,30 @@ class Helper
         return 'Pending Stay';
     }
 
+    public static function get_traveller_status($status, $start_date, $end_date)
+    {
+        switch ($status) {
+            case 1:
+                return 'Pending Approval';
+            case 2:
+                $now = Carbon::now()->startOfDay();
+                $booking_starts_on = Carbon::parse($start_date)->startOfDay();
+                $booking_ends_on = Carbon::parse($end_date)->startOfDay();
+                if ($now->between($booking_starts_on, $booking_ends_on)) {
+                    return 'Happening Now';
+                }
+                return 'Approved';
+            case 3:
+                return 'Ended';
+            case 4:
+                return 'Denied';
+            case 8:
+                return 'Cancelled';
+            default:
+                return '';
+        }
+    }
+
     public static function generate_booking_payments($booking, $is_owner = 0)
     {
         $start_date = Carbon::parse($booking->start_date);

@@ -32,68 +32,44 @@
                     </div>
                 </div>
                 <table class="manage-table responsive-table" style="border-spacing: 0 1em;" id="booking_table">
-                    {{--                     <tr>--}}
-                    {{--                        <td><input type="text"  name="from_date" placeholder="Start Date" value="" autocomplete="off" id="start_date" /></td>--}}
-                    {{--                        <td colspan="2"><input name="to_date"  type="text"  placeholder="End Date" value="" autocomplete="off" id="end_date" /></td>--}}
-                    {{--                        <td  ><button class="button" id="search" >Search</button></td>--}}
-                    {{--                    </tr>--}}
                     <tr>
                         <th><i class="fa fa-file-text"></i> My Bookings</th>
                         <th class="expire-date"> Status </th>
                         <th colspan="2">Action</th>
                     </tr>
 
-                    @foreach($bookings as $booking)
+                @foreach($bookings as $booking)
                     <!-- Item starts -->
                         <tr class="card" id="{{$booking->id}}">
                             <td class="title-container">
                                 <img style="margin-left: 5%;" src="{{$booking->image_url}}" alt="">
                                 <div class="title">
-                                    <h4><a href="{{url('/')}}/property/{{$booking->property_id}}">{{$booking->title}}</a></h4>
-                                    <div>Request by : <a href="{{BASE_URL}}owner-profile/{{$booking->traveller_id}}">{{$booking->traveller_name}}</a> </div>
-                                    <div>From : {{date('m-d-Y',strtotime($booking->start_date))}}</div>
-                                    <div>To : {{date('m-d-Y',strtotime($booking->end_date))}}</div>
-                                    <div>Booking ID : <a href="{{BASE_URL}}owner/single-booking/{{$booking->booking_id}}">{{$booking->booking_id}}</a></div>
+                                    <h4><a href="/property/{{$booking->property_id}}" target="_blank">{{$booking->title}}</a></h4>
+                                    <div><b>Traveler</b><a href="{{BASE_URL}}owner-profile/{{$booking->traveller_id}}"> {{$booking->traveller_name}} </a></div>
+                                    <div><b>Check-in</b> {{$booking->start_date}}</div>
+                                    <div><b>Check-out</b> {{$booking->end_date}}</div>
+                                    <div><b>Booking ID</b><a href="{{BASE_URL}}owner/reservations/{{$booking->booking_id}}"> {{$booking->booking_id}} </a></div>
                                 </div>
                             </td>
                             <td class="expire-date">
-                                <p>
-                                    <mark style="color: #FFFF;background-color: #0983b8;">
-                                        {{Helper::get_stay_status($booking)}}
-                                    </mark>
-                                </p>
+                                <span>
+                                    {{Helper::get_traveller_status($booking->status, $booking->start_date, $booking->end_date)}}
+                                </span>
                             </td>
                             <td colspan="2" class="action" style="width: 1%">
-                            <span>
-                                @if($booking->status == 3)
-                                    Invoice Sent
-                                @endif
-                                @if($booking->status == 4)
-                                    Request Cancelled by you
-                                @endif
-                                @if($booking->status == 8)
-                                    Booking Cancelled by you
-                                @endif
-                                @if($booking->status == 6)
-                                    You rated traveller
-                                @endif
-                                @if($booking->status == 7)
-                                    Traveller rated your property
-                                @endif
-                            </span>
                                 <button type="button" class="button" style="min-width: 170px;" onclick="document.location.href='{{BASE_URL}}owner/single-booking/{{$booking->booking_id}}';">
                                     View Request
-                                </button><br><br><br>
-                                @if($booking->status == 5 || $booking->status == 6)
-                                    <button class="button" onclick="document.location.href='{{BASE_URL}}property_ratings/{{$booking->booking_id}}';" style="min-width: 170px;">
-                                        Rate Traveller
-                                    </button><br><br><br>
-                                @endif
-                                @if(date('m-d-Y',strtotime($booking->end_date)) == date('m-d-Y') && $booking->status == 3 && $booking->payment_done == "1")
-                                    <button class="button" id="reservation_completed" onclick="reservation_completed('{{$booking->booking_id}}')" style="min-width: 170px;">
-                                        Reservation Completed
-                                    </button><br>
-                                @endif
+                                </button>
+                                {{--                                @if($booking->status == 5 || $booking->status == 6)--}}
+                                {{--                                    <button class="button" onclick="document.location.href='{{BASE_URL}}property_ratings/{{$booking->booking_id}}';" style="min-width: 170px;">--}}
+                                {{--                                        Rate Traveller--}}
+                                {{--                                    </button><br><br><br>--}}
+                                {{--                                @endif--}}
+                                {{--                                @if(date('m-d-Y',strtotime($booking->end_date)) == date('m-d-Y') && $booking->status == 3 && $booking->payment_done == "1")--}}
+                                {{--                                    <button class="button" id="reservation_completed" onclick="reservation_completed('{{$booking->booking_id}}')" style="min-width: 170px;">--}}
+                                {{--                                        Reservation Completed--}}
+                                {{--                                    </button><br>--}}
+                                {{--                                @endif--}}
                             </td>
                         </tr>
                         <!-- Item ends -->

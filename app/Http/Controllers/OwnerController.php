@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Helper\Helper;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Users;
@@ -183,6 +184,8 @@ class OwnerController extends BaseController
             } else {
                 $datum->traveller_name = $traveller->name_of_agency;
             }
+            $datum->start_date = Carbon::parse($datum->start_date)->format('m/d/Y');
+            $datum->end_date = Carbon::parse($datum->end_date)->format('m/d/Y');
         }
 
         return view('owner.my_bookings')->with('bookings', $data);

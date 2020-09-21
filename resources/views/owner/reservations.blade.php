@@ -25,7 +25,8 @@
                     <table class="manage-table responsive-table">
                         <tr>
                             <th><i class="fa fa-file-text"></i> Your Trips</th>
-                            <th></th>
+                            <th class="expire-date"> Status </th>
+                            <th colspan="2">Action</th>
                         </tr>
 
                     @foreach($bookings as $booking)
@@ -36,60 +37,44 @@
                                     <img style="margin-left: 5%;" src="{{$booking->image_url}}" alt="">
                                     <div class="title">
                                         <h4><a href="/property/{{$booking->property_id}}" target="_blank">{{$booking->title}}</a></h4>
-                                        <div>Booking ID : <a href="{{BASE_URL}}owner/reservations/{{$booking->booking_id}}"> {{$booking->booking_id}} </a></div>
-                                        <div>Payment Status :
-                                        <a href="#">
-                                        @if($booking->payment_done == 0)
-                                                Not paid
-                                            @endif
-
-                                            @if($booking->payment_done == 1)
-                                                Paid
-                                            @endif
-
-
-                                        </a>
-                                    </div>
+                                        <div><b>Owner</b><a href="{{BASE_URL}}owner-profile/{{$booking->owner_id}}"> {{$booking->owner_name}} </a></div>
+                                        <div><b>Check-in</b> {{$booking->start_date}}</div>
+                                        <div><b>Check-out</b> {{$booking->end_date}}</div>
+                                        <div><b>Booking ID</b><a href="{{BASE_URL}}owner/reservations/{{$booking->booking_id}}"> {{$booking->booking_id}} </a></div>
                                     </div>
                                 </td>
-                                <td class="action text-center" style="width: 1%">
+                                <td class="expire-date">
                                 <span>
-                                    @if($booking->bookStatus == 1 || $booking->bookStatus == 2)
-                                        Waiting for confirmation
-                                    @endif
-                                    @if($booking->bookStatus == 3)
-                                        Booking Confirmed
-                                    @endif
-                                    @if($booking->bookStatus == 4)
-                                        Booking Cancelled by Owner
-                                    @endif
+                                    {{Helper::get_traveller_status($booking->bookStatus, $booking->start_date, $booking->end_date)}}
                                 </span>
+                                </td>
+                                <td colspan="2" class="action" style="width: 1%">
                                     <button class="button" onclick="document.location.href='{{BASE_URL}}owner/reservations/{{$booking->booking_id}}';" style="min-width: 200px;">
                                         View Details
                                     </button>
-                                    @if($booking->bookStatus == 5 || $booking->bookStatus == 6)
-                                        <button class="button" onclick="document.location.href='{{BASE_URL}}traveller_ratings/{{$booking->booking_id}}';" style="min-width: 170px;">
-                                            Rate your stay
-                                        </button><br><br><br>
-                                    @endif
-                                    @if($booking->bookStatus == 6)
-                                        <button class="button" style="min-width: 170px;">
-                                            Owner rated your Stay
-                                        </button><br><br><br>
-                                    @endif
+                                    {{--                                    @if($booking->bookStatus == 5 || $booking->bookStatus == 6)--}}
+                                    {{--                                        <button class="button" onclick="document.location.href='{{BASE_URL}}traveller_ratings/{{$booking->booking_id}}';" style="min-width: 170px;">--}}
+                                    {{--                                            Rate your stay--}}
+                                    {{--                                        </button><br><br><br>--}}
+                                    {{--                                    @endif--}}
+                                    {{--                                    @if($booking->bookStatus == 6)--}}
+                                    {{--                                        <button class="button" style="min-width: 170px;">--}}
+                                    {{--                                            Owner rated your Stay--}}
+                                    {{--                                        </button><br><br><br>--}}
+                                    {{--                                    @endif--}}
 
-                                    @if($booking->bookStatus == 7)
-                                        <button class="button" style="min-width: 170px;">
-                                            You rated this booking
-                                        </button><br><br><br>
+                                    {{--                                    @if($booking->bookStatus == 7)--}}
+                                    {{--                                        <button class="button" style="min-width: 170px;">--}}
+                                    {{--                                            You rated this booking--}}
+                                    {{--                                        </button><br><br><br>--}}
+                                    {{--                                    @endif--}}
+
+
+                                    @if($booking->bookStatus < 2)
+                                        <div class="link" onclick="cancel_booking('{{$booking->booking_id}}')" style="margin-top: 10px; text-align: center">
+                                            Cancel booking
+                                        </div>
                                     @endif
-
-
-                                    {{-- @if($booking->bookStatus != 5)
-                                    <button class="button" onclick="cancel_booking('{{$booking->booking_id}}')" style="min-width: 200px;background-color: #e78016;margin-top: 10%">
-                                        Cancel booking
-                                    </button>
-                                    @endif --}}
 
                                 </td>
                             </tr>
@@ -113,7 +98,20 @@
             var r = confirm("Are you sure to cancel Booking..");
             if (r == true) {
                 var url = '{{BASE_URL}}cancel-booking/'+id;
-                window.location = url;
+                $.ajax({
+                    "type": "get",
+                    "url" : url,
+                    success: function(data) {
+                        if(data.status=="SUCCESS"){
+                            window.location.reload();
+                        } else {
+                            console.log('Error Updating cancel status for booking');
+                        }
+                    },
+                    error: function (e) {
+                        console.log('Error Updating cancel status for booking');
+                    }
+                });
             }
         }
     </script>

@@ -318,6 +318,6 @@ class Dwolla
     {
         $signature = hash_hmac('sha256', $payloadBody, $this->webhook_secret);
         Logger::info('GeneratedSignature: ' . $signature);
-        return $signature == $proposedSignature;
+        return ['generated_signature' => $signature, 'is_valid' => $signature == $proposedSignature];
     }
 }

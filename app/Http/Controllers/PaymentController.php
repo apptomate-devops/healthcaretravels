@@ -6,6 +6,7 @@ use App\Services\Logger;
 use Illuminate\Http\Request;
 use App\Models\Users;
 use App\Models\BookingPayments;
+use App\Models\DwollaEvents;
 use Carbon\Carbon;
 
 class PaymentController extends BaseController
@@ -144,13 +145,30 @@ class PaymentController extends BaseController
         $eventType = $request->header('x-dwolla-topic');
         $payloadBody = json_encode($request->all());
         $requiredEvents = ['transfer_completed', 'transfer_cancelled', 'transfer_failed'];
-        if (!in_array($eventType, $requiredEvents)) {
-            return response()->json(['success' => true, 'message' => 'Unused event received']);
-        }
         Logger::info('Webhook called: eventType: ' . $eventType);
         Logger::info('ProposedSignature: ' . $proposedSignature);
         Logger::info('payload: ' . $payloadBody);
-        $isValidRequest = $this->dwolla->verify_gateway_signature($proposedSignature, $payloadBody);
+        $willBeUsed = in_array($eventType, $requiredEvents);
+        $validation = $this->dwolla->verify_gateway_signature($proposedSignature, $payloadBody);
+        $event = new DwollaEvents();
+        try {
+            $event->dwolla_id = $request->id;
+            $event->resource_id = $request->resourceId;
+            $event->timestamp = $request->timestamp;
+            $event->links = json_encode($request->_links);
+            $event->dwolla_created = $request->created;
+            $event->topic = $eventType;
+            $event->proposed_signature = $proposedSignature;
+            $event->generated_signature = $validation['generated_signature'];
+            $event->is_valid_request = $validation['is_valid'];
+            $event->is_used = $willBeUsed;
+            $event->save();
+        } catch (\Exception $ex) {
+            Logger::error('Error in saving dwolla event: ' . $ex->getMessage());
+        }
+        if (!$willBeUsed) {
+            return response()->json(['success' => true, 'message' => 'Unused event received']);
+        }
         $resourceId = $request->resourceId;
         $payment = BookingPayments::getByTransactionId($resourceId);
         if (empty($payment)) {
@@ -159,14 +177,12 @@ class PaymentController extends BaseController
         switch ($eventType) {
             case 'transfer_cancelled':
             case 'transfer_failed':
-                Logger::info('Handle Error use case');
                 // TODO: ask if we want to send another email notifying user that payment failed for some reason.
                 $payment->failed_time = Carbon::parse($request->timestamp)->toDateTimeString();
                 $payment->is_cleared = -1;
                 $payment->save();
                 break;
             case 'transfer_completed':
-                Logger::info('Handle transfer complete use case');
                 $payment->confirmed_time = Carbon::parse($request->timestamp)->toDateTimeString();
                 $payment->is_cleared = 1;
                 $payment->save();
@@ -176,7 +192,7 @@ class PaymentController extends BaseController
                 Logger::info('Not required event received');
                 break;
         }
-        return response()->json(['isValidRequest' => $isValidRequest]);
+        return response()->json(['isValidRequest' => $validation['is_valid']]);
     }
 
     public function get_funding_source_details(Request $request)

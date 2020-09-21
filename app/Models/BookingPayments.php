@@ -21,6 +21,7 @@ class BookingPayments extends Model
         'due_date',
         'is_owner',
         'transfer_url',
+        'transfer_id',
         'job_id',
         'is_cleared',
     ];

@@ -51,4 +51,12 @@ class PropertyBooking extends Model
     {
         return $this->belongsTo('App\Models\PropertyList', 'property_id', 'id');
     }
+
+    /**
+     * Get the Payments made/due for this property booking.
+     */
+    public function payments()
+    {
+        return $this->hasMany('App\Models\BookingPayments', 'booking_id', 'booking_id');
+    }
 }

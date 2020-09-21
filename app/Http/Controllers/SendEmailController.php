@@ -15,9 +15,10 @@ class SendEmailController extends BaseController
             'propertyName' => 'foo',
             'BASE_URL' => BASE_URL,
             'APP_BASE_NAME' => APP_BASE_NAME,
+            'travelerPhone' => '9898989898',
         ];
-        ProcessEmail::dispatch("test@gmail.com", "mail.owner-24hr-before-checkin", "First subject", $data1)->delay(
-            now()->addSeconds(30),
+        ProcessEmail::dispatch("owner@yopmail.com", "mail.owner-24hr-before-checkin", "First subject", $data1)->delay(
+            now()->addSeconds(300),
         );
     }
 }

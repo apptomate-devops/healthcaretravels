@@ -27,6 +27,10 @@
     color: #707070;
     margin-left: 5px;
 }
+.single_bookings .booking-details div a {
+    font-weight: normal;
+    margin-left: 5px;
+}
 
 .single_bookings .booking-details div img {
     width: 30px;
@@ -232,4 +236,9 @@ div::-webkit-scrollbar-thumb {
 
 .tooltips .tooltiptext {
     top: -35px !important;
+}
+#chat_now {
+    width: auto;
+    float: right;
+    margin-top: 10px;
 }

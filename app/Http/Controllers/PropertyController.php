@@ -1182,6 +1182,7 @@ class PropertyController extends BaseController
             $data->owner_role_id = $owner[0]->role_id;
             $data->owner_profile_image = $owner[0]->profile_image;
             $data->owner_name = $owner[0]->username;
+            $data->agency = implode(", ", array_filter([$data->name_of_agency, $data->other_agency]));
 
             return view('owner.single_booking', [
                 'data' => $data,
@@ -1578,7 +1579,7 @@ class PropertyController extends BaseController
         $data->owner_role_id = $owner[0]->role_id;
         $data->owner_profile_image = $owner[0]->profile_image;
         $data->owner_name = $owner[0]->username;
-
+        $data->agency = implode(", ", array_filter([$data->name_of_agency, $data->other_agency]));
         return view('owner.single_reservations', [
             'data' => $data,
             'guest_info' => $guest_info,

@@ -37,10 +37,10 @@
                                     <img style="margin-left: 5%;" src="{{$booking->image_url}}" alt="">
                                     <div class="title">
                                         <h4><a href="/property/{{$booking->property_id}}" target="_blank">{{$booking->title}}</a></h4>
-                                        <div><b>Owner</b><a href="{{BASE_URL}}owner-profile/{{$booking->owner_id}}"> {{$booking->owner_name}} </a></div>
+                                        <div><b>Owner</b><a href="owner-profile/{{$booking->owner_id}}"> {{$booking->owner_name}} </a></div>
                                         <div><b>Check-in</b> {{$booking->start_date}}</div>
                                         <div><b>Check-out</b> {{$booking->end_date}}</div>
-                                        <div><b>Booking ID</b><a href="{{BASE_URL}}owner/reservations/{{$booking->booking_id}}"> {{$booking->booking_id}} </a></div>
+                                        <div><b>Booking ID</b><a href="owner/reservations/{{$booking->booking_id}}"> {{$booking->booking_id}} </a></div>
                                     </div>
                                 </td>
                                 <td class="expire-date">

@@ -25,20 +25,20 @@
 
             <div class="col-md-8">
                 <div class="booking-details">
-                    <h3>Details:</h3>
-                    <div>Booking ID : <span>{{$data->booking_id}}</span></div>
-                    <div>Property Name : <span>{{$data->title}}</span></div>
-                    <div>Requested By :
-                        <img src="{{($data->traveller_profile_image != " " && $data->traveller_profile_image != 0) ? $data->traveller_profile_image : '/user_profile_default.png'}}"/>
-                        <span>{{$data->traveller_name}}</span>
+                    <a class="btn bg-orange" id="chat_now" href="/owner-profile/{{$data->owner_id}}">Chat now with {{$data->owner_name}}</a>
+                    <h3>Details</h3>
+                    <div>Booking Reservation: <span>{{$data->booking_id}}</span></div>
+                    <div>Property Name: <a href="/property/{{$data->property_id}}">{{$data->title}}</a></div>
+                    <div>Owner:
+                        <a href="/owner-profile/{{$data->owner_id}}">
+                            <img src="{{($data->owner_profile_image != " " && $data->owner_profile_image != 0) ? $data->owner_profile_image : '/user_profile_default.png'}}"/>
+                            {{$data->owner_name}}
+                        </a>
                     </div>
-                    <div>Owner :
-                        <img src="{{($data->owner_profile_image != " " && $data->owner_profile_image != 0) ? $data->owner_profile_image : '/user_profile_default.png'}}"/>
-                        <span>{{$data->owner_name}}</span>
-                    </div>
-                    <div>Date period : <span>{{date('m-d-Y',strtotime($data->start_date))}} to {{date('m-d-Y',strtotime($data->end_date))}}</span></div>
-                    <div>Total Payment : <span>$ {{$data->total_amount}}</span></div>
-                    <div>Total Guests : <span>{{$data->guest_count}}</span></div>
+                    <div>Check-in: <span>{{date('m-d-Y',strtotime($data->start_date))}}</span></div>
+                    <div>Check-out: <span>{{date('m-d-Y',strtotime($data->end_date))}}</span></div>
+                    <div>Guests: <span>{{$data->guest_count}}</span></div>
+                    <div>Total Payment: <span>$ {{$data->total_amount}}</span></div>
                 </div>
                 <table class="manage-table responsive-table" style="border-spacing: 0px 8px;">
                     <tr>
@@ -223,6 +223,17 @@
                                     <img src="{{$pet_details->pet_image}}" alt="">
                                 </a>
                             </td>
+                        </tr>
+                    </table>
+                @endif
+                @if(isset($data->agency) > 0)
+                    <h2>Agency Details</h2>
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Name</th>
+                        </tr>
+                        <tr>
+                            <td>{{$data->agency}}</td>
                         </tr>
                     </table>
                 @endif

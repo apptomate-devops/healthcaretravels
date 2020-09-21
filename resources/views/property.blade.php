@@ -1180,7 +1180,10 @@
 
                         var toolTip = '<span class="tooltips"><i class="fa fa-question-circle"></i><span class="tooltiptext">Deposit collected by host in case of damages. Refundable based on Cancellation Policy</span></span>';
 
-                        $('<div style="color: black;">+ $ '+data.data.security_deposit+' refundable security deposit '+toolTip+'</div>').insertAfter('.pay-caption');
+
+                        if (!$(".security_deposite").length) {
+                            $('<div class="security_deposite" style="color: black;">+ $ '+data.data.security_deposit+' refundable security deposit '+toolTip+'</div>').insertAfter('.pay-caption');
+                        }
                     }
                 },
                 error: function (e) {

@@ -36,115 +36,34 @@
                     <div>Check-in: <span>{{date('m-d-Y',strtotime($data->start_date))}}</span></div>
                     <div>Check-out: <span>{{date('m-d-Y',strtotime($data->end_date))}}</span></div>
                     <div>Guests: <span>{{$data->guest_count}}</span></div>
-                    <div>Total Earnings: <span>$ {{$data->total_amount}}</span></div>
+                    <div>Total Earnings: <span>$ {{$total_earning}}</span></div>
                 </div>
 
                 <input type="hidden" id="booking_id" value="{{$data->booking_id}}">
-                <table class="manage-table responsive-table" style="border-spacing: 0px 8px;">
-
+                <table class="pricing-table responsive-table">
                     <tr>
-                        <th style="width: 0;background-color: #0983b8;">
-                            Cost
-                        </th>
-                        <th style="width: 0;background-color: #0983b8;">
-                            Price
-                        </th>
-                        <th style="width: 0;background-color: #0983b8;">
-                            Detail
-                        </th>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th>Details</th>
                     </tr>
-
                     <tr>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                Price per day <br> $ {{Helper::get_daily_price($data->monthly_rate)}}
-                            </p>
-                        </th>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                $ {{Helper::get_daily_price($data->monthly_rate) * $data->total_days}}
-                            </p>
-                        </th>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                {{$data->total_days}} Days
-                            </p>
-                        </th>
+                        <td>{{date('m/d/Y',strtotime($data->start_date))}}</td>
+                        <td>Cleaning Fee</td>
+                        <td>+${{$data->cleaning_fee}}</td>
+                        <td>Pending</td>
+                        <td></td>
                     </tr>
-
-                    <tr>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                Cleaning Fee
-                            </p>
-                        </th>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                $ {{$data->cleaning_fee}}
-                            </p>
-                        </th>
-
-                    </tr>
-
-                    <tr>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                Security Deposit
-                            </p>
-                        </th>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                $ {{$data->security_deposit}}
-                            </p>
-                        </th>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                *Refundable based on selected Cancellation Policy
-                            </p>
-                        </th>
-                    </tr>
-
-
-
-                    <tr>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                Service Fee
-                            </p>
-                        </th>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                $ {{$data->service_tax}}
-                            </p>
-                        </th>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-
-                            </p>
-                        </th>
-                    </tr>
-
-
-
-                    <tr>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                Homeowner Earns
-                            </p>
-                        </th>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-                                $ {{$data->total_amount - ($data->service_tax + $data->admin_commision)}}
-                            </p>
-                        </th>
-                        <th style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
-                            <p style="color: #000;">
-
-                            </p>
-                        </th>
-                    </tr>
-
-
+                    @foreach($scheduled_payments as $payment)
+                        <tr>
+                            <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
+                            <td>Stay payment</td>
+                            <td>+${{$payment['amount']}}</td>
+                            <td>Pending</td>
+                            <td>Covering {{$payment['covering_range']}}, Minus ${{$payment['service_tax']}} fee</td>
+                        </tr>
+                    @endforeach
                 </table>
                 @if(count($guest_info) > 0)
                         <h2>Guest Information</h2>
@@ -186,7 +105,7 @@
                         </tr>
                     </table>
                 @endif
-                @if(isset($data->agency) > 0)
+                @if($data->agency)
                     <h2>Agency Details</h2>
                     <table class="table table-striped">
                         <tr>

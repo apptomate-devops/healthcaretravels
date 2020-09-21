@@ -24,6 +24,8 @@ class BookingPayments extends Model
         'transfer_id',
         'job_id',
         'is_cleared',
+        'is_partial_days',
+        'covering_range',
     ];
     /**
      * Get the Booking that owns the payments.

@@ -24,9 +24,8 @@ class Helper
 
         $scheduled_payment_details = Helper::get_months_and_days($property_details);
 
-        $neatAmount = $scheduled_payment_details['neat_amount'];
         $pay_now = $scheduled_payment_details['pay_now'];
-        $total_price = $neatAmount + $cleaning_fee + $service_tax;
+        $total_price = $scheduled_payment_details['total_price'];
         $due_on_approve = $total_price - $pay_now;
 
         $booking_price = [
@@ -40,7 +39,7 @@ class Helper
             'pay_now' => $pay_now,
             'due_on_approve' => $due_on_approve,
             'total_price' => $total_price,
-            'neat_amount' => $neatAmount,
+            'neat_amount' => $scheduled_payment_details['neat_amount'],
             'count_label' => $scheduled_payment_details['count_label'],
             'scheduled_payments' => $scheduled_payment_details['scheduled_payments'],
         ];
@@ -52,42 +51,48 @@ class Helper
         $all_scheduled_payments = Helper::generate_booking_payments($booking);
         $months = 0;
         $pay_now = 0;
+        $neat_amount = 0;
+        $total_price = 0;
+        $partialDayCount = 0;
         $scheduled_payments = [];
+
         foreach ($all_scheduled_payments as $payment) {
-            $day = date("F d, Y", strtotime($payment['due_date']));
+            $day = Carbon::parse($payment['due_date'])->format('F d, Y');
 
             if (isset($payment['is_partial_days'])) {
-                $partialDayDetails = $payment;
-                $price = $payment['total_amount'];
+                $partialDayCount = $payment['is_partial_days'];
+                $neat_price = $payment['total_amount']; // consider price for remaining days
             } else {
                 $months++;
-                $price = $payment['monthly_rate'];
+                $neat_price = $payment['monthly_rate']; // consider price for full month
+
                 if ($payment['payment_cycle'] == 1) {
+                    // For Initial Payment
                     $day = 'On Approval';
                     $pay_now = $payment['total_amount'];
                 }
             }
 
+            $neat_amount = $neat_amount + $neat_price;
+            $total_price = $total_price + $payment['total_amount'] + $payment['service_tax']; // TODO: not displaying service tax in payment schedules on pages
+
             array_push($scheduled_payments, [
                 'day' => $day,
-                'price' => $price,
+                'price' => $neat_price,
             ]);
         }
 
-        $remaining_days_amount = 0;
+        $total_price = $total_price - $booking->security_deposit; // TODO: not displaying security_deposit in payment schedules on pages
+
         $day_count_label = $months . ' month' . ($months > 1 ? 's' : '');
-
-        if (isset($partialDayDetails)) {
-            $remaining_days = $partialDayDetails['is_partial_days'];
-            $remaining_days_amount = $partialDayDetails['total_amount'];
-            $day_count_label = $day_count_label . ', ' . $remaining_days . ' day' . ($remaining_days > 1 ? 's' : '');
+        if ($partialDayCount) {
+            $day_count_label = $day_count_label . ', ' . $partialDayCount . ' day' . ($partialDayCount > 1 ? 's' : '');
         }
-
-        $neat_amount = round($months * $booking->monthly_rate + $remaining_days_amount);
 
         return [
             'count_label' => $day_count_label,
             'neat_amount' => $neat_amount,
+            'total_price' => $total_price,
             'scheduled_payments' => $scheduled_payments,
             'pay_now' => $pay_now,
         ];
@@ -145,8 +150,6 @@ class Helper
         $end_date = Carbon::parse($booking->end_date);
         $accepted_date = Carbon::now();
         $scheduler_date = Carbon::parse($booking->start_date);
-        // Getting total days
-        $diffInDays = $start_date->diffInDays($end_date);
         // Finding Partial month days
         $lastMonthRenew = Carbon::parse($booking->end_date);
         if ($lastMonthRenew->day < $start_date->day) {
@@ -173,6 +176,12 @@ class Helper
                 'security_deposit' => $booking->security_deposit,
                 'monthly_rate' => $booking->monthly_rate,
                 'is_owner' => $is_owner,
+                'covering_range' =>
+                    Carbon::parse($booking->start_date)->format('m/d/Y') .
+                    ' - ' .
+                    Carbon::parse($booking->start_date)
+                        ->addMonth()
+                        ->format('m/d/Y'),
             ];
             if ($i == 1) {
                 $data['service_tax'] = SERVICE_TAX;
@@ -182,7 +191,9 @@ class Helper
                 $data['due_date'] = $accepted_date;
                 if ($is_owner) {
                     $dd = Carbon::parse($booking->start_date)->addHours(48);
-                    $timeSplit = explode(':', $booking->check_in);
+                    $check_in = str_replace(' AM', '', $booking->check_in);
+                    $check_in = str_replace(' PM', '', $check_in);
+                    $timeSplit = explode(':', $check_in);
                     $dd->hour = $timeSplit[0];
                     $dd->minute = $timeSplit[1];
                     $dd->second = 0;
@@ -202,6 +213,12 @@ class Helper
             if ($i == $totalCycles && $isPartial) {
                 $data['total_amount'] = round($data['monthly_rate'] / $partialDays);
                 $data['is_partial_days'] = $partialDays;
+                $data['covering_range'] =
+                    Carbon::parse($booking->start_date)->format('m/d/Y') .
+                    ' - ' .
+                    Carbon::parse($booking->start_date)
+                        ->addDays($partialDays)
+                        ->format('m/d/Y');
             }
             $data['due_date'] = $data['due_date']->toDateString();
             array_push($scheduled_payments, $data);

@@ -47,7 +47,7 @@
                                     <div><b>Traveler</b><a href="{{BASE_URL}}owner-profile/{{$booking->traveller_id}}"> {{$booking->traveller_name}} </a></div>
                                     <div><b>Check-in</b> {{$booking->start_date}}</div>
                                     <div><b>Check-out</b> {{$booking->end_date}}</div>
-                                    <div><b>Booking ID</b><a href="{{BASE_URL}}owner/reservations/{{$booking->booking_id}}"> {{$booking->booking_id}} </a></div>
+                                    <div><b>Booking ID</b><a href="{{BASE_URL}}owner/single-booking/{{$booking->booking_id}}"> {{$booking->booking_id}} </a></div>
                                 </div>
                             </td>
                             <td class="expire-date">

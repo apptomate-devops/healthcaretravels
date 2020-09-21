@@ -42,6 +42,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::GET('/user-status-update', 'Admin\OwnerController@status_update');
         Route::GET('/single_user', 'Admin\OwnerController@single_user');
 
+        Route::GET('/bookings', 'Admin\BookingController@index');
+
         Route::GET('/commision', 'Admin\CommisionController@index');
         Route::POST('/commision', 'Admin\CommisionController@update');
 

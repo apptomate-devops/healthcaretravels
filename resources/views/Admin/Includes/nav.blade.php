@@ -63,6 +63,15 @@
                 </a>
             </li>
 
+            <li {{{ (Request::is('admin/bookings*') ? 'class=active' : '') }}}>
+                <a href="{{url('admin/bookings')}}">
+                    <i class="la la-home"></i>
+                    <span class="menu-title" data-i18n="nav.dash.main">
+                    Manage Bookings
+                </span>
+                </a>
+            </li>
+
             <li {{{ (Request::is('admin/property*') ? 'class=active' : '') }}}>
                 <a href="{{url('admin/property')}}">
                     <i class="la la-home"></i>
@@ -71,6 +80,7 @@
                 </span>
                 </a>
             </li>
+            
             <li {{{ (Request::is('admin/block_property*') ? 'class=active' : '') }}}>
                 <a href="{{url('admin/block_property')}}">
                     <i class="la la-home"></i>

@@ -7,6 +7,9 @@
         border: 1px solid #e08716;
         object-fit: contain;
     }
+    .btn-muted {
+        background-color: #DDD;
+    }
     .remove-profile-image {
         position: absolute; height: 30px; width: 30px; top: 0; right: 0; background: red
     }
@@ -268,8 +271,8 @@
                                                     <input type="text" class="denial-reason form-control" style="margin-top: 10px; display: none;" name="reason-{{$d->id}}" id="reason-{{$d->id}}" data-id="{{$d->id}}" placeholder="specify reason for denial">
                                                 </div>
                                             @elseif($d->status == 1)
-                                                <span class="btn btn-default btn-success btn-block"
-                                                      style="background-color: green">Verified</span>
+                                                <span disabled class="btn btn-default btn-muted text-success btn-block"
+                                                     >Document Approved</span>
                                             @else
                                                 <span class="btn btn-default btn-danger btn-block">Unverified</span>
                                             @endif

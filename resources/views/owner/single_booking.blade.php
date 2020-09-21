@@ -3,6 +3,9 @@
 @section('main_content')
     <link rel="stylesheet" href="{{ URL::asset('css/bookings.css') }}">
 
+    @php
+        $payment_error_message = 'Please add a new account or contact support';
+    @endphp
 
     <div class="container single_bookings">
         <div class="row">
@@ -48,19 +51,27 @@
                         <th>Status</th>
                         <th>Details</th>
                     </tr>
-                    <tr>
-                        <td>{{date('m/d/Y',strtotime($data->start_date))}}</td>
-                        <td>Cleaning Fee</td>
-                        <td>+${{$data->cleaning_fee}}</td>
-                        <td>Pending</td>
-                        <td></td>
-                    </tr>
                     @foreach($scheduled_payments as $payment)
+                        @if($payment['payment_cycle'] == 1)
+                            <tr>
+                                <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
+                                <td>Cleaning Fee</td>
+                                <td>+${{$payment['cleaning_fee']}}</td>
+                                <td>
+                                    <p>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'])}}</p>
+                                    <p>{{($payment['is_cleared'] == -1) ? $payment_error_message : ''}}</p>
+                                </td>
+                                <td></td>
+                            </tr>
+                        @endif
                         <tr>
                             <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
                             <td>Stay payment</td>
                             <td>+${{$payment['amount']}}</td>
-                            <td>Pending</td>
+                            <td>
+                                <p>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'])}}</p>
+                                <p>{{($payment['is_cleared'] == -1) ? $payment_error_message : ''}}</p>
+                            </td>
                             <td>Covering {{$payment['covering_range']}}, Minus ${{$payment['service_tax']}} fee</td>
                         </tr>
                     @endforeach

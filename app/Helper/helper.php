@@ -120,6 +120,18 @@ class Helper
         return 'Pending Stay';
     }
 
+    public static function get_payment_status($value, $is_owner = 0)
+    {
+        switch ($value) {
+            case -1:
+                return $is_owner ? 'Error' : 'Failed';
+            case 1:
+                return 'Completed';
+            default:
+                return 'Pending';
+        }
+    }
+
     public static function get_traveller_status($status, $start_date, $end_date)
     {
         switch ($status) {

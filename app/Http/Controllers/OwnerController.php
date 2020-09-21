@@ -80,7 +80,7 @@ class OwnerController extends BaseController
                 ->leftjoin('users as traveller', 'traveller.id', '=', 'property_booking.traveller_id')
                 ->where('property_booking.client_id', '=', CLIENT_ID)
                 ->where('property_booking.property_id', '=', $id)
-                ->where('property_booking.payment_done', '=', 1)
+                ->where('property_booking.status', '=', 2)
                 ->select(
                     DB::raw('DATE_FORMAT(property_booking.start_date, "%M %d, %Y") as start_date'),
                     DB::raw('DATE_FORMAT(property_booking.end_date, "%M %d, %Y") as end_date'),
@@ -91,7 +91,7 @@ class OwnerController extends BaseController
                 ->where('client_id', '=', CLIENT_ID)
                 ->where('property_id', '=', $id)
                 ->select(
-                    'property_booking.is_instant',
+                    //                    'property_booking.is_instant',
                     DB::raw('DATE_FORMAT(property_blocking.start_date, "%M %d, %Y") as start_date'),
                     DB::raw('DATE_FORMAT(property_blocking.end_date, "%M %d, %Y") as end_date'),
                 )
@@ -108,14 +108,14 @@ class OwnerController extends BaseController
                 }
             }
 
-            foreach ($booked_events as $key => $value) {
-                if ($value->is_instant < 2) {
-                    $value->booked_on = APP_BASE_NAME;
-                } else {
-                    $value->booked_on = 'Airbnb';
-                }
-            }
-
+            //            foreach ($booked_events as $key => $value) {
+            //                if ($value->is_instant < 2) {
+            //                    $value->booked_on = APP_BASE_NAME;
+            //                } else {
+            //                    $value->booked_on = 'Airbnb';
+            //                }
+            //            }
+            $booked_events->booked_on = APP_BASE_NAME;
             return view(
                 'owner.calender',
                 compact('properties', 'id', 'booked_events', 'icals', 'block_events', 'res', 'property_title'),

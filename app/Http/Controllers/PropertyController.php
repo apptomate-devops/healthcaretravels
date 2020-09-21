@@ -1503,7 +1503,7 @@ class PropertyController extends BaseController
 
         $booked_dates = DB::table('property_booking')
             ->where('property_booking.client_id', '=', CLIENT_ID)
-            ->where('property_booking.payment_done', '=', 1)
+            ->where('property_booking.status', '=', 2)
             ->where('property_booking.property_id', '=', $property_id)
             ->select('start_date', 'end_date')
             ->get();
@@ -2065,13 +2065,15 @@ class PropertyController extends BaseController
                         }
                     }
 
-                    foreach ($booked_events as $key => $value) {
-                        if ($value->is_instant < 2) {
-                            $value->booked_on = APP_BASE_NAME;
-                        } else {
-                            $value->booked_on = 'Airbnb';
-                        }
-                    }
+                    //                    foreach ($booked_events as $key => $value) {
+                    //                        if ($value->is_instant < 2) {
+                    //                            $value->booked_on = APP_BASE_NAME;
+                    //                        } else {
+                    //                            $value->booked_on = 'Airbnb';
+                    //                        }
+                    //                    }
+
+                    $booked_events->booked_on = APP_BASE_NAME;
                 } else {
                     $booked_events = [];
                     $icals = [];
@@ -2374,13 +2376,14 @@ class PropertyController extends BaseController
                 }
             }
 
-            foreach ($booked_events as $key => $value) {
-                if ($value->is_instant < 2) {
-                    $value->booked_on = APP_BASE_NAME;
-                } else {
-                    $value->booked_on = 'Airbnb';
-                }
-            }
+            //            foreach ($booked_events as $key => $value) {
+            //                if ($value->is_instant < 2) {
+            //                    $value->booked_on = APP_BASE_NAME;
+            //                } else {
+            //                    $value->booked_on = 'Airbnb';
+            //                }
+            //            }
+            $booked_events->booked_on = APP_BASE_NAME;
         } else {
             $booked_events = [];
             $icals = [];

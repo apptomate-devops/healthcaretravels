@@ -45,6 +45,7 @@ class Helper
             'name' => $name,
             'amount' => $payment->total_amount,
             'booking_id' => $booking_id,
+            'deposit' => boolval($is_owner),
         ];
         $dwolla = new Dwolla();
         if (!defined('GENERAL_MAIL')) {
@@ -68,6 +69,8 @@ class Helper
             }
             $transferDetails = null;
             if ($is_owner) {
+                // TODO: fix the funding source of owner here.
+                $fundingSource = $payment->booking->owner->default_funding_source;
                 $transferDetails = $dwolla->createTransferToCustomer($fundingSource, $amount);
             } else {
                 $transferDetails = $dwolla->createTransferToMasterDwolla($fundingSource, $amount);

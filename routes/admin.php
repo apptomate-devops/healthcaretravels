@@ -43,6 +43,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::GET('/single_user', 'Admin\OwnerController@single_user');
 
         Route::GET('/bookings', 'Admin\BookingController@index');
+        Route::GET('/bookings/{id}', 'Admin\BookingController@booking_details');
 
         Route::GET('/commision', 'Admin\CommisionController@index');
         Route::POST('/commision', 'Admin\CommisionController@update');

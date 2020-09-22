@@ -55,6 +55,7 @@
                                             <th>Start Date</th>
                                             <th>End Date</th>
                                             <th>Status</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -62,10 +63,10 @@
                                         @foreach($bookings as $key => $booking)
                                         <tr>
                                             <td>
-                                            {{$booking->id}}
+                                                {{$booking->id}}
                                             </td>
                                             <td>
-                                            {{$booking->booking_id}}
+                                                {{$booking->booking_id}}
                                             </td>
                                             <td>
                                                 {{$booking->property_title}}
@@ -80,7 +81,7 @@
                                                 {{date('m-d-Y',strtotime($booking->start_date))}}
                                             </td>
                                             <td>
-                                            {{date('m-d-Y',strtotime($booking->end_date))}}
+                                                {{date('m-d-Y',strtotime($booking->end_date))}}
                                             </td>
                                             <td>
                                                 @if($booking->status == 1)
@@ -92,6 +93,13 @@
                                                 @else
                                                 Canceled
                                                 @endif
+                                            </td>
+                                            <td>
+                                                <a href="{{BASE_URL}}admin/bookings/{{$booking->id}}">
+                                                    <span class="btn btn-success btn-default btn-block">
+                                                        View 
+                                                    </span> 
+                                                </a>
                                             </td>
                                         </tr>
                                         @endforeach

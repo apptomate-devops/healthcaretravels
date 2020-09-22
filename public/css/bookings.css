@@ -247,6 +247,7 @@ div::-webkit-scrollbar-thumb {
 
 .tooltips .tooltiptext {
     top: -35px !important;
+    line-height: 22px;
 }
 #chat_now {
     width: auto;

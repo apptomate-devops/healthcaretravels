@@ -1098,14 +1098,14 @@ class PropertyController extends BaseController
             ->where('is_owner', $is_owner)
             ->get();
 
-        if (empty($all_scheduled_payments)) {
+        if (count($all_scheduled_payments) == 0) {
             $all_scheduled_payments = Helper::generate_booking_payments($booking, $is_owner);
         }
         foreach ($all_scheduled_payments as $payment) {
             if (is_object($payment)) {
                 $payment = json_decode(json_encode($payment), true);
             }
-
+            $payment['is_cleared'] = $payment['is_cleared'] ?? 0;
             if ($is_owner == 1) {
                 $payment['amount'] = $payment['total_amount'] - $payment['service_tax'];
                 $grand_total = $grand_total + $payment['amount'];

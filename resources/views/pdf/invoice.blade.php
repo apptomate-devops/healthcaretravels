@@ -65,17 +65,6 @@
     </tr>
     @foreach($data->scheduled_payments as $payment)
         @if($payment['payment_cycle'] == 1)
-            <tr>
-                <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
-                <td>Cleaning Fee</td>
-                <td>${{$payment['cleaning_fee']}}</td>
-                <td>
-                    <p>
-                        <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'])}}</b>
-                    </p>
-                </td>
-                <td></td>
-            </tr>
             @if($data->is_owner == 0)
                 <tr>
                     <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
@@ -102,6 +91,17 @@
                     <td>One-time charge</td>
                 </tr>
             @endif
+                <tr>
+                    <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
+                    <td>Cleaning Fee</td>
+                    <td>${{$payment['cleaning_fee']}}</td>
+                    <td>
+                        <p>
+                            <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'])}}</b>
+                        </p>
+                    </td>
+                    <td></td>
+                </tr>
         @endif
         <tr>
             <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>

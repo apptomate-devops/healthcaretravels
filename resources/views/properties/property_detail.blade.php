@@ -46,15 +46,14 @@
                                                 </tr>
                                                 <tr>
                                                 </tr>
-                                                <tr>
-                                                    <td>
-                                                        Days
-                                                    </td>
-                                                    <td>
-                                                        &nbsp;
-                                                        {{$data->total_days}}
-                                                    </td>
-                                                </tr>
+                                                @if($data->status == 1)
+{{--                                                    only allow to edit if not approved--}}
+                                                    <tr>
+                                                        <td>
+                                                            <a href="{{BASE_URL}}property/{{$data->property_id}}/{{$data->booking_id}}">Go back to edit</a>
+                                                        </td>
+                                                    </tr>
+                                                @endif
                                                 {{-- Hiding coupon details as of now --}}
                                                 @if(false && $data->coupon_value=="")
                                                     <tr><td>&nbsp;</td><td>&nbsp;</td></tr>

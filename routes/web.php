@@ -86,8 +86,8 @@ Route::get('/delete_property_image/{id}', 'PropertyController@delete_property_im
 Route::get('/update_cover_image/{id}/{property_id}', 'PropertyController@update_cover_image');
 Route::match(['get', 'post'], '/properties', 'PropertyController@search_property');
 Route::post('/search-property-filtering', 'PropertyController@search_property');
-Route::GET('/property/get-price', 'PropertyController@get_price');
-Route::GET('/property/{id}', 'PropertyController@single_property');
+Route::GET('/get-property-price', 'PropertyController@get_price');
+Route::GET('/property/{id}/{booking_id?}', 'PropertyController@single_property');
 Route::GET('/add-calender/{property_id}', 'CalenderController@add_calender');
 Route::GET('/update-calender/{id}', 'CalenderController@update_calender');
 Route::GET('/delete-calender/{id}', 'CalenderController@delete_calender');

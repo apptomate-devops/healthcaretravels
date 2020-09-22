@@ -718,6 +718,7 @@
                                         <input name="check_out" value="@if(count($session)!=0) {{$session['toDate']}} @endif"  required id="booking_date_range_picker" placeholder="Check Out date" type="text" autocomplete="off" >
 
                                         <input name="property_id" type="hidden" value="{{$property_id}}" >
+                                        <input id="booking_id" name="booking_id" type="hidden">
                                     </div>
                                 </div>
                                 <input type="hidden" id="guest" name="guest_count">
@@ -1051,6 +1052,18 @@
         });
 
         $( document ).ready(function() {
+            // Edit Property Booking
+            var booking_details = <?php echo json_encode($booking_details); ?>;
+            debugger
+            if(booking_details) {
+                $('#booking_id').val(booking_details.booking_id);
+                var start = moment(booking_details.start_date, "YYYY-MM-DD").format("MM/DD/YYYY")
+                var end = moment(booking_details.end_date, "YYYY-MM-DD").format("MM/DD/YYYY")
+                $('input[id="booking_date_range_picker"][name="check_in"]').val(start);
+                $('input[id="booking_date_range_picker"][name="check_out"]').val(end);
+                $('#current_guest_count').val(booking_details.guest_count);
+                get_price();
+            }
             var fav_id = '{{$data->is_favourite}}';
             if (fav_id == 1) {
                 $("#yes_favourite").show();
@@ -1103,6 +1116,7 @@
         });
         function get_price() {
             var id = "{{$property_id}}";
+            var booking_id = $('#booking_id').val();
             var from_date =$('input[id="booking_date_range_picker"][name="check_in"]').val();
             var to_date = $('input[id="booking_date_range_picker"][name="check_out"]').val();
             var guestCount = parseInt($("#current_guest_count").val());
@@ -1111,16 +1125,17 @@
             totalguestcount = isNaN(totalguestcount) ? 0 : totalguestcount;
             guest_count = isNaN(guest_count) ? 0 : guest_count;
 
+            debugger
             $('.guest').show();
             if(!id || !from_date || !to_date || !guest_count) {
                 return;
             }
-            $('#btn_book_now').prop("disabled", false);
-            var url = 'get-price?property_id='+id+"&check_in="+from_date+"&check_out="+to_date+"&guest_count="+guest_count;
+            var url = '/get-property-price?property_id='+id+"&check_in="+from_date+"&check_out="+to_date+"&guest_count="+guest_count+"&booking_id="+booking_id;
             $.ajax({
                 "type": "get",
                 "url" : url,
                 success: function(data) {
+                    debugger
                     // console.log("room ",data);
                     if (data.status == 'FAILED' && data.status_code == 0) {
                         $(".alert").html(data.message || "Sorry! This property is not available during all of your selected dates. Try changing your dates or finding another property.");
@@ -1146,6 +1161,7 @@
                         $('.booking_button').css('background','#0983b8');
                         $("#pricing_details").show();
                     }
+                    $('#btn_book_now').prop("disabled", false);
 
 
                     console.log("Set favourite success ====:"+JSON.stringify(data));
@@ -1187,6 +1203,7 @@
                     }
                 },
                 error: function (e) {
+                    debugger
                     console.log('Error in Get_price', e);
                 }
             });

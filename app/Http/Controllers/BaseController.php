@@ -267,7 +267,7 @@ class BaseController extends ConstantsController
         Logger::info('Scheduling email job after: ' . $delayInSeconds);
         ProcessEmail::dispatch($to, $template, $subject, $data)
             ->delay(now()->addSeconds($delayInSeconds))
-            ->onQueue('emails');
+            ->onQueue(EMAIL_QUEUE);
     }
 
     public function send_custom_email($email, $subject, $view_name, $data, $title, $from = GENERAL_MAIL)
@@ -785,7 +785,7 @@ class BaseController extends ConstantsController
                 $dueTime = Carbon::parse($payment['due_time']);
                 ProcessPayment::dispatch($payment['id'])
                     ->delay($dueTime)
-                    ->onQueue('hct:payments');
+                    ->onQueue(PAYMENT_QUEUE);
             }
         }
         $owner = $booking->owner;

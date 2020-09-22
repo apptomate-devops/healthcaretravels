@@ -358,12 +358,7 @@ class PropertyController extends BaseController
         $booking_price = Helper::get_price_details($data, $data->start_date, $data->end_date);
         $data = (object) array_merge((array) $data, (array) $booking_price);
 
-        $all_funding_sources = $this->dwolla->getFundingSourcesForCustomer($traveller->dwolla_customer);
-        $funding_sources = array_filter($all_funding_sources, function ($source) {
-            if ($source->status == 'verified' && $source->type != 'balance') {
-                return true;
-            }
-        });
+        $funding_sources = $this->dwolla->getFundingSourcesForCustomer($traveller->dwolla_customer);
 
         return view('properties.property_detail', [
             'data' => $data,
@@ -819,7 +814,10 @@ class PropertyController extends BaseController
         if ($user_id && $booking && $booking->owner_id == $user_id) {
             DB::table('property_booking')
                 ->where('booking_id', $request->booking_id)
-                ->update(['status' => $request->status]);
+                ->update([
+                    'owner_funding_source' => $request->owner_funding_source ?? '',
+                    'status' => $request->status,
+                ]);
 
             if ($request->status == 2 || $request->status == 4) {
                 // SEND MAIL TO TRAVELLER FOR BOOKING ACCEPTED/CANCELLED
@@ -1169,10 +1167,14 @@ class PropertyController extends BaseController
             $data->traveller_name = $traveller->username;
             $data->owner_role_id = $owner->role_id;
             $data->owner_profile_image = $owner->profile_image;
+            $data->owner_id = $owner->id;
             $data->owner_name = $owner->username;
+            $data->owner_default_funding_source = $owner->default_funding_source;
             $data->agency = implode(", ", array_filter([$data->name_of_agency, $data->other_agency])); // Booking agencies
 
             $payment_summary = $this->get_payment_summary($data, 1);
+
+            $funding_sources = $this->dwolla->getFundingSourcesForCustomer($owner->dwolla_customer);
 
             return view('owner.single_booking', [
                 'data' => $data,
@@ -1180,6 +1182,7 @@ class PropertyController extends BaseController
                 'pet_details' => $pet_details,
                 'scheduled_payments' => $payment_summary['scheduled_payments'],
                 'total_earning' => $payment_summary['grand_total'],
+                'funding_sources' => $funding_sources,
             ]);
         } catch (Exception $e) {
             Logger::info($e->getMessage());

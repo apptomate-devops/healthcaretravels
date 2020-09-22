@@ -27,6 +27,7 @@ class PropertyBooking extends Model
         'name_of_agency',
         'other_agency',
         'funding_source',
+        'owner_funding_source',
     ];
     /**
      * Get the Traveler who made the booking.

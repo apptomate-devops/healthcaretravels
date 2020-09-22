@@ -192,18 +192,8 @@
                                     </div>
                                 </div>
 
-                                <h2>Account Details</h2>
-                                @if(count($funding_sources) > 0)
-                                    <select name="funding_source" id="fundingSource" class="chosen-select-no-single">
-                                        <option selected disabled>Select Account</option>
-                                        @foreach($funding_sources as $source)
-                                            <option label="{{$source->name}}" value="{{$source->_links->self->href}}">{{$source->name}}</option>
-                                        @endforeach
-                                    </select>
-                                @else
-                                    <div>You haven't added any account details yet.</div>
-                                @endif
-                                <span class="link" id="create-funding-source">Add Account Details</span>
+                                @component('components.funding-source', ['funding_sources' => $funding_sources])
+                                @endcomponent
 
                                 <h2>Guest Details</h2>
                                 <div class="wrapper center-block">
@@ -515,46 +505,23 @@
                 },
             };
             dwolla.iav.start(iavToken, config, function(err, res) {
-                $('#addDetailsProgress').hide();
                 if(err) {
+                    $('#addDetailsProgress').hide();
                     console.log('Error creating IAV funding source', err.message, 'with code', err.code);
                     return false
                 }
                 var fundingSource = res._links['funding-source'].href;
-                getFundingSourceDetails(fundingSource, function (err, data) {
+                addDefaultFundingSourceToUser(fundingSource, function (err, data) {
+                    $('#addDetailsProgress').hide();
                     $("#bank_verification_modal").modal('hide');
                     if(data.success) {
-                        console.log('data.success', data.success);
-                        $('#fundingSource').append($('<option>', {
-                            value: fundingSource,
-                            text: data.data.name,
-                        }));
-                        $('#fundingSource').val(fundingSource);
+                        window.location.reload();
                     }
                 });
-                addDefaultFundingSourceToUser(fundingSource);
             });
         };
 
-        function getFundingSourceDetails(fundingSource, cb) {
-            var formData = {
-                url: fundingSource,
-                _token: '{{ csrf_token() }}'
-            };
-            $.ajax({
-                url: "/dwolla/get_funding_source_details",
-                type: "POST",
-                data: formData,
-                json: true,
-                success: function(response, textStatus, jqXHR) {
-                    cb(null, response);
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    cb(errorThrown);
-                }
-            });
-        };
-        function addDefaultFundingSourceToUser(fundingSource) {
+        function addDefaultFundingSourceToUser(fundingSource, cb) {
             var formData = {
                 id: {{$traveller->id}},
                 fundingSource: fundingSource,
@@ -566,14 +533,10 @@
                 data: formData,
                 json: true,
                 success: function(response, textStatus, jqXHR) {
-                    if (response.success) {
-                        console.log('Default funding source stored');
-                    } else {
-                        console.log('Error saving Default funding source');
-                    }
+                    cb(null, response);
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    console.log('Error saving Default funding source');
+                    cb(errorThrown);
                 }
             });
         };

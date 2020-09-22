@@ -850,6 +850,7 @@ class PropertyController extends BaseController
                 }
                 $paymentRes = $this->process_booking_payment($booking->booking_id, 1);
                 $bookingModel = PropertyBooking::find($booking->id);
+                $this->schedule_payments_for_booking($bookingModel);
                 $owner = $bookingModel->owner;
                 $traveler = $bookingModel->traveler;
                 $property = $bookingModel->property;

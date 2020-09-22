@@ -850,77 +850,7 @@ class PropertyController extends BaseController
                 }
                 $paymentRes = $this->process_booking_payment($booking->booking_id, 1);
                 $bookingModel = PropertyBooking::find($booking->id);
-                $this->schedule_payments_for_booking($bookingModel);
-                $owner = $bookingModel->owner;
-                $traveler = $bookingModel->traveler;
-                $property = $bookingModel->property;
-                $propertyTitle = $property->title;
-                $travelerName = $traveler->first_name . " " . $traveler->last_name;
-                $owner_mail_data = [
-                    'name' => $owner->first_name . " " . $owner->last_name,
-                    'propertyName' => $property->title,
-                    'travelerName' => $travelerName,
-                    'travelerPhone' => $traveler->phone,
-                ];
-                $start_delay = 0;
-                $end_delay = 0;
-                $start_date = Carbon::parse($bookingModel->start_date);
-                $start_date_with_padding = $start_date->subDays(1);
-                $end_date = Carbon::parse($bookingModel->end_date);
-                $end_date_with_padding = $end_date->subDay(1);
-                $current_date = Carbon::now();
-
-                // if there is no padding of 24 hr send email right away.
-                if ($start_date_with_padding->gt($current_date)) {
-                    $start_delay = $start_date_with_padding->diffInSeconds($current_date);
-                }
-
-                if ($end_date_with_padding->gt($current_date)) {
-                    $end_delay = $end_date_with_padding->diffInSeconds($current_date);
-                }
-
-                $subject = 'Your Booking is Starting Soon';
-                $this->send_scheduled_email(
-                    $owner->email,
-                    'owner-24hr-before-checkin',
-                    $subject,
-                    $owner_mail_data,
-                    $start_delay,
-                );
-                $subject = 'Your Booking at ' . $propertyTitle . ' is Ending';
-                $this->send_scheduled_email(
-                    $owner->email,
-                    'owner-24hr-before-checkout',
-                    $subject,
-                    $owner_mail_data,
-                    $end_delay,
-                );
-
-                $traveler_mail_data = [
-                    'name' => $travelerName,
-                    'propertyName' => $propertyTitle,
-                ];
-                $subject = 'Your Stay at ' . $propertyTitle;
-                $this->send_scheduled_email(
-                    $owner->email,
-                    'traveler-24hr-before-checkin',
-                    $subject,
-                    $traveler_mail_data,
-                    $start_delay,
-                );
-                $subject = 'Your Stay at ' . $propertyTitle . ' is Ending';
-                $this->send_scheduled_email(
-                    $owner->email,
-                    'traveler-24hr-before-checkout',
-                    $subject,
-                    $traveler_mail_data,
-                    $end_delay,
-                );
-
-                // TODO: clear if we want to allow accepting booking request if the payment fails for a reason.
-                // if (!$paymentRes['success']) {
-                //     return response()->json(['status' => 'ERROR', 'message' => $paymentRes['message']]);
-                // }
+                $this->schedule_payments_and_emails_for_booking($bookingModel);
             }
             if ($request->link == 1) {
                 return $this->single_booking($request->booking_id, $request);

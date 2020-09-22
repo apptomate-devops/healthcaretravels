@@ -19,6 +19,7 @@ class BookingPayments extends Model
         'monthly_rate',
         'total_amount',
         'due_date',
+        'due_time',
         'is_owner',
         'transfer_url',
         'transfer_id',

@@ -8,18 +8,24 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
+use Helper;
+use App\Models\BookingPayments;
+use App\Services\Logger;
+
 class ProcessPayment implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    protected $payment_id;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($payment_id)
     {
-        $this->data = $data;
+        $this->payment_id = $payment_id;
     }
 
     /**
@@ -30,10 +36,21 @@ class ProcessPayment implements ShouldQueue
     public function handle()
     {
         try {
-
-
+            Logger::info('Payment Processing job for payment id: ' . $this->payment_id . ' initiated at ' . now());
+            $payment = BookingPayments::find($this->payment_id);
+            Helper::process_booking_payment($payment->booking_id, $payment->payment_cycle, $payment->is_owner);
         } catch (Exception $e) {
             error_log($e);
         }
+    }
+
+    /**
+     * Handle a job failure.
+     *
+     * @return void
+     */
+    public function failed()
+    {
+        Logger::info('Payment Processing job for payment id: ' . $this->payment_id . ' failed at ' . now());
     }
 }

@@ -10,8 +10,7 @@ use App\Models\BookingPayments;
 
 class Helper
 {
-
-    static public function send_custom_email($email, $subject, $view_name, $data, $title, $from = GENERAL_MAIL)
+    public static function send_custom_email($email, $subject, $view_name, $data, $title, $from = GENERAL_MAIL)
     {
         $mail_title = $title ?? 'Health Care Travels';
         $mail_from = $from ? $from : GENERAL_MAIL;
@@ -28,7 +27,7 @@ class Helper
         }
     }
 
-    static public function process_booking_payment($booking_id, $payment_cycle, $is_owner = 0)
+    public static function process_booking_payment($booking_id, $payment_cycle, $is_owner = 0)
     {
         $payment = BookingPayments::where('booking_id', $booking_id)
             ->where('payment_cycle', $payment_cycle)
@@ -252,12 +251,23 @@ class Helper
         }
     }
 
+    public static function get_time_split($time)
+    {
+        $time = str_replace(' AM', '', $time);
+        $time = str_replace(' PM', '', $time);
+        return explode(':', $time);
+    }
+
     public static function generate_booking_payments($booking, $is_owner = 0)
     {
         $start_date = Carbon::parse($booking->start_date);
         $end_date = Carbon::parse($booking->end_date);
         $accepted_date = Carbon::now();
         $scheduler_date = Carbon::parse($booking->start_date);
+        $timeSplit = Helper::get_time_split($booking->check_in);
+        $scheduler_date->hour = $timeSplit[0];
+        $scheduler_date->minute = $timeSplit[1];
+        $scheduler_date->second = 0;
         // Finding Partial month days
         $lastMonthRenew = Carbon::parse($booking->end_date);
         if ($lastMonthRenew->day < $start_date->day) {
@@ -299,9 +309,7 @@ class Helper
                 $data['due_date'] = $accepted_date;
                 if ($is_owner) {
                     $dd = Carbon::parse($booking->start_date)->addHours(48);
-                    $check_in = str_replace(' AM', '', $booking->check_in);
-                    $check_in = str_replace(' PM', '', $check_in);
-                    $timeSplit = explode(':', $check_in);
+                    $timeSplit = Helper::get_time_split($booking->check_in);
                     $dd->hour = $timeSplit[0];
                     $dd->minute = $timeSplit[1];
                     $dd->second = 0;
@@ -328,6 +336,7 @@ class Helper
                         ->addDays($partialDays)
                         ->format('m/d/Y');
             }
+            $data['due_time'] = $data['due_date'];
             $data['due_date'] = $data['due_date']->toDateString();
             array_push($scheduled_payments, $data);
         }

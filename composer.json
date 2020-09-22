@@ -31,7 +31,9 @@
         "classmap": [
             "database"
         ],
-        "files" : ["app/Helper/helper.php"],
+        "files": [
+            "app/Helper/helper.php"
+        ],
         "psr-4": {
             "App\\": "app/"
         }
@@ -63,7 +65,8 @@
             "php artisan config:clear",
             "php artisan cache:clear",
             "php artisan route:clear",
-            "php artisan view:clear"
+            "php artisan view:clear",
+            "php artisan queue:restart"
         ]
     },
     "config": {

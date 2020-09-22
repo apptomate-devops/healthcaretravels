@@ -57,10 +57,13 @@ class OwnerController extends BaseController
     {
         $data = $this->user
             ::leftJoin('user_role', 'users.role_id', '=', 'user_role.id')
-            ->select('users.*', 'user_role.role')
+            ->leftJoin('ad_users', 'users.approved_by', '=', 'ad_users.id')
+            ->select('users.*', 'user_role.role', 'ad_users.name as approved_by_name')
             ->where('users.id', $request->id)
             ->first();
         $document = DB::table('documents')
+            ->select('documents.*', 'ad_users.name as approved_by_name')
+            ->leftJoin('ad_users', 'ad_users.id', '=', 'documents.approved_by')
             ->where('user_id', $request->id)
             ->get();
         $total_posted = DB::table('property_list')

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
@@ -51,6 +52,7 @@ class HomeController extends BaseController
             }
         }
         $request->session()->put('admin_email', $request->email);
+        $request->session()->put('admin_id', $check->id);
         $redirectUrl = $request->session()->get('admin.url.intended');
         if (!empty($redirectUrl)) {
             return redirect($redirectUrl);
@@ -576,12 +578,16 @@ class HomeController extends BaseController
         $data = $request->responses;
         $deniedCount = 0;
         foreach ($data as $value) {
+            $updateData = ['status' => $value["status"], 'reason' => $value["reason"]];
             if ($value["status"] == -1) {
                 $deniedCount++;
+            } else {
+                $updateData['approved_by'] = $request->session()->get('admin_id');
+                $updateData['approved_on'] = now();
             }
             DB::table('documents')
                 ->where('id', $value["id"])
-                ->update(['status' => $value["status"], 'reason' => $value["reason"]]);
+                ->update($updateData);
         }
         $isDenied = $deniedCount > 0;
         $updateStatus = $isDenied ? -1 : ONE;
@@ -589,6 +595,9 @@ class HomeController extends BaseController
         if ($isDenied) {
             $updateData['denied_count'] = DB::raw('denied_count+1');
             $updateData['is_submitted_documents'] = 0;
+        } else {
+            $updateData['approved_by'] = $request->session()->get('admin_id');
+            $updateData['approved_on'] = now();
         }
         $this->user->where('id', $id)->update($updateData);
         $user = $this->user->where('id', $id)->first();

@@ -2,7 +2,7 @@
 <meta name="description"
     content="Health Care Travels is committed to delivering a high level of expertise, customer service, and attention to detail to the market of accommodation booking." />
 <meta property="og:locale" content="en_US" />
-<meta property="og:image" content="https://healthcaretravels.com/healthcaretravel.png">
+<meta property="og:image" content="https://healthcaretravels.com/hct-logo-square.jpeg">
 <meta property="og:site_name" content="The best place to rent/book properties to/for healthcare workers | Health Care Travels" />
 <meta property="og:title" content="The best place to rent/book properties to/for healthcare workers | Health Care Travels" />
 <meta itemprop="name" content="The best place to rent/book properties to/for healthcare workers | Health Care Travels" />

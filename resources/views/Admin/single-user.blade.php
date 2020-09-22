@@ -272,7 +272,7 @@
                                     <input type="text" class="denial-reason form-control" style="margin-top: 10px; display: none;" name="reason-{{$d->id}}" id="reason-{{$d->id}}" data-id="{{$d->id}}" placeholder="specify reason for denial">
                                 </div>
                                 @elseif($d->status == 1)
-                                <span disabled class="btn btn-default btn-muted text-success btn-block">Document Approved</span>
+                                <span disabled class="btn btn-default btn-outline-success btn-block">Document Approved</span>
                                 @else
                                 <span class="btn btn-default btn-danger btn-block">Unverified</span>
                                 @endif

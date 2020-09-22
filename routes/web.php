@@ -172,6 +172,7 @@ Route::middleware(['LoginCheck'])->group(function () {
 });
 
 Route::post('/dwolla-webhooks', 'PaymentController@dwolla_webhook');
+Route::post('/webhooks/dwolla', 'PaymentController@dwolla_webhook');
 
 // TODO: remove when implemented
 // Payment testing APIS

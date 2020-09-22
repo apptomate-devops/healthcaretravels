@@ -58,7 +58,7 @@ class PropertyController extends BaseController
             $check_out_date .
             "')  AND B.total_guests < " .
             $request->guest_count .
-            " AND A.payment_done = 1 AND A.is_instant = B.is_instant AND A.property_id = " .
+            " AND A.status = 2 AND A.is_instant = B.is_instant AND A.property_id = " .
             $request->property_id .
             "";
 
@@ -270,7 +270,7 @@ class PropertyController extends BaseController
             $check_out_date .
             "')  AND B.total_guests < " .
             $guest_count .
-            " AND A.payment_done = 1 AND A.property_id = " .
+            " AND A.status = 2 AND A.property_id = " .
             $request->property_id;
 
         $is_available = DB::select($sql);
@@ -986,14 +986,11 @@ class PropertyController extends BaseController
             $source_lng = $request->lng;
             $property_list_obj = new PropertyList();
 
-            $query = $property_list_obj
-                ->join('users', 'users.id', '=', 'property_list.user_id')
-                ->join('property_room', 'property_room.property_id', '=', 'property_list.id')
-                ->leftjoin('property_blocking', 'property_blocking.property_id', '=', 'property_list.id')
-                ->select('property_list.*', 'property_room.*')
-                ->where('property_list.is_complete', '=', ACTIVE)
-                ->where('property_list.status', '=', 1)
-                ->where('property_list.property_status', '=', 1);
+            $query = $property_list_obj->select('property_list.*')->where([
+                'is_complete' => ACTIVE,
+                'status' => 1,
+                'property_status' => 1,
+            ]);
 
             if (!empty($source_lng) && !empty($source_lat)) {
                 $query
@@ -1021,9 +1018,9 @@ class PropertyController extends BaseController
                 $where[] = 'property_list.room_type = "' . $request->room_type . '" ';
             }
 
-            if (isset($request->instance_booking)) {
-                $where[] = 'property_list.is_instant = 1';
-            }
+            //            if (isset($request->instance_booking)) {
+            //                $where[] = 'property_list.is_instant = 1';
+            //            }
 
             if (isset($request->flexible_cancellation)) {
                 $where[] = "property_list.cancellation_policy = 'Flexible'";
@@ -1056,11 +1053,11 @@ class PropertyController extends BaseController
             $from = strtotime($request->from_date);
             $to = strtotime($request->to_date);
             $query_blocking = [];
-
             if ($from && $to) {
                 $fromDate = date('Y-m-d', $from);
                 $toDate = date('Y-m-d', $to);
                 $property_blocking_obj = new PropertyBlocking();
+                $property_booking_obj = new PropertyBooking();
 
                 $query_blocking = $property_blocking_obj
                     ->select('property_id')
@@ -1081,6 +1078,27 @@ class PropertyController extends BaseController
                     )
                     ->pluck('property_id')
                     ->toArray();
+
+                $query_booking = $property_booking_obj
+                    ->select('property_id')
+                    ->whereRaw(
+                        '(property_booking.start_date between "' .
+                            $fromDate .
+                            '" and "' .
+                            $toDate .
+                            '" OR
+                             property_booking.end_date between "' .
+                            $fromDate .
+                            '" and "' .
+                            $toDate .
+                            '" OR
+                             "' .
+                            $fromDate .
+                            '" between property_booking.start_date and property_booking.end_date) and property_booking.status = 2',
+                    )
+                    ->pluck('property_id')
+                    ->toArray();
+                $query_blocking = array_unique(array_merge($query_blocking, $query_booking));
             }
 
             $dataWhere = implode(" and ", $where);
@@ -1099,12 +1117,11 @@ class PropertyController extends BaseController
             $nearby_properties = $query->get();
             foreach ($nearby_properties as $key => $value) {
                 $image = DB::table('property_images')
-                    ->where('property_id', $value->property_id)
+                    ->where('property_id', $value->id)
                     ->first();
                 $value->image_url = isset($image->image_url) ? $image->image_url : '';
             }
         }
-
         return view('search_property')
             ->with('properties', $nearby_properties)
             ->with('total_count', $total_count)
@@ -1141,6 +1158,48 @@ class PropertyController extends BaseController
         }
     }
 
+    public static function get_payment_summary($booking, $is_owner = 0)
+    {
+        // Get all booking payments for traveler
+        $grand_total = 0;
+        $scheduled_payments = [];
+
+        $all_scheduled_payments = BookingPayments::where('booking_id', $booking->booking_id)
+            ->where('is_owner', $is_owner)
+            ->get();
+
+        if (empty($all_scheduled_payments)) {
+            $all_scheduled_payments = Helper::generate_booking_payments($booking, $is_owner);
+        }
+        foreach ($all_scheduled_payments as $payment) {
+            if (is_object($payment)) {
+                $payment = json_decode(json_encode($payment), true);
+            }
+
+            if ($is_owner == 1) {
+                $payment['amount'] = $payment['total_amount'] - $payment['service_tax'];
+                $grand_total = $grand_total + $payment['amount'];
+                if ($payment['payment_cycle'] == 1) {
+                    // Deduct cleaning_fee and service_tax to Display neat rate for Owner
+                    $payment['amount'] = $payment['total_amount'] - $payment['service_tax'] - $payment['cleaning_fee'];
+                }
+            } else {
+                $payment['amount'] = $payment['total_amount'];
+                $grand_total = $grand_total + $payment['amount'] + $payment['service_tax'];
+                if ($payment['payment_cycle'] == 1) {
+                    // Deduct cleaning_fee and security_deposit to Display neat rate for traveler
+                    $payment['amount'] =
+                        $payment['total_amount'] - $payment['security_deposit'] - $payment['cleaning_fee'];
+                    // Deduct security deposit from final amount as it will be refunded
+                    $grand_total = $grand_total - $payment['security_deposit'];
+                }
+            }
+            array_push($scheduled_payments, $payment);
+        }
+
+        return ['scheduled_payments' => $scheduled_payments, 'grand_total' => $grand_total];
+    }
+
     public function single_booking($booking_id, Request $request)
     {
         try {
@@ -1169,55 +1228,28 @@ class PropertyController extends BaseController
             if (empty($data)) {
                 return view('general_error', ['message' => 'We can’t find the booking you’re looking for.']);
             }
-            $traveller = DB::select(
-                "SELECT username,profile_image,role_id,name_of_agency FROM users WHERE id = $data->traveller_id",
-            );
-            $owner = DB::select(
-                "SELECT username,profile_image,role_id,name_of_agency FROM users WHERE id = $data->owner_id",
-            );
+            $bookingModel = PropertyBooking::find($data->id);
+            $owner = $bookingModel->owner;
+            $traveller = $bookingModel->traveler;
+
             $guest_info = GuestsInformation::where('booking_id', $booking_id)->get();
             $pet_details = PetInformation::where('booking_id', $booking_id)->first();
-            $data->role_id = $traveller[0]->role_id;
-            $data->traveller_profile_image = $traveller[0]->profile_image;
-            //            if ($traveller[0]->role_id == 2) {
-            //                $data->traveller_name = $traveller[0]->name_of_agency;
-            //            } else {
-            $data->traveller_name = $traveller[0]->username;
-            //            }
-            $data->owner_role_id = $owner[0]->role_id;
-            $data->owner_profile_image = $owner[0]->profile_image;
-            $data->owner_name = $owner[0]->username;
-            $data->agency = implode(", ", array_filter([$data->name_of_agency, $data->other_agency]));
-            // TODO: Get all booking payments for Owner
-            $all_scheduled_payments = BookingPayments::where('booking_id', $booking_id)
-                ->where('is_owner', 1)
-                ->get();
+            $data->role_id = $traveller->role_id;
+            $data->traveller_profile_image = $traveller->profile_image;
+            $data->traveller_name = $traveller->username;
+            $data->owner_role_id = $owner->role_id;
+            $data->owner_profile_image = $owner->profile_image;
+            $data->owner_name = $owner->username;
+            $data->agency = implode(", ", array_filter([$data->name_of_agency, $data->other_agency])); // Booking agencies
 
-            if (empty($all_scheduled_payments)) {
-                $all_scheduled_payments = Helper::generate_booking_payments($data, 1);
-            }
-            $total_earning = 0;
-            $scheduled_payments = [];
-            foreach ($all_scheduled_payments as $payment) {
-                if (is_object($payment)) {
-                    $payment = json_decode(json_encode($payment), true);
-                }
-
-                $payment['amount'] = $payment['total_amount'] - $payment['service_tax'];
-                $total_earning = $total_earning + $payment['amount'];
-                if ($payment['payment_cycle'] == 1) {
-                    // TODO: Deduct cleaning_fee and service_tax to Display neat rate for Owner
-                    $payment['amount'] = $payment['total_amount'] - $payment['service_tax'] - $payment['cleaning_fee'];
-                }
-                array_push($scheduled_payments, $payment);
-            }
+            $payment_summary = $this->get_payment_summary($data, 1);
 
             return view('owner.single_booking', [
                 'data' => $data,
                 'guest_info' => $guest_info,
                 'pet_details' => $pet_details,
-                'scheduled_payments' => $scheduled_payments,
-                'total_earning' => $total_earning,
+                'scheduled_payments' => $payment_summary['scheduled_payments'],
+                'total_earning' => $payment_summary['grand_total'],
             ]);
         } catch (Exception $e) {
             Logger::info($e->getMessage());
@@ -1592,51 +1624,28 @@ class PropertyController extends BaseController
             ->where('property_booking.booking_id', $booking_id)
             ->first();
 
-        $traveller = DB::select(
-            "SELECT username,profile_image,role_id,name_of_agency FROM users WHERE id = $data->traveller_id",
-        );
-        $owner = DB::select(
-            "SELECT username,profile_image,role_id,name_of_agency FROM users WHERE id = $data->owner_id",
-        );
+        $bookingModel = PropertyBooking::find($data->id);
+        $owner = $bookingModel->owner;
+        $traveller = $bookingModel->traveler;
+
         $guest_info = GuestsInformation::where('booking_id', $booking_id)->get();
         $pet_details = PetInformation::where('booking_id', $booking_id)->first();
-        $data->role_id = $traveller[0]->role_id;
-        $data->traveller_profile_image = $traveller[0]->profile_image;
-        $data->traveller_name = $traveller[0]->username;
-        $data->owner_role_id = $owner[0]->role_id;
-        $data->owner_profile_image = $owner[0]->profile_image;
-        $data->owner_name = $owner[0]->username;
-        $data->agency = implode(", ", array_filter([$data->name_of_agency, $data->other_agency]));
-        // TODO: Get all booking payments for traveler
-        $all_scheduled_payments = BookingPayments::where('booking_id', $booking_id)
-            ->where('is_owner', 0)
-            ->get();
+        $data->role_id = $traveller->role_id;
+        $data->traveller_profile_image = $traveller->profile_image;
+        $data->traveller_name = $traveller->username;
+        $data->owner_role_id = $owner->role_id;
+        $data->owner_profile_image = $owner->profile_image;
+        $data->owner_name = $owner->username;
+        $data->agency = implode(", ", array_filter([$data->name_of_agency, $data->other_agency])); // Booking Agency
 
-        if (empty($all_scheduled_payments)) {
-            $all_scheduled_payments = Helper::generate_booking_payments($data);
-        }
-        $total_payment = 0;
-        $scheduled_payments = [];
+        $payment_summary = $this->get_payment_summary($data);
 
-        foreach ($all_scheduled_payments as $payment) {
-            if (is_object($payment)) {
-                $payment = json_decode(json_encode($payment), true);
-            }
-            $payment['amount'] = $payment['total_amount'];
-            $total_payment = $total_payment + $payment['amount'] + $payment['service_tax'];
-            if ($payment['payment_cycle'] == 1) {
-                // TODO: Deduct cleaning_fee and security_deposit to Display neat rate for traveler
-                $payment['amount'] = $payment['total_amount'] - $payment['security_deposit'] - $payment['cleaning_fee'];
-            }
-            array_push($scheduled_payments, $payment);
-        }
-        $total_payment = $total_payment - $data->security_deposit; // TODO: total amount displays including security_deposit
         return view('owner.single_reservations', [
             'data' => $data,
             'guest_info' => $guest_info,
             'pet_details' => $pet_details,
-            'scheduled_payments' => $scheduled_payments,
-            'total_payment' => $total_payment,
+            'scheduled_payments' => $payment_summary['scheduled_payments'],
+            'total_payment' => $payment_summary['grand_total'],
         ]);
     }
 

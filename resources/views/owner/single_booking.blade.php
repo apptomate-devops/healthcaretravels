@@ -58,7 +58,9 @@
                                 <td>Cleaning Fee</td>
                                 <td>+${{$payment['cleaning_fee']}}</td>
                                 <td>
-                                    <p>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'])}}</p>
+                                    <p>
+                                        <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'])}}</b>
+                                    </p>
                                     <p>{{($payment['is_cleared'] == -1) ? $payment_error_message : ''}}</p>
                                 </td>
                                 <td></td>
@@ -69,14 +71,20 @@
                             <td>Stay payment</td>
                             <td>+${{$payment['amount']}}</td>
                             <td>
-                                <p>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'])}}</p>
+                                <p>
+                                    <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'])}}</b>
+                                </p>
                                 <p>{{($payment['is_cleared'] == -1) ? $payment_error_message : ''}}</p>
                             </td>
                             <td>Covering {{$payment['covering_range']}}, Minus ${{$payment['service_tax']}} fee</td>
                         </tr>
                     @endforeach
                 </table>
-                @if(count($guest_info) > 0)
+                <div class="text-right">
+                    <a target="_blank" href="{{BASE_URL}}invoice/{{$data->booking_id}}/1" class="margin-top-40 button border">Print Invoice</a>
+                </div>
+
+            @if(count($guest_info) > 0)
                         <h2>Guest Information</h2>
                         <table class="table table-striped">
                             <tr>
@@ -147,7 +155,6 @@
 
                     @endif
                     </center>
-                    <a style="float: right;margin-bottom: 40px;" target="_blank" href="{{BASE_URL}}invoice/{{$data->booking_id}}" class="margin-top-40 button border">Print Invoice</a>
                 </div>
 
             </div>

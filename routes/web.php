@@ -160,7 +160,7 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::GET('/ical/{id}', 'IcalController@ical');
 
     // Payment and Invoices
-    Route::GET('/invoice/{id}', 'PDF_Controller@invoice');
+    Route::GET('/invoice/{id}/{is_owner}', 'PDF_Controller@invoice');
 
     // Dwolla Payment Routes
     Route::post(

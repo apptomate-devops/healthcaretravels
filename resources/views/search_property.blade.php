@@ -164,7 +164,7 @@
                                 </div>
                                 <div class="listing-item compact">
 
-                                    <a href="{{url('/')}}/property/{{$property->property_id}}"
+                                    <a href="{{url('/')}}/property/{{$property->id}}"
                                        class="listing-img-container">
                                         @if($property->verified==1)
                                             <div class="listing-badges">

@@ -987,7 +987,7 @@ class PropertyController extends BaseController
 
             $query = $property_list_obj
                 ->join('users', 'users.id', '=', 'property_list.user_id')
-                ->join('property_room', 'property_room.property_id', '=', 'property_list.id')
+                ->leftjoin('property_room', 'property_room.property_id', '=', 'property_list.id')
                 ->leftjoin('property_blocking', 'property_blocking.property_id', '=', 'property_list.id')
                 ->select('property_list.*', 'property_room.*')
                 ->where('property_list.is_complete', '=', ACTIVE)

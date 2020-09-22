@@ -229,8 +229,6 @@ class PropertyController extends BaseController
 
     public function get_price(Request $request)
     {
-        Logger::info('in Get_price');
-
         $guest_count = $request->guest_count == 0 ? 20 : $request->guest_count;
         $request->adults_count = $guest_count;
         $check_in = date('Y-m-d', strtotime($request->check_in));
@@ -259,6 +257,35 @@ class PropertyController extends BaseController
                 'status_code' => ZERO,
                 'is_blocked' => ONE,
                 'blocked_data' => $isBlocked,
+            ]);
+        }
+
+        $user_id = $request->session()->get('user_id');
+        $booking_id = $request->booking_id;
+
+        $requestAlreadyExists = PropertyBooking::whereRaw(
+            'traveller_id = "' .
+                $user_id .
+                ($booking_id ? '" AND booking_id != "' . $booking_id : '') .
+                '" AND ((start_date BETWEEN "' .
+                $check_in .
+                '" AND "' .
+                $check_out .
+                '") OR (end_date BETWEEN "' .
+                $check_in .
+                '" AND "' .
+                $check_out .
+                '") OR ("' .
+                $check_in .
+                '" BETWEEN start_date AND end_date))',
+        )->get();
+        if (count($requestAlreadyExists)) {
+            return response()->json([
+                'status' => 'FAILED',
+                'message' => 'Sorry! You have already requested booking for selected date range.',
+                'status_code' => ZERO,
+                'request_already_exists' => ONE,
+                'request_data' => $requestAlreadyExists,
             ]);
         }
 

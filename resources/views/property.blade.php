@@ -1150,6 +1150,7 @@
                         $(".alert").html(data.message || "Sorry! This property is not available during all of your selected dates. Try changing your dates or finding another property.");
                         $(".alert").show();
                         $("#table_body").html("");
+                        $("#pricing_details").hide();
                         $('.booking_button').attr('disabled',true);
                         $('.booking_button').css('background','lightgrey');
 
@@ -1158,6 +1159,7 @@
                         $(".alert").html(data.message || "Please review the house rules for Minimum days stay.");
                         $(".alert").show();
                         $("#table_body").html("");
+                        $("#pricing_details").hide();
                         $('.booking_button').attr('disabled',true);
                         $('.booking_button').css('background','lightgrey');
 
@@ -1166,6 +1168,7 @@
                     if(data.status == 'SUCCESS'){
                         $(".alert").html("");
                         $(".alert").hide();
+                        $("#pricing_details").show();
                         if($('#terms').is(":checked")) {
                             $('.booking_button').attr('disabled',false);
                             $('.booking_button').css('background','#0983b8');

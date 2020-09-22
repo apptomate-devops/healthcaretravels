@@ -250,7 +250,7 @@ class Dwolla
         }
     }
 
-    public function createTransferToMasterDwolla($source, $amount, $clearance = 'next-available')
+    public function createTransferToMasterDwolla($source, $amount, $idempotency, $clearance = 'next-available')
     {
         // Master Balance account
         // 'href' => 'https://api-sandbox.dwolla.com/funding-sources/180d546c-56c8-47b8-b3e7-6b52e184a72f',
@@ -282,14 +282,14 @@ class Dwolla
             ],
         ];
         try {
-            $transfer = $this->transfersApi->create($payload);
+            $transfer = $this->transfersApi->create($payload, $idempotency);
             return $transfer;
         } catch (\Throwable $th) {
             throw $th;
         }
     }
 
-    public function createTransferToCustomer($destination, $amount, $clearance = 'next-available')
+    public function createTransferToCustomer($destination, $amount, $idempotency, $clearance = 'next-available')
     {
         if (empty($destination)) {
             throw new \Exception('Invalid source value');
@@ -312,7 +312,7 @@ class Dwolla
             ],
         ];
         try {
-            $transfer = $this->transfersApi->create($payload);
+            $transfer = $this->transfersApi->create($payload, $idempotency);
             return $transfer;
         } catch (\Throwable $th) {
             throw $th;

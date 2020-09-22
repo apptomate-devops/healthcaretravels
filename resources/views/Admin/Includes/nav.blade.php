@@ -42,7 +42,7 @@
                 <a href="{{url('admin/owner')}}">
                     <i class="la la-user-plus"></i>
                     <span class="menu-title" data-i18n="nav.dash.main">
-                   Manage Owner
+                    Manage Property Owner
                 </span>
                 </a>
             </li>

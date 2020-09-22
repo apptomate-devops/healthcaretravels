@@ -285,8 +285,9 @@
             if (r == true) {
                 var formData = {
                     booking_id: id,
-                    status,
-                    owner_funding_source
+                    status: status,
+                    owner_funding_source: owner_funding_source,
+                    _token: '{{ csrf_token() }}'
                 };
                 $.ajax({
                     url: "/owner-update-booking",

@@ -58,7 +58,7 @@ class PropertyController extends BaseController
             $check_out_date .
             "')  AND B.total_guests < " .
             $request->guest_count .
-            " AND A.payment_done = 1 AND A.is_instant = B.is_instant AND A.property_id = " .
+            " AND A.status = 2 AND A.is_instant = B.is_instant AND A.property_id = " .
             $request->property_id .
             "";
 
@@ -270,7 +270,7 @@ class PropertyController extends BaseController
             $check_out_date .
             "')  AND B.total_guests < " .
             $guest_count .
-            " AND A.payment_done = 1 AND A.property_id = " .
+            " AND A.status = 2 AND A.property_id = " .
             $request->property_id;
 
         $is_available = DB::select($sql);
@@ -985,14 +985,11 @@ class PropertyController extends BaseController
             $source_lng = $request->lng;
             $property_list_obj = new PropertyList();
 
-            $query = $property_list_obj
-                ->join('users', 'users.id', '=', 'property_list.user_id')
-                ->leftjoin('property_room', 'property_room.property_id', '=', 'property_list.id')
-                ->leftjoin('property_blocking', 'property_blocking.property_id', '=', 'property_list.id')
-                ->select('property_list.*', 'property_room.*')
-                ->where('property_list.is_complete', '=', ACTIVE)
-                ->where('property_list.status', '=', 1)
-                ->where('property_list.property_status', '=', 1);
+            $query = $property_list_obj->select('property_list.*')->where([
+                'is_complete' => ACTIVE,
+                'status' => 1,
+                'property_status' => 1,
+            ]);
 
             if (!empty($source_lng) && !empty($source_lat)) {
                 $query
@@ -1020,9 +1017,9 @@ class PropertyController extends BaseController
                 $where[] = 'property_list.room_type = "' . $request->room_type . '" ';
             }
 
-            if (isset($request->instance_booking)) {
-                $where[] = 'property_list.is_instant = 1';
-            }
+            //            if (isset($request->instance_booking)) {
+            //                $where[] = 'property_list.is_instant = 1';
+            //            }
 
             if (isset($request->flexible_cancellation)) {
                 $where[] = "property_list.cancellation_policy = 'Flexible'";
@@ -1055,11 +1052,11 @@ class PropertyController extends BaseController
             $from = strtotime($request->from_date);
             $to = strtotime($request->to_date);
             $query_blocking = [];
-
             if ($from && $to) {
                 $fromDate = date('Y-m-d', $from);
                 $toDate = date('Y-m-d', $to);
                 $property_blocking_obj = new PropertyBlocking();
+                $property_booking_obj = new PropertyBooking();
 
                 $query_blocking = $property_blocking_obj
                     ->select('property_id')
@@ -1080,6 +1077,27 @@ class PropertyController extends BaseController
                     )
                     ->pluck('property_id')
                     ->toArray();
+
+                $query_booking = $property_booking_obj
+                    ->select('property_id')
+                    ->whereRaw(
+                        '(property_booking.start_date between "' .
+                            $fromDate .
+                            '" and "' .
+                            $toDate .
+                            '" OR
+                             property_booking.end_date between "' .
+                            $fromDate .
+                            '" and "' .
+                            $toDate .
+                            '" OR
+                             "' .
+                            $fromDate .
+                            '" between property_booking.start_date and property_booking.end_date) and property_booking.status = 2',
+                    )
+                    ->pluck('property_id')
+                    ->toArray();
+                $query_blocking = array_unique(array_merge($query_blocking, $query_booking));
             }
 
             $dataWhere = implode(" and ", $where);
@@ -1098,12 +1116,11 @@ class PropertyController extends BaseController
             $nearby_properties = $query->get();
             foreach ($nearby_properties as $key => $value) {
                 $image = DB::table('property_images')
-                    ->where('property_id', $value->property_id)
+                    ->where('property_id', $value->id)
                     ->first();
                 $value->image_url = isset($image->image_url) ? $image->image_url : '';
             }
         }
-
         return view('search_property')
             ->with('properties', $nearby_properties)
             ->with('total_count', $total_count)

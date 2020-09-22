@@ -75,14 +75,14 @@
                                                 <table id="billing-table" class="reso-info-table billing-table" style="width:95%">
                                                     <tbody>
                                                     <h4>Payment Details</h4>
-                                                    <tr>
+                                                    <tr id="neat_amount">
                                                         <td class="name pos-rel" >
                                                                 <span class="lang-chang-label">
                                                                     {{$data->count_label}}
                                                                 </span>
                                                             <span class='tooltips'><i style="color:black"  class='fa fa-question-circle'></i><span style="color: white!important" class='tooltiptext'>Total price</span></span>
                                                         </td>
-                                                        <td class="val text-right" id="neat_amount">
+                                                        <td class="val text-right">
                                                             $ {{$data->neat_amount}}
                                                         </td>
                                                     </tr>

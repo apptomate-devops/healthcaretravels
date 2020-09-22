@@ -1180,7 +1180,7 @@
 
                         var tr_data="";
 
-                        tr_data +="<tr style='border-bottom-color: white;'><td style='text-align: left;color:black;padding:5px'> "+data.data.count_label+" &nbsp;</td><td id='neat_amount' style='text-align: right;color:black;padding:0 5px'> $ "+ data.data.neat_amount +"</td></tr>";
+                        tr_data +="<tr id='neat_amount' style='border-bottom-color: white;'><td style='text-align: left;color:black;padding:5px'> "+data.data.count_label+" &nbsp;</td><td class='val' style='text-align: right;color:black;padding:0 5px'> $ "+ data.data.neat_amount +"</td></tr>";
 
                         scheduled_payments.forEach(e => {
                             tr_data +="<tr  class='payment_sections' style='border-bottom-color: white;'><td style='text-align: left;color:black;padding:0 5px'> "+e.day+" &nbsp;</td><td style='text-align: right;color:black;padding:0 5px'> $ "+ e.price +"</td></tr>";

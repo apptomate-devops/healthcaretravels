@@ -58,6 +58,7 @@
                     <thead>
                         <tr>
                             <td>ID</td>
+                            <td>Account</td>
                             <td>Payment Cycle</td>
                             <td>Service Tax</td>
                             <td>Partial Days</td>
@@ -88,6 +89,13 @@
                         @foreach ($booking_transactions as $booking_transaction)
                         <tr>
                             <td>{{$booking_transaction->id}}</td>
+                            <td>
+                                @if($booking_transaction->is_owner == 0)
+                                Traveler
+                                @else
+                                Owner
+                                @endif
+                            </td>
                             <td>{{$booking_transaction->payment_cycle}}</td>
                             <td>{{$booking_transaction->service_tax}}</td>
                             <td>{{$booking_transaction->partial_days}}</td>

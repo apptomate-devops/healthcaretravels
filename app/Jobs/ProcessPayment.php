@@ -57,6 +57,8 @@ class ProcessPayment implements ShouldQueue
      */
     public function failed()
     {
-        Logger::info('Payment Processing job for payment id: ' . $this->payment_id . ' failed at ' . now());
+        $message = 'Payment Processing job for payment id: ' . $this->payment_id . ' failed at ' . now();
+        error_log($message);
+        Logger::error($message);
     }
 }

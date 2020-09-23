@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Helper;
 
-Helper::reloadEnv();
 Helper::set_settings_constants();
 
 class ConstantsController extends Controller

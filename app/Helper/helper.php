@@ -390,6 +390,7 @@ class Helper
 
     public static function set_settings_constants()
     {
+        Helper::reloadEnv();
         $BASE_URL = config("app.url");
 
         define("MAP_MARKER_ICON", "http://api.estatevue2.com/cdn/img/marker-green.png");

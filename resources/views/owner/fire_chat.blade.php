@@ -55,7 +55,7 @@
     <!-- AngularFire -->
     <script src="https://cdn.firebase.com/libs/angularfire/1.1.2/angularfire.min.js"></script>
 
-    <div class="container" style="margin-top: 35px;">
+    <div class="container" style="margin-top: 100px;">
         <div class="row">
             <!-- Widget -->
             <div class="col-md-4">
@@ -76,8 +76,6 @@
                 <div class="md-card md-card-single" ng-controller="ListController">
                     <div class="md-card-toolbar">
                         <div class="md-card-toolbar-actions hidden-print">
-                            <!--  <div class="md-card-dropdown" data-uk-dropdown="{pos:'bottom-right'}"><i class="md-icon material-icons">&#xE3B7;</i><div class="uk-dropdown"><ul class="uk-nav" id="chat_colors"><li class="uk-nav-header">Message Colors</li><li class="uk-active"><a href="#" data-chat-color="chat_box_colors_a">Grey/Green</a></li><li><a href="#" data-chat-color="chat_box_colors_b">Blue/Dark Blue</a></li><li><a href="#" data-chat-color="chat_box_colors_c">Orange/Light Gray</a></li><li><a href="#" data-chat-color="chat_box_colors_d">Deep Purple/Light Grey</a></li></ul></div></div> -->
-                            <i class="material-icons">&#xE314;</i>
                         </div>
                         <div class="" style="display: flex; align-items: center;">
                             <div class="chat_user_avatar" style="margin-right: 6px">
@@ -86,6 +84,9 @@
                             <h3 class="md-card-toolbar-heading-text large">
                                 <span class="uk-text-muted">Chat with</span>
                                 <a href="#">{{$traveller->first_name}} {{$traveller->last_name}}</a>
+                                <span ng-if="messages[messages.length - 1].$id == 'start'">
+                                    , <a href="/property/<%messages[messages.length - 1].property_id%>">Property Link</a>
+                                </span>
                             </h3>
                         </div>
                     </div>
@@ -145,14 +146,15 @@
 
                             </div>
                             <div class="chat_submit_box" id="chat_submit_box">
-                                <div class="uk-input-group">
-
-                                    <input type="text" class="md-input" ng-model="messageSend" name="submit_message" id="submit_message" placeholder="Send message" onchange="youFunction(this.value);" onkeyup="youFunction(this.value);">
-                                    <span style="cursor: pointer;" id="send_msg" class="uk-input-group-addon" ng-click="addMessage()">
-
-                                                                                                            <i class="material-icons md-24">&#xE163;</i>
-
-                                                                                                    </span>
+                               <div class="uk-input-group chat-input-wrapper">
+                                    <div style="width:80%">
+                                        <input type="text" class="md-input mb-0" ng-model="messageSend" name="submit_message" id="submit_message" placeholder="Send message" onchange="checkNotAllowedText(this.value);" onkeyup="checkNotAllowedText(this.value);">
+                                    </div>
+                                    <div>
+                                        <button style="cursor: pointer;" id="send_msg" class="btn btn-primary" ng-click="addMessage()">
+                                            <i class="material-icons md-24 text-white">&#xE163;</i> Send
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -325,6 +327,11 @@
 
             };
 
+            document.addEventListener('keydown',function(event){
+                if(event.keyCode === 13 && document.getElementById('send_msg').style.display != 'none') {
+                    $scope.addMessage();
+                }
+            });
         }]);
 
         app.controller('AddController', ['$scope', '$firebaseArray', '$location', 'FBURL', function($scope, $firebaseArray, $location, FBURL){

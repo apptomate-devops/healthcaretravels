@@ -72,14 +72,9 @@
 
 
             <div class="col-md-8" ng-app="myApp">
-                <!--  <div id="page_content"><div id="page_content_inner"> -->
-                <!-- <div class="uk-width-medium-8-10 uk-container-center"> -->
-                <!--   <div class="uk-grid uk-grid-collapse" data-uk-grid-margin><div class="uk-width-large-7-10"> -->
                 <div class="md-card md-card-single" ng-controller="ListController">
                     <div class="md-card-toolbar">
                         <div class="md-card-toolbar-actions hidden-print">
-                            <!--  <div class="md-card-dropdown" data-uk-dropdown="{pos:'bottom-right'}"><i class="md-icon material-icons">&#xE3B7;</i><div class="uk-dropdown"><ul class="uk-nav" id="chat_colors"><li class="uk-nav-header">Message Colors</li><li class="uk-active"><a href="#" data-chat-color="chat_box_colors_a">Grey/Green</a></li><li><a href="#" data-chat-color="chat_box_colors_b">Blue/Dark Blue</a></li><li><a href="#" data-chat-color="chat_box_colors_c">Orange/Light Gray</a></li><li><a href="#" data-chat-color="chat_box_colors_d">Deep Purple/Light Grey</a></li></ul></div></div> -->
-                            <i class="material-icons">&#xE314;</i>
                         </div>
                         <div class="" style="display: flex; align-items: center;">
                             <div class="chat_user_avatar" style="margin-right: 6px">
@@ -88,6 +83,9 @@
                             <h3 class="md-card-toolbar-heading-text large">
                                 <span class="uk-text-muted">Chat with</span>
                                 <a href="#">{{$owner->first_name}} {{$owner->last_name}}</a>
+                                <span ng-if="messages[messages.length - 1].$id == 'start'">
+                                    , <a href="/property/<%messages[messages.length - 1].property_id%>">Property Link</a>
+                                </span>
                             </h3>
                         </div>
                     </div>
@@ -106,7 +104,7 @@
                                 <img ng-hide="loader == 'yes'" src="http://52.14.214.241/public/loader.gif" style="height: 100px;margin-left: 300px;margin-top: 20px;">
 
                                 <div ng-repeat="message in messages" ng-hide="header == 1">
-                                    <div ng-show="message.id == 'start'"><%message.start_date%></div>
+                                <div ng-show="message.$id == 'start'"><%message.start_date%></div>
                                 <input type="hidden" name="" value="{{$traveller_id}}" ng-model="userid">
                                 <div class="chat_message_wrapper" ng-show="message.sent_by != userid">
                                     <div class="chat_user_avatar">
@@ -280,7 +278,7 @@
             //var node_name = 'instant_chat';
             var chats = new Firebase('{{FB_URL}}'+node_name+'/'+request_id);
             $scope.messages = $firebaseArray(chats);
-            console.log($scope.messages);
+
             if ($scope.messages) {
                 $scope.loader = 'yes';
             }

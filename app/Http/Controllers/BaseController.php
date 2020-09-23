@@ -260,11 +260,7 @@ class BaseController extends ConstantsController
 
     public function send_scheduled_email($to, $template, $subject, $data, $delayInSeconds)
     {
-        $data = array_merge($data, [
-            'BASE_URL' => BASE_URL,
-            'APP_BASE_NAME' => APP_BASE_NAME,
-        ]);
-        Logger::info('Scheduling email job after: ' . $delayInSeconds);
+        Logger::info('Scheduling email to: '. $to . ' after: ' . $delayInSeconds . ' for template: ' . $template);
         ProcessEmail::dispatch($to, 'mail.' . $template, $subject, $data)
             ->delay(now()->addSeconds($delayInSeconds))
             ->onQueue(EMAIL_QUEUE);

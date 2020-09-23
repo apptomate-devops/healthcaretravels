@@ -1203,14 +1203,8 @@ class PropertyController extends BaseController
 
             $guest_info = GuestsInformation::where('booking_id', $booking_id)->get();
             $pet_details = PetInformation::where('booking_id', $booking_id)->first();
-            $data->role_id = $traveller->role_id;
             $data->traveller_profile_image = $traveller->profile_image;
             $data->traveller_name = $traveller->username;
-            $data->owner_role_id = $owner->role_id;
-            $data->owner_profile_image = $owner->profile_image;
-            $data->owner_id = $owner->id;
-            $data->owner_name = $owner->username;
-            $data->owner_default_funding_source = $owner->default_funding_source;
             $data->agency = implode(", ", array_filter([$data->name_of_agency, $data->other_agency])); // Booking agencies
 
             $payment_summary = $this->get_payment_summary($data, 1);
@@ -1219,6 +1213,7 @@ class PropertyController extends BaseController
 
             return view('owner.single_booking', [
                 'data' => $data,
+                'owner' => $owner,
                 'guest_info' => $guest_info,
                 'pet_details' => $pet_details,
                 'scheduled_payments' => $payment_summary['scheduled_payments'],

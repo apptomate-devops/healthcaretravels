@@ -267,7 +267,7 @@ class PropertyController extends BaseController
             'traveller_id = "' .
                 $user_id .
                 ($booking_id ? '" AND booking_id != "' . $booking_id : '') .
-                '" AND ((start_date BETWEEN "' .
+                '" AND status != 8 AND ((start_date BETWEEN "' .
                 $check_in .
                 '" AND "' .
                 $check_out .
@@ -280,9 +280,13 @@ class PropertyController extends BaseController
                 '" BETWEEN start_date AND end_date))',
         )->get();
         if (count($requestAlreadyExists)) {
+            $my_trips_url = BASE_URL . 'traveler/my-reservations';
             return response()->json([
                 'status' => 'FAILED',
-                'message' => 'Sorry! You have already requested booking for selected date range.',
+                'message' =>
+                    'You already have a booking overlapping these dates. Try a different date range or cancel your booking on the <a style="color: white;text-decoration-line: underline;" href=' .
+                    $my_trips_url .
+                    '>My Trips</a> page.',
                 'status_code' => ZERO,
                 'request_already_exists' => ONE,
                 'request_data' => $requestAlreadyExists,
@@ -890,13 +894,13 @@ class PropertyController extends BaseController
             if ($request->link == 1) {
                 return $this->single_booking($request->booking_id, $request);
             }
-            return response()->json(['status' => 'SUCCESS']);
+            return response()->json(['success' => true]);
         }
         if ($request->link == 1) {
             $url = $this->get_base_url() . 'login';
             return redirect($url)->with('error', 'Login with Owner account');
         }
-        return response()->json(['status' => 'ERROR']);
+        return response()->json(['success' => false]);
     }
 
     public function reservations(Request $request)

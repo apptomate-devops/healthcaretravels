@@ -11,8 +11,16 @@ use App\Models\Settings;
 
 class Helper
 {
+    public static function setConstantsHelper()
+    {
+        if (!defined('GENERAL_MAIL')) {
+            Helper::set_settings_constants();
+        }
+    }
+
     public static function send_custom_email($email, $subject, $view_name, $data, $title, $from = GENERAL_MAIL)
     {
+        Helper::setConstantsHelper();
         $mail_title = $title ?? 'Health Care Travels';
         $mail_from = $from ? $from : GENERAL_MAIL;
         try {
@@ -31,33 +39,52 @@ class Helper
     public static function generate_idempotency_key($payment)
     {
         $data = [$payment->id, $payment->booking_id, $payment->is_owner];
-        return ['Idempotency-Key' => implode("-",$data)];
+        return ['Idempotency-Key' => implode("-", $data)];
     }
 
-    public static function process_booking_payment($booking_id, $payment_cycle, $is_owner = 0)
+    public static function send_payment_email($payment, $fundingSource, $success = false, $is_init = false)
     {
-        $payment = BookingPayments::where('booking_id', $booking_id)
-            ->where('payment_cycle', $payment_cycle)
-            ->where('is_owner', $is_owner)
-            ->first();
-        if (empty($payment)) {
-            return ['success' => false, 'message' => 'No such payment exists!'];
-        }
+        $dwolla = new Dwolla();
         $booking = $payment->booking;
-        $traveler = $booking->traveler;
-        $name = $traveler->first_name . ' ' . $traveler->last_name;
+        $is_owner = boolval($payment->is_owner);
+        $user = $is_owner ? $booking->owner : $booking->traveler;
+        $name = $user->first_name . ' ' . $user->last_name;
         $fundingSourceDetails = null;
         $subjectDate = Carbon::now()->format('m/d');
         $data = [
             'name' => $name,
             'amount' => $payment->total_amount,
-            'booking_id' => $booking_id,
-            'deposit' => boolval($is_owner),
+            'booking_id' => $booking->booking_id,
+            'deposit' => $is_owner,
         ];
-        $dwolla = new Dwolla();
-        if (!defined('GENERAL_MAIL')) {
-            Helper::set_settings_constants();
+        $mailTemplate = 'mail.payment-failure';
+        $fundingSourceDetails = $dwolla->getFundingSourceDetails($fundingSource);
+        $subject = 'URGENT: Payment Failure on ' . $subjectDate;
+        if ($success) {
+            $mailTemplate = 'mail.payment-success';
+            $subject = 'Payment Successfully Processed on ' . $subjectDate;
         }
+        if ($is_init) {
+            $mailTemplate = 'mail.payment-success-init';
+            $subject = 'Your ' . ($is_owner ? 'Deposit' : 'Payment') . ' is Processing';
+        }
+        $data['accountName'] = $fundingSourceDetails->name;
+        Helper::send_custom_email($user->email, $subject, $mailTemplate, $data, 'Payment Processed');
+    }
+    public static function process_booking_payment($booking_id, $payment_cycle, $is_owner = 0)
+    {
+        Helper::setConstantsHelper();
+        $payment = BookingPayments::where('booking_id', $booking_id)
+            ->where('payment_cycle', $payment_cycle)
+            ->where('is_owner', $is_owner)
+            ->first();
+        if (empty($payment)) {
+            Logger::info('No Payment found for booking: ' . $booking_id . ' :: paymentCycle: ' . $payment_cycle);
+            return ['success' => false, 'message' => 'No such payment exists!'];
+        }
+        $dwolla = new Dwolla();
+        $booking = $payment->booking;
+        $fundingSource = $booking->funding_source;
         try {
             // Processing first payment cycle from user's side
             Logger::info(
@@ -67,17 +94,16 @@ class Helper
                     $payment_cycle .
                     ($is_owner ? ' To Owner' : ' From Traveler'),
             );
-            $fundingSource = $booking->funding_source;
             // Total amount is rent - service for traveler
             $amount = $payment->total_amount + $payment->service_tax;
             if ($is_owner) {
                 // Total amount is rent - service for traveler
                 $amount = $payment->total_amount - $payment->service_tax;
+                $fundingSource = $booking->owner_funding_source;
             }
             $transferDetails = null;
             $idempotency = Helper::generate_idempotency_key($payment);
             if ($is_owner) {
-                $fundingSource = $booking->owner_funding_source;
                 $transferDetails = $dwolla->createTransferToCustomer($fundingSource, $amount, $idempotency);
             } else {
                 $transferDetails = $dwolla->createTransferToMasterDwolla($fundingSource, $amount, $idempotency);
@@ -88,10 +114,7 @@ class Helper
             $payment->processed_time = Carbon::now()->toDateTimeString();
             $payment->is_processed = 1;
             $payment->save();
-            $fundingSourceDetails = $dwolla->getFundingSourceDetails($fundingSource);
-            $subject = 'Payment Successfully Processed on ' . $subjectDate;
-            $data['accountName'] = $fundingSourceDetails->name;
-            Helper::send_custom_email($traveler->email, $subject, 'mail.payment-success', $data, 'Payment Processed');
+            Helper::send_payment_email($payment, $fundingSource, true, true);
             return ['success' => true, 'message' => 'Payment has been processed successfully!'];
         } catch (\Exception $ex) {
             $message = $ex->getMessage();
@@ -105,12 +128,7 @@ class Helper
             $payment->is_processed = 1;
             $payment->failed_reason = $message;
             $payment->save();
-            if (empty($fundingSourceDetails)) {
-                $fundingSourceDetails = $dwolla->getFundingSourceDetails($fundingSource);
-            }
-            $data['accountName'] = $fundingSourceDetails->name;
-            $subject = 'URGENT: Payment Failure on ' . $subjectDate;
-            Helper::send_custom_email($traveler->email, $subject, 'mail.payment-failure', $data, 'Payment Processed');
+            Helper::send_payment_email($payment, $fundingSource, false);
             return ['success' => false, 'message' => $message];
         }
     }
@@ -377,6 +395,7 @@ class Helper
         define("STATIC_IMAGE", "http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg");
         define("APP_BASE_NAME", "Health Care Travels");
         define("APP_ENV", env("APP_ENV", "local"));
+        define("IS_LOCAL", env("APP_ENV", "local") == "local");
         define("EMAIL_QUEUE", env("APP_ENV", "local") . ":emails");
         define("PAYMENT_QUEUE", env("APP_ENV", "local") . ":payments");
         define("DWOLLA_ENV", config('services.dwolla.env'));

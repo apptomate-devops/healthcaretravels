@@ -10,6 +10,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Mail;
+use App\Services\Logger;
+use Helper;
 
 class ProcessEmail implements ShouldQueue
 {
@@ -18,6 +20,12 @@ class ProcessEmail implements ShouldQueue
     protected $view;
     protected $data;
     protected $subject;
+    /**
+     * The number of seconds to wait before retrying the job.
+     *
+     * @var int
+     */
+    public $backoff = 3;
     /**
      * Create a new job instance.
      *
@@ -38,16 +46,7 @@ class ProcessEmail implements ShouldQueue
      */
     public function handle()
     {
-        try {
-            error_log('sending email');
-            Mail::send($this->view, $this->data, function ($message) {
-                $message->from('gotocva@gmail.com', 'Mail from ' . $this->data['APP_BASE_NAME']);
-                $message->to($this->to);
-                $message->subject($this->subject);
-            });
-        } catch (Exception $e) {
-            error_log($e);
-        }
+        Helper::send_custom_email($this->to, $this->subject, $this->view, $this->data, null, null);
     }
 
     public function failed()

@@ -240,7 +240,7 @@ class Dwolla
             $all_funding_sources = $this->fsApi->getCustomerFundingSources($customerId);
             $funding_sources = $all_funding_sources->_embedded->{'funding-sources'};
             return array_filter($funding_sources, function ($source) {
-                if ($source->status == 'verified' && $source->type != 'balance') {
+                if ($source->status == 'verified' && $source->type != 'balance' && $source->removed == false) {
                     return true;
                 }
             });
@@ -263,6 +263,9 @@ class Dwolla
         // "https://api-sandbox.dwolla.com/funding-sources/914d31a8-458a-4d13-bd94-39aab09cb7a0"
         if (empty($source)) {
             throw new \Exception('Invalid source value');
+        }
+        if(IS_LOCAL) {
+            $amount = 20;
         }
         $payload = [
             '_links' => [
@@ -293,6 +296,9 @@ class Dwolla
     {
         if (empty($destination)) {
             throw new \Exception('Invalid source value');
+        }
+        if(IS_LOCAL) {
+            $amount = 20;
         }
         $payload = [
             '_links' => [

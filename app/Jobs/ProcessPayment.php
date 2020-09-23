@@ -19,6 +19,12 @@ class ProcessPayment implements ShouldQueue
     protected $payment_id;
 
     /**
+     * The number of seconds to wait before retrying the job.
+     *
+     * @var int
+     */
+    public $backoff = 10;
+    /**
      * Create a new job instance.
      *
      * @return void
@@ -51,6 +57,8 @@ class ProcessPayment implements ShouldQueue
      */
     public function failed()
     {
-        Logger::info('Payment Processing job for payment id: ' . $this->payment_id . ' failed at ' . now());
+        $message = 'Payment Processing job for payment id: ' . $this->payment_id . ' failed at ' . now();
+        error_log($message);
+        Logger::error($message);
     }
 }

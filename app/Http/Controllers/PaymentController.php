@@ -8,6 +8,7 @@ use App\Models\Users;
 use App\Models\BookingPayments;
 use App\Models\DwollaEvents;
 use Carbon\Carbon;
+use Helper;
 
 class PaymentController extends BaseController
 {
@@ -174,19 +175,21 @@ class PaymentController extends BaseController
         if (empty($payment)) {
             return response()->json(['success' => false, 'message' => 'resource id does not exists!']);
         }
+        $booking = $payment->booking;
+        $fundingSource = $payment->is_owner ? $booking->owner_funding_source : $booking->funding_source;
         switch ($eventType) {
             case 'transfer_cancelled':
             case 'transfer_failed':
-                // TODO: ask if we want to send another email notifying user that payment failed for some reason.
                 $payment->failed_time = Carbon::parse($request->timestamp)->toDateTimeString();
                 $payment->is_cleared = -1;
                 $payment->save();
+                Helper::send_payment_email($payment, $fundingSource, false);
                 break;
             case 'transfer_completed':
                 $payment->confirmed_time = Carbon::parse($request->timestamp)->toDateTimeString();
                 $payment->is_cleared = 1;
                 $payment->save();
-                // TODO: ask if we want to send another email confirming that payment went through.
+                Helper::send_payment_email($payment, $fundingSource, true);
                 break;
             default:
                 Logger::info('Not required event received');

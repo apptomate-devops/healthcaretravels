@@ -7,9 +7,6 @@
 @section('main_content')
 
 <style type="text/css">
-        /* .header_double_height {
-            padding-top: 130px;
-        } */
         .chat_box.chat_box_colors_a .chat_message_wrapper.chat_message_right ul.chat_message>li {
             background: #0983b8 !important;
         }
@@ -42,13 +39,13 @@
             font-size: 16px;
         }
     </style>
-    <link rel="stylesheet" href="{{ URL::asset('assets/icons/flags/flags.min.css') }}" media="all">
+    <link rel="stylesheet" href="{{ URL::asset('public/assets/icons/flags/flags.min.css') }}" media="all">
     <!-- style switcher -->
-    <link rel="stylesheet" href="{{ URL::asset('assets/css/style_switcher.min.css') }}" media="all">
+    <link rel="stylesheet" href="{{ URL::asset('public/assets/css/style_switcher.min.css') }}" media="all">
     <!-- altair admin -->
-    <link rel="stylesheet" href="{{ URL::asset('assets/css/main.min.css') }}" media="all">
+    <link rel="stylesheet" href="{{ URL::asset('public/assets/css/main.min.css') }}" media="all">
     <!-- themes -->
-    {{--   <link rel="stylesheet" href="{{ URL::asset('assets/css/themes/themes_combined.min.css') }}" media="all"> --}}
+    {{--   <link rel="stylesheet" href="{{ URL::asset('public/assets/css/themes/themes_combined.min.css') }}" media="all"> --}}
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
     <script src="https://code.angularjs.org/1.4.4/angular-route.min.js"></script>
 
@@ -57,7 +54,8 @@
 
     <!-- AngularFire -->
     <script src="https://cdn.firebase.com/libs/angularfire/1.1.2/angularfire.min.js"></script>
-    <div class="container" style="margin-top: 100px;">
+
+    <div class="container" style="margin-top: 35px;">
         <div class="row">
             <!-- Widget -->
             <div class="col-md-4">
@@ -87,7 +85,7 @@
                             </div>
                             <h3 class="md-card-toolbar-heading-text large">
                                 <span class="uk-text-muted">Chat with</span>
-                                <a href="#">{{$owner->first_name}} {{$owner->last_name}}</a>
+                                <a href="#">{{$traveller->first_name}} {{$traveller->last_name}}</a>
                             </h3>
                         </div>
                     </div>
@@ -100,25 +98,20 @@
                         <div class="chat_box_wrapper">
                             <div class="chat_box touchscroll chat_box_colors_a" id="chat" >
 
-                                <div ng-if="loader">
-
-                                </div>
-                                <img ng-hide="loader == 'yes'" src="http://52.14.214.241/public/loader.gif" style="height: 100px;margin-left: 300px;margin-top: 20px;">
-
                                 <div ng-repeat="message in messages" ng-hide="header == 1">
                                     <div ng-show="message.id == 'start'"><%message.start_date%></div>
-                                <input type="hidden" name="" value="{{$traveller_id}}" ng-model="userid">
+                                <input type="hidden" name="" value="{{$owner->id}}" ng-model="userid">
                                 <div class="chat_message_wrapper" ng-show="message.sent_by != userid">
                                     <div class="chat_user_avatar">
-                                        @if($owner->profile_image != " ")
-                                            <img class="md-user-image" src="{{$owner->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt=""/>
+                                        @if($traveller->profile_image != " ")
+                                            <img class="md-user-image" src="{{$traveller->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt=""/>
                                         @else
                                             <img class="md-user-image" src="/user_profile_default.png" alt=""/>
                                         @endif
                                     </div>
                                     <ul class="chat_message">
                                         <li>
-                                            <p>
+                                            <p> 
                                                 <%message.message%>
                                                 <span class="chat_message_time"><%message.date%></span>
                                             </p>
@@ -129,8 +122,8 @@
 
                                 <div class="chat_message_wrapper chat_message_right" ng-show="message.sent_by == userid">
                                     <div class="chat_user_avatar">
-                                        @if($traveller->profile_image != " ")
-                                            <img class="md-user-image" src="{{$traveller->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt=""/>
+                                        @if($owner->profile_image != " ")
+                                            <img class="md-user-image" src="{{$owner->profile_image}}" alt="" onerror="this.onerror=null;this.src='/user_profile_default.png';" />
                                         @else
                                             <img class="md-user-image" src="/user_profile_default.png" alt=""/>
                                         @endif
@@ -138,12 +131,10 @@
                                     </div>
                                     <ul class="chat_message">
                                         <li>
-                                            <p>
+                                            <p> 
                                                 <%message.message%>
                                                 <span class="chat_message_time"><%message.date%></span>
-
                                             </p>
-
                                         </li>
 
                                     </ul>
@@ -154,17 +145,14 @@
 
                             </div>
                             <div class="chat_submit_box" id="chat_submit_box">
-                                <div class="uk-input-group chat-input-wrapper">
+                                <div class="uk-input-group">
 
-                                    
-                                    <div style="width:80%">
-                                        <input type="text" class="md-input mb-0" ng-model="messageSend" name="submit_message" id="submit_message" placeholder="Send message" onchange="checkNotAllowedText(this.value);" onkeyup="checkNotAllowedText(this.value);">
-                                    </div>
-                                    <div>
-                                        <button style="cursor: pointer;" id="send_msg" class="btn btn-primary" ng-click="addMessage()">
-                                            <i class="material-icons md-24 text-white">&#xE163;</i> Send
-                                        </button>
-                                    </div>
+                                    <input type="text" class="md-input" ng-model="messageSend" name="submit_message" id="submit_message" placeholder="Send message" onchange="youFunction(this.value);" onkeyup="youFunction(this.value);">
+                                    <span style="cursor: pointer;" id="send_msg" class="uk-input-group-addon" ng-click="addMessage()">
+
+                                                                                                            <i class="material-icons md-24">&#xE163;</i>
+
+                                                                                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -185,7 +173,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="exampleModalLabel"><span style="color:red">Warning</span></h4>
+            <h4 class="modal-title" id="exampleModalLabel"><b><span style="color:red">Warning</span></b></h4>
           </div>
           <div class="modal-body">
             You are receiving this message either because you are attempting to send information that is either NOT allowed by Health Care Travels Terms of Use and Polices or in error. If you feel this message is in error contact <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com</a>
@@ -197,21 +185,22 @@
       </div>
     </div>
     <!-- common functions -->
-    <script src="{{ URL::asset('bower_components/common.min.js') }}"></script>
+    <script src="{{ URL::asset('public/bower_components/common.min.js') }}"></script>
     <!-- uikit functions -->
-    <script src="{{ URL::asset('bower_components/uikit_custom.min.js') }}"></script>
+    <script src="{{ URL::asset('public/bower_components/uikit_custom.min.js') }}"></script>
     <!-- altair common functions/helpers -->
-    <script src="{{ URL::asset('bower_components/altair_admin_common.min.js') }}"></script>
+    <script src="{{ URL::asset('public/bower_components/altair_admin_common.min.js') }}"></script>
     <!-- page specific plugins -->
     <!--  chat functions -->
-    <script src="{{ URL::asset('bower_components/page_chat.min.js') }}"></script>
-     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="{{ URL::asset('public/bower_components/page_chat.min.js') }}"></script>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <!-- Contact
 ================================================== -->
     <!-- Footer
 ================================================== -->
-    @include('includes.footer')
+   
     <!-- Footer / End -->
     <!-- Back To Top Button -->
     <div id="backtotop">
@@ -221,7 +210,7 @@
 ================================================== -->
     <script type="text/javascript">
 
-        function checkNotAllowedText(msg){
+         function youFunction(msg){
 
             var matches = msg.match(/\d+/g);
             if(matches == null){
@@ -230,7 +219,7 @@
 
                 var isEvery = checkInput(str,arr);
                 console.log(isEvery);
-
+                
                 if(isEvery == true){
                     $("#send_msg").hide();
                     $('#myModal').modal();
@@ -244,20 +233,18 @@
                 $('#myModal').modal();
                 // alert('You are receiving this message either because you are attempting to send information that is either NOT allowed by Health Care Travels Terms of Use and Polices or in error. If you feel this message is in error contact support@healthcaretravels.com');
             }
-
-
+            
+           
         }
-
+     
         function checkInput(input, words) {
             return words.some(word => input.toLowerCase().includes(word.toLowerCase()));
         }
-        // function checkIfEmailInString(text) {
-        //     var re = /(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
-        //     return re.test(text);
-        // }
-
-        
-
+     
+        function checkIfEmailInString(text) { 
+            var re = /(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
+            return re.test(text);
+        }
 
         var app = angular.module('myApp', ['firebase'], function($interpolateProvider) {
             $interpolateProvider.startSymbol('<%');
@@ -281,12 +268,9 @@
             var chats = new Firebase('{{FB_URL}}'+node_name+'/'+request_id);
             $scope.messages = $firebaseArray(chats);
             console.log($scope.messages);
-            if ($scope.messages) {
-                $scope.loader = 'yes';
-            }
-            //alert($scope.loader);
 
-            $scope.userid = {{$traveller_id}};
+
+            $scope.userid = '{{$owner->id}}';
             $scope.removeProduct = function(id) {
                 var ref = new Firebase('{{FB_URL}}'+node_name+'/'+request_id+'/' + id);
                 var product = $firebaseObject(ref)
@@ -297,26 +281,49 @@
                 var ref = new Firebase('{{FB_URL}}'+node_name+'/'+request_id);
             // {"date":"13/03/2018 10:33:38","message":"Hi bubblu Enquiry sent for Sunset Cave Hosue 2guests,
                 // -","owner_id":73,"property_id":"2","sent_by":"37","traveller_id":"37"}
-                var product = $firebaseArray(ref);
-                product.$add({
-                    message: $scope.messageSend,
-                    sent_by: $scope.userid,
-                    owner_id: $scope.userid,
-                    traveller_id: 1,
-                    property_id: 1,
-                    date: current_date,
-                    read: false,
-                });
+                var message = $scope.messageSend;
+                var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                var status = re.test(message);
+                var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+                var p_status = urlRegex.test(message);
+
+                function isANumber( n ) {
+                    var numStr = /(?:\d.*?){3,}/;
+                    return numStr.test( n.toString() );
+                }
+                console.log(message);
+                var a = isANumber(message);
+                if(a){
+                    var n_status = true;
+                }
+                if (!status) {
+                    if (!p_status) {
+                        if(!n_status){
+                            var product = $firebaseArray(ref);
+                            product.$add({
+                                message: $scope.messageSend,
+                                sent_by: $scope.userid,
+                                owner_id: $scope.userid,
+                                traveller_id: 1,
+                                property_id: 1,
+                                date: current_date
+                            });
+                        }else{
+                            alert("Numbers are not allowed");
+                            //return false;
+                        }
+                        
+                    } else {
+                        alert("Websites are not allowed to send");
+                    }
+                } else {
+                    alert("Email are not allowed to send");
+                }
+                
 
                 delete $scope.messageSend;
 
             };
-
-        document.addEventListener('keydown',function(event){
-            if(event.keyCode === 13 && document.getElementById('send_msg').style.display != 'none') {
-                $scope.addMessage();
-            }
-        });
 
         }]);
 
@@ -338,10 +345,6 @@
 
 
 
-    <!-- DropZone | Documentation: http://dropzonejs.com -->
-
-
-
 
 
 
@@ -351,18 +354,19 @@
     <script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
     <!-- GeoFire -->
     <script src="https://cdn.firebase.com/libs/geofire/4.1.2/geofire.min.js"></script>
+
     <script>
 
         // Initialize Firebase
-    var config = {
-        apiKey: "AIzaSyAp8NYnsYWc_E_78Ou4yXHDH4PasZuYs58",
-        authDomain: "health-care-travels.firebaseapp.com",
-        databaseURL: "https://health-care-travels.firebaseio.com",
-        projectId: "health-care-travels",
-        storageBucket: "health-care-travels.appspot.com",
-        messagingSenderId: "420688223951",
-        appId: "1:420688223951:web:5518320dc1d350fe1fe1ba"
-    }
+        var config = {
+            apiKey: "AIzaSyAp8NYnsYWc_E_78Ou4yXHDH4PasZuYs58",
+            authDomain: "health-care-travels.firebaseapp.com",
+            databaseURL: "https://health-care-travels.firebaseio.com",
+            projectId: "health-care-travels",
+            storageBucket: "health-care-travels.appspot.com",
+            messagingSenderId: "420688223951",
+            appId: "1:420688223951:web:5518320dc1d350fe1fe1ba"
+        };
         firebase.initializeApp(config);
 
         // Create a Firebase reference where GeoFire will store its information
@@ -401,9 +405,9 @@
             var file_data = $('#profile_image').prop('files')[0];
             var form_data = new FormData();
             form_data.append('profile_image', file_data);
-            form_data.append('_token', "{{csrf_token()}}");
+            //alert(form_data);
             $.ajax({
-                url: '/update-profile-picture', // point to server-side PHP script
+                url: 'owner-update-profile', // point to server-side PHP script
                 dataType: 'text',  // what to expect back from the PHP script, if anything
                 cache: false,
                 contentType: false,
@@ -434,30 +438,5 @@
         }
     </script>
     <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
-    <script type="text/javascript">
-        $('#button').click(function (e) {
-            var isvalid = true;
-            var checki=true;
-            $(".validate").each(function () {
-                if ($.trim($(this).val()) == '') {
-                    isValid = false;
-                    $(this).css({
-                        "border-color": "1px solid red",
-                        "background": ""
-                    });
-                    //alert("Please fill all required fields");
-                    if (isValid == false)
-                        e.preventDefault();
-                }
-                else {
-                    $(this).css({
-                        "border": "2px solid green",
-                        "background": ""
-                    });
-
-                }
-            });
-
-        });
-    </script>
+   
 @endsection

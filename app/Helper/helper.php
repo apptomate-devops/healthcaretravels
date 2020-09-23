@@ -11,8 +11,16 @@ use App\Models\Settings;
 
 class Helper
 {
+    public static function setConstantsHelper()
+    {
+        if (!defined('GENERAL_MAIL')) {
+            Helper::set_settings_constants();
+        }
+    }
+
     public static function send_custom_email($email, $subject, $view_name, $data, $title, $from = GENERAL_MAIL)
     {
+        Helper::setConstantsHelper();
         $mail_title = $title ?? 'Health Care Travels';
         $mail_from = $from ? $from : GENERAL_MAIL;
         try {
@@ -65,6 +73,7 @@ class Helper
     }
     public static function process_booking_payment($booking_id, $payment_cycle, $is_owner = 0)
     {
+        Helper::setConstantsHelper();
         $payment = BookingPayments::where('booking_id', $booking_id)
             ->where('payment_cycle', $payment_cycle)
             ->where('is_owner', $is_owner)
@@ -74,9 +83,6 @@ class Helper
             return ['success' => false, 'message' => 'No such payment exists!'];
         }
         $dwolla = new Dwolla();
-        if (!defined('GENERAL_MAIL')) {
-            Helper::set_settings_constants();
-        }
         $booking = $payment->booking;
         $fundingSource = $booking->funding_source;
         try {

@@ -38,7 +38,8 @@ class Helper
     {
         $dwolla = new Dwolla();
         $booking = $payment->booking;
-        $user = boolval($booking->is_owner) ? $booking->owner : $booking->traveler;
+        $is_owner = boolval($payment->is_owner);
+        $user = $is_owner ? $booking->owner : $booking->traveler;
         $name = $user->first_name . ' ' . $user->last_name;
         $fundingSourceDetails = null;
         $subjectDate = Carbon::now()->format('m/d');
@@ -46,7 +47,7 @@ class Helper
             'name' => $name,
             'amount' => $payment->total_amount,
             'booking_id' => $booking->booking_id,
-            'deposit' => boolval($booking->is_owner),
+            'deposit' => $is_owner,
         ];
         $mailTemplate = 'mail.payment-failure';
         $fundingSourceDetails = $dwolla->getFundingSourceDetails($fundingSource);
@@ -57,7 +58,7 @@ class Helper
         }
         if ($is_init) {
             $mailTemplate = 'mail.payment-success-init';
-            $subject = 'Your ' . (boolval($booking->is_owner) ? 'Deposit' : 'Payment') . ' is Processing';
+            $subject = 'Your ' . ($is_owner ? 'Deposit' : 'Payment') . ' is Processing';
         }
         $data['accountName'] = $fundingSourceDetails->name;
         Helper::send_custom_email($user->email, $subject, $mailTemplate, $data, 'Payment Processed');

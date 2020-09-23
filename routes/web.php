@@ -128,7 +128,7 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::POST('/save-guest-information', 'PropertyController@save_guest_information');
 
     // Owner
-    Route::get('/owner/inbox', 'PropertyController@inbox');
+    Route::get('/owner/inbox', 'PropertyController@inbox_owner');
     Route::get('/owner/favorites', 'PropertyController@favorites');
     Route::GET('/owner/transaction-history', 'TransactionController@transaction_history');
     Route::GET('/owner/special_price', 'OwnerController@special_price');

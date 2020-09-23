@@ -691,7 +691,7 @@ class PropertyController extends BaseController
         return view('owner.fire_chat', ['owner' => $owner, 'traveller' => $traveller, 'id' => $id]);
     }
 
-    public function inbox(Request $request)
+    public function inbox_owner(Request $request)
     {
         $user_id = $request->session()->get('user_id');
 

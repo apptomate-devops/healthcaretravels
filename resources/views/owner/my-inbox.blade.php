@@ -6,7 +6,7 @@
 <div class="container" style="margin-top: 35px;">
     <div class="row">
 
-        
+
         <!-- Widget -->
         <div class="col-md-4">
             <div class="sidebar left">
@@ -32,93 +32,93 @@
 
                 <!-- Item #1 -->
                 @foreach($properties[0] as $property)
-                <?php if (count($property->traveller) != 0) { ?>
-                    <tr>
-                        <td class="title-container">
+                @if(isset($property->traveller) != 0)
+                <tr>
+                    <td class="title-container">
 
-                            @if($property->traveller->profile_image != null)
-                            <img style="border-radius: 11px;" src="{{$property->traveller->profile_image}}" alt="">
-                            @else
-                            <img style="border-radius: 11px;" src="http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg" alt="">
-                            @endif
-                            <div class="title">
-                                <h4><a href="#">{{$property->traveller->first_name}} {{$property->traveller->last_name}}</a></h4>
-                                <span> {{$property->last_message}} </span>
+                        @if($property->traveller->profile_image != null)
+                        <img style="border-radius: 11px;" src="{{$property->traveller->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt="">
+                        @else
+                        <img style="border-radius: 11px;" src="/user_profile_default.png" alt="">
+                        @endif
+                        <div class="title">
+                            <h4><a href="#">{{$property->traveller->first_name}} {{$property->traveller->last_name}}</a></h4>
+                            <span> {{$property->last_message}} </span>
 
-                                <span class="table-property-price"></span>
+                            <span class="table-property-price"></span>
 
-                            </div>
-                        </td>
-                        <td>{{--<h4>Subject:</h4><h5>Message from keepers</h5>--}}</td>
-
-
-              <td class="action">
-                        <button class="button" onclick="location.href ='{{url('/')}}/owner/chat/{{$property->id}}?fb-key={{$property->chat_key}}&fbkey={{$property->chat_key}}';" ><i class="fa fa-reply"></i> Reply</button>
-                        {{--<a href="#"><i class="fa  fa-eye-slash"></i> Hide</a>--}}
-                        <button class="button"  onclick="location.href ='{{url('/')}}/delete_chat/{{$property->id}}';" style="background-color: #e78016;"  class="delete"><i class="fa fa-remove"></i> Delete</button>
+                        </div>
                     </td>
-                    </tr>
-                <?php } ?>
+                    <td>{{--<h4>Subject:</h4><h5>Message from keepers</h5>--}}</td>
+
+
+                    <td class="action">
+                        <button class="button" onclick="location.href ='{{url('/')}}/owner/chat/{{$property->id}}?fb-key={{$property->chat_key}}&fbkey={{$property->chat_key}}';"><i class="fa fa-reply"></i> Reply</button>
+                        {{--<a href="#"><i class="fa  fa-eye-slash"></i> Hide</a>--}}
+                        <button class="button" onclick="location.href ='{{url('/')}}/delete_chat/{{$property->id}}';" style="background-color: #e78016;" class="delete"><i class="fa fa-remove"></i> Delete</button>
+                    </td>
+                </tr>
+                @endif
                 @endforeach
 
                 @foreach($properties[1] as $property)
-                <?php if (count($property->traveller) != 0) { ?>
-                    <tr>
-                        <td class="title-container">
+                @if(isset($property->traveller) != 0)
+                <tr>
+                    <td class="title-container">
 
-                            @if($property->traveller->profile_image != null)
-                            <img style="border-radius: 11px;" src="{{$property->traveller->profile_image}}" alt="">
-                            @else
-                            <img style="border-radius: 11px;" src="http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg" alt="">
-                            @endif
-                            <div class="title">
-                                <h4><a href="#">{{$property->traveller->first_name}} {{$property->traveller->last_name}}</a></h4>
-                                <span> {{$property->last_message}} </span>
+                        @if($property->traveller->profile_image != null)
+                        <img style="border-radius: 11px;" src="{{$property->traveller->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt="">
+                        @else
+                        <img style="border-radius: 11px;" src="/user_profile_default.png" alt="">
+                        @endif
+                        <div class="title">
+                            <h4><a href="#">{{$property->traveller->first_name}} {{$property->traveller->last_name}}</a></h4>
+                            <span> {{$property->last_message}} </span>
 
-                                <span class="table-property-price"></span>
+                            <span class="table-property-price"></span>
 
-                            </div>
-                        </td>
-                        <td>{{--<h4>Subject:</h4><h5>Message from keepers</h5>--}}</td>
+                        </div>
+                    </td>
+                    <td>{{--<h4>Subject:</h4><h5>Message from keepers</h5>--}}</td>
 
 
-                        <td clas                s="action">
-                            <button class="button" onclick="location.href ='{{url('/')}}/owner/chat/{{$property->id}}?fb-key={{$property->chat_key}}&fbkey={{$property->chat_key}}';" ><i class="fa fa-reply"></i> Reply</button>
-                            {{--<a href="#"><i class="fa  fa-eye-slash"></i> Hide</a>--}}
-                            <button class="button" style="background-color: #e78016;" onclick="location.href ='{{url('/')}}/delete_chat/{{$property->id}}';" class="delete"><i class="fa fa-remove"></i> Delete</button>
-                        </td>
-                    </tr>
-                <?php } ?>
+                    <td clas s="action">
+                        <button class="button" onclick="location.href ='{{url('/')}}/owner/chat/{{$property->id}}?fb-key={{$property->chat_key}}&fbkey={{$property->chat_key}}';"><i class="fa fa-reply"></i> Reply</button>
+                        {{--<a href="#"><i class="fa  fa-eye-slash"></i> Hide</a>--}}
+                        <button class="button" style="background-color: #e78016;" onclick="location.href ='{{url('/')}}/delete_chat/{{$property->id}}';" class="delete"><i class="fa fa-remove"></i> Delete</button>
+                    </td>
+                </tr>
+                @endif
                 @endforeach
 
                 @foreach($properties[2] as $property)
-                <?php if (count($property->traveller) != 0) { ?>
-                    <tr>
-                        <td class="title-container">
+                @if(isset($property->traveller) != 0)
+                <tr>
+                    <td class="title-container">
 
-                            @if($property->traveller->profile_image != null)
-                            <img style="border-radius: 11px;" src="{{$property->traveller->profile_image}}" alt="">
-                            @else
-                            <img style="border-radius: 11px;" src="http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg" alt="">
-                            @endif
-                            <div class="title">
-                                <h4><a href="#">{{$property->traveller->first_name}} {{$property->traveller->last_name}}</a></h4>
-                                <span> {{$property->last_message}} </span>
+                        @if($property->traveller->profile_image != null)
+                        <img style="border-radius: 11px;" src="{{$property->traveller->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt="">
+                        @else
+                        <img style="border-radius: 11px;" src="/user_profile_default.png" alt="">
+                        @endif
+                        <div class="title">
+                            <h4><a href="#">{{$property->traveller->first_name}} {{$property->traveller->last_name}}</a></h4>
+                            <span> {{$property->last_message}} </span>
 
-                                <span class="table-property-price"></span>
+                            <span class="table-property-price"></span>
 
-                            </div>
-                        </td>
-                        <td>{{--<h4>Subject:</h4><h5>Message from keepers</h5>--}}</td>
+                        </div>
+                    </td>
+                    <td>{{--<h4>Subject:</h4><h5>Message from keepers</h5>--}}</td>
 
 
-                        <td class="action">
-                            <button class="button" onclick="location.href ='{{url('/')}}/owner/chat/{{$property->id}}?fb-key={{$property->chat_key}}&fbkey={{$property->chat_key}}';" ><i class="fa fa-reply"></i> Reply</button>
-                            {{--<a href="#"><i class="fa  fa-eye-slash"></i> Hide</a>--}}
-                            <button class="button" style="background-color: #e78016;" onclick="location.href ='{{url('/')}}/delete_chat/{{$property->id}}';" class="delete"><i class="fa fa-remove"></i> Delete</button>
-                        </td>
-                    </tr>
-                <?php } ?>
+                    <td class="action">
+                        <button class="button" onclick="location.href ='{{url('/')}}/owner/chat/{{$property->id}}?fb-key={{$property->chat_key}}&fbkey={{$property->chat_key}}';"><i class="fa fa-reply"></i> Reply</button>
+                        {{--<a href="#"><i class="fa  fa-eye-slash"></i> Hide</a>--}}
+                        <button class="button" style="background-color: #e78016;" onclick="location.href ='{{url('/')}}/delete_chat/{{$property->id}}';" class="delete"><i class="fa fa-remove"></i> Delete</button>
+                    </td>
+                </tr>
+                @endif
                 @endforeach
 
 

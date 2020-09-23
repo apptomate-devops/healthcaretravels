@@ -336,13 +336,14 @@
 
     // Initialize Firebase
     var config = {
-        apiKey: "AIzaSyCBLDLZq27-DR9Wf0oNOTwNI4GKE7Vy-qI",
-        authDomain: "keepers-firebase.firebaseapp.com",
-        databaseURL: "https://keepers-firebase.firebaseio.com",
-        projectId: "keepers-firebase",
-        storageBucket: "",
-        messagingSenderId: "813429405573"
-    };
+        apiKey: "AIzaSyAp8NYnsYWc_E_78Ou4yXHDH4PasZuYs58",
+    authDomain: "health-care-travels.firebaseapp.com",
+    databaseURL: "https://health-care-travels.firebaseio.com",
+    projectId: "health-care-travels",
+    storageBucket: "health-care-travels.appspot.com",
+    messagingSenderId: "420688223951",
+    appId: "1:420688223951:web:5518320dc1d350fe1fe1ba"
+    }
     firebase.initializeApp(config);
 
     // Create a Firebase reference where GeoFire will store its information

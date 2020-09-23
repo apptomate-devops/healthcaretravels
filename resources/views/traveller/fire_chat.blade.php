@@ -83,7 +83,7 @@
                         </div>
                         <div class="" style="display: flex; align-items: center;">
                             <div class="chat_user_avatar" style="margin-right: 6px">
-                                <img class="md-user-image" src="{{$owner->profile_image}}" onerror="this.onerror=null;this.src='http://127.0.0.1:8000/user_profile_default.png';" alt=""/>
+                                <img class="md-user-image" src="{{$owner->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';"  alt=""/>
                             </div>
                             <h3 class="md-card-toolbar-heading-text large">
                                 <span class="uk-text-muted">Chat with</span>
@@ -271,7 +271,6 @@
         app.controller('ListController', ['$scope', '$firebaseArray', '$firebaseObject', 'FBURL', function($scope,$firebaseArray, $firebaseObject, FBURL){
 
             var request_id = {{$id}};
-            console.log('request_id',request_id);
             var current_date = "{{date('m/d/Y H:i A')}}";
             //current_date = current_date.toString();
             var url_string = window.location.href; //window.location.href
@@ -306,7 +305,8 @@
                     owner_id: $scope.userid,
                     traveller_id: 1,
                     property_id: 1,
-                    date: current_date
+                    date: current_date,
+                    read: false,
                 });
 
                 delete $scope.messageSend;
@@ -355,14 +355,15 @@
     <script>
 
         // Initialize Firebase
-        var config = {
-        apiKey: "AIzaSyAqC-P0TVmYIKwa9YfzWqlCJO0ojrdKwiY",
-        authDomain: "rental-slew.firebaseapp.com",
-        databaseURL: "https://rental-slew.firebaseio.com",
-        projectId: "rental-slew",
-        storageBucket: "rental-slew.appspot.com",
-        messagingSenderId: "386426447902"
-      };
+    var config = {
+        apiKey: "AIzaSyAp8NYnsYWc_E_78Ou4yXHDH4PasZuYs58",
+  authDomain: "health-care-travels.firebaseapp.com",
+  databaseURL: "https://health-care-travels.firebaseio.com",
+  projectId: "health-care-travels",
+  storageBucket: "health-care-travels.appspot.com",
+  messagingSenderId: "420688223951",
+  appId: "1:420688223951:web:5518320dc1d350fe1fe1ba"
+    }
         firebase.initializeApp(config);
 
         // Create a Firebase reference where GeoFire will store its information

@@ -1,5 +1,5 @@
 <div>
-    <h2>Account Details</h2>
+    <h2>Select an Account</h2>
     @if(count($funding_sources) > 0)
         <div style="width: 70%">
             <select name="funding_source" id="fundingSource" class="chosen-select-no-single">
@@ -12,5 +12,5 @@
     @else
         <div>You haven't added any account details yet.</div>
     @endif
-    <span class="link" id="create-funding-source">Add Account Details</span>
+    <div class="btn bg-orange" style="width: auto; margin-top: 10px;" id="create-funding-source">Add Account Details</div>
 </div>

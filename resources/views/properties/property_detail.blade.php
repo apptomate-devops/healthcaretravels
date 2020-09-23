@@ -42,10 +42,10 @@
                                                 @if($data->status == 1)
                                                     {{--                                                    only allow to edit if not approved--}}
                                                     <div>
-                                                    <strong>
-                                                        <a href="{{BASE_URL}}property/{{$data->property_id}}/{{$data->booking_id}}">Go back to edit</a>
-                                                    </strong>
-                                                </div>
+                                                        <strong>
+                                                            <a href="{{BASE_URL}}property/{{$data->property_id}}/{{$data->booking_id}}">Go back to edit</a>
+                                                        </strong>
+                                                    </div>
                                                 @endif
                                             </div>
                                             <hr>
@@ -187,14 +187,14 @@
                                     <div class="col-sm-12">
                                         <h2>Billing Information</h2>
                                         To complete this booking, you will need your bank account number and routing number an invoice will be sent to the verified email associated with your Health Care Travels account within 24 hours. Once the invoice has been sent you should pay the invoice as soon as possible. Bookings are confirmed on a first come first serve basis and the invoice will expire 24 hours after invoice is created. Please review this listing in its entirety and the selected cancellation policy.<br><br>
-                                        *Please note to speed up this process make sure your account is Up-To-Date, Complete, Verified and all of the necessary documents are uploaded to your account. If you have any question or concerns email <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com</a><br><br>
+                                        *Please note to speed up this process make sure your account is Up-To-Date, Complete, Verified and all of the necessary documents are uploaded to your account. If you have any question or concerns email <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com</a>
                                         <p></p>
                                     </div>
                                 </div>
 
                                 @component('components.funding-source', ['funding_sources' => $funding_sources])
                                 @endcomponent
-
+                                <hr>
                                 <h2>Guest Details</h2>
                                 <div class="wrapper center-block">
                                     <div class="panel-group" id="guest-accordian" role="tablist" aria-multiselectable="true">
@@ -212,34 +212,49 @@
                                                     <div class="panel-body">
                                                         <input  name="guest_id[]" type="hidden" value="{{$guest_data->id ?? ''}}" required>
                                                         <div class="control-group cc-first-name col-md-6">
-                                                            <label class="control-label" for="credit-card-first-name">
-                                                                Guest Name
-                                                            </label>
-                                                            <input  name="guest_name[]" type="text" value="{{$guest_data->name ?? ''}}" required>
+                                                            <div style="display: flex; justify-content: space-between;">
+                                                                <label class="control-label" for="credit-card-first-name">
+                                                                    Guest Name
+                                                                </label>
+                                                                @if($i == 0) <div onclick="add_my_info('name');" class="link">Add my info</div> @endif
+                                                            </div>
+                                                            <input id="name_{{$i}}" name="guest_name[]" type="text" value="{{$guest_data->name ?? ''}}" required>
                                                         </div>
                                                         <div class="control-group cc-last-name col-md-6">
-                                                            <label class="control-label" for="credit-card-last-name">
-                                                                Occupation
-                                                            </label>
-                                                            <input  name="guest_occupation[]" type="text" value="{{$guest_data->occupation ?? ''}}">
+                                                            <div style="display: flex; justify-content: space-between;">
+                                                                <label class="control-label" for="credit-card-first-name">
+                                                                    Occupation
+                                                                </label>
+                                                                @if($i == 0) <div onclick="add_my_info('occupation');" class="link">Add my info</div> @endif
+                                                            </div>
+                                                            <input id="occupation_{{$i}}" name="guest_occupation[]" type="text" value="{{$guest_data->occupation ?? ''}}">
                                                         </div>
                                                         <div class="control-group cc-last-name col-md-6">
-                                                            <label class="control-label" for="credit-card-last-name">
-                                                                Phone number
-                                                            </label>
-                                                            <input  name="phone_number[]" type="text" value="{{$guest_data->phone_number?? ''}}">
+                                                            <div style="display: flex; justify-content: space-between;">
+                                                                <label class="control-label" for="credit-card-first-name">
+                                                                    Phone Number
+                                                                </label>
+                                                                @if($i == 0) <div onclick="add_my_info('phone');" class="link">Add my info</div> @endif
+                                                            </div>
+                                                            <input id="phone_{{$i}}"  name="phone_number[]" type="text" value="{{$guest_data->phone_number?? ''}}">
                                                         </div>
                                                         <div class="control-group cc-last-name col-md-6">
-                                                            <label class="control-label" for="credit-card-last-name">
-                                                                Email
-                                                            </label>
-                                                            <input  name="email[]" type="email" value="{{$guest_data->email ?? ''}}">
+                                                            <div style="display: flex; justify-content: space-between;">
+                                                                <label class="control-label" for="credit-card-first-name">
+                                                                    Email
+                                                                </label>
+                                                                @if($i == 0) <div onclick="add_my_info('email');" class="link">Add my info</div> @endif
+                                                            </div>
+                                                            <input id="email_{{$i}}" name="email[]" type="email" value="{{$guest_data->email ?? ''}}">
                                                         </div>
                                                         <div class="control-group cc-last-name col-md-6">
-                                                            <label class="control-label" for="credit-card-last-name">
-                                                                Age
-                                                            </label>
-                                                            <select name="age[]" data-placeholder="Select Age" required>
+                                                            <div style="display: flex; justify-content: space-between;">
+                                                                <label class="control-label" for="credit-card-first-name">
+                                                                    Age
+                                                                </label>
+                                                                @if($i == 0) <div onclick="add_my_info('age');" class="link">Add my info</div> @endif
+                                                            </div>
+                                                            <select id="age_{{$i}}" name="age[]" data-placeholder="Select Age" required>
                                                                 <option label="Select Age" value="" disabled selected>Select Age</option>
                                                                 <option label="Adult" value="Adult" @if($guest_data && $guest_data->age == 'Adult') selected @endif></option>
                                                                 <option label="Child (Ages 2-12)" value="Child" @if($guest_data && $guest_data->age == 'Child') selected @endif></option>
@@ -390,6 +405,18 @@
             }
         }
 
+        function add_my_info(key) {
+            var traveller = <?php echo json_encode($traveller); ?>;
+            var input = $(`#${key}_0`);
+            var value = traveller[key];
+            if(key == 'name') {
+                value = traveller.first_name + ' ' + traveller.last_name;
+            }
+            if(key == 'age') {
+                value = 'Adult';
+            }
+            input.val(value);
+        }
         function load_agencies() {
             var agencies = <?php echo json_encode($agency); ?>;
             allAgencies = agencies;

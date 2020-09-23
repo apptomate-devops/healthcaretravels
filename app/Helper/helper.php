@@ -326,12 +326,6 @@ class Helper
                 'security_deposit' => $booking->security_deposit,
                 'monthly_rate' => $booking->monthly_rate,
                 'is_owner' => $is_owner,
-                'covering_range' =>
-                    Carbon::parse($booking->start_date)->format('m/d/Y') .
-                    ' - ' .
-                    Carbon::parse($booking->start_date)
-                        ->addMonth()
-                        ->format('m/d/Y'),
             ];
             if ($i == 1) {
                 $data['service_tax'] = SERVICE_TAX;
@@ -358,15 +352,23 @@ class Helper
                     $data['due_date'] = $dd;
                 }
             }
+
+            $data['covering_range'] =
+                Carbon::parse($booking->start_date)
+                    ->addMonth($i - 1)
+                    ->format('m/d/Y') .
+                ' - ' .
+                Carbon::parse($booking->start_date)
+                    ->addMonth($i)
+                    ->format('m/d/Y');
+
             if ($i == $totalCycles && $isPartial) {
-                $data['total_amount'] = round($data['monthly_rate'] / $partialDays);
+                $data['total_amount'] = round(($data['monthly_rate'] * $partialDays) / 30);
                 $data['is_partial_days'] = $partialDays;
                 $data['covering_range'] =
-                    Carbon::parse($booking->start_date)->format('m/d/Y') .
+                    $data['due_date']->format('m/d/Y') .
                     ' - ' .
-                    Carbon::parse($booking->start_date)
-                        ->addDays($partialDays)
-                        ->format('m/d/Y');
+                    $data['due_date']->addDays($partialDays)->format('m/d/Y');
             }
             $data['due_time'] = $data['due_date'];
             $data['due_date'] = $data['due_date']->toDateString();

@@ -265,7 +265,7 @@ class BaseController extends ConstantsController
             'APP_BASE_NAME' => APP_BASE_NAME,
         ]);
         Logger::info('Scheduling email job after: ' . $delayInSeconds);
-        ProcessEmail::dispatch($to, $template, $subject, $data)
+        ProcessEmail::dispatch($to, 'mail.' . $template, $subject, $data)
             ->delay(now()->addSeconds($delayInSeconds))
             ->onQueue(EMAIL_QUEUE);
     }

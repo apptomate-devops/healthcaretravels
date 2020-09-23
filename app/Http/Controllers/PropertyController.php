@@ -267,7 +267,7 @@ class PropertyController extends BaseController
             'traveller_id = "' .
                 $user_id .
                 ($booking_id ? '" AND booking_id != "' . $booking_id : '') .
-                '" AND ((start_date BETWEEN "' .
+                '" AND status != 8 AND ((start_date BETWEEN "' .
                 $check_in .
                 '" AND "' .
                 $check_out .
@@ -280,9 +280,13 @@ class PropertyController extends BaseController
                 '" BETWEEN start_date AND end_date))',
         )->get();
         if (count($requestAlreadyExists)) {
+            $my_trips_url = BASE_URL . 'traveler/my-reservations';
             return response()->json([
                 'status' => 'FAILED',
-                'message' => 'Sorry! You have already requested booking for selected date range.',
+                'message' =>
+                    'You already have a booking overlapping these dates. Try a different date range or cancel your booking on the <a style="color: white;text-decoration-line: underline;" href=' .
+                    $my_trips_url .
+                    '>My Trips</a> page.',
                 'status_code' => ZERO,
                 'request_already_exists' => ONE,
                 'request_data' => $requestAlreadyExists,

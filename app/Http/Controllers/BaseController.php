@@ -26,6 +26,7 @@ use App\Services\Dwolla;
 
 use App\Jobs\ProcessEmail;
 use App\Jobs\ProcessPayment;
+use App\Jobs\ProcessSecurityDeposit;
 
 use Image;
 use DB;
@@ -781,6 +782,16 @@ class BaseController extends ConstantsController
         $propertyTitle = $property->title;
         $travelerName = $traveler->first_name . " " . $traveler->last_name;
         $accountName = null;
+        $timeSplit = Helper::get_time_split($property->check_out);
+        $scheduler_date = Carbon::parse($booking->end_date);
+        $scheduler_date->hour = $timeSplit[0];
+        $scheduler_date->minute = $timeSplit[1];
+        $scheduler_date->second = 0;
+        $scheduler_date->addDays(3);
+        ProcessSecurityDeposit::dispatch($booking->id)
+                    ->delay($scheduler_date)
+                    ->onQueue(PAYMENT_QUEUE);
+        Logger::info('Security deposit job scheduled for: ' . $booking->id .' at: ' . $scheduler_date);
         foreach ($payments as $payment) {
             // Removing first payment of traveller
             if (!($payment['is_owner'] == 0 && $payment['payment_cycle'] == 1)) {

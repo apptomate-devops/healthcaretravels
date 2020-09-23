@@ -264,6 +264,7 @@ class Dwolla
         if (empty($source)) {
             throw new \Exception('Invalid source value');
         }
+        Logger::info('A transfer from customer is initiated for ' . $amount . ' at '. now());
         if(IS_LOCAL) {
             $amount = 20;
         }
@@ -297,6 +298,7 @@ class Dwolla
         if (empty($destination)) {
             throw new \Exception('Invalid source value');
         }
+        Logger::info('A transfer to customer is initiated for ' . $amount . ' at '. now());
         if(IS_LOCAL) {
             $amount = 20;
         }

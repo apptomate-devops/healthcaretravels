@@ -14,7 +14,6 @@ class AddOwnerFundingSourceToPropertyBooking extends Migration
     public function up()
     {
         Schema::table('property_booking', function (Blueprint $table) {
-            //
             $table->string('owner_funding_source')->nullable();
         });
     }
@@ -27,7 +26,6 @@ class AddOwnerFundingSourceToPropertyBooking extends Migration
     public function down()
     {
         Schema::table('property_booking', function (Blueprint $table) {
-            //
             $table->dropColumn(['owner_funding_source']);
         });
     }

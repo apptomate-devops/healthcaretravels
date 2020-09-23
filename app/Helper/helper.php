@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Services\Logger;
 use App\Services\Dwolla;
 use App\Models\BookingPayments;
+use App\Models\PropertyBooking;
 use App\Models\Settings;
 
 class Helper
@@ -39,6 +40,13 @@ class Helper
     public static function generate_idempotency_key($payment)
     {
         $data = [$payment->id, $payment->booking_id, $payment->is_owner];
+        return ['Idempotency-Key' => implode("-", $data)];
+    }
+
+    public static function generate_idempotency_key_for_deposit($booking, $is_owner = false)
+    {
+        $userId = $is_owner ? $booking->owner_id : $booking->traveller_id;
+        $data = [$booking->id, $booking->booking_id, $userId];
         return ['Idempotency-Key' => implode("-", $data)];
     }
 
@@ -288,6 +296,53 @@ class Helper
         $time = str_replace(' AM', '', $time);
         $time = str_replace(' PM', '', $time);
         return explode(':', $time);
+    }
+
+    public static function processSecurityDepositForBooking($id, $from_job = true)
+    {
+        $booking = PropertyBooking::find($id);
+        if (empty($booking)) {
+            Logger::error('Booking does not exist: ' . $id);
+            return ['success' => false];
+        }
+        if ($from_job && !$booking->should_auto_deposit) {
+            Logger::error('Security deposit was marked not to auto deposit: ' . $id);
+            return ['success' => false];
+        }
+        if ($booking->is_deposit_handled || $booking->is_deposit_handled_by_admin) {
+            Logger::error('Security deposit was already handled: ' . $id);
+            return ['success' => false];
+        }
+        try {
+            // TODO: store security deposit, cleaning fee and monthly rates in property_booking table.
+            // TODO: handle security deposit amount from booking.
+            Logger::info('Initiating security deposit handler for: ' . $id);
+            $dwolla = new Dwolla();
+            $fundingSource = $booking->funding_source;
+            $amount = $booking->property->security_deposit;
+            $idempotency = Helper::generate_idempotency_key_for_deposit($booking, false);
+            $transferDetails = $dwolla->createTransferToCustomer($fundingSource, $amount, $idempotency);
+            $booking->traveler_deposit_transfer_id = basename($transferDetails);
+            $booking->traveler_deposit_processed_at = Carbon::now()->toDateTimeString();
+            $booking->is_deposit_handled = 1;
+            $booking->traveler_cut = $amount;
+            $booking->save();
+            Logger::info('Security deposit handled successfully for: ' . $id);
+            return ['success' => true];
+            // TODO: add email for sending email about security deposit return to traveler.
+        } catch (\Exception $ex) {
+            $message = $ex->getMessage();
+            Logger::error('Error in handling security deposit for: ' . $id . '. EX: ', $message);
+            if (method_exists($ex, 'getResponseBody') && $ex->getResponseBody()) {
+                $message = $ex->getResponseBody();
+            }
+            Logger::error('Error in handling security deposit for: ' . $id . '. EX: ', $message);
+            $booking->traveler_deposit_processed_at = Carbon::now()->toDateTimeString();
+            $booking->traveler_deposit_failed_at = Carbon::now()->toDateTimeString();
+            $booking->traveler_deposit_failed_reason = $message;
+            $booking->save();
+            return ['success' => false];
+        }
     }
 
     public static function generate_booking_payments($booking, $is_owner = 0)

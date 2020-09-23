@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Calendar;
-use App\Models\Bookings;
 use DB;
 
 class CalenderController extends BaseController

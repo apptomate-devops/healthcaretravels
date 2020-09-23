@@ -209,7 +209,7 @@ class PaymentController extends BaseController
     {
         $user = Users::find(27);
         try {
-            $transferDetails = $this->dwolla->createTransferToMasterDwolla($user->default_funding_source, 1000);
+            $transferDetails = $this->dwolla->createTransferToMasterDwolla($user->default_funding_source, 20);
             return response()->json(['success' => true, 'transfer' => $transferDetails]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();

@@ -84,9 +84,17 @@ class PropertyController extends BaseController
             $insert_booking['owner_id'] = $property_details->user_id;
             $insert_booking['is_instant'] = $property_details->is_instant;
             $insert_booking['status'] = ONE;
-            $insert_booking['booking_id'] = $this->generate_random_string();
+            $insert_booking['booking_id'] = $request->booking_id ?? $this->generate_random_string();
+
             $booking_id = $insert_booking['booking_id'];
-            $property_booking_id = DB::table('property_booking')->insertGetId($insert_booking);
+            $property_booking = PropertyBooking::updateOrCreate(
+                [
+                    'booking_id' => $insert_booking['booking_id'],
+                ],
+                $insert_booking,
+            );
+            $property_booking_id = $property_booking->id;
+            //            $property_booking_id = DB::table('property_booking')->insertGetId($insert_booking);
 
             $weeks = $this->get_weekend_count($check_in, $check_out);
             $weeks['total'] = $weeks['total'] - 1;
@@ -249,6 +257,35 @@ class PropertyController extends BaseController
                 'status_code' => ZERO,
                 'is_blocked' => ONE,
                 'blocked_data' => $isBlocked,
+            ]);
+        }
+
+        $user_id = $request->session()->get('user_id');
+        $booking_id = $request->booking_id;
+
+        $requestAlreadyExists = PropertyBooking::whereRaw(
+            'traveller_id = "' .
+                $user_id .
+                ($booking_id ? '" AND booking_id != "' . $booking_id : '') .
+                '" AND ((start_date BETWEEN "' .
+                $check_in .
+                '" AND "' .
+                $check_out .
+                '") OR (end_date BETWEEN "' .
+                $check_in .
+                '" AND "' .
+                $check_out .
+                '") OR ("' .
+                $check_in .
+                '" BETWEEN start_date AND end_date))',
+        )->get();
+        if (count($requestAlreadyExists)) {
+            return response()->json([
+                'status' => 'FAILED',
+                'message' => 'Sorry! You have already requested booking for selected date range.',
+                'status_code' => ZERO,
+                'request_already_exists' => ONE,
+                'request_data' => $requestAlreadyExists,
             ]);
         }
 
@@ -1190,8 +1227,24 @@ class PropertyController extends BaseController
         }
     }
 
-    public function single_property($property_id, Request $request)
+    public function single_property($property_id, $booking_id = null, Request $request)
     {
+        $booking_details = null;
+        if ($booking_id) {
+            $booking_details = PropertyBooking::where('booking_id', $booking_id)->first();
+            if (!$booking_details) {
+                return view('general_error', ['message' => 'We can’t find the property you’re looking for.']);
+            }
+            if ($booking_details && $booking_details->status != 1) {
+                return view('general_error', ['message' => 'You can not edit booking now.']);
+            }
+            $user_id = $request->session()->get('user_id');
+            if ($user_id != $booking_details->traveller_id) {
+                // Do not allow other user to access booking details
+                return view('general_error', ['message' => 'Invalid Access']);
+            }
+        }
+
         $temp_bed_rooms = [];
         if ($request->reviews) {
             $properties = DB::table('property_list')
@@ -1545,6 +1598,7 @@ class PropertyController extends BaseController
 
         return view('property', $f_result)
             ->with('hospitals', $hospitals)
+            ->with('booking_details', $booking_details)
             ->with('pets', $pets);
     }
 

@@ -28,6 +28,12 @@ class Helper
         }
     }
 
+    public static function generate_idempotency_key($payment)
+    {
+        $data = [$payment->id, $payment->booking_id, $payment->is_owner];
+        return ['Idempotency-Key' => implode("-",$data)];
+    }
+
     public static function process_booking_payment($booking_id, $payment_cycle, $is_owner = 0)
     {
         $payment = BookingPayments::where('booking_id', $booking_id)
@@ -37,7 +43,8 @@ class Helper
         if (empty($payment)) {
             return ['success' => false, 'message' => 'No such payment exists!'];
         }
-        $traveler = $payment->booking->traveler;
+        $booking = $payment->booking;
+        $traveler = $booking->traveler;
         $name = $traveler->first_name . ' ' . $traveler->last_name;
         $fundingSourceDetails = null;
         $subjectDate = Carbon::now()->format('m/d');
@@ -60,7 +67,7 @@ class Helper
                     $payment_cycle .
                     ($is_owner ? ' To Owner' : ' From Traveler'),
             );
-            $fundingSource = $payment->booking->funding_source;
+            $fundingSource = $booking->funding_source;
             // Total amount is rent - service for traveler
             $amount = $payment->total_amount + $payment->service_tax;
             if ($is_owner) {
@@ -68,12 +75,12 @@ class Helper
                 $amount = $payment->total_amount - $payment->service_tax;
             }
             $transferDetails = null;
+            $idempotency = Helper::generate_idempotency_key($payment);
             if ($is_owner) {
-                // TODO: fix the funding source of owner here.
-                $fundingSource = $payment->booking->owner->default_funding_source;
-                $transferDetails = $dwolla->createTransferToCustomer($fundingSource, $amount);
+                $fundingSource = $booking->owner_funding_source;
+                $transferDetails = $dwolla->createTransferToCustomer($fundingSource, $amount, $idempotency);
             } else {
-                $transferDetails = $dwolla->createTransferToMasterDwolla($fundingSource, $amount);
+                $transferDetails = $dwolla->createTransferToMasterDwolla($fundingSource, $amount, $idempotency);
             }
             Logger::info('Transfer success for booking: ' . $booking_id . ' for payment cycle: ' . $payment_cycle);
             $payment->transfer_url = $transferDetails;

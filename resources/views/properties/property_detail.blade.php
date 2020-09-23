@@ -17,7 +17,7 @@
                                 <div class="px-15">
                                     <section id="your-trip" class="your-trip">
                                         <div class="hosting-info">
-                                            <div class="payments-listing-name h4 row-space-1" style="word-wrap: break-word;">
+                                            <div class="payments-listing-name h2 row-space-1" style="word-wrap: break-word;">
                                                 {{$data->title}}
                                                 {{-- <p style="font-weight: normal;
                                                    font-size: 14px;
@@ -31,30 +31,26 @@
                                                     </strong>
                                                 </div>
                                                 <div>
-                                                    <strong>{{date('m/d/Y',strtotime($data->start_date))}}</strong> to <strong>{{date('m/d/Y',strtotime($data->end_date))}}</strong>
+                                                    <strong>{{$data->guest_count}} Guests, {{date('m/d/Y',strtotime($data->start_date))}}</strong> - <strong>{{date('m/d/Y',strtotime($data->end_date))}}</strong>
                                                 </div>
+                                                <div>
+                                                    <strong>
+                                                        Cancellation Policy:
+                                                        <a href="{{URL('/')}}/cancellationpolicy" class="cancel-policy-link" target="_blank">{{$data->cancellation_policy}} </a>
+                                                    </strong>
+                                                </div>
+                                                @if($data->status == 1)
+                                                    {{--                                                    only allow to edit if not approved--}}
+                                                    <div>
+                                                    <strong>
+                                                        <a href="{{BASE_URL}}property/{{$data->property_id}}/{{$data->booking_id}}">Go back to edit</a>
+                                                    </strong>
+                                                </div>
+                                                @endif
                                             </div>
                                             <hr>
                                             <table class="reso-info-table" style="width:95%">
                                                 <tbody>
-                                                <tr>
-                                                    <td>Cancellation Policy</td>
-                                                    <td>
-                                                        &nbsp;
-                                                        <a href="{{URL('/')}}/cancellationpolicy" class="cancel-policy-link" target="_blank">{{$data->cancellation_policy}} </a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        Days
-                                                    </td>
-                                                    <td>
-                                                        &nbsp;
-                                                        {{$data->total_days}}
-                                                    </td>
-                                                </tr>
                                                 {{-- Hiding coupon details as of now --}}
                                                 @if(false && $data->coupon_value=="")
                                                     <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
@@ -75,19 +71,18 @@
                                                 @endif
                                                 </tbody>
                                             </table>
-                                            <hr>
                                             <section id="billing-summary" class="billing-summary">
                                                 <table id="billing-table" class="reso-info-table billing-table" style="width:95%">
                                                     <tbody>
                                                     <h4>Payment Details</h4>
-                                                    <tr>
+                                                    <tr id="neat_amount">
                                                         <td class="name pos-rel" >
                                                                 <span class="lang-chang-label">
                                                                     {{$data->count_label}}
                                                                 </span>
                                                             <span class='tooltips'><i style="color:black"  class='fa fa-question-circle'></i><span style="color: white!important" class='tooltiptext'>Total price</span></span>
                                                         </td>
-                                                        <td class="val text-right" id="neat_amount">
+                                                        <td class="val text-right">
                                                             $ {{$data->neat_amount}}
                                                         </td>
                                                     </tr>
@@ -121,9 +116,19 @@
                                                         </td>
                                                     </tr>
 
+                                                    <tr class="row_border">
+                                                        <td class="name">
+                                                            Refundable Deposit
+                                                            <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Refunded after completion</span></span>
+                                                        </td>
+                                                        <td class="val text-right" >
+                                                            $ {{$data->security_deposit}}
+                                                        </td>
+                                                    </tr>
+
                                                     <tr>
                                                         <td class="name">
-                                                            Total Amount
+                                                            Total Cost
                                                         </td>
                                                         <td class="val text-right" >
                                                             $ {{$data->total_price}}
@@ -135,11 +140,6 @@
                                                         </td>
                                                         <td class="val text-right" >
                                                             <b>$ {{$data->due_on_approve}}</b>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="name">
-                                                            + $ {{$data->security_deposit}} refundable security deposit <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Refunded after completion</span></span>
                                                         </td>
                                                     </tr>
                                                     @if(false && $data->coupon_value!="")

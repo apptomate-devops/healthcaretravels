@@ -19,6 +19,12 @@ class ProcessPayment implements ShouldQueue
     protected $payment_id;
 
     /**
+     * The number of seconds to wait before retrying the job.
+     *
+     * @var int
+     */
+    public $backoff = 10;
+    /**
      * Create a new job instance.
      *
      * @return void

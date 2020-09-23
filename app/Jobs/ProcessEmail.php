@@ -19,6 +19,12 @@ class ProcessEmail implements ShouldQueue
     protected $data;
     protected $subject;
     /**
+     * The number of seconds to wait before retrying the job.
+     *
+     * @var int
+     */
+    public $backoff = 3;
+    /**
      * Create a new job instance.
      *
      * @return void

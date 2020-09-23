@@ -264,6 +264,9 @@ class Dwolla
         if (empty($source)) {
             throw new \Exception('Invalid source value');
         }
+        if(IS_LOCAL) {
+            $amount = 20;
+        }
         $payload = [
             '_links' => [
                 'source' => [
@@ -293,6 +296,9 @@ class Dwolla
     {
         if (empty($destination)) {
             throw new \Exception('Invalid source value');
+        }
+        if(IS_LOCAL) {
+            $amount = 20;
         }
         $payload = [
             '_links' => [

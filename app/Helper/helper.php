@@ -389,6 +389,7 @@ class Helper
         define("STATIC_IMAGE", "http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg");
         define("APP_BASE_NAME", "Health Care Travels");
         define("APP_ENV", env("APP_ENV", "local"));
+        define("IS_LOCAL", env("APP_ENV", "local") == "local");
         define("EMAIL_QUEUE", env("APP_ENV", "local") . ":emails");
         define("PAYMENT_QUEUE", env("APP_ENV", "local") . ":payments");
         define("DWOLLA_ENV", config('services.dwolla.env'));

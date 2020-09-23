@@ -890,13 +890,13 @@ class PropertyController extends BaseController
             if ($request->link == 1) {
                 return $this->single_booking($request->booking_id, $request);
             }
-            return response()->json(['status' => 'SUCCESS']);
+            return response()->json(['success' => true]);
         }
         if ($request->link == 1) {
             $url = $this->get_base_url() . 'login';
             return redirect($url)->with('error', 'Login with Owner account');
         }
-        return response()->json(['status' => 'ERROR']);
+        return response()->json(['success' => false]);
     }
 
     public function reservations(Request $request)

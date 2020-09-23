@@ -775,6 +775,12 @@ class BaseController extends ConstantsController
     public function schedule_payments_and_emails_for_booking($booking)
     {
         $payments = $booking->payments->toArray();
+        $owner = $booking->owner;
+        $traveler = $booking->traveler;
+        $property = $booking->property;
+        $propertyTitle = $property->title;
+        $travelerName = $traveler->first_name . " " . $traveler->last_name;
+        $accountName = null;
         foreach ($payments as $payment) {
             // Removing first payment of traveller
             if (!($payment['is_owner'] == 0 && $payment['payment_cycle'] == 1)) {
@@ -782,13 +788,36 @@ class BaseController extends ConstantsController
                 ProcessPayment::dispatch($payment['id'])
                     ->delay($dueTime)
                     ->onQueue(PAYMENT_QUEUE);
+                if($payment['is_owner'] == 0) {
+                    $amount = $payment['service_tax'] + $payment['total_amount'];
+                    if(empty($accountName)) {
+                        $fundingSource = $booking->funding_source;
+                        $fsDetails = $this->dwolla->getFundingSourceDetails($fundingSource);
+                        $accountName = $fsDetails->name;
+                    }
+                    $mail_data = [
+                        'name' => $travelerName,
+                        'propertyName' => $property->title,
+                        'propertyId' => $property->id,
+                        'date' => $dueTime->format('m-d-Y'),
+                        'amount' => $amount,
+                        'accountName' => $accountName,
+                    ];
+                    $mailing_date = Carbon::parse($dueTime)->subDays(3);
+                    $mailDelay = 0;
+                    if ($mailing_date->gt(now())) {
+                        $mailDelay = $mailing_date->diffInSeconds(now());
+                    }
+                    $this->send_scheduled_email(
+                        $traveler->email,
+                        'automatic-payment',
+                        'Automatic Payment Reminder',
+                        $mail_data,
+                        $mailDelay,
+                    );
+                }
             }
         }
-        $owner = $booking->owner;
-        $traveler = $booking->traveler;
-        $property = $booking->property;
-        $propertyTitle = $property->title;
-        $travelerName = $traveler->first_name . " " . $traveler->last_name;
         $owner_mail_data = [
             'name' => $owner->first_name . " " . $owner->last_name,
             'propertyName' => $property->title,

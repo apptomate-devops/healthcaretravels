@@ -12,13 +12,13 @@
                 <section id="your-trip" class="your-trip">
                     <div class="hosting-info">
                         <div class="payments-listing-name h4 row-space-1" style="word-wrap: break-word;">
-                            <h2>{{$data->title}}</h2>
+                            <h2>{{$property->title}}</h2>
                             <p style="font-weight: normal; font-size: 14px; margin: 10px 0px !important;">{{$property->city}} ,{{$property->state}}</p>
                         </div>
                         <div class="">
                             <hr>
                             <div class="row-space-1">
-                                <strong>{{$data->room_type}}</strong>
+                                <strong>{{$property->room_type}}</strong>
                             </div>
                             <div>
                                 <strong>{{$data->start_date}}</strong> to <strong>{{$data->end_date}}</strong>
@@ -31,19 +31,10 @@
                                     <td>Cancellation Policy</td>
                                     <td>
                                     &nbsp;
-                                    <a href="{{URL('/')}}/cancellationpolicy" class="cancel-policy-link" target="_blank">{{$data->cancellation_policy}} </a>
+                                    <a href="{{URL('/')}}/cancellationpolicy" class="cancel-policy-link" target="_blank">{{$property->cancellation_policy}} </a>
                                     </td>
                                 </tr>
                                 <tr>
-                                </tr>
-                                <tr>
-                                    <td>
-                                    Nights
-                                    </td>
-                                    <td>
-                                    &nbsp;
-                                    {{$data->total_days}}
-                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -53,16 +44,16 @@
                                 <tbody>
                                     <h4>Property Pricing Details</h4>
                                     <tr style=" border-bottom: 1px solid lightgrey;">
-                                    <td class="name pos-rel" >
+                                        <td class="name pos-rel" >
                                         <span class="lang-chang-label">
                                         $
-                                        </span>{{$data->single_day_fare}} x {{$data->total_days}} night
-                                        <span class='tooltips'><i style="color:black"  class='fa fa-question-circle'></i><span style="color: white!important" class='tooltiptext'>Average Nightly rate is Rounded</span></span>
-                                    </td>
-                                    <td class="val text-left">
+                                        </span>{{$property->monthly_rate}}
+                                            <span class='tooltips'><i style="color:black"  class='fa fa-question-circle'></i><span style="color: white!important" class='tooltiptext'>Monthly rate</span></span>
+                                        </td>
+                                        <td class="val text-left">
                                         <span class="lang-chang-label">  $
-                                        </span><span>{{$data->single_day_fare*$data->total_days}}</span>
-                                    </td>
+                                        </span><span>{{$property->monthly_rate}}</span>
+                                        </td>
                                     </tr>
                                     @if($data->extra_guest!=0)
                                     <tr style=" border-bottom: 1px solid lightgrey;">
@@ -84,7 +75,7 @@
                                     </td>
                                     <td class="val text-left">
                                         <span class="lang-chang-label">         $
-                                        </span><span>{{$data->service_tax}}</span>
+                                        </span><span>{{SERVICE_TAX}}</span>
                                     </td>
                                     </tr>
 

@@ -39,7 +39,6 @@ class PropertyController extends BaseController
         }
         $check_in = date('Y-m-d', strtotime($request->check_in));
         $check_out = date('Y-m-d', strtotime($request->check_out));
-        $guest_count = $request->guest_count == 0 ? 20 : $request->guest_count;
 
         // Padding 24 hours for property owner
         $c_in = Carbon::parse($check_in);
@@ -98,8 +97,6 @@ class PropertyController extends BaseController
                 $insert_booking,
             );
             $property_booking_id = $property_booking->id;
-            //            $property_booking_id = DB::table('property_booking')->insertGetId($insert_booking);
-
             $weeks = $this->get_weekend_count($check_in, $check_out);
             $weeks['total'] = $weeks['total'] - 1;
             $single_day_fare = $property_details->monthly_rate / 30;
@@ -109,7 +106,6 @@ class PropertyController extends BaseController
             $booking_price['single_day_fare'] = $single_day_fare;
             $booking_price['property_booking_id'] = $property_booking_id;
             $booking_price['total_days'] = $weeks['total'];
-            $total_days = $weeks['total'];
             $week_end_days = ZERO;
 
             $price = $weeks['total'] * $single_day_fare;
@@ -119,7 +115,6 @@ class PropertyController extends BaseController
             $total_price =
                 $price + $property_details->cleaning_fee + $property_details->security_deposit + $service_tax->value;
 
-            //            $due_now = $this->get_percentage($pricing_config->first_payment_percentage, $total_price);
             $booking_price['service_tax'] = $service_tax->value;
             $booking_price['initial_pay'] = 0; // TODO: check with $due_now;
             $booking_price['total_amount'] = round($total_price, 2);
@@ -135,92 +130,6 @@ class PropertyController extends BaseController
                 ->first();
             $insert_data->calc_price = $price;
 
-            //            $insert_data->service_amount = $this->get_percentage($pricing_config->service_fee_percentage, $total_price);
-            //            $user_id = $request->session()->get('user_id');
-            //            $user = Users::where('id', $user_id)->first();
-            $property_id = $request->property_id;
-            $property = DB::table('property_list')
-                ->leftjoin('users', 'users.id', '=', 'property_list.user_id')
-                ->where('property_list.id', '=', $property_id)
-                ->select('property_list.*', 'users.email', 'users.first_name', 'users.last_name', 'users.email')
-                ->first();
-
-            $data = DB::table('property_booking')
-                ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
-                ->join('property_images', 'property_images.property_id', '=', 'property_booking.property_id')
-                ->join(
-                    'property_booking_price',
-                    'property_booking_price.property_booking_id',
-                    '=',
-                    'property_booking.id',
-                )
-                ->join('users', 'users.id', '=', 'property_booking.owner_id')
-                ->where('property_booking.client_id', CLIENT_ID)
-                ->where('property_booking.booking_id', $booking_id)
-                ->first();
-
-            // Owner Mail
-            $bookingEmailType = $data->is_instant;
-            if ($bookingEmailType != 0 || $bookingEmailType != 1) {
-                $bookingEmailType = 0;
-            }
-            $welcome = EmailConfig::where('type', 3)
-                ->where('role_id', $bookingEmailType)
-                ->first();
-
-            $owner_name = $data->first_name . " " . $data->last_name;
-            $mail_data = [
-                'name' => $owner_name,
-                'text' => isset($welcome->message) ? $welcome->message : '',
-                'property' => $property,
-                'data' => $data,
-            ];
-
-            $title = isset($welcome->title) ? $welcome->title : 'New booking from - ' . APP_BASE_NAME;
-            $subject = isset($welcome->subject) ? $welcome->subject : "New booking from  - " . APP_BASE_NAME;
-            $this->send_custom_email($property->email, $subject, 'mail.booking-mail', $mail_data, $title);
-            // Owner Mail
-            $traveller = DB::select(
-                "SELECT concat(first_name,last_name) as name, email FROM users WHERE id = $user_id",
-            );
-
-            $data->traveller_name = $traveller[0]->name;
-            $mail_traveler = EmailConfig::where('type', 4)
-                ->where('role_id', 0)
-                ->first();
-
-            $mail_data_traveler = [
-                'name' => $traveller[0]->name,
-                'text' => isset($mail_traveler->message) ? $mail_traveler->message : '',
-                'property' => $property,
-                'data' => $data,
-            ];
-
-            $title_traveler = isset($mail_traveler->title)
-                ? $mail_traveler->title
-                : 'New booking from - ' . APP_BASE_NAME;
-            $subject_traveler = isset($mail_traveler->subject)
-                ? $mail_traveler->subject
-                : "New booking from  - " . APP_BASE_NAME;
-            $this->send_custom_email(
-                $traveller[0]->email,
-                $subject_traveler,
-                'mail.booking-mail-traveler',
-                $mail_data_traveler,
-                $title_traveler,
-            );
-
-            $text_message =
-                "Hi " .
-                $owner_name .
-                ", You received a property booking for " .
-                $property->title .
-                " for " .
-                $data->start_date .
-                " to " .
-                $data->end_date .
-                ". Please check your email or your Health Care Travels account to accept or deny the request.";
-            $this->sendTwilioMessage($data->phone, $text_message);
             return redirect()->intended('/booking_detail/' . $booking_id);
         } else {
             return response()->json([
@@ -2846,6 +2755,70 @@ class PropertyController extends BaseController
         }
         $booking->funding_source = $request->funding_source;
         $booking->save();
+
+        //        $bookingModel = PropertyBooking::find($booking->id);
+        $owner = $booking->owner;
+        $traveller = $booking->traveler;
+        $property = $booking->property;
+
+        // Owner Mail
+
+        $bookingEmailType = $booking->is_instant;
+        if ($bookingEmailType != 0 || $bookingEmailType != 1) {
+            $bookingEmailType = 0;
+        }
+        $welcome = EmailConfig::where('type', 3)
+            ->where('role_id', $bookingEmailType)
+            ->first();
+
+        $owner_name = $owner->first_name . " " . $owner->last_name;
+        $mail_data = [
+            'name' => $owner_name,
+            'text' => isset($welcome->message) ? $welcome->message : '',
+            'property' => $property,
+            'data' => $booking,
+        ];
+
+        $title = isset($welcome->title) ? $welcome->title : 'New booking from - ' . APP_BASE_NAME;
+        $subject = isset($welcome->subject) ? $welcome->subject : "New booking from  - " . APP_BASE_NAME;
+        $this->send_custom_email($owner->email, $subject, 'mail.booking-mail', $mail_data, $title);
+
+        // Traveller Mail
+        $mail_traveler = EmailConfig::where('type', 4)
+            ->where('role_id', 0)
+            ->first();
+
+        $mail_data_traveler = [
+            'name' => $traveller->first_name . " " . $traveller->last_name,
+            'text' => isset($mail_traveler->message) ? $mail_traveler->message : '',
+            'property' => $property,
+            'data' => $booking,
+        ];
+
+        $title_traveler = isset($mail_traveler->title) ? $mail_traveler->title : 'New booking from - ' . APP_BASE_NAME;
+        $subject_traveler = isset($mail_traveler->subject)
+            ? $mail_traveler->subject
+            : "New booking from  - " . APP_BASE_NAME;
+
+        $this->send_custom_email(
+            $traveller->email,
+            $subject_traveler,
+            'mail.booking-mail-traveler',
+            $mail_data_traveler,
+            $title_traveler,
+        );
+
+        $text_message =
+            "Hi " .
+            $owner_name .
+            ", You received a property booking for " .
+            $property->title .
+            " for " .
+            $booking->start_date .
+            " to " .
+            $booking->end_date .
+            ". Please check your email or your Health Care Travels account to accept or deny the request.";
+        $this->sendTwilioMessage($owner->phone, $text_message);
 
         if ($request->guest_name) {
             for ($i = 0; $i < count($request->guest_name); $i++) {

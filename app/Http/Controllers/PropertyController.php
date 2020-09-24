@@ -83,6 +83,10 @@ class PropertyController extends BaseController
             $insert_booking['traveller_id'] = $user_id;
             $insert_booking['owner_id'] = $property_details->user_id;
             $insert_booking['is_instant'] = $property_details->is_instant;
+            // Add deposit amount and traveler cut
+            $insert_booking['traveler_cut'] = $property_details->security_deposit;
+            $insert_booking['security_deposit'] = $property_details->security_deposit;
+            $insert_booking['cleaning_fee'] = $property_details->cleaning_fee;
             $insert_booking['status'] = ONE;
             $insert_booking['booking_id'] = $request->booking_id ?? $this->generate_random_string();
 
@@ -841,8 +845,6 @@ class PropertyController extends BaseController
                 'users.last_name',
                 'property_list.title',
                 'property_list.monthly_rate',
-                'property_list.security_deposit',
-                'property_list.cleaning_fee',
                 'property_list.check_in',
                 'property_list.check_out',
                 'property_booking.*',

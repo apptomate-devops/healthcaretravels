@@ -314,18 +314,15 @@ class Helper
             return ['success' => false];
         }
         try {
-            // TODO: store security deposit, cleaning fee and monthly rates in property_booking table.
-            // TODO: handle security deposit amount from booking.
             Logger::info('Initiating security deposit handler for: ' . $id);
             $dwolla = new Dwolla();
             $fundingSource = $booking->funding_source;
-            $amount = $booking->property->security_deposit;
+            $amount = $booking->traveler_cut;
             $idempotency = Helper::generate_idempotency_key_for_deposit($booking, false);
             $transferDetails = $dwolla->createTransferToCustomer($fundingSource, $amount, $idempotency);
             $booking->traveler_deposit_transfer_id = basename($transferDetails);
             $booking->traveler_deposit_processed_at = Carbon::now()->toDateTimeString();
             $booking->is_deposit_handled = 1;
-            $booking->traveler_cut = $amount;
             $booking->save();
             Logger::info('Security deposit handled successfully for: ' . $id);
             return ['success' => true];

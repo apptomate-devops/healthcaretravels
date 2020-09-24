@@ -114,100 +114,101 @@
                         <i class="fa fa-search"></i> Find a New Home
                     </a>
                     @if(Auth::check() && Auth::user()->id)
-                        <div class="hidden-xs hidden-sm">
-                            <div class="user-menu-container">
-                                <div class="user-menu">
-                                    <div class="user-name">
-                                <span id="header_profile_image">
-                                    @if(Session::has('profile_image') && Session::get('profile_image') != ' ')
+                    <div class="hidden-xs hidden-sm">
+                        <div class="user-menu-container">
+                            <div class="user-menu">
+                                <div class="user-name">
+                                    <span id="header_profile_image">
+                                        @if(Session::has('profile_image') && Session::get('profile_image') != ' ')
                                         <img src="{{ Session::get('profile_image') }}">
-                                    @else
+                                        @else
                                         <img src="/user_profile_default.png" alt="">
-                                    @endif
-                                </span>
-                                        <span>{{ Session::get('username') }}</span>
-                                    </div>
-
-                                    @if(Session::get('role_id') == 1 || Session::get('role_id') == 4) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}
-                                    <ul>
-                                        <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
-                                        <li><a href="{{url('/')}}/verify-account"><i class="sl sl-icon-user"></i> Verify Account</a></li>
-                                        <li><a href="{{url('/')}}/owner/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
-                                        @if(Session::get('role_id') == 1)
-                                            <li><a href="{{url('/')}}/owner/my-properties" class="not-verified-block"><i class="sl sl-icon-home"></i> My Properties</a></li>
-                                            <li><a href="{{url('/')}}/owner/add-property" class="not-verified-block"><i class="sl sl-icon-plus"></i> Add Property</a></li>
-                                            <li><a href="{{url('/')}}/owner/bookings"><i class="sl sl-icon-basket"></i> Bookings</a></li>
-                                            {{-- <li><a href="{{url('/')}}/owner/reservations"><i class="sl sl-icon-credit-card"></i> My Trips</a></li> --}}
-                                            <li><a href="{{url('/')}}/owner/calender"><i class="sl sl-icon-credit-card"></i> Calender</a></li>
                                         @endif
-                                        <li><a href="{{url('/')}}/owner/inbox" class="not-verified-block"><i class="fa fa-inbox"></i> Inbox</a></li>
-                                        <li><a href="{{url('/')}}/owner/invoices"><i class="sl sl-icon-note"></i> Transaction History </a></li>
-                                        <li>
-                                            <a href="{{url('/')}}/payment-options" class="not-verified-block">
-                                                <i class="sl sl-icon-note"></i> Payment Options
-                                            </a>
-                                        </li>
-{{--                                        <li><a href="{{url('/')}}/owner/special_price"><i class="sl sl-icon-star"></i> Special Pricing </a></li>--}}
-                                        {{-- <li><a href="{{url('/')}}/delete_account/"><i class="sl sl-icon-trash"></i> Delete Account </a></li> --}}
-                                        <li><a href="{{url('/')}}/logout" onclick="signOut();" id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
-                                    </ul>
-                                    @endif
-
-                                    @if(Session::get('role_id') == 0) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}
-                                    <ul>
-                                        <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
-                                        <li><a href="{{url('/')}}/traveler/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
-                                        <li><a href="{{url('/')}}/traveler/my-reservations" class="not-verified-block"><i class="sl sl-icon-credit-card"></i> My Trips</a></li>
-                                        <li><a href="{{url('/')}}/traveler/inbox" class="not-verified-block"><i class="fa fa-inbox"></i> Inbox</a></li>
-                                        <li>
-                                            <a href="{{url('/')}}/payment-options" class="not-verified-block">
-                                                <i class="sl sl-icon-note"></i> Payment Options
-                                            </a>
-                                        </li>
-                                        {{--  <li><a href="{{url('/')}}/delete_account/"><i class="sl sl-icon-trash"></i> Delete Account </a></li> --}}
-                                        <li><a href="{{url('/')}}/logout" onclick="signOut();"  id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
-                                    </ul>
-                                    @endif
-
-                                    @if(Session::get('role_id') == 2) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}
-                                    <ul>
-                                        <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
-                                        <li><a href="{{url('/')}}/traveler/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
-                                        <li><a href="{{url('/')}}/traveler/my-reservations" class="not-verified-block"><i class="sl sl-icon-credit-card"></i> My Trips</a></li>
-                                        <li><a href="{{url('/')}}/traveler/inbox" class="not-verified-block"><i class="fa fa-inbox"></i> Inbox</a></li>
-                                        <li>
-                                            <a href="{{url('/')}}/payment-options" class="not-verified-block">
-                                                <i class="sl sl-icon-note"></i> Payment Options
-                                            </a>
-                                        </li>
-                                        {{--  <li><a href="{{url('/')}}/delete_account/"><i class="sl sl-icon-trash"></i> Delete Account </a></li> --}}
-                                        <li><a href="{{url('/')}}/logout" onclick="signOut();"  id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
-                                    </ul>
-                                    @endif
-                                    @if(Session::get('role_id') == 3) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency -- 3 -- RV Traveller --}}
-                                    <ul>
-                                        <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
-
-                                        <li><a href="{{url('/')}}/logout" onclick="signOut();"  id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
-                                    </ul>
-                                    @endif
+                                        <span id="unread_chat_badge"><span class="unread_chat_badge"></span></span>
+                                    </span>
+                                    <span>{{ Session::get('username') }}</span>
                                 </div>
+
+                                @if(Session::get('role_id') == 1 || Session::get('role_id') == 4) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}
+                                <ul>
+                                    <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
+                                    <li><a href="{{url('/')}}/verify-account"><i class="sl sl-icon-user"></i> Verify Account</a></li>
+                                    <li><a href="{{url('/')}}/owner/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
+                                    @if(Session::get('role_id') == 1)
+                                    <li><a href="{{url('/')}}/owner/my-properties" class="not-verified-block"><i class="sl sl-icon-home"></i> My Properties</a></li>
+                                    <li><a href="{{url('/')}}/owner/add-property" class="not-verified-block"><i class="sl sl-icon-plus"></i> Add Property</a></li>
+                                    <li><a href="{{url('/')}}/owner/bookings"><i class="sl sl-icon-basket"></i> Bookings</a></li>
+                                    {{-- <li><a href="{{url('/')}}/owner/reservations"><i class="sl sl-icon-credit-card"></i> My Trips</a></li> --}}
+                                    <li><a href="{{url('/')}}/owner/calender"><i class="sl sl-icon-credit-card"></i> Calender</a></li>
+                                    @endif
+                                    <li><a href="{{url('/')}}/owner/inbox" class="not-verified-block"><i class="fa fa-inbox"></i> Inbox</a></li>
+                                    <li><a href="{{url('/')}}/owner/invoices"><i class="sl sl-icon-note"></i> Transaction History </a></li>
+                                    <li>
+                                        <a href="{{url('/')}}/payment-options" class="not-verified-block">
+                                            <i class="sl sl-icon-note"></i> Payment Options
+                                        </a>
+                                    </li>
+                                    {{-- <li><a href="{{url('/')}}/owner/special_price"><i class="sl sl-icon-star"></i> Special Pricing </a></li>--}}
+                                    {{-- <li><a href="{{url('/')}}/delete_account/"><i class="sl sl-icon-trash"></i> Delete Account </a></li> --}}
+                                    <li><a href="{{url('/')}}/logout" onclick="signOut();" id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
+                                </ul>
+                                @endif
+
+                                @if(Session::get('role_id') == 0) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}
+                                <ul>
+                                    <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
+                                    <li><a href="{{url('/')}}/traveler/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
+                                    <li><a href="{{url('/')}}/traveler/my-reservations" class="not-verified-block"><i class="sl sl-icon-credit-card"></i> My Trips</a></li>
+                                    <li><a href="{{url('/')}}/traveler/inbox" class="not-verified-block"><i class="fa fa-inbox"></i> Inbox</a></li>
+                                    <li>
+                                        <a href="{{url('/')}}/payment-options" class="not-verified-block">
+                                            <i class="sl sl-icon-note"></i> Payment Options
+                                        </a>
+                                    </li>
+                                    {{-- <li><a href="{{url('/')}}/delete_account/"><i class="sl sl-icon-trash"></i> Delete Account </a></li> --}}
+                                    <li><a href="{{url('/')}}/logout" onclick="signOut();" id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
+                                </ul>
+                                @endif
+
+                                @if(Session::get('role_id') == 2) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}
+                                <ul>
+                                    <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
+                                    <li><a href="{{url('/')}}/traveler/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
+                                    <li><a href="{{url('/')}}/traveler/my-reservations" class="not-verified-block"><i class="sl sl-icon-credit-card"></i> My Trips</a></li>
+                                    <li><a href="{{url('/')}}/traveler/inbox" class="not-verified-block"><i class="fa fa-inbox"></i> Inbox</a></li>
+                                    <li>
+                                        <a href="{{url('/')}}/payment-options" class="not-verified-block">
+                                            <i class="sl sl-icon-note"></i> Payment Options
+                                        </a>
+                                    </li>
+                                    {{-- <li><a href="{{url('/')}}/delete_account/"><i class="sl sl-icon-trash"></i> Delete Account </a></li> --}}
+                                    <li><a href="{{url('/')}}/logout" onclick="signOut();" id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
+                                </ul>
+                                @endif
+                                @if(Session::get('role_id') == 3) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency -- 3 -- RV Traveller --}}
+                                <ul>
+                                    <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
+
+                                    <li><a href="{{url('/')}}/logout" onclick="signOut();" id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
+                                </ul>
+                                @endif
                             </div>
                         </div>
+                    </div>
                     @else
-                        <a href="/login" class="sign-in">
-                            <img src="/icons/login.png" alt="Login" class="sign-in-icon" style="height: 20px; width: 20px; margin-right: 10px;">
-                            <span>Log In / Register</span>
-                        </a>
+                    <a href="/login" class="sign-in">
+                        <img src="/icons/login.png" alt="Login" class="sign-in-icon" style="height: 20px; width: 20px; margin-right: 10px;">
+                        <span>Log In / Register</span>
+                    </a>
                     @endif
                 </div>
-                {{--                <ul class="header-widget">--}}
-                {{--                    <li class="with-btn">--}}
-                {{--                        @if(Session::get('username'))--}}
-                {{--                            <a href="{{url('/')}}/owner/add-property" class="button border">Submit Property</a>--}}
-                {{--                        @endif--}}
-                {{--                    </li>--}}
-                {{--                </ul>--}}
+                {{-- <ul class="header-widget">--}}
+                {{-- <li class="with-btn">--}}
+                {{-- @if(Session::get('username'))--}}
+                {{-- <a href="{{url('/')}}/owner/add-property" class="button border">Submit Property</a>--}}
+                {{-- @endif--}}
+                {{-- </li>--}}
+                {{-- </ul>--}}
             </div>
             <!-- Right Side Content / End -->
         </div>
@@ -249,9 +250,11 @@
             event.stopPropagation();
             closeVerificationModal();
         });
+
         function openVerificationModal() {
             document.getElementById("verification-pending-modal").style.height = "100%";
         }
+
         function closeVerificationModal() {
             document.getElementById("verification-pending-modal").style.height = "0%";
         }
@@ -269,12 +272,12 @@
             }
         }
 
-        $( window ).on( "load", function() {
-            $('.mm-next').click(function(){
+        $(window).on("load", function() {
+            $('.mm-next').click(function() {
                 $('.mm-next').removeClass('active');
                 $(this).addClass('active')
             });
-            $('.mm-prev').click(function(){
+            $('.mm-prev').click(function() {
                 $('.mm-next').removeClass('active');
             });
             responsiveRightSide();
@@ -285,7 +288,7 @@
         // });
 
         $(document).ready(function() {
-            $(".user-menu").hover(function () {
+            $(".user-menu").hover(function() {
                 var class_n = $(this).attr('class');
                 if (class_n == "user-menu") {
                     $(this).addClass('active');
@@ -295,8 +298,22 @@
                 }
             });
         });
-
     </script>
+    <style>
+        #unread_chat_badge{
+            display: none;
+        }
+        .unread_chat_badge {
+            position: absolute;
+            bottom: 0;
+            left: 26px;
+            height: 10px;
+            width: 10px;
+            background-color: red;
+            border-radius: 50%;
+            display: inline;
+        }
+    </style>
 </header>
 
 <!-- The actual snackbar -->

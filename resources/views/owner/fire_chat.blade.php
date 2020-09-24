@@ -212,7 +212,7 @@
 ================================================== -->
     <script type="text/javascript">
 
-         function youFunction(msg){
+         function checkNotAllowedText(msg){
 
             var matches = msg.match(/\d+/g);
             if(matches == null){
@@ -220,7 +220,6 @@
                 var arr = ['@','#','My phone number','Your phone number','Email','E-mail','Phone number','Paypal','Facebook','facebook.com','Instagram','Cash app','App','Gmail.com','Gmail','Yahoo.com','Yahoo.com','Hotmail.com','Hotmail ','Aol.com','Msn.com','Comcast.net','Live.com','Ymail.com','Outlook.com','Sbcglobal.net','Net ','.com','.net','Dot','Version.net','Att.net','Bellsouth.net','Airbnb','Airbnb.com','Mac.cm','icould.com ','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Address ','Street','Western union','Wire','Bank','Money','Text '];
 
                 var isEvery = checkInput(str,arr);
-                console.log(isEvery);
                 
                 if(isEvery == true){
                     $("#send_msg").hide();
@@ -269,9 +268,12 @@
             //var node_name = 'instant_chat';
             var chats = new Firebase('{{FB_URL}}'+node_name+'/'+request_id);
             $scope.messages = $firebaseArray(chats);
-            console.log($scope.messages);
 
-
+            $scope.$watch(function(){return $scope.messages},function(newValue){
+                $scope.messages.$loaded(function(newValue){
+                    $scope.markAsRead(newValue);
+                })
+            })
             $scope.userid = '{{$owner->id}}';
             $scope.removeProduct = function(id) {
                 var ref = new Firebase('{{FB_URL}}'+node_name+'/'+request_id+'/' + id);
@@ -279,10 +281,26 @@
                 product.$remove();
             };
 
+            $scope.markAsRead = function(messages) {
+                var updates = {};
+                messages.forEach(function(message){        
+                    message = JSON.parse(JSON.stringify(message));
+                    var messageId = message.$id;
+                    delete message.$id;
+                    delete message.$priority;
+                    if(message.sent_by != '{{$owner->id}}' && !message.read) {
+                        message.read = true;
+                        updates['/'+node_name+'/'+request_id+'/'+messageId] = message;
+                    }
+                });
+                if(Object.keys(updates).length > 0){
+                    firebase.database().ref().update(updates);
+                }
+                return;
+            }
+            
             $scope.addMessage = function() {
                 var ref = new Firebase('{{FB_URL}}'+node_name+'/'+request_id);
-            // {"date":"13/03/2018 10:33:38","message":"Hi bubblu Enquiry sent for Sunset Cave Hosue 2guests,
-                // -","owner_id":73,"property_id":"2","sent_by":"37","traveller_id":"37"}
                 var message = $scope.messageSend;
                 var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 var status = re.test(message);
@@ -293,7 +311,7 @@
                     var numStr = /(?:\d.*?){3,}/;
                     return numStr.test( n.toString() );
                 }
-                console.log(message);
+
                 var a = isANumber(message);
                 if(a){
                     var n_status = true;

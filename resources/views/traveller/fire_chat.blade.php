@@ -227,7 +227,6 @@
                 var arr = ['@','#','My phone number','Your phone number','Email','E-mail','Phone number','Paypal','Facebook','facebook.com','Instagram','Cash app','App','Gmail.com','Gmail','Yahoo.com','Yahoo.com','Hotmail.com','Hotmail ','Aol.com','Msn.com','Comcast.net','Live.com','Ymail.com','Outlook.com','Sbcglobal.net','Net ','.com','.net','Dot','Version.net','Att.net','Bellsouth.net','Airbnb','Airbnb.com','Mac.cm','icould.com ','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Address ','Street','Western union','Wire','Bank','Money','Text '];
 
                 var isEvery = checkInput(str,arr);
-                console.log(isEvery);
 
                 if(isEvery == true){
                     $("#send_msg").hide();
@@ -282,7 +281,11 @@
             if ($scope.messages) {
                 $scope.loader = 'yes';
             }
-            //alert($scope.loader);
+            $scope.$watch(function(){return $scope.messages},function(newValue){
+                $scope.messages.$loaded(function(newValue){
+                    $scope.markAsRead(newValue);
+                })
+            })
 
             $scope.userid = {{$traveller_id}};
             $scope.removeProduct = function(id) {
@@ -290,6 +293,24 @@
                 var product = $firebaseObject(ref)
                 product.$remove();
             };
+
+            $scope.markAsRead = function(messages) {
+                var updates = {};
+                messages.forEach(function(message){        
+                    message = JSON.parse(JSON.stringify(message));
+                    var messageId = message.$id;
+                    delete message.$id;
+                    delete message.$priority;
+                    if(message.sent_by != '{{$traveller_id}}' && !message.read) {
+                        message.read = true;
+                        updates['/'+node_name+'/'+request_id+'/'+messageId] = message;
+                    }
+                });
+                if(Object.keys(updates).length > 0){
+                    firebase.database().ref().update(updates);
+                }
+                return;
+            }
 
             $scope.addMessage = function() {
                 var ref = new Firebase('{{FB_URL}}'+node_name+'/'+request_id);

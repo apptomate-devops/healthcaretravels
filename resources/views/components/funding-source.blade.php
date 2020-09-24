@@ -1,5 +1,5 @@
 <div>
-    <h2>Select an Account</h2>
+    <h2>{{$label ?? 'Select an Account'}}</h2>
     @if(count($funding_sources) > 0)
         <div style="width: 70%">
             <select name="funding_source" id="fundingSource" class="chosen-select-no-single">
@@ -12,7 +12,7 @@
     @else
         <div>You haven't added any account details yet.</div>
     @endif
-    <div class="btn bg-orange" style="width: auto; margin-top: 10px;" id="create-funding-source">Add Account Details</div>
+    <div class="btn bg-orange" style="width: auto; margin-top: 10px;" id="create-funding-source">{{$button_label ?? 'Add Account Details'}}</div>
     <div id="bank_verification_modal" data-backdrop="static" data-keyboard="false" class="modal fade in" role="dialog">
         <div class="modal-dialog modal-lg">
             <!-- Modal content-->

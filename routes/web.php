@@ -159,6 +159,8 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::get('/owner/chat/{id}', 'PropertyController@fire_chat');
     Route::GET('/ical/{id}', 'IcalController@ical');
 
+    Route::GET('/payment-options', 'PaymentController@get_payment_options');
+
     // Payment and Invoices
     Route::GET('/invoice/{id}/{is_owner}', 'PDF_Controller@invoice');
 

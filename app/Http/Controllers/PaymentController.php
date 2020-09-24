@@ -233,4 +233,17 @@ class PaymentController extends BaseController
             dd($th);
         }
     }
+    public function get_payment_options(Request $request)
+    {
+        $user_id = $request->session()->get('user_id');
+        $user = Users::find($user_id);
+        if (empty($user)) {
+            return view('general_error', ['message' => 'We can’t find user.']);
+        }
+        $funding_sources = $this->dwolla->getFundingSourcesForCustomer($user->dwolla_customer);
+        return view('payments.payment_options', [
+            'user' => $user,
+            'funding_sources' => $funding_sources,
+        ]);
+    }
 }

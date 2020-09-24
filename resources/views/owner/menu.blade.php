@@ -73,6 +73,12 @@
                 <i class="sl sl-icon-note"></i> Transcation History
             </a>
         </li>
+        <li>
+            <a href="{{url('/')}}/payment-options" {{{ (Request::is('/payment-options') ? 'class=current' : '') }}}>
+                <i class="sl sl-icon-note"></i> Payment Options
+            </a>
+        </li>
+
 {{--        <li>--}}
 {{--            <a href="{{url('/')}}/owner/special_price" {{{ (Request::is('/owner/special_price') ? 'class=current' : '') }}}>--}}
 {{--                <i class="sl sl-icon-star"></i>  Special Pricing--}}
@@ -131,6 +137,12 @@
     <li><a href="{{url('/')}}/traveler/my-reservations" {{{ (Request::is('traveler/my-reservations') ? 'class=current' : '') }}}>
             <i class="sl sl-icon-credit-card"></i> My Trips</a><i class="fa fa-bell" id="traveler_trips"></i></li>
 
+    <li>
+        <a href="{{url('/')}}/payment-options" {{{ (Request::is('/payment-options') ? 'class=current' : '') }}}>
+            <i class="sl sl-icon-note"></i> Payment Options
+        </a>
+    </li>
+
     <li><a href="{{url('/')}}/traveler/inbox" {{{ (Request::is('traveler/inbox') ? 'class=current not-verified-block' : 'class=not-verified-block') }}}>
             <i class="fa fa-inbox"></i> Inbox</a></li>
     <li>
@@ -169,6 +181,11 @@
     <li><a href="{{url('/')}}/traveler/my-reservations" {{{ (Request::is('traveler/my-reservations') ? 'class=current' : '') }}}>
             <i class="sl sl-icon-credit-card"></i> My Trips</a><i class="fa fa-bell" id="agency_trips"></i></li>
 
+    <li>
+        <a href="{{url('/')}}/payment-options" {{{ (Request::is('/payment-options') ? 'class=current' : '') }}}>
+            <i class="sl sl-icon-note"></i> Payment Options
+        </a>
+    </li>
     <li><a href="{{url('/')}}/traveler/inbox" {{{ (Request::is('traveler/inbox') ? 'class=current not-verified-block' : 'class=not-verified-block') }}}>
             <i class="fa fa-inbox"></i> Inbox</a></li>
     <li>

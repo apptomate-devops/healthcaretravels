@@ -909,7 +909,7 @@ class PropertyController extends BaseController
     {
         $user_id = $request->session()->get('user_id');
         $data = DB::select(
-            "SELECT A.*,A.status as bookStatus,B.* FROM `property_booking` A,`property_list` B WHERE A.property_id = B.id AND A.traveller_id = $user_id",
+            "SELECT A.*,A.status as bookStatus,B.* FROM `property_booking` A,`property_list` B WHERE A.property_id = B.id AND A.funding_source != '' AND A.traveller_id = $user_id",
         );
         DB::table('property_booking')
             ->where('property_booking.traveller_id', $request->session()->get('user_id'))

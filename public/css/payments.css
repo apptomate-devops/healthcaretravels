@@ -1,0 +1,29 @@
+table.pricing-table  {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table.pricing-table tr th {
+    border: none;
+    background-color: #0983b8;
+    color: #fff;
+}
+
+table.pricing-table td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+table.pricing-table tr td {
+    background-color: #FFF;
+    border: none;
+    border-bottom: 1px solid #000;
+    color: #000;
+    padding: 20px 15px;
+}
+
+table.pricing-table tr td p {
+    margin: 0;
+}

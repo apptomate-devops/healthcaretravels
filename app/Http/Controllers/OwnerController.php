@@ -167,7 +167,10 @@ class OwnerController extends BaseController
             // TODO: check if date should fall between selected range then change line to (property_booking.start_date <= $fromDate AND property_booking.end_date >= $toDate)
             //            $data->whereBetween('property_booking.start_date', [$from, $to]);
         }
-        $data = $data->select('property_list.title', 'property_booking.*')->get();
+        $data = $data
+            ->where('property_booking.funding_source', '!=', '')
+            ->select('property_list.title', 'property_booking.*')
+            ->get();
 
         $booking_requests = [];
         $my_bookings = [];

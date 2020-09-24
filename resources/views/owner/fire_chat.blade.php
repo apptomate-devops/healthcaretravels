@@ -308,7 +308,8 @@
                                 owner_id: $scope.userid,
                                 traveller_id: 1,
                                 property_id: 1,
-                                date: current_date
+                                date: current_date,
+                                read: false
                             });
                         }else{
                             alert("Numbers are not allowed");

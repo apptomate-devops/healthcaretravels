@@ -337,18 +337,19 @@
     // Initialize Firebase
     var config = {
         apiKey: "AIzaSyAp8NYnsYWc_E_78Ou4yXHDH4PasZuYs58",
-    authDomain: "health-care-travels.firebaseapp.com",
-    databaseURL: "https://health-care-travels.firebaseio.com",
-    projectId: "health-care-travels",
-    storageBucket: "health-care-travels.appspot.com",
-    messagingSenderId: "420688223951",
-    appId: "1:420688223951:web:5518320dc1d350fe1fe1ba"
-    }
+        authDomain: "health-care-travels.firebaseapp.com",
+        databaseURL: "https://health-care-travels.firebaseio.com",
+        projectId: "health-care-travels",
+        storageBucket: "health-care-travels.appspot.com",
+        messagingSenderId: "420688223951",
+        appId: "1:420688223951:web:5518320dc1d350fe1fe1ba"
+    };
     firebase.initializeApp(config);
 
     // Create a Firebase reference where GeoFire will store its information
-    var firebaseRef = firebase.database().ref();
-
+    var db = firebase.database();
+    var firebaseRef = db.ref();
+    var hasUnreadMessage = {{Session::get('has_unread_message')}};
     // Create a GeoFire index
     var geoFire = new GeoFire(firebaseRef);
 

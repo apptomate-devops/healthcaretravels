@@ -261,7 +261,7 @@ class BaseController extends ConstantsController
 
     public function send_scheduled_email($to, $template, $subject, $data, $delayInSeconds)
     {
-        Logger::info('Scheduling email to: '. $to . ' after: ' . $delayInSeconds . ' for template: ' . $template);
+        Logger::info('Scheduling email to: ' . $to . ' after: ' . $delayInSeconds . ' for template: ' . $template);
         ProcessEmail::dispatch($to, 'mail.' . $template, $subject, $data)
             ->delay(now()->addSeconds($delayInSeconds))
             ->onQueue(EMAIL_QUEUE);
@@ -789,9 +789,9 @@ class BaseController extends ConstantsController
         $scheduler_date->second = 0;
         $scheduler_date->addDays(3);
         ProcessSecurityDeposit::dispatch($booking->id)
-                    ->delay($scheduler_date)
-                    ->onQueue(PAYMENT_QUEUE);
-        Logger::info('Security deposit job scheduled for: ' . $booking->id .' at: ' . $scheduler_date);
+            ->delay($scheduler_date)
+            ->onQueue(PAYMENT_QUEUE);
+        Logger::info('Security deposit job scheduled for: ' . $booking->id . ' at: ' . $scheduler_date);
         foreach ($payments as $payment) {
             // Removing first payment of traveller
             if (!($payment['is_owner'] == 0 && $payment['payment_cycle'] == 1)) {
@@ -799,9 +799,9 @@ class BaseController extends ConstantsController
                 ProcessPayment::dispatch($payment['id'])
                     ->delay($dueTime)
                     ->onQueue(PAYMENT_QUEUE);
-                if($payment['is_owner'] == 0) {
+                if ($payment['is_owner'] == 0) {
                     $amount = $payment['service_tax'] + $payment['total_amount'];
-                    if(empty($accountName)) {
+                    if (empty($accountName)) {
                         $fundingSource = $booking->funding_source;
                         $fsDetails = $this->dwolla->getFundingSourceDetails($fundingSource);
                         $accountName = $fsDetails->name;

@@ -344,6 +344,7 @@ class UserController extends BaseController
         $request->session()->put('phone', $check->phone);
         $request->session()->put('user_id_v', $check->id);
         $request->session()->put('phone_v', $check->phone);
+        $request->session()->put('user_role_id', $check->role_id);
         if ($check->otp_verified != 1) {
             $OTP = rand(1111, 9999);
             // send otp

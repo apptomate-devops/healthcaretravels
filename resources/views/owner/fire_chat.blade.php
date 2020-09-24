@@ -295,6 +295,7 @@
                 });
                 if(Object.keys(updates).length > 0){
                     firebase.database().ref().update(updates);
+                    $('#unread_chat_badge').hide();
                 }
                 return;
             }

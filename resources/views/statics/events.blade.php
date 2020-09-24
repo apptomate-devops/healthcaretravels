@@ -31,7 +31,7 @@
                 </p> --}}
                 <div class="image">
                     <center>
-                        <div class="col-md-12 pb-20">
+                        <div class="col-md-12 pb-50">
                             <img src="{{URL::asset('/assets/events/exhibitor2021.jpeg')}}"
                                  style="vertical-align: middle;height: 331px;">
                         </div>

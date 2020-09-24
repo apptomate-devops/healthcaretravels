@@ -350,6 +350,10 @@
     var db = firebase.database();
     var firebaseRef = db.ref();
     var hasUnreadMessage = {{Session::get('has_unread_message')}};
+    if(hasUnreadMessage) {
+        $('#unread_chat_badge').show();
+    }
+
     // Create a GeoFire index
     var geoFire = new GeoFire(firebaseRef);
 

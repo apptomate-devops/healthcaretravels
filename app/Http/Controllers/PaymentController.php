@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PropertyBooking;
 use App\Services\Logger;
 use Illuminate\Http\Request;
 use App\Models\Users;
@@ -247,9 +248,90 @@ class PaymentController extends BaseController
             return view('general_error', ['message' => 'We can’t find user.']);
         }
         $funding_sources = $this->dwolla->getFundingSourcesForCustomer($user->dwolla_customer);
+
+        // TODO: get transaction history
+        // TODO: confirm if owner can also book property
+
+        $all_bookings = PropertyBooking::whereIn('status', [2, 4])
+            ->where(function ($q) use ($user_id) {
+                $q->where('traveller_id', $user_id)->orWhere('owner_id', $user_id);
+            })
+            ->select('booking_id', 'traveller_id', 'owner_id')
+            ->get();
+        $all_payments = [];
+        foreach ($all_bookings as $booking) {
+            $is_owner = (int) ($booking->owner_id == $user_id);
+            $payments = BookingPayments::where('booking_id', $booking->booking_id)
+                ->where('is_owner', $is_owner)
+                ->where('is_cleared', 1)
+                ->get();
+
+            foreach ($payments as $payment) {
+                $payment->confirmed_time = Carbon::now();
+                $transaction_record['transaction_date'] = Carbon::parse($payment->confirmed_time)->toDateString();
+                $transaction_record['name'] = 'Stay Payment';
+                $transaction_record['booking_id'] = $payment->booking_id;
+
+                if ($is_owner) {
+                    $transaction_record['payment'] = $payment->total_amount - $payment->service_tax;
+                    $transaction_record['status'] = 'Credited';
+
+                    if ($payment->payment_cycle == 1) {
+                        // For cleaning fee entry
+                        $cleaning_fee_record['name'] = 'Cleaning Fee';
+                        $cleaning_fee_record['payment'] = $payment->cleaning_fee;
+                        $cleaning_fee_record['status'] = 'Credited';
+                        $cleaning_fee_record['booking_id'] = $payment->booking_id;
+                        $cleaning_fee_record['transaction_date'] = $transaction_record['transaction_date'];
+                        array_push($all_payments, $cleaning_fee_record);
+
+                        $transaction_record['payment'] =
+                            $payment->total_amount - $payment->service_tax - $payment->cleaning_fee;
+                    }
+                } else {
+                    $transaction_record['payment'] = $payment->total_amount;
+                    $transaction_record['status'] = 'Debited';
+
+                    if ($payment->payment_cycle == 1) {
+                        // For cleaning fee entry
+                        $cleaning_fee_record['name'] = 'Cleaning Fee';
+                        $cleaning_fee_record['payment'] = $payment->cleaning_fee;
+                        $cleaning_fee_record['status'] = 'Debited';
+                        $cleaning_fee_record['booking_id'] = $payment->booking_id;
+                        $cleaning_fee_record['transaction_date'] = $transaction_record['transaction_date'];
+                        array_push($all_payments, $cleaning_fee_record);
+
+                        // For Security Deposit entry
+                        $security_deposit_record['name'] = 'Security Deposit';
+                        $security_deposit_record['payment'] = $payment->security_deposit;
+                        $security_deposit_record['status'] = 'Debited';
+                        $security_deposit_record['booking_id'] = $payment->booking_id;
+                        $security_deposit_record['transaction_date'] = $transaction_record['transaction_date'];
+                        array_push($all_payments, $security_deposit_record);
+
+                        // For Service Tax entry
+                        $service_tax_record['name'] = 'Service Tax';
+                        $service_tax_record['payment'] = $payment->service_tax;
+                        $service_tax_record['status'] = 'Debited';
+                        $service_tax_record['booking_id'] = $payment->booking_id;
+                        $service_tax_record['transaction_date'] = $transaction_record['transaction_date'];
+                        array_push($all_payments, $service_tax_record);
+
+                        $transaction_record['payment'] =
+                            $payment->total_amount - $payment->security_deposit - $payment->cleaning_fee;
+                    }
+
+                    // TODO: Add security deposit details here when handled
+                }
+
+                array_push($all_payments, $transaction_record);
+            }
+        }
+
         return view('payments.payment_options', [
             'user' => $user,
             'funding_sources' => $funding_sources,
+            'all_payments' => $all_payments,
         ]);
     }
 }

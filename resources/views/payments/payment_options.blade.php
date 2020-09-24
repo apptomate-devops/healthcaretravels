@@ -3,7 +3,7 @@
     {{APP_BASE_NAME}} | Payment Options
 @endsection
 @section('main_content')
-    <link rel="stylesheet" href="{{ URL::asset('css/reservations.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('css/payments.css') }}">
 
     <div class="container" style="margin-top: 35px;">
         <div class="row">
@@ -30,8 +30,29 @@
                                  'button_label' => 'Add a Payment Option'
                                  ])
                 @endcomponent
-            </div>
 
+                @if(count($all_payments) > 0)
+                    <h2 style="margin-top: 50px;">Payment History</h2>
+                    <table class="pricing-table responsive-table">
+                        <tr>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Payment</th>
+                            <th>Booking ID</th>
+                            <th>Status</th>
+                        </tr>
+                        @foreach($all_payments as $payment)
+                            <tr>
+                                <td>{{$payment['transaction_date']}}</td>
+                                <td>{{$payment['name']}}</td>
+                                <td>${{$payment['payment']}}</td>
+                                <td>{{$payment['booking_id']}}</td>
+                                <td>{{$payment['status']}}</td>
+                            </tr>
+                        @endforeach
+                    </table>
+                @endif
+            </div>
         </div>
     </div>
 @endsection

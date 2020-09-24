@@ -144,13 +144,19 @@ class PaymentController extends BaseController
     {
         $proposedSignature = $request->header('X-Request-Signature-SHA-256');
         $eventType = $request->header('x-dwolla-topic');
-        $payloadBody = json_encode($request->all());
+        $payloadBody = json_encode($request->all(), JSON_UNESCAPED_SLASHES);
         $requiredEvents = ['transfer_completed', 'transfer_cancelled', 'transfer_failed'];
         Logger::info('Webhook called: eventType: ' . $eventType);
         Logger::info('ProposedSignature: ' . $proposedSignature);
         Logger::info('payload: ' . $payloadBody);
         $willBeUsed = in_array($eventType, $requiredEvents);
         $validation = $this->dwolla->verify_gateway_signature($proposedSignature, $payloadBody);
+        if (!$validation['is_valid']) {
+            // Note: Check me in the logs
+            Logger::error('Failed to verify dwolla signature');
+            // TODO: enable error when confirmed signatures are working
+            // return response()->json(['success' => true, 'message' => 'Failed to verify dwolla signature']);
+        }
         $event = new DwollaEvents();
         try {
             $event->dwolla_id = $request->id;

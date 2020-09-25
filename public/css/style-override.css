@@ -88,6 +88,12 @@
 .padding-5 {
     padding: 5px 0;
 }
+.pb-20 {
+    padding-bottom: 20px;
+}
+.pb-50 {
+    padding-bottom: 50px;
+}
 .px-0 {
     padding-left: 0 !important;
     padding-right: 0 !important;

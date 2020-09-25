@@ -231,6 +231,10 @@ class HomeController extends BaseController
     {
         return view('statics.partner');
     }
+    public function events()
+    {
+        return view('statics.events');
+    }
     public function payment_terms()
     {
         return view('policies.payment-terms');

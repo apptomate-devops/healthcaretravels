@@ -63,6 +63,7 @@ Route::GET('/get-user-notifications', 'HomeController@get_user_notifications');
 Route::get('/how_it_works', 'HomeController@how_it_works');
 Route::get('/non-discrimination-policy', 'HomeController@non_discrimination_policy');
 Route::get('/partner', 'HomeController@partner');
+Route::get('/events', 'HomeController@events');
 Route::get('/payment-terms', 'HomeController@payment_terms');
 Route::get('/policies', 'HomeController@policies');
 Route::get('/privacy-policy', 'HomeController@privacy_policy');

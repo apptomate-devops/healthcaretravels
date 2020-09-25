@@ -179,24 +179,54 @@ class PaymentController extends BaseController
         }
         $resourceId = $request->resourceId;
         $payment = BookingPayments::getByTransactionId($resourceId);
+        $paymentBooking = null;
+        $fundingSource = null;
+        $booking = null;
         if (empty($payment)) {
-            return response()->json(['success' => false, 'message' => 'resource id does not exists!']);
+            $booking = PropertyBooking::findByResourceId($resourceId);
+            if (empty($booking)) {
+                return response()->json(['success' => false, 'message' => 'resource id does not exists!']);
+            }
         }
-        $booking = $payment->booking;
-        $fundingSource = $payment->is_owner ? $booking->owner_funding_source : $booking->funding_source;
+        if ($payment) {
+            $paymentBooking = $payment->booking;
+            $fundingSource = $payment->is_owner
+                ? $paymentBooking->owner_funding_source
+                : $paymentBooking->funding_source;
+        }
         switch ($eventType) {
             case 'transfer_cancelled':
             case 'transfer_failed':
-                $payment->failed_time = Carbon::parse($request->timestamp)->toDateTimeString();
-                $payment->is_cleared = -1;
-                $payment->save();
-                Helper::send_payment_email($payment, $fundingSource, false);
+                if ($payment) {
+                    $payment->failed_time = Carbon::parse($request->timestamp)->toDateTimeString();
+                    $payment->is_cleared = -1;
+                    $payment->save();
+                    Helper::send_payment_email($payment, $fundingSource, false);
+                } elseif ($booking) {
+                    if ($booking->owner_deposit_transfer_id == $resourceId) {
+                        $booking->owner_deposit_failed_at = Carbon::parse($request->timestamp)->toDateTimeString();
+                    } elseif ($booking->traveler_deposit_transfer_id == $resourceId) {
+                        $booking->traveler_deposit_failed_at = Carbon::parse($request->timestamp)->toDateTimeString();
+                    }
+                    $booking->save();
+                }
                 break;
             case 'transfer_completed':
-                $payment->confirmed_time = Carbon::parse($request->timestamp)->toDateTimeString();
-                $payment->is_cleared = 1;
-                $payment->save();
-                Helper::send_payment_email($payment, $fundingSource, true);
+                if ($payment) {
+                    $payment->confirmed_time = Carbon::parse($request->timestamp)->toDateTimeString();
+                    $payment->is_cleared = 1;
+                    $payment->save();
+                    Helper::send_payment_email($payment, $fundingSource, true);
+                } elseif ($booking) {
+                    if ($booking->owner_deposit_transfer_id == $resourceId) {
+                        $booking->owner_deposit_confirmed_at = Carbon::parse($request->timestamp)->toDateTimeString();
+                    } elseif ($booking->traveler_deposit_transfer_id == $resourceId) {
+                        $booking->traveler_deposit_confirmed_at = Carbon::parse(
+                            $request->timestamp,
+                        )->toDateTimeString();
+                    }
+                    $booking->save();
+                }
                 break;
             default:
                 Logger::info('Not required event received');

@@ -82,4 +82,11 @@ class PropertyBooking extends Model
     {
         return $this->hasMany('App\Models\BookingPayments', 'booking_id', 'booking_id');
     }
+
+    public static function findByResourceId($id)
+    {
+        return PropertyBooking::where('owner_deposit_transfer_id', $id)
+            ->orWhere('traveler_deposit_transfer_id', $id)
+            ->first();
+    }
 }

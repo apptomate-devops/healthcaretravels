@@ -59,6 +59,11 @@
                                     </a>
                                 </li>
                                 <li class="text-center">
+                                    <a href="/events">
+                                        Events
+                                    </a>
+                                </li>
+                                <li class="text-center">
                                     <a href="#">
                                         Agency
                                     </a>

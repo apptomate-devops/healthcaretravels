@@ -14,15 +14,17 @@ class UnreadMessageCount
         $user_id = $this->request->session()->get('user_id');
         $unread_count = 0;
         $unread_message_data = [];
-        $data = file_get_contents(FB_URL . $key . "/" . $id . "/.json");
-        $data = json_decode($data);
-        $data = (array) $data;
 
-        foreach ($data as $message) {
-            if ($message->sent_by != $user_id && property_exists($message, 'read') && $message->read == false) {
-                $unread_count++;
-                $unread_message_data = ['message_id' => $id, 'message_key' => $key];
-                break;
+        if (defined('FB_URL')) {
+            $data = file_get_contents(FB_URL . $key . "/" . $id . "/.json");
+            $data = json_decode($data);
+            $data = (array) $data;
+            foreach ($data as $message) {
+                if ($message->sent_by != $user_id && property_exists($message, 'read') && $message->read == false) {
+                    $unread_count++;
+                    $unread_message_data = ['message_id' => $id, 'message_key' => $key];
+                    break;
+                }
             }
         }
         $data = [

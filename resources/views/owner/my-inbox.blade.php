@@ -34,12 +34,15 @@
                 @foreach($properties[0] as $property)
                 @if(isset($property->traveller) != 0)
                 <tr>
-                    <td class="title-container">
+                    <td class="title-container" style="position: relative;">
 
                         @if($property->traveller->profile_image != null)
                         <img style="border-radius: 11px;" src="{{$property->traveller->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt="">
                         @else
                         <img style="border-radius: 11px;" src="/user_profile_default.png" alt="">
+                        @endif
+                        @if(isset($property->has_unread_message) && $property->has_unread_message) 
+                            <span class="unread_message_badge"></span>
                         @endif
                         <div class="title">
                             <h4><a href="#">{{$property->traveller->first_name}} {{$property->traveller->last_name}}</a></h4>
@@ -64,12 +67,15 @@
                 @foreach($properties[1] as $property)
                 @if(isset($property->traveller) != 0)
                 <tr>
-                    <td class="title-container">
+                    <td class="title-container" style="position: relative;">
 
                         @if($property->traveller->profile_image != null)
                         <img style="border-radius: 11px;" src="{{$property->traveller->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt="">
                         @else
                         <img style="border-radius: 11px;" src="/user_profile_default.png" alt="">
+                        @endif
+                        @if(isset($property->has_unread_message) && $property->has_unread_message) 
+                            <span class="unread_message_badge"></span>
                         @endif
                         <div class="title">
                             <h4><a href="#">{{$property->traveller->first_name}} {{$property->traveller->last_name}}</a></h4>
@@ -94,12 +100,15 @@
                 @foreach($properties[2] as $property)
                 @if(isset($property->traveller) != 0)
                 <tr>
-                    <td class="title-container">
+                    <td class="title-container" style="position: relative;">
 
                         @if($property->traveller->profile_image != null)
                         <img style="border-radius: 11px;" src="{{$property->traveller->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt="">
                         @else
                         <img style="border-radius: 11px;" src="/user_profile_default.png" alt="">
+                        @endif
+                        @if(isset($property->has_unread_message) && $property->has_unread_message) 
+                                <span class="unread_message_badge"></span>
                         @endif
                         <div class="title">
                             <h4><a href="#">{{$property->traveller->first_name}} {{$property->traveller->last_name}}</a></h4>
@@ -129,5 +138,15 @@
     </div>
 </div>
 
-
+<style>
+.unread_message_badge {
+    position: absolute;
+    bottom: 40px;
+    height: 10px;
+    background-color: red;
+    width: 10px;
+    left: 150px;
+    border-radius: 50%;
+}
+</style>
 @endsection

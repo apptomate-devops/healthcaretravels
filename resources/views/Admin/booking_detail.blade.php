@@ -40,6 +40,67 @@
 </div>
 <div class="card">
     <div class="card-header">
+        <h4 class="card-title">Booking Security Deposit</h4>
+        <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+        <div class="heading-elements">
+            <ul class="list-inline mb-0">
+                <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                <li><a data-action="close"><i class="ft-x"></i></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="card-content px-25" style="padding-bottom:10px;">
+        <h6 for="">Deposit Amount: {{$booking->security_deposit}}<br /></h6>
+        @if ($booking->is_deposit_handled)
+            <div class="mt-10 alert alert-success" role="alert">
+                Security deposit was settled as follows:
+            </div>
+        @endif
+        <div class="deposit-form-wrapper">
+            <form action="{{url('/')}}/admin/settle-deposit" method="post" id="settle-deposit">
+                @csrf
+                <input type="hidden" value="{{$booking->id}}"  name="id">
+                <div class="form-group">
+                    <label for="traveler_cut">Traveler Cut</label>
+                    <input type="number" class="form-control col-1" min="0" max="{{$booking->security_deposit}}" value="{{$booking->traveler_cut}}" id="traveler_cut" name="traveler_cut" placeholder="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="owner_cut">Owner Cut</label>
+                    <input type="number" class="form-control col-1" id="owner_cut" name="owner_cut" min="0" max="{{$booking->security_deposit}}" value="{{$booking->owner_cut}}" placeholder="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="admin_remarks">Admin Remarks</label>
+                    <input type="text" class="form-control col-4" id="admin_remarks" name="admin_remarks" value="{{$booking->admin_remarks}}" placeholder="Admin Remarks" required>
+                </div>
+                <div class="form-group">
+                    <label for="traveler_remarks">Traveler Remarks</label>
+                    <input type="text" class="form-control col-4" id="traveler_remarks" name="traveler_remarks" value="{{$booking->traveler_remarks}}" placeholder="Traveler Remarks" required>
+                </div>
+                <div class="form-group">
+                    <label for="owner_remarks">Owner Remarks</label>
+                    <input type="text" class="form-control col-4" id="owner_remarks" name="owner_remarks" value="{{$booking->owner_remarks}}" placeholder="Owner Remarks" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Process Deposit</button>
+                @if(Session::has('success'))
+                    @if (Session::has('successMessage'))
+                        <div class="mt-10 alert alert-success" role="alert" autofocus>
+                            {{ Session::get('successMessage') }}
+                        </div>
+                    @endif
+                    @if (Session::has('errorMessage'))
+                        <div class="mt-10 alert alert-danger" role="alert">
+                            {{ Session::get('errorMessage') }}
+                        </div>
+                    @endif
+                @endif
+            </form>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
         <h4 class="card-title">Booking Transactions</h4>
         <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
         <div class="heading-elements">
@@ -132,5 +193,33 @@
 
 @section('scripts')
 <script>
+    $(function ready() {
+        var deposit = '{{$booking->security_deposit}}';
+        deposit = parseInt(deposit);
+        var tc = $('#traveler_cut');
+        var oc = $('#owner_cut');
+        tc.change(function (event) {
+            var travelerValue = event.currentTarget.value;
+            travelerValue = parseInt(travelerValue);
+            oc.val(deposit - travelerValue);
+        });
+        oc.change(function (event) {
+            var ownerValue = event.currentTarget.value;
+            ownerValue = parseInt(ownerValue);
+            tc.val(deposit - ownerValue);
+        });
+        var isHandled = '{{$booking->is_deposit_handled}}';
+        if (isHandled == 1) {
+            $('#settle-deposit :input').prop("disabled", true);;
+        }
+        var hasMessage = '{{Session::has("success")}}';
+        if (hasMessage) {
+            var hasSuccessMessage = '{{Session::has("successMessage")}}';
+            var hasErrorMessage = '{{Session::has("errorMessage")}}';
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#traveler_remarks").offset().top
+            }, 400);
+        }
+    });
 </script>
 @endsection

@@ -53,3 +53,12 @@ canvas[data-enlargable] {
 .mb-15 {
     margin-bottom: 15px;
 }
+
+.px-25 {
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}

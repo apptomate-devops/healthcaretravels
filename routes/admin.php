@@ -44,6 +44,7 @@ Route::group(['prefix' => 'admin'], function () {
 
         Route::GET('/bookings', 'Admin\BookingController@index');
         Route::GET('/bookings/{id}', 'Admin\BookingController@booking_details');
+        Route::POST('/settle-deposit', 'Admin\BookingController@settle_deposit');
 
         Route::GET('/commision', 'Admin\CommisionController@index');
         Route::POST('/commision', 'Admin\CommisionController@update');

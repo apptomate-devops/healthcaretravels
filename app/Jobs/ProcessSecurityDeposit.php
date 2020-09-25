@@ -41,7 +41,7 @@ class ProcessSecurityDeposit implements ShouldQueue
     public function handle()
     {
         Helper::setConstantsHelper();
-        Helper::processSecurityDepositForBooking($this->booking_id);
+        Helper::processSecurityDepositForBooking($this->booking_id, true);
     }
 
         /**

@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
+use App\Models\PropertyBooking;
+
 use DB;
+use Helper;
 
 class BookingController extends BaseController
 {
@@ -56,5 +59,34 @@ class BookingController extends BaseController
             ->get();
 
         return view('Admin.booking_detail', compact('booking', 'booking_transactions'));
+    }
+
+    public function settle_deposit(Request $request)
+    {
+        $id = $request->id;
+        $booking = PropertyBooking::find($id);
+        if (empty($booking)) {
+            return back()->with([
+                'success' -> false,
+                'errorMessage' => 'No such booking exists!',
+            ]);
+        }
+        if ($booking->is_deposit_handled) {
+            Logger::error('Security deposit was already handled: ' . $id);
+            return back()->with(['success' => false, 'errorMessage' => 'Security deposit was already handled']);
+        }
+        if ($request->traveler_cut + $request->owner_cut != $booking->security_deposit) {
+            return back()->with(['success' => false, 'errorMessage' => 'Sum of owner and traveler cut should be equal to Security deposit']);
+        }
+        $booking->should_auto_deposit = 0;
+        $booking->is_deposit_handled_by_admin = 1;
+        $booking->traveler_cut = $request->traveler_cut;
+        $booking->owner_cut = $request->owner_cut;
+        $booking->admin_remarks = $request->admin_remarks;
+        $booking->traveler_remarks = $request->traveler_remarks;
+        $booking->owner_remarks = $request->owner_remarks;
+        $booking->save();
+        $res = Helper::processSecurityDepositForBooking($booking->id);
+        return back()->with($res);
     }
 }

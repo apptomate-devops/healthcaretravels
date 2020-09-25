@@ -305,48 +305,123 @@ class Helper
         return explode(':', $time);
     }
 
-    public static function processSecurityDepositForBooking($id, $from_job = true)
+    public static function processSecurityDepositForBooking($id, $from_job = false)
     {
         $booking = PropertyBooking::find($id);
         if (empty($booking)) {
             Logger::error('Booking does not exist: ' . $id);
-            return ['success' => false];
+            return ['success' => false, 'errorMessage' => 'Booking does not exist!'];
         }
         if ($from_job && !$booking->should_auto_deposit) {
             Logger::error('Security deposit was marked not to auto deposit: ' . $id);
-            return ['success' => false];
+            return ['success' => false, 'errorMessage' => 'Security deposit was marked not to auto deposit'];
         }
-        if ($booking->is_deposit_handled || $booking->is_deposit_handled_by_admin) {
+        if ($from_job && $booking->is_deposit_handled_by_admin) {
+            Logger::error('Security deposit was handled by admin: ' . $id);
+            return ['success' => false, 'errorMessage' => 'Security deposit was handled by admin'];
+        }
+        if ($booking->is_deposit_handled) {
             Logger::error('Security deposit was already handled: ' . $id);
-            return ['success' => false];
+            return ['success' => false, 'errorMessage' => 'Security deposit was already handled'];
         }
+        Logger::info('Initiating security deposit handler for: ' . $id);
+        $dwolla = new Dwolla();
+        $traveller = $booking->traveler;
+        $owner = $booking->owner;
+        $travelerRes = null;
+        $ownerRes = null;
+        $hasOwnerPart = 0;
+        if ($booking->owner_cut && $booking->owner_cut > 0) {
+            $hasOwnerPart = 1;
+        }
+        // Handling raveler part
         try {
-            Logger::info('Initiating security deposit handler for: ' . $id);
-            $dwolla = new Dwolla();
+            if ($booking->traveler_deposit_transfer_id) {
+                $travelerRes = ['success' => true, 'successMessage' => 'Security deposit has been handled for traveler'];
+            }
+            Logger::info('Initiating transfer for traveler: bookingID: ' . $id);
             $fundingSource = $booking->funding_source;
             $amount = $booking->traveler_cut;
             $idempotency = Helper::generate_idempotency_key_for_deposit($booking, false);
             $transferDetails = $dwolla->createTransferToCustomer($fundingSource, $amount, $idempotency);
             $booking->traveler_deposit_transfer_id = basename($transferDetails);
             $booking->traveler_deposit_processed_at = Carbon::now()->toDateTimeString();
-            $booking->is_deposit_handled = 1;
+            if (!$hasOwnerPart) {
+                $booking->is_deposit_handled = 1;
+                $booking->deposit_handled_at = Carbon::now()->toDateTimeString();
+            }
             $booking->save();
-            Logger::info('Security deposit handled successfully for: ' . $id);
-            return ['success' => true];
-            // TODO: add email for sending email about security deposit return to traveler.
+            Logger::info('Security deposit handled successfully for traveler: ' . $id);
+            $travelerRes = ['success' => true, 'successMessage' => 'Security deposit has been handled for traveler'];
+            Helper::send_custom_email(
+                $traveller->email,
+                'Security Deposit Return',
+                'mail.security-deposit-refund',
+                ['name' => $traveller->first_name . ' ' . $traveller->last_name],
+                'Payment Processed'
+            );
         } catch (\Exception $ex) {
             $message = $ex->getMessage();
             Logger::error('Error in handling security deposit for: ' . $id . '. EX: ', $message);
             if (method_exists($ex, 'getResponseBody') && $ex->getResponseBody()) {
-                $message = $ex->getResponseBody();
+                $message .= ' :: ' . $ex->getResponseBody();
             }
             Logger::error('Error in handling security deposit for: ' . $id . '. EX: ', $message);
             $booking->traveler_deposit_processed_at = Carbon::now()->toDateTimeString();
             $booking->traveler_deposit_failed_at = Carbon::now()->toDateTimeString();
             $booking->traveler_deposit_failed_reason = $message;
             $booking->save();
-            return ['success' => false];
+            $travelerRes = ['success' => false, 'errorMessage' => $message];
         }
+        if (!$hasOwnerPart) {
+            return $travelerRes;
+        }
+        // Handling owner part
+        try {
+            if ($booking->owner_deposit_transfer_id) {
+                $ownerRes = ['success' => true, 'successMessage' => 'Security deposit has been handled for owner'];
+            }
+            Logger::info('Initiating transfer for owner: bookingID: ' . $id);
+            $fundingSource = $booking->owner_funding_source;
+            $amount = $booking->owner_cut;
+            $idempotency = Helper::generate_idempotency_key_for_deposit($booking, true);
+            $transferDetails = $dwolla->createTransferToCustomer($fundingSource, $amount, $idempotency);
+            $booking->owner_deposit_transfer_id = basename($transferDetails);
+            $booking->owner_deposit_processed_at = Carbon::now()->toDateTimeString();
+            if ($travelerRes['success']) {
+                $booking->is_deposit_handled = 1;
+                $booking->deposit_handled_at = Carbon::now()->toDateTimeString();
+            }
+            $booking->save();
+            Logger::info('Security deposit handled successfully for owner: ' . $id);
+            $ownerRes = ['success' => true, 'successMessage' => 'Security deposit has been handled for owner'];
+            // TODO: add email for sending email about security deposit return to traveler.
+        } catch (\Exception $ex) {
+            $message = $ex->getMessage();
+            Logger::error('Error in handling security deposit for: ' . $id . '. EX: ', $message);
+            if (method_exists($ex, 'getResponseBody') && $ex->getResponseBody()) {
+                $message .= ' :: ' . $ex->getResponseBody();
+            }
+            Logger::error('Error in handling security deposit for: ' . $id . '. EX: ', $message);
+            $booking->owner_deposit_processed_at = Carbon::now()->toDateTimeString();
+            $booking->owner_deposit_failed_at = Carbon::now()->toDateTimeString();
+            $booking->owner_deposit_failed_reason = $message;
+            $booking->save();
+            $ownerRes = ['success' => false, 'errorMessage' => $message];
+        }
+        $res = ['success' => $ownerRes['success'] && $travelerRes['success']];
+        if ($res['success']) {
+            $res['successMessage'] = 'Security deposit has been handled successfully';
+        } else if ($ownerRes['success']) {
+            $res['successMessage'] = $ownerRes['successMessage'];
+            $res['errorMessage'] = $travelerRes['errorMessage'];
+        } else if ($travelerRes['success']) {
+            $res['successMessage'] = $travelerRes['successMessage'];
+            $res['errorMessage'] = $ownerRes['errorMessage'];
+        } else {
+            $res['errorMessage'] = 'Error in handling security deposit';
+        }
+        return $res;
     }
 
     public static function generate_booking_payments($booking, $is_owner = 0)

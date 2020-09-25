@@ -297,7 +297,7 @@
                                             <input type="file" name="pet_image" id="pet_image" class="form-control" accept="image/*"/>
                                         </label>
                                     </div>
-                                    <div id="remove_pet" class="add-another">Don't want to add a pet?</div>
+                                    <div id="remove_pet" class="add-another" style="cursor: pointer;">Don't want to add a pet?</div>
                                 </div>
                                 <hr>
 

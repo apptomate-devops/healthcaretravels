@@ -27,7 +27,7 @@
 }
 
 .my-reservations table .title-container .title h4 {
-    width: 80%;
+    max-width: 220px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -5671,7 +5671,7 @@ table.manage-table a.button {
 
 table.manage-table .title-container {
     display: flex;
-    flex-wrap: wrap;
+    /*flex-wrap: wrap;*/
     align-items: flex-start;
 }
 
@@ -5722,7 +5722,7 @@ table.manage-table .title-container .title .table-property-price {
 }
 
 table.manage-table th:first-child {
-    width: 50%;
+    width: 80%;
     border-radius: 3px 0 0 3px
 }
 

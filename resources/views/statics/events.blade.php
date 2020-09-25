@@ -32,9 +32,10 @@
                 <div class="image">
                     <center>
                         <div class="col-md-12 pb-50">
-                            <img src="{{URL::asset('/assets/events/exhibitor2021.jpeg')}}"
-                                 style="vertical-align: middle;height: 331px;">
+                            <a href="https://travcon.org/exhibitors/" target="_blank" title="TravCon"><img src="{{URL::asset('/assets/events/exhibitor2021.jpeg')}}"
+                                style="vertical-align: middle;height: 331px;"></a>
                         </div>
+                        <a href="https://travcon.org/exhibitors/" target="_blank" title="TravCon"><p style="font-size: 20px;">Look for us at next year's TravCon!</p></a>
                     </center>
                 </div>
 

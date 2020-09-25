@@ -1,0 +1,72 @@
+#billing-table {
+    width: 95%;
+}
+
+#billing-table tr {
+    font-weight: bold;
+}
+
+#table_body tr td {
+    padding: 5px;
+}
+
+#billing-table tr td:last-child {
+    text-align: right;
+}
+
+#billing-table tr.payment_sub_sections {
+    font-weight: normal;
+}
+#billing-table tr.payment_sub_sections td {
+    font-size: 14px;
+    padding: 0 10px;
+}
+.row_border{
+    border-bottom: 1px solid lightgrey;
+}
+.row_border_top{
+    border-top: 1px solid lightgrey;
+}
+.expandable {
+    cursor: pointer;
+}
+.expandable .val:after {
+    content: '\025B6';
+    font-size: 12px;
+    color: #707070;
+    float: right;
+    margin-left: 5px;
+
+}
+#neat_amount.expandable.active .val:after {
+    content: '\025BC';
+    margin-left: 3px;
+    margin-top: 2px;
+}
+.payment_sections.expandable.expanded .val:after {
+    content: '\025BC';
+    margin-left: 3px;
+    margin-top: 2px;
+}
+
+.payment_sections {
+    display: none;
+    overflow: hidden;
+}
+.payment_sub_sections {
+    display: none;
+    overflow: hidden;
+}
+
+.payment_sections td {
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 14px;
+}
+
+.payment_sections.active {
+    display: revert;
+}
+.payment_sub_sections.active {
+    display: revert;
+}

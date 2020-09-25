@@ -196,28 +196,35 @@ class Helper
 
             if (isset($payment['is_partial_days'])) {
                 $partialDayCount = $payment['is_partial_days'];
-                $neat_price = $payment['total_amount']; // consider price for remaining days
+                $neat_price = $payment['total_amount'] + $payment['service_tax']; // consider price for remaining days
+                $section = [
+                    $partialDayCount . ' Days' => $payment['total_amount'],
+                    'Processing Fee' => $payment['service_tax'],
+                ];
             } else {
                 $months++;
-                $neat_price = $payment['monthly_rate']; // consider price for full month
-
+                $neat_price = $payment['monthly_rate'] + $payment['service_tax']; // consider price for full month
+                $section = [
+                    $months . ' Month' => $payment['monthly_rate'],
+                    $payment['payment_cycle'] == 1 ? 'Service Fee' : 'Processing Fee' => $payment['service_tax'],
+                ];
                 if ($payment['payment_cycle'] == 1) {
                     // For Initial Payment
                     $day = 'On Approval';
-                    $pay_now = $payment['total_amount'];
+                    $pay_now = $payment['total_amount'] + $payment['service_tax'];
                 }
             }
 
             $neat_amount = $neat_amount + $neat_price;
-            $total_price = $total_price + $payment['total_amount'] + $payment['service_tax']; // TODO: not displaying service tax in payment schedules on pages
 
             array_push($scheduled_payments, [
                 'day' => $day,
                 'price' => $neat_price,
+                'section' => $section,
             ]);
         }
 
-        $total_price = $total_price - $booking->security_deposit; // TODO: not displaying security_deposit in payment schedules on pages
+        $total_price = $neat_amount + $booking->cleaning_fee + $booking->security_deposit;
 
         $day_count_label = $months . ' month' . ($months > 1 ? 's' : '');
         if ($partialDayCount) {

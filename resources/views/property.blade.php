@@ -1,5 +1,6 @@
 @extends('layout.master') @section('title',$data->title) @section('main_content')
     <link rel="stylesheet" href="{{ URL::asset('css/property.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('css/pricing_details.css') }}">
     <div id="titlebar" class="property-titlebar margin-bottom-0">
         <div class="container">
 
@@ -735,11 +736,9 @@
 
                                 <div id="pricing_details" style="margin-bottom: 10px;">
 
-                                    <table cellpadding="1" cellspacing="1" border="1" style="width: 100%; border-top: 1px solid lightgrey; border-bottom:  1px solid lightgrey;
-                                 border-left: 1px solid white;
-                                 border-right: 1px solid white" id="pricing">
+                                    <table id="billing-table">
                                         <thead>
-                                        <tr>
+                                        <tr class="row_border">
                                             <th style="text-align: left;padding: 5px">Detail</th>
                                             <th style="text-align: left;padding: 5px">Price</th>
                                         </tr>
@@ -752,14 +751,6 @@
 
                                     </table>
                                     <p class="pay-caption"></p>
-
-                                    @if(Session::get('user_id'))
-                                        <label class="checkbox-container">
-                                            I agree with the <a href="{{BASE_URL}}/terms-of-use" target="_blank"> Term of Use </a> and <a href="{{BASE_URL}}/cancellationpolicy" target="_blank"> Cancellation Policy </a>
-                                            <input type="checkbox" required name="terms" id="terms">
-                                            <span class="checkmark"></span>
-                                        </label>
-                                    @endif
 
                                 </div>
                                 @if(Session::get('user_id') !=  $data->user_id)
@@ -1060,18 +1051,6 @@
                 $('#current_guest_count').val(booking_details.guest_count);
                 get_price();
             }
-            $('#terms').change(function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-                if ($(this).is(":checked")) {
-                    $('.booking_button').attr('disabled',false);
-                    $('.booking_button').css('background','#0983b8');
-                } else {
-                    $('.booking_button').attr('disabled',true);
-                    $('.booking_button').css('background','lightgrey');
-                }
-                return !$(this).is(":checked");
-            });
             var fav_id = '{{$data->is_favourite}}';
             if (fav_id == 1) {
                 $("#yes_favourite").show();
@@ -1169,10 +1148,9 @@
                         $(".alert").html("");
                         $(".alert").hide();
                         $("#pricing_details").show();
-                        if($('#terms').is(":checked")) {
-                            $('.booking_button').attr('disabled',false);
-                            $('.booking_button').css('background','#0983b8');
-                        }
+
+                        $('.booking_button').attr('disabled',false);
+                        $('.booking_button').css('background','#0983b8');
                         $("#pricing_details").show();
                     }
 
@@ -1183,16 +1161,18 @@
 
                         var tr_data="";
 
-                        tr_data +="<tr id='neat_amount' style='border-bottom-color: white;'><td style='text-align: left;color:black;padding:5px'> "+data.data.count_label+" &nbsp;</td><td class='val' style='text-align: right;color:black;padding:0 5px'> $ "+ data.data.neat_amount +"</td></tr>";
+                        tr_data +="<tr class='expandable' id='neat_amount'><td> "+data.data.count_label+" &nbsp;&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>The cost of your stay including applicable fees.</span></span></td><td class='val'> $ "+ data.data.neat_amount +"</td></tr>";
 
-                        scheduled_payments.forEach(e => {
-                            tr_data +="<tr  class='payment_sections' style='border-bottom-color: white;'><td style='text-align: left;color:black;padding:0 5px'> "+e.day+" &nbsp;</td><td style='text-align: right;color:black;padding:0 5px'> $ "+ e.price +"</td></tr>";
+                        scheduled_payments.forEach((e, i) => {
+                            tr_data +="<tr class='expandable payment_sections' id='section_"+i+"' onclick='toggle_sub_section("+i+");'><td> "+e.day+" &nbsp;</td><td class='val'> $ "+ e.price +"</td></tr>";
+                            Object.keys(e.section).forEach((key) => {
+                                tr_data +="<tr class='payment_sub_sections sub_sections_"+i+"'><td> "+key+" &nbsp;</td><td class='val'> $ "+ e.section[key] +"</td></tr>";
+                            })
                         });
 
-                        tr_data +="<tr style='border-top: 1px solid lightgrey;'><td style='text-align: left;color:black;padding:5px'>Service Fee &nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>This fee helps us run our platform and offer our services </span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.service_tax+"</td></tr>";
-                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Cleaning Fee&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'> fee charged by host to cover the cost of cleaning their space.</span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.cleaning_fee+"</td></tr>";
-                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Refundable Deposit&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'> refundable security deposit. </span></span></td><td style='text-align: right;color:black;padding:5px'>$ "+data.data.security_deposit+"</td></tr>";
-                        tr_data +="<tr><td style='text-align: left;color:black;padding:5px'>Total Cost&nbsp;</td><td style='text-align: right;color:black;padding:5px'><b  id='total_booking_price'>$ "+data.data.total_price+"</b></td></tr>";
+                        tr_data +="<tr class='row_border row_border_top'><td>Cleaning Fee&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Decided by the property owner to clean before your stay.</span></span></td><td>$ "+data.data.cleaning_fee+"</td></tr>";
+                        tr_data +="<tr class='row_border'><td>Deposit&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>If property owner reports no damage, your deposit will be returned 72 hours after your stay.</span></span></td><td>$ "+data.data.security_deposit+"</td></tr>";
+                        tr_data +="<tr class='row_border'><td>Total Cost&nbsp;</td><td><b  id='total_booking_price'>$ "+data.data.total_price+"</b></td></tr>";
 
                         if(data.data.no_extra_guest==1){
                             if(totalguestcount < guest_count){
@@ -1217,6 +1197,11 @@
                         $('#neat_amount').click(function (e) {
                             e.stopPropagation();
                             e.preventDefault();
+                            if($(this).hasClass('active')) {
+                                $('.payment_sub_sections').removeClass('active');
+                                $('.payment_sections').removeClass('expanded');
+                            } else {
+                            }
                             $('.payment_sections').toggleClass('active');
                             $(this).toggleClass('active');
                         });
@@ -1227,7 +1212,10 @@
                 }
             });
         }
-
+        function toggle_sub_section(index) {
+            $(`#section_${index}`).toggleClass('expanded');
+            $(`.sub_sections_${index}`).toggleClass('active');
+        };
         $("#pricing_details").hide();
     </script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>

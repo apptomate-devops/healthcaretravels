@@ -4,6 +4,7 @@
 @extends('layout.master') @section('title',$data->title) @section('main_content')
     <link rel="stylesheet" href="{{ URL::asset('css/select-pure.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('css/bookings.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('css/pricing_details.css') }}">
     <div id="" class="property-titlebar margin-bottom-0">
         <div class="property_details container">
             <div class="row">
@@ -72,22 +73,22 @@
                                                 </tbody>
                                             </table>
                                             <section id="billing-summary" class="billing-summary">
-                                                <table id="billing-table" class="reso-info-table billing-table" style="width:95%">
+                                                <table id="billing-table" class="reso-info-table billing-table">
                                                     <tbody>
                                                     <h4>Payment Details</h4>
-                                                    <tr id="neat_amount">
+                                                    <tr class="expandable" id="neat_amount">
                                                         <td class="name pos-rel" >
                                                                 <span class="lang-chang-label">
                                                                     {{$data->count_label}}
                                                                 </span>
-                                                            <span class='tooltips'><i style="color:black"  class='fa fa-question-circle'></i><span style="color: white!important" class='tooltiptext'>Total price</span></span>
+                                                            <span class='tooltips'><i style="color:black"  class='fa fa-question-circle'></i><span style="color: white!important" class='tooltiptext'>The cost of your stay including applicable fees</span></span>
                                                         </td>
                                                         <td class="val text-right">
                                                             $ {{$data->neat_amount}}
                                                         </td>
                                                     </tr>
-                                                    @foreach($data->scheduled_payments as $payment)
-                                                        <tr class="payment_sections">
+                                                    @foreach($data->scheduled_payments as $i => $payment)
+                                                        <tr class="expandable payment_sections" id="section_{{$i}}" onclick="toggle_sub_section({{$i}});">
                                                             <td class="name">
                                                                 {{$payment['day']}}
                                                             </td>
@@ -95,21 +96,22 @@
                                                                 $ {{$payment['price']}}
                                                             </td>
                                                         </tr>
+                                                        @foreach($payment['section'] as $key => $value)
+                                                            <tr class="payment_sub_sections sub_sections_{{$i}}">
+                                                                <td class="name">
+                                                                    {{$key}}
+                                                                </td>
+                                                                <td class="val text-right">
+                                                                    $ {{$value}}
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
                                                     @endforeach
-                                                    <tr class="row_border row_border_top">
-                                                        <td class="name pos-rel">
-                                                            Service Fee
-                                                            <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">General Service Charges</span></span>
-                                                        </td>
-                                                        <td class="val text-right" >
-                                                            $ {{$data->service_tax}}
-                                                        </td>
-                                                    </tr>
 
-                                                    <tr class="row_border">
+                                                    <tr class="row_border_top row_border">
                                                         <td class="name">
                                                             Cleaning Fee
-                                                            <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">General Cleaning Charges</span></span>
+                                                            <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Decided by the property owner to clean before your stay</span></span>
                                                         </td>
                                                         <td class="val text-right" >
                                                             $ {{$data->cleaning_fee}}
@@ -118,15 +120,15 @@
 
                                                     <tr class="row_border">
                                                         <td class="name">
-                                                            Refundable Deposit
-                                                            <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Refunded after completion</span></span>
+                                                            Deposit
+                                                            <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">If property owner reports no damage, your deposit will be returned 72 hours after your stay</span></span>
                                                         </td>
                                                         <td class="val text-right" >
                                                             $ {{$data->security_deposit}}
                                                         </td>
                                                     </tr>
 
-                                                    <tr>
+                                                    <tr style="font-weight: normal;">
                                                         <td class="name">
                                                             Total Cost
                                                         </td>
@@ -135,7 +137,7 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="name">
+                                                        <td class="name" style="padding: 0 10px;">
                                                             <b>Due on Approval</b>
                                                         </td>
                                                         <td class="val text-right" >
@@ -150,6 +152,17 @@
                                                             <td class="val text-right">
                                                                 <span class="lang-chang-label" style="color:green;font-weight: bold">$</span>
                                                                 <span style="color:green;font-weight: bold">{{$data->coupon_value}}</span>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+                                                    @if(Session::get('user_id'))
+                                                        <tr class="editable-fields">
+                                                            <td colspan="2">
+                                                                <label class="checkbox-container">
+                                                                    I agree with the <a href="{{BASE_URL}}/terms-of-use" target="_blank"> Term of Use </a> and <a href="{{BASE_URL}}/cancellationpolicy" target="_blank"> Cancellation Policy </a>
+                                                                    <input type="checkbox" required name="terms" id="terms">
+                                                                    <span class="checkmark"></span>
+                                                                </label>
                                                             </td>
                                                         </tr>
                                                     @endif
@@ -331,12 +344,12 @@
         $(document).ready(function(){
             var defaultFundingSource = "{{$traveller->default_funding_source}}";
             $('#fundingSource').val(defaultFundingSource);
-            if($('#fundingSource').val()) {
+            if($('#fundingSource').val() && $('#terms').is(":checked")) {
                 $('#requestBooking').attr('disabled',false);
             }
 
             $('#fundingSource').change(function (e) {
-                if($('#fundingSource').val()) {
+                if($('#fundingSource').val() && $('#terms').is(":checked")) {
                     $('#requestBooking').attr('disabled',false);
                 }
             });
@@ -459,12 +472,32 @@
                 return false;
             }
         });
+        $('#terms').change(function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            debugger
+            if($('#fundingSource').val() && $(this).is(":checked")) {
+                $('#requestBooking').attr('disabled',false);
+            } else {
+                $('#requestBooking').attr('disabled',true);
+            }
+            return !$(this).is(":checked");
+        });
         $('#neat_amount').click(function (e) {
             e.stopPropagation();
             e.preventDefault();
+            if($(this).hasClass('active')) {
+                $('.payment_sub_sections').removeClass('active');
+                $('.payment_sections').removeClass('expanded');
+            } else {
+            }
             $('.payment_sections').toggleClass('active');
             $(this).toggleClass('active');
-        })
+        });
+        function toggle_sub_section(index) {
+            $(`#section_${index}`).toggleClass('expanded');
+            $(`.sub_sections_${index}`).toggleClass('active');
+        };
         function apply_coupon(id){
 
             var coupon_code=document.getElementById('coupon_code').value;

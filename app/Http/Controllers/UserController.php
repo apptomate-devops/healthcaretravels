@@ -323,7 +323,10 @@ class UserController extends BaseController
             ];
             if (!Auth::attempt($credentials)) {
                 $this->incrementLoginAttempts($request);
-                return back()->with('error', 'You have entered the wrong email or password. Please Try again.');
+                return back()->with([
+                    'error' => '',
+                    'password_error' => 'You have entered the wrong password. Please Try again.',
+                ]);
             }
             if (\Hash::needsRehash($check->password)) {
                 $hashed = $this->encrypt_password($request->password);
@@ -334,7 +337,11 @@ class UserController extends BaseController
             }
             return $this->login_user_success($check, $request);
         } else {
-            return back()->with('error', 'This email is not registered.');
+            return back()->with([
+                'error' => '',
+                'email' => $request->username,
+                'email_error' => 'This email is not registered.',
+            ]);
         }
     }
 

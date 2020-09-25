@@ -49,7 +49,7 @@
                         <h4>{{Session::get('success')}}</h4>
                     </div>
                 @endif
-                @if(Session::has('error'))
+                @if(Session::has('error') && Session::get('error') != '')
                     <div class="alert alert-danger">
                         <h4>{!!Session::get('error')!!}</h4>
                     </div>
@@ -76,13 +76,19 @@
                             <input type="hidden" name="client_id" value="{{$constants['client_id']}}">
                             <p class="form-row form-row-wide">
                                 <label for="username">Email Address:
-                                    <input type="email" class="input-text" name="username" id="username" placeholder="Email Address" required />
+                                    <input type="email" class="input-text {{ Session::has('email_error') ? 'form-error' : ''}}" name="username" id="username" placeholder="Email Address" required value="{{Session::get('email')}}" />
                                 </label>
+                                @if(Session::has('error') && Session::has('email_error'))
+                                    <p class="error-text">{{Session::get('email_error')}}</p>
+                                @endif
                             </p>
                             <p class="form-row form-row-wide">
                                 <label for="password">Password:
-                                    <input class="input-text" type="password" name="password" id="password" placeholder="Password" required />
+                                    <input class="input-text {{ Session::has('password_error') ? 'form-error' : ''}}" type="password" name="password" id="password" placeholder="Password" required />
                                 </label>
+                                @if(Session::has('error') && Session::has('password_error'))
+                                    <p class="error-text">{{Session::get('password_error')}}</p>
+                                @endif
                             </p>
                             <div class="checkboxes in-row password-checkbox">
                                 <input id="show_password" name="show_password" type="checkbox" onclick="togglePassword('password')">

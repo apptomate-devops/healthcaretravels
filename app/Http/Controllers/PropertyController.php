@@ -611,6 +611,8 @@ class PropertyController extends BaseController
     public function inbox_owner(Request $request)
     {
         $user_id = $request->session()->get('user_id');
+        $unread_message_data = $request->session()->get('unread_message_data');
+        $has_unread_message = $request->session()->get('has_unread_message');
 
         $request_chats = DB::table('request_chat')
             ->where('client_id', '=', CLIENT_ID)
@@ -627,6 +629,14 @@ class PropertyController extends BaseController
                 ->where('id', $request_chat->owner_id)
                 ->first();
             $request_chat->chat_key = 'request_chat';
+            if (
+                $has_unread_message &&
+                isset($unread_message_data['message_key']) &&
+                $unread_message_data['message_key'] == $request_chat->chat_key &&
+                $unread_message_data['message_id'] == $request_chat->id
+            ) {
+                $request_chat->has_unread_message = true;
+            }
             $request_chat->last_message = $this->get_firebase_last_message('request_chat', $request_chat->id);
         }
 
@@ -644,6 +654,14 @@ class PropertyController extends BaseController
                 ->where('id', $request_chat->owner_id)
                 ->first();
             $request_chat->chat_key = 'instant_chat';
+            if (
+                $has_unread_message &&
+                isset($unread_message_data['message_key']) &&
+                $unread_message_data['message_key'] == $request_chat->chat_key &&
+                $unread_message_data['message_id'] == $request_chat->id
+            ) {
+                $request_chat->has_unread_message = true;
+            }
             $request_chat->last_message = $this->get_firebase_last_message('instant_chat', $request_chat->id);
         }
         // echo $user_id;
@@ -663,6 +681,14 @@ class PropertyController extends BaseController
                 ->where('id', $request_chat->owner_id)
                 ->first();
             $request_chat->chat_key = 'personal_chat';
+            if (
+                $has_unread_message &&
+                isset($unread_message_data['message_key']) &&
+                $unread_message_data['message_key'] == $request_chat->chat_key &&
+                $unread_message_data['message_id'] == $request_chat->id
+            ) {
+                $request_chat->has_unread_message = true;
+            }
             $request_chat->last_message = $this->get_firebase_last_message('personal_chat', $request_chat->id);
         }
 
@@ -680,6 +706,8 @@ class PropertyController extends BaseController
     public function inbox_traveller(Request $request)
     {
         $user_id = $request->session()->get('user_id');
+        $unread_message_data = $request->session()->get('unread_message_data');
+        $has_unread_message = $request->session()->get('has_unread_message');
 
         $request_chats = DB::table('request_chat')
             ->where('client_id', '=', CLIENT_ID)
@@ -695,6 +723,14 @@ class PropertyController extends BaseController
                 ->where('id', $request_chat->owner_id)
                 ->first();
             $request_chat->chat_key = 'request_chat';
+            if (
+                $has_unread_message &&
+                isset($unread_message_data['message_key']) &&
+                $unread_message_data['message_key'] == $request_chat->chat_key &&
+                $unread_message_data['message_id'] == $request_chat->id
+            ) {
+                $request_chat->has_unread_message = true;
+            }
             $request_chat->last_message = $this->get_firebase_last_message('request_chat', $request_chat->id);
         }
 
@@ -712,6 +748,14 @@ class PropertyController extends BaseController
                 ->where('id', $request_chat->owner_id)
                 ->first();
             $request_chat->chat_key = 'instant_chat';
+            if (
+                $has_unread_message &&
+                isset($unread_message_data['message_key']) &&
+                $unread_message_data['message_key'] == $request_chat->chat_key &&
+                $unread_message_data['message_id'] == $request_chat->id
+            ) {
+                $request_chat->has_unread_message = true;
+            }
             $request_chat->last_message = $this->get_firebase_last_message('instant_chat', $request_chat->id);
         }
 
@@ -730,6 +774,14 @@ class PropertyController extends BaseController
                 ->where('id', $request_chat->owner_id)
                 ->first();
             $request_chat->chat_key = 'personal_chat';
+            if (
+                $has_unread_message &&
+                isset($unread_message_data['message_key']) &&
+                $unread_message_data['message_key'] == $request_chat->chat_key &&
+                $unread_message_data['message_id'] == $request_chat->id
+            ) {
+                $request_chat->has_unread_message = true;
+            }
             $request_chat->last_message = $this->get_firebase_last_message('personal_chat', $request_chat->id);
         }
 

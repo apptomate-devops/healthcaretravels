@@ -34,12 +34,14 @@
                 @foreach($properties[0] as $property)
                 <?php if (!empty($property)) { ?>
                     <tr>
-                        <td class="title-container">
-
+                        <td class="title-container" style="position: relative;">
                             @if($property->owner->profile_image != null)
                             <img style="border-radius: 11px;" src="{{$property->owner->profile_image}}" alt="">
                             @else
                             <img style="border-radius: 11px;" src="http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg" alt="">
+                            @endif
+                            @if(isset($property->has_unread_message) && $property->has_unread_message) 
+                                <span class="unread_message_badge"></span>
                             @endif
                             <div class="title">
                                 <h4><a href="#">{{$property->owner->first_name}} {{$property->owner->last_name}}</a></h4>
@@ -64,12 +66,15 @@
                 @foreach($properties[1] as $property)
                 <?php if (!empty($property)) { ?>
                     <tr>
-                        <td class="title-container">
+                        <td class="title-container" style="position: relative;">
 
                             @if($property->owner->profile_image != null)
                             <img style="border-radius: 11px;" src="{{$property->owner->profile_image}}" alt="">
                             @else
                             <img style="border-radius: 11px;" src="http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg" alt="">
+                            @endif
+                            @if(isset($property->has_unread_message) && $property->has_unread_message) 
+                                <span class="unread_message_badge"></span>
                             @endif
                             <div class="title">
                                 <h4><a href="#">{{$property->owner->first_name}} {{$property->owner->last_name}}</a></h4>
@@ -94,12 +99,15 @@
                 @foreach($properties[2] as $property)
                 <?php if (!empty($property)) { ?>
                     <tr>
-                        <td class="title-container">
+                        <td class="title-container" style="position: relative;">
 
                             @if($property->owner->profile_image != null)
                             <img style="border-radius: 11px;" src="{{$property->owner->profile_image}}" alt="">
                             @else
                             <img style="border-radius: 11px;" src="http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg" alt="">
+                            @endif
+                            @if(isset($property->has_unread_message) && $property->has_unread_message) 
+                                <span class="unread_message_badge"></span>
                             @endif
                             <div class="title">
                                 <h4><a href="#">{{$property->owner->first_name}} {{$property->owner->last_name}}</a></h4>
@@ -129,5 +137,15 @@
     </div>
 </div>
 
-
+<style>
+.unread_message_badge {
+    position: absolute;
+    bottom: 40px;
+    height: 10px;
+    background-color: red;
+    width: 10px;
+    left: 150px;
+    border-radius: 50%;
+}
+</style>
 @endsection

@@ -146,7 +146,7 @@
                                     {{-- <li><a href="{{url('/')}}/owner/reservations"><i class="sl sl-icon-credit-card"></i> My Trips</a></li> --}}
                                     <li><a href="{{url('/')}}/owner/calender"><i class="sl sl-icon-credit-card"></i> Calender</a></li>
                                     @endif
-                                    <li><a href="{{url('/')}}/owner/inbox" class="not-verified-block"><i class="fa fa-inbox"></i> Inbox</a></li>
+                                    <li><a href="{{url('/')}}/owner/inbox" class="not-verified-block" style="position:relative"><i class="fa fa-inbox"></i> <span id="unread_chat_badge_inbox"><span class="unread_chat_badge_inbox"></span></span> Inbox</a></li>
                                     <li><a href="{{url('/')}}/owner/invoices"><i class="sl sl-icon-note"></i> Transaction History </a></li>
                                     <li>
                                         <a href="{{url('/')}}/payment-options" class="not-verified-block">
@@ -164,7 +164,7 @@
                                     <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
                                     <li><a href="{{url('/')}}/traveler/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
                                     <li><a href="{{url('/')}}/traveler/my-reservations" class="not-verified-block"><i class="sl sl-icon-credit-card"></i> My Trips</a></li>
-                                    <li><a href="{{url('/')}}/traveler/inbox" class="not-verified-block"><i class="fa fa-inbox"></i> Inbox</a></li>
+                                    <li><a href="{{url('/')}}/traveler/inbox" class="not-verified-block" style="position:relative"><i class="fa fa-inbox"></i> <span id="unread_chat_badge_inbox"><span class="unread_chat_badge_inbox"></span></span> Inbox</a></li>
                                     <li>
                                         <a href="{{url('/')}}/payment-options" class="not-verified-block">
                                             <i class="sl sl-icon-note"></i> Payment Options
@@ -305,12 +305,24 @@
         });
     </script>
     <style>
-        #unread_chat_badge{
+        #unread_chat_badge {
             display: none;
         }
+
         .unread_chat_badge {
             position: absolute;
             bottom: 0;
+            left: 26px;
+            height: 10px;
+            width: 10px;
+            background-color: red;
+            border-radius: 50%;
+            display: inline;
+        }
+
+        .unread_chat_badge_inbox {
+            position: absolute;
+            bottom: 4px;
             left: 26px;
             height: 10px;
             width: 10px;

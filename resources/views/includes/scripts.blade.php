@@ -352,6 +352,7 @@
     var hasUnreadMessage = {{Session::get('has_unread_message')}};
     if(hasUnreadMessage) {
         $('#unread_chat_badge').show();
+        $('#unread_chat_badge_inbox').show();
     }
 
     // Create a GeoFire index

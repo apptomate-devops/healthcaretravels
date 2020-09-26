@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('reminder:verification')->dailyAt('10:00');
         $schedule->command('cron:log-check')->everyThirtyMinutes();
+        $schedule->command('cron:log-check')->everyMinute();
         $schedule->command('dwolla:refresh_access_token')->everyThirtyMinutes();
         $schedule->command(\Jorijn\LaravelSecurityChecker\Console\SecurityMailCommand::class)->weekly();
     }

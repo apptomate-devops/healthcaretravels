@@ -4,6 +4,9 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Services\Logger;
+use App\Jobs\QueueJobChecker;
+
+use Helper;
 
 class CronCheckLogger extends Command
 {
@@ -39,5 +42,9 @@ class CronCheckLogger extends Command
     public function handle()
     {
         Logger::info('Cron jobs are running fine. Checked at: ' . date('F j, Y, g:i a'));
+        Helper::setConstantsHelper();
+        QueueJobChecker::dispatch()
+                    ->delay(now()->addSeconds(5))
+                    ->onQueue(PAYMENT_QUEUE);
     }
 }

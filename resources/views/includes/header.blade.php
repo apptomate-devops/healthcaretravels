@@ -309,6 +309,10 @@
             display: none;
         }
 
+        #unread_chat_badge_inbox {
+            display: none;
+        }
+
         .unread_chat_badge {
             position: absolute;
             bottom: 0;

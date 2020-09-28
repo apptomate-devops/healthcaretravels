@@ -106,7 +106,7 @@
                     <div class="chat_box_wrapper">
                         <div class="chat_box touchscroll chat_box_colors_a" id="chat">
 
-                            <div ng-repeat="message in messages" ng-hide="header == 1">
+                            <div ng-repeat="message in messages | orderBy : 'date'" ng-hide="header == 1">
                                 <div ng-show="message.id == 'start'"><%message.start_date%></div>
                                 <input type="hidden" name="" value="{{$owner->id}}" ng-model="userid">
                                 <div class="chat_message_wrapper" ng-show="message.sent_by != userid">
@@ -334,7 +334,11 @@
         }, function(newValue) {
             $scope.messages.$loaded(function(newValue) {
                 $scope.markAsRead(newValue);
-            })
+            });
+            $scope.messages.$watch(function(newValue) {
+                $scope.markAsRead(newValue);
+
+            });
         })
         $scope.userid = '{{$owner->id}}';
         $scope.removeProduct = function(id) {

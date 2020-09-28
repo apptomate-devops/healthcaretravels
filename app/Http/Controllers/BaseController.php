@@ -792,40 +792,38 @@ class BaseController extends ConstantsController
             ->onQueue(PAYMENT_QUEUE);
         Logger::info('Security deposit job scheduled for: ' . $booking->id . ' at: ' . $scheduler_date);
         foreach ($payments as $payment) {
-            // Removing first payment of traveller
-            if (!($payment['is_owner'] == 0 && $payment['payment_cycle'] == 1)) {
+            // Removing first payment of traveller and all owner payments as they are scheduled on traveler payment success
+            if ($payment['is_owner'] == 0 && $payment['payment_cycle'] != 1) {
                 $dueTime = Carbon::parse($payment['due_time']);
                 ProcessPayment::dispatch($payment['id'])
                     ->delay($dueTime)
                     ->onQueue(PAYMENT_QUEUE);
-                if ($payment['is_owner'] == 0) {
-                    $amount = $payment['service_tax'] + $payment['total_amount'];
-                    if (empty($accountName)) {
-                        $fundingSource = $booking->funding_source;
-                        $fsDetails = $this->dwolla->getFundingSourceDetails($fundingSource);
-                        $accountName = $fsDetails->name;
-                    }
-                    $mail_data = [
-                        'name' => $travelerName,
-                        'propertyName' => $property->title,
-                        'propertyId' => $property->id,
-                        'date' => $dueTime->format('m-d-Y'),
-                        'amount' => $amount,
-                        'accountName' => $accountName,
-                    ];
-                    $mailing_date = Carbon::parse($dueTime)->subDays(3);
-                    $mailDelay = 0;
-                    if ($mailing_date->gt(now())) {
-                        $mailDelay = $mailing_date->diffInSeconds(now());
-                    }
-                    $this->send_scheduled_email(
-                        $traveler->email,
-                        'automatic-payment',
-                        'Automatic Payment Reminder',
-                        $mail_data,
-                        $mailDelay,
-                    );
+                $amount = $payment['service_tax'] + $payment['total_amount'];
+                if (empty($accountName)) {
+                    $fundingSource = $booking->funding_source;
+                    $fsDetails = $this->dwolla->getFundingSourceDetails($fundingSource);
+                    $accountName = $fsDetails->name;
                 }
+                $mail_data = [
+                    'name' => $travelerName,
+                    'propertyName' => $property->title,
+                    'propertyId' => $property->id,
+                    'date' => $dueTime->format('m-d-Y'),
+                    'amount' => $amount,
+                    'accountName' => $accountName,
+                ];
+                $mailing_date = Carbon::parse($dueTime)->subDays(3);
+                $mailDelay = 0;
+                if ($mailing_date->gt(now())) {
+                    $mailDelay = $mailing_date->diffInSeconds(now());
+                }
+                $this->send_scheduled_email(
+                    $traveler->email,
+                    'automatic-payment',
+                    'Automatic Payment Reminder',
+                    $mail_data,
+                    $mailDelay,
+                );
             }
         }
         $owner_mail_data = [

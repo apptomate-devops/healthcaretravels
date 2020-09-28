@@ -895,13 +895,13 @@
                         <div id="check_in_div">
                             <div class="form-group">
                                 <label class="control-label" for="chat_from_date">Check In</label>
-                                <input name="check_in" required id="chat_from_date" placeholder="Check In date"  type="text" style="width: 273px;" >
+                                <input name="check_in" id="chat_from_date" placeholder="Check In date"  type="text" style="width: 273px;" >
                             </div>
                         </div>
                         <div id="check_out_div">
                             <div class="form-group">
                                 <label class="control-label" for="date">Check Out</label>
-                                <input name="check_out"  required id="chat_to_date"  placeholder="Check Out date" type="text" style="width: 273px;" >
+                                <input name="check_out"  id="chat_to_date"  placeholder="Check Out date" type="text" style="width: 273px;" >
                                 <input name="property_id" type="hidden" value="{{$property_id}}" >
                             </div>
                         </div>

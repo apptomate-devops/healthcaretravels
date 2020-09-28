@@ -191,7 +191,6 @@ class Dwolla
             'firstName' => $user->first_name,
             'lastName' => $user->last_name,
             'email' => $user->email,
-            'correlationId' => $user->id,
             'ipAddress' => Request::ip(),
         ];
     }
@@ -264,8 +263,8 @@ class Dwolla
         if (empty($source)) {
             throw new \Exception('Invalid source value');
         }
-        Logger::info('A transfer from customer is initiated for ' . $amount . ' at '. now());
-        if(IS_LOCAL) {
+        Logger::info('A transfer from customer is initiated for ' . $amount . ' at ' . now());
+        if (IS_LOCAL) {
             $amount = 20;
         }
         $payload = [
@@ -298,8 +297,8 @@ class Dwolla
         if (empty($destination)) {
             throw new \Exception('Invalid source value');
         }
-        Logger::info('A transfer to customer is initiated for ' . $amount . ' at '. now());
-        if(IS_LOCAL) {
+        Logger::info('A transfer to customer is initiated for ' . $amount . ' at ' . now());
+        if (IS_LOCAL) {
             $amount = 20;
         }
         $payload = [

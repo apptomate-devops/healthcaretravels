@@ -146,7 +146,11 @@
                             <br><br>
 
                         @elseif($data->status == 2)
-                            <button class="button" >Request Accepted</button><br><br>
+                            <b>Request Accepted</b>
+                            <br><br>
+                            <button class="button" onclick="location.href='{{BASE_URL}}request_cancellation/{{$data->booking_id}}';">Request Cancellation</button>
+                            <br>
+                            <br>
                         @elseif($data->status == 3)
                             <button class="button" >Invoice sent</button><br><br>
                         @elseif($data->status == 4)

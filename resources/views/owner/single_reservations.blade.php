@@ -30,7 +30,7 @@
                     <a class="btn bg-orange" id="chat_now" href="/owner-profile/{{$data->owner_id}}">Chat now with {{$data->owner_name}}</a>
                     <h3>Details</h3>
                     <div>Booking Reservation: <span>{{$data->booking_id}}</span></div>
-                    <div>Property Name: <a href="/property/{{$data->property_id}}">{{$data->title}}</a></div>
+                    <div>Property Name: <a href="/property/{{$data->property_id}}">{{$property->title}}</a></div>
                     <div>Owner:
                         <a href="/owner-profile/{{$data->owner_id}}">
                             <img src="{{($data->owner_profile_image != " " && $data->owner_profile_image != 0) ? $data->owner_profile_image : '/user_profile_default.png'}}"/>
@@ -167,9 +167,14 @@
                         </tr>
                     </table>
                 @endif
+                @if($data->status == 2)
+                    <div style="text-align: center;margin-top: 30px;">
+                        <button class="button" onclick="location.href='{{BASE_URL}}request_cancellation/{{$data->booking_id}}';">Request Cancellation</button>
+                    </div>
+                    <br>
+                @endif
                 <div >
 
-                    <?php $single_pay = $data->total_amount / $data->payment_splitup; ?>
                     <center>
                         @if($data->payment_done == 1)
                             <span class="txt-green">Payment Done</span><br>

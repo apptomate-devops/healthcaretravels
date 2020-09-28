@@ -50,6 +50,11 @@ class PropertyBooking extends Model
         'traveler_cut',
         'security_deposit',
         'cleaning_fee',
+        'cancellation_requested',
+        'already_checked_in',
+        'cancellation_reason',
+        'cancellation_explanation',
+        'cancelled_by',
     ];
     /**
      * Get the Traveler who made the booking.

@@ -337,7 +337,10 @@ class Helper
         // Handling raveler part
         try {
             if ($booking->traveler_deposit_transfer_id) {
-                $travelerRes = ['success' => true, 'successMessage' => 'Security deposit has been handled for traveler'];
+                $travelerRes = [
+                    'success' => true,
+                    'successMessage' => 'Security deposit has been handled for traveler',
+                ];
             }
             Logger::info('Initiating transfer for traveler: bookingID: ' . $id);
             $fundingSource = $booking->funding_source;
@@ -358,7 +361,7 @@ class Helper
                 'Security Deposit Return',
                 'mail.security-deposit-refund',
                 ['name' => $traveller->first_name . ' ' . $traveller->last_name],
-                'Payment Processed'
+                'Payment Processed',
             );
         } catch (\Exception $ex) {
             $message = $ex->getMessage();
@@ -412,10 +415,10 @@ class Helper
         $res = ['success' => $ownerRes['success'] && $travelerRes['success']];
         if ($res['success']) {
             $res['successMessage'] = 'Security deposit has been handled successfully';
-        } else if ($ownerRes['success']) {
+        } elseif ($ownerRes['success']) {
             $res['successMessage'] = $ownerRes['successMessage'];
             $res['errorMessage'] = $travelerRes['errorMessage'];
-        } else if ($travelerRes['success']) {
+        } elseif ($travelerRes['success']) {
             $res['successMessage'] = $travelerRes['successMessage'];
             $res['errorMessage'] = $ownerRes['errorMessage'];
         } else {
@@ -629,6 +632,27 @@ class Helper
             'Native Hawaiian or Pacific Islander',
             'White',
             'Other',
+        ]);
+
+        define('OWNER_CANCELLATION_REASONS', [
+            'Personal reasons',
+            'Traveler damaged or disrespected property',
+            'Traveler broke property rules',
+            'Traveler requested cancellation',
+            'Traveler not responsive',
+            'Traveler left their stay',
+            'Traveler was a scam',
+            'The property is no longer available',
+            'Other reason',
+        ]);
+
+        define('TRAVELLER_CANCELLATION_REASONS', [
+            'Personal / Sick',
+            'Lost/ended job offer',
+            'Found another place to stay',
+            'Property misrepresented',
+            'Property was a scam',
+            'Other reason',
         ]);
 
         //define("UPLOAD_CLOUD_NAME","dazx7zpzb");

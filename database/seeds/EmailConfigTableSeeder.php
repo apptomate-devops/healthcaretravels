@@ -193,5 +193,19 @@ class EmailConfigTableSeeder extends Seeder
                 'updated_at' => date("Y-m-d H:i:s"),
             ],
         );
+        \App\Models\EmailConfig::updateOrCreate(
+            [
+                'type' => 15,
+            ],
+            [
+                'type' => 15,
+                'title' => 'Health Care Travels',
+                'subject' => 'Your Cancellation Request',
+                'message' =>
+                    "Health Care Travels has received your cancellation request. We'll contact you or confirm your cancellation within 72 hours.",
+                'role_id' => 0,
+                'updated_at' => date("Y-m-d H:i:s"),
+            ],
+        );
     }
 }

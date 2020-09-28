@@ -1567,8 +1567,6 @@ class PropertyController extends BaseController
     public function single_reservations($booking_id, Request $request)
     {
         $data = DB::table('property_booking')
-            ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
-            ->join('property_booking_price', 'property_booking_price.property_booking_id', '=', 'property_booking.id')
             ->where('property_booking.client_id', CLIENT_ID)
             ->where('property_booking.booking_id', $booking_id)
             ->first();
@@ -1576,6 +1574,7 @@ class PropertyController extends BaseController
         $bookingModel = PropertyBooking::find($data->id);
         $owner = $bookingModel->owner;
         $traveller = $bookingModel->traveler;
+        $property = $bookingModel->property;
 
         $guest_info = GuestsInformation::where('booking_id', $booking_id)->get();
         $pet_details = PetInformation::where('booking_id', $booking_id)->first();
@@ -1591,6 +1590,7 @@ class PropertyController extends BaseController
 
         return view('owner.single_reservations', [
             'data' => $data,
+            'property' => $property,
             'guest_info' => $guest_info,
             'pet_details' => $pet_details,
             'scheduled_payments' => $payment_summary['scheduled_payments'],
@@ -3062,5 +3062,127 @@ class PropertyController extends BaseController
         // DB::table('property_short_term_pricing')->where('client_id', CLIENT_ID)->where('property_id', $property_id)->delete();
         // DB::table('property_images')->where('client_id', CLIENT_ID)->where('property_id', $property_id)->delete();
         return back()->with('success', 'Property removed successfully');
+    }
+
+    public function request_cancellation($booking_id, Request $request)
+    {
+        $data = DB::table('property_booking')
+            ->where('property_booking.client_id', CLIENT_ID)
+            ->where('property_booking.booking_id', $booking_id)
+            ->first();
+        if (empty($data)) {
+            return view('general_error', ['message' => 'Booking you are looking for does not exists!']);
+        }
+        // allow only if booking request is accepted
+        if ($data->status != 2) {
+            return view('general_error', ['message' => 'Request is not accepted yet']);
+        }
+        $user_id = $request->session()->get('user_id');
+        if ($user_id != $data->traveller_id && $user_id != $data->owner_id) {
+            // Do not allow other user to access booking details
+            return view('general_error', ['message' => 'Invalid Access']);
+        }
+
+        $bookingModel = PropertyBooking::find($data->id);
+        $property = $bookingModel->property;
+
+        $is_owner = $user_id == $data->owner_id;
+        if ($is_owner) {
+            $title = 'Request to Cancel This Trip';
+            $subTitle =
+                'Once you submit your cancellation request, Health Care Travels will email you for more information.';
+            $reasons = OWNER_CANCELLATION_REASONS;
+        } else {
+            $title = 'Request to Cancel Your Trip';
+            $subTitle =
+                "Make sure to review this property's cancellation policy before requesting to cancel. Once you submit your cancellation request, Health Care Travels will email you if we need more information. Unless the property owner is at fault, you will only receive a refund based on the property owner's cancellation policy. We recommend submitting a request at least 72 hours before your next scheduled payment.";
+            $reasons = TRAVELLER_CANCELLATION_REASONS;
+        }
+        return view('properties.request_cancellation', [
+            'booking' => $data,
+            'title' => $title,
+            'subTitle' => $subTitle,
+            'reasons' => $reasons,
+            'property' => $property,
+            'is_owner' => $is_owner,
+        ]);
+    }
+
+    public function submit_cancellation_request(Request $request)
+    {
+        try {
+            $booking = PropertyBooking::where('booking_id', '$request->booking_id')->first();
+            if (empty($booking)) {
+                return back()->withErrors(['Booking you are looking for does not exists!']);
+            }
+            if ($booking->cancellation_requested == 2) {
+                return back()->withErrors(['Cancellation is completed for this booking!']);
+            }
+            if ($booking->cancellation_requested == 1) {
+                return back()->withErrors(['You have already request cancellation for this booking!']);
+            }
+            $user_id = $request->session()->get('user_id');
+            PropertyBooking::where('booking_id', $request->booking_id)->update([
+                'cancellation_requested' => 1,
+                'cancellation_reason' => $request->cancellation_reason,
+                'cancellation_explanation' => $request->cancellation_explanation,
+                'cancelled_by' => $user_id,
+                'already_checked_in' => $request->checked_in,
+            ]);
+
+            $bookingModel = PropertyBooking::find($booking->id);
+            $owner = $bookingModel->owner;
+            $traveler = $bookingModel->traveler;
+            $property = $bookingModel->property;
+            $is_owner = $user_id == $booking->owner_id;
+            $user = $is_owner ? $owner : $traveler;
+
+            $mail_traveler = EmailConfig::where('type', 15)
+                ->where('role_id', 0)
+                ->first();
+
+            // TODO: send email to user
+
+            $name = $user->first_name . " " . $user->last_name;
+
+            $title = $mail_traveler->title ?? APP_BASE_NAME . "Cancellation Request";
+            $subject = $mail_traveler->subject ?? "Your Cancellation Request";
+            $content =
+                $mail_traveler->message ??
+                "Health Care Travels has received your cancellation request. We'll contact you or confirm your cancellation within 72 hours.";
+            $mail_data = [
+                'name' => $name,
+                'text' => $content,
+            ];
+            $this->send_custom_email($user->email, $subject, 'mail.cancellation_request', $mail_data, $title);
+
+            // TODO: send email to Admin: support@healthcaretravels.com
+            $mail_data_admin = [
+                'name' => $name,
+                'user_type' => $is_owner ? 'Owner' : 'Traveler',
+                'property_title' => $property->title,
+                'booking_id' => $booking->booking_id,
+                'owner' => $owner,
+                'traveler' => $traveler,
+                'reason' => $request->cancellation_reason,
+                'explanation' => $request->cancellation_explanation,
+                'checked_in' => $request->checked_in ? 'Yes' : 'No',
+            ];
+            $this->send_email_contact(
+                $user->email,
+                'Cancellation Request',
+                'mail.cancellation_request_owner',
+                $mail_data_admin,
+                $name,
+            );
+
+            return back()->with(
+                'success',
+                'You have successfully requested cancellation for this booking, we will contact you soon!',
+            );
+        } catch (\Exception $ex) {
+            Logger::error('Error sending email to: Error: ' . $ex->getMessage());
+            return back()->withErrors([$ex->getMessage()]);
+        }
     }
 }

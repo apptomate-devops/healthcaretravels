@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\PropertyBooking;
 use App\Services\Logger;
-use Illuminate\Http\Request;
 use App\Models\Users;
 use App\Models\BookingPayments;
 use App\Models\DwollaEvents;
+use App\Jobs\ProcessPayment;
 use Carbon\Carbon;
 use Helper;
 
@@ -220,6 +221,21 @@ class PaymentController extends BaseController
                     $payment->is_cleared = 1;
                     $payment->status = PAYMENT_SUCCESS;
                     $payment->save();
+                    // Scheduling payment for owner when payment is successful from traveler
+                    if (!$payment->is_owner) {
+                        // Finding related owner payment:
+                        $ownerPayment = BookingPayments::where('booking_id', $payment->booking_id)
+                            ->where('is_owner', 1)
+                            ->where('payment_cycle', $payment->payment_cycle)
+                            ->first();
+                        $dueTime = Carbon::parse($ownerPayment->due_time);
+                        if ($dueTime->lte(now())) {
+                            $dueTime = now();
+                        }
+                        ProcessPayment::dispatch($ownerPayment->id)
+                            ->delay($dueTime)
+                            ->onQueue(PAYMENT_QUEUE);
+                    }
                     Helper::send_payment_email($payment, $fundingSource, true);
                 } elseif ($booking) {
                     if ($booking->owner_deposit_transfer_id == $resourceId) {

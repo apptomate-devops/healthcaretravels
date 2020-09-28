@@ -27,7 +27,6 @@
                     <th><i class="fa fa-inbox"></i> My Inbox</th>
                     {{-- <th class="expire-date"><i class="fa fa-calendar"></i> Status</th> --}}
                     <th></th>
-                    <th></th>
                 </tr>
 
                 <!-- Item #1 -->
@@ -36,12 +35,12 @@
                     <tr>
                         <td class="title-container" style="position: relative;">
                             @if($property->owner->profile_image != null)
-                            <img style="border-radius: 11px;" src="{{$property->owner->profile_image}}" alt="">
+                            <img style="border-radius: 11px;object-fit:contain;" src="{{$property->owner->profile_image}}" alt="">
                             @else
-                            <img style="border-radius: 11px;" src="http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg" alt="">
+                            <img style="border-radius: 11px;object-fit:contain;" src="http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg" alt="">
                             @endif
-                            @if(isset($property->has_unread_message) && $property->has_unread_message) 
-                                <span class="unread_message_badge"></span>
+                            @if(isset($property->has_unread_message) && $property->has_unread_message)
+                            <span class="unread_message_badge"></span>
                             @endif
                             <div class="title">
                                 <h4><a href="#">{{$property->owner->first_name}} {{$property->owner->last_name}}</a></h4>
@@ -51,14 +50,13 @@
 
                             </div>
                         </td>
-                        <td>{{--<h4>Subject:</h4><h5>Message from keepers</h5>--}}</td>
 
 
-              <td clas                s="action">
-                        <button class="button" onclick="location.href ='{{url('/')}}/traveler/chat/{{$property->id}}?fb-key={{$property->chat_key}}&fbkey={{$property->chat_key}}';" ><i class="fa fa-reply"></i> Reply</button>
-                        {{--<a href="#"><i class="fa  fa-eye-slash"></i> Hide</a>--}}
-                        <button class="button" style="background-color: #ef585f;" onclick="location.href ='{{url('/')}}/delete_chat/{{$property->id}}';" class="delete"><i class="fa fa-remove"></i> Delete</button>
-                    </td>
+                        <td clas s="action">
+                            <button class="button mb-10" onclick="location.href ='{{url('/')}}/traveler/chat/{{$property->id}}?fb-key={{$property->chat_key}}&fbkey={{$property->chat_key}}';"><i class="fa fa-reply"></i> Reply</button>
+                            {{--<a href="#"><i class="fa  fa-eye-slash"></i> Hide</a>--}}
+                            <button class="button" style="background-color: #ef585f;" onclick="location.href ='{{url('/')}}/delete_chat/{{$property->id}}';" class="delete"><i class="fa fa-remove"></i> Delete</button>
+                        </td>
                     </tr>
                 <?php } ?>
                 @endforeach
@@ -69,12 +67,12 @@
                         <td class="title-container" style="position: relative;">
 
                             @if($property->owner->profile_image != null)
-                            <img style="border-radius: 11px;" src="{{$property->owner->profile_image}}" alt="">
+                            <img style="border-radius: 11px;object-fit:contain;" src="{{$property->owner->profile_image}}" alt="">
                             @else
-                            <img style="border-radius: 11px;" src="http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg" alt="">
+                            <img style="border-radius: 11px;object-fit:contain;" src="http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg" alt="">
                             @endif
-                            @if(isset($property->has_unread_message) && $property->has_unread_message) 
-                                <span class="unread_message_badge"></span>
+                            @if(isset($property->has_unread_message) && $property->has_unread_message)
+                            <span class="unread_message_badge"></span>
                             @endif
                             <div class="title">
                                 <h4><a href="#">{{$property->owner->first_name}} {{$property->owner->last_name}}</a></h4>
@@ -84,11 +82,8 @@
 
                             </div>
                         </td>
-                        <td>{{--<h4>Subject:</h4><h5>Message from keepers</h5>--}}</td>
-
-
                         <td class="action">
-                            <button class="button" onclick="location.href ='{{url('/')}}/traveler/chat/{{$property->id}}?fb-key={{$property->chat_key}}&fbkey={{$property->chat_key}}';" ><i class="fa fa-reply"></i> Reply</button>
+                            <button class="button mb-10" onclick="location.href ='{{url('/')}}/traveler/chat/{{$property->id}}?fb-key={{$property->chat_key}}&fbkey={{$property->chat_key}}';"><i class="fa fa-reply"></i> Reply</button>
                             {{--<a href="#"><i class="fa  fa-eye-slash"></i> Hide</a>--}}
                             <button class="button" style="background-color: #ef585f;" onclick="location.href ='{{url('/')}}/delete_chat/{{$property->id}}';" class="delete"><i class="fa fa-remove"></i> Delete</button>
                         </td>
@@ -102,12 +97,12 @@
                         <td class="title-container" style="position: relative;">
 
                             @if($property->owner->profile_image != null)
-                            <img style="border-radius: 11px;" src="{{$property->owner->profile_image}}" alt="">
+                            <img style="border-radius: 11px;object-fit:contain;" src="{{$property->owner->profile_image}}" alt="">
                             @else
-                            <img style="border-radius: 11px;" src="http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg" alt="">
+                            <img style="border-radius: 11px;object-fit:contain;" src="http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg" alt="">
                             @endif
-                            @if(isset($property->has_unread_message) && $property->has_unread_message) 
-                                <span class="unread_message_badge"></span>
+                            @if(isset($property->has_unread_message) && $property->has_unread_message)
+                            <span class="unread_message_badge"></span>
                             @endif
                             <div class="title">
                                 <h4><a href="#">{{$property->owner->first_name}} {{$property->owner->last_name}}</a></h4>
@@ -117,13 +112,10 @@
 
                             </div>
                         </td>
-                        <td>{{--<h4>Subject:</h4><h5>Message from keepers</h5>--}}</td>
-
-
-                        <td clas                s="action">
-                            <button class="button" onclick="location.href ='{{url('/')}}/traveler/chat/{{$property->id}}?fb-key={{$property->chat_key}}&fbkey={{$property->chat_key}}';" ><i class="fa fa-reply"></i> Reply</button>
+                        <td class="action">
+                            <button class="button mb-10" onclick="location.href ='{{url('/')}}/traveler/chat/{{$property->id}}?fb-key={{$property->chat_key}}&fbkey={{$property->chat_key}}';"><i class="fa fa-reply"></i> Reply</button>
                             {{--<a href="#"><i class="fa  fa-eye-slash"></i> Hide</a>--}}
-                            <button class="button" style="background-color: #ef585f;" onclick="location.href ='{{url('/')}}/delete_chat/{{$property->id}}';" class="delete"><i class="fa fa-remove"></i> Delete</button>
+                            <button class="button " style="background-color: #ef585f;" onclick="location.href ='{{url('/')}}/delete_chat/{{$property->id}}';" class="delete"><i class="fa fa-remove"></i> Delete</button>
                         </td>
                     </tr>
                 <?php } ?>
@@ -138,14 +130,18 @@
 </div>
 
 <style>
-.unread_message_badge {
-    position: absolute;
-    bottom: 40px;
-    height: 10px;
-    background-color: red;
-    width: 10px;
-    left: 150px;
-    border-radius: 50%;
-}
+    .unread_message_badge {
+        position: absolute;
+        bottom: 40px;
+        height: 10px;
+        background-color: red;
+        width: 10px;
+        left: 150px;
+        border-radius: 50%;
+    }
+
+    .mb-10 {
+        margin-bottom: 10px;
+    }
 </style>
 @endsection

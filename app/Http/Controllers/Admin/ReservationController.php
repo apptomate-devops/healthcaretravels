@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\PropertyBooking;
 use Illuminate\Http\Request;
 use DB;
 use App\Models\Users;
@@ -40,6 +41,55 @@ class ReservationController extends BaseController
 
         // echo json_encode($data2);
         return view('Admin.reservations', compact('data'));
+    }
+
+    public function cancellation_requests(Request $request)
+    {
+        $data = DB::table('property_booking')
+            ->join('users as traveller', 'traveller.id', '=', 'property_booking.traveller_id')
+            ->join('users as owner', 'owner.id', '=', 'property_booking.owner_id')
+            ->join('users as requester', 'requester.id', '=', 'property_booking.cancelled_by')
+            ->where('property_booking.cancellation_requested', '>=', 1)
+            ->select(
+                'property_booking.*',
+                'owner.first_name as owner_first_name',
+                'owner.last_name as owner_last_name',
+                'traveller.first_name as traveller_first_name',
+                'traveller.last_name as traveller_last_name',
+                'requester.first_name as requester_first_name',
+                'requester.last_name as requester_last_name',
+                'property_booking.id as p_id',
+            )
+            ->get();
+        return view('Admin.cancellation_requests', compact('data'));
+    }
+
+    public function cancellation_request_details(Request $request)
+    {
+        $data = PropertyBooking::where('booking_id', $request->booking_id)->first();
+        if (empty($data)) {
+            return back()->withErrors(['Booking you are looking for does not exists!']);
+        }
+        $booking = PropertyBooking::find($data->id);
+        $owner = $booking->owner;
+        $traveler = $booking->traveler;
+        $property = $booking->property;
+        $cancelled_by = $booking->cancelled_by == $owner->id ? $owner : $traveler;
+        return view(
+            'Admin.cancellation_request_details',
+            compact('booking', 'property', 'traveler', 'owner', 'cancelled_by'),
+        );
+    }
+
+    public function update_cancellation_request_status(Request $request)
+    {
+        $data = PropertyBooking::where('booking_id', $request->booking_id)->first();
+        $status = $request->status;
+        if (!empty($data) && ($status == 2 || $status == 3)) {
+            PropertyBooking::where('booking_id', $request->booking_id)->update(['cancellation_requested' => $status]);
+            return back()->with('success', 'Status updated successfully');
+        }
+        return back()->withErrors(['Booking you are looking for does not exists!']);
     }
 
     public function booking_status_update(Request $request)

@@ -52,6 +52,12 @@ Route::group(['prefix' => 'admin'], function () {
         Route::GET('/reservations', 'Admin\ReservationController@index');
         Route::GET('/booking-status-update', 'Admin\ReservationController@booking_status_update');
         Route::GET('/send-invoice/{booking_id}/{property_id}', 'Admin\ReservationController@send_invoice');
+        Route::GET('/cancellation_requests', 'Admin\ReservationController@cancellation_requests');
+        Route::GET('/cancellation_requests/{booking_id}', 'Admin\ReservationController@cancellation_request_details');
+        Route::GET(
+            '/update_cancellation_request_status/{booking_id}/{status}',
+            'Admin\ReservationController@update_cancellation_request_status',
+        );
 
         Route::GET('/completedpayment', 'Admin\PaymentController@completed_payment');
         Route::GET('/cancelledpayment', 'Admin\PaymentController@cancelledpayment');

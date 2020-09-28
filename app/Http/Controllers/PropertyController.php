@@ -3034,6 +3034,9 @@ class PropertyController extends BaseController
             if (empty($booking)) {
                 return back()->withErrors(['Booking you are looking for does not exists!']);
             }
+            if ($booking->cancellation_requested == 3) {
+                return back()->withErrors(['Cancellation is in progress for this booking!']);
+            }
             if ($booking->cancellation_requested == 2) {
                 return back()->withErrors(['Cancellation is completed for this booking!']);
             }

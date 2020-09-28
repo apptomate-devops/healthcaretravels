@@ -143,6 +143,7 @@ class PaymentController extends BaseController
 
     public function dwolla_webhook(Request $request)
     {
+        Helper::setConstantsHelper();
         $proposedSignature = $request->header('X-Request-Signature-SHA-256');
         $eventType = $request->header('x-dwolla-topic');
         $payloadBody = json_encode($request->all(), JSON_UNESCAPED_SLASHES);
@@ -200,6 +201,8 @@ class PaymentController extends BaseController
                 if ($payment) {
                     $payment->failed_time = Carbon::parse($request->timestamp)->toDateTimeString();
                     $payment->is_cleared = -1;
+                    $payment->status = PAYMENT_FAILED;
+                    $payment->failed_count += 1;
                     $payment->save();
                     Helper::send_payment_email($payment, $fundingSource, false);
                 } elseif ($booking) {
@@ -215,6 +218,7 @@ class PaymentController extends BaseController
                 if ($payment) {
                     $payment->confirmed_time = Carbon::parse($request->timestamp)->toDateTimeString();
                     $payment->is_cleared = 1;
+                    $payment->status = PAYMENT_SUCCESS;
                     $payment->save();
                     Helper::send_payment_email($payment, $fundingSource, true);
                 } elseif ($booking) {

@@ -80,7 +80,7 @@
                 </span>
                 </a>
             </li>
-            
+
             <li {{{ (Request::is('admin/block_property*') ? 'class=active' : '') }}}>
                 <a href="{{url('admin/block_property')}}">
                     <i class="la la-home"></i>
@@ -167,6 +167,15 @@
                     <i class="la la-money"></i>
                     <span class="menu-title" data-i18n="nav.dash.main">
                    Cancelled Payments
+                </span>
+                </a>
+            </li>
+
+            <li {{{ (Request::is('admin/cancellation_requests') ? 'class=active' : '') }}}>
+                <a href="{{url('admin/cancellation_requests')}}">
+                    <i class="la la-money"></i>
+                    <span class="menu-title" data-i18n="nav.dash.main">
+                   Cancellations
                 </span>
                 </a>
             </li>

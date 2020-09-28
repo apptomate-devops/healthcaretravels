@@ -93,7 +93,7 @@
                                 @if(Session::get('user_id'))
                                     <a><h3 id="contact_host"><span class="property-badge"  id="chat_host">Message Host</span></h3></a>
                                 @else
-                                    <a href="{{BASE_URL}}login" target="_blank"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8">Login to Chat</span></h3></a>
+                                    <button style="background: transparent;border: 0;float: right;" onclick="$('#request-chat').click()"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8">Login to Chat</span></h3></button>
                                 @endif
                             </div>
 
@@ -906,7 +906,7 @@
                             </div>
                         </div>
                         <center>
-                            <button class="button  margin-top-5"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                            <button id="request-chat" class="button  margin-top-5"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
                                         Request Chat
                                     </font></font>
                             </button>

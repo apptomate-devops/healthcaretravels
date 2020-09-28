@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Laravel\Socialite\Facades\Socialite;
+use App\Helper\Helper;
 use App\Models\EmailConfig;
 use App\Models\Users;
 use DB;
@@ -423,9 +424,14 @@ class UserController extends BaseController
             $userProfileImage = $check->profile_image ? $check->profile_image : BASE_URL . 'user_profile_default.png';
             $request->session()->put('profile_image', $userProfileImage);
             $url = $this->check_login_redirection($check);
-            if ($request->session()->get('propertyId')) {
-                $property_id = $request->session()->get('propertyId');
+            $request_chat_property_id = $request->session()->get('request_chat_property_id');
+            $property_id = $request->session()->get('propertyId');
+            if ($property_id) {
                 $url = $this->get_base_url() . 'property/' . $property_id;
+            } elseif ($request_chat_property_id) {
+                $url = $this->get_base_url() . 'create_chat/' . $request_chat_property_id;
+                $request->session()->forget('request_chat_property_id');
+                return Helper::start_chat($request_chat_property_id, $request);
             }
             return redirect($url)->with('phone', $check->phone);
         }

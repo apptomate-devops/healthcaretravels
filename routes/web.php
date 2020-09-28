@@ -99,6 +99,9 @@ Route::GET('/delete_block_booking', 'CalenderController@delete_block_booking');
 Route::GET('/single-marker/{lat}/{lng}/{pets}', 'MapController@single_marker');
 Route::get('/owner-profile/{id}', 'OwnerController@property_owner_profile');
 
+// login to chat button
+Route::POST('/create_chat/{id}', 'PropertyController@create_chat');
+
 // Logged in routes
 Route::middleware(['LoginCheck'])->group(function () {
     // All Users
@@ -125,7 +128,6 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::post('/book-now', 'PropertyController@book_now');
     Route::GET('/booking_detail/{id}', 'PropertyController@booking_detail');
     Route::GET('/request_cancellation/{id}', 'PropertyController@request_cancellation');
-    Route::POST('/create_chat/{id}', 'PropertyController@create_chat');
     Route::GET('/property/set-favourite/{id}', 'PropertyController@set_favourite');
     Route::POST('/save-guest-information', 'PropertyController@save_guest_information');
     Route::POST('/submit_cancellation_request', 'PropertyController@submit_cancellation_request');

@@ -37,7 +37,6 @@ use Helper;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 
-define('FB_URL', 'https://health-care-travels.firebaseio.com/');
 // define('CLIENT_MAIL', 'info@healthcaretravels.com');
 
 class BaseController extends ConstantsController

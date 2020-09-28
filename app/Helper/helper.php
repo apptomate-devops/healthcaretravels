@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Helper;
+
 use DB;
 use Mail;
 use Carbon\Carbon;
@@ -525,6 +526,100 @@ class Helper
         ]);
     }
 
+    public static function start_chat($property_id, $request)
+    {
+        Helper::setConstantsHelper();
+        $user_id = $request->session()->get('user_id');
+        if (!$user_id) {
+            $request->session()->put('request_chat_property_id', $property_id);
+            return redirect('/login');
+        }
+        $property_detail = DB::table('property_list')
+            ->where('client_id', CLIENT_ID)
+            ->where('id', $property_id)
+            ->first();
+        $ins_data = [];
+        $ins_data['client_id'] = CLIENT_ID;
+        $ins_data['owner_id'] = $property_detail->user_id;
+        $ins_data['property_id'] = $property_id;
+        $ins_data['traveller_id'] = $user_id;
+        $ins_data['sent_by'] = $request->session()->get('user_id');
+        $ins_data['message'] = "Hi";
+        $chat_check = DB::table('personal_chat')
+            ->where('client_id', CLIENT_ID)
+            ->where('owner_id', $property_detail->user_id)
+            ->where('traveller_id', $request->session()->get('user_id'))
+            ->where('property_id', $property_id)
+            ->first();
+        if ($chat_check) {
+            $chat_get = DB::table('personal_chat')
+                ->where('client_id', CLIENT_ID)
+                ->where('owner_id', $chat_check->owner_id)
+                ->where('traveller_id', $chat_check->traveller_id)
+                ->where('property_id', $property_id)
+                ->where('owner_visible', 1)
+                ->first();
+            $chat_id = $chat_get->id;
+        } else {
+            $chat_id = DB::table('personal_chat')->insertGetId($ins_data);
+        }
+
+        $message = "Enquiry sent for ";
+        $message .= $property_detail->title;
+        $message .= ", Property ID :" . $property_id;
+        if ($request->check_in) {
+            $message .=
+                " on " .
+                date("m/d/Y", strtotime($request->check_in)) .
+                " to " .
+                date("m/d/Y", strtotime($request->check_out));
+        }
+
+        // firebase write starts
+        $date_fmt = date("m/d/Y H:i A");
+        $values = [];
+        $values['traveller_id'] = $request->session()->get('user_id');
+        $values['owner_id'] = $property_detail->user_id;
+        $values['sent_by'] = $request->session()->get('user_id');
+        $values['property_id'] = $property_id;
+        $values['date'] = $date_fmt;
+        $values['message'] = "Hi, " . $message;
+        $values['header'] = ONE;
+        $postdata = json_encode($values);
+        $header = [];
+        $header[] = 'Content-Type: application/json';
+        $url = FB_URL . PERSONAL_CHAT . '/' . $chat_id . '/start.json';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        $traveler = DB::table('users')
+            ->where('id', $request->session()->get('user_id'))
+            ->first();
+        $owner = DB::table('users')
+            ->where('id', $property_detail->user_id)
+            ->first();
+
+        if ($owner->email != "0") {
+            $content = $message;
+
+            $data = ['username' => $owner->username, 'content' => $content];
+
+            $subject = "Enquiry for Your Property";
+            $title = $traveler->username . " sends Enquiry for Your Property";
+            $owner_mail = $owner->email;
+            $mail_data = ['username' => $owner->username, 'content' => $content];
+            Helper::send_custom_email($owner_mail, $subject, 'mail.custom-email', $data, 'Payment Processed');
+        }
+
+        return redirect()->intended('/traveler/chat/' . $chat_id . '?fb-key=personal_chat&fbkey=personal_chat');
+    }
+
     public static function set_settings_constants()
     {
         Helper::reloadEnv();
@@ -732,6 +827,8 @@ class Helper
         define("TEMPLATE_TRAVELER_24HR_BEFORE_CHECKOUT", 12);
         define("TEMPLATE_OWNER_24HR_BEFORE_CHECKOUT", 13);
         define("TEMPLATE_SECURITY_DEPOSIT_REFUND", 14);
+
+        define('FB_URL', 'https://health-care-travels.firebaseio.com/');
     }
 
     public static function changeEnv($data = [])

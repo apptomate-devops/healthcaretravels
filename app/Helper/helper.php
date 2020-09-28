@@ -121,6 +121,7 @@ class Helper
             $payment->transfer_id = basename($transferDetails);
             $payment->processed_time = Carbon::now()->toDateTimeString();
             $payment->is_processed = 1;
+            $payment->status = PAYMENT_INIT;
             $payment->save();
             Helper::send_payment_email($payment, $fundingSource, true, true);
             return ['success' => true, 'message' => 'Payment has been processed successfully!'];
@@ -135,6 +136,8 @@ class Helper
             $payment->failed_time = Carbon::now()->toDateTimeString();
             $payment->is_processed = 1;
             $payment->failed_reason = $message;
+            $payment->status = PAYMENT_FAILED;
+            $payment->failed_count += 1;
             $payment->save();
             Helper::send_payment_email($payment, $fundingSource, false);
             return ['success' => false, 'message' => $message];
@@ -732,6 +735,10 @@ class Helper
         define("TEMPLATE_TRAVELER_24HR_BEFORE_CHECKOUT", 12);
         define("TEMPLATE_OWNER_24HR_BEFORE_CHECKOUT", 13);
         define("TEMPLATE_SECURITY_DEPOSIT_REFUND", 14);
+
+        define("PAYMENT_INIT", 1);
+        define("PAYMENT_SUCCESS", 2);
+        define("PAYMENT_FAILED", 3);
     }
 
     public static function changeEnv($data = [])

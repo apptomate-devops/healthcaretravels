@@ -27,6 +27,8 @@ class BookingPayments extends Model
         'is_cleared',
         'is_partial_days',
         'covering_range',
+        'status',
+        'failed_count',
     ];
     /**
      * Get the Booking that owns the payments.

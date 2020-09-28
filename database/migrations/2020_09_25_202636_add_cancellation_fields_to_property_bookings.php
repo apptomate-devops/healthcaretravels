@@ -14,7 +14,6 @@ class AddCancellationFieldsToPropertyBookings extends Migration
     public function up()
     {
         Schema::table('property_booking', function (Blueprint $table) {
-            //
             $table
                 ->tinyInteger('cancellation_requested')
                 ->default(0)
@@ -37,7 +36,6 @@ class AddCancellationFieldsToPropertyBookings extends Migration
     public function down()
     {
         Schema::table('property_booking', function (Blueprint $table) {
-            //
             $table->dropColumn([
                 'cancellation_requested',
                 'already_checked_in',

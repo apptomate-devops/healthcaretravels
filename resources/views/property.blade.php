@@ -91,7 +91,9 @@
                             </div>
                             <div class="sub-price">
                                 @if(Session::get('user_id'))
+                                    @if($data->user_id != Session::get('user_id'))
                                     <a><h3 id="contact_host"><span class="property-badge"  id="chat_host">Message Host</span></h3></a>
+                                    @endif
                                 @else
                                     <button style="background: transparent;border: 0;float: right;" onclick="$('#request-chat').click()"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8">Login to Chat</span></h3></button>
                                 @endif

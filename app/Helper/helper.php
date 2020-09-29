@@ -44,10 +44,13 @@ class Helper
         return ['Idempotency-Key' => implode("-", $data)];
     }
 
-    public static function generate_idempotency_key_for_deposit($booking, $is_owner = false)
+    public static function generate_idempotency_key_for_deposit($booking, $is_owner = false, $is_refund = false)
     {
         $userId = $is_owner ? $booking->owner_id : $booking->traveller_id;
         $data = [$booking->id, $booking->booking_id, $userId];
+        if ($is_refund) {
+            array_push($data, 'refund');
+        }
         return ['Idempotency-Key' => implode("-", $data)];
     }
 

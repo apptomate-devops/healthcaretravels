@@ -55,6 +55,13 @@ class PropertyBooking extends Model
         'cancellation_reason',
         'cancellation_explanation',
         'cancelled_by',
+        'cancellation_refund_amount',
+        'cancellation_refund_processed_at',
+        'cancellation_refund_confirmed_at',
+        'cancellation_refund_failed_at',
+        'cancellation_refund_failed_reason',
+        'cancellation_refund_transfer_id',
+        'cancellation_refund_status',
     ];
     /**
      * Get the Traveler who made the booking.
@@ -92,6 +99,7 @@ class PropertyBooking extends Model
     {
         return PropertyBooking::where('owner_deposit_transfer_id', $id)
             ->orWhere('traveler_deposit_transfer_id', $id)
+            ->orWhere('cancellation_refund_transfer_id', $id)
             ->first();
     }
 }

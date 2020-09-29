@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\PropertyBooking;
-use App\Services\Logger;
 use Illuminate\Http\Request;
-use DB;
-use App\Models\Users;
 use App\Http\Controllers\BaseController;
+use Carbon\Carbon;
+
+use App\Models\PropertyBooking;
+use App\Models\Users;
+use App\Services\Logger;
+
+use DB;
+use Helper;
 
 class ReservationController extends BaseController
 {
     public function index(Request $request)
     {
-        # code...
         $data = DB::table('property_booking')
             ->join('property_booking_price', 'property_booking_price.property_booking_id', '=', 'property_booking.id')
             ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
@@ -90,14 +93,14 @@ class ReservationController extends BaseController
 
     public function update_cancellation_request_status(Request $request)
     {
-        $data = PropertyBooking::where('booking_id', $request->booking_id)->first();
+        $booking = PropertyBooking::where('booking_id', $request->booking_id)->first();
         $status = $request->status;
-        if (empty($data)) {
+        if (empty($booking)) {
             return back()->with(['success' => false, 'errorMessage' => 'Booking you are looking for does not exists!']);
         }
         if ($status == 2) {
             $refund_amount = $request->refund_amount;
-            // TODO: Process refund for cancellation
+            $this->process_cancellation_refund($booking, $refund_amount);
         }
 
         PropertyBooking::where('booking_id', $request->booking_id)->update(['cancellation_requested' => $status]);
@@ -105,6 +108,39 @@ class ReservationController extends BaseController
             'success' => true,
             'successMessage' => 'Status updated Successfully!!!',
         ]);
+    }
+
+    public function process_cancellation_refund($booking, $amount)
+    {
+        $booking->cancellation_refund_amount = $amount;
+        $fundingSource = $booking->funding_source;
+        Logger::info('Initiating refund transfer for booking: ' . $booking->booking_id);
+        try {
+            $transferDetails = null;
+            $idempotency = Helper::generate_idempotency_key_for_deposit($booking, false, true);
+            $transferDetails = $this->dwolla->createTransferToCustomer($fundingSource, $amount, $idempotency);
+            Logger::info('Transfer of refund success for booking: ' . $booking->booking_id);
+            $booking->cancellation_refund_transfer_id = basename($transferDetails);
+            $booking->cancellation_refund_processed_at = Carbon::now()->toDateTimeString();
+            $booking->cancellation_refund_status = PAYMENT_INIT;
+            $booking->save();
+            // TODO: add emails for cancellation refund success.
+            return ['success' => true, 'message' => 'Cancellation refund payment has been processed successfully!'];
+        } catch (\Exception $ex) {
+            $message = $ex->getMessage();
+            if (method_exists($ex, 'getResponseBody')) {
+                $message .= ' :: ' . $ex->getResponseBody();
+            }
+            Logger::info('Cancellation refund transfer failed for booking: ' . $booking->booking_id);
+            Logger::info('Cancellation refund failed ex: ' . $message);
+            $booking->cancellation_refund_processed_at = Carbon::now()->toDateTimeString();
+            $booking->cancellation_refund_failed_at = Carbon::now()->toDateTimeString();
+            $booking->cancellation_refund_failed_reason = $message;
+            $booking->cancellation_refund_status = PAYMENT_FAILED;
+            $booking->save();
+            // TODO: add emails for cancellation refund failure.
+            return ['success' => false, 'message' => $message];
+        }
     }
 
     public function booking_cancellation_admin(Request $request)
@@ -119,7 +155,7 @@ class ReservationController extends BaseController
         }
 
         $refund_amount = $request->refund_amount;
-        // TODO: Process refund for cancellation
+        $this->process_cancellation_refund($data, $refund_amount);
 
         PropertyBooking::where('booking_id', $request->booking_id)->update([
             'cancellation_requested' => $status,

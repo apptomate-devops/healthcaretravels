@@ -226,7 +226,7 @@
     <!-- Header / End -->
     <script type="text/javascript">
         var isUserVerified = false;
-        var verifiedInterval = setInterval(function() {
+        function interval_check_vefiried() {
             $.ajax({
                 type: 'GET',
                 url: '/check_verified',
@@ -241,7 +241,9 @@
                     console.log(error);
                 }
             });
-        }, 1000 * 60);
+        }
+        interval_check_vefiried();
+        var verifiedInterval = setInterval(interval_check_vefiried, 1000 * 60);
         $(document).on('click', '.not-verified-block', function(event) {
             var sessionVerified = "{{Session::has('is_verified') && Session::get('is_verified')}}";
             if (isUserVerified != 1 && sessionVerified != "1") {

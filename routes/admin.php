@@ -58,6 +58,7 @@ Route::group(['prefix' => 'admin'], function () {
             '/update_cancellation_request_status/{booking_id}/{status}',
             'Admin\ReservationController@update_cancellation_request_status',
         );
+        Route::POST('/booking_cancellation_admin', 'Admin\ReservationController@booking_cancellation_admin');
 
         Route::GET('/completedpayment', 'Admin\PaymentController@completed_payment');
         Route::GET('/cancelledpayment', 'Admin\PaymentController@cancelledpayment');

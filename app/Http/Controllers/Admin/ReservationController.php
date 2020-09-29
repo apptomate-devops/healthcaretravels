@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\PropertyBooking;
+use App\Services\Logger;
 use Illuminate\Http\Request;
 use DB;
 use App\Models\Users;
@@ -85,11 +86,47 @@ class ReservationController extends BaseController
     {
         $data = PropertyBooking::where('booking_id', $request->booking_id)->first();
         $status = $request->status;
-        if (!empty($data) && ($status == 2 || $status == 3)) {
-            PropertyBooking::where('booking_id', $request->booking_id)->update(['cancellation_requested' => $status]);
-            return back()->with('success', 'Status updated successfully');
+        if (empty($data)) {
+            return back()->with(['success' => false, 'errorMessage' => 'Booking you are looking for does not exists!']);
         }
-        return back()->withErrors(['Booking you are looking for does not exists!']);
+        if ($status == 2) {
+            $refund_amount = $request->refund_amount;
+            // TODO: Process refund for cancellation
+        }
+
+        PropertyBooking::where('booking_id', $request->booking_id)->update(['cancellation_requested' => $status]);
+        return back()->with([
+            'success' => true,
+            'successMessage' => 'Status updated Successfully!!!',
+        ]);
+    }
+
+    public function booking_cancellation_admin(Request $request)
+    {
+        $data = PropertyBooking::where('booking_id', $request->booking_id)->first();
+        $status = 2;
+        if (empty($data)) {
+            return back()->with([
+                'success_cancel_booking' => false,
+                'errorMessage' => 'Booking you are looking for does not exists!',
+            ]);
+        }
+        $refund_amount = $request->refund_amount;
+        // TODO: Process refund for cancellation
+
+        PropertyBooking::where('booking_id', $request->booking_id)->update([
+            'cancellation_requested' => $status,
+            'cancellation_reason' => $request->cancellation_reason,
+            'cancellation_explanation' => $request->cancellation_explanation,
+            'cancelled_by' => 'Admin',
+            'already_checked_in' => $request->checked_in,
+        ]);
+        // TODO: send email to traveller/owner if admin cancels request
+
+        return back()->with([
+            'success_cancel_booking' => true,
+            'successMessage' => 'Booking cancelled Successfully!!!',
+        ]);
     }
 
     public function booking_status_update(Request $request)

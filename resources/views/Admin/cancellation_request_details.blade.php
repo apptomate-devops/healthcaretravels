@@ -11,16 +11,8 @@
         }
     </style>
     <div class="content-header row">
-        <div class="content-header-left col-md-6 col-12 mb-2 breadcrumb-new">
+        <div class="content-header-left col-md-6 col-12 mb-2">
             <h3 class="content-header-title mb-0 d-inline-block">Cancellation Request</h3>
-            <div class="row breadcrumbs-top d-inline-block">
-                <div class="breadcrumb-wrapper col-12">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">Dashboard</a>
-                        </li>
-                    </ol>
-                </div>
-            </div>
         </div>
     </div>
     <div class="content-body">
@@ -51,14 +43,51 @@
                                     <div class="details"><b>Cancellation Reason: </b><span>{{$booking->cancellation_reason}}</span></div>
                                     <div class="details"><b>Explanation: </b><span>{{$booking->cancellation_explanation}}</span></div>
                                     <div class="details"><b>Has the traveler checked in to this property?: </b><span>{{$booking->already_checked_in ? 'Yes' : 'No'}}</span></div>
+
+{{--                                TODO: confirm if we need to make the request in progress fiorst or allow direct cancellation for request --}}
                                     @if($booking->cancellation_requested == 1 || $booking->cancellation_requested == 3)
                                         <div style="margin-top: 20px;">
                                             <a class="btn btn-default btn-primary btn-block" href="{{BASE_URL}}admin/update_cancellation_request_status/{{$booking->booking_id}}/3">
                                                 <span style="height:29px">In Progress</span>
                                             </a>
-                                            <a class="btn btn-default btn-primary btn-block" href="{{BASE_URL}}admin/update_cancellation_request_status/{{$booking->booking_id}}/2">
-                                                <span style="height:29px">Resolved</span>
-                                            </a>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h4 class="card-title">Cancellation Request Refund</h4>
+                                                <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                                                <div class="heading-elements">
+                                                    <ul class="list-inline mb-0">
+                                                        <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                                                        <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                                                        <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                                                        <li><a data-action="close"><i class="ft-x"></i></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="card-content px-25" style="padding-bottom:10px;">
+                                                <div class="deposit-form-wrapper">
+                                                    <form action="{{BASE_URL}}admin/update_cancellation_request_status/{{$booking->booking_id}}/2" id="booking_cancellation_refund">
+                                                        @csrf
+                                                        <div class="form-group">
+                                                            <label for="refund_amount">Enter amount to be refunded:</label>
+                                                            <input type="number" class="form-control col-1" id="refund_amount" name="refund_amount" placeholder="0" required>
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary btn-block">Process Refund and Cancel Request</button>
+                                                        @if(Session::has('success'))
+                                                            @if (Session::has('successMessage'))
+                                                                <div class="mt-10 alert alert-success" role="alert" autofocus>
+                                                                    {{ Session::get('successMessage') }}
+                                                                </div>
+                                                            @endif
+                                                            @if (Session::has('errorMessage'))
+                                                                <div class="mt-10 alert alert-danger" role="alert">
+                                                                    {{ Session::get('errorMessage') }}
+                                                                </div>
+                                                            @endif
+                                                        @endif
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </div>
                                     @endif
                                     @if($booking->cancellation_requested == 2)

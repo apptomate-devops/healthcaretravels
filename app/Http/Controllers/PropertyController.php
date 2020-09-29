@@ -3148,7 +3148,7 @@ class PropertyController extends BaseController
             $this->send_email_contact(
                 $user->email,
                 'Cancellation Request',
-                'mail.cancellation_request_owner',
+                'mail.cancellation_request_admin',
                 $mail_data_admin,
                 $name,
             );

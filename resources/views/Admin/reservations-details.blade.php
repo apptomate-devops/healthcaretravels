@@ -185,10 +185,10 @@
                                         <td class="col-det">{{$data->guest_count}}</td>
                                     </tr>
 
-                                    <tr>
-                                        <td>Total Days:</td>
-                                        <td class="col-det">{{$data->min_days}}</td>
-                                    </tr>
+{{--                                    <tr>--}}
+{{--                                        <td>Total Days:</td>--}}
+{{--                                        <td class="col-det">{{$data->min_days}}</td>--}}
+{{--                                    </tr>--}}
 
                                     <td>Room Fee:</td>
                                     <td class="col-det">$ {{$data->monthly_rate}} / Month</td>

@@ -749,7 +749,6 @@ class Helper
             'Lost/ended job offer',
             'Found another place to stay',
             'Property misrepresented',
-            'Property was a scam',
             'Other reason',
         ]);
 

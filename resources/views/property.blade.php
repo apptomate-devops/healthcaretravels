@@ -888,37 +888,39 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="exampleModalLabel">Chat to Host</h4>
+                    <h4 class="modal-title" id="exampleModalLabel">Chat with Host</h4>
                 </div>
+                <form action="{{BASE_URL}}create_chat/{{$property_id}}" method="post">
                 <div class="modal-body">
                     {{--  <a href="{{BASE_URL}}create_chat/{{$property_id}}" target="_blank"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8" >Message Host</span></h3></a> --}}
-                    <form action="{{BASE_URL}}create_chat/{{$property_id}}" method="post">
-                        <input type="hidden" name="_token" value="{{csrf_token()}}">
-                        <div id="check_in_div">
-                            <div class="form-group">
-                                <label class="control-label" for="chat_from_date">Check In</label>
-                                <input name="check_in" id="chat_from_date" placeholder="Check In date"  type="text" style="width: 273px;" >
+                            <input type="hidden" name="_token" value="{{csrf_token()}}">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label" for="chat_from_date">Check In</label>
+                                        <input name="check_in" id="chat_from_date" placeholder="Check In date"  type="text" style="width: 273px;" >
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label" for="date">Check Out</label>
+                                        <input name="check_out"  id="chat_to_date"  placeholder="Check Out date" type="text" style="width: 273px;" >
+                                        <input name="property_id" type="hidden" value="{{$property_id}}" >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center" style="font-size:1.2rem;">
+                                Optional: Add check-in/check-out dates to give the property owner more information about your inquiry.
                             </div>
                         </div>
-                        <div id="check_out_div">
-                            <div class="form-group">
-                                <label class="control-label" for="date">Check Out</label>
-                                <input name="check_out"  id="chat_to_date"  placeholder="Check Out date" type="text" style="width: 273px;" >
-                                <input name="property_id" type="hidden" value="{{$property_id}}" >
-                            </div>
-                        </div>
-                        <center>
-                            <button id="request-chat" class="button  margin-top-5"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" style="float:left;" data-dismiss="modal">Close</button>
+                            <button id="request-chat" class="button margin-top-5"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
                                         Request Chat
                                     </font></font>
                             </button>
-                        </center>
+                        </div>
                     </form>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
             </div>
         </div>
     </div>

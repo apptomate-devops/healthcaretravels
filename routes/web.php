@@ -161,7 +161,7 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::GET('/delete-property/{id}', 'PropertyController@delete_property');
     Route::GET('/payment-default/{id}', 'OwnerController@payment_default');
     Route::GET('/owner/calender', 'OwnerController@calender');
-    Route::get('/owner/chat/{id}', 'PropertyController@fire_chat');
+    Route::get('/owner/chat/{id}', 'PropertyController@owner_fire_chat');
     Route::GET('/ical/{id}', 'IcalController@ical');
 
     Route::GET('/payment-options', 'PaymentController@get_payment_options');

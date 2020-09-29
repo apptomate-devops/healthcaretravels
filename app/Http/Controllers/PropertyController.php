@@ -496,12 +496,24 @@ class PropertyController extends BaseController
         return view('owner.favourites', ['properties' => $properties_near, 'role_id' => $role_id]);
     }
 
-    public function fire_chat($id, Request $request)
+    public function owner_fire_chat($id, Request $request)
     {
+        $user_id = $request->session()->get('user_id');
+        if (!$user_id) {
+            return redirect('/');
+        }
         if ($request->fbkey == "personal_chat") {
             $property = DB::table('personal_chat')
-                ->where('id', $id)
+                ->where('id', '=', $id)
+                ->where(function ($query) use ($user_id) {
+                    $query->where('owner_id', '=', $user_id)->orWhere('traveller_id', '=', $user_id);
+                })
                 ->first();
+
+            if (!isset($property)) {
+                return redirect('/');
+            }
+
             $traveller = DB::table('users')
                 ->where('client_id', '=', CLIENT_ID)
                 ->where('id', $property->traveller_id)
@@ -510,7 +522,16 @@ class PropertyController extends BaseController
                 ->where('client_id', '=', CLIENT_ID)
                 ->where('id', $property->owner_id)
                 ->first();
-            return view('owner.fire_chat', ['owner' => $owner, 'traveller' => $traveller, 'id' => $id]);
+            $property_description = DB::table('property_list')
+                ->where('id', $property->property_id)
+                ->first();
+
+            return view('owner.fire_chat', [
+                'owner' => $owner,
+                'traveller' => $traveller,
+                'id' => $id,
+                'property' => $property_description,
+            ]);
         }
         $property = DB::table('property_booking')
             ->where('client_id', '=', CLIENT_ID)
@@ -535,7 +556,11 @@ class PropertyController extends BaseController
 
         $request_chats = DB::table('request_chat')
             ->where('client_id', '=', CLIENT_ID)
-            ->where('request_chat.owner_id', '=', $user_id)
+            ->where(function ($query) use ($user_id) {
+                $query
+                    ->where('request_chat.owner_id', '=', $user_id)
+                    ->orWhere('request_chat.traveller_id', '=', $user_id);
+            })
             ->get();
 
         foreach ($request_chats as $request_chat) {
@@ -561,7 +586,11 @@ class PropertyController extends BaseController
 
         $instant_chats = DB::table('instant_chat')
             ->where('client_id', '=', CLIENT_ID)
-            ->where('instant_chat.owner_id', '=', $user_id)
+            ->where(function ($query) use ($user_id) {
+                $query
+                    ->where('instant_chat.owner_id', '=', $user_id)
+                    ->orWhere('instant_chat.traveller_id', '=', $user_id);
+            })
             ->get();
         foreach ($instant_chats as $request_chat) {
             $request_chat->traveller = DB::table('users')
@@ -586,7 +615,11 @@ class PropertyController extends BaseController
         // echo $user_id;
         $personal_chats = DB::table('personal_chat')
             ->where('client_id', '=', CLIENT_ID)
-            ->where('personal_chat.owner_id', '=', $user_id)
+            ->where(function ($query) use ($user_id) {
+                $query
+                    ->where('personal_chat.owner_id', '=', $user_id)
+                    ->orWhere('personal_chat.traveller_id', '=', $user_id);
+            })
             ->where('owner_visible', 1)
             ->get();
 
@@ -1519,10 +1552,20 @@ class PropertyController extends BaseController
 
     public function traveller_fire_chat($id, Request $request)
     {
+        $user_id = $request->session()->get('user_id');
+
+        if (!$user_id) {
+            return redirect('/');
+        }
+
         if ($request->fbkey == "personal_chat") {
             $property = DB::table('personal_chat')
-                ->where('id', $id)
+                ->where([['id', '=', $id], ['traveller_id', '=', $user_id]])
                 ->first();
+            if (!isset($property)) {
+                error_log('..');
+                return redirect('/');
+            }
             // echo json_encode($property);exit;
             $traveller = DB::table('users')
                 ->where('client_id', '=', CLIENT_ID)
@@ -1532,17 +1575,29 @@ class PropertyController extends BaseController
                 ->where('client_id', '=', CLIENT_ID)
                 ->where('id', $property->owner_id)
                 ->first();
+
+            $property_description = DB::table('property_list')
+                ->where('id', $property->property_id)
+                ->first();
+
             return view('traveller.fire_chat', [
                 'owner' => $owner,
                 'traveller' => $traveller,
                 'id' => $id,
                 'traveller_id' => $property->traveller_id,
+                'property' => $property_description,
             ]);
         }
         if ($request->fbkey == "request_chat") {
             $property = DB::table('request_chat')
-                ->where('id', $id)
+                ->where([['id', '=', $id], ['traveller_id', '=', $user_id]])
                 ->first();
+
+            if (!isset($property)) {
+                error_log('..');
+                return redirect('/');
+            }
+
             $traveller = DB::table('users')
                 ->where('client_id', '=', CLIENT_ID)
                 ->where('id', $property->traveller_id)

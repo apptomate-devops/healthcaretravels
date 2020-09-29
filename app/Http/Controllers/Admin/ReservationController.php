@@ -123,6 +123,23 @@ class ReservationController extends BaseController
         ]);
         // TODO: send email to traveller/owner if admin cancels request
 
+        $bookingModel = PropertyBooking::find($data->id);
+        $owner = $bookingModel->owner;
+        $traveller = $bookingModel->traveler;
+        $property = $bookingModel->property;
+
+        $title = APP_BASE_NAME . "Admin cancelled booking";
+        $subject = "Booking Cancelled";
+        $mail_data = [
+            'property_title' => $property->title,
+            'check_in' => date('d-m-Y', strtotime($data->start_date)),
+            'check_out' => date('d-m-Y', strtotime($data->check_out)),
+            'traveler_name' => $traveller->username,
+            'owner_name' => $owner->username,
+        ];
+        $this->send_custom_email($owner->email, $subject, 'mail.admin-cancel-booking', $mail_data, $title);
+        $this->send_custom_email($traveller->email, $subject, 'mail.admin-cancel-booking', $mail_data, $title);
+
         return back()->with([
             'success_cancel_booking' => true,
             'successMessage' => 'Booking cancelled Successfully!!!',

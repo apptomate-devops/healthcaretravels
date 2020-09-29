@@ -5,4 +5,5 @@
     </div>
     <div style="padding-top: 5px;">
         {{$text}}
+    </div>
 @endsection

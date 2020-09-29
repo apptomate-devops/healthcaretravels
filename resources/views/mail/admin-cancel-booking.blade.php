@@ -1,12 +1,12 @@
 @extends('layout.mail')
 @section('content')
-    <div>
-        You booking at {{$propertyName}} for {{$check_in}} - {{$check_out}} has been cancelled. Please reach out to support for more information.
+    <div style="padding-top: 5px;">
+        Your booking at <b>{{$property_title}}</b> for {{$check_in}} to {{$check_out}} has been cancelled. Please reach out to support for more information.
     </div>
     <div style="padding-top: 5px;">
-        Traveler: {{$traveler_name}}
+        Traveler: <b>{{$traveler_name}}</b>
     </div>
     <div style="padding-top: 5px;">
-        Property Owner: {{$owner_name}}
+        Property Owner: <b>{{$owner_name}}</b>
     </div>
 @endsection

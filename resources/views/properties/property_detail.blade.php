@@ -475,7 +475,6 @@
         $('#terms').change(function (e) {
             e.stopPropagation();
             e.preventDefault();
-            debugger
             if($('#fundingSource').val() && $(this).is(":checked")) {
                 $('#requestBooking').attr('disabled',false);
             } else {

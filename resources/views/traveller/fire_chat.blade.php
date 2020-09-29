@@ -90,9 +90,11 @@
                         <h3 class="md-card-toolbar-heading-text large">
                             <span class="uk-text-muted">Chat with</span>
                             <a href="#">{{$owner->first_name}} {{$owner->last_name}}</a>
-                            <span ng-if="messages[messages.length - 1].$id == 'start'">
-                                , <a href="/property/<%messages[messages.length - 1].property_id%>">Property Link</a>
-                            </span>
+                            @if(isset($property))
+                            , <a href="/property/{{$property->id}}">
+                                {{$property->title}}
+                            </a>
+                            @endif
                         </h3>
                     </div>
                 </div>

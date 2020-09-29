@@ -68,7 +68,6 @@ class RefreshDwollaAccessToken extends Command
      */
     public function handle()
     {
-        Logger::info('Before requesting access token config value: ' . config('services.dwolla.access_token'));
         Logger::info('Requesting new accessToken from Refresh access token command:');
         $accessToken = $this->setupAccessToken();
         if (!$accessToken) {
@@ -80,6 +79,5 @@ class RefreshDwollaAccessToken extends Command
         ];
         DwollaSwagger\Configuration::$access_token = $accessToken;
         Helper::changeEnv($envData);
-        Logger::info('After setting Config Value: ' . config('services.dwolla.access_token'));
     }
 }

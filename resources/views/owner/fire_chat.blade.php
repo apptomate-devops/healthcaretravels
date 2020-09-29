@@ -105,7 +105,7 @@
                             To protect your payment, always communicate and pay through Health Care Travels.
                         </div>
                     </div>
-                    <div class="chat_box_wrapper">
+                    <div class="chat_box_wrapper" id="chat_box_wrapper" style="display: none">
                         <div class="chat_box touchscroll chat_box_colors_a" id="chat">
 
                             <div ng-repeat="message in messages | orderBy : 'date'" ng-hide="header == 1">
@@ -335,6 +335,7 @@
             return $scope.messages
         }, function(newValue) {
             $scope.messages.$loaded(function(newValue) {
+                $('#chat_box_wrapper').show();
                 $scope.markAsRead(newValue);
             });
             $scope.messages.$watch(function(newValue) {

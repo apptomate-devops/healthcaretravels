@@ -46,8 +46,6 @@
                                 <h4><a href="#">{{$property->owner->first_name}} {{$property->owner->last_name}}</a></h4>
                                 <span> {{$property->last_message}} </span>
 
-                                <span class="table-property-price"></span>
-
                             </div>
                         </td>
 
@@ -78,8 +76,6 @@
                                 <h4><a href="#">{{$property->owner->first_name}} {{$property->owner->last_name}}</a></h4>
                                 <span> {{$property->last_message}} </span>
 
-                                <span class="table-property-price"></span>
-
                             </div>
                         </td>
                         <td class="action">
@@ -107,8 +103,6 @@
                             <div class="title">
                                 <h4><a href="#">{{$property->owner->first_name}} {{$property->owner->last_name}}</a></h4>
                                 <span> {{$property->last_message}} </span>
-
-                                <span class="table-property-price"></span>
 
                             </div>
                         </td>

@@ -196,11 +196,12 @@ class PaymentController extends BaseController
                 ? $paymentBooking->owner_funding_source
                 : $paymentBooking->funding_source;
         }
+        $requestTime = Carbon::parse($request->timestamp)->toDateTimeString();
         switch ($eventType) {
             case 'transfer_cancelled':
             case 'transfer_failed':
                 if ($payment) {
-                    $payment->failed_time = Carbon::parse($request->timestamp)->toDateTimeString();
+                    $payment->failed_time = $requestTime;
                     $payment->is_cleared = -1;
                     $payment->status = PAYMENT_FAILED;
                     $payment->failed_count += 1;
@@ -208,16 +209,19 @@ class PaymentController extends BaseController
                     Helper::send_payment_email($payment, $fundingSource, false);
                 } elseif ($booking) {
                     if ($booking->owner_deposit_transfer_id == $resourceId) {
-                        $booking->owner_deposit_failed_at = Carbon::parse($request->timestamp)->toDateTimeString();
+                        $booking->owner_deposit_failed_at = $requestTime;
                     } elseif ($booking->traveler_deposit_transfer_id == $resourceId) {
-                        $booking->traveler_deposit_failed_at = Carbon::parse($request->timestamp)->toDateTimeString();
+                        $booking->traveler_deposit_failed_at = $requestTime;
+                    } elseif ($booking->cancellation_refund_transfer_id == $resourceId) {
+                        $booking->cancellation_refund_failed_at = $requestTime;
+                        $booking->cancellation_refund_status = PAYMENT_FAILED;
                     }
                     $booking->save();
                 }
                 break;
             case 'transfer_completed':
                 if ($payment) {
-                    $payment->confirmed_time = Carbon::parse($request->timestamp)->toDateTimeString();
+                    $payment->confirmed_time = $requestTime;
                     $payment->is_cleared = 1;
                     $payment->status = PAYMENT_SUCCESS;
                     $payment->save();
@@ -239,11 +243,12 @@ class PaymentController extends BaseController
                     Helper::send_payment_email($payment, $fundingSource, true);
                 } elseif ($booking) {
                     if ($booking->owner_deposit_transfer_id == $resourceId) {
-                        $booking->owner_deposit_confirmed_at = Carbon::parse($request->timestamp)->toDateTimeString();
+                        $booking->owner_deposit_confirmed_at = $requestTime;
                     } elseif ($booking->traveler_deposit_transfer_id == $resourceId) {
-                        $booking->traveler_deposit_confirmed_at = Carbon::parse(
-                            $request->timestamp,
-                        )->toDateTimeString();
+                        $booking->traveler_deposit_confirmed_at = $requestTime;
+                    } elseif ($booking->cancellation_refund_transfer_id == $resourceId) {
+                        $booking->cancellation_refund_confirmed_at = $requestTime;
+                        $booking->cancellation_refund_status = PAYMENT_SUCCESS;
                     }
                     $booking->save();
                 }

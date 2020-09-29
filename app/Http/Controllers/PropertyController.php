@@ -498,16 +498,19 @@ class PropertyController extends BaseController
 
     public function owner_fire_chat($id, Request $request)
     {
-        $user_id = $request->session() - get('user_id');
+        $user_id = $request->session()->get('user_id');
         if (!$user_id) {
             return redirect('/');
         }
         if ($request->fbkey == "personal_chat") {
             $property = DB::table('personal_chat')
-                ->where([['id', '=', $id], ['owner_id', '=', $user_id]])
+                ->where('id', '=', $id)
+                ->where(function ($query) use ($user_id) {
+                    $query->where('owner_id', '=', $user_id)->orWhere('traveller_id', '=', $user_id);
+                })
                 ->first();
 
-            if (isset($property)) {
+            if (!isset($property)) {
                 return redirect('/');
             }
 
@@ -553,7 +556,11 @@ class PropertyController extends BaseController
 
         $request_chats = DB::table('request_chat')
             ->where('client_id', '=', CLIENT_ID)
-            ->where('request_chat.owner_id', '=', $user_id)
+            ->where(function ($query) use ($user_id) {
+                $query
+                    ->where('request_chat.owner_id', '=', $user_id)
+                    ->orWhere('request_chat.traveller_id', '=', $user_id);
+            })
             ->get();
 
         foreach ($request_chats as $request_chat) {
@@ -579,7 +586,11 @@ class PropertyController extends BaseController
 
         $instant_chats = DB::table('instant_chat')
             ->where('client_id', '=', CLIENT_ID)
-            ->where('instant_chat.owner_id', '=', $user_id)
+            ->where(function ($query) use ($user_id) {
+                $query
+                    ->where('instant_chat.owner_id', '=', $user_id)
+                    ->orWhere('instant_chat.traveller_id', '=', $user_id);
+            })
             ->get();
         foreach ($instant_chats as $request_chat) {
             $request_chat->traveller = DB::table('users')
@@ -604,7 +615,11 @@ class PropertyController extends BaseController
         // echo $user_id;
         $personal_chats = DB::table('personal_chat')
             ->where('client_id', '=', CLIENT_ID)
-            ->where('personal_chat.owner_id', '=', $user_id)
+            ->where(function ($query) use ($user_id) {
+                $query
+                    ->where('personal_chat.owner_id', '=', $user_id)
+                    ->orWhere('personal_chat.traveller_id', '=', $user_id);
+            })
             ->where('owner_visible', 1)
             ->get();
 

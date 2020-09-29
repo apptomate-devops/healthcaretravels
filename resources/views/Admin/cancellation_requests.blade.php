@@ -46,7 +46,7 @@
                                                 <td>{{$booking->booking_id}}</td>
                                                 <td>{{$booking->owner_first_name . ' ' . $booking->owner_last_name}}</td>
                                                 <td>{{$booking->traveller_first_name . ' ' . $booking->traveller_last_name}}</td>
-                                                <td>{{$booking->requester_first_name . ' ' . $booking->requester_last_name}}</td>
+                                                <td>{{$booking->cancelled_by == 'Admin' ? 'Admin' : $booking->requester_first_name . ' ' . $booking->requester_last_name}}</td>
                                                 <td>{{$booking->cancellation_requested == 3 ? 'In Progress' : ($booking->cancellation_requested == 2 ? 'Resolved' : 'Pending')}}</td>
                                                 <td>
                                                     <a href="{{url('admin/cancellation_requests/')}}/{{$booking->booking_id}}">

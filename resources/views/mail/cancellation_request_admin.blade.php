@@ -7,7 +7,10 @@
         Cancellation is requested by <b>{{$name}} ({{$user_type}})</b> for property <b>{{$property_title}}</b>. Here are the details for the request:
         <br>
         <br>
-        <b>Booking ID:</b> {{$booking_id}}
+        <b>Booking ID:</b>
+        <a href="{{BASE_URL}}admin/bookings/{{$booking_row_id}}">
+             {{$booking_id}}
+        </a>
         <br>
         <b>Owner Name:</b> {{$owner->first_name . ' ' . $owner->last_name}}
         <br>

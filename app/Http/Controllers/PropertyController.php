@@ -3085,7 +3085,7 @@ class PropertyController extends BaseController
     public function submit_cancellation_request(Request $request)
     {
         try {
-            $booking = PropertyBooking::where('booking_id', '$request->booking_id')->first();
+            $booking = PropertyBooking::where('booking_id', $request->booking_id)->first();
             if (empty($booking)) {
                 return back()->withErrors(['Booking you are looking for does not exists!']);
             }
@@ -3138,6 +3138,7 @@ class PropertyController extends BaseController
                 'name' => $name,
                 'user_type' => $is_owner ? 'Owner' : 'Traveler',
                 'property_title' => $property->title,
+                'booking_row_id' => $booking->id,
                 'booking_id' => $booking->booking_id,
                 'owner' => $owner,
                 'traveler' => $traveler,

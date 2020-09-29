@@ -49,7 +49,7 @@ class ReservationController extends BaseController
         $data = DB::table('property_booking')
             ->join('users as traveller', 'traveller.id', '=', 'property_booking.traveller_id')
             ->join('users as owner', 'owner.id', '=', 'property_booking.owner_id')
-            ->join('users as requester', 'requester.id', '=', 'property_booking.cancelled_by')
+            ->leftjoin('users as requester', 'requester.id', '=', 'property_booking.cancelled_by')
             ->where('property_booking.cancellation_requested', '>=', 1)
             ->select(
                 'property_booking.*',
@@ -75,7 +75,13 @@ class ReservationController extends BaseController
         $owner = $booking->owner;
         $traveler = $booking->traveler;
         $property = $booking->property;
-        $cancelled_by = $booking->cancelled_by == $owner->id ? $owner : $traveler;
+        if ($booking->cancelled_by == 'Admin') {
+            $cancelled_by = 'Admin';
+        } elseif ($booking->cancelled_by == $owner->id) {
+            $cancelled_by = $owner->first_name . ' ' . $owner->last_name;
+        } else {
+            $cancelled_by = $traveler->first_name . ' ' . $traveler->last_name;
+        }
         return view(
             'Admin.cancellation_request_details',
             compact('booking', 'property', 'traveler', 'owner', 'cancelled_by'),
@@ -111,6 +117,7 @@ class ReservationController extends BaseController
                 'errorMessage' => 'Booking you are looking for does not exists!',
             ]);
         }
+
         $refund_amount = $request->refund_amount;
         // TODO: Process refund for cancellation
 
@@ -121,7 +128,8 @@ class ReservationController extends BaseController
             'cancelled_by' => 'Admin',
             'already_checked_in' => $request->checked_in,
         ]);
-        // TODO: send email to traveller/owner if admin cancels request
+
+        // send email to traveller/owner if admin cancels request
 
         $bookingModel = PropertyBooking::find($data->id);
         $owner = $bookingModel->owner;

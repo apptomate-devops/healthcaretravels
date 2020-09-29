@@ -58,6 +58,7 @@ class Kernel extends HttpKernel
         'HeaderValidator' => \App\Http\Middleware\headerValidate::class,
         'AdminCheck' => \App\Http\Middleware\AdminCheck::class,
         'LoginCheck' => \App\Http\Middleware\LoginCheck::class,
+        'VerifiedCheck' => \App\Http\Middleware\VerifiedCheck::class,
         'API' => \App\Http\Middleware\API::class,
     ];
 }

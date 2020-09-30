@@ -334,7 +334,6 @@ class Helper
         }
         Logger::info('Initiating security deposit handler for: ' . $id);
         $dwolla = new Dwolla();
-        $traveller = $booking->traveler;
         $owner = $booking->owner;
         $travelerRes = null;
         $ownerRes = null;
@@ -364,13 +363,6 @@ class Helper
             $booking->save();
             Logger::info('Security deposit handled successfully for traveler: ' . $id);
             $travelerRes = ['success' => true, 'successMessage' => 'Security deposit has been handled for traveler'];
-            Helper::send_custom_email(
-                $traveller->email,
-                'Security Deposit Return',
-                'mail.security-deposit-refund',
-                ['name' => $traveller->first_name . ' ' . $traveller->last_name],
-                'Payment Processed',
-            );
         } catch (\Exception $ex) {
             $message = $ex->getMessage();
             Logger::error('Error in handling security deposit for: ' . $id . '. EX: ', $message);

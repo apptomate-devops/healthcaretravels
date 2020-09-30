@@ -502,6 +502,7 @@ class Helper
                 ' - ' .
                 Carbon::parse($booking->start_date)
                     ->addMonth($i)
+                    ->subDay()
                     ->format('m/d/Y');
 
             if ($i == $totalCycles && $isPartial) {

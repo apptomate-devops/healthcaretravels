@@ -494,33 +494,23 @@ class Helper
                     $data['due_date'] = $dd;
                 }
             }
-
-            $data['covering_range'] =
-                Carbon::parse($booking->start_date)
-                    ->addMonth($i - 1)
-                    ->format('m/d/Y') .
-                ' - ' .
-                Carbon::parse($booking->start_date)
-                    ->addMonth($i)
-                    ->subDay()
-                    ->format('m/d/Y');
-
+            $cdd = $data['due_date']->copy();
+            if ($is_owner) {
+                // Subtracting 48 hours from due date for owner as 48 hours are added to due date for owner
+                $cdd->subHours(48);
+            }
+            $covering_date = $cdd->max(Carbon::parse($booking->start_date));
+            $covering_start_date = Carbon::parse($covering_date);
+            $covering_end_date = $covering_start_date->copy()->addMonth()->subDay();
             if ($i == $totalCycles && $isPartial) {
                 $data['total_amount'] = round(($data['monthly_rate'] * $partialDays) / 30);
                 $data['is_partial_days'] = $partialDays;
-                $dd = $data['due_date']->copy();
-                if ($is_owner) {
-                    // Subtracting 48 hours from due date for owner as 48 hours are added to due date for owner
-                    $dd->subHours(48);
-                }
-                $covering_date = $dd->max(Carbon::parse($booking->start_date));
-                $covering_start_date = Carbon::parse($covering_date);
                 $covering_end_date = $covering_start_date->copy()->addDays($partialDays);
-                $data['covering_range'] =
+            }
+            $data['covering_range'] =
                     $covering_start_date->format('m/d/Y') .
                     ' - ' .
                     $covering_end_date->format('m/d/Y');
-            }
             $data['due_time'] = $data['due_date'];
             $data['due_date'] = $data['due_date']->toDateString();
             array_push($scheduled_payments, $data);

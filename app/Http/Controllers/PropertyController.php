@@ -282,8 +282,7 @@ class PropertyController extends BaseController
     {
         $data = DB::table('property_booking')
             ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
-            ->join('property_images', 'property_images.property_id', '=', 'property_booking.property_id')
-            ->join('property_booking_price', 'property_booking_price.property_booking_id', '=', 'property_booking.id')
+            ->leftjoin('property_images', 'property_images.property_id', '=', 'property_booking.property_id')
             ->where('property_booking.client_id', CLIENT_ID)
             ->where('property_booking.booking_id', $booking_id)
             ->first();
@@ -1518,8 +1517,15 @@ class PropertyController extends BaseController
     public function single_reservations($booking_id, Request $request)
     {
         $data = DB::table('property_booking')
+            ->leftJoin('property_list', 'property_list.id', '=', 'property_booking.property_id')
             ->where('property_booking.client_id', CLIENT_ID)
             ->where('property_booking.booking_id', $booking_id)
+            ->select(
+                'property_booking.*',
+                'property_list.monthly_rate',
+                'property_list.check_in',
+                'property_list.check_out',
+            )
             ->first();
 
         $bookingModel = PropertyBooking::find($data->id);

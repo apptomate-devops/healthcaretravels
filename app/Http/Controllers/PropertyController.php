@@ -1167,8 +1167,7 @@ class PropertyController extends BaseController
             ->where('property_list.id', '=', $property_id)
             ->select(
                 'property_list.*',
-                'users.first_name',
-                'users.last_name',
+                'users.username',
                 'users.profile_image',
                 'users.device_token',
                 'property_images.image_url',
@@ -1302,8 +1301,8 @@ class PropertyController extends BaseController
                 'property_room.bedroom_count',
                 'property_room.bathroom_count',
                 'property_list.property_size',
-                'users.first_name',
-                'users.last_name',
+                'users.username',
+                'users.profile_image',
                 'property_list.id as property_id',
                 'property_list.verified',
                 'users.id as owner_id',

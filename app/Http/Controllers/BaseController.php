@@ -872,7 +872,7 @@ class BaseController extends ConstantsController
         ];
         $subject = 'Your Stay at ' . $propertyTitle;
         $this->send_scheduled_email(
-            $owner->email,
+            $traveler->email,
             'traveler-24hr-before-checkin',
             $subject,
             $traveler_mail_data,
@@ -880,7 +880,7 @@ class BaseController extends ConstantsController
         );
         $subject = 'Your Stay at ' . $propertyTitle . ' is Ending';
         $this->send_scheduled_email(
-            $owner->email,
+            $traveler->email,
             'traveler-24hr-before-checkout',
             $subject,
             $traveler_mail_data,

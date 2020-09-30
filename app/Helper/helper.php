@@ -429,8 +429,8 @@ class Helper
 
     public static function generate_booking_payments($booking, $is_owner = 0)
     {
-        $start_date = Carbon::parse($booking->start_date);
-        $end_date = Carbon::parse($booking->end_date);
+        $start_date = Carbon::parse($booking->start_date, 'UTC');
+        $end_date = Carbon::parse($booking->end_date, 'UTC');
         $accepted_date = Carbon::now();
         $scheduler_date = Carbon::parse($booking->start_date);
         $timeSplit = Helper::get_time_split($booking->check_in);

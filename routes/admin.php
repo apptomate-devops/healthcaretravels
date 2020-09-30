@@ -9,6 +9,7 @@
   | contains the "web" middleware group. Now create something great!
   |
  */
+
 use Illuminate\Http\Request;
 
 Route::group(['prefix' => 'admin'], function () {
@@ -124,6 +125,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::GET('/verify_document/{id}/{status}', 'Admin\HomeController@verify_document');
         Route::GET('/verify_mobile/{id}/{status}', 'Admin\HomeController@verify_mobile');
         Route::POST('/verify_all_documents/{id}', 'Admin\HomeController@verify_all_documents');
+
+        Route::POST('/update_notes/{id}', 'Admin\HomeController@update_notes');
         // faq
         Route::POST('/add_faq_process', 'Admin\HomeController@add_faq_process');
         Route::GET('/faq', 'Admin\HomeController@add_faq');

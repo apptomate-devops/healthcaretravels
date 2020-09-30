@@ -482,6 +482,95 @@ class HomeController extends BaseController
     {
         $property_id = $id;
         $property = DB::table('property_list')
+            ->select(
+                'property_list.*',
+                "users.client_id",
+                "users.email",
+                "users.first_name",
+                "users.last_name",
+                "users.phone",
+                "users.username",
+                "users.gender",
+                "users.date_of_birth",
+                "users.is_verified",
+                "users.social_id",
+                "users.password",
+                "users.auth_token",
+                "users.device_token",
+                "users.role_id",
+                "users.status",
+                "users.otp_verified",
+                "users.otp",
+                "users.email_verified",
+                "users.created_at",
+                "users.updated_at",
+                "users.address",
+                "users.country",
+                "users.state",
+                "users.city",
+                "users.pin_code",
+                "users.about_me",
+                "users.current_city",
+                "users.languages_known",
+                "users.paypal_email",
+                "users.facebook_url",
+                "users.twitter_url",
+                "users.skype_id",
+                "users.profile_image",
+                "users.user_type",
+                "users.login_type",
+                "users.occupation",
+                "users.occupation_desc",
+                "users.reset_password_token",
+                "users.reset_date",
+                "users.recruiter_name",
+                "users.recruiter_phone",
+                "users.work",
+                "users.school",
+                "users.name_of_agency",
+                "users.website",
+                "users.rep_code",
+                "users.linkedin_url",
+                "users.airbnb_link",
+                "users.home_away_link",
+                "users.tax_home",
+                "users.listing_address",
+                "users.work_title",
+                "users.instagram_url",
+                "users.traveler_license",
+                "users.vrbo_link",
+                "users.agency_hr_phone",
+                "users.agency_hr_email",
+                "users.is_submitted_documents",
+                "users.ethnicity",
+                "users.agency_office_number",
+                "users.agency_website",
+                "users.denied_count",
+                "users.address_line_2",
+                "users.other_agency",
+                "users.property_tax_url",
+                "users.homeowner_first_name",
+                "users.homeowner_last_name",
+                "users.homeowner_email",
+                "users.homeowner_phone_number",
+                "users.property_address",
+                "users.is_encrypted",
+                "users.enable_two_factor_auth",
+                "users.email_opt",
+                "users.is_pet_travelling",
+                "users.pet_name",
+                "users.pet_breed",
+                "users.pet_weight",
+                "users.pet_image",
+                "users.other_occupation",
+                "users.dwolla_customer",
+                "users.default_funding_source",
+                "users.dwolla_first_name",
+                "users.dwolla_last_name",
+                "users.dwolla_email",
+                "users.approved_by",
+                "users.approved_on",
+            )
             ->leftjoin('users', 'users.id', '=', 'property_list.user_id')
             ->where('property_list.id', '=', $property_id)
             ->get();
@@ -497,6 +586,7 @@ class HomeController extends BaseController
             ->get();
 
         // return response()->json(['data'=>$p]);
+        error_log(json_encode($property));
         return view('Admin.property-details')->with('property', $property);
     }
 
@@ -743,5 +833,31 @@ class HomeController extends BaseController
 
         return view('Admin.reports', ['total' => $admin, 'host' => $host, 'data' => $data, 'revenue' => $revenue]);
         // $total_earning = DB::select("SELECT SUM(`service_tax`) as total FROM `property_booking_price` WHERE `status` = 2");
+    }
+
+    public function update_notes($id, Request $request)
+    {
+        $data = $request->responses;
+
+        switch ($data['type']) {
+            case 'users':
+                DB::table('users')
+                    ->where('id', '=', $id)
+                    ->update(['admin_notes' => $data['note']]);
+                break;
+            case 'property_list':
+                DB::table('property_list')
+                    ->where('id', '=', $id)
+                    ->update(['admin_notes' => $data['note']]);
+                break;
+            case 'bookings':
+                DB::table('property_booking')
+                    ->where('id', '=', $id)
+                    ->update(['admin_notes' => $data['note']]);
+            default:
+                error_log('default');
+                break;
+        }
+        return;
     }
 }

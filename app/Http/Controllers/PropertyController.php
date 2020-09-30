@@ -197,9 +197,9 @@ class PropertyController extends BaseController
             return response()->json([
                 'status' => 'FAILED',
                 'message' =>
-                    'You already have a booking overlapping these dates. Try a different date range or cancel your booking on the <a style="color: white;text-decoration-line: underline;" href=' .
+                    'You have already <a style="color: white;text-decoration-line: underline;" href=' .
                     $my_trips_url .
-                    '>My Trips</a> page.',
+                    '>submitted a request</a> for these dates.',
                 'status_code' => ZERO,
                 'request_already_exists' => ONE,
                 'request_data' => $requestAlreadyExists,
@@ -334,69 +334,7 @@ class PropertyController extends BaseController
                 ->where('booking_id', $id)
                 ->select('traveller_id')
                 ->first();
-            // TODO: check if owner can cancel stay
 
-            //        if ($request->session()->get('role_id') == 1) {
-            //            $user_id = $request->session()->get('user_id');
-            //            $user = DB::table('users')
-            //                ->where('client_id', CLIENT_ID)
-            //                ->where('id', $user_id)
-            //                ->first();
-            //            $booking = DB::table('property_booking')
-            //                ->where('booking_id', $id)
-            //                ->leftjoin('property_list', 'property_list.id', '=', 'property_booking.property_id')
-            //                ->leftjoin('users', 'users.id', '=', 'property_booking.traveller_id')
-            //                ->select(
-            //                    'users.first_name',
-            //                    'users.last_name',
-            //                    'property_list.title',
-            //                    'property_booking.*',
-            //                    'users.email',
-            //                )
-            //                ->first();
-            //            // print_r($booking);exit;
-            //            $mail_data = [
-            //                'owner_name' => $user->first_name . " " . $user->last_name,
-            //                'booking_id' => $booking->booking_id,
-            //                'property' => $booking->title,
-            //                'start_date' => date("m-d-Y", strtotime($booking->start_date)),
-            //                'end_date' => date("m-d-Y", strtotime($booking->end_date)),
-            //                'mail_to' => 'admin',
-            //                'traveler' => $booking->first_name . " " . $booking->last_name,
-            //            ];
-            //            // $this->send_email('guru@sparkouttech.com', 'mail.cancel_booking', $mail_data);
-            //            $this->send_email('info@healthcaretravels.com', 'mail.cancel_booking', $mail_data);
-            //            if ($booking->email) {
-            //                $mail_data1 = [
-            //                    'owner_name' => $user->first_name . " " . $user->last_name,
-            //                    'booking_id' => $booking->booking_id,
-            //                    'property' => $booking->title,
-            //                    'start_date' => date("m-d-Y", strtotime($booking->start_date)),
-            //                    'end_date' => date("m-d-Y", strtotime($booking->end_date)),
-            //                    'mail_to' => 'traveller',
-            //                    'traveler' => $booking->first_name . " " . $booking->last_name,
-            //                ];
-            //                $this->send_email($booking->email, 'mail.cancel_booking', $mail_data1);
-            //            }
-            //
-            //            if ($user->email) {
-            //                $mail_data2 = [
-            //                    'owner_name' => $user->first_name . " " . $user->last_name,
-            //                    'booking_id' => $booking->booking_id,
-            //                    'property' => $booking->title,
-            //                    'start_date' => date("m-d-Y", strtotime($booking->start_date)),
-            //                    'end_date' => date("m-d-Y", strtotime($booking->end_date)),
-            //                    'mail_to' => 'owner',
-            //                    'traveler' => $user->first_name . " " . $booking->last_name,
-            //                ];
-            //                $this->send_email($user->email, 'mail.cancel_booking', $mail_data2);
-            //            }
-            //
-            //            DB::table('property_booking')
-            //                ->where('booking_id', $id)
-            //                ->update(['status' => 8]);
-            //            return response()->json(['status' => 'SUCCESS', 'message' => 'Booking Cancelled successfully!']);
-            //        }
             if ($user_id != $traveller->traveller_id) {
                 // Do not allow other user to cancel booking
                 return response()->json(['status' => 'FAILED', 'message' => 'Invalid Access']);
@@ -753,17 +691,28 @@ class PropertyController extends BaseController
             ->leftjoin('property_list', 'property_list.id', '=', 'property_booking.property_id')
             ->leftjoin('users', 'users.id', '=', 'property_booking.traveller_id')
             ->select(
+                'users.username',
                 'users.first_name',
                 'users.last_name',
                 'property_list.title',
+                'property_list.room_type',
                 'property_list.monthly_rate',
                 'property_list.check_in',
                 'property_list.check_out',
                 'property_booking.*',
                 'users.email',
                 'users.phone',
+                'users.role_id',
             )
             ->first();
+
+        $property_img = DB::table('property_images')
+            ->where('property_images.client_id', '=', CLIENT_ID)
+            ->where('property_images.property_id', '=', $booking->property_id)
+            ->orderBy('is_cover', 'DESC')
+            ->first();
+        $cover_img = BASE_URL . ltrim($property_img->image_url, '/');
+
         $user_id = $request->session()->get('user_id');
 
         if ($user_id && $booking && $booking->owner_id == $user_id) {
@@ -774,19 +723,6 @@ class PropertyController extends BaseController
                     'status' => $request->status,
                 ]);
 
-            if ($request->status == 2 || $request->status == 4) {
-                // SEND MAIL TO TRAVELLER FOR BOOKING ACCEPTED/CANCELLED
-                $mail_data = [
-                    'property' => $booking->title,
-                    'booking_id' => $booking->booking_id,
-                    'start_date' => $booking->start_date,
-                    'end_date' => $booking->end_date,
-                    'mail_to' => 'traveller',
-                    'traveler' => $booking->first_name . " " . $booking->last_name,
-                ];
-                $mail_copy = $request->status == 2 ? 'mail.accepted_booking' : 'mail.cancel_booking';
-                $this->send_email($booking->email, $mail_copy, $mail_data);
-            }
             if ($request->status == 2) {
                 $scheduled_payments_traveler = Helper::generate_booking_payments($booking);
                 $scheduled_payments_owner = Helper::generate_booking_payments($booking, 1);
@@ -803,16 +739,34 @@ class PropertyController extends BaseController
                 }
                 $paymentRes = $this->process_booking_payment($booking->booking_id, 1);
                 $bookingModel = PropertyBooking::find($booking->id);
+
+                // SEND MAIL TO TRAVELLER/OWNER AS SOON AS BOOKING ACCEPTED
+                $owner = $bookingModel->owner;
+                $traveler = $bookingModel->traveler;
+                $mail_data = [
+                    'traveler' => $traveler,
+                    'owner' => $owner,
+                    'mail_to' => 'traveller',
+                    'booking_id' => $booking->booking_id,
+                    'property_title' => $booking->title,
+                    'property_room_type' => $booking->room_type,
+                    'start_date' => date('Y-m-d', strtotime($booking->start_date)),
+                    'end_date' => date('Y-m-d', strtotime($booking->end_date)),
+                    'cover_img' => $cover_img,
+                ];
+
+                $title = $request->status == 2 ? 'Owner confirms booking' : 'Owner cancels booking';
+                $subject = $request->status == 2 ? 'Booking Confirmed' : 'Booking Cancelled';
+
+                // Traveler email
+                $this->send_custom_email($traveler->email, $subject, 'mail.accepted_booking', $mail_data, $title);
+                // Owner email
+                $mail_data['mail_to'] = 'owner';
+                $this->send_custom_email($owner->email, $subject, 'mail.accepted_booking', $mail_data, $title);
+
                 $this->schedule_payments_and_emails_for_booking($bookingModel);
             }
-            if ($request->link == 1) {
-                return $this->single_booking($request->booking_id, $request);
-            }
             return response()->json(['success' => true]);
-        }
-        if ($request->link == 1) {
-            $url = $this->get_base_url() . 'login';
-            return redirect($url)->with('error', 'Login with Owner account');
         }
         return response()->json(['success' => false]);
     }
@@ -2791,10 +2745,26 @@ class PropertyController extends BaseController
         $owner = $booking->owner;
         $traveller = $booking->traveler;
         $property = $booking->property;
+        $property_img = DB::table('property_images')
+            ->where('property_images.client_id', '=', CLIENT_ID)
+            ->where('property_images.property_id', '=', $property->id)
+            ->orderBy('is_cover', 'DESC')
+            ->first();
+        $cover_img = BASE_URL . ltrim($property_img->image_url, '/');
 
         // Owner Mail
+        $property_details = DB::table('property_list')
+            ->where('client_id', CLIENT_ID)
+            ->where('id', $booking->property_id)
+            ->select('monthly_rate', 'check_in', 'check_out')
+            ->first();
 
-        $bookingEmailType = $booking->is_instant;
+        $booking->monthly_rate = $property_details->monthly_rate;
+        $booking->check_in = $property_details->check_in;
+        $booking->check_out = $property_details->check_out;
+        $booking_price = (object) Helper::get_price_details($booking, $booking->start_date, $booking->end_date);
+
+        $bookingEmailType = $booking->is_instant ?? 0;
         if ($bookingEmailType != 0 || $bookingEmailType != 1) {
             $bookingEmailType = 0;
         }
@@ -2807,7 +2777,9 @@ class PropertyController extends BaseController
             'name' => $owner_name,
             'text' => isset($welcome->message) ? $welcome->message : '',
             'property' => $property,
+            'cover_img' => $cover_img,
             'data' => $booking,
+            'booking_price' => $booking_price,
         ];
 
         $title = isset($welcome->title) ? $welcome->title : 'New booking from - ' . APP_BASE_NAME;
@@ -2823,7 +2795,9 @@ class PropertyController extends BaseController
             'name' => $traveller->first_name . " " . $traveller->last_name,
             'text' => isset($mail_traveler->message) ? $mail_traveler->message : '',
             'property' => $property,
+            'cover_img' => $cover_img,
             'data' => $booking,
+            'booking_price' => $booking_price,
         ];
 
         $title_traveler = isset($mail_traveler->title) ? $mail_traveler->title : 'New booking from - ' . APP_BASE_NAME;
@@ -2883,7 +2857,7 @@ class PropertyController extends BaseController
         } else {
             $pet_detail->delete();
         }
-        return redirect()->intended('/traveler/my-reservations');
+        return redirect()->intended('/owner/reservations/' . $booking->booking_id);
     }
 
     public function update_property($property_id)

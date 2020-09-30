@@ -247,6 +247,14 @@ class PaymentController extends BaseController
                         $booking->owner_deposit_confirmed_at = $requestTime;
                     } elseif ($booking->traveler_deposit_transfer_id == $resourceId) {
                         $booking->traveler_deposit_confirmed_at = $requestTime;
+                        $traveller = $booking->traveler;
+                        Helper::send_custom_email(
+                            $traveller->email,
+                            'Security Deposit Return',
+                            'mail.security-deposit-refund',
+                            ['name' => $traveller->first_name . ' ' . $traveller->last_name],
+                            'Payment Processed',
+                        );
                     } elseif ($booking->cancellation_refund_transfer_id == $resourceId) {
                         $booking->cancellation_refund_confirmed_at = $requestTime;
                         $booking->cancellation_refund_status = PAYMENT_SUCCESS;

@@ -203,19 +203,19 @@
 <div class="card">
     <div class="card-header">
         <div style="display: flex;align-items:center">
-        @if(isset($data->approved_by_name))
-        <div style="padding-right:10">
-            <i class="la la-check text-success"></i>
-        </div>
-        @endif
-        <div>
-        <h4 class="card-title">Verification Documents</h4>
-        @if(isset($data->approved_by_name))
-        <div>
-            Documents Approved by <b>{{$data->approved_by_name}}</b> on {{date('d-m-Y h:m A',strtotime($data->approved_on))}}
-        </div>
-        @endif
-        </div>
+            @if(isset($data->approved_by_name))
+            <div style="padding-right:10">
+                <i class="la la-check text-success"></i>
+            </div>
+            @endif
+            <div>
+                <h4 class="card-title">Verification Documents</h4>
+                @if(isset($data->approved_by_name))
+                <div>
+                    Documents Approved by <b>{{$data->approved_by_name}}</b> on {{date('d-m-Y h:m A',strtotime($data->approved_on))}}
+                </div>
+                @endif
+            </div>
         </div>
         <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
         <div class="heading-elements">
@@ -294,6 +294,9 @@
     </div>
     <!--/ PhotoSwipe -->
 </div>
+
+@include('Admin.Includes.notes',['id'=>$data->id,'admin_notes'=>$data->admin_notes,'type'=>'users'])
+
 @endsection
 
 @section('scripts')

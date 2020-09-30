@@ -253,6 +253,8 @@
             </div>
         </div>
     </div>
+
+    @include('Admin.Includes.notes',['id'=>$booking->id,'admin_notes'=>$booking->admin_notes,'type'=>'bookings'])
 @endsection
 
 @section('scripts')

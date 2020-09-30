@@ -155,8 +155,8 @@
                             <button class="button" >Invoice sent</button><br><br>
                         @elseif($data->status == 4)
                             <button class="button" >Request Declined by you</button><br><br>
-                        @else
-
+                        @elseif($data->status == 8)
+                            <button class="button" >Your booking has been cancelled.</button><br><br>
                         @endif
                     </center>
                 </div>

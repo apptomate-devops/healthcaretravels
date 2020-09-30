@@ -55,7 +55,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::GET('/cancellation_requests', 'Admin\ReservationController@cancellation_requests');
         Route::GET('/cancellation_requests/{booking_id}', 'Admin\ReservationController@cancellation_request_details');
         Route::GET(
-            '/update_cancellation_request_status/{booking_id}/{status}',
+            '/update_cancellation_request_status/{booking_id}',
             'Admin\ReservationController@update_cancellation_request_status',
         );
         Route::POST('/booking_cancellation_admin', 'Admin\ReservationController@booking_cancellation_admin');

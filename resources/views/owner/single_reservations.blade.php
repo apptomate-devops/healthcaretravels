@@ -173,6 +173,12 @@
                     </div>
                     <br>
                 @endif
+                @if($data->status == 8)
+                    <div style="text-align: center;margin-top: 30px;">
+                        Your booking has been cancelled.
+                    </div>
+                    <br>
+                @endif
                 <div >
 
                     <center>

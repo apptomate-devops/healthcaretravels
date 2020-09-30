@@ -94,16 +94,16 @@ class ReservationController extends BaseController
     public function update_cancellation_request_status(Request $request)
     {
         $booking = PropertyBooking::where('booking_id', $request->booking_id)->first();
-        $status = $request->status;
         if (empty($booking)) {
             return back()->with(['success' => false, 'errorMessage' => 'Booking you are looking for does not exists!']);
         }
-        if ($status == 2) {
-            $refund_amount = $request->refund_amount;
-            $this->process_cancellation_refund($booking, $refund_amount);
-        }
+        $refund_amount = $request->refund_amount;
+        $this->process_cancellation_refund($booking, $refund_amount);
 
-        PropertyBooking::where('booking_id', $request->booking_id)->update(['cancellation_requested' => $status]);
+        PropertyBooking::where('booking_id', $request->booking_id)->update([
+            'cancellation_requested' => 2,
+            'status' => 8,
+        ]);
         return back()->with([
             'success' => true,
             'successMessage' => 'Status updated Successfully!!!',
@@ -146,7 +146,6 @@ class ReservationController extends BaseController
     public function booking_cancellation_admin(Request $request)
     {
         $data = PropertyBooking::where('booking_id', $request->booking_id)->first();
-        $status = 2;
         if (empty($data)) {
             return back()->with([
                 'success_cancel_booking' => false,
@@ -158,11 +157,12 @@ class ReservationController extends BaseController
         $this->process_cancellation_refund($data, $refund_amount);
 
         PropertyBooking::where('booking_id', $request->booking_id)->update([
-            'cancellation_requested' => $status,
+            'cancellation_requested' => 2,
             'cancellation_reason' => $request->cancellation_reason,
             'cancellation_explanation' => $request->cancellation_explanation,
             'cancelled_by' => 'Admin',
             'already_checked_in' => $request->checked_in,
+            'status' => 8,
         ]);
 
         // send email to traveller/owner if admin cancels request

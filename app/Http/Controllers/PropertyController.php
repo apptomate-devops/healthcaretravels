@@ -1065,7 +1065,7 @@ class PropertyController extends BaseController
                 $grand_total = $grand_total + $payment['amount'];
                 if ($payment['payment_cycle'] == 1) {
                     // Deduct cleaning_fee and service_tax to Display neat rate for Owner
-                    $payment['amount'] = $payment['total_amount'] - $payment['service_tax'] - $payment['cleaning_fee'];
+                    $payment['amount'] = $payment['total_amount'] - $payment['service_tax'] - $booking['cleaning_fee'];
                 }
             } else {
                 $payment['amount'] = $payment['total_amount'];
@@ -1073,9 +1073,9 @@ class PropertyController extends BaseController
                 if ($payment['payment_cycle'] == 1) {
                     // Deduct cleaning_fee and security_deposit to Display neat rate for traveler
                     $payment['amount'] =
-                        $payment['total_amount'] - $payment['security_deposit'] - $payment['cleaning_fee'];
+                        $payment['total_amount'] - $booking['security_deposit'] - $booking['cleaning_fee'];
                     // Deduct security deposit from final amount as it will be refunded
-                    $grand_total = $grand_total - $payment['security_deposit'];
+                    $grand_total = $grand_total - $booking['security_deposit'];
                 }
             }
             array_push($scheduled_payments, $payment);

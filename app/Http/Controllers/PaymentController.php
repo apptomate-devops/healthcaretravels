@@ -316,6 +316,7 @@ class PaymentController extends BaseController
         $all_payments = [];
         foreach ($all_bookings as $booking) {
             $is_owner = (int) ($booking->owner_id == $user_id);
+            $booking_details = PropertyBooking::where('booking_id', $booking->booking_id)->first();
             $payments = BookingPayments::where('booking_id', $booking->booking_id)
                 ->where('is_owner', $is_owner)
                 ->where('is_cleared', 1)
@@ -334,14 +335,14 @@ class PaymentController extends BaseController
                     if ($payment->payment_cycle == 1) {
                         // For cleaning fee entry
                         $cleaning_fee_record['name'] = 'Cleaning Fee';
-                        $cleaning_fee_record['payment'] = $payment->cleaning_fee;
+                        $cleaning_fee_record['payment'] = $booking_details->cleaning_fee;
                         $cleaning_fee_record['status'] = 'Credited';
                         $cleaning_fee_record['booking_id'] = $payment->booking_id;
                         $cleaning_fee_record['transaction_date'] = $transaction_record['transaction_date'];
                         array_push($all_payments, $cleaning_fee_record);
 
                         $transaction_record['payment'] =
-                            $payment->total_amount - $payment->service_tax - $payment->cleaning_fee;
+                            $payment->total_amount - $payment->service_tax - $booking_details->cleaning_fee;
                     }
                 } else {
                     $transaction_record['payment'] = $payment->total_amount;
@@ -350,7 +351,7 @@ class PaymentController extends BaseController
                     if ($payment->payment_cycle == 1) {
                         // For cleaning fee entry
                         $cleaning_fee_record['name'] = 'Cleaning Fee';
-                        $cleaning_fee_record['payment'] = $payment->cleaning_fee;
+                        $cleaning_fee_record['payment'] = $booking_details->cleaning_fee;
                         $cleaning_fee_record['status'] = 'Debited';
                         $cleaning_fee_record['booking_id'] = $payment->booking_id;
                         $cleaning_fee_record['transaction_date'] = $transaction_record['transaction_date'];
@@ -358,7 +359,7 @@ class PaymentController extends BaseController
 
                         // For Security Deposit entry
                         $security_deposit_record['name'] = 'Security Deposit';
-                        $security_deposit_record['payment'] = $payment->security_deposit;
+                        $security_deposit_record['payment'] = $booking_details->security_deposit;
                         $security_deposit_record['status'] = 'Debited';
                         $security_deposit_record['booking_id'] = $payment->booking_id;
                         $security_deposit_record['transaction_date'] = $transaction_record['transaction_date'];
@@ -373,7 +374,9 @@ class PaymentController extends BaseController
                         array_push($all_payments, $service_tax_record);
 
                         $transaction_record['payment'] =
-                            $payment->total_amount - $payment->security_deposit - $payment->cleaning_fee;
+                            $payment->total_amount -
+                            $booking_details->security_deposit -
+                            $booking_details->cleaning_fee;
                     }
 
                     // TODO: Add security deposit details here when handled

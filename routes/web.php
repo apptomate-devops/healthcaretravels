@@ -104,6 +104,7 @@ Route::POST('/create_chat/{id}', 'PropertyController@create_chat');
 
 // Logged in routes
 Route::middleware(['LoginCheck'])->group(function () {
+
     // All Users
     Route::GET('/profile', 'UserController@profile');
     Route::GET('/verify-account', 'UserController@verify_account');
@@ -115,59 +116,6 @@ Route::middleware(['LoginCheck'])->group(function () {
     Route::POST('/upload-document', 'UserController@upload_document');
     Route::GET('/change-password', 'UserController@change_password');
     Route::POST('/change-password', 'UserController@update_password');
-    Route::get('/delete_chat/{id}', 'PropertyController@delete_chat');
-
-    // Traveller
-    Route::get('/traveler/my-reservations', 'PropertyController@reservations');
-    Route::GET('/traveler/inbox', 'PropertyController@inbox_traveller');
-    Route::GET('/traveler/favorites', 'PropertyController@favorites');
-    Route::get('/traveler/chat/{id}', 'PropertyController@traveller_fire_chat');
-    Route::GET('/cancel-booking/{id}', 'PropertyController@cancel_booking');
-
-    // Property
-    Route::post('/book-now', 'PropertyController@book_now');
-    Route::GET('/booking_detail/{id}', 'PropertyController@booking_detail');
-    Route::GET('/request_cancellation/{id}', 'PropertyController@request_cancellation');
-    Route::GET('/property/set-favourite/{id}', 'PropertyController@set_favourite');
-    Route::POST('/save-guest-information', 'PropertyController@save_guest_information');
-    Route::POST('/submit_cancellation_request', 'PropertyController@submit_cancellation_request');
-
-    // Owner
-    Route::get('/owner/inbox', 'PropertyController@inbox_owner');
-    Route::get('/owner/favorites', 'PropertyController@favorites');
-    Route::GET('/owner/transaction-history', 'TransactionController@transaction_history');
-    Route::GET('/owner/special_price', 'OwnerController@special_price');
-    Route::GET('/owner/special_price_details', 'OwnerController@special_price_details');
-    Route::get('/owner/my-properties', 'PropertyController@my_properties');
-    Route::get('/owner/add-property', 'PropertyController@add_property');
-    Route::POST('/owner/add-property', 'PropertyController@add_new_property');
-    Route::GET('/owner/add-new-property/{stage}/{property_id}', 'PropertyController@property_next');
-    Route::POST('/owner/add-new-property/2', 'PropertyController@property_next2');
-    Route::POST('/owner/add-new-property/3', 'PropertyController@property_next3');
-    Route::POST('/owner/add-new-property/4', 'PropertyController@property_next4');
-    Route::POST('/owner/add-new-property/5', 'PropertyController@property_next5');
-    Route::POST('/owner/add-new-property/6', 'PropertyController@property_next6');
-    Route::POST('/owner/add-new-property/7', 'PropertyController@property_next7');
-    Route::get('/owner/payment-method', 'OwnerController@payment_method_index');
-    Route::GET('/owner/my-bookings', 'OwnerController@my_bookings');
-    Route::GET('/owner/bookings', 'OwnerController@my_bookings');
-    Route::GET('/owner/single-booking/{id}', 'PropertyController@single_booking');
-    Route::get('/owner/reservations', 'PropertyController@reservations');
-    Route::get('/owner/reservations/{id}', 'PropertyController@single_reservations');
-    Route::POST('/owner/property/file-upload', 'PropertyController@property_image_upload');
-    Route::POST('/owner-update-booking', 'PropertyController@owner_update_booking');
-    Route::get('/owner/update-property/{id}', 'PropertyController@update_property');
-    Route::GET('/disable-property/{id}', 'PropertyController@disable_property');
-    Route::GET('/delete-property/{id}', 'PropertyController@delete_property');
-    Route::GET('/payment-default/{id}', 'OwnerController@payment_default');
-    Route::GET('/owner/calender', 'OwnerController@calender');
-    Route::get('/owner/chat/{id}', 'PropertyController@owner_fire_chat');
-    Route::GET('/ical/{id}', 'IcalController@ical');
-
-    Route::GET('/payment-options', 'PaymentController@get_payment_options');
-
-    // Payment and Invoices
-    Route::GET('/invoice/{id}/{is_owner}', 'PDF_Controller@invoice');
 
     // Dwolla Payment Routes
     Route::post(
@@ -176,6 +124,64 @@ Route::middleware(['LoginCheck'])->group(function () {
     );
     Route::post('/dwolla/get_funding_source_details', 'PaymentController@get_funding_source_details');
     Route::post('/dwolla/add_funding_source', 'PaymentController@add_funding_source');
+
+    // Verified users only
+    Route::middleware(['VerifiedCheck'])->group(function () {
+        // Chat
+        Route::get('/delete_chat/{id}', 'PropertyController@delete_chat');
+
+        // Traveller
+        Route::get('/traveler/my-reservations', 'PropertyController@reservations');
+        Route::GET('/traveler/inbox', 'PropertyController@inbox_traveller');
+        Route::GET('/traveler/favorites', 'PropertyController@favorites');
+        Route::get('/traveler/chat/{id}', 'PropertyController@traveller_fire_chat');
+        Route::GET('/cancel-booking/{id}', 'PropertyController@cancel_booking');
+
+        // Property
+        Route::post('/book-now', 'PropertyController@book_now');
+        Route::GET('/booking_detail/{id}', 'PropertyController@booking_detail');
+        Route::GET('/request_cancellation/{id}', 'PropertyController@request_cancellation');
+        Route::GET('/property/set-favourite/{id}', 'PropertyController@set_favourite');
+        Route::POST('/save-guest-information', 'PropertyController@save_guest_information');
+        Route::POST('/submit_cancellation_request', 'PropertyController@submit_cancellation_request');
+
+        // Owner
+        Route::get('/owner/inbox', 'PropertyController@inbox_owner');
+        Route::get('/owner/favorites', 'PropertyController@favorites');
+        Route::GET('/owner/transaction-history', 'TransactionController@transaction_history');
+        Route::GET('/owner/special_price', 'OwnerController@special_price');
+        Route::GET('/owner/special_price_details', 'OwnerController@special_price_details');
+        Route::get('/owner/my-properties', 'PropertyController@my_properties');
+        Route::get('/owner/add-property', 'PropertyController@add_property');
+        Route::POST('/owner/add-property', 'PropertyController@add_new_property');
+        Route::GET('/owner/add-new-property/{stage}/{property_id}', 'PropertyController@property_next');
+        Route::POST('/owner/add-new-property/2', 'PropertyController@property_next2');
+        Route::POST('/owner/add-new-property/3', 'PropertyController@property_next3');
+        Route::POST('/owner/add-new-property/4', 'PropertyController@property_next4');
+        Route::POST('/owner/add-new-property/5', 'PropertyController@property_next5');
+        Route::POST('/owner/add-new-property/6', 'PropertyController@property_next6');
+        Route::POST('/owner/add-new-property/7', 'PropertyController@property_next7');
+        Route::get('/owner/payment-method', 'OwnerController@payment_method_index');
+        Route::GET('/owner/my-bookings', 'OwnerController@my_bookings');
+        Route::GET('/owner/bookings', 'OwnerController@my_bookings');
+        Route::GET('/owner/single-booking/{id}', 'PropertyController@single_booking');
+        Route::get('/owner/reservations', 'PropertyController@reservations');
+        Route::get('/owner/reservations/{id}', 'PropertyController@single_reservations');
+        Route::POST('/owner/property/file-upload', 'PropertyController@property_image_upload');
+        Route::POST('/owner-update-booking', 'PropertyController@owner_update_booking');
+        Route::get('/owner/update-property/{id}', 'PropertyController@update_property');
+        Route::GET('/disable-property/{id}', 'PropertyController@disable_property');
+        Route::GET('/delete-property/{id}', 'PropertyController@delete_property');
+        Route::GET('/payment-default/{id}', 'OwnerController@payment_default');
+        Route::GET('/owner/calender', 'OwnerController@calender');
+        Route::get('/owner/chat/{id}', 'PropertyController@owner_fire_chat');
+        Route::GET('/ical/{id}', 'IcalController@ical');
+
+
+        // Payment and Invoices
+        Route::GET('/payment-options', 'PaymentController@get_payment_options');
+        Route::GET('/invoice/{id}/{is_owner}', 'PDF_Controller@invoice');
+    });
 });
 
 Route::post('/dwolla-webhooks', 'PaymentController@dwolla_webhook');

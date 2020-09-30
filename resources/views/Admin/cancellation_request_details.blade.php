@@ -46,11 +46,6 @@
 
 {{--                                TODO: confirm if we need to make the request in progress fiorst or allow direct cancellation for request --}}
                                     @if($booking->cancellation_requested == 1 || $booking->cancellation_requested == 3)
-                                        <div style="margin-top: 20px;">
-                                            <a class="btn btn-default btn-primary btn-block" href="{{BASE_URL}}admin/update_cancellation_request_status/{{$booking->booking_id}}/3">
-                                                <span style="height:29px">In Progress</span>
-                                            </a>
-                                        </div>
                                         <div class="card">
                                             <div class="card-header">
                                                 <h4 class="card-title">Cancellation Request Refund</h4>
@@ -66,7 +61,7 @@
                                             </div>
                                             <div class="card-content px-25" style="padding-bottom:10px;">
                                                 <div class="deposit-form-wrapper">
-                                                    <form action="{{BASE_URL}}admin/update_cancellation_request_status/{{$booking->booking_id}}/2" id="booking_cancellation_refund">
+                                                    <form action="{{BASE_URL}}admin/update_cancellation_request_status/{{$booking->booking_id}}" id="booking_cancellation_refund">
                                                         @csrf
                                                         <div class="form-group">
                                                             <label for="refund_amount">Enter amount to be refunded:</label>

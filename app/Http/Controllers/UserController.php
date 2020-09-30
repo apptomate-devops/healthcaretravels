@@ -103,6 +103,7 @@ class UserController extends BaseController
             ->where('id', $user_id)
             ->where('is_verified', 1)
             ->count();
+        $request->session()->put('is_verified', $check);
         return response()->json(['isVerified' => $check]);
     }
 

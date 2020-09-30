@@ -36,11 +36,4 @@ class UsersController extends BaseController
             ->update(['is_verified' => 1]);
         return back()->with('approved', $rowsUpdated);
     }
-
-    public function update_notes($id, Request $request)
-    {
-        $data = $request->responses;
-        error_log(json_encode($data));
-        Users::where('id', '=', $id)->update(['admin_notes' => $data['note']]);
-    }
 }

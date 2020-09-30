@@ -480,8 +480,8 @@ class Helper
                     $data['total_amount'] = round($data['monthly_rate'] + $data['cleaning_fee']);
                     $data['due_date'] = $dd;
                 } else {
-                    // TODO: check if owner is an agency and update service tax
-                    Logger::info('Role id: '. $booking->role_id);
+                    // TODO: check if traveller is an agency and update service tax
+                    Logger::info('Role id: ' . $booking->role_id);
                     if ($booking->role_id == 2) {
                         $data['service_tax'] = AGENCY_SERVICE_TAX;
                     }

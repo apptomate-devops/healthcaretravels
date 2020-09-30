@@ -251,6 +251,11 @@ class PropertyController extends BaseController
 
         if ($is_available[ZERO]->is_available == ZERO || $booking_count == ZERO) {
             try {
+                $user_role_id = DB::table('users')
+                    ->where('id', '=', $user_id)
+                    ->select('role_id')
+                    ->first();
+                $property_details->role_id = isset($user_role_id) ? $user_role_id->role_id : 0;
                 $booking_price = Helper::get_price_details($property_details, $check_in, $check_out);
                 return response()->json(['status' => 'SUCCESS', 'data' => $booking_price, 'status_code' => ONE]);
             } catch (\Exception $ex) {
@@ -308,6 +313,8 @@ class PropertyController extends BaseController
         $traveller = DB::table('users')
             ->where('id', $data->traveller_id)
             ->first();
+
+        $data->role_id = $traveller->role_id;
         $booking_price = Helper::get_price_details($data, $data->start_date, $data->end_date);
         $data = (object) array_merge((array) $data, (array) $booking_price);
 

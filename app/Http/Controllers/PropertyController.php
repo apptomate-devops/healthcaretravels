@@ -762,6 +762,7 @@ class PropertyController extends BaseController
                 'property_booking.*',
                 'users.email',
                 'users.phone',
+                'users.role_id',
             )
             ->first();
         $user_id = $request->session()->get('user_id');

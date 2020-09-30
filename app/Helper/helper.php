@@ -153,6 +153,7 @@ class Helper
         $current = Carbon::parse($check_in);
         $end = Carbon::parse($check_out);
 
+        // TODO: fix me when displaying details :: We have constants for this and have different values as per user type and payment cycle
         $service_tax_row = DB::table('settings')
             ->where('param', 'service_tax')
             ->first();
@@ -486,6 +487,12 @@ class Helper
                     // Because security deposit is handled at the end of checkout by admin or auto deposit
                     $data['total_amount'] = round($data['monthly_rate'] + $data['cleaning_fee']);
                     $data['due_date'] = $dd;
+                } else {
+                    // TODO: check if owner is an agency and update service tax
+                    Logger::info('Role id: '. $booking->role_id);
+                    if ($booking->role_id == 2) {
+                        $data['service_tax'] = AGENCY_SERVICE_TAX;
+                    }
                 }
             } else {
                 $data['total_amount'] = round($data['monthly_rate']);
@@ -809,6 +816,9 @@ class Helper
                     break;
                 case 'service_tax':
                     define("SERVICE_TAX", $setting->value);
+                    break;
+                case 'agency_service_tax':
+                    define("AGENCY_SERVICE_TAX", $setting->value);
                     break;
                 case 'service_tax_second':
                     define("SERVICE_TAX_SECOND", $setting->value);

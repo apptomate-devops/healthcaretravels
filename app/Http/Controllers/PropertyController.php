@@ -15,6 +15,8 @@ use App\Models\EmailConfig;
 use App\Models\GuestsInformation;
 use App\Models\PropertyBooking;
 use App\Models\BookingPayments;
+use App\Jobs\ProcessAutoCancel;
+
 use Mail;
 use App\Helper\Helper;
 use Carbon\Carbon;
@@ -2713,6 +2715,23 @@ class PropertyController extends BaseController
         return redirect($url);
     }
 
+    public function schedule_auto_cancel_job($booking)
+    {
+        // within 24 hours of Check-In date OR  7 days after of traveler request, deny request.
+        $day_before_check_in = Carbon::parse($booking->start_date)->subDay();
+        $week_after_approval = now()->addDays(7);
+        $scheduler_date = Carbon::parse($day_before_check_in->min($week_after_approval));
+        $check_in = $booking->property->check_in;
+        $timeSplit = Helper::get_time_split($check_in);
+        $scheduler_date->hour = $timeSplit[0];
+        $scheduler_date->minute = $timeSplit[1];
+        $scheduler_date->second = 0;
+
+        ProcessAutoCancel::dispatch($booking->id)
+            ->delay($scheduler_date)
+            ->onQueue(GENERAL_QUEUE);
+    }
+
     /**
      *save guest details of booking
      *
@@ -2747,6 +2766,8 @@ class PropertyController extends BaseController
         }
         $booking->funding_source = $request->funding_source;
         $booking->save();
+        // Scheduling auto cancel job if there was no response from owner
+        $this->schedule_auto_cancel_job($booking);
 
         //        $bookingModel = PropertyBooking::find($booking->id);
         $owner = $booking->owner;

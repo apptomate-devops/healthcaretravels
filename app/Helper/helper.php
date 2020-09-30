@@ -427,6 +427,23 @@ class Helper
         return $res;
     }
 
+    public static function handleAutoCancelForBooking($id)
+    {
+        $booking = PropertyBooking::find($id);
+        if (empty($booking)) {
+            Logger::error('Booking does not exist: ' . $id);
+            return ['success' => false, 'message' => 'Booking does not exist!'];
+        }
+        if ($booking->status != 1) {
+            Logger::info('Booking request was handled already: ' . $id);
+            return ['success' => false, 'message' => 'Booking request was handled already!'];
+        }
+        $booking->status = 4;
+        $booking->auto_canceled = 1;
+        $booking->save();
+        return ['success' => true, 'message' => 'Booking request was canceled successfully'];
+    }
+
     public static function generate_booking_payments($booking, $is_owner = 0)
     {
         $start_date = Carbon::parse($booking->start_date, 'UTC');
@@ -633,9 +650,10 @@ class Helper
         define("STATIC_IMAGE", "http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg");
         define("APP_BASE_NAME", "Health Care Travels");
         define("APP_ENV", env("APP_ENV", "local"));
-        define("IS_LOCAL", env("APP_ENV", "local") == "local");
-        define("EMAIL_QUEUE", env("APP_ENV", "local") . ":emails");
-        define("PAYMENT_QUEUE", env("APP_ENV", "local") . ":payments");
+        define("IS_LOCAL", APP_ENV == "local");
+        define("EMAIL_QUEUE", APP_ENV . ":emails");
+        define("PAYMENT_QUEUE", APP_ENV . ":payments");
+        define("GENERAL_QUEUE", APP_ENV . ":general");
         define("DWOLLA_ENV", config('services.dwolla.env'));
 
         define("APP_LOGO_URL", "https://demo.rentalslew.com/public/keepers_logo.png");

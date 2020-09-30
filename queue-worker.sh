@@ -1,1 +1,1 @@
-php artisan queue:work --queue=local:payments,local:emails --tries=3 --sleep=3
+php artisan queue:work --queue=local:payments,local:emails,local:general --tries=3 --sleep=3

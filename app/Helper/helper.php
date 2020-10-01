@@ -442,7 +442,7 @@ class Helper
             Logger::info('Booking request was handled already: ' . $id);
             return ['success' => false, 'message' => 'Booking request was handled already!'];
         }
-        $booking->status = 4;
+        $booking->status = 8;
         $booking->auto_canceled = 1;
         $booking->save();
         return ['success' => true, 'message' => 'Booking request was canceled successfully'];

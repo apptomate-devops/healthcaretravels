@@ -25,10 +25,10 @@
             <div class="col-md-8">
                 @component('components.funding-source', [
                                 'funding_sources' => $funding_sources,
-                                 'user' => $user,
-                                 'label' => 'Select an Option',
-                                 'button_label' => 'Add a Payment Option'
-                                 ])
+                                'user' => $user,
+                                'label' => 'Select an Option',
+                                'button_label' => 'Add a Payment Option'
+                            ])
                 @endcomponent
 
                 @if(count($all_payments) > 0)

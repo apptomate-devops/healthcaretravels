@@ -45,6 +45,6 @@ class CronCheckLogger extends Command
         Helper::setConstantsHelper();
         QueueJobChecker::dispatch()
                     ->delay(now()->addSeconds(5))
-                    ->onQueue(PAYMENT_QUEUE);
+                    ->onQueue(GENERAL_QUEUE);
     }
 }

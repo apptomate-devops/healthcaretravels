@@ -19,6 +19,12 @@ class PDF_Controller extends BaseController
             ->where('property_booking.client_id', CLIENT_ID)
             ->where('property_booking.booking_id', $booking_id)
             ->first();
+        $user_id = $request->session()->get('user_id');
+        $user_role_id = DB::table('users')
+            ->where('id', '=', $user_id)
+            ->select('role_id')
+            ->first();
+        $data->role_id = isset($user_role_id) ? $user_role_id->role_id : 0;
         $payment_summary = PropertyController::get_payment_summary($data, $is_owner);
         $data->scheduled_payments = $payment_summary['scheduled_payments'];
         $data->grand_total = $payment_summary['grand_total'];

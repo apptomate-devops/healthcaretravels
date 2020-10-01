@@ -37,7 +37,7 @@
                                  alt="">
                         </p>
                         <div class="sub-price">
-                            <a href="{{BASE_URL}}owner-profile/{{$data->user_id}}">{{$data->first_name}} {{$data->last_name}}</a><br>
+                            <a href="{{BASE_URL}}owner-profile/{{$data->user_id}}">{{$data->username}}</a><br>
                         </div>
 
                     </div>
@@ -82,12 +82,12 @@
                     <center>
                         <div style="margin-left: 18%;" class="col-md-3 col-sm-6 col-xs-6 property-image hide-990">
                             <p>
-                                <img style="max-height: 85px;max-width: 85px;"
-                                     src="{{isset($data->profile_image) ? $data->profile_image : '/user_profile_default.png'}}"
+                                <img style="height: 80px; width: 80px; border-radius: 50%;object-fit: contain; border: 1px solid #e78016;"
+                                     src="{{isset($data->profile_image) && $data->profile_image != '' && $data->profile_image != ' ' ? $data->profile_image : '/user_profile_default.png'}}"
                                      alt="">
                             </p>
                             <div class="sub-price">
-                                <a href="{{BASE_URL}}owner-profile/{{$data->user_id}}">{{ucfirst($data->first_name)}} {{ucfirst($data->last_name)}}</a>
+                                <a href="{{BASE_URL}}owner-profile/{{$data->user_id}}">{{$data->username}}</a>
                             </div>
                             <div class="sub-price">
                                 @if(Session::get('user_id'))
@@ -604,7 +604,7 @@
                                         @for($j=0;$j<=4;$j++)
                                             <tr>
                                                 <td style="width: 21%;"><img src="{{$data->prop_full_rating[$j]->profile_image}}" style="border-radius: 85px;width: 58%;"></td>
-                                                <td><strong>{{$data->prop_full_rating[$j]->first_name}}&nbsp;{{$data->prop_full_rating[$j]->last_name}}</strong><br>
+                                                <td><strong>{{$data->prop_full_rating[$j]-username}}</strong><br>
                                                     {{$data->prop_full_rating[$j]->comments}}
                                                     <br>
                                                     @for($i=1;$i<=$data->prop_full_rating[$j]->rating;$i++)
@@ -618,7 +618,7 @@
                                         @for($j=0;$j<count($data->prop_full_rating);$j++)
                                             <tr>
                                                 <td style="width: 21%;"><img src="{{$data->prop_full_rating[$j]->profile_image}}" style="border-radius: 85px;width: 58%;"></td>
-                                                <td><strong>{{$data->prop_full_rating[$j]->first_name}}&nbsp;{{$data->prop_full_rating[$j]->last_name}}</strong></a><br>
+                                                <td><strong>{{$data->prop_full_rating[$j]->username}}</strong><br>
                                                     {{$data->prop_full_rating[$j]->comments}}
                                                     <br>
                                                     @for($i=1;$i<=$data->prop_full_rating[$j]->rating;$i++)
@@ -848,7 +848,7 @@
 
                                     <div class="listing-footer">
                                         <a href="{{BASE_URL}}owner-profile/{{$property->owner_id}}">
-                                            <i class="fa fa-user"></i> {{$property->first_name}} {{$property->last_name}}
+                                            <i class="fa fa-user"></i> {{$property->username}}
                                         </a>
                                         {{-- <span><i class="fa fa-calendar-o"></i> 1 day ago</span> --}}
                                     </div>

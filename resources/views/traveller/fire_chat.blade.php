@@ -349,7 +349,10 @@
             $scope.messages.$loaded(function(newValue) {
                 $('#chat_box_wrapper').show();
                 $scope.markAsRead(newValue);
-            })
+            });
+            $scope.messages.$watch(function(newValue) {
+                $scope.markAsRead($scope.messages);
+            });
         })
 
         $scope.userid = '{{$traveller_id}}';

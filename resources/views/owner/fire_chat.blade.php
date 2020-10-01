@@ -339,7 +339,7 @@
                 $scope.markAsRead(newValue);
             });
             $scope.messages.$watch(function(newValue) {
-                $scope.markAsRead(newValue);
+                $scope.markAsRead($scope.messages);
 
             });
         })

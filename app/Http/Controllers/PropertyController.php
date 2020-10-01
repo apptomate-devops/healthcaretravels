@@ -463,6 +463,16 @@ class PropertyController extends BaseController
                 ->where('id', $property->property_id)
                 ->first();
 
+            if ($property->traveller_id == $user_id) {
+                return view('traveller.fire_chat', [
+                    'owner' => $owner,
+                    'traveller' => $traveller,
+                    'id' => $id,
+                    'traveller_id' => $property->traveller_id,
+                    'property' => $property_description,
+                ]);
+            }
+
             return view('owner.fire_chat', [
                 'owner' => $owner,
                 'traveller' => $traveller,
@@ -482,7 +492,26 @@ class PropertyController extends BaseController
             ->where('client_id', '=', CLIENT_ID)
             ->where('id', $property->owner_id)
             ->first();
-        return view('owner.fire_chat', ['owner' => $owner, 'traveller' => $traveller, 'id' => $id]);
+        $property_description = DB::table('property_list')
+            ->where('id', $property->property_id)
+            ->first();
+
+        if ($property->traveller_id == $user_id) {
+            return view('traveller.fire_chat', [
+                'owner' => $owner,
+                'traveller' => $traveller,
+                'id' => $id,
+                'traveller_id' => $property->traveller_id,
+                'property' => $property_description,
+            ]);
+        }
+
+        return view('owner.fire_chat', [
+            'owner' => $owner,
+            'traveller' => $traveller,
+            'id' => $id,
+            'property' => $property_description,
+        ]);
     }
 
     public function inbox_owner(Request $request)

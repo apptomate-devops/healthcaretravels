@@ -1053,21 +1053,21 @@ class PropertyController extends BaseController
             }
 
             $payment['is_cleared'] = $payment['is_cleared'] ?? 0;
+            $is_partial_days_payment = boolval($payment['is_partial_days'] ?? 0);
+            $neat_rate = $is_partial_days_payment ? $payment['total_amount'] : $payment['monthly_rate'];
 
             if ($is_owner == 1) {
-                $payment['amount'] = $payment['total_amount'] - $payment['service_tax'];
-                $grand_total = $grand_total + $payment['amount'];
+                $payment['amount'] = $neat_rate - $payment['service_tax'];
+                $grand_total = $grand_total + $payment['total_amount'] - $payment['service_tax'];
                 $payment['covering_range'] =
                     "Covering " . $payment['covering_range'] . ", Minus $" . $payment['service_tax'] . " fee";
 
                 if ($payment['payment_cycle'] == 1) {
-                    if (boolval($payment['is_partial_days'] ?? 0)) {
+                    if ($is_partial_days_payment) {
                         // In case of partial days, add cleaning fees to neat amount
                         $grand_total = $grand_total + $booking->cleaning_fee;
-                    } else {
-                        // Deduct cleaning_fee and service_tax to Display neat rate for Owner
-                        $payment['amount'] = $payment['amount'] - $booking->cleaning_fee;
                     }
+
                     $cleaning_fee_entry['due_date'] = $payment['due_date'];
                     $cleaning_fee_entry['name'] = 'Cleaning Fee';
                     $cleaning_fee_entry['amount'] = $booking->cleaning_fee;
@@ -1076,21 +1076,16 @@ class PropertyController extends BaseController
                     array_push($scheduled_payments, $cleaning_fee_entry);
                 }
             } else {
-                $payment['amount'] = $payment['total_amount'];
-                $grand_total = $grand_total + $payment['amount'] + $payment['service_tax'];
+                $payment['amount'] = $neat_rate;
+                $grand_total = $grand_total + $payment['total_amount'] + $payment['service_tax'];
 
                 if ($payment['payment_cycle'] == 1) {
-                    if (boolval($payment['is_partial_days'] ?? 0)) {
+                    if ($is_partial_days_payment) {
                         // In case of partial days, add cleaning fees to neat amount
                         $grand_total = $grand_total + $booking->cleaning_fee;
                     } else {
-                        // Deduct cleaning_fee and service_tax to Display neat rate for traveler
-                        $payment['amount'] =
-                            $payment['total_amount'] - $booking->security_deposit - $booking->cleaning_fee;
-                        // Deduct security deposit from final amount as it will be refunded
                         $grand_total = $grand_total - $booking->security_deposit;
                     }
-
                     $cleaning_fee_entry['due_date'] = $payment['due_date'];
                     $cleaning_fee_entry['name'] = 'Cleaning Fee';
                     $cleaning_fee_entry['amount'] = $booking->cleaning_fee;

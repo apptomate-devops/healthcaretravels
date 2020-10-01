@@ -72,7 +72,7 @@ class SettingsTableSeeder extends Seeder
             ],
             [
                 'param' => 'agency_service_tax',
-                'value' => 70,
+                'value' => 75,
             ],
         );
         \App\Models\Settings::updateOrCreate(

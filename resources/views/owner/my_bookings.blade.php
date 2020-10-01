@@ -103,6 +103,7 @@
                                 <span>
                                     {{$booking->bookStatus}}
                                 </span>
+                                @if($booking->bookStatus == 'Denied') <span style="font-size: 12px; color: #e78016">{{$booking->deny_reason ?? ''}}</span> @endif
                             </td>
                             <td colspan="2" class="action" style="width: 1%">
                                 <button type="button" class="button" style="min-width: 170px;" onclick="document.location.href='{{BASE_URL}}owner/single-booking/{{$booking->booking_id}}';">

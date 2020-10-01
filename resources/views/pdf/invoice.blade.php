@@ -64,55 +64,16 @@
         </th>
     </tr>
     @foreach($data->scheduled_payments as $payment)
-        @if($payment['payment_cycle'] == 1)
-            @if($data->is_owner == 0)
-                <tr>
-                    <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
-                    <td>Security Deposit</td>
-                    <td>${{$payment['security_deposit']}}</td>
-                    <td>
-                        <p>
-                            <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'])}}</b>
-                        </p>
-                        <p>{{($payment['is_cleared'] == -1) ? $payment_error_message : ''}}</p>
-                    </td>
-                    <td>Refunded 72 hours after check-out</td>
-                </tr>
-                <tr>
-                    <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
-                    <td>Service Tax</td>
-                    <td>${{$payment['service_tax']}}</td>
-                    <td>
-                        <p>
-                            <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'])}}</b>
-                        </p>
-                        <p>{{($payment['is_cleared'] == -1) ? $payment_error_message : ''}}</p>
-                    </td>
-                    <td>One-time charge</td>
-                </tr>
-            @endif
-                <tr>
-                    <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
-                    <td>Cleaning Fee</td>
-                    <td>${{$payment['cleaning_fee']}}</td>
-                    <td>
-                        <p>
-                            <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'])}}</b>
-                        </p>
-                    </td>
-                    <td></td>
-                </tr>
-        @endif
         <tr>
             <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
-            <td>Stay payment</td>
+            <td>{{$payment['name'] ?? 'Stay payment'}}</td>
             <td>${{$payment['amount']}}</td>
             <td>
                 <p>
-                    <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'])}}</b>
+                    <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'] ?? 0)}}</b>
                 </p>
             </td>
-            <td>Covering {{$payment['covering_range']}}, Minus ${{$payment['service_tax']}} fee</td>
+            <td>{{$payment['covering_range']}}</td>
         </tr>
     @endforeach
     @if($data->is_owner == 0)

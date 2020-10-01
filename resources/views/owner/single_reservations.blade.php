@@ -54,51 +54,13 @@
                         <th>Details</th>
                     </tr>
                     @foreach($scheduled_payments as $payment)
-                        @if($payment['payment_cycle'] == 1)
-                            <tr>
-                                <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
-                                <td>Cleaning Fee</td>
-                                <td>-${{$payment['cleaning_fee']}}</td>
-                                <td>
-                                    <p>
-                                        <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'])}}</b>
-                                    </p>
-                                    <p>{{($payment['is_cleared'] == -1) ? $payment_error_message : ''}}</p>
-                                </td>
-                                <td>One-time charge</td>
-                            </tr>
-                            <tr>
-                                <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
-                                <td>Security Deposit</td>
-                                <td>-${{$payment['security_deposit']}}</td>
-                                <td>
-                                    <p>
-                                        <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'])}}</b>
-                                    </p>
-                                    <p>{{($payment['is_cleared'] == -1) ? $payment_error_message : ''}}</p>
-                                </td>
-                                <td>Refunded 72 hours after check-out</td>
-                            </tr>
-                            <tr>
-                                <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
-                                <td>Service Tax</td>
-                                <td>-${{$payment['service_tax']}}</td>
-                                <td>
-                                    <p>
-                                        <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'])}}</b>
-                                    </p>
-                                    <p>{{($payment['is_cleared'] == -1) ? $payment_error_message : ''}}</p>
-                                </td>
-                                <td>One-time charge</td>
-                            </tr>
-                        @endif
                         <tr>
                             <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
-                            <td>Stay payment</td>
+                            <td>{{$payment['name'] ?? 'Stay payment'}}</td>
                             <td>-${{$payment['amount']}}</td>
                             <td>
                                 <p>
-                                    <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'])}}</b>
+                                    <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'] ?? 0)}}</b>
                                 </p>
                                 <p>{{($payment['is_cleared'] == -1) ? $payment_error_message : ''}}</p>
                             </td>
@@ -173,6 +135,14 @@
                 @if($data->status == 2)
                     <div style="text-align: center;margin-top: 30px;">
                         <button class="button" onclick="location.href='{{BASE_URL}}request_cancellation/{{$data->booking_id}}';">Request Cancellation</button>
+                    </div>
+                    <br>
+                @endif
+                @if($data->status == 4)
+                    <div style="text-align: center;margin-top: 30px;">
+                        <button class="button">Request Denied by Owner</button>
+                        <br>
+                        <span style="font-weight: bold; color: #e78016">{{$data->deny_reason ?? ''}}</span>
                     </div>
                     <br>
                 @endif

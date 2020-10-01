@@ -27,8 +27,10 @@
                     <table class="manage-table responsive-table">
                         <tr>
                             <th><i class="fa fa-file-text"></i> Property</th>
-                            <th class="expire-date"><i class="fa fa-calendar"></i> Status</th>
-                            <th></th>
+                            <th class="expire-date">
+                                <div style="display: flex; align-items: center;"><i class="fa fa-calendar" style="margin-right: 7px;"></i><span> Status</span></div>
+                            </th>
+                            <th>Action</th>
                         </tr>
                         @foreach($properties as $property)
                             <tr>

@@ -52,31 +52,17 @@
                         <th>Details</th>
                     </tr>
                     @foreach($scheduled_payments as $payment)
-                        @if($payment['payment_cycle'] == 1)
-                            <tr>
-                                <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
-                                <td>Cleaning Fee</td>
-                                <td>+${{$payment['cleaning_fee']}}</td>
-                                <td>
-                                    <p>
-                                        <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'])}}</b>
-                                    </p>
-                                    <p>{{($payment['is_cleared'] == -1) ? $payment_error_message : ''}}</p>
-                                </td>
-                                <td></td>
-                            </tr>
-                        @endif
                         <tr>
                             <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
-                            <td>Stay payment</td>
+                            <td>{{$payment['name'] ?? 'Stay payment'}}</td>
                             <td>+${{$payment['amount']}}</td>
                             <td>
                                 <p>
-                                    <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'])}}</b>
+                                    <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'] ?? 0)}}</b>
                                 </p>
                                 <p>{{($payment['is_cleared'] == -1) ? $payment_error_message : ''}}</p>
                             </td>
-                            <td>Covering {{$payment['covering_range']}}, Minus ${{$payment['service_tax']}} fee</td>
+                            <td>{{$payment['covering_range']}}</td>
                         </tr>
                     @endforeach
                 </table>
@@ -153,8 +139,12 @@
                             <br>
                         @elseif($data->status == 3)
                             <button class="button" >Invoice sent</button><br><br>
+
                         @elseif($data->status == 4)
-                            <button class="button" >Request Declined by you</button><br><br>
+                            <button class="button" >Request Declined by you</button>
+                            <br>
+                            <span style="font-weight: bold; color: #e78016">{{$data->deny_reason ?? ''}}</span>
+                            <br><br>
                         @elseif($data->status == 8)
                             <button class="button" >Your booking has been cancelled.</button><br><br>
                         @endif

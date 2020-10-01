@@ -88,7 +88,7 @@ class PropertyController extends BaseController
             $insert_booking['traveler_cut'] = $property_details->security_deposit;
             $insert_booking['security_deposit'] = $property_details->security_deposit;
             $insert_booking['cleaning_fee'] = $property_details->cleaning_fee;
-            $insert_booking['status'] = ONE;
+            //            $insert_booking['status'] = ONE;
             $insert_booking['booking_id'] = $request->booking_id ?? $this->generate_random_string();
 
             $booking_id = $insert_booking['booking_id'];
@@ -774,7 +774,33 @@ class PropertyController extends BaseController
                 $this->send_custom_email($owner->email, $subject, 'mail.accepted_booking', $mail_data, $title);
 
                 $this->schedule_payments_and_emails_for_booking($bookingModel);
+
+                // Deny other booking requests for this property for overlapping dates
+                $overlapping_bookings = PropertyBooking::whereRaw(
+                    'booking_id != "' .
+                        $booking->booking_id .
+                        '" AND property_id = "' .
+                        $booking->property_id .
+                        '" AND status = 1 AND ((start_date BETWEEN "' .
+                        $booking->start_date .
+                        '" AND "' .
+                        $booking->end_date .
+                        '") OR (end_date BETWEEN "' .
+                        $booking->start_date .
+                        '" AND "' .
+                        $booking->end_date .
+                        '") OR ("' .
+                        $booking->start_date .
+                        '" BETWEEN start_date AND end_date))',
+                )->pluck('booking_id');
+                foreach ($overlapping_bookings as $bookingId) {
+                    PropertyBooking::where('booking_id', $bookingId)->update([
+                        'status' => 4, // Deny request
+                        'deny_reason' => 'Dates Not Available',
+                    ]);
+                }
             }
+
             return response()->json(['success' => true]);
         }
         return response()->json(['success' => false]);
@@ -803,6 +829,7 @@ class PropertyController extends BaseController
             $datum->owner_id = $traveller[0]->id;
             $datum->start_date = Carbon::parse($datum->start_date)->format('m/d/Y');
             $datum->end_date = Carbon::parse($datum->end_date)->format('m/d/Y');
+            $datum->bookStatus = Helper::get_traveller_status($datum->bookStatus, $datum->start_date, $datum->end_date);
         }
         return view('owner.reservations', ['bookings' => $data]);
     }
@@ -1006,38 +1033,85 @@ class PropertyController extends BaseController
 
     public static function get_payment_summary($booking, $is_owner = 0)
     {
-        // Get all booking payments for traveler
         $grand_total = 0;
         $scheduled_payments = [];
+
+        // Get all booking payments for traveler from DB
 
         $all_scheduled_payments = BookingPayments::where('booking_id', $booking->booking_id)
             ->where('is_owner', $is_owner)
             ->get();
 
         if (count($all_scheduled_payments) == 0) {
+            // Display records for payment if no DB entry found
             $all_scheduled_payments = Helper::generate_booking_payments($booking, $is_owner);
         }
+
         foreach ($all_scheduled_payments as $payment) {
             if (is_object($payment)) {
                 $payment = json_decode(json_encode($payment), true);
             }
+
             $payment['is_cleared'] = $payment['is_cleared'] ?? 0;
+
             if ($is_owner == 1) {
                 $payment['amount'] = $payment['total_amount'] - $payment['service_tax'];
                 $grand_total = $grand_total + $payment['amount'];
+                $payment['covering_range'] =
+                    "Covering " . $payment['covering_range'] . ", Minus $" . $payment['service_tax'] . " fee";
+
                 if ($payment['payment_cycle'] == 1) {
-                    // Deduct cleaning_fee and service_tax to Display neat rate for Owner
-                    $payment['amount'] = $payment['total_amount'] - $payment['service_tax'] - $booking->cleaning_fee;
+                    if (boolval($payment['is_partial_days'] ?? 0)) {
+                        // In case of partial days, add cleaning fees to neat amount
+                        $grand_total = $grand_total + $booking->cleaning_fee;
+                    } else {
+                        // Deduct cleaning_fee and service_tax to Display neat rate for Owner
+                        $payment['amount'] = $payment['amount'] - $booking->cleaning_fee;
+                    }
+                    $cleaning_fee_entry['due_date'] = $payment['due_date'];
+                    $cleaning_fee_entry['name'] = 'Cleaning Fee';
+                    $cleaning_fee_entry['amount'] = $booking->cleaning_fee;
+                    $cleaning_fee_entry['is_cleared'] = $payment['is_cleared'];
+                    $cleaning_fee_entry['covering_range'] = '';
+                    array_push($scheduled_payments, $cleaning_fee_entry);
                 }
             } else {
                 $payment['amount'] = $payment['total_amount'];
                 $grand_total = $grand_total + $payment['amount'] + $payment['service_tax'];
+
                 if ($payment['payment_cycle'] == 1) {
-                    // Deduct cleaning_fee and security_deposit to Display neat rate for traveler
-                    $payment['amount'] = $payment['total_amount'] - $booking->security_deposit - $booking->cleaning_fee;
-                    // Deduct security deposit from final amount as it will be refunded
-                    $grand_total = $grand_total - $booking->security_deposit;
+                    if (boolval($payment['is_partial_days'] ?? 0)) {
+                        // In case of partial days, add cleaning fees to neat amount
+                        $grand_total = $grand_total + $booking->cleaning_fee;
+                    } else {
+                        // Deduct cleaning_fee and service_tax to Display neat rate for traveler
+                        $payment['amount'] =
+                            $payment['total_amount'] - $booking->security_deposit - $booking->cleaning_fee;
+                        // Deduct security deposit from final amount as it will be refunded
+                        $grand_total = $grand_total - $booking->security_deposit;
+                    }
+
+                    $cleaning_fee_entry['due_date'] = $payment['due_date'];
+                    $cleaning_fee_entry['name'] = 'Cleaning Fee';
+                    $cleaning_fee_entry['amount'] = $booking->cleaning_fee;
+                    $cleaning_fee_entry['is_cleared'] = $payment['is_cleared'];
+                    $cleaning_fee_entry['covering_range'] = 'One-time charge';
+                    array_push($scheduled_payments, $cleaning_fee_entry);
+
+                    $security_deposit_entry['due_date'] = $payment['due_date'];
+                    $security_deposit_entry['name'] = 'Security Deposit';
+                    $security_deposit_entry['amount'] = $booking->security_deposit;
+                    $security_deposit_entry['is_cleared'] = $payment['is_cleared'];
+                    $security_deposit_entry['covering_range'] = 'Refunded 72 hours after check-out';
+                    array_push($scheduled_payments, $security_deposit_entry);
                 }
+
+                $service_tax_entry['due_date'] = $payment['due_date'];
+                $service_tax_entry['name'] = 'Service Tax';
+                $service_tax_entry['amount'] = $payment['service_tax'];
+                $service_tax_entry['is_cleared'] = $payment['is_cleared'];
+                $service_tax_entry['covering_range'] = 'One-time charge';
+                array_push($scheduled_payments, $service_tax_entry);
             }
             array_push($scheduled_payments, $payment);
         }
@@ -2764,6 +2838,7 @@ class PropertyController extends BaseController
             $booking->other_agency = $request->other_agency;
         }
         $booking->funding_source = $request->funding_source;
+        $booking->status = ONE;
         $booking->save();
         // Scheduling auto cancel job if there was no response from owner
         $this->schedule_auto_cancel_job($booking);

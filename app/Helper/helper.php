@@ -10,6 +10,8 @@ use App\Services\Dwolla;
 use App\Models\BookingPayments;
 use App\Models\PropertyBooking;
 use App\Models\Settings;
+use App\Services\Twilio;
+use App\Jobs\ProcessMessage;
 
 class Helper
 {
@@ -518,16 +520,17 @@ class Helper
             }
             $covering_date = $cdd->max(Carbon::parse($booking->start_date));
             $covering_start_date = Carbon::parse($covering_date);
-            $covering_end_date = $covering_start_date->copy()->addMonth()->subDay();
+            $covering_end_date = $covering_start_date
+                ->copy()
+                ->addMonth()
+                ->subDay();
             if ($i == $totalCycles && $isPartial) {
                 $data['total_amount'] = round(($data['monthly_rate'] * $partialDays) / 30);
                 $data['is_partial_days'] = $partialDays;
                 $covering_end_date = $covering_start_date->copy()->addDays($partialDays);
             }
             $data['covering_range'] =
-                    $covering_start_date->format('m/d/Y') .
-                    ' - ' .
-                    $covering_end_date->format('m/d/Y');
+                $covering_start_date->format('m/d/Y') . ' - ' . $covering_end_date->format('m/d/Y');
             $data['due_time'] = $data['due_date'];
             $data['due_date'] = $data['due_date']->toDateString();
             array_push($scheduled_payments, $data);
@@ -654,6 +657,7 @@ class Helper
         define("EMAIL_QUEUE", APP_ENV . ":emails");
         define("PAYMENT_QUEUE", APP_ENV . ":payments");
         define("GENERAL_QUEUE", APP_ENV . ":general");
+        define("MESSAGE_QUEUE", APP_ENV . ":message");
         define("DWOLLA_ENV", config('services.dwolla.env'));
 
         define("APP_LOGO_URL", "https://demo.rentalslew.com/public/keepers_logo.png");
@@ -904,5 +908,59 @@ class Helper
         } else {
             return false;
         }
+    }
+
+    public static function create_twilio_message(
+        $name,
+        $number,
+        $check_in,
+        $check_out,
+        $property_name,
+        $property_id,
+        $type
+    ) {
+        switch ($type) {
+            case 'OWNER_NEW_BOOKING':
+                $message = "Hi {$name}, you received a booking request for {$check_in} - {$check_out} at {$property_name}. Please log into Health Care Travels to approve or deny this request. Your response time is very important!";
+                return ProcessMessage::dispatch($number, $message, $property_id)
+                    ->delay(now()->addSeconds(1))
+                    ->onQueue(MESSAGE_QUEUE);
+            case 'OWNER_REMINDER_BOOKING':
+                $message = "Hi {$name}, you have a booking request for {$check_in} - {$check_out} at {$property_name} that has been pending for 48 hours. Please log into Health Care Travels to accept or deny the booking and keep your account in good standing.";
+                return ProcessMessage::dispatch($number, $message, $property_id)
+                    ->delay(now()->addHours(48))
+                    ->onQueue(MESSAGE_QUEUE);
+            case 'TRAVELER_CHECK_IN_APPROVAL':
+                $message = "Hi {$name}, this is Health Care Travels. Please reply 'Y' once you are safely checked in at your booking location. Please reach out to support@healthcaretravels.com if you encounter any issues.";
+                return ProcessMessage::dispatch($number, $message, $property_id)
+                    ->delay(Carbon::parse($check_in))
+                    ->onQueue(MESSAGE_QUEUE);
+            case 'TRAVELER_CHECK_IN_APPROVAL_REMINDER':
+                $message = "Hi {$name}, this is Health Care Travels. Please reply 'Y' once you are safely checked in at your booking location. Please reach out to support@healthcaretravels.com if you encounter any issues.";
+                return ProcessMessage::dispatch($number, $message, $property_id)
+                    ->delay(Carbon::parse($check_in))
+                    ->onQueue(MESSAGE_QUEUE);
+        }
+    }
+
+    public static function send_message($number, $message, $property_id, $type)
+    {
+        Helper::setConstantsHelper();
+        $twilio = new Twilio();
+        switch ($type) {
+            case 'OWNER_NEW_BOOKING':
+                // do nothing
+                break;
+            case 'OWNER_REMINDER_BOOKING':
+                // logic for checking if owner approved booking or not.
+                break;
+            case 'TRAVELER_CHECK_IN_APPROVAL':
+                // do nothing
+                break;
+            case 'TRAVELER_CHECK_IN_APPROVAL_REMINDER':
+                // logic for checking if traveler has checkin or not
+                break;
+        }
+        return $twilio->sendMessage(COUNTRY_CODE . $number, $message);
     }
 }

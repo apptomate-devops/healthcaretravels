@@ -982,7 +982,7 @@ class Helper
         $booking = DB::table('property_booking')
             ->where('id', $booking_id)
             ->first();
-
+        error_log('Processing message type=' . $type);
         switch ($type) {
             case OWNER_NEW_BOOKING:
                 // do nothing

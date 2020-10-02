@@ -2980,18 +2980,6 @@ class PropertyController extends BaseController
             $title_traveler,
         );
 
-        $text_message =
-            "Hi " .
-            $owner_name .
-            ", You received a property booking for " .
-            $property->title .
-            " for " .
-            $booking->start_date .
-            " to " .
-            $booking->end_date .
-            ". Please check your email or your Health Care Travels account to accept or deny the request.";
-        $this->sendTwilioMessage($owner->phone, $text_message);
-
         if ($request->guest_name) {
             for ($i = 0; $i < count($request->guest_name); $i++) {
                 if ($request->guest_id[$i]) {

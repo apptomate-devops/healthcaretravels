@@ -2903,8 +2903,8 @@ class PropertyController extends BaseController
         Helper::send_booking_message(
             $owner_name,
             $owner->phone,
-            $booking->check_in,
-            $booking->check_out,
+            $booking->start_date,
+            $booking->end_date,
             $property_details->title,
             $request->booking_id,
             OWNER_NEW_BOOKING,
@@ -2913,8 +2913,8 @@ class PropertyController extends BaseController
         Helper::send_booking_message(
             $owner_name,
             $owner->phone,
-            $booking->check_in,
-            $booking->check_out,
+            $booking->start_date,
+            $booking->end_date,
             $property_details->title,
             $booking->id,
             OWNER_BOOKING_REMINDER,
@@ -2923,8 +2923,8 @@ class PropertyController extends BaseController
         Helper::send_booking_message(
             $traveler_name,
             $traveller->phone,
-            $booking->check_in,
-            $booking->check_out,
+            $booking->start_date,
+            $booking->end_date,
             $property_details->title,
             $booking->id,
             TRAVELER_CHECK_IN_APPROVAL,
@@ -2933,8 +2933,8 @@ class PropertyController extends BaseController
         Helper::send_booking_message(
             $traveler_name,
             $traveller->phone,
-            $booking->check_in,
-            $booking->check_out,
+            $booking->start_date,
+            $booking->end_date,
             $property_details->title,
             $booking->id,
             TRAVELER_CHECK_IN_APPROVAL_REMINDER,
@@ -3037,6 +3037,55 @@ class PropertyController extends BaseController
         $url = BASE_URL . 'owner/add-new-property/' . $stage . '/' . $data->id;
 
         return redirect($url);
+    }
+
+    public function check_in_traveler_based_on_message(Request $request)
+    {
+        $data = $request->all();
+        if (!isset($data['message']) || !isset($data['phone'])) {
+            return response()->json([
+                'status' => 'FAILED',
+                'message' => 'Message and Phone are required fields.',
+            ]);
+        }
+        if (strtolower(trim($data['message'])) == 'y') {
+            $data['phone'] = str_replace(COUNTRY_CODE, "", $data['phone']);
+            $traveler = DB::table('users')
+                ->where('phone', '=', $data['phone'])
+                ->where('role_id', '=', ZERO)
+                ->first();
+
+            if (isset($traveler)) {
+                $booking = PropertyBooking::getActiveBookingForUser($traveler->id)
+                    ->where('status', 2)
+                    ->first();
+
+                if (isset($booking)) {
+                    if ($booking->already_checked_in == 0) {
+                        $booking->already_checked_in = 1;
+                        $booking->save();
+                    }
+                    return response()->json([
+                        'status' => 'SUCCESS',
+                        'message' => 'Traveler successfully check-in.',
+                    ]);
+                } else {
+                    return response()->json([
+                        'status' => 'FAILED',
+                        'message' => 'No booking found.',
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'status' => 'FAILED',
+                    'message' => 'No traveler found.',
+                ]);
+            }
+        }
+        return response()->json([
+            'status' => 'FAILED',
+            'message' => 'Something went wrong with webhook.',
+        ]);
     }
 
     public function my_properties(Request $request)

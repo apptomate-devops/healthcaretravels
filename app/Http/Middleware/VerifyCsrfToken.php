@@ -11,5 +11,5 @@ class VerifyCsrfToken extends BaseVerifier
      *
      * @var array
      */
-    protected $except = ['properties', 'dwolla-webhooks'];
+    protected $except = ['properties', 'dwolla-webhooks', '/twilio-webhooks/check-in-traveler-based-on-message'];
 }

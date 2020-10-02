@@ -19,7 +19,6 @@ Route::GET('/logout', 'LogoutController@logout');
 Route::GET('/is_user_active', 'LogoutController@is_user_active');
 
 // User Controller Routes
-
 // User Controller Auth Routes
 Route::GET('/check_email/{email}/{client_id}', 'UserController@check_email');
 Route::GET('/check_phone/{phono_no}/{client_id}', 'UserController@check_phone');
@@ -184,6 +183,10 @@ Route::middleware(['LoginCheck'])->group(function () {
 
 Route::post('/dwolla-webhooks', 'PaymentController@dwolla_webhook');
 Route::post('/webhooks/dwolla', 'PaymentController@dwolla_webhook');
+Route::post(
+    '/twilio-webhooks/check-in-traveler-based-on-message',
+    'PropertyController@check_in_traveler_based_on_message',
+);
 
 // TODO: remove when implemented
 // Payment testing APIS

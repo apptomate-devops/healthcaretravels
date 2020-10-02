@@ -70,7 +70,8 @@
         var formData = {
             id: {{$user->id}},
             fundingSource: fundingSource,
-            _token: '{{ csrf_token() }}'
+            _token: '{{ csrf_token() }}',
+            fromProfile: '{{ $from_profile ?? ''}}'
         };
         $.ajax({
             url: "/dwolla/add_funding_source",

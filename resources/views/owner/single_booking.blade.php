@@ -152,6 +152,8 @@
                 </div>
             </div>
         </div>
+        <div id="update_status_loading" class="loading style-2" style="display: none;"><div class="loading-wheel"></div></div>
+
     </div>
 
     <script type="text/javascript">
@@ -180,6 +182,7 @@
                 var r = true;
             }
             if (r == true) {
+                $('#update_status_loading').show();
                 var formData = {
                     booking_id: id,
                     status: status,
@@ -192,6 +195,7 @@
                     data: formData,
                     json: true,
                     success: function(response, textStatus, jqXHR) {
+                        $('#update_status_loading').hide();
                         if(response.success) {
                             window.location.reload();
                         } else {
@@ -199,6 +203,7 @@
                         }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
+                        $('#update_status_loading').hide();
                         console.log('Error updating status');
                     }
                 });

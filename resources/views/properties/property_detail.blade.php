@@ -261,51 +261,36 @@
                                                     </h4>
                                                 </div>
                                                 <div id="guest-collapse{{$i+1}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="guest-heading-{{$i+1}}">
-                                                    <div class="panel-body">
+                                                    <div class="panel-body" style="position: relative;">
                                                         <input  name="guest_id[]" type="hidden" value="{{$guest_data->id ?? ''}}" required>
                                                         <div class="control-group cc-first-name col-md-6">
-                                                            <div style="display: flex; justify-content: space-between;">
-                                                                <label class="control-label" for="credit-card-first-name">
-                                                                    Guest Name
-                                                                </label>
-                                                                @if($i == 0) <div onclick="add_my_info('name');" class="link">Add my info</div> @endif
-                                                            </div>
+                                                            <label class="control-label" for="credit-card-first-name">
+                                                                Guest Name
+                                                            </label>
                                                             <input id="name_{{$i}}" name="guest_name[]" type="text" value="{{$guest_data->name ?? ''}}" required>
                                                         </div>
                                                         <div class="control-group cc-last-name col-md-6">
-                                                            <div style="display: flex; justify-content: space-between;">
-                                                                <label class="control-label" for="credit-card-first-name">
-                                                                    Occupation
-                                                                </label>
-                                                                @if($i == 0) <div onclick="add_my_info('occupation');" class="link">Add my info</div> @endif
-                                                            </div>
+                                                            <label class="control-label" for="credit-card-first-name">
+                                                                Occupation
+                                                            </label>
                                                             <input id="occupation_{{$i}}" name="guest_occupation[]" type="text" value="{{$guest_data->occupation ?? ''}}">
                                                         </div>
                                                         <div class="control-group cc-last-name col-md-6">
-                                                            <div style="display: flex; justify-content: space-between;">
-                                                                <label class="control-label" for="credit-card-first-name">
-                                                                    Phone Number
-                                                                </label>
-                                                                @if($i == 0) <div onclick="add_my_info('phone');" class="link">Add my info</div> @endif
-                                                            </div>
+                                                            <label class="control-label" for="credit-card-first-name">
+                                                                Phone Number
+                                                            </label>
                                                             <input class="masked_phone_us" id="phone_{{$i}}"  name="phone_number[]" type="text" value="{{$guest_data->phone_number?? ''}}">
                                                         </div>
                                                         <div class="control-group cc-last-name col-md-6">
-                                                            <div style="display: flex; justify-content: space-between;">
-                                                                <label class="control-label" for="credit-card-first-name">
-                                                                    Email
-                                                                </label>
-                                                                @if($i == 0) <div onclick="add_my_info('email');" class="link">Add my info</div> @endif
-                                                            </div>
+                                                            <label class="control-label" for="credit-card-first-name">
+                                                                Email
+                                                            </label>
                                                             <input id="email_{{$i}}" name="email[]" type="email" value="{{$guest_data->email ?? ''}}">
                                                         </div>
                                                         <div class="control-group cc-last-name col-md-6">
-                                                            <div style="display: flex; justify-content: space-between;">
-                                                                <label class="control-label" for="credit-card-first-name">
-                                                                    Age
-                                                                </label>
-                                                                @if($i == 0) <div onclick="add_my_info('age');" class="link">Add my info</div> @endif
-                                                            </div>
+                                                            <label class="control-label" for="credit-card-first-name">
+                                                                Age
+                                                            </label>
                                                             <select id="age_{{$i}}" name="age[]" data-placeholder="Select Age" required>
                                                                 <option label="Select Age" value="" disabled selected>Select Age</option>
                                                                 <option label="Adult" value="Adult" @if($guest_data && $guest_data->age == 'Adult') selected @endif></option>
@@ -313,6 +298,7 @@
                                                                 <option label="Infant (Under 2)" value="Infant" @if($guest_data && $guest_data->age == 'Infant') selected @endif></option>
                                                             </select>
                                                         </div>
+                                                        <div onclick="add_my_info();" class="btn bg-orange" style="position: absolute; bottom: 0; right: 10px; margin-bottom: 20px; width: auto;">Add my info</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -444,15 +430,11 @@
 
         function add_my_info(key) {
             var traveller = <?php echo json_encode($traveller); ?>;
-            var input = $(`#${key}_0`);
-            var value = traveller[key];
-            if(key == 'name') {
-                value = traveller.first_name + ' ' + traveller.last_name;
-            }
-            if(key == 'age') {
-                value = 'Adult';
-            }
-            input.val(value);
+            $('#name_0').val(`${traveller.first_name} ${traveller.last_name}`);
+            $('#occupation_0').val(traveller.occupation);
+            $('#phone_0').val(traveller.phone);
+            $('#email_0').val(traveller.email);
+            $('#age_0').val('Adult');
         }
         function load_agencies() {
             var agencies = <?php echo json_encode($agency); ?>;

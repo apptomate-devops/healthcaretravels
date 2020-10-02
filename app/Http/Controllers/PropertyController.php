@@ -2887,7 +2887,7 @@ class PropertyController extends BaseController
         $property_details = DB::table('property_list')
             ->where('client_id', CLIENT_ID)
             ->where('id', $booking->property_id)
-            ->select('monthly_rate', 'check_in', 'check_out')
+            ->select('monthly_rate', 'check_in', 'check_out', 'title', 'id')
             ->first();
 
         $booking->monthly_rate = $property_details->monthly_rate;
@@ -2904,6 +2904,48 @@ class PropertyController extends BaseController
             ->first();
 
         $owner_name = $owner->first_name . " " . $owner->last_name;
+        $traveler_name = $traveller->first_name . " " . $traveller->last_name;
+
+        Helper::send_booking_message(
+            $owner_name,
+            $owner->phone,
+            $booking->check_in,
+            $booking->check_out,
+            $property_details->title,
+            $request->booking_id,
+            OWNER_NEW_BOOKING,
+        );
+
+        Helper::send_booking_message(
+            $owner_name,
+            $owner->phone,
+            $booking->check_in,
+            $booking->check_out,
+            $property_details->title,
+            $booking->id,
+            OWNER_BOOKING_REMINDER,
+        );
+
+        Helper::send_booking_message(
+            $traveler_name,
+            $traveller->phone,
+            $booking->check_in,
+            $booking->check_out,
+            $property_details->title,
+            $booking->id,
+            TRAVELER_CHECK_IN_APPROVAL,
+        );
+
+        Helper::send_booking_message(
+            $traveler_name,
+            $traveller->phone,
+            $booking->check_in,
+            $booking->check_out,
+            $property_details->title,
+            $booking->id,
+            TRAVELER_CHECK_IN_APPROVAL_REMINDER,
+        );
+
         $mail_data = [
             'name' => $owner_name,
             'text' => isset($welcome->message) ? $welcome->message : '',
@@ -2923,7 +2965,7 @@ class PropertyController extends BaseController
             ->first();
 
         $mail_data_traveler = [
-            'name' => $traveller->first_name . " " . $traveller->last_name,
+            'name' => $traveler_name,
             'text' => isset($mail_traveler->message) ? $mail_traveler->message : '',
             'property' => $property,
             'cover_img' => $cover_img,

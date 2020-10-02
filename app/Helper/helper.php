@@ -855,6 +855,11 @@ class Helper
         define("TEMPLATE_OWNER_24HR_BEFORE_CHECKOUT", 13);
         define("TEMPLATE_SECURITY_DEPOSIT_REFUND", 14);
 
+        define("OWNER_NEW_BOOKING", 1);
+        define("OWNER_BOOKING_REMINDER", 2);
+        define("TRAVELER_CHECK_IN_APPROVAL", 3);
+        define("TRAVELER_CHECK_IN_APPROVAL_REMINDER", 4);
+
         define('FB_URL', 'https://health-care-travels.firebaseio.com/');
         define("PAYMENT_INIT", 1);
         define("PAYMENT_SUCCESS", 2);
@@ -910,57 +915,84 @@ class Helper
         }
     }
 
-    public static function create_twilio_message(
+    public static function send_booking_message(
         $name,
         $number,
         $check_in,
         $check_out,
         $property_name,
-        $property_id,
+        $booking_id,
         $type
     ) {
         switch ($type) {
-            case 'OWNER_NEW_BOOKING':
+            case OWNER_NEW_BOOKING:
                 $message = "Hi {$name}, you received a booking request for {$check_in} - {$check_out} at {$property_name}. Please log into Health Care Travels to approve or deny this request. Your response time is very important!";
-                return ProcessMessage::dispatch($number, $message, $property_id)
-                    ->delay(now()->addSeconds(1))
+                $timestamp = now()->addSeconds(1);
+
+                return ProcessMessage::dispatch($number, $message, $booking_id, OWNER_NEW_BOOKING)
+                    ->delay($timestamp)
                     ->onQueue(MESSAGE_QUEUE);
-            case 'OWNER_REMINDER_BOOKING':
+
+            case OWNER_BOOKING_REMINDER:
                 $message = "Hi {$name}, you have a booking request for {$check_in} - {$check_out} at {$property_name} that has been pending for 48 hours. Please log into Health Care Travels to accept or deny the booking and keep your account in good standing.";
-                return ProcessMessage::dispatch($number, $message, $property_id)
-                    ->delay(now()->addHours(48))
+                $timestamp = now()->addHours(48);
+
+                return ProcessMessage::dispatch($number, $message, $booking_id, OWNER_BOOKING_REMINDER)
+                    ->delay($timestamp)
                     ->onQueue(MESSAGE_QUEUE);
-            case 'TRAVELER_CHECK_IN_APPROVAL':
+
+            case TRAVELER_CHECK_IN_APPROVAL:
                 $message = "Hi {$name}, this is Health Care Travels. Please reply 'Y' once you are safely checked in at your booking location. Please reach out to support@healthcaretravels.com if you encounter any issues.";
-                return ProcessMessage::dispatch($number, $message, $property_id)
-                    ->delay(Carbon::parse($check_in))
+                $timestamp = Carbon::parse($check_in)->setTime(11, 0, 0);
+
+                return ProcessMessage::dispatch($number, $message, $booking_id, TRAVELER_CHECK_IN_APPROVAL)
+                    ->delay($timestamp)
                     ->onQueue(MESSAGE_QUEUE);
-            case 'TRAVELER_CHECK_IN_APPROVAL_REMINDER':
+
+            case TRAVELER_CHECK_IN_APPROVAL_REMINDER:
                 $message = "Hi {$name}, this is Health Care Travels. Please reply 'Y' once you are safely checked in at your booking location. Please reach out to support@healthcaretravels.com if you encounter any issues.";
-                return ProcessMessage::dispatch($number, $message, $property_id)
-                    ->delay(Carbon::parse($check_in))
+                $timestamp = Carbon::parse($check_in)
+                    ->addDay(1)
+                    ->setTime(11, 0, 0);
+
+                return ProcessMessage::dispatch($number, $message, $booking_id, TRAVELER_CHECK_IN_APPROVAL_REMINDER)
+                    ->delay($timestamp)
                     ->onQueue(MESSAGE_QUEUE);
         }
     }
 
-    public static function send_message($number, $message, $property_id, $type)
+    public static function send_message($number, $message, $booking_id, $type)
     {
         Helper::setConstantsHelper();
-        $twilio = new Twilio();
+        $should_send_message = true;
+        $booking = DB::table('property_booking')
+            ->where('id', $booking_id)
+            ->first();
+
         switch ($type) {
-            case 'OWNER_NEW_BOOKING':
+            case OWNER_NEW_BOOKING:
                 // do nothing
                 break;
-            case 'OWNER_REMINDER_BOOKING':
+            case OWNER_BOOKING_REMINDER:
                 // logic for checking if owner approved booking or not.
+                if ($booking->status != 1) {
+                    $should_send_message = false;
+                }
                 break;
-            case 'TRAVELER_CHECK_IN_APPROVAL':
+            case TRAVELER_CHECK_IN_APPROVAL:
                 // do nothing
                 break;
-            case 'TRAVELER_CHECK_IN_APPROVAL_REMINDER':
+            case TRAVELER_CHECK_IN_APPROVAL_REMINDER:
                 // logic for checking if traveler has checkin or not
+                if ($booking->already_checked_in == 1) {
+                    $should_send_message = false;
+                }
                 break;
         }
-        return $twilio->sendMessage(COUNTRY_CODE . $number, $message);
+        if ($should_send_message) {
+            $twilio = new Twilio();
+            $twilio->sendMessage(COUNTRY_CODE . $number, $message);
+        }
+        return;
     }
 }

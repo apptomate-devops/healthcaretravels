@@ -95,11 +95,28 @@ class PropertyBooking extends Model
         return $this->hasMany('App\Models\BookingPayments', 'booking_id', 'booking_id');
     }
 
+    /**
+     * Get the Booking for which dwolla webhook responded.
+     */
     public static function findByResourceId($id)
     {
         return PropertyBooking::where('owner_deposit_transfer_id', $id)
             ->orWhere('traveler_deposit_transfer_id', $id)
             ->orWhere('cancellation_refund_transfer_id', $id)
             ->first();
+    }
+
+    /**
+     * Get active Booking for users.
+     */
+    public static function getActiveBookingForUser($id)
+    {
+        return PropertyBooking::where(function ($query) use ($id) {
+            return $query->where('traveller_id', $id)
+                    ->orWhere('owner_id', $id);
+                })
+                ->whereDate('start_date', '<=', date("Y-m-d"))
+                ->whereDate('end_date', '>=', date("Y-m-d"))
+                ->get();
     }
 }

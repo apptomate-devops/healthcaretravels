@@ -146,14 +146,21 @@ class PaymentController extends BaseController
                 $activeBookings = $bookings->filter(function ($booking) {
                     return in_array($booking->status, [2, 3]);
                 });
-                $activeBookings->each(function($booking) use ($id) {
+                $activeBookings->each(function($booking) use ($id, $default_funding_source) {
                     $is_owner = $booking->owner_id == $id ? 1 : 0;
+                    $updateBooking = PropertyBooking::where('id', $booking->id);
+                    if ($is_owner) {
+                        $updateBooking->update(['owner_funding_source' => $default_funding_source]);
+                    } else {
+                        $updateBooking->update(['funding_source' => $default_funding_source]);
+                    }
                     $failedPayments = $booking->payments->where('status', PAYMENT_FAILED)
                         ->where('is_owner', $is_owner);
                     $failedPayments->each(function($payment) {
-                        Logger::info('Scheduling for payment: ' . $payment->id);
+                        Logger::info('Retrying payment for payment id: ' . $payment->id);
+                        $scheduledTime = now()->addSeconds(5);
                         ProcessPayment::dispatch($payment->id)
-                            ->delay(now()->addSeconds(5))
+                            ->delay($scheduledTime)
                             ->onQueue(PAYMENT_QUEUE);
                     });
 

@@ -208,6 +208,45 @@
                                 @component('components.funding-source', ['funding_sources' => $funding_sources, 'user' => $traveller])
                                 @endcomponent
                                 <hr>
+                                <h2>Basic Details</h2>
+                                <div class="wrapper center-block">
+                                    <div class="row">
+                                        <div class="control-group cc-first-name col-md-6">
+                                            <label class="control-label" for="recruiter_name">
+                                                Recruiter Name
+                                            </label>
+                                            <input id="recruiter_name" name="recruiter_name" type="text" value="{{$data->recruiter_name ?? ''}}">
+                                        </div>
+                                        <div class="control-group cc-first-name col-md-6">
+                                            <label class="control-label" for="recruiter_email">
+                                                Recruiter Email
+                                            </label>
+                                            <input id="recruiter_email" name="recruiter_email" type="email" value="{{$data->recruiter_email ?? ''}}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="control-group cc-first-name col-md-4">
+                                            <label class="control-label" for="recruiter_phone_number">
+                                                Recruiter Phone Number
+                                            </label>
+                                            <input class="masked_phone_us" id="recruiter_phone_number" name="recruiter_phone_number" type="text" value="{{$data->recruiter_phone_number ?? ''}}">
+                                        </div>
+                                        <div class="control-group cc-first-name col-md-4">
+                                            <label class="control-label" for="contract_start_date">
+                                                Contract Start Date
+                                            </label>
+                                            <input type="date" id="contract_start_date" name="contract_start_date" min="{{date('Y-m-d')}}">
+                                        </div>
+                                        <div class="control-group cc-first-name col-md-4">
+                                            <label class="control-label" for="contract_end_date">
+                                                Contract End Date
+                                            </label>
+                                            <input type="date" id="contract_end_date" name="contract_end_date" min="{{date('Y-m-d')}}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr>
                                 <h2>Guest Details</h2>
                                 <div class="wrapper center-block">
                                     <div class="panel-group" id="guest-accordian" role="tablist" aria-multiselectable="true">
@@ -249,7 +288,7 @@
                                                                 </label>
                                                                 @if($i == 0) <div onclick="add_my_info('phone');" class="link">Add my info</div> @endif
                                                             </div>
-                                                            <input id="phone_{{$i}}"  name="phone_number[]" type="text" value="{{$guest_data->phone_number?? ''}}">
+                                                            <input class="masked_phone_us" id="phone_{{$i}}"  name="phone_number[]" type="text" value="{{$guest_data->phone_number?? ''}}">
                                                         </div>
                                                         <div class="control-group cc-last-name col-md-6">
                                                             <div style="display: flex; justify-content: space-between;">

@@ -99,6 +99,10 @@ class Helper
         $dwolla = new Dwolla();
         $booking = $payment->booking;
         $fundingSource = $booking->funding_source;
+        if (in_array($booking->status, [4, 8])) {
+            Logger::info('Property booking was canceled: ' . $booking_id . ' :: paymentCycle: ' . $payment_cycle);
+            return ['success' => false, 'message' => 'Property Booking was canceled'];
+        }
         try {
             // Processing first payment cycle from user's side
             Logger::info(
@@ -440,7 +444,7 @@ class Helper
             Logger::info('Booking request was handled already: ' . $id);
             return ['success' => false, 'message' => 'Booking request was handled already!'];
         }
-        $booking->status = 4;
+        $booking->status = 8;
         $booking->auto_canceled = 1;
         $booking->save();
         return ['success' => true, 'message' => 'Booking request was canceled successfully'];

@@ -320,13 +320,13 @@ class PaymentController extends BaseController
             ->where(function ($q) use ($user_id) {
                 $q->where('traveller_id', $user_id)->orWhere('owner_id', $user_id);
             })
-            ->select('booking_id', 'traveller_id', 'owner_id')
+            ->select('booking_id', 'traveller_id', 'owner_id', 'property_id')
             ->get();
         $all_payments = [];
         foreach ($all_bookings as $booking) {
             $is_owner = (int) ($booking->owner_id == $user_id);
             $booking_details = PropertyBooking::where('booking_id', $booking->booking_id)->first();
-            $property_details = PropertyList::where('id', $booking->property_id)->first();
+            $property_details = PropertyList::find($booking->property_id);
             $payments = BookingPayments::where('booking_id', $booking->booking_id)
                 ->where('is_owner', $is_owner)
                 ->where('is_cleared', 1)

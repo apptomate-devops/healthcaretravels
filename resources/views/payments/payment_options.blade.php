@@ -27,7 +27,8 @@
                                 'funding_sources' => $funding_sources,
                                 'user' => $user,
                                 'label' => 'Select an Option',
-                                'button_label' => 'Add a Payment Option'
+                                'button_label' => 'Add a Payment Option',
+                                'from_profile' => true,
                             ])
                 @endcomponent
 

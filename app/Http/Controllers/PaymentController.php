@@ -131,15 +131,37 @@ class PaymentController extends BaseController
 
     public function add_funding_source(Request $request)
     {
-        // TODO: get id value from users session
-        $id = $request->id;
+        $id = $request->session()->get('user_id');
         $default_funding_source = $request->fundingSource;
+        $fromProfile = $request->fromProfile;
         $user = Users::find($id);
         if (empty($user)) {
             return response()->json(['success' => false, 'error' => 'User does not exists!']);
         }
         $user->default_funding_source = $default_funding_source;
         $user->save();
+        if ($fromProfile) {
+            try {
+                $bookings = PropertyBooking::getActiveBookingForUser($id);
+                $activeBookings = $bookings->filter(function ($booking) {
+                    return in_array($booking->status, [2, 3]);
+                });
+                $activeBookings->each(function($booking) use ($id) {
+                    $is_owner = $booking->owner_id == $id ? 1 : 0;
+                    $failedPayments = $booking->payments->where('status', PAYMENT_FAILED)
+                        ->where('is_owner', $is_owner);
+                    $failedPayments->each(function($payment) {
+                        Logger::info('Scheduling for payment: ' . $payment->id);
+                        ProcessPayment::dispatch($payment->id)
+                            ->delay(now()->addSeconds(5))
+                            ->onQueue(PAYMENT_QUEUE);
+                    });
+
+                });
+            } catch (\Exception $ex) {
+                Logger::error('Error scheduling failed payments. EX: ' . $ex->getMessage());
+            }
+        }
         return response()->json(['success' => true]);
     }
 

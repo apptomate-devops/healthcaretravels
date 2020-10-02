@@ -1082,6 +1082,10 @@ class PropertyController extends BaseController
             }
 
             $payment['is_cleared'] = $payment['is_cleared'] ?? 0;
+            $payment['status'] = $payment['status'] ?? 0;
+            $cleaning_fee_entry = array_merge([], $payment);
+            $security_deposit_entry = array_merge([], $payment);
+            $service_tax_entry = array_merge([], $payment);
             $is_partial_days_payment = boolval($payment['is_partial_days'] ?? 0);
             $neat_rate = $is_partial_days_payment ? $payment['total_amount'] : $payment['monthly_rate'];
 
@@ -1097,10 +1101,8 @@ class PropertyController extends BaseController
                         $grand_total = $grand_total + $booking->cleaning_fee;
                     }
 
-                    $cleaning_fee_entry['due_date'] = $payment['due_date'];
                     $cleaning_fee_entry['name'] = 'Cleaning Fee';
                     $cleaning_fee_entry['amount'] = $booking->cleaning_fee;
-                    $cleaning_fee_entry['is_cleared'] = $payment['is_cleared'];
                     $cleaning_fee_entry['covering_range'] = '';
                     array_push($scheduled_payments, $cleaning_fee_entry);
                 }
@@ -1115,17 +1117,13 @@ class PropertyController extends BaseController
                     } else {
                         $grand_total = $grand_total - $booking->security_deposit;
                     }
-                    $cleaning_fee_entry['due_date'] = $payment['due_date'];
                     $cleaning_fee_entry['name'] = 'Cleaning Fee';
                     $cleaning_fee_entry['amount'] = $booking->cleaning_fee;
-                    $cleaning_fee_entry['is_cleared'] = $payment['is_cleared'];
                     $cleaning_fee_entry['covering_range'] = 'One-time charge';
                     array_push($scheduled_payments, $cleaning_fee_entry);
 
-                    $security_deposit_entry['due_date'] = $payment['due_date'];
                     $security_deposit_entry['name'] = 'Security Deposit';
                     $security_deposit_entry['amount'] = $booking->security_deposit;
-                    $security_deposit_entry['is_cleared'] = $payment['is_cleared'];
                     $security_deposit_entry['covering_range'] = 'Refunded 72 hours after check-out';
                     array_push($scheduled_payments, $security_deposit_entry);
                 }
@@ -1134,6 +1132,7 @@ class PropertyController extends BaseController
                 $service_tax_entry['name'] = 'Service Tax';
                 $service_tax_entry['amount'] = $payment['service_tax'];
                 $service_tax_entry['is_cleared'] = $payment['is_cleared'];
+                $service_tax_entry['status'] = $payment['status'];
                 $service_tax_entry['covering_range'] = 'One-time charge';
                 array_push($scheduled_payments, $service_tax_entry);
             }

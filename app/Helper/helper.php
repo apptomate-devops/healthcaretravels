@@ -276,13 +276,23 @@ class Helper
         return 'Pending Stay';
     }
 
-    public static function get_payment_status($value, $is_owner = 0)
+    public static function get_payment_status($payment)
     {
-        switch ($value) {
-            case -1:
-                return $is_owner ? 'Error' : 'Failed';
-            case 1:
+        $status = $payment['status'];
+        $is_owner = $payment['is_owner'];
+        if ($is_owner) {
+            $dd = Carbon::parse($payment['due_date']);
+            if (now()->gt($dd) && $status < PAYMENT_INIT) {
+                return 'Processing';
+            }
+        }
+        switch ($status) {
+            case PAYMENT_INIT:
+                return 'Processing';
+            case PAYMENT_SUCCESS:
                 return 'Completed';
+            case PAYMENT_FAILED:
+                return 'Failed';
             default:
                 return 'Pending';
         }

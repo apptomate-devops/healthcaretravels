@@ -60,7 +60,7 @@
                             <td>-${{$payment['amount']}}</td>
                             <td>
                                 <p>
-                                    <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'] ?? 0)}}</b>
+                                    <b>{{Helper::get_payment_status($payment)}}</b>
                                 </p>
                                 <p>{{($payment['is_cleared'] == -1) ? $payment_error_message : ''}}</p>
                             </td>

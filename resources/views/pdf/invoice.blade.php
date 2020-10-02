@@ -70,7 +70,7 @@
             <td>${{$payment['amount']}}</td>
             <td>
                 <p>
-                    <b>{{Helper::get_payment_status($payment['is_cleared'], $payment['is_owner'] ?? 0)}}</b>
+                    <b>{{Helper::get_payment_status($payment)}}</b>
                 </p>
             </td>
             <td>{{$payment['covering_range']}}</td>

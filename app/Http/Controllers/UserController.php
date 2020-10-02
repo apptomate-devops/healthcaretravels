@@ -327,7 +327,7 @@ class UserController extends BaseController
                 $this->incrementLoginAttempts($request);
                 return back()->with([
                     'error' => '',
-                    'password_error' => 'You have entered the wrong password. Please Try again.',
+                    'password_error' => 'You have entered the wrong password. Please try again.',
                 ]);
             }
             if (\Hash::needsRehash($check->password)) {

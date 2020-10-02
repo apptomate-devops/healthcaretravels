@@ -91,6 +91,11 @@
                                     </a>
                                 </li>
                                 <li class="text-center">
+                                    <a href="/request-roommate">
+                                        Request a Roommate
+                                    </a>
+                                </li>
+                                <li class="text-center">
                                     <a href="/how_it_works">
                                         How It Works
                                     </a>

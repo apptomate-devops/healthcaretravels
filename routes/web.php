@@ -68,7 +68,7 @@ Route::get('/payment-terms', 'HomeController@payment_terms');
 Route::get('/policies', 'HomeController@policies');
 Route::get('/privacy-policy', 'HomeController@privacy_policy');
 Route::get('/privacy-policy', 'HomeController@privacy_policy');
-Route::get('/roommate', 'HomeController@request_roommate');
+Route::get('/request-roommate', 'HomeController@request_roommate');
 Route::post('/request_roommate', 'HomeController@save_request_roommate');
 Route::post('/request_roommate2', 'HomeController@save_request_roommate2');
 Route::get('/rv_professional', 'HomeController@rv_professional');
@@ -104,7 +104,6 @@ Route::POST('/create_chat/{id}', 'PropertyController@create_chat');
 
 // Logged in routes
 Route::middleware(['LoginCheck'])->group(function () {
-
     // All Users
     Route::GET('/profile', 'UserController@profile');
     Route::GET('/verify-account', 'UserController@verify_account');
@@ -176,7 +175,6 @@ Route::middleware(['LoginCheck'])->group(function () {
         Route::GET('/owner/calender', 'OwnerController@calender');
         Route::get('/owner/chat/{id}', 'PropertyController@owner_fire_chat');
         Route::GET('/ical/{id}', 'IcalController@ical');
-
 
         // Payment and Invoices
         Route::GET('/payment-options', 'PaymentController@get_payment_options');

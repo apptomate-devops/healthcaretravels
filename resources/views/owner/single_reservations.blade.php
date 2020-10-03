@@ -78,6 +78,7 @@
                         <td>Automatic deposit refund 72 hours after check-out</td>
                     </tr>
                 </table>
+                    <div>The selected account will be used to process any future payments for this booking.</div>
                 <div class="text-right">
                     <a target="_blank" href="{{BASE_URL}}invoice/{{$data->booking_id}}/0" class="margin-top-40 button border">Print Invoice</a>
                 </div>

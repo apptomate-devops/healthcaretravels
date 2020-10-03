@@ -292,6 +292,12 @@ class PropertyController extends BaseController
             ->leftjoin('property_images', 'property_images.property_id', '=', 'property_booking.property_id')
             ->where('property_booking.client_id', CLIENT_ID)
             ->where('property_booking.booking_id', $booking_id)
+            ->select(
+                'property_booking.*',
+                'property_booking.status as bookingStatus',
+                'property_list.*',
+                'property_images.*',
+            )
             ->first();
         if (empty($data)) {
             return view('general_error', ['message' => 'Booking you are looking for does not exists!']);

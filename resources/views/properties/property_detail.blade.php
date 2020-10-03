@@ -40,7 +40,7 @@
                                                         <a href="{{URL('/')}}/cancellationpolicy" class="cancel-policy-link" target="_blank">{{$data->cancellation_policy}} </a>
                                                     </strong>
                                                 </div>
-                                                @if($data->status == 1)
+                                                @if($data->bookingStatus == 1)
                                                     {{--                                                    only allow to edit if not approved--}}
                                                     <div>
                                                         <strong>
@@ -141,7 +141,7 @@
                                                             <b>Due on Approval</b>
                                                         </td>
                                                         <td class="val text-right" >
-                                                            <b>$ {{$data->due_on_approve}}</b>
+                                                            <b>$ {{$data->pay_now}}</b>
                                                         </td>
                                                     </tr>
                                                     @if(false && $data->coupon_value!="")
@@ -155,27 +155,53 @@
                                                             </td>
                                                         </tr>
                                                     @endif
-                                                    @if(Session::get('user_id'))
+                                                    @if($data->bookingStatus == 1)
+                                                        @if(Session::get('user_id'))
+                                                            <tr class="editable-fields">
+                                                                <td colspan="2">
+                                                                    <label class="checkbox-container">
+                                                                        I agree with the <a href="{{BASE_URL}}/terms-of-use" target="_blank"> Term of Use </a> and <a href="{{BASE_URL}}/cancellationpolicy" target="_blank"> Cancellation Policy </a>
+                                                                        <input type="checkbox" required name="terms" id="terms">
+                                                                        <span class="checkmark"></span>
+                                                                    </label>
+                                                                </td>
+                                                            </tr>
+                                                        @endif
                                                         <tr class="editable-fields">
                                                             <td colspan="2">
-                                                                <label class="checkbox-container">
-                                                                    I agree with the <a href="{{BASE_URL}}/terms-of-use" target="_blank"> Term of Use </a> and <a href="{{BASE_URL}}/cancellationpolicy" target="_blank"> Cancellation Policy </a>
-                                                                    <input type="checkbox" required name="terms" id="terms">
-                                                                    <span class="checkmark"></span>
-                                                                </label>
+                                                                <button id="requestBooking" class="btn btn-default btn-block bg-orange" disabled>Request Booking</button>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="editable-fields" id="total_amount">
+                                                            <td colspan="2">
+                                                                <div class="total_amount total_amount_gray">You won't be charged until the property owner confirms your request</div>
+                                                            </td>
+                                                        </tr>
+                                                    @elseif($data->bookingStatus == 2)
+                                                        <tr class="editable-fields">
+                                                            <td colspan="2">
+                                                                <div style="margin-top: 30px; color: #e08716;">This booking request has been accepted by owner.</div>
+                                                            </td>
+                                                        </tr>
+                                                    @elseif($data->bookingStatus == 3)
+                                                        <tr class="editable-fields">
+                                                            <td colspan="2">
+                                                                <div style="margin-top: 30px; color: #e08716;">This booking is completed.</div>
+                                                            </td>
+                                                        </tr>
+                                                    @elseif($data->bookingStatus == 4)
+                                                        <tr class="editable-fields">
+                                                            <td colspan="2">
+                                                                <div style="margin-top: 30px; color: #e08716;">This booking request is denied by Owner.</div>
+                                                            </td>
+                                                        </tr>
+                                                    @elseif($data->bookingStatus == 8)
+                                                        <tr class="editable-fields">
+                                                            <td colspan="2">
+                                                                <div style="margin-top: 30px; color: #e08716;">This booking has been cancelled.</div>
                                                             </td>
                                                         </tr>
                                                     @endif
-                                                    <tr class="editable-fields">
-                                                        <td colspan="2">
-                                                            <button id="requestBooking" class="btn btn-default btn-block bg-orange" disabled>Request Booking</button>
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="editable-fields" id="total_amount">
-                                                        <td colspan="2">
-                                                            <div class="total_amount total_amount_gray">You won't be charged until the property owner confirms your request</div>
-                                                        </td>
-                                                    </tr>
                                                     @if(false && $data->coupon_value!="")
                                                         <tr>
                                                             <td colspan="2"style="color:green;font-weight: bold"><center> Coupon Code is Applied<b>({{$data->coupon_code}})</b></center></td>
@@ -207,45 +233,6 @@
 
                                 @component('components.funding-source', ['funding_sources' => $funding_sources, 'user' => $traveller])
                                 @endcomponent
-                                <hr>
-                                <h2>Basic Details</h2>
-                                <div class="wrapper center-block">
-                                    <div class="row">
-                                        <div class="control-group cc-first-name col-md-6">
-                                            <label class="control-label" for="recruiter_name">
-                                                Recruiter Name
-                                            </label>
-                                            <input id="recruiter_name" name="recruiter_name" type="text" value="{{$data->recruiter_name ?? ''}}">
-                                        </div>
-                                        <div class="control-group cc-first-name col-md-6">
-                                            <label class="control-label" for="recruiter_email">
-                                                Recruiter Email
-                                            </label>
-                                            <input id="recruiter_email" name="recruiter_email" type="email" value="{{$data->recruiter_email ?? ''}}">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="control-group cc-first-name col-md-4">
-                                            <label class="control-label" for="recruiter_phone_number">
-                                                Recruiter Phone Number
-                                            </label>
-                                            <input class="masked_phone_us" id="recruiter_phone_number" name="recruiter_phone_number" type="text" value="{{$data->recruiter_phone_number ?? ''}}">
-                                        </div>
-                                        <div class="control-group cc-first-name col-md-4">
-                                            <label class="control-label" for="contract_start_date">
-                                                Contract Start Date
-                                            </label>
-                                            <input type="date" id="contract_start_date" name="contract_start_date" min="{{date('Y-m-d')}}">
-                                        </div>
-                                        <div class="control-group cc-first-name col-md-4">
-                                            <label class="control-label" for="contract_end_date">
-                                                Contract End Date
-                                            </label>
-                                            <input type="date" id="contract_end_date" name="contract_end_date" min="{{date('Y-m-d')}}">
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <hr>
                                 <h2>Guest Details</h2>
                                 <div class="wrapper center-block">
@@ -350,6 +337,45 @@
                                     <input type="text" style="display: none;" class="input-text validate" name="other_agency" id="other_agency" value="{{$traveller->other_agency}}" placeholder="Other agency" autocomplete="off">
                                     <div style="display: none;" id="other_agency_cancel" class="add-another" onclick="add_another_agency()" style="cursor: pointer;">Cancel</div>
                                 </div>
+                                <hr>
+                                <h2 style="margin-bottom: 20px;">Basic Details<span style="font-size: 15px; color: #707070; margin-left: 5px"> (Optional)</span></h2>
+                                <div class="wrapper center-block">
+                                    <div class="row">
+                                        <div class="control-group cc-first-name col-md-6">
+                                            <label class="control-label" for="recruiter_name">
+                                                Recruiter Name
+                                            </label>
+                                            <input id="recruiter_name" name="recruiter_name" type="text" value="{{$data->recruiter_name ?? ''}}">
+                                        </div>
+                                        <div class="control-group cc-first-name col-md-6">
+                                            <label class="control-label" for="recruiter_email">
+                                                Recruiter Email
+                                            </label>
+                                            <input id="recruiter_email" name="recruiter_email" type="email" value="{{$data->recruiter_email ?? ''}}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="control-group cc-first-name col-md-4">
+                                            <label class="control-label" for="recruiter_phone_number">
+                                                Recruiter Phone Number
+                                            </label>
+                                            <input class="masked_phone_us" id="recruiter_phone_number" name="recruiter_phone_number" type="text" value="{{$data->recruiter_phone_number ?? ''}}">
+                                        </div>
+                                        <div class="control-group cc-first-name col-md-4">
+                                            <label class="control-label" for="contract_start_date">
+                                                Contract Start Date
+                                            </label>
+                                            <input type="date" id="contract_start_date" name="contract_start_date" min="{{date('Y-m-d')}}">
+                                        </div>
+                                        <div class="control-group cc-first-name col-md-4">
+                                            <label class="control-label" for="contract_end_date">
+                                                Contract End Date
+                                            </label>
+                                            <input type="date" id="contract_end_date" name="contract_end_date" min="{{date('Y-m-d')}}">
+                                        </div>
+                                    </div>
+                                </div>
+
                             </section>
                         </div>
                     </div>

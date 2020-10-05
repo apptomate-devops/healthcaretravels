@@ -241,6 +241,10 @@ class Helper
 
         $total_price = $neat_amount + $booking->cleaning_fee + $booking->security_deposit;
 
+        if (count($all_scheduled_payments) == 1) {
+            $pay_now = $neat_amount + $booking->cleaning_fee + $booking->security_deposit;
+        }
+
         $day_count_label = $months . ' month' . ($months > 1 ? 's' : '');
         if ($partialDayCount) {
             $day_count_label = $day_count_label . ', ' . $partialDayCount . ' day' . ($partialDayCount > 1 ? 's' : '');

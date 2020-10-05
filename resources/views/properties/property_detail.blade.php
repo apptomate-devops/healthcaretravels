@@ -285,7 +285,9 @@
                                                                 <option label="Infant (Under 2)" value="Infant" @if($guest_data && $guest_data->age == 'Infant') selected @endif></option>
                                                             </select>
                                                         </div>
-                                                        <div onclick="add_my_info();" class="btn bg-orange" style="position: absolute; bottom: 0; right: 10px; margin-bottom: 20px; width: auto;">Add my info</div>
+                                                        @if($i == 0)
+                                                            <div onclick="add_my_info();" class="btn bg-orange" style="position: absolute; bottom: 0; right: 10px; margin-bottom: 20px; width: auto;">Add my info</div>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>

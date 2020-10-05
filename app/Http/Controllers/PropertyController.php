@@ -16,6 +16,7 @@ use App\Models\GuestsInformation;
 use App\Models\PropertyBooking;
 use App\Models\BookingPayments;
 use App\Jobs\ProcessAutoCancel;
+use Twilio\TwiML\MessagingResponse;
 
 use Mail;
 use App\Helper\Helper;
@@ -2047,8 +2048,10 @@ class PropertyController extends BaseController
                         ->where('property_booking.status', '=', 2)
                         ->select(
                             'property_booking.is_instant',
-                            DB::raw('DATE_FORMAT(property_booking.start_date, "%M %d, %Y") as start_date'),
-                            DB::raw('DATE_FORMAT(property_booking.end_date, "%M %d, %Y") as end_date'),
+                            'property_booking.start_date',
+                            'property_booking.end_date',
+                            //                            DB::raw('DATE_FORMAT(property_booking.start_date, "%M %d, %Y") as start_date'),
+                            //                            DB::raw('DATE_FORMAT(property_booking.end_date, "%M %d, %Y") as end_date'),
                             'traveller.username',
                         )
                         ->get();
@@ -3035,17 +3038,20 @@ class PropertyController extends BaseController
 
     public function check_in_traveler_based_on_message(Request $request)
     {
+        $response = new MessagingResponse();
         $data = $request->all();
-        if (!isset($data['message']) || !isset($data['phone'])) {
-            return response()->json([
-                'status' => 'FAILED',
-                'message' => 'Message and Phone are required fields.',
-            ]);
+        error_log(json_encode($data));
+        $message = $data['Body'];
+        $phone_number = $data['From'];
+        Logger::info("Twilio webhook executed.");
+        if (!isset($phone_number) || !isset($message)) {
+            Logger::info("FAILED: Message and Phone are required fields.");
+            return $response;
         }
-        if (strtolower(trim($data['message'])) == 'y') {
-            $data['phone'] = str_replace(COUNTRY_CODE, "", $data['phone']);
+        if (strtolower(trim($message)) == 'y') {
+            $phone_number = str_replace(COUNTRY_CODE, "", $phone_number);
             $traveler = DB::table('users')
-                ->where('phone', '=', $data['phone'])
+                ->where('phone', '=', $phone_number)
                 ->where('role_id', '=', ZERO)
                 ->first();
 
@@ -3059,27 +3065,20 @@ class PropertyController extends BaseController
                         $booking->already_checked_in = 1;
                         $booking->save();
                     }
-                    return response()->json([
-                        'status' => 'SUCCESS',
-                        'message' => 'Traveler successfully check-in.',
-                    ]);
+                    Logger::info("SUCCESS: Traveler successfully check-in.");
+                    return $response;
                 } else {
-                    return response()->json([
-                        'status' => 'FAILED',
-                        'message' => 'No booking found.',
-                    ]);
+                    Logger::info("FAILED: No booking found.");
+                    return $response;
                 }
             } else {
-                return response()->json([
-                    'status' => 'FAILED',
-                    'message' => 'No traveler found.',
-                ]);
+                Logger::info("FAILED: No traveler found.");
+                return $response;
             }
         }
-        return response()->json([
-            'status' => 'FAILED',
-            'message' => 'Something went wrong with webhook.',
-        ]);
+        Logger::info("FAILED: Something went wrong with webhook.");
+
+        return $response;
     }
 
     public function my_properties(Request $request)

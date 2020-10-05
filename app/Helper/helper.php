@@ -939,6 +939,9 @@ class Helper
         $booking_id,
         $type
     ) {
+        $check_in = date("m/d/Y", strtotime($check_in));
+        $check_out = date("m/d/Y", strtotime($check_out));
+
         switch ($type) {
             case OWNER_NEW_BOOKING:
                 $message = "Hi {$name}, you received a booking request for {$check_in} - {$check_out} at {$property_name}. Please log into Health Care Travels to approve or deny this request. Your response time is very important!";

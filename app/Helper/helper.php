@@ -943,8 +943,8 @@ class Helper
         $booking_id,
         $type
     ) {
-        $check_in = date("m/d/Y", strtotime($check_in));
-        $check_out = date("m/d/Y", strtotime($check_out));
+        $check_in = date("m-d-Y", strtotime($check_in));
+        $check_out = date("m-d-Y", strtotime($check_out));
 
         switch ($type) {
             case OWNER_NEW_BOOKING:

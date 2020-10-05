@@ -134,6 +134,7 @@ Route::middleware(['LoginCheck'])->group(function () {
         Route::GET('/traveler/favorites', 'PropertyController@favorites');
         Route::get('/traveler/chat/{id}', 'PropertyController@traveller_fire_chat');
         Route::GET('/cancel-booking/{id}', 'PropertyController@cancel_booking');
+        Route::GET('/delete-booking/{id}', 'PropertyController@delete_booking');
 
         // Property
         Route::post('/book-now', 'PropertyController@book_now');

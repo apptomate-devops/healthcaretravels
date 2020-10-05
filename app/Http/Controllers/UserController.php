@@ -236,6 +236,9 @@ class UserController extends BaseController
 
     public function login(Request $request)
     {
+        if (Auth::check()) {
+            return redirect()->intended('/profile');
+        }
         $constants = $this->constants();
 
         $agency = DB::table('agency')

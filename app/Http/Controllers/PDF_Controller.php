@@ -19,6 +19,9 @@ class PDF_Controller extends BaseController
             ->where('property_booking.client_id', CLIENT_ID)
             ->where('property_booking.booking_id', $booking_id)
             ->first();
+        if (empty($data)) {
+            return view('general_error', ['message' => 'Booking invoice  you are looking for does not exists!']);
+        }
         $user_id = $request->session()->get('user_id');
         $is_owner = $user_id == $data->owner_id ? 1 : 0;
         $user_role_id = DB::table('users')

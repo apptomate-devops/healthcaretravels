@@ -171,6 +171,8 @@
                 },
                 titleFormat: 'MMM - YYYY',
                 allDaySlot: false,
+                allDay: false,
+                displayEventTime: false,
                 selectHelper: true,
                 select: function(start, end, allDay) {
                     var check_start=$('#start_date_hidden').val();
@@ -194,7 +196,7 @@
                     }
                     if (title) {
                         // var start_date=$('#start_date_hidden').val();
-                        var end_date=convert(end);
+                        var end_date=convert(end, 1);
                         $('#calendar_blocking_loading').show();
                         var ajax_url = "{{BASE_URL}}"+"block_booking?title="+title+"&start="+start_date+"&end="+end_date+"&pro_id="+pro_id;
                         $.ajax({
@@ -203,7 +205,7 @@
                             success: function(data){
                                 $('#calendar_blocking_loading').hide();
                                 if (data.status === 'SUCCESS' && data.event_id) {
-                                    calendar.fullCalendar('renderEvent', { title, start, end, allDay: allDay, className: 'blocked', id: data.event_id});
+                                    calendar.fullCalendar('renderEvent', { title, start, end: get_end_date(start_date, end_date), allDay, className: 'blocked', id: data.event_id});
                                 } else {
                                     alert('Error while blocking date')
                                 }
@@ -228,9 +230,9 @@
                 events: [
                         @foreach($booked_events as $event)
                     {
-                        title: "{{$property_details->title}} booked by {{$event->username}} from {{$event->start_date}} to {{$event->end_date}}",
+                        title: "{{$property_details->title}} booked by {{$event->username}} from {{date("F d, Y", strtotime($event->start_date))}} to {{date("F d, Y", strtotime($event->end_date))}}",
                         start: "{{$event->start_date}}",
-                        end: "{{$event->end_date}}",
+                        end: get_end_date("{{$event->start_date}}", "{{$event->end_date}}"),
                         className: 'booked',
                     },
                         @endforeach
@@ -238,7 +240,7 @@
                     {
                         title: "{{$eve->booked_on}}",
                         start: "{{$eve->start_date}}",
-                        end: "{{$eve->end_date}}",
+                        end: get_end_date("{{$eve->start_date}}", "{{$eve->end_date}}"),
                         className: 'blocked',
                         id: "{{$eve->id}}"
                     },
@@ -299,11 +301,14 @@
             $("#confirmationModal").on("hidden.bs.modal", function () {
                 $('#btnDeleteEvent').data();
             });
-
         });
 
-        function convert(dateObj) {
-            return new Date(dateObj).toISOString().split('T')[0];
+        function convert(dateObj, day = 0) {
+            return dateObj.subtract(day, "days").format('YYYY-MM-DD'); // full day calendar end date display issue
+        }
+        function get_end_date(start_date, end_date) {
+            if(start_date == end_date) { return end_date; }
+            return moment(end_date, "YYYY-MM_DD").add(1, 'days'); // full day calendar end date display issue
         }
 
     </script>

@@ -82,8 +82,10 @@ class OwnerController extends BaseController
                 ->where('property_booking.property_id', '=', $id)
                 ->where('property_booking.status', '=', 2)
                 ->select(
-                    DB::raw('DATE_FORMAT(property_booking.start_date, "%M %d, %Y") as start_date'),
-                    DB::raw('DATE_FORMAT(property_booking.end_date, "%M %d, %Y") as end_date'),
+                    'property_booking.start_date',
+                    'property_booking.end_date',
+                    //                    DB::raw('DATE_FORMAT(property_booking.start_date, "%M %d, %Y") as start_date'),
+                    //                    DB::raw('DATE_FORMAT(property_booking.end_date, "%M %d, %Y") as end_date'),
                     'traveller.username',
                 )
                 ->get();
@@ -91,9 +93,12 @@ class OwnerController extends BaseController
                 ->where('client_id', '=', CLIENT_ID)
                 ->where('property_id', '=', $id)
                 ->select(
+                    'property_blocking.start_date',
+                    'property_blocking.end_date',
+                    'property_blocking.booked_on',
                     //                    'property_booking.is_instant',
-                    DB::raw('DATE_FORMAT(property_blocking.start_date, "%M %d, %Y") as start_date'),
-                    DB::raw('DATE_FORMAT(property_blocking.end_date, "%M %d, %Y") as end_date'),
+                    //                    DB::raw('DATE_FORMAT(property_blocking.start_date, "%M %d, %Y") as start_date'),
+                    //                    DB::raw('DATE_FORMAT(property_blocking.end_date, "%M %d, %Y") as end_date'),
                 )
                 ->get();
 

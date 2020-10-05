@@ -87,17 +87,17 @@
                     // place the added events
                         @foreach($booked_events as $event)
                     {
-                        title: "{{$property_title}} booked by {{$event->username}} from {{$event->start_date}} to {{$event->end_date}}",
+                        title: "{{$property_title}} booked by {{$event->username}} from {{date("F d, Y", strtotime($event->start_date))}} to {{date("F d, Y", strtotime($event->end_date))}}",
                         start: "{{$event->start_date}}",
-                        end: "{{$event->end_date}}",
+                        end: get_end_date("{{$event->start_date}}", "{{$event->end_date}}"),
                         className: 'booked',
                     },
                         @endforeach
                         @foreach($block_events as $eve)
                     {
-                        title: "Manual Dates - Property Not Available",
+                        title: "{{$eve->booked_on}}",
                         start: "{{$eve->start_date}}",
-                        end: "{{$eve->end_date}}",
+                        end: get_end_date("{{$eve->start_date}}", "{{$eve->end_date}}"),
                         className: 'blocked',
                     },
                         @endforeach
@@ -141,11 +141,9 @@
 
         });
 
-        function convert(str) {
-            var date = new Date(str),
-                mnth = ("0" + (date.getMonth()+1)).slice(-2),
-                day  = ("0" + date.getDate()).slice(-2);
-            return [ date.getFullYear(), mnth, day ].join("-");
+        function get_end_date(start_date, end_date) {
+            if(start_date == end_date) { return end_date; }
+            return moment(end_date, "YYYY-MM_DD").add(1, 'days'); // full day calendar end date display issue
         }
 
     </script>

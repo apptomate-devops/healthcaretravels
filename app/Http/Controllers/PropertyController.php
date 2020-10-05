@@ -2048,8 +2048,10 @@ class PropertyController extends BaseController
                         ->where('property_booking.status', '=', 2)
                         ->select(
                             'property_booking.is_instant',
-                            DB::raw('DATE_FORMAT(property_booking.start_date, "%M %d, %Y") as start_date'),
-                            DB::raw('DATE_FORMAT(property_booking.end_date, "%M %d, %Y") as end_date'),
+                            'property_booking.start_date',
+                            'property_booking.end_date',
+                            //                            DB::raw('DATE_FORMAT(property_booking.start_date, "%M %d, %Y") as start_date'),
+                            //                            DB::raw('DATE_FORMAT(property_booking.end_date, "%M %d, %Y") as end_date'),
                             'traveller.username',
                         )
                         ->get();

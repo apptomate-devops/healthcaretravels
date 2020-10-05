@@ -11,7 +11,7 @@ use App\Models\Users;
 
 class PDF_Controller extends BaseController
 {
-    public function invoice($booking_id, $is_owner, Request $request)
+    public function invoice($booking_id, Request $request)
     {
         $data = DB::table('property_booking')
             ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
@@ -20,6 +20,7 @@ class PDF_Controller extends BaseController
             ->where('property_booking.booking_id', $booking_id)
             ->first();
         $user_id = $request->session()->get('user_id');
+        $is_owner = $user_id == $data->owner_id ? 1 : 0;
         $user_role_id = DB::table('users')
             ->where('id', '=', $user_id)
             ->select('role_id')

@@ -177,7 +177,7 @@ Route::middleware(['LoginCheck'])->group(function () {
 
         // Payment and Invoices
         Route::GET('/payment-options', 'PaymentController@get_payment_options');
-        Route::GET('/invoice/{id}/{is_owner}', 'PDF_Controller@invoice');
+        Route::GET('/invoice/{id}', 'PDF_Controller@invoice');
     });
 });
 

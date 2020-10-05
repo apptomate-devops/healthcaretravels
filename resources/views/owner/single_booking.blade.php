@@ -68,7 +68,7 @@
                 </table>
                 <div>The selected account will be used to process any future deposits for this booking.</div>
                 <div class="text-right">
-                    <a target="_blank" href="{{BASE_URL}}invoice/{{$data->booking_id}}/1" class="margin-top-40 button border">Print Invoice</a>
+                    <a target="_blank" href="{{BASE_URL}}invoice/{{$data->booking_id}}" class="margin-top-40 button border">Print Invoice</a>
                 </div>
 
                 @if(count($guest_info) > 0)

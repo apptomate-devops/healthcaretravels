@@ -29,62 +29,87 @@
                             <th colspan="2">Action</th>
                         </tr>
 
-                    @foreach($bookings as $booking)
-                        <!-- Item starts -->
-                            <tr class="card">
+                    @if(count($bookings) > 0)
+                        @foreach($bookings as $booking)
+                            <!-- Item starts -->
+                                <tr class="card">
 
-                                <td class="title-container">
-                                    <img style="margin-left: 5%;" src="{{$booking->image_url}}" alt="">
-                                    <div class="title">
-                                        <h4><a href="/property/{{$booking->property_id}}" target="_blank">{{$booking->title}}</a></h4>
-                                        <div><b>Owner</b><a href="/owner-profile/{{$booking->owner_id}}"> {{$booking->owner_name}} </a></div>
-                                        <div><b>Check-in</b> {{$booking->start_date}}</div>
-                                        <div><b>Check-out</b> {{$booking->end_date}}</div>
-                                        <div><b>Booking ID</b><a href="/owner/reservations/{{$booking->booking_id}}"> {{$booking->booking_id}} </a></div>
-                                    </div>
-                                </td>
-                                <td class="expire-date">
+                                    <td class="title-container">
+                                        <img style="margin-left: 5%;" src="{{$booking->image_url}}" alt="">
+                                        <div class="title">
+                                            <h4><a href="/property/{{$booking->property_id}}" target="_blank">{{$booking->title}}</a></h4>
+                                            <div><b>Owner</b><a href="/owner-profile/{{$booking->owner_id}}"> {{$booking->owner_name}} </a></div>
+                                            <div><b>Check-in</b> {{$booking->start_date}}</div>
+                                            <div><b>Check-out</b> {{$booking->end_date}}</div>
+                                            <div><b>Booking ID</b><a href="/owner/reservations/{{$booking->booking_id}}"> {{$booking->booking_id}} </a></div>
+                                        </div>
+                                    </td>
+                                    <td class="expire-date">
                                 <span>
                                     {{$booking->bookStatus}}
                                     @if($booking->bookStatus == 'Denied') <span style="font-size: 12px; color: #e78016">{{$booking->deny_reason ?? ''}}</span> @endif
                                 </span>
-                                </td>
-                                <td colspan="2" class="action" style="width: 1%">
-                                    <button class="button" onclick="document.location.href='{{BASE_URL}}owner/reservations/{{$booking->booking_id}}';" style="min-width: 200px;">
-                                        View Details
-                                    </button>
-                                    {{--                                    @if($booking->bookStatus == 5 || $booking->bookStatus == 6)--}}
-                                    {{--                                        <button class="button" onclick="document.location.href='{{BASE_URL}}traveller_ratings/{{$booking->booking_id}}';" style="min-width: 170px;">--}}
-                                    {{--                                            Rate your stay--}}
-                                    {{--                                        </button><br><br><br>--}}
-                                    {{--                                    @endif--}}
-                                    {{--                                    @if($booking->bookStatus == 6)--}}
-                                    {{--                                        <button class="button" style="min-width: 170px;">--}}
-                                    {{--                                            Owner rated your Stay--}}
-                                    {{--                                        </button><br><br><br>--}}
-                                    {{--                                    @endif--}}
+                                    </td>
+                                    <td colspan="2" class="action" style="width: 1%">
+                                        <button class="button" onclick="document.location.href='{{BASE_URL}}owner/reservations/{{$booking->booking_id}}';" style="min-width: 200px;">
+                                            View Details
+                                        </button>
+                                        @if($booking->bookStatus < 2)
+                                            <div class="link" onclick="cancel_booking('{{$booking->booking_id}}')" style="margin-top: 10px; text-align: center">
+                                                Cancel booking
+                                            </div>
+                                        @endif
 
-                                    {{--                                    @if($booking->bookStatus == 7)--}}
-                                    {{--                                        <button class="button" style="min-width: 170px;">--}}
-                                    {{--                                            You rated this booking--}}
-                                    {{--                                        </button><br><br><br>--}}
-                                    {{--                                    @endif--}}
-
-
-                                    @if($booking->bookStatus < 2)
-                                        <div class="link" onclick="cancel_booking('{{$booking->booking_id}}')" style="margin-top: 10px; text-align: center">
-                                            Cancel booking
-                                        </div>
-                                    @endif
-
-                                </td>
-                            </tr>
-                            <!-- Item ends -->
-                        @endforeach
+                                    </td>
+                                </tr>
+                                <!-- Item ends -->
+                            @endforeach
+                        @else
+                            <td>No booking requested</td>
+                        @endif
 
 
                     </table>
                 </div>
+
+                @if(count($incomplete_bookings) > 0)
+                    <div style="overflow-x:auto;">
+                        <table class="manage-table responsive-table">
+                            <tr>
+                                <th><i class="fa fa-file-text"></i>Incomplete Bookings</th>
+                                <th colspan="2">Action</th>
+                            </tr>
+
+                        @foreach($incomplete_bookings as $booking)
+                            <!-- Item starts -->
+                                <tr class="card">
+
+                                    <td class="title-container">
+                                        <img style="margin-left: 5%;" src="{{$booking->image_url}}" alt="">
+                                        <div class="title">
+                                            <h4><a href="/property/{{$booking->property_id}}" target="_blank">{{$booking->title}}</a></h4>
+                                            <div><b>Owner</b><a href="/owner-profile/{{$booking->owner_id}}"> {{$booking->owner_name}} </a></div>
+                                            <div><b>Check-in</b> {{$booking->start_date}}</div>
+                                            <div><b>Check-out</b> {{$booking->end_date}}</div>
+                                            <div><b>Booking ID</b><a href="/owner/reservations/{{$booking->booking_id}}"> {{$booking->booking_id}} </a></div>
+                                        </div>
+                                    </td>
+                                    <td colspan="2" class="action" style="width: 1%">
+                                        <button class="button" onclick="document.location.href='{{BASE_URL}}booking_detail/{{$booking->booking_id}}';" style="min-width: 200px;">
+                                            Complete Booking
+                                        </button>
+                                        <div class="link" onclick="delete_booking('{{$booking->booking_id}}')" style="margin-top: 10px; text-align: center">
+                                            Delete booking
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Item ends -->
+                            @endforeach
+
+
+                        </table>
+                    </div>
+                @endif
             </div>
 
         </div>
@@ -94,8 +119,7 @@
 
 @section('custom_script')
     <script type="text/javascript">
-        function cancel_booking(id)
-        {
+        function cancel_booking(id) {
             var r = confirm("Are you sure to cancel Booking..");
             if (r == true) {
                 var url = '{{BASE_URL}}cancel-booking/'+id;
@@ -114,6 +138,23 @@
                     }
                 });
             }
+        }
+        function delete_booking(id) {
+            var url = '{{BASE_URL}}delete-booking/'+id;
+            $.ajax({
+                "type": "get",
+                "url" : url,
+                success: function(data) {
+                    if(data.status=="SUCCESS"){
+                        window.location.reload();
+                    } else {
+                        console.log('Error Updating cancel status for booking');
+                    }
+                },
+                error: function (e) {
+                    console.log('Error Updating cancel status for booking');
+                }
+            });
         }
     </script>
 @endsection

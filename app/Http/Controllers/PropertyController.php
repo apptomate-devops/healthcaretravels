@@ -183,7 +183,7 @@ class PropertyController extends BaseController
             'traveller_id = "' .
                 $user_id .
                 ($booking_id ? '" AND booking_id != "' . $booking_id : '') .
-                '" AND status != 8 AND ((start_date BETWEEN "' .
+                '" AND status NOT IN (4, 8) AND ((start_date BETWEEN "' .
                 $check_in .
                 '" AND "' .
                 $check_out .
@@ -359,6 +359,31 @@ class PropertyController extends BaseController
                 ->where('booking_id', $id)
                 ->update(['status' => 8]);
             return response()->json(['status' => 'SUCCESS', 'message' => 'Booking Cancelled successfully!']);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'FAILED', 'message' => $e->getMessage()]);
+        }
+    }
+
+    public function delete_booking(Request $request, $id)
+    {
+        try {
+            $user_id = $request->session()->get('user_id');
+            if (!$user_id) {
+                return redirect()->intended('login');
+            }
+            $traveller = DB::table('property_booking')
+                ->where('booking_id', $id)
+                ->select('traveller_id')
+                ->first();
+
+            if ($user_id != $traveller->traveller_id) {
+                // Do not allow other user to cancel booking
+                return response()->json(['status' => 'FAILED', 'message' => 'Invalid Access']);
+            }
+            DB::table('property_booking')
+                ->where('booking_id', $id)
+                ->delete();
+            return response()->json(['status' => 'SUCCESS', 'message' => 'Booking Deleted successfully!']);
         } catch (\Exception $e) {
             return response()->json(['status' => 'FAILED', 'message' => $e->getMessage()]);
         }
@@ -846,11 +871,14 @@ class PropertyController extends BaseController
     {
         $user_id = $request->session()->get('user_id');
         $data = DB::select(
-            "SELECT A.*,A.status as bookStatus,B.* FROM `property_booking` A,`property_list` B WHERE A.property_id = B.id AND A.funding_source != '' AND A.traveller_id = $user_id",
+            "SELECT A.*,A.status as bookStatus,B.* FROM `property_booking` A,`property_list` B WHERE A.property_id = B.id AND A.traveller_id = $user_id",
         );
+
         DB::table('property_booking')
             ->where('property_booking.traveller_id', $request->session()->get('user_id'))
             ->update(['traveler_notify' => 0]);
+        $bookings = [];
+        $incomplete_bookings = [];
         foreach ($data as $datum) {
             $traveller = DB::select(
                 "SELECT username as name,id FROM users WHERE client_id = CLIENT_ID AND id = $datum->owner_id LIMIT 1",
@@ -865,9 +893,14 @@ class PropertyController extends BaseController
             $datum->owner_id = $traveller[0]->id;
             $datum->start_date = Carbon::parse($datum->start_date)->format('m/d/Y');
             $datum->end_date = Carbon::parse($datum->end_date)->format('m/d/Y');
+            if ($datum->bookStatus == 0) {
+                array_push($incomplete_bookings, $datum);
+            } else {
+                array_push($bookings, $datum);
+            }
             $datum->bookStatus = Helper::get_traveller_status($datum->bookStatus, $datum->start_date, $datum->end_date);
         }
-        return view('owner.reservations', ['bookings' => $data]);
+        return view('owner.reservations', ['bookings' => $bookings, 'incomplete_bookings' => $incomplete_bookings]);
     }
 
     public function search_property(Request $request)

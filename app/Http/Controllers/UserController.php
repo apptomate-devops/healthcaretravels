@@ -434,7 +434,10 @@ class UserController extends BaseController
                 $request->session()->forget('request_chat_property_id');
                 return Helper::start_chat($request_chat_property_id, $request);
             }
-            return redirect($url)->with('phone', $check->phone);
+
+            return redirect()
+                ->intended($url)
+                ->with('phone', $check->phone);
         }
     }
 
@@ -832,6 +835,9 @@ class UserController extends BaseController
             $request->session()->put('profile_image', $userProfileImage);
             $request->session()->put('user_id_v', $check->id);
             $request->session()->put('phone_v', $check->phone);
+            if ($check->is_verified) {
+                return redirect()->intended($url);
+            }
             return redirect($url);
         }
     }

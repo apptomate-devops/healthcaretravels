@@ -386,7 +386,7 @@
                 </form>
             </div>
         </div>
-        <div id="request_bookig_loading" class="loading style-2" style="display: none;"><div class="loading-wheel"></div></div>
+        <div id="request_booking_loading" class="loading style-2" style="display: none;"><div class="loading-wheel"></div></div>
     </div>
 
     <script>
@@ -497,7 +497,7 @@
         function validate_submit() {
             $('#name_of_agency').val(agencyAutoComplete.value());
             if($('#other_agency').val() || (agencyAutoComplete.value().length && agencyAutoComplete.value().length)) {
-                $('#request_bookig_loading').show();
+                $('#request_booking_loading').show();
                 return true;
             }
             $('#agency_error').show();

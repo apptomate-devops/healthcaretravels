@@ -108,6 +108,7 @@
         </div>
 
     </div>
+    <div id="calendar_blocking_loading" class="loading style-2" style="display: none;"><div class="loading-wheel"></div></div>
 
     </div>
     </div>
@@ -194,11 +195,13 @@
                     if (title) {
                         // var start_date=$('#start_date_hidden').val();
                         var end_date=convert(end);
+                        $('#calendar_blocking_loading').show();
                         var ajax_url = "{{BASE_URL}}"+"block_booking?title="+title+"&start="+start_date+"&end="+end_date+"&pro_id="+pro_id;
                         $.ajax({
                             url:ajax_url,
                             type:"GET",
                             success: function(data){
+                                $('#calendar_blocking_loading').hide();
                                 if (data.status === 'SUCCESS' && data.event_id) {
                                     calendar.fullCalendar('renderEvent', { title, start, end, allDay: allDay, className: 'blocked', id: data.event_id});
                                 } else {
@@ -206,6 +209,7 @@
                                 }
                             },
                             error: function (error) {
+                                $('#calendar_blocking_loading').hide();
                                 console.log('Error adding block dates: ', error);
                             }
                         });
@@ -273,10 +277,12 @@
                     var pro_id = $("#property_id").val();
 
                     var ajax_url = `{{BASE_URL}}delete_block_booking?id=${btnData.eventId}&property_id=${pro_id}`;
+                    $('#calendar_blocking_loading').show();
                     $.ajax({
                         url:ajax_url,
                         type:"GET",
                         success: function(data){
+                            $('#calendar_blocking_loading').hide();
                             if (data.status === 'SUCCESS') {
                                 calendar.fullCalendar('removeEvents', btnData.eventId);
                             } else {
@@ -284,6 +290,7 @@
                             }
                         },
                         error: function (error) {
+                            $('#calendar_blocking_loading').hide();
                             console.log('Error adding block dates: ', error);
                         }
                     });
@@ -323,6 +330,7 @@
                 return;
             }
             var ajax_url = "{{BASE_URL}}"+"add-calender/"+property_id+"?ical_name="+ical_name+"&ical_url="+ical_url;
+            $('#calendar_blocking_loading').show();
             $.ajax({
                 url:ajax_url,
                 type:"get",
@@ -330,6 +338,7 @@
                     show_snackbar("Loading...");
                 },
                 success: function(data){
+                    $('#calendar_blocking_loading').hide();
                     if(data.status === 'SUCCESS') {
                         $("#ical_name").val("");
                         $("#ical_url").val("");
@@ -340,6 +349,7 @@
                     }
                 },
                 error: function(){
+                    $('#calendar_blocking_loading').hide();
                     show_alert_message();
                 }
             });

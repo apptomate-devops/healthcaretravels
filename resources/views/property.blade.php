@@ -162,7 +162,7 @@
                             <font style="vertical-align: inherit;">About Home</font>
                         </font>
                     </h3>
-                    <div class="show-more" id="head_scroll">
+                    <div class="show-more visible" id="head_scroll">
 
                         <p>
                             <font style="vertical-align: inherit;">
@@ -1107,6 +1107,13 @@
                 $('input[id="booking_date_range_picker"][name="check_in"]').val();
                 $('input[id="booking_date_range_picker"][name="check_out"]').val();
             });
+
+            var aboutHeight = $('#head_scroll').height();
+            if(aboutHeight > 240) {
+                $(".show-more").removeClass("visible");
+            } else {
+                $('#show_less').hide();
+            }
         });
         function get_price() {
             var id = "{{$property_id}}";
@@ -1303,7 +1310,7 @@
 
                 var isFixed = $(".tempClass").css("position") === "fixed";
                 if($(window).scrollTop() > boxPosition && !isFixed){
-                    $(".tempClass").css({position:"fixed", top: "5px" ,bottom:'55px', left:"840px"});
+                    $(".tempClass").css({position:"fixed", top: "5px" ,bottom:'55px', left:"900px"});
                     $("#check_in_div").addClass('col-md-6');
                     $("#check_out_div").addClass('col-md-6');
                 }else if($(window).scrollTop() < boxPosition){

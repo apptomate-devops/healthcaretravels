@@ -49,7 +49,7 @@
                                                 <td>{{$booking->cancelled_by == 'Admin' ? 'Admin' : $booking->requester_first_name . ' ' . $booking->requester_last_name}}</td>
                                                 <td>{{$booking->cancellation_requested == 3 ? 'In Progress' : ($booking->cancellation_requested == 2 ? 'Resolved' : 'Pending')}}</td>
                                                 <td>
-                                                    <a href="{{url('admin/cancellation_requests/')}}/{{$booking->booking_id}}">
+                                                    <a href="{{url('admin/bookings/')}}/{{$booking->id}}">
                                                         <button class="btn btn-primary btn-sm" style="float: right;">
                                                             View Details
                                                         </button>

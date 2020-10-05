@@ -241,6 +241,10 @@ class Helper
 
         $total_price = $neat_amount + $booking->cleaning_fee + $booking->security_deposit;
 
+        if (count($all_scheduled_payments) == 1) {
+            $pay_now = $total_price;
+        }
+
         $day_count_label = $months . ' month' . ($months > 1 ? 's' : '');
         if ($partialDayCount) {
             $day_count_label = $day_count_label . ', ' . $partialDayCount . ' day' . ($partialDayCount > 1 ? 's' : '');
@@ -939,8 +943,8 @@ class Helper
         $booking_id,
         $type
     ) {
-        $check_in = date("m/d/Y", strtotime($check_in));
-        $check_out = date("m/d/Y", strtotime($check_out));
+        $check_in = date("m-d-Y", strtotime($check_in));
+        $check_out = date("m-d-Y", strtotime($check_out));
 
         switch ($type) {
             case OWNER_NEW_BOOKING:

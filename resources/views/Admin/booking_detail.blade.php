@@ -21,10 +21,25 @@
                 </ul>
             </div>
         </div>
-        <div class="card-content text-center" style="padding-bottom:10px;">
-            Property Title: {{$booking->property_title}}<br />
-            Owner: {{$booking->owner_first_name}} {{$booking->owner_last_name}}<br />
-            Traveller: {{$booking->traveller_first_name}} {{$booking->traveller_last_name}}<br />
+        <div class="card-content card-body-padding">
+            <h4 style="font-weight: bold;">Property: <span>{{$property->title}}</span></h4>
+            <div class="details">Booking ID: <span>{{$booking->booking_id}}</span></div>
+            <div class="details">Cancellation Policy: <a href="{{BASE_URL}}cancellationpolicy" class="cancel-policy-link" target="_blank">{{$property->cancellation_policy}}</a></div>
+            <br>
+            <div class="details"><b>Owner</b></div>
+            <div class="details">Name: <span>{{$owner->first_name . ' ' . $owner->last_name}}</span></div>
+            <div class="details">Username: <span>{{$owner->username}}</span></div>
+            <div class="details">Email: <span>{{$owner->email}}</span></div>
+            <div class="details"><b>Traveler</b></div>
+            <div class="details">Name: <span>{{$traveler->first_name . ' ' . $traveler->last_name}}</span></div>
+            <div class="details">Username: <span>{{$traveler->username}}</span></div>
+            <div class="details">Email: <span>{{$traveler->email}}</span></div>
+            <br>
+            <div class="details"><b>Submitted By: </b><span>{{$cancelled_by}}</span></div>
+            <div class="details"><b>Cancellation Status: </b><span>{{$booking->cancellation_requested == 3 ? 'In Progress' : ($booking->cancellation_requested == 2 ? 'Completed' : 'Pending') }}</span></div>
+            <div class="details"><b>Cancellation Reason: </b><span>{{$booking->cancellation_reason}}</span></div>
+            <div class="details"><b>Explanation: </b><span>{{$booking->cancellation_explanation}}</span></div>
+            <div class="details"><b>Has the traveler checked in to this property?: </b><span>{{$booking->already_checked_in ? 'Yes' : 'No'}}</span></div>
             Start Date: {{date('m-d-Y',strtotime($booking->start_date))}}<br />
             End Date: {{date('m-d-Y',strtotime($booking->end_date))}}<br />
             Status: @if($booking->status == 1)
@@ -33,6 +48,8 @@
                 Approved
             @elseif($booking->status == 3)
                 Completed
+            @elseif($booking->status == 4)
+                Denied
             @else
                 Canceled
             @endif<br />
@@ -51,7 +68,7 @@
                 </ul>
             </div>
         </div>
-        <div class="card-content px-25" style="padding-bottom:10px;">
+        <div class="card-content card-body-padding">
             @if($booking->cancellation_requested == 2)
                 <h5><b>Cancellation is completed for this booking</b></h5>
             @elseif($booking->cancellation_requested == 3)
@@ -84,7 +101,7 @@
                         <label for="refund_amount">Enter amount to be refunded:</label>
                         <input type="number" class="form-control col-1" id="refund_amount" name="refund_amount" placeholder="0" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Cancel Booking</button>
+                    <button type="submit" class="btn btn-primary btn-block">Process refund and cancel Booking</button>
                     @if(Session::has('success_cancel_booking'))
                         @if (Session::has('successMessage'))
                             <div class="mt-10 alert alert-success" role="alert" autofocus>

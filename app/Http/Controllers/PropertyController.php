@@ -1213,7 +1213,7 @@ class PropertyController extends BaseController
             if (!$booking_details) {
                 return view('general_error', ['message' => 'We can’t find the property you’re looking for.']);
             }
-            if ($booking_details && $booking_details->status != 1) {
+            if ($booking_details && !in_array($booking_details->status, [0, 1])) {
                 return view('general_error', ['message' => 'You can not edit booking now.']);
             }
             $user_id = $request->session()->get('user_id');

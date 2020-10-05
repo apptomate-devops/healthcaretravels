@@ -281,11 +281,11 @@ class Helper
         return 'Pending Stay';
     }
 
-    public static function get_payment_status($payment)
+    public static function get_payment_status($payment, $fromAdmin = false)
     {
         $status = $payment['status'];
         $is_owner = $payment['is_owner'];
-        if ($is_owner) {
+        if ($is_owner && !$fromAdmin) {
             $dd = Carbon::parse($payment['due_date']);
             if (now()->gt($dd) && $status < PAYMENT_INIT) {
                 return 'Processing';

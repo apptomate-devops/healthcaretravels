@@ -50,11 +50,11 @@ class BookingController extends BaseController
         } else {
             $cancelled_by = $traveler->first_name . ' ' . $traveler->last_name;
         }
-        $booking_transactions = BookingPayments::where('booking_row_id', $request->id)->get();
+        $payments = BookingPayments::where('booking_row_id', $request->id)->get();
 
         return view(
             'Admin.booking_detail',
-            compact('booking', 'booking_transactions', 'owner', 'traveler', 'property', 'cancelled_by'),
+            compact('booking', 'payments', 'owner', 'traveler', 'property', 'cancelled_by'),
         );
     }
 

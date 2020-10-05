@@ -207,66 +207,50 @@
                             <td>ID</td>
                             <td>Account</td>
                             <td>Payment Cycle</td>
+                            <td>Due Date</td>
+                            <td>Covering Range</td>
                             <td>Service Tax</td>
-                            <td>Partial Days</td>
-                            <td>Booking Row ID</td>
-                            <td>Booking ID</td>
                             <td>Cleaning Fee</td>
                             <td>Security Deposit</td>
                             <td>Monthly Rate</td>
                             <td>Total Amount</td>
-                            <td>Due Date</td>
-                            <td>Is Processed</td>
+                            <td>Status</td>
                             <td>Processed Time</td>
                             <td>Confirmed Time</td>
                             <td>Failed Time</td>
                             <td>Failed Reason</td>
                             <td>Transfer ID</td>
-                            <td>Created At</td>
-                            <td>Updated At</td>
-                            <td>Is Owner</td>
-                            <td>Job ID</td>
                             <td>Transfer URL</td>
-                            <td>Is Cleared</td>
-                            <td>Is Partial Days</td>
-                            <td>Covering Range</td>
+                            <td>Partial Days</td>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($booking_transactions as $booking_transaction)
+                        @foreach ($payments as $payment)
                             <tr>
-                                <td>{{$booking_transaction->id}}</td>
+                                <td>{{$payment->id}}</td>
                                 <td>
-                                    @if($booking_transaction->is_owner == 0)
+                                    @if($payment->is_owner == 0)
                                         Traveler
                                     @else
                                         Owner
                                     @endif
                                 </td>
-                                <td>{{$booking_transaction->payment_cycle}}</td>
-                                <td>{{$booking_transaction->service_tax}}</td>
-                                <td>{{$booking_transaction->partial_days}}</td>
-                                <td>{{$booking_transaction->booking_row_id}}</td>
-                                <td>{{$booking_transaction->booking_id}}</td>
-                                <td>{{$booking_transaction->cleaning_fee}}</td>
-                                <td>{{$booking_transaction->security_deposit}}</td>
-                                <td>{{$booking_transaction->monthly_rate}}</td>
-                                <td>{{$booking_transaction->total_amount}}</td>
-                                <td>{{$booking_transaction->due_date}}</td>
-                                <td>{{$booking_transaction->is_processed}}</td>
-                                <td>{{$booking_transaction->processed_time}}</td>
-                                <td>{{$booking_transaction->confirmed_time}}</td>
-                                <td>{{$booking_transaction->failed_time}}</td>
-                                <td>{{$booking_transaction->failed_reason}}</td>
-                                <td>{{$booking_transaction->transfer_id}}</td>
-                                <td>{{$booking_transaction->created_at}}</td>
-                                <td>{{$booking_transaction->updated_at}}</td>
-                                <td>{{$booking_transaction->is_owner}}</td>
-                                <td>{{$booking_transaction->job_id}}</td>
-                                <td>{{$booking_transaction->transfer_url}}</td>
-                                <td>{{$booking_transaction->is_cleared}}</td>
-                                <td>{{$booking_transaction->is_partial_days}}</td>
-                                <td>{{$booking_transaction->covering_range}}</td>
+                                <td>{{$payment->payment_cycle}}</td>
+                                <td>{{$payment->due_date}}</td>
+                                <td>{{$payment->covering_range}}</td>
+                                <td>{{$payment->service_tax}}</td>
+                                <td>{{$payment->cleaning_fee}}</td>
+                                <td>{{$payment->security_deposit}}</td>
+                                <td>{{$payment->monthly_rate}}</td>
+                                <td>{{$payment->total_amount}}</td>
+                                <td>{{Helper::get_payment_status($payment, true)}}</td>
+                                <td>{{$payment->processed_time}}</td>
+                                <td>{{$payment->confirmed_time}}</td>
+                                <td>{{$payment->failed_time}}</td>
+                                <td>{{$payment->failed_reason}}</td>
+                                <td>{{$payment->transfer_id}}</td>
+                                <td>{{$payment->transfer_url}}</td>
+                                <td>{{$payment->is_partial_days}}</td>
                             </tr>
                         @endforeach
                         </tbody>

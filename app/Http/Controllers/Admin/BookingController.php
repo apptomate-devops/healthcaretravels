@@ -58,6 +58,21 @@ class BookingController extends BaseController
         );
     }
 
+    public function pause_auto_deposit($id, Request $request)
+    {
+        $id = $request->id;
+        $booking = PropertyBooking::find($id);
+        if (empty($booking)) {
+            return back()->with([('success')->false, 'errorMessage' => 'No such booking exists!']);
+        }
+        $booking->should_auto_deposit = 0;
+        $booking->save();
+        return back()->with([
+            'success' => true,
+            'successMessage' => 'Auto handling of Security deposit is turned off for this booking',
+        ]);
+    }
+
     public function settle_deposit(Request $request)
     {
         $id = $request->id;

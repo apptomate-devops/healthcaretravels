@@ -134,6 +134,9 @@
         </div>
         <div class="card-content px-25" style="padding-bottom:10px;">
             <h6 for="">Deposit Amount: {{$booking->security_deposit}}<br /></h6>
+            <div class="mt-10 alert alert-primary" role="alert">
+                Auto handling of Security deposit is turned @if ($booking->should_auto_deposit) <b>on</b> @else <b>off</b> @endif for this booking
+            </div>
             @if ($booking->is_deposit_handled)
                 <div class="mt-10 alert alert-success" role="alert">
                     Security deposit was settled as follows:
@@ -164,6 +167,8 @@
                         <input type="text" class="form-control col-4" id="owner_remarks" name="owner_remarks" value="{{$booking->owner_remarks}}" placeholder="Owner Remarks" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Process Deposit</button>
+                    <br />
+                    <button id="pause-auto-deposit" type="button" class="mt-10 btn btn-primary" @if($booking->should_auto_deposit == 0) disabled @endif>Pause Auto Deposit</button>
                     @if(Session::has('success'))
                         @if (Session::has('successMessage'))
                             <div class="mt-10 alert alert-success" role="alert" autofocus>
@@ -307,6 +312,11 @@
         $('#checked_in_yes,#checked_in_no').change(function(){
             $("input[type=checkbox][name='checked_in']").prop('checked',false);
             $(this).prop('checked',true);
+        });
+        $('#pause-auto-deposit').click(function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            window.location.href = '/admin/pause-auto-deposit/{{$booking->id}}';
         });
     </script>
 @endsection

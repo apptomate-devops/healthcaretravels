@@ -155,7 +155,7 @@
                                                             </td>
                                                         </tr>
                                                     @endif
-                                                    @if($data->bookingStatus == 1)
+                                                    @if(in_array($data->bookingStatus, [0, 1]))
                                                         @if(Session::get('user_id'))
                                                             <tr class="editable-fields">
                                                                 <td colspan="2">

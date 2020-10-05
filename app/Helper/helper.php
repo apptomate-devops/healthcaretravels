@@ -17,6 +17,7 @@ class Helper
 {
     public static function setConstantsHelper()
     {
+        Helper::reloadEnv();
         if (!defined('GENERAL_MAIL')) {
             Helper::set_settings_constants();
         }

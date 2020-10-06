@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
 use App\Models\PropertyBooking;
 use App\Models\BookingPayments;
+use App\Services\Logger;
 
 use DB;
 use Helper;
@@ -37,6 +38,18 @@ class BookingController extends BaseController
         return view('Admin.bookings', compact('bookings'));
     }
 
+    public function extract_ids($data) {
+        return $data->map(function ($entry) {
+            return $entry->id;
+        })->all();
+    }
+
+    public function filter_payments($payments, $status, $is_owner = 0) {
+        return $payments->filter(function ($payment) use ($status, $is_owner) {
+            return $payment->status == $status && $payment->is_owner == $is_owner;
+        });
+    }
+
     public function booking_details(Request $request)
     {
         $booking = PropertyBooking::find($request->id);
@@ -50,12 +63,100 @@ class BookingController extends BaseController
         } else {
             $cancelled_by = $traveler->first_name . ' ' . $traveler->last_name;
         }
+        $lastPaidByTraveler = null;
+        $lastPaidToOwner = null;
+        $travelerPaymentInProcessing = null;
+        $ownerPaymentInProcessing = null;
+        $traveler_total = 0;
+        $owner_total = 0;
         $payments = BookingPayments::where('booking_row_id', $request->id)->get();
+        foreach ($payments as $payment) {
+            if ($payment->status == PAYMENT_SUCCESS) {
+                if ($payment->is_owner) {
+                    $owner_total += $payment->total_amount;
+                    if (empty($lastPaidToOwner)) {
+                        $lastPaidToOwner = $payment;
+                    } elseif ($payment->payment_cycle > $lastPaidToOwner->payment_cycle) {
+                        $lastPaidToOwner = $payment;
+                    }
+                } else {
+                    $traveler_total += $payment->total_amount;
+                    if (empty($lastPaidByTraveler)) {
+                        $lastPaidByTraveler = $payment;
+                    } elseif ($payment->payment_cycle > $lastPaidByTraveler->payment_cycle) {
+                        $lastPaidByTraveler = $payment;
+                    }
+                }
+            }
+        }
+        $travelerPaymentInProcessing = $this->filter_payments($payments, PAYMENT_INIT);
+        // TODO: confirm if we need to cancel payments for owner as well which are in processing.
+        $ownerPaymentInProcessing = $this->filter_payments($payments, PAYMENT_INIT, 1);
 
+        // TODO: Discuss cancellation of the payment based on details https://discuss.dwolla.com/t/cancelling-transaction-returning-400-status/5208
+        $paymentsInProcessing = array_merge(
+            $this->extract_ids($travelerPaymentInProcessing),
+            $this->extract_ids($ownerPaymentInProcessing),
+        );
+        $hasPaymentsInProcessing = count($paymentsInProcessing) > 0;
         return view(
             'Admin.booking_detail',
-            compact('booking', 'payments', 'owner', 'traveler', 'property', 'cancelled_by'),
+            compact(
+                'booking',
+                'payments',
+                'owner',
+                'traveler',
+                'property',
+                'cancelled_by',
+                'lastPaidByTraveler',
+                'lastPaidToOwner',
+                'travelerPaymentInProcessing',
+                'ownerPaymentInProcessing',
+                'traveler_total',
+                'owner_total',
+                'paymentsInProcessing',
+                'hasPaymentsInProcessing',
+            ),
         );
+    }
+
+    public function cancel_payments_processing(Request $request) {
+        $ids = $request->query('payments');
+        if (empty($ids)) {
+            return back()->with([
+                'success_cancel_booking' => false,
+                'errorMessage' => 'No payments specified for cancellation',
+            ]);
+        }
+        if (count($ids) < 1) {
+            return back()->with([
+                'success_cancel_booking' => false,
+                'errorMessage' => 'No payments specified for cancellation',
+            ]);
+        }
+        $payments = BookingPayments::findMany($ids);
+        $errorCount = 0;
+        foreach ($payments as $payment) {
+            try {
+                $this->dwolla->cancelTransfer($payment->transfer_url);
+                $payment->status = PAYMENT_CANCELED;
+                $payment->canceled_at = now();
+                $payment->save();
+            } catch (\Exception $ex) {
+                Logger::error('Error in canceling payment: payment id' . $payment->id . '. EX: ' . $ex->getResponseBody());
+                $errorCount++;
+            }
+        }
+        if ($errorCount) {
+            return back()->with([
+                'success_cancel_booking' => false,
+                'errorMessage' => 'Error in cancelling payments',
+            ]);
+        }
+        return back()->with([
+            'success_cancel_booking' => true,
+            'successMessage' => 'Processing payments are been canceled',
+        ]);
     }
 
     public function pause_auto_deposit($id, Request $request)

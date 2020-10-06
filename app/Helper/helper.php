@@ -943,12 +943,14 @@ class Helper
         $booking_id,
         $type
     ) {
-        $check_in = date("m-d-Y", strtotime($check_in));
-        $check_out = date("m-d-Y", strtotime($check_out));
+        $check_in = Carbon::parse($check_in);
+        $check_out = Carbon::parse($check_out);
+        $check_in_date = $check_in->format('m-d-Y');
+        $check_out_date = $check_out->format('m-d-Y');
 
         switch ($type) {
             case OWNER_NEW_BOOKING:
-                $message = "Hi {$name}, you received a booking request for {$check_in} - {$check_out} at {$property_name}. Please log into Health Care Travels to approve or deny this request. Your response time is very important!";
+                $message = "Hi {$name}, you received a booking request for {$check_in_date} - {$check_out_date} at {$property_name}. Please log into Health Care Travels to approve or deny this request. Your response time is very important!";
                 $timestamp = now()->addSeconds(1);
 
                 return ProcessMessage::dispatch($number, $message, $booking_id, OWNER_NEW_BOOKING)
@@ -956,7 +958,7 @@ class Helper
                     ->onQueue(MESSAGE_QUEUE);
 
             case OWNER_BOOKING_REMINDER:
-                $message = "Hi {$name}, you have a booking request for {$check_in} - {$check_out} at {$property_name} that has been pending for 48 hours. Please log into Health Care Travels to accept or deny the booking and keep your account in good standing.";
+                $message = "Hi {$name}, you have a booking request for {$check_in_date} - {$check_out_date} at {$property_name} that has been pending for 48 hours. Please log into Health Care Travels to accept or deny the booking and keep your account in good standing.";
                 $timestamp = now()->addHours(48);
 
                 return ProcessMessage::dispatch($number, $message, $booking_id, OWNER_BOOKING_REMINDER)
@@ -965,7 +967,7 @@ class Helper
 
             case TRAVELER_CHECK_IN_APPROVAL:
                 $message = "Hi {$name}, this is Health Care Travels. Please reply 'Y' once you are safely checked in at your booking location. Please reach out to support@healthcaretravels.com if you encounter any issues.";
-                $timestamp = Carbon::parse($check_in)->setTime(11, 0, 0);
+                $timestamp = $check_in->setTime(11, 0, 0);
 
                 return ProcessMessage::dispatch($number, $message, $booking_id, TRAVELER_CHECK_IN_APPROVAL)
                     ->delay($timestamp)
@@ -973,9 +975,7 @@ class Helper
 
             case TRAVELER_CHECK_IN_APPROVAL_REMINDER:
                 $message = "Hi {$name}, this is Health Care Travels. Please reply 'Y' once you are safely checked in at your booking location. Please reach out to support@healthcaretravels.com if you encounter any issues.";
-                $timestamp = Carbon::parse($check_in)
-                    ->addDay(1)
-                    ->setTime(11, 0, 0);
+                $timestamp = $check_in->addDay(1)->setTime(11, 0, 0);
 
                 return ProcessMessage::dispatch($number, $message, $booking_id, TRAVELER_CHECK_IN_APPROVAL_REMINDER)
                     ->delay($timestamp)

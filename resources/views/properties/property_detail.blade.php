@@ -340,7 +340,7 @@
                                     <div style="display: none;" id="other_agency_cancel" class="add-another" onclick="add_another_agency()" style="cursor: pointer;">Cancel</div>
                                 </div>
                                 <hr>
-                                <h2 style="margin-bottom: 20px;">Basic Details<span style="font-size: 15px; color: #707070; margin-left: 5px"> (Optional)</span></h2>
+                                <h2 style="margin-bottom: 20px;">Recruiter Details<span style="font-size: 15px; color: #707070; margin-left: 5px"> (Optional)</span></h2>
                                 <div class="wrapper center-block">
                                     <div class="row">
                                         <div class="control-group cc-first-name col-md-6">

@@ -79,7 +79,7 @@
     @if($data->is_owner == 0)
         {{--                    TODO: Add security deposit details here when handled--}}
         <tr style="height: 54px;">
-            <td>{{date('m/d/Y',strtotime($data->start_date))}}</td>
+            <td>{{\Carbon\Carbon::parse($data->end_date)->addHours(72)->format('m/d/Y')}}</td>
             <td>Security Deposit</td>
             <td>${{$data->security_deposit}}</td>
             <td>

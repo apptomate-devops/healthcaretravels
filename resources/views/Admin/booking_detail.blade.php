@@ -40,9 +40,9 @@
             <div class="details"><b>Cancellation Reason: </b><span>{{$booking->cancellation_reason}}</span></div>
             <div class="details"><b>Explanation: </b><span>{{$booking->cancellation_explanation}}</span></div>
             <div class="details"><b>Has the traveler checked in to this property?: </b><span>{{$booking->already_checked_in ? 'Yes' : 'No'}}</span></div>
-            Start Date: {{date('m-d-Y',strtotime($booking->start_date))}}<br />
-            End Date: {{date('m-d-Y',strtotime($booking->end_date))}}<br />
-            Status: @if($booking->status == 1)
+            <div class="details"><b>Start Date: </b><span>{{date('m-d-Y',strtotime($booking->start_date))}}</span></div>
+            <div class="details"><b>End Date: </b><span>{{date('m-d-Y',strtotime($booking->end_date))}}</span></div>
+            <div class="details"><b>Status: </b><span>@if($booking->status == 1)
                 Created
             @elseif($booking->status == 2)
                 Approved
@@ -52,7 +52,7 @@
                 Denied
             @else
                 Canceled
-            @endif<br />
+            @endif</span></div>
         </div>
     </div>
     <div class="card">
@@ -98,10 +98,24 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="refund_amount">Enter amount to be refunded:</label>
+                        <div class="details"><b>Total amount received from Traveler: </b><span>${{$traveler_total}}</span></div>
+                        <div class="details"><b>Total amount paid to Owner: </b><span>${{$owner_total}}</span></div>
+                    </div>
+                    <div class="form-group">
+                        @if($lastPaidByTraveler)
+                        <div class="details"><b>Last payment received from traveler of: </b><span>${{$lastPaidByTraveler->total_amount}} on {{$lastPaidByTraveler->confirmed_time}}</span></div>
+                        @endif
+                        @if($lastPaidToOwner)
+                        <div class="details"><b>Last payment paid to owner of: </b><span>${{$lastPaidToOwner->total_amount}} on {{$lastPaidToOwner->confirmed_time}}</span></div>
+                        @endif
+                    </div>
+                    @if($hasPaymentsInProcessing)<div class="form-group"><div class="details"><b>This booking has payments in processing</b></div>@endif
+                    <div class="form-group mt-10">
+                        <label for="refund_amount">Amount to be refunded to traveler:</label>
                         <input type="number" class="form-control col-1" id="refund_amount" name="refund_amount" placeholder="0" required>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Process refund and cancel Booking</button>
+                    <button id="cancel-payments" type="button" class="btn btn-warning btn-block">Cancel payments in processing</button>
                     @if(Session::has('success_cancel_booking'))
                         @if (Session::has('successMessage'))
                             <div class="mt-10 alert alert-success" role="alert" autofocus>
@@ -301,6 +315,16 @@
             event.preventDefault();
             event.stopPropagation();
             window.location.href = '/admin/pause-auto-deposit/{{$booking->id}}';
+        });
+        $('#cancel-payments').click(function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var paymentIds = @json($paymentsInProcessing);
+            var data = paymentIds.map(function (item) {
+                return 'payments[]=' + item;
+            });
+            var href = '/admin/cancel-payments-processing?' + data.join('&');
+            window.location.href = href;
         });
     </script>
 @endsection

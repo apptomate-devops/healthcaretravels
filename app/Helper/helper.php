@@ -298,6 +298,8 @@ class Helper
                 return 'Completed';
             case PAYMENT_FAILED:
                 return 'Failed';
+            case PAYMENT_CANCELED:
+                return 'Canceled';
             default:
                 return 'Pending';
         }
@@ -514,7 +516,7 @@ class Helper
                     $dd->hour = $timeSplit[0];
                     $dd->minute = $timeSplit[1];
                     $dd->second = 0;
-                    // Because security deposit is handled at the end of checkout by admin or auto deposit
+                    // Not adding security deposit as it is handled at the end of checkout by admin or auto deposit
                     $data['total_amount'] = round($data['monthly_rate'] + $data['cleaning_fee']);
                     $data['due_date'] = $dd;
                 } else {
@@ -883,6 +885,7 @@ class Helper
         define("PAYMENT_INIT", 1);
         define("PAYMENT_SUCCESS", 2);
         define("PAYMENT_FAILED", 3);
+        define("PAYMENT_CANCELED", 4);
     }
 
     public static function changeEnv($data = [])

@@ -212,7 +212,7 @@
                         <!-- Avatar -->
                         <div class="edit-profile-photo">
                             <div id="profileImage">
-                                <img src="{{($user_detail->profile_image != " " && $user_detail->profile_image != "" && $user_detail->profile_image != 0) ? $user_detail->profile_image : '/user_profile_default.png'}}"/>
+                                <img class="user-icon" src="{{$user_detail->profile_image}}"/>
                             </div>
                             <div class="col-md-6">
                                 <div class="change-photo-btn" id="upload_button">

@@ -326,6 +326,18 @@ class Dwolla
         }
     }
 
+    public function cancelTransfer($transferUrl)
+    {
+        try {
+            $transfer = $this->transfersApi->update([
+                'status' => 'cancelled',
+            ], $transferUrl);
+            return $transfer;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
     public function verify_gateway_signature($proposedSignature, $payloadBody)
     {
         $signature = hash_hmac('sha256', $payloadBody, $this->webhook_secret);

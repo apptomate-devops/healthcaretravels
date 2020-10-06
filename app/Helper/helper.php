@@ -298,6 +298,8 @@ class Helper
                 return 'Completed';
             case PAYMENT_FAILED:
                 return 'Failed';
+            case PAYMENT_CANCELED:
+                return 'Canceled';
             default:
                 return 'Pending';
         }
@@ -883,6 +885,7 @@ class Helper
         define("PAYMENT_INIT", 1);
         define("PAYMENT_SUCCESS", 2);
         define("PAYMENT_FAILED", 3);
+        define("PAYMENT_CANCELED", 4);
     }
 
     public static function changeEnv($data = [])

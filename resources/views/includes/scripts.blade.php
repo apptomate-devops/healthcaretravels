@@ -520,6 +520,17 @@
     $('.panel-collapse').on('hide.bs.collapse', function () {
         $(this).siblings('.panel-heading').removeClass('active');
     });
+    $('img.user-icon').error(function (event) {
+        event.target.src = '/user_profile_default.png';
+    });
+    $(document).ready(function() {
+        $('img.user-icon').each(function(img) {
+            var src = $(this).attr('src');
+            if (!src || src == ' ' || src == '0') {
+                $(this).attr('src', '/user_profile_default.png');
+            }
+        });
+    }) ;
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}&libraries=places&callback=onGoogleLoad" async defer></script>
 

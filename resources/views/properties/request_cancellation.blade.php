@@ -12,14 +12,14 @@
             @endif
             <div class="row">
                 @if($booking->cancellation_requested == 3)
-                    <h3>We have cancelled your request for this booking!</h3>
+                    <h3>We have cancelled your request for this booking</h3>
                     <div>Status: Cancellation In Progress</div>
                 @elseif($booking->cancellation_requested == 2)
-                    <h3>We have cancelled your request for this booking!</h3>
+                    <h3>We have cancelled your request for this booking</h3>
                     <div>Status: Cancellation Completed</div>
                 @elseif ($booking->cancellation_requested == 1)
-                    <h3>We have request for cancellation for this booking!</h3>
-                    <div>Status: Cancellation Pending</div>
+                    <h3>You have requested to cancel this booking</h3>
+                    <div>We’ll keep you updated on the status of your request. If we need more information, we’ll reach out to you within 48 hours.</div>
                 @else
                     <form id="cancel_request_form" name="cancel_request_form" action="{{url('/')}}/submit_cancellation_request" method="post" autocomplete="off" >
                         <input type="hidden" name="_token" value="{{csrf_token()}}">

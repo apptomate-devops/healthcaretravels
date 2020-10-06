@@ -67,7 +67,7 @@
                             <td>{{$payment['covering_range']}}</td>
                         </tr>
                     @endforeach
-{{--                    TODO: Add security deposit details here when handled--}}
+                    {{--                    TODO: Add security deposit details here when handled--}}
                     <tr>
                         <td>{{\Carbon\Carbon::parse($data->end_date)->addHours(72)->format('m/d/Y')}}</td>
                         <td>Security Deposit</td>
@@ -78,7 +78,7 @@
                         <td>Automatic deposit refund 72 hours after check-out</td>
                     </tr>
                 </table>
-                    <div>The selected account will be used to process any future payments for this booking.</div>
+                <div>The selected account will be used to process any future payments for this booking.</div>
                 <div class="text-right">
                     <a target="_blank" href="{{BASE_URL}}invoice/{{$data->booking_id}}" class="margin-top-40 button border">Print Invoice</a>
                 </div>
@@ -133,21 +133,28 @@
                         </tr>
                     </table>
                 @endif
-                @if($data->status == 2)
-                    <div style="text-align: center;margin-top: 30px;">
-                        <button class="button" onclick="location.href='{{BASE_URL}}request_cancellation/{{$data->booking_id}}';">Request Cancellation</button>
-                    </div>
-                    <br>
-                @endif
-                @if($data->status == 4)
+                @if($data->status == 1)
+                        <div style="text-align: center;margin-top: 30px;">
+                            <button class="button" onclick="cancel_booking('{{$data->booking_id}}')" >Cancel Booking</button>
+                        </div>
+                        <br>
+                @elseif($data->status == 2)
+                    @if($data->cancellation_requested == 1)
+                        <div style="text-align: center; font-size: 18px; font-weight: bold;">Cancellation Pending</div>
+                    @else
+                        <div style="text-align: center;margin-top: 30px;">
+                            <button class="button" onclick="location.href='{{BASE_URL}}request_cancellation/{{$data->booking_id}}';">Request Cancellation</button>
+                        </div>
+                        <br>
+                    @endif
+                @elseif($data->status == 4)
                     <div style="text-align: center;margin-top: 30px;">
                         <button class="button">Request Denied by Owner</button>
                         <br>
                         <span style="font-weight: bold; color: #e78016">{{$data->deny_reason ?? ''}}</span>
                     </div>
                     <br>
-                @endif
-                @if($data->status == 8)
+                @elseif($data->status == 8)
                     <div style="text-align: center;margin-top: 30px;">
                         Your booking has been cancelled.
                     </div>
@@ -174,5 +181,27 @@
         </div>
     </div>
 
+    <script type="text/javascript">
+        function cancel_booking(id) {
+            var r = confirm("Are you sure you want to cancel?");
+            if (r == true) {
+                var url = '{{BASE_URL}}cancel-booking/'+id;
+                $.ajax({
+                    "type": "get",
+                    "url" : url,
+                    success: function(data) {
+                        if(data.status=="SUCCESS"){
+                            window.location.reload();
+                        } else {
+                            console.log('Error Updating cancel status for booking');
+                        }
+                    },
+                    error: function (e) {
+                        console.log('Error Updating cancel status for booking');
+                    }
+                });
+            }
+        }
+    </script>
 @endsection
 

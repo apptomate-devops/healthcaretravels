@@ -898,7 +898,6 @@ class PropertyController extends BaseController
             } else {
                 array_push($bookings, $datum);
             }
-            $datum->bookStatus = Helper::get_traveller_status($datum->bookStatus, $datum->start_date, $datum->end_date);
         }
         return view('owner.reservations', ['bookings' => $bookings, 'incomplete_bookings' => $incomplete_bookings]);
     }

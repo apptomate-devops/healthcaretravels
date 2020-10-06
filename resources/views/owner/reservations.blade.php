@@ -46,15 +46,15 @@
                                     </td>
                                     <td class="expire-date">
                                 <span>
-                                    {{$booking->bookStatus}}
-                                    @if($booking->bookStatus == 'Denied') <span style="font-size: 12px; color: #e78016">{{$booking->deny_reason ?? ''}}</span> @endif
+                                    {{Helper::get_traveller_status($booking->bookStatus, $booking->start_date, $booking->end_date)}}
+                                    @if($booking->bookStatus == 4) <span style="font-size: 12px; color: #e78016">{{$booking->deny_reason ?? ''}}</span> @endif
                                 </span>
                                     </td>
                                     <td colspan="2" class="action" style="width: 1%">
                                         <button class="button" onclick="document.location.href='{{BASE_URL}}owner/reservations/{{$booking->booking_id}}';" style="min-width: 200px;">
                                             View Details
                                         </button>
-                                        @if($booking->bookStatus < 2)
+                                        @if($booking->bookStatus == 1)
                                             <div class="link" onclick="cancel_booking('{{$booking->booking_id}}')" style="margin-top: 10px; text-align: center">
                                                 Cancel booking
                                             </div>
@@ -120,7 +120,7 @@
 @section('custom_script')
     <script type="text/javascript">
         function cancel_booking(id) {
-            var r = confirm("Are you sure to cancel Booking..");
+            var r = confirm("Are you sure you want to cancel?");
             if (r == true) {
                 var url = '{{BASE_URL}}cancel-booking/'+id;
                 $.ajax({

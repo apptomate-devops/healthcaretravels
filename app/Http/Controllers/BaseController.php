@@ -826,8 +826,9 @@ class BaseController extends ConstantsController
                 );
             }
         }
+        $owner_name = $owner->first_name . " " . $owner->last_name;
         $owner_mail_data = [
-            'name' => $owner->first_name . " " . $owner->last_name,
+            'name' => $owner_name,
             'propertyName' => $property->title,
             'travelerName' => $travelerName,
             'travelerPhone' => $traveler->phone,
@@ -869,6 +870,10 @@ class BaseController extends ConstantsController
         $traveler_mail_data = [
             'name' => $travelerName,
             'propertyName' => $propertyTitle,
+            'propertyAddress' => $property->address,
+            'ownerName' => $owner_name,
+            'ownerNumber' => $owner->phone,
+            'propertyZip' => $property->zip_code,
         ];
         $subject = 'Your Stay at ' . $propertyTitle;
         $this->send_scheduled_email(

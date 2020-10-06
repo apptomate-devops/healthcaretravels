@@ -55,7 +55,7 @@
                     </tr>
                     @foreach($scheduled_payments as $payment)
                         <tr>
-                            <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
+                            <td>{{$payment['due_date_override'] ?? date('m/d/Y',strtotime($payment['due_date']))}}</td>
                             <td>{{$payment['name'] ?? 'Stay payment'}}</td>
                             <td>-${{$payment['amount']}}</td>
                             <td>

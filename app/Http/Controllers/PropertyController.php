@@ -1159,11 +1159,20 @@ class PropertyController extends BaseController
                     $cleaning_fee_entry['name'] = 'Cleaning Fee';
                     $cleaning_fee_entry['amount'] = $booking->cleaning_fee;
                     $cleaning_fee_entry['covering_range'] = 'One-time charge';
-                    array_push($scheduled_payments, $cleaning_fee_entry);
 
                     $security_deposit_entry['name'] = 'Security Deposit';
                     $security_deposit_entry['amount'] = $booking->security_deposit;
                     $security_deposit_entry['covering_range'] = 'Refunded 72 hours after check-out';
+                    // Showing pending if the booking is not yet approved
+                    if ($booking->status < 2) {
+                        $payment['due_date_override'] = 'Pending';
+                        $cleaning_fee_entry['due_date_override'] = 'Pending';
+                        $security_deposit_entry['due_date_override'] = 'Pending';
+                        $service_tax_entry['due_date_override'] = 'Pending';
+                    }
+
+                    // Adding entries to scheduled payments.
+                    array_push($scheduled_payments, $cleaning_fee_entry);
                     array_push($scheduled_payments, $security_deposit_entry);
                 }
 

@@ -570,31 +570,29 @@ class Helper
         ]);
     }
 
-    public static function start_chat($property_id, $request)
+    public static function start_chat_handler($traveler_id, $property_id, $request)
     {
         Helper::setConstantsHelper();
-        $user_id = $request->session()->get('user_id');
-        if (!$user_id) {
-            $request->session()->put('request_chat_property_id', $property_id);
-            return redirect('/login');
-        }
         $property_detail = DB::table('property_list')
             ->where('client_id', CLIENT_ID)
             ->where('id', $property_id)
             ->first();
+
         $ins_data = [];
         $ins_data['client_id'] = CLIENT_ID;
         $ins_data['owner_id'] = $property_detail->user_id;
         $ins_data['property_id'] = $property_id;
-        $ins_data['traveller_id'] = $user_id;
-        $ins_data['sent_by'] = $request->session()->get('user_id');
+        $ins_data['traveller_id'] = $traveler_id;
+        $ins_data['sent_by'] = $traveler_id;
         $ins_data['message'] = "Hi";
+
         $chat_check = DB::table('personal_chat')
             ->where('client_id', CLIENT_ID)
             ->where('owner_id', $property_detail->user_id)
-            ->where('traveller_id', $request->session()->get('user_id'))
+            ->where('traveller_id', $traveler_id)
             ->where('property_id', $property_id)
             ->first();
+
         if ($chat_check) {
             $chat_get = DB::table('personal_chat')
                 ->where('client_id', CLIENT_ID)
@@ -607,11 +605,10 @@ class Helper
         } else {
             $chat_id = DB::table('personal_chat')->insertGetId($ins_data);
         }
-
         $message = "Enquiry sent for ";
         $message .= $property_detail->title;
         $message .= ", Property ID :" . $property_id;
-        if ($request->check_in) {
+        if (isset($request) && $request->check_in) {
             $message .=
                 " on " .
                 date("m/d/Y", strtotime($request->check_in)) .
@@ -622,9 +619,9 @@ class Helper
         // firebase write starts
         $date_fmt = date("m/d/Y H:i A");
         $values = [];
-        $values['traveller_id'] = $request->session()->get('user_id');
+        $values['traveller_id'] = $traveler_id;
         $values['owner_id'] = $property_detail->user_id;
-        $values['sent_by'] = $request->session()->get('user_id');
+        $values['sent_by'] = $traveler_id;
         $values['property_id'] = $property_id;
         $values['date'] = $date_fmt;
         $values['message'] = "Hi, " . $message;
@@ -641,6 +638,27 @@ class Helper
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
         $result = curl_exec($ch);
         curl_close($ch);
+
+        return [
+            'chat_id' => $chat_id,
+            'message' => $message,
+            'property_detail' => $property_detail,
+        ];
+    }
+
+    public static function start_chat($property_id, $request)
+    {
+        Helper::setConstantsHelper();
+        $user_id = $request->session()->get('user_id');
+        if (!$user_id) {
+            $request->session()->put('request_chat_property_id', $property_id);
+            return redirect('/login');
+        }
+
+        $data = Helper::start_chat_handler($user_id, $property_id, $request);
+        $chat_id = $data['chat_id'];
+        $message = $data['message'];
+        $property_detail = $data['property_detail'];
 
         $traveler = DB::table('users')
             ->where('id', $request->session()->get('user_id'))

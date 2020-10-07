@@ -772,7 +772,7 @@ class BaseController extends ConstantsController
         return $icsDates;
     }
 
-    public function schedule_payments_and_emails_for_booking($booking)
+    public function schedule_payments_and_emails_for_booking($booking, $request)
     {
         $payments = $booking->payments->toArray();
         $owner = $booking->owner;
@@ -826,12 +826,14 @@ class BaseController extends ConstantsController
                 );
             }
         }
+        $chat_data = Helper::start_chat_handler($traveler->id, $property->id, $request);
         $owner_name = $owner->first_name . " " . $owner->last_name;
         $owner_mail_data = [
             'name' => $owner_name,
             'propertyName' => $property->title,
             'travelerName' => $travelerName,
             'travelerPhone' => $traveler->phone,
+            'contact' => "{$request->getSchemeAndHttpHost()}/owner/chat/{$chat_data['chat_id']}?fb-key=personal_chat&fbkey=personal_chat",
         ];
         $start_delay = 0;
         $end_delay = 0;
@@ -874,6 +876,7 @@ class BaseController extends ConstantsController
             'ownerName' => $owner_name,
             'ownerNumber' => $owner->phone,
             'propertyZip' => $property->zip_code,
+            'contact' => "{$request->getSchemeAndHttpHost()}/traveler/chat/{$chat_data['chat_id']}?fb-key=personal_chat&fbkey=personal_chat",
         ];
         $subject = 'Your Stay at ' . $propertyTitle;
         $this->send_scheduled_email(

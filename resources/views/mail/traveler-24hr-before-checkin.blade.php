@@ -10,10 +10,10 @@
     Property Address: {{$propertyAddress}} {{$propertyZip}}
 </div>
 <div style="padding-top: 5px;">
-    Host Name: {{$ownerName}}
+    <b>Host Name:</b> {{$ownerName}}
 </div>
 <div style="padding-top: 5px;">
-    Host Phone: +1 ({{substr($ownerNumber,0,3)}}) {{substr($ownerNumber,3,6)}}-{{substr($ownerNumber,6,10)}}
+    <b>Host Phone:</b> +1 ({{substr($ownerNumber,0,3)}}) {{substr($ownerNumber,3,3)}}-{{substr($ownerNumber,6,4)}}
 </div>
 
 

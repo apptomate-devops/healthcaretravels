@@ -32,7 +32,7 @@
                     <div>Property Name: <a href="/property/{{$data->property_id}}">{{$data->title}}</a></div>
                     <div>Traveler:
                         <a href="/owner-profile/{{$data->traveller_id}}">
-                            <img src="{{($data->traveller_profile_image != " " && $data->traveller_profile_image != 0) ? $data->traveller_profile_image : '/user_profile_default.png'}}"/>
+                            <img class="user-icon" src="{{$data->traveller_profile_image}}"/>
                             {{$data->traveller_name}}
                         </a>
                     </div>

@@ -36,7 +36,7 @@
                     <div>Property Name: <a href="/property/{{$data->property_id}}">{{$property->title}}</a></div>
                     <div>Owner:
                         <a href="/owner-profile/{{$data->owner_id}}">
-                            <img src="{{($data->owner_profile_image != " " && $data->owner_profile_image != 0) ? $data->owner_profile_image : '/user_profile_default.png'}}"/>
+                            <img class="user-icon" src="{{$data->owner_profile_image}}"/>
                             {{$data->owner_name}}
                         </a>
                     </div>
@@ -55,7 +55,7 @@
                     </tr>
                     @foreach($scheduled_payments as $payment)
                         <tr>
-                            <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
+                            <td>{{$payment['due_date_override'] ?? date('m/d/Y',strtotime($payment['due_date']))}}</td>
                             <td>{{$payment['name'] ?? 'Stay payment'}}</td>
                             <td>-${{$payment['amount']}}</td>
                             <td>

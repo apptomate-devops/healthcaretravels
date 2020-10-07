@@ -4,7 +4,7 @@
     Hi {{$name}},
 </div>
 <div style="padding-top: 5px;">
-    Your stay at {{$propertyName}} is starting in 24 hours. Please be sure to contact the property owner to discuss how to enter the property and begin your stay.
+    Your stay at {{$propertyName}} is starting in 24 hours. Please be sure to <a href="{{$contact}}">contact the property owner</a> to discuss how to enter the property and begin your stay.
 </div>
 <div style="padding-top: 5px;">
     Property Address: {{$propertyAddress}} {{$propertyZip}}

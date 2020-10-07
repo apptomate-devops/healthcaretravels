@@ -8,7 +8,7 @@
     <div id="" class="property-titlebar margin-bottom-0">
         <div class="property_details container">
             <div class="row">
-                <form name="payment" action="{{URL('/')}}/save-guest-information" method="post" enctype="multipart/form-data" onsubmit="return validate_submit()" autocomplete="off" onkeydown="return event.key != 'Enter';" >
+                <form name="request_booking" id="request_booking" action="{{URL('/')}}/save-guest-information" method="post" enctype="multipart/form-data" onsubmit="return validate_submit()" autocomplete="off" onkeydown="return event.key != 'Enter';" >
                     <div class="row">
                         <div class="col-md-5 col-md-push-7 col-lg-4 col-lg-push-8 row-space-2 lang-ar-left tempClass">
                             <div class="panel payments-listing payment_list_right border-0 shadow-none mb-0">
@@ -40,7 +40,7 @@
                                                         <a href="{{URL('/')}}/cancellationpolicy" class="cancel-policy-link" target="_blank">{{$data->cancellation_policy}} </a>
                                                     </strong>
                                                 </div>
-                                                @if($data->bookingStatus == 1)
+                                                @if(in_array($data->bookingStatus, [0,1]))
                                                     {{--                                                    only allow to edit if not approved--}}
                                                     <div>
                                                         <strong>
@@ -249,7 +249,7 @@
                                                 </div>
                                                 <div id="guest-collapse{{$i+1}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="guest-heading-{{$i+1}}">
                                                     <div class="panel-body" style="position: relative;">
-                                                        <input  name="guest_id[]" type="hidden" value="{{$guest_data->id ?? ''}}" required>
+                                                        <input name="guest_id[]" type="hidden" value="{{$guest_data->id ?? ''}}">
                                                         <div class="control-group cc-first-name col-md-6">
                                                             <label class="control-label" for="credit-card-first-name">
                                                                 Guest Name
@@ -340,20 +340,20 @@
                                     <div style="display: none;" id="other_agency_cancel" class="add-another" onclick="add_another_agency()" style="cursor: pointer;">Cancel</div>
                                 </div>
                                 <hr>
-                                <h2 style="margin-bottom: 20px;">Basic Details<span style="font-size: 15px; color: #707070; margin-left: 5px"> (Optional)</span></h2>
+                                <h2 style="margin-bottom: 20px;">Recruiter Details</h2>
                                 <div class="wrapper center-block">
                                     <div class="row">
                                         <div class="control-group cc-first-name col-md-6">
                                             <label class="control-label" for="recruiter_name">
                                                 Recruiter Name
                                             </label>
-                                            <input id="recruiter_name" name="recruiter_name" type="text" value="{{$data->recruiter_name ?? ''}}">
+                                            <input id="recruiter_name" name="recruiter_name" type="text" value="{{$data->recruiter_name ?? ''}}" required>
                                         </div>
                                         <div class="control-group cc-first-name col-md-6">
                                             <label class="control-label" for="recruiter_email">
                                                 Recruiter Email
                                             </label>
-                                            <input id="recruiter_email" name="recruiter_email" type="email" value="{{$data->recruiter_email ?? ''}}">
+                                            <input id="recruiter_email" name="recruiter_email" type="email" value="{{$data->recruiter_email ?? ''}}" required>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -361,19 +361,19 @@
                                             <label class="control-label" for="recruiter_phone_number">
                                                 Recruiter Phone Number
                                             </label>
-                                            <input class="masked_phone_us" id="recruiter_phone_number" name="recruiter_phone_number" type="text" value="{{$data->recruiter_phone_number ?? ''}}">
+                                            <input class="masked_phone_us" id="recruiter_phone_number" name="recruiter_phone_number" type="text" value="{{$data->recruiter_phone_number ?? ''}}" required>
                                         </div>
                                         <div class="control-group cc-first-name col-md-4">
                                             <label class="control-label" for="contract_start_date">
                                                 Contract Start Date
                                             </label>
-                                            <input type="date" id="contract_start_date" name="contract_start_date" min="{{date('Y-m-d')}}">
+                                            <input type="date" id="contract_start_date" name="contract_start_date" min="{{date('Y-m-d')}}" required>
                                         </div>
                                         <div class="control-group cc-first-name col-md-4">
                                             <label class="control-label" for="contract_end_date">
                                                 Contract End Date
                                             </label>
-                                            <input type="date" id="contract_end_date" name="contract_end_date" min="{{date('Y-m-d')}}">
+                                            <input type="date" id="contract_end_date" name="contract_end_date" min="{{date('Y-m-d')}}" required>
                                         </div>
                                     </div>
                                 </div>
@@ -383,7 +383,6 @@
                     </div>
 
                     <div style="height:200px"></div>
-
 
                 </form>
             </div>
@@ -496,9 +495,19 @@
             agencyAutoComplete = autocomplete;
         }
 
+        $('#requestBooking').click(function (event) {
+            $(".panel-body input[required],select[required]").each(function() {
+                if (!$(this).val()) {
+                    $(".panel-collapse.in").removeClass("in");
+                    $(this).closest(".panel-collapse").addClass("in").css("height","auto");
+                    return false;
+                }
+            });
+        });
+
         function validate_submit() {
             $('#name_of_agency').val(agencyAutoComplete.value());
-            if($('#other_agency').val() || (agencyAutoComplete.value().length && agencyAutoComplete.value().length)) {
+            if ($('#other_agency').val() || (agencyAutoComplete.value().length && agencyAutoComplete.value().length)) {
                 $('#request_booking_loading').show();
                 return true;
             }
@@ -533,6 +542,7 @@
             }
             return !$(this).is(":checked");
         });
+
         $('#neat_amount').click(function (e) {
             e.stopPropagation();
             e.preventDefault();

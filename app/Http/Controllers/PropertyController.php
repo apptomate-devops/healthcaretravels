@@ -834,7 +834,7 @@ class PropertyController extends BaseController
                 $mail_data['mail_to'] = 'owner';
                 $this->send_custom_email($owner->email, $subject, 'mail.accepted_booking', $mail_data, $title);
 
-                $this->schedule_payments_and_emails_for_booking($bookingModel);
+                $this->schedule_payments_and_emails_for_booking($bookingModel, $request);
 
                 // Deny other booking requests for this property for overlapping dates
                 $overlapping_bookings = PropertyBooking::whereRaw(

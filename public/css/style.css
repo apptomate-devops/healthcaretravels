@@ -5347,6 +5347,11 @@ section.fullwidth.border-bottom {
     margin-bottom: 30px;
 }
 
+.agent-widget.is-fixed {
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+}
+
 .agent-widget h4 {
     color: #333;
     margin: 0px 0 6px 0;
@@ -5369,7 +5374,8 @@ section.fullwidth.border-bottom {
 }
 
 .agent-details {
-    margin-left: 92px;
+    width: 100%;
+    text-align: center;
     display: block;
     position: absolute;
     top: 50%;

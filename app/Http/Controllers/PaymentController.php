@@ -140,13 +140,15 @@ class PaymentController extends BaseController
         }
         $user->default_funding_source = $default_funding_source;
         $user->save();
+        $request->session()->put('user_funding_source', $default_funding_source);
+
         if ($fromProfile) {
             try {
                 $bookings = PropertyBooking::getActiveBookingForUser($id);
                 $activeBookings = $bookings->filter(function ($booking) {
                     return in_array($booking->status, [2, 3]);
                 });
-                $activeBookings->each(function($booking) use ($id, $default_funding_source) {
+                $activeBookings->each(function ($booking) use ($id, $default_funding_source) {
                     $is_owner = $booking->owner_id == $id ? 1 : 0;
                     $updateBooking = PropertyBooking::where('id', $booking->id);
                     if ($is_owner) {
@@ -154,16 +156,14 @@ class PaymentController extends BaseController
                     } else {
                         $updateBooking->update(['funding_source' => $default_funding_source]);
                     }
-                    $failedPayments = $booking->payments->where('status', PAYMENT_FAILED)
-                        ->where('is_owner', $is_owner);
-                    $failedPayments->each(function($payment) {
+                    $failedPayments = $booking->payments->where('status', PAYMENT_FAILED)->where('is_owner', $is_owner);
+                    $failedPayments->each(function ($payment) {
                         Logger::info('Retrying payment for payment id: ' . $payment->id);
                         $scheduledTime = now()->addSeconds(5);
                         ProcessPayment::dispatch($payment->id)
                             ->delay($scheduledTime)
                             ->onQueue(PAYMENT_QUEUE);
                     });
-
                 });
             } catch (\Exception $ex) {
                 Logger::error('Error scheduling failed payments. EX: ' . $ex->getMessage());

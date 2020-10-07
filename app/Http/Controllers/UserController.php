@@ -357,6 +357,7 @@ class UserController extends BaseController
         $request->session()->put('user_id_v', $check->id);
         $request->session()->put('phone_v', $check->phone);
         $request->session()->put('user_role_id', $check->role_id);
+        $request->session()->put('user_funding_source', $check->default_funding_source);
         if ($check->otp_verified != 1) {
             $OTP = rand(1111, 9999);
             // send otp
@@ -425,6 +426,7 @@ class UserController extends BaseController
             $request->session()->put('username', $check->username);
             $request->session()->put('name_of_agency', $check->name_of_agency);
             $request->session()->put('phone', $check->phone);
+            $request->session()->put('user_funding_source', $check->default_funding_source);
             $userProfileImage = $check->profile_image ? $check->profile_image : BASE_URL . 'user_profile_default.png';
             $request->session()->put('profile_image', $userProfileImage);
             $url = $this->check_login_redirection($check);
@@ -766,6 +768,7 @@ class UserController extends BaseController
                 $request->session()->put('username', $check->username);
                 $request->session()->put('name_of_agency', $check->name_of_agency);
                 $request->session()->put('phone', $check->phone);
+                $request->session()->put('user_funding_source', $check->default_funding_source);
                 $userProfileImage = $check->profile_image
                     ? $check->profile_image
                     : BASE_URL . 'user_profile_default.png';
@@ -838,6 +841,7 @@ class UserController extends BaseController
             $request->session()->put('profile_image', $userProfileImage);
             $request->session()->put('user_id_v', $check->id);
             $request->session()->put('phone_v', $check->phone);
+            $request->session()->put('user_funding_source', $check->default_funding_source);
             if ($check->is_verified) {
                 return redirect()->intended($url);
             }

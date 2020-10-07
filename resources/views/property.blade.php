@@ -1203,7 +1203,7 @@
                         }
                         $("#table_body").html(tr_data);
 
-                        $('.pay-caption').text(`Pay now: $${data.data.pay_now}, Total: $${data.data.total_price}`);
+                        $('.pay-caption').text(`Pay on approval: $${data.data.pay_now}, Total: $${data.data.total_price}`);
 
                         $('#neat_amount').click(function (e) {
                             e.stopPropagation();
@@ -1310,11 +1310,13 @@
 
                 var isFixed = $(".tempClass").css("position") === "fixed";
                 if($(window).scrollTop() > boxPosition && !isFixed){
-                    $(".tempClass").css({position:"fixed", top: "5px" ,bottom:'55px', left:"900px"});
+                    $(".tempClass").css({position:"fixed", top: "70px" ,bottom:'55px', left:"900px"});
+                    $(".agent-widget").addClass('is-fixed');
                     $("#check_in_div").addClass('col-md-6');
                     $("#check_out_div").addClass('col-md-6');
                 }else if($(window).scrollTop() < boxPosition){
                     $(".tempClass").css({position:"static"});
+                    $(".agent-widget").removeClass('is-fixed');
                     $("#check_in_div").removeClass('col-md-6');
                     $("#check_out_div").removeClass('col-md-6');
                 }
@@ -1322,6 +1324,7 @@
                 if(boxPosition1 < $(window).scrollTop())
                 {
                     $(".tempClass").css({position:"static"});
+                    $(".agent-widget").removeClass('is-fixed');
                     $("#check_in_div").removeClass('col-md-6');
                     $("#check_out_div").removeClass('col-md-6');
                 }

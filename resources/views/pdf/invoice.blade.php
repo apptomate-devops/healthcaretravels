@@ -77,13 +77,12 @@
         </tr>
     @endforeach
     @if($data->is_owner == 0)
-        {{--                    TODO: Add security deposit details here when handled--}}
         <tr style="height: 54px;">
             <td>{{\Carbon\Carbon::parse($data->end_date)->addHours(72)->format('m/d/Y')}}</td>
             <td>Security Deposit</td>
-            <td>${{$data->security_deposit}}</td>
+            <td>${{$data->traveler_cut}}</td>
             <td>
-                <b>Pending</b>
+                <b>{{Helper::get_security_payment_status($data)}}</b>
             </td>
             <td>Automatic deposit refund 72 hours after check-out</td>
         </tr>

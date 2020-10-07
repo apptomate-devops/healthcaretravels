@@ -14,6 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [];
 
+    public $timezone = 'America/New_York';
+
     /**
      * Define the application's command schedule.
      *
@@ -22,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('reminder:verification')->dailyAt('10:00');
+        $schedule->command('reminder:verification')->timezone($this->timezone)->dailyAt('10:00');
         $schedule->command('cron:log-check')->everyThirtyMinutes();
         $schedule->command('dwolla:refresh_access_token')->everyThirtyMinutes();
         $schedule->command(\Jorijn\LaravelSecurityChecker\Console\SecurityMailCommand::class)->weekly();

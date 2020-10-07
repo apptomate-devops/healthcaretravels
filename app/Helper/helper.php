@@ -281,6 +281,24 @@ class Helper
         return 'Pending Stay';
     }
 
+    public static function get_security_payment_status($booking, $is_owner = 0)
+    {
+        $type = $is_owner == 0 ? 'traveler' : 'owner';
+        $processedAt = $type . '_deposit_processed_at';
+        $confirmedAt = $type . '_deposit_confirmed_at';
+        $failedAt = $type . '_deposit_failed_at';
+        if ($booking->$confirmedAt) {
+            return 'Completed';
+        }
+        if ($booking->$failedAt) {
+            return 'Failed';
+        }
+        if ($booking->$processedAt) {
+            return 'Processing';
+        }
+        return 'Pending';
+    }
+
     public static function get_payment_status($payment, $fromAdmin = false)
     {
         $status = $payment['status'];

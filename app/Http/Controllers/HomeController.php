@@ -242,6 +242,8 @@ class HomeController extends BaseController
 
     public function request_roommate()
     {
+        // TODO: remove me when functionality is implemented
+        return view('request-roommate-iframe');
         return view('request-roommate');
     }
 

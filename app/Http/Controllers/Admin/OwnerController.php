@@ -101,6 +101,10 @@ class OwnerController extends BaseController
             'reset_password_token',
             'login_type',
             'denied_count',
+            'ethnicity',
+            'dwolla_email',
+            'dwolla_last_name',
+            'dwolla_first_name',
         ];
         return view('Admin.single-user', [
             'data' => $data,

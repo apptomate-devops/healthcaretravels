@@ -39,7 +39,8 @@ class Handler extends ExceptionHandler
     public function report(Exception $exception)
     {
         if ($this->shouldReport($exception)) {
-            $this->sendEmail($exception);
+            // TODO: enable it when job worker error handled
+            // $this->sendEmail($exception);
         }
         parent::report($exception);
     }

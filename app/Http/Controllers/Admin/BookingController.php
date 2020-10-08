@@ -44,9 +44,9 @@ class BookingController extends BaseController
         })->all();
     }
 
-    public function filter_payments($payments, $status, $is_owner = 0) {
-        return $payments->filter(function ($payment) use ($status, $is_owner) {
-            return $payment->status == $status && $payment->is_owner == $is_owner;
+    public function filter_payments($payments, $status) {
+        return $payments->filter(function ($payment) use ($status) {
+            return $payment->status == $status;
         });
     }
 
@@ -89,16 +89,18 @@ class BookingController extends BaseController
                 }
             }
         }
-        $travelerPaymentInProcessing = $this->filter_payments($payments, PAYMENT_INIT);
-        // TODO: confirm if we need to cancel payments for owner as well which are in processing.
-        $ownerPaymentInProcessing = $this->filter_payments($payments, PAYMENT_INIT, 1);
-
-        // TODO: Discuss cancellation of the payment based on details https://discuss.dwolla.com/t/cancelling-transaction-returning-400-status/5208
-        $paymentsInProcessing = array_merge(
-            $this->extract_ids($travelerPaymentInProcessing),
-            $this->extract_ids($ownerPaymentInProcessing),
-        );
+        $paymentInProcessing = $this->filter_payments($payments, PAYMENT_INIT);
+        $paymentsInProcessing = $this->extract_ids($paymentInProcessing);
+        // NOTE: Checking if the transfer is allowed to cancel: Implemented based on details from here: https://discuss.dwolla.com/t/cancelling-transaction-returning-400-status/5208
         $hasPaymentsInProcessing = count($paymentsInProcessing) > 0;
+        $canPaymentsCanceled = false;
+        if ($hasPaymentsInProcessing) {
+            $latestInProgress = BookingPayments::where('booking_row_id', $request->id)->orderBy('processed_time','DESC')->first();
+            $transferDetails = $this->dwolla->transfersApi->byId($latestInProgress->transfer_url);
+            if ($transferDetails && $transferDetails->_links && $transferDetails->_links['cancel']) {
+                $canPaymentsCanceled = true;
+            }
+        }
         return view(
             'Admin.booking_detail',
             compact(
@@ -110,12 +112,11 @@ class BookingController extends BaseController
                 'cancelled_by',
                 'lastPaidByTraveler',
                 'lastPaidToOwner',
-                'travelerPaymentInProcessing',
-                'ownerPaymentInProcessing',
                 'traveler_total',
                 'owner_total',
                 'paymentsInProcessing',
                 'hasPaymentsInProcessing',
+                'canPaymentsCanceled',
             ),
         );
     }

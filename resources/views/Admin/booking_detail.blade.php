@@ -109,13 +109,17 @@
                         <div class="details"><b>Last payment paid to owner of: </b><span>${{$lastPaidToOwner->total_amount}} on {{$lastPaidToOwner->confirmed_time}}</span></div>
                         @endif
                     </div>
-                    @if($hasPaymentsInProcessing)<div class="form-group"><div class="details"><b>This booking has payments in processing</b></div>@endif
+                    @if($hasPaymentsInProcessing)
+                        <div class="form-group"><div class="details"><b>This booking has payments in processing</b></div>
+                    @endif
                     <div class="form-group mt-10">
                         <label for="refund_amount">Amount to be refunded to traveler:</label>
                         <input type="number" class="form-control col-1" id="refund_amount" name="refund_amount" placeholder="0" required>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Process refund and cancel Booking</button>
-                    <button id="cancel-payments" type="button" class="btn btn-warning btn-block">Cancel payments in processing</button>
+                    @if ($canPaymentsCanceled)
+                        <button id="cancel-payments" type="button" class="btn btn-warning btn-block">Cancel payments in processing</button>
+                    @endif
                     @if(Session::has('success_cancel_booking'))
                         @if (Session::has('successMessage'))
                             <div class="mt-10 alert alert-success" role="alert" autofocus>

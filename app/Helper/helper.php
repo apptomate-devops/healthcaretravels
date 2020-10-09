@@ -475,7 +475,7 @@ class Helper
             Logger::error('Booking does not exist: ' . $id);
             return ['success' => false, 'message' => 'Booking does not exist!'];
         }
-        if ($booking->status != 1) {
+        if (!in_array($booking->status, [0, 1])) {
             Logger::info('Booking request was handled already: ' . $id);
             return ['success' => false, 'message' => 'Booking request was handled already!'];
         }

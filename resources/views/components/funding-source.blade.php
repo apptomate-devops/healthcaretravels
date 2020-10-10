@@ -14,7 +14,7 @@
         <div class="checkboxes mt-10" id="policy_accept_field">
             <input id="dwolla_policy_accept" type="checkbox" name="dwolla_policy_accept">
             <label for="dwolla_policy_accept">
-                By checking and selecting {{$button_label ?? 'Add Account Details'}} below, You agree to <a target="_blank" href="https://www.dwolla.com/legal/tos/">Dwolla Terms of Service</a>
+                By checking and selecting {{$button_label ?? 'Add Account Details'}} below, You agree to <a target="_blank" href="https://www.dwolla.com/legal/tos/">Dwolla Terms of Service</a> and <a target="_blank" href="https://www.dwolla.com/legal/privacy/">Dwolla Privacy Policy</a>
                 <p class="error-text-accept" style="display: none">Policy must be agreed</p>
             </label>
         </div>

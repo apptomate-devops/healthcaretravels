@@ -223,3 +223,8 @@
 .shadow-none {
     box-shadow: none !important;
 }
+
+.error-text-accept {
+    margin-top: 10px !important;
+    color: #9d0000;
+}

@@ -11,6 +11,13 @@
         </div>
     @else
         <div>You haven't added any account details yet.</div>
+        <div class="checkboxes mt-10" id="policy_accept_field">
+            <input id="dwolla_policy_accept" type="checkbox" name="dwolla_policy_accept">
+            <label for="dwolla_policy_accept">
+                By checking and selecting {{$button_label ?? 'Add Account Details'}} below, You agree to <a target="_blank" href="https://www.dwolla.com/legal/tos/">Dwolla Terms of Service</a>
+                <p class="error-text-accept" style="display: none">Policy must be agreed</p>
+            </label>
+        </div>
     @endif
     <div class="btn bg-orange" style="width: auto; margin-top: 10px;" id="create-funding-source">{{$button_label ?? 'Add Account Details'}}</div>
     <div id="bank_verification_modal" data-backdrop="static" data-keyboard="false" class="modal fade in" role="dialog">
@@ -88,6 +95,13 @@
     };
 
     $('#create-funding-source').on('click', function (e) {
+        var dwollaAccept = $('#dwolla_policy_accept');
+        if (dwollaAccept.length && !dwollaAccept.is(':checked')) {
+            $('.error-text-accept').fadeIn();
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
         $('#addDetailsProgress').show();
         var userInfo = {
             id: {{$user->id}},

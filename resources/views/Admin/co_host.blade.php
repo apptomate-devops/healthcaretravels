@@ -63,6 +63,9 @@
                                 <table class="table table-striped table-bordered zero-configuration">
                                     <thead>
                                         <tr>
+                                            <th>
+                                                <input type="checkbox" name="check-all" id="check-all" /> Select
+                                            </th>
                                             <th>ID</th>
                                             <th>Registered On</th>
                                             <th>Name</th>
@@ -79,6 +82,11 @@
 
                                         @foreach($travellers as $key => $traveller)
                                         <tr>
+                                            <td>
+                                                <center>
+                                                    <input type="checkbox" name="" value="{{$traveller->id}}" />
+                                                </center>
+                                            </td>
                                             <td>
                                                 {{$traveller->id}}
                                             </td>

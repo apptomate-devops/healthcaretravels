@@ -125,6 +125,19 @@ class HomeController extends BaseController
         return view('Admin.dashboard', compact('counts', 'bookings'));
     }
 
+    public function approve_user_profiles(Request $request)
+    {
+        $data = $request->all();
+        if (isset($data['userIds'])) {
+            DB::table('users')
+                ->whereIn('id', $data['userIds'])
+                ->update(['is_verified' => 1]);
+        }
+        return response()->json([
+            'status' => 'SUCCESS',
+        ]);
+    }
+
     public function become_scout()
     {
         $data = BecomeScout::get();

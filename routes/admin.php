@@ -129,6 +129,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::POST('/verify_all_documents/{id}', 'Admin\HomeController@verify_all_documents');
 
         Route::POST('/update_notes/{id}', 'Admin\HomeController@update_notes');
+        Route::POST('/verify_checked_profiles', 'Admin\HomeController@approve_user_profiles');
         // faq
         Route::POST('/add_faq_process', 'Admin\HomeController@add_faq_process');
         Route::GET('/faq', 'Admin\HomeController@add_faq');

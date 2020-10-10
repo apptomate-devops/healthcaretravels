@@ -1,7 +1,7 @@
 @if (isset($user))
 <div class="mb-15">
     {{-- TODO: come with a better name --}}
-    <button id="approve-checked-profiles" onclick="approveCheckedProfiles()" class="btn btn-primary d-none">Approve Checked Profiles</button>
+    <button id="approve-checked-profiles" onclick="approveCheckedProfiles()" class="btn btn-primary d-none">Verify Checked Users</button>
     <button class="btn btn-default" onclick="approveAll()">Approve all who signed up today</button>
 </div>
 @if(Session::has('approved'))

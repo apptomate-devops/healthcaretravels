@@ -2886,6 +2886,8 @@ class PropertyController extends BaseController
             $scheduler_date->setTime($timeSplit[0], $timeSplit[1], 0);
         }
         Logger::info('Cancel date: ' . $scheduler_date);
+        Logger::info('Current date now: ' . Carbon::now());
+        Logger::info('check_in_date_time: ' . $check_in_date_time);
         ProcessAutoCancel::dispatch($booking->id)
             ->delay($scheduler_date)
             ->onQueue(GENERAL_QUEUE);

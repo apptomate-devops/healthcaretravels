@@ -479,6 +479,7 @@ class Helper
             Logger::info('Booking request was handled already: ' . $id);
             return ['success' => false, 'message' => 'Booking request was handled already!'];
         }
+        Logger::info('Auto cancel booking with status::::' . $booking->status);
         $booking->status = 8;
         $booking->auto_canceled = 1;
         $booking->save();

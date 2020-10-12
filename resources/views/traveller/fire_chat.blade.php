@@ -330,8 +330,6 @@
     app.controller('ListController', ['$scope', '$firebaseArray', '$firebaseObject', 'FBURL', function($scope, $firebaseArray, $firebaseObject, FBURL) {
 
         var request_id = '{{$id}}';
-        var current_date = "{{date('m/d/Y H:i A')}}";
-        //current_date = current_date.toString();
         var url_string = window.location.href; //window.location.href
         var url = new URL(url_string);
         var node_name = url.searchParams.get("fb-key");
@@ -392,7 +390,7 @@
                 owner_id: $scope.userid,
                 traveller_id: 1,
                 property_id: 1,
-                date: current_date,
+                date: new Date().toLocaleString(),
                 read: false,
             });
 

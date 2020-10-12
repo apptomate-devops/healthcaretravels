@@ -2863,16 +2863,29 @@ class PropertyController extends BaseController
 
     public function schedule_auto_cancel_job($booking)
     {
-        // within 24 hours of Check-In date OR  7 days after of traveler request, deny request.
-        $day_before_check_in = Carbon::parse($booking->start_date)->subDay();
-        $week_after_approval = now()->addDays(7);
-        $scheduler_date = Carbon::parse($day_before_check_in->min($week_after_approval));
+        // Getting check in time
         $check_in = $booking->property->check_in;
         $timeSplit = Helper::get_time_split($check_in);
-        $scheduler_date->hour = $timeSplit[0];
-        $scheduler_date->minute = $timeSplit[1];
-        $scheduler_date->second = 0;
 
+        // Exact check in time with date
+        $check_in_date_time = Carbon::parse($booking->start_date);
+        $check_in_date_time->setTime($timeSplit[0], $timeSplit[1], 0);
+
+        $hoursDiff = $check_in_date_time->diffInHours(now());
+
+        // If request is made in less then 72 hours of check in time, cancel at 12 am on check in date
+        if ($hoursDiff <= 72) {
+            $scheduler_date = Carbon::parse($booking->start_date);
+            $scheduler_date->setTime(0, 0, 0);
+        } else {
+            // If request is made in before 72 hours of check in time,
+            //  within 24 hours of Check-In date OR  7 days after of traveler request, deny request.
+            $day_before_check_in = $check_in_date_time->copy()->subDays(1);
+            $week_after_approval = now()->addDays(7);
+            $scheduler_date = Carbon::parse($day_before_check_in->min($week_after_approval));
+            $scheduler_date->setTime($timeSplit[0], $timeSplit[1], 0);
+        }
+        Logger::info('Cancel date: ' . $scheduler_date);
         ProcessAutoCancel::dispatch($booking->id)
             ->delay($scheduler_date)
             ->onQueue(GENERAL_QUEUE);

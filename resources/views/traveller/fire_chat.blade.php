@@ -58,6 +58,7 @@
 {{-- <link rel="stylesheet" href="{{ URL::asset('assets/css/themes/themes_combined.min.css') }}" media="all"> --}}
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
 <script src="https://code.angularjs.org/1.4.4/angular-route.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
 <!-- Firebase -->
 <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
@@ -127,7 +128,9 @@
                                         <li>
                                             <p>
                                                 <%message.message%>
-                                                <span class="chat_message_time"><%message.date%></span>
+                                                <span class="chat_message_time">
+                                                    <% message.date | chatDate %>
+                                                </span>
                                             </p>
                                         </li>
 
@@ -147,7 +150,9 @@
                                         <li>
                                             <p>
                                                 <%message.message%>
-                                                <span class="chat_message_time"><%message.date%></span>
+                                                <span class="chat_message_time">
+                                                    <% message.date | chatDate %>
+                                                </span>
 
                                             </p>
 
@@ -327,6 +332,12 @@
         //Use the URL of your project here with the trailing slash
     );
 
+    app.filter('chatDate', function() {
+        return function(input) {
+            return moment(input).local().format('MM/DD/YYYY h:m:s a');
+        };
+    });
+
     app.controller('ListController', ['$scope', '$firebaseArray', '$firebaseObject', 'FBURL', function($scope, $firebaseArray, $firebaseObject, FBURL) {
 
         var request_id = '{{$id}}';
@@ -390,7 +401,7 @@
                 owner_id: $scope.userid,
                 traveller_id: 1,
                 property_id: 1,
-                date: new Date().toLocaleString(),
+                date: new Date().toUTCString(),
                 read: false,
             });
 

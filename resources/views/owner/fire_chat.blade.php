@@ -123,7 +123,9 @@
                                         <li>
                                             <p>
                                                 <%message.message%>
-                                                <span class="chat_message_time"><%message.date%></span>
+                                                <span class="chat_message_time">
+                                                    <% message.date | chatDate %>
+                                                </span>
                                             </p>
                                         </li>
 
@@ -143,7 +145,9 @@
                                         <li>
                                             <p>
                                                 <%message.message%>
-                                                <span class="chat_message_time">{{Helper::get_local_date_time($property->created_at)}}<%message.date%></span>
+                                                <span class="chat_message_time">
+                                                    <% message.date | chatDate %>
+                                                </span>
                                             </p>
                                         </li>
 
@@ -318,6 +322,12 @@
         //Use the URL of your project here with the trailing slash
     );
 
+    app.filter('chatDate', function() {
+        return function(input) {
+            return moment(input).local().format('MM/DD/YYYY h:m:s a');
+        };
+    });
+
     app.controller('ListController', ['$scope', '$firebaseArray', '$firebaseObject', 'FBURL', function($scope, $firebaseArray, $firebaseObject, FBURL) {
 
         var request_id = '{{$id}}';
@@ -338,7 +348,6 @@
             });
             $scope.messages.$watch(function(newValue) {
                 $scope.markAsRead($scope.messages);
-
             });
         })
         $scope.userid = '{{$owner->id}}';
@@ -394,7 +403,7 @@
                             owner_id: $scope.userid,
                             traveller_id: 1,
                             property_id: 1,
-                            date: new Date().toLocaleString(),
+                            date: new Date().toUTCString(),
                             read: false
                         });
                     } else {

@@ -82,9 +82,11 @@
                             </label>
                         </p>
                         <div id="otp_buttons">
-                            <input type="submit" name="button border fw" value="Submit">
-                            <span style="float:right;margin-top: 10px;background-color: #e78016;border-color: #e78016;" class="btn btn-danger btn-default" id="send_otp">Send me another code</span>
-                            <a id="change-phone" class="change-phone-link">Change number</a>
+                            <span style="margin-top: 5px;background-color: #e78016;border-color: #e78016;" class="btn btn-danger btn-default" id="send_otp">Send me another code</span>
+                            <input type="submit" name="button border fw" value="Submit" style="float:right; margin: 0;">
+                            <div style="width: 100%; text-align: right; margin-top: 10px;">
+                                <a id="change-phone" class="change-phone-link">Change number</a>
+                            </div>
                         </div>
                         @if(Session::has('attempts') && Session::get('attempts') > 1)
                             <center><input type="button" class="btn_get_help" onclick="get_help()" id="get_help" value="Get Help"></center>

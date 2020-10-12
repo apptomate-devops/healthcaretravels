@@ -210,7 +210,7 @@
                             <p class="form-row form-row-wide" id="profile_image_field" style="display: none;">
                                 <label for="profile_image">Profile Picture:</label>
                                 <label class="register-info">Upload a clear image of your face.</label>
-                                <img src="/user_profile_default.png" alt="" onclick="$('#profile_image').trigger('click'); return false;">
+                                <img src="/user_profile_default.png" alt="" onclick="$('#profile_image').trigger('click'); return false;" style="cursor: pointer;">
                                 <input style="display: none;" type="file" name="profile_image" id="profile_image" class="form-control" accept="image/*"/>
                             </p>
 

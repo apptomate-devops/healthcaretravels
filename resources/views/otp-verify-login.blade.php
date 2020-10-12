@@ -72,10 +72,10 @@
                             </label>
                         </p>
                         <div id="otp_buttons">
-                            <input type="submit" name="button border fw" value="Submit">
-                            <span style="float:right;margin-top: 10px;background-color: #e78016;border-color: #e78016;" class="btn btn-danger btn-default" id="send_otp">Send me another code</span>
+                            <span style="margin-top: 5px;background-color: #e78016;border-color: #e78016;" class="btn btn-danger btn-default" id="send_otp">Send me another code</span>
+                            <input style="float:right;" type="submit" name="button border fw" value="Submit">
                         </div>
-                        <center>
+                        <center style="margin-top: 22px;">
                             <span>Having trouble or change your number?</span>
                             <br>
                             <span>Contact support at <a target="_blank" href="mailto:{{SUPPORT_MAIL}}">{{SUPPORT_MAIL}}</a></span>

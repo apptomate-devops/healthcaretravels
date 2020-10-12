@@ -1375,6 +1375,7 @@ class PropertyController extends BaseController
             }
 
             $properties->bed_rooms = $bed_list;
+            $properties->bed_count = $bed_list->sum('count');
 
             $amenties = DB::table('property_amenties')
                 ->where('property_amenties.client_id', '=', CLIENT_ID)

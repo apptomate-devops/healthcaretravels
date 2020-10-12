@@ -212,7 +212,7 @@
                 <h4 class="card-title">Verification Documents</h4>
                 @if(isset($data->approved_by_name))
                 <div>
-                    Documents Approved by <b>{{$data->approved_by_name}}</b> on {{date('d-m-Y h:m A',strtotime($data->approved_on))}}
+                    Documents Approved by <b>{{$data->approved_by_name}}</b> on {{Helper::get_local_date_time($data->approved_on)}}
                 </div>
                 @endif
             </div>

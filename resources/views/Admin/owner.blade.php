@@ -85,7 +85,7 @@
                                             <td>
                                                 {{$traveller->id}}
                                             </td>
-                                            <td>{{date("m/d/Y",strtotime($traveller->created_at))}}</td>
+                                            <td>{{Helper::get_local_date_time($traveller->created_at, 'm/d/Y')}}</td>
                                             <td>
                                                 <center>@if($traveller->first_name!='0'){{$traveller->first_name}} @else @endif
                                                     @if($traveller->last_name!='0'){{$traveller->last_name}}@else

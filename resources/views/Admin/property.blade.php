@@ -59,11 +59,11 @@
                                     @foreach($properties as $key => $property)
                                         <tr>
                                             <td>{{$property->id}}</td>
-                                            <td>{{date("m/d/Y",strtotime($property->created_at))}}</td>
+                                            <td>{{Helper::get_local_date_time($property->created_at, 'm/d/Y')}}</td>
                                             <td>{{$property->title}}</td>
                                             <td>{{$property->first_name}} {{$property->last_name}}</td>
                                             <td>{{$property->room_type}}</td>
-                                            <td>{{$property->created_at}}</td>
+                                            <td>{{Helper::get_local_date_time($property->created_at)}}</td>
 {{--                                            <td>{{$property->view_count}}</td>--}}
                                             <td>
                                                 Featured : <input type="checkbox" id="switchery1" class="switchery-sm" />

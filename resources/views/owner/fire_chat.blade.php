@@ -1,4 +1,4 @@
-<?php date_default_timezone_set(TIMEZONE); ?>
+<?php date_default_timezone_set(USER_DEFAULT_TIMEZONE); ?>
 @extends('layout.master')
 @section('title')
 {{APP_BASE_NAME}} Chat
@@ -143,7 +143,7 @@
                                         <li>
                                             <p>
                                                 <%message.message%>
-                                                <span class="chat_message_time"><%message.date%></span>
+                                                <span class="chat_message_time">{{Helper::get_local_date_time($property->created_at)}}<%message.date%></span>
                                             </p>
                                         </li>
 

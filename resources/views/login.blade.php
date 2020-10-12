@@ -73,6 +73,7 @@
                         @endcomponent
                         <form method="post" class="login" action="{{url('/')}}/login-user">
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
+                            <input type="hidden" name="timezone" id="timezone">
                             <input type="hidden" name="client_id" value="{{$constants['client_id']}}">
                             <p class="form-row form-row-wide">
                                 <label for="username">Email Address:
@@ -121,6 +122,7 @@
                         @endif
                         <form method="post" class="register" action="{{url('/')}}/register-user" enctype="multipart/form-data" onsubmit="return validate_registration()" autocomplete="off" onkeydown="return event.key != 'Enter';">
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
+                            <input type="hidden" name="timezone" id="timezone">
                             <input type="hidden" name="client_id" id="client_id" value="{{$constants['client_id']}}">
                             <input type="hidden" name="social_id" id="social_id" value="{{Session::get('social_id')}}">
                             <input type="hidden" name="login_type" id="login_type" value="{{Session::get('login_type')}}">
@@ -441,6 +443,8 @@
         });
     }
     $(document).ready(() => {
+        $('#timezone').val(moment.tz.guess())
+
         load_agencies();
         set_max_date();
         checkRememberEmail(true);

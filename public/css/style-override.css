@@ -1,4 +1,12 @@
-﻿/* Components stylings */
+﻿.chosenIcon-container .chosen-icon-item {
+    position: absolute;
+    font-size: 18px;
+    right: 0;
+    margin-right: 5px;
+    padding: 0 10px;
+}
+
+/* Components stylings */
 /* Social Buttons */
 .social-buttons-wrapper {
     display: flex;
@@ -227,4 +235,16 @@
 .error-text-accept {
     margin-top: 10px !important;
     color: #9d0000;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+.w-mc {
+    width: max-content !important;
+}
+
+.ml-10 {
+    margin-left: 10px;
 }

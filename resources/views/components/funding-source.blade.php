@@ -2,10 +2,10 @@
     <h2>{{$label ?? 'Select an Account'}}</h2>
     @if(count($funding_sources) > 0)
         <div style="width: 70%">
-            <select name="funding_source" id="fundingSource" class="chosen-select-no-single">
+            <select name="funding_source" id="fundingSource" class="chosen-icon-no-single trash-icon">
                 <option selected disabled>Select Account</option>
                 @foreach($funding_sources as $source)
-                    <option label="{{$source->name}}" value="{{$source->_links->self->href}}">{{$source->name}}</option>
+                    <option data-icon="fa fa-trash" label="{{$source->name}}" value="{{$source->_links->self->href}}">{{$source->name}}</option>
                 @endforeach
             </select>
         </div>
@@ -30,6 +30,23 @@
                 </div>
                 <div class="modal-body">
                     <div id="iavContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="delete_funding_source_modal" data-backdrop="static" data-keyboard="false" class="modal fade in" role="dialog">
+        <div class="modal-dialog modal-md">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Are you sure you want to remove the account <span id="delete-account-name"></span></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="flex-row">
+                        <div class="btn btn-default w-mc" data-dismiss="modal">Cancel</div>
+                        <div class="btn btn-danger w-mc ml-10" id="confirm-delete-fs">Remove now</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -69,7 +86,7 @@
                 if(data.success) {
                     $('#fundingSource').empty();
                     data.funding_sources.forEach(source => {
-                        $('#fundingSource').append(`<option label="${source.name}" value="${source._links.self.href}">${source.name}</option>`);
+                        $('#fundingSource').append(`<option data-icon="fa fa-trash" label="${source.name}" value="${source._links.self.href}">${source.name}</option>`);
                     })
                     $('#fundingSource').val(fundingSource);
                     $('#fundingSource').chosen().trigger("chosen:updated");
@@ -99,6 +116,48 @@
         });
     };
 
+    function deleteFundingSourceFromUser(fundingSource, cb) {
+        var formData = {
+            id: {{$user->id}},
+            fundingSource: fundingSource,
+            _token: '{{ csrf_token() }}',
+        };
+        $.ajax({
+            url: "/dwolla/delete_funding_source",
+            type: "POST",
+            data: formData,
+            json: true,
+            success: function(response, textStatus, jqXHR) {
+                cb(null, response);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                cb(errorThrown);
+            }
+        });
+    };
+
+    $(document).on('click', '.chosen-icon-item', function(event) {
+        window.fsToDelete = event.target.dataset.value;
+        window.fsToDeleteName = event.target.dataset.name;
+        $('#delete-account-name').text(window.fsToDeleteName);
+        $('#delete_funding_source_modal').modal('show');
+    });
+
+    $(document).on('click', '#confirm-delete-fs', function(event) {
+        $('#addDetailsProgress').show();
+        deleteFundingSourceFromUser(window.fsToDelete, function (err, data) {
+                $("#delete_funding_source_modal").modal('hide');
+                if(data.success) {
+                    $('#fundingSource').empty();
+                    data.funding_sources.forEach(source => {
+                        $('#fundingSource').append(`<option data-icon="fa fa-trash" label="${source.name}" value="${source._links.self.href}">${source.name}</option>`);
+                    })
+                    $('#fundingSource').val(fundingSource);
+                    $('#fundingSource').chosen().trigger("chosen:updated");
+                }
+                $('#addDetailsProgress').hide();
+            });
+    });
     $('#create-funding-source').on('click', function (e) {
         var dwollaAccept = $('#dwolla_policy_accept');
         if (dwollaAccept.length && !dwollaAccept.is(':checked')) {

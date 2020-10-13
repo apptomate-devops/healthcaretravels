@@ -129,6 +129,26 @@ class PaymentController extends BaseController
         ]);
     }
 
+    public function delete_funding_source(Request $request)
+    {
+        $id = $request->session()->get('user_id');
+        $funding_source = $request->fundingSource;
+        $user = Users::find($id);
+        if (empty($user)) {
+            return response()->json(['success' => false, 'error' => 'User does not exists!']);
+        }
+        try {
+            $this->dwolla->deleteFundingSource($funding_source);
+            $user->default_funding_source = null;
+            $user->save();
+        } catch (\Throwable $th) {
+            Logger::error('Error in deleting funding source for user: ' . $id);
+            return response()->json(['success' => false, 'error' => $th->getMessage()]);
+        }
+        $funding_sources = $this->dwolla->getFundingSourcesForCustomer($user->dwolla_customer);
+        return response()->json(['success' => true, 'funding_sources' => $funding_sources]);
+    }
+
     public function add_funding_source(Request $request)
     {
         $id = $request->session()->get('user_id');
@@ -142,7 +162,6 @@ class PaymentController extends BaseController
         $user->save();
         $request->session()->put('user_funding_source', $default_funding_source);
         $funding_sources = $this->dwolla->getFundingSourcesForCustomer($user->dwolla_customer);
-
         if ($fromProfile) {
             try {
                 $bookings = PropertyBooking::getActiveBookingForUser($id);

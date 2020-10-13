@@ -532,6 +532,56 @@
                 $(this).attr('src', '/user_profile_default.png');
             }
         });
+
+        $.getIconNode = function (classname, value, name) {
+            var element = document.createElement('i');
+            var classReaplce = classname.replace('.', '');
+            element.className = classReaplce + ' chosen-icon-item';
+            element.dataset.value = value;
+            element.dataset.name = name;
+            return element;
+        }
+
+        $.fn.chosenIcon = function (options) {
+            return this.each(function () {
+                var $select = $(this);
+                var iconMap = {};
+                var valueMap = {};
+                var nameMap = {};
+
+                // Retrieve icon class from data attribute and build object for each list item
+                $select.find('option').filter(function () {
+                    return $(this).text();
+                }).each(function (i) {
+                    var node = $(this);
+                    var iconSrc = node.attr('data-icon');
+                    iconMap[i] = $.trim(iconSrc);
+                    valueMap[i] = node.val();
+                    nameMap[i] = node.text();
+                });
+                // Execute chosen plugin and add our custom class
+                $select.chosen(options);
+                $chosen = $select.next().addClass('chosenIcon-container');
+
+                // Add icon node in list item with source value
+                $select.on('chosen:showing_dropdown chosen:activate', function () {
+                    setTimeout(function () {
+                        $chosen.find('.chosen-results li').each(function (i) {
+                            var iconClassName = iconMap[i];
+                            if (iconClassName) {
+                                var iconNode = $.getIconNode(iconClassName, valueMap[i], nameMap[i]);
+                                $(this).append(iconNode);
+                            }
+                        });
+                    }, 0);
+                });
+                $select.trigger('change');
+            });
+        }
+        $('.chosen-icon-no-single').chosenIcon({
+            disable_search_threshold: 10,
+            parser_config: { copy_data_attributes: true }
+        });;
     }) ;
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}&libraries=places&callback=onGoogleLoad" async defer></script>

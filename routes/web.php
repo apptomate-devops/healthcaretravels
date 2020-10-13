@@ -122,6 +122,7 @@ Route::middleware(['LoginCheck'])->group(function () {
     );
     Route::post('/dwolla/get_funding_source_details', 'PaymentController@get_funding_source_details');
     Route::post('/dwolla/add_funding_source', 'PaymentController@add_funding_source');
+    Route::post('/dwolla/delete_funding_source', 'PaymentController@delete_funding_source');
 
     // Verified users only
     Route::middleware(['VerifiedCheck'])->group(function () {

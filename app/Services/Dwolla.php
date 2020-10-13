@@ -195,6 +195,16 @@ class Dwolla
         ];
     }
 
+    public function deleteFundingSource($funding_sources)
+    {
+        try {
+            return $this->fsApi->softDelete(['removed' => true], $funding_sources);
+        } catch (\Throwable $ex) {
+            Logger::error('Error in deleting funding source: ' . $fundingSourceUrl . '. EX: ' . $ex->getResponseBody());
+            throw $ex;
+        }
+    }
+
     public function getFundingSourceToken($id)
     {
         $user = Users::find($id);
@@ -329,9 +339,12 @@ class Dwolla
     public function cancelTransfer($transferUrl)
     {
         try {
-            $transfer = $this->transfersApi->update([
-                'status' => 'cancelled',
-            ], $transferUrl);
+            $transfer = $this->transfersApi->update(
+                [
+                    'status' => 'cancelled',
+                ],
+                $transferUrl,
+            );
             return $transfer;
         } catch (\Throwable $th) {
             throw $th;

@@ -141,6 +141,7 @@ class PaymentController extends BaseController
         $user->default_funding_source = $default_funding_source;
         $user->save();
         $request->session()->put('user_funding_source', $default_funding_source);
+        $funding_sources = $this->dwolla->getFundingSourcesForCustomer($user->dwolla_customer);
 
         if ($fromProfile) {
             try {
@@ -169,7 +170,7 @@ class PaymentController extends BaseController
                 Logger::error('Error scheduling failed payments. EX: ' . $ex->getMessage());
             }
         }
-        return response()->json(['success' => true]);
+        return response()->json(['success' => true, 'funding_sources' => $funding_sources]);
     }
 
     public function dwolla_webhook(Request $request)

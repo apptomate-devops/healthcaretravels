@@ -1,3 +1,10 @@
+@php
+$buttonText = $button_label ?? 'Add Account Details';
+$hasDwollaAccount = isset($user->dwolla_customer);
+if (!$hasDwollaAccount) {
+    $buttonText = 'Agree and ' . $buttonText;
+}
+@endphp
 <div>
     <h2>{{$label ?? 'Select an Account'}}</h2>
     @if(count($funding_sources) > 0)
@@ -11,15 +18,17 @@
         </div>
     @else
         <div>You haven't added any account details yet.</div>
+    @endif
+    @if (!$hasDwollaAccount)
         <div class="checkboxes mt-10" id="policy_accept_field">
             <input id="dwolla_policy_accept" type="checkbox" name="dwolla_policy_accept">
             <label for="dwolla_policy_accept">
-                By checking and selecting {{$button_label ?? 'Agree and Add Account Details'}} below, You agree to <a target="_blank" href="https://www.dwolla.com/legal/tos/">Dwolla Terms of Service</a> and <a target="_blank" href="https://www.dwolla.com/legal/privacy/">Dwolla Privacy Policy</a>
+                By checking and selecting {{$buttonText}} below, You agree to <a target="_blank" href="https://www.dwolla.com/legal/tos/">Dwolla Terms of Service</a> and <a target="_blank" href="https://www.dwolla.com/legal/privacy/">Dwolla Privacy Policy</a>
                 <p class="error-text-accept" style="display: none">Policy must be agreed</p>
             </label>
         </div>
     @endif
-    <div class="btn bg-orange" style="width: auto; margin-top: 10px;" id="create-funding-source">{{$button_label ?? 'Agree and Add Account Details'}}</div>
+    <div class="btn bg-orange" style="width: auto; margin-top: 10px;" id="create-funding-source">{{$buttonText}}</div>
     <div id="bank_verification_modal" data-backdrop="static" data-keyboard="false" class="modal fade in" role="dialog">
         <div class="modal-dialog modal-lg">
             <!-- Modal content-->

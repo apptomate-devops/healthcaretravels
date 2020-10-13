@@ -358,6 +358,14 @@ class UserController extends BaseController
         $request->session()->put('phone_v', $check->phone);
         $request->session()->put('user_role_id', $check->role_id);
         $request->session()->put('user_funding_source', $check->default_funding_source);
+
+        // store user timezone
+        DB::table('users')
+            ->where('client_id', '=', CLIENT_ID)
+            ->where('phone', '=', $check->phone)
+            ->where('id', '=', $check->id)
+            ->update(['timezone' => $request->timezone]);
+
         if ($check->otp_verified != 1) {
             $OTP = rand(1111, 9999);
             // send otp
@@ -665,6 +673,7 @@ class UserController extends BaseController
             'work' => $request->work,
             'work_title' => $request->work_title,
             'website' => $request->website,
+            'timezone' => $request->timezone,
             'auth_token' => $token,
             'is_encrypted' => 1,
             'login_type' => $login_type,

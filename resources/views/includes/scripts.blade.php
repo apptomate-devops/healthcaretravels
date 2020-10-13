@@ -12,6 +12,8 @@
 <script type="text/javascript" src="{{URL::asset('js/caleran.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/my-library.js') }}"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.14/moment-timezone-with-data-2012-2022.min.js"></script>
 {{--Masked Inputs--}}
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.60/inputmask/jquery.inputmask.js"></script>
 

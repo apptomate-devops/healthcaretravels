@@ -72,7 +72,7 @@
                                             <td>
                                                 {{$agency->id}}
                                             </td>
-                                            <td>{{date("m/d/Y",strtotime($agency->created_at))}}</td>
+                                            <td>{{Helper::get_local_date_time($agency->created_at, 'm/d/Y')}}</td>
                                             <td>
                                                 <center>@if($agency->name_of_agency!='0'){{$agency->name_of_agency}} @else
                                                     - @endif </center>

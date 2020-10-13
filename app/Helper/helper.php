@@ -719,7 +719,7 @@ class Helper
         define("DWOLLA_ENV", config('services.dwolla.env'));
 
         define("APP_LOGO_URL", "https://demo.rentalslew.com/public/keepers_logo.png");
-        define("TIMEZONE", "Asia/Kolkata");
+        define("USER_DEFAULT_TIMEZONE", "America/Chicago");
 
         define("BASE_URL", $BASE_URL . "/");
 
@@ -1056,5 +1056,16 @@ class Helper
             $twilio->sendMessage(COUNTRY_CODE . $number, $message);
         }
         return;
+    }
+
+    public static function get_local_date_time($dateObj, $format = 'm-d-y H:i:s')
+    {
+        if (empty($dateObj)) {
+            return '';
+        }
+        $timezone = optional(auth()->user())->timezone ?? USER_DEFAULT_TIMEZONE;
+        return Carbon::parse($dateObj)
+            ->timezone($timezone)
+            ->format($format);
     }
 }

@@ -67,7 +67,12 @@
                 $('#addDetailsProgress').hide();
                 $("#bank_verification_modal").modal('hide');
                 if(data.success) {
-                    window.location.reload();
+                    $('#fundingSource').empty();
+                    data.funding_sources.forEach(source => {
+                        $('#fundingSource').append(`<option label="${source.name}" value="${source._links.self.href}">${source.name}</option>`);
+                    })
+                    $('#fundingSource').val(fundingSource);
+                    $('#fundingSource').chosen().trigger("chosen:updated");
                 }
             });
         });

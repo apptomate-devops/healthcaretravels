@@ -262,9 +262,9 @@
                                 <td>{{$payment->monthly_rate}}</td>
                                 <td>{{$payment->total_amount}}</td>
                                 <td>{{Helper::get_payment_status($payment, true)}}</td>
-                                <td>{{$payment->processed_time}}</td>
-                                <td>{{$payment->confirmed_time}}</td>
-                                <td>{{$payment->failed_time}}</td>
+                                <td>{{Helper::get_local_date_time($payment->processed_time)}}</td>
+                                <td>{{Helper::get_local_date_time($payment->confirmed_time)}}</td>
+                                <td>{{Helper::get_local_date_time($payment->failed_time)}}</td>
                                 <td>{{$payment->failed_reason}}</td>
                                 <td>{{$payment->transfer_id}}</td>
                                 <td>{{$payment->transfer_url}}</td>

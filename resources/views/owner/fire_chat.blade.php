@@ -1,4 +1,4 @@
-<?php date_default_timezone_set(TIMEZONE); ?>
+<?php date_default_timezone_set(USER_DEFAULT_TIMEZONE); ?>
 @extends('layout.master')
 @section('title')
 {{APP_BASE_NAME}} Chat
@@ -55,7 +55,6 @@
 {{-- <link rel="stylesheet" href="{{ URL::asset('assets/css/themes/themes_combined.min.css') }}" media="all"> --}}
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
 <script src="https://code.angularjs.org/1.4.4/angular-route.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
 <!-- Firebase -->
 <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>

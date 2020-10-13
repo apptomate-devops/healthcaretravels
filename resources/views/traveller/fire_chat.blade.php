@@ -1,4 +1,4 @@
-<?php date_default_timezone_set(TIMEZONE); ?>
+<?php date_default_timezone_set(USER_DEFAULT_TIMEZONE); ?>
 @extends('layout.master')
 @section('title')
 {{APP_BASE_NAME}} Chat

@@ -26,7 +26,7 @@
 
             <div class="col-md-8">
                 <div class="booking-details">
-                    <a class="btn bg-orange" id="chat_now" href="/owner-profile/{{$data->traveller_id}}">Chat now with {{$data->traveller_name}}</a>
+                    <a class="btn bg-orange" id="chat_now" href="{{$chat_url}}">Chat now with {{$data->traveller_name}}</a>
                     <h3>Details</h3>
                     <div>Booking Reservation: <span>{{$data->booking_id}}</span></div>
                     <div>Property Name: <a href="/property/{{$data->property_id}}">{{$data->title}}</a></div>

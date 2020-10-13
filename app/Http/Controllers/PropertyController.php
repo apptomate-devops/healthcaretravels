@@ -1205,6 +1205,7 @@ class PropertyController extends BaseController
                     'property_booking_price.*',
                     'property_booking.*',
                     'property_list.title',
+                    'property_list.id as property_id',
                     'property_list.min_days',
                     'property_list.monthly_rate',
                     'property_list.security_deposit',
@@ -1221,7 +1222,10 @@ class PropertyController extends BaseController
             $bookingModel = PropertyBooking::find($data->id);
             $owner = $bookingModel->owner;
             $traveller = $bookingModel->traveler;
+            $property = $bookingModel->property;
 
+            $chat_data = Helper::start_chat_handler($traveller->id, $property->id, $request);
+            $chat_url = "{$request->getSchemeAndHttpHost()}/owner/chat/{$chat_data['chat_id']}?fb-key=personal_chat&fbkey=personal_chat";
             $guest_info = GuestsInformation::where('booking_id', $booking_id)->get();
             $pet_details = PetInformation::where('booking_id', $booking_id)->first();
             $data->traveller_profile_image = $traveller->profile_image;
@@ -1240,6 +1244,7 @@ class PropertyController extends BaseController
                 'scheduled_payments' => $payment_summary['scheduled_payments'],
                 'total_earning' => $payment_summary['grand_total'],
                 'funding_sources' => $funding_sources,
+                'chat_url' => $chat_url,
             ]);
         } catch (Exception $e) {
             Logger::info($e->getMessage());
@@ -1639,6 +1644,7 @@ class PropertyController extends BaseController
         $owner = $bookingModel->owner;
         $traveller = $bookingModel->traveler;
         $property = $bookingModel->property;
+        $chat_data = Helper::start_chat_handler($traveller->id, $property->id, $request);
 
         $guest_info = GuestsInformation::where('booking_id', $booking_id)->get();
         $pet_details = PetInformation::where('booking_id', $booking_id)->first();
@@ -1651,6 +1657,7 @@ class PropertyController extends BaseController
         $data->agency = implode(", ", array_filter([$data->name_of_agency, $data->other_agency])); // Booking Agency
 
         $payment_summary = $this->get_payment_summary($data);
+        $traveller_chat_url = "{$request->getSchemeAndHttpHost()}/traveler/chat/{$chat_data['chat_id']}?fb-key=personal_chat&fbkey=personal_chat";
 
         return view('owner.single_reservations', [
             'data' => $data,
@@ -1659,6 +1666,7 @@ class PropertyController extends BaseController
             'pet_details' => $pet_details,
             'scheduled_payments' => $payment_summary['scheduled_payments'],
             'total_payment' => $payment_summary['grand_total'],
+            'chat_url' => $traveller_chat_url,
         ]);
     }
 

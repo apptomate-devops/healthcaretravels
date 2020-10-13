@@ -30,7 +30,7 @@
                     <div style="font-weight: bold; color: #e08716; margin-bottom: 15px;">Your request has been sent to the property owner. We'll let you know when your request if approved. In the mean time, feel free to start a chat with the property owner to say hello!</div>
                 @endif
                 <div class="booking-details">
-                    <a class="btn bg-orange" id="chat_now" href="/owner-profile/{{$data->owner_id}}">Chat now with {{$data->owner_name}}</a>
+                    <a class="btn bg-orange" id="chat_now" href="{{$chat_url}}">Chat now with {{$data->owner_name}}</a>
                     <h3>Details</h3>
                     <div>Booking Reservation: <span>{{$data->booking_id}}</span></div>
                     <div>Property Name: <a href="/property/{{$data->property_id}}">{{$property->title}}</a></div>

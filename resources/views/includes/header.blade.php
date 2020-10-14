@@ -149,7 +149,7 @@
                                     @endif
                                     <li><a href="{{url('/')}}/owner/inbox" class="not-verified-block" style="position:relative"><i class="fa fa-inbox"></i> <span id="unread_chat_badge_inbox"><span class="unread_chat_badge_inbox"></span></span> Inbox</a></li>
                                     <li><a href="{{url('/')}}/owner/invoices"><i class="sl sl-icon-note"></i> Transaction History </a></li>
-                                    @if(Session::has('user_funding_source'))
+                                    @if(Auth::user()->default_funding_source)
                                         <li>
                                             <a href="{{url('/')}}/payment-options" class="not-verified-block">
                                                 <i class="sl sl-icon-note"></i> Payment Options
@@ -168,7 +168,7 @@
                                     <li><a href="{{url('/')}}/traveler/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
                                     <li><a href="{{url('/')}}/traveler/my-reservations" class="not-verified-block"><i class="sl sl-icon-credit-card"></i> My Trips</a></li>
                                     <li><a href="{{url('/')}}/traveler/inbox" class="not-verified-block" style="position:relative"><i class="fa fa-inbox"></i> <span id="unread_chat_badge_inbox"><span class="unread_chat_badge_inbox"></span></span> Inbox</a></li>
-                                    @if(Session::has('user_funding_source'))
+                                    @if(Auth::user()->default_funding_source)
                                         <li>
                                             <a href="{{url('/')}}/payment-options" class="not-verified-block">
                                                 <i class="sl sl-icon-note"></i> Payment Options
@@ -186,7 +186,7 @@
                                     <li><a href="{{url('/')}}/traveler/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
                                     <li><a href="{{url('/')}}/traveler/my-reservations" class="not-verified-block"><i class="sl sl-icon-credit-card"></i> My Trips</a></li>
                                     <li><a href="{{url('/')}}/traveler/inbox" class="not-verified-block"><i class="fa fa-inbox"></i> Inbox</a></li>
-                                    @if(Session::has('user_funding_source'))
+                                    @if(Auth::user()->default_funding_source)
                                         <li>
                                             <a href="{{url('/')}}/payment-options" class="not-verified-block">
                                                 <i class="sl sl-icon-note"></i> Payment Options

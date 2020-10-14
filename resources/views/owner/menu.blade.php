@@ -73,7 +73,7 @@
                 <i class="sl sl-icon-note"></i> Transcation History
             </a>
         </li>
-        @if(Session::has('user_funding_source'))
+        @if(Auth::user()->default_funding_source)
             <li>
                 <a href="{{url('/')}}/payment-options" {{{ (Request::is('/payment-options') ? 'class=current' : '') }}}>
                     <i class="sl sl-icon-note"></i> Payment Options
@@ -139,7 +139,7 @@
     <li><a href="{{url('/')}}/traveler/my-reservations" {{{ (Request::is('traveler/my-reservations') ? 'class=current' : '') }}}>
             <i class="sl sl-icon-credit-card"></i> My Trips</a><i class="fa fa-bell" id="traveler_trips"></i></li>
 
-    @if(Session::has('user_funding_source'))
+    @if(Auth::user()->default_funding_source)
         <li>
             <a href="{{url('/')}}/payment-options" {{{ (Request::is('/payment-options') ? 'class=current' : '') }}}>
                 <i class="sl sl-icon-note"></i> Payment Options
@@ -185,7 +185,7 @@
     <li><a href="{{url('/')}}/traveler/my-reservations" {{{ (Request::is('traveler/my-reservations') ? 'class=current' : '') }}}>
             <i class="sl sl-icon-credit-card"></i> My Trips</a><i class="fa fa-bell" id="agency_trips"></i></li>
 
-    @if(Session::has('user_funding_source'))
+    @if(Auth::user()->default_funding_source)
         <li>
             <a href="{{url('/')}}/payment-options" {{{ (Request::is('/payment-options') ? 'class=current' : '') }}}>
                 <i class="sl sl-icon-note"></i> Payment Options

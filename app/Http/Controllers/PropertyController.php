@@ -2934,16 +2934,17 @@ class PropertyController extends BaseController
         if ($request->other_agency) {
             $booking->other_agency = $request->other_agency;
         }
+        $owner = $booking->owner;
+        $traveller = $booking->traveler;
+        $property = $booking->property;
+
         $booking->funding_source = $request->funding_source;
         $booking->status = ONE;
+        $booking->cancellation_policy = $property->cancellation_policy;
         $booking->save();
         // Scheduling auto cancel job if there was no response from owner
         $this->schedule_auto_cancel_job($booking);
 
-        //        $bookingModel = PropertyBooking::find($booking->id);
-        $owner = $booking->owner;
-        $traveller = $booking->traveler;
-        $property = $booking->property;
         $property_img = DB::table('property_images')
             ->where('property_images.client_id', '=', CLIENT_ID)
             ->where('property_images.property_id', '=', $property->id)

@@ -29,7 +29,7 @@
                             <h2>{{$title}}</h2>
                             <div>{{$subTitle}}</div>
                             @if(!$is_owner)
-                                <div>Cancellation Policy: <a href="{{BASE_URL}}cancellationpolicy" class="cancel-policy-link" target="_blank">{{$property->cancellation_policy}}</a></div>
+                                <div>Cancellation Policy: <a href="{{BASE_URL}}cancellationpolicy" class="cancel-policy-link" target="_blank">{{$booking->cancellation_policy ?? $property->cancellation_policy}}</a></div>
                             @endif
                         </div>
                         <div class="row margin-top-30">

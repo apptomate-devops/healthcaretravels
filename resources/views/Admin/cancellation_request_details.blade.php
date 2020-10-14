@@ -27,7 +27,7 @@
                                 @else
                                     <h4 style="font-weight: bold;">Property: <span>{{$property->title}}</span></h4>
                                     <div class="details">Booking ID: <span>{{$booking->booking_id}}</span></div>
-                                    <div class="details">Cancellation Policy: <a href="{{BASE_URL}}cancellationpolicy" class="cancel-policy-link" target="_blank">{{$property->cancellation_policy}}</a></div>
+                                    <div class="details">Cancellation Policy: <a href="{{BASE_URL}}cancellationpolicy" class="cancel-policy-link" target="_blank">{{$booking->cancellation_policy ?? $property->cancellation_policy}}</a></div>
                                     <br>
                                     <div class="details"><b>Owner</b></div>
                                     <div class="details">Name: <span>{{$owner->first_name . ' ' . $owner->last_name}}</span></div>

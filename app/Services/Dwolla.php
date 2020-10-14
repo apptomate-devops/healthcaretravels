@@ -248,11 +248,13 @@ class Dwolla
         try {
             $all_funding_sources = $this->fsApi->getCustomerFundingSources($customerId);
             $funding_sources = $all_funding_sources->_embedded->{'funding-sources'};
-            return array_filter($funding_sources, function ($source) {
-                if ($source->status == 'verified' && $source->type != 'balance' && $source->removed == false) {
-                    return true;
-                }
-            });
+            return array_values(
+                array_filter($funding_sources, function ($source) {
+                    if ($source->status == 'verified' && $source->type != 'balance' && $source->removed == false) {
+                        return true;
+                    }
+                }),
+            );
         } catch (\Exception $ex) {
             Logger::error('Error in getFundingSourcesForCustomer ' . $ex->getMessage());
             return [];

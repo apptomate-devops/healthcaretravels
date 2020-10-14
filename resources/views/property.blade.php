@@ -82,9 +82,7 @@
                     <center>
                         <div style="margin-left: 18%;" class="col-md-3 col-sm-6 col-xs-6 property-image hide-990">
                             <p>
-                                <img style="height: 80px; width: 80px; border-radius: 50%;object-fit: contain; border: 1px solid #e78016;"
-                                     src="{{isset($data->profile_image) && $data->profile_image != '' && $data->profile_image != ' ' ? $data->profile_image : '/user_profile_default.png'}}"
-                                     alt="">
+                                <img class="user-icon" src="{{$data->profile_image}}">
                             </p>
                             <div class="sub-price">
                                 <a href="{{BASE_URL}}owner-profile/{{$data->user_id}}">{{$data->username}}</a>

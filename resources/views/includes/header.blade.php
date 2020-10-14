@@ -129,11 +129,7 @@
                             <div class="user-menu">
                                 <div class="user-name">
                                     <span id="header_profile_image">
-                                        @if(Session::has('profile_image') && Session::get('profile_image') != ' ')
-                                        <img src="{{ Session::get('profile_image') }}">
-                                        @else
-                                        <img src="/user_profile_default.png" alt="">
-                                        @endif
+                                        <img class="user-icon" src="{{Auth::user()->profile_image}}">
                                         <span id="unread_chat_badge"><span class="unread_chat_badge"></span></span>
                                     </span>
                                     <span>{{ Session::get('username') }}</span>

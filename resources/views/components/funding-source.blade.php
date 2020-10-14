@@ -153,9 +153,9 @@ if (!$hasDwollaAccount) {
     });
 
     $(document).on('click', '#confirm-delete-fs', function(event) {
+        $("#delete_funding_source_modal").modal('hide');
         $('#addDetailsProgress').show();
         deleteFundingSourceFromUser(window.fsToDelete, function (err, data) {
-                $("#delete_funding_source_modal").modal('hide');
                 if(data.success) {
                     $('#fundingSource').empty();
                     data.funding_sources.forEach(source => {

@@ -70,7 +70,7 @@
 
         <li>
             <a href="{{url('/')}}/owner/transaction-history" {{{ (Request::is('owner/transaction-history') ? 'class=current' : '') }}}>
-                <i class="sl sl-icon-note"></i> Transcation History
+                <i class="sl sl-icon-note"></i> Transaction History
             </a>
         </li>
         @if(Auth::user()->default_funding_source)

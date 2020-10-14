@@ -2,7 +2,7 @@
 //print_r($properties[0]); exit;
 ?>
 @extends('layout.master')
-@section('title','Transcation history ')
+@section('title','Transaction history ')
 @section('main_content')
 
 <!-- Content
@@ -10,7 +10,7 @@
 <div class="container">
 
 
-    <h2>Transcation History</h2>
+    <h2>Transaction History</h2>
 
     <div class="row">
 
@@ -20,8 +20,8 @@
 
                 <!-- Tabs Navigation -->
                 <ul class="tabs-nav">
-                    <li class="active"><a href="#tab1">Completed Transcations</a></li>
-                    <li class=""><a href="#tab2">Futured Transcations</a></li>
+                    <li class="active"><a href="#tab1">Completed Transactions</a></li>
+                    <li class=""><a href="#tab2">Future Transactions</a></li>
                     <li class=""><a href="#tab3">Gross Earnings</a></li>
 
                 </ul>
@@ -111,7 +111,7 @@
                     </div>
                     <!--  completed transcations ends-->
 
-                    <!--  Futured transcations starts-->
+                    <!--  Future transcations starts-->
                     <div class="tab-content" id="tab2" style="display: none;">
 
                         <h2 style="margin-left: 30px;">Pending Paid out : $ 100.00</h2>
@@ -173,7 +173,7 @@
                         </div>
 
                     </div>
-                    <!--  Futured transcations starts-->
+                    <!--  Future transcations starts-->
 
 
                     <!--  gross earnings transcations starts-->

@@ -334,7 +334,8 @@
 
     app.filter('chatDate', function() {
         return function(input) {
-            return moment(input).local().format('MM/DD/YYYY h:m:s a');
+            var date = typeof input === 'string' ? input : input.date;
+            return moment(date).local().format('MM/DD/YYYY hh:mm:ss a');
         };
     });
 

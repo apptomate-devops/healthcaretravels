@@ -636,7 +636,7 @@ class Helper
         }
 
         // firebase write starts
-        $date_fmt = date("m/d/Y H:i A");
+        $date_fmt = now();
         $values = [];
         $values['traveller_id'] = $traveler_id;
         $values['owner_id'] = $property_detail->user_id;

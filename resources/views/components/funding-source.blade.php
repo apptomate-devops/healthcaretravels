@@ -93,12 +93,7 @@ if (!$hasDwollaAccount) {
                 $('#addDetailsProgress').hide();
                 $("#bank_verification_modal").modal('hide');
                 if(data.success) {
-                    $('#fundingSource').empty();
-                    data.funding_sources.forEach(source => {
-                        $('#fundingSource').append(`<option data-icon="fa fa-trash" label="${source.name}" value="${source._links.self.href}">${source.name}</option>`);
-                    })
-                    $('#fundingSource').val(fundingSource);
-                    $('#fundingSource').chosen().trigger("chosen:updated");
+                    reintChosen(data, fundingSource);
                 }
             });
         });
@@ -125,6 +120,29 @@ if (!$hasDwollaAccount) {
         });
     };
 
+    function objectValues(obj) {
+        var res = [];
+        for (var i in obj) {
+            if (obj.hasOwnProperty(i)) {
+                res.push(obj[i]);
+            }
+        }
+        return res;
+    }
+    function reintChosen(data, fundingSource) {
+        $('#fundingSource').empty();
+        var fs = data.funding_sources;
+        if (!Array.isArray(fs)) {
+            fs = objectValues(fs);
+        }
+        fs.forEach(source => {
+            $('#fundingSource').append(`<option data-icon="fa fa-trash" label="${source.name}" value="${source._links.self.href}">${source.name}</option>`);
+        });
+        if(fundingSource) {
+            $('#fundingSource').val(fundingSource);
+        }
+        $('#fundingSource').chosenIcon().trigger("chosen:updated");
+    }
     function deleteFundingSourceFromUser(fundingSource, cb) {
         var formData = {
             id: {{$user->id}},
@@ -157,12 +175,7 @@ if (!$hasDwollaAccount) {
         $('#addDetailsProgress').show();
         deleteFundingSourceFromUser(window.fsToDelete, function (err, data) {
                 if(data.success) {
-                    $('#fundingSource').empty();
-                    data.funding_sources.forEach(source => {
-                        $('#fundingSource').append(`<option data-icon="fa fa-trash" label="${source.name}" value="${source._links.self.href}">${source.name}</option>`);
-                    })
-                    $('#fundingSource').val(fundingSource);
-                    $('#fundingSource').chosen().trigger("chosen:updated");
+                    reintChosen(data);
                 }
                 $('#addDetailsProgress').hide();
             });

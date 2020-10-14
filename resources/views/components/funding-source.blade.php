@@ -7,18 +7,15 @@ if (!$hasDwollaAccount) {
 @endphp
 <div>
     <h2>{{$label ?? 'Select an Account'}}</h2>
-    @if(count($funding_sources) > 0)
-        <div style="width: 70%">
-            <select name="funding_source" id="fundingSource" class="chosen-icon-no-single trash-icon">
-                <option selected disabled>Select Account</option>
-                @foreach($funding_sources as $source)
-                    <option data-icon="fa fa-trash" label="{{$source->name}}" value="{{$source->_links->self->href}}">{{$source->name}}</option>
-                @endforeach
-            </select>
-        </div>
-    @else
-        <div>You haven't added any account details yet.</div>
-    @endif
+    <div style="width: 70%">
+        <select name="funding_source" id="fundingSource" class="chosen-icon-no-single trash-icon">
+            <option selected disabled>Select Account</option>
+            @foreach($funding_sources as $source)
+                <option data-icon="fa fa-trash" label="{{$source->name}}" value="{{$source->_links->self->href}}">{{$source->name}}</option>
+            @endforeach
+        </select>
+    </div>
+    <div id="noFundingSource" style="display: none;">You haven't added any account details yet.</div>
     @if (!$hasDwollaAccount)
         <div class="checkboxes mt-10" id="policy_accept_field">
             <input id="dwolla_policy_accept" type="checkbox" name="dwolla_policy_accept">
@@ -65,6 +62,16 @@ if (!$hasDwollaAccount) {
 
 <script src="https://cdn.dwolla.com/1/dwolla.js"></script>
 <script>
+    $('#fundingSource').on('chosen:ready', function(){
+            var fundingSources = <?php echo json_encode($funding_sources); ?>;
+            if(fundingSources.length) {
+                $('#fundingSource_chosen').show();
+                $('#noFundingSource').hide();
+            } else {
+                $('#fundingSource_chosen').hide();
+                $('#noFundingSource').show();
+            }
+        });
     // Dwolla: Account details
     dwolla.configure('{{DWOLLA_ENV}}');
 
@@ -135,11 +142,18 @@ if (!$hasDwollaAccount) {
         if (!Array.isArray(fs)) {
             fs = objectValues(fs);
         }
-        fs.forEach(source => {
-            $('#fundingSource').append(`<option data-icon="fa fa-trash" label="${source.name}" value="${source._links.self.href}">${source.name}</option>`);
-        });
-        if(fundingSource) {
-            $('#fundingSource').val(fundingSource);
+        if(fs.length) {
+            $('#fundingSource_chosen').show();
+            $('#noFundingSource').hide();
+            fs.forEach(source => {
+                $('#fundingSource').append(`<option data-icon="fa fa-trash" label="${source.name}" value="${source._links.self.href}">${source.name}</option>`);
+            });
+            if(fundingSource) {
+                $('#fundingSource').val(fundingSource);
+            }
+        } else {
+            $('#fundingSource_chosen').hide();
+            $('#noFundingSource').show();
         }
         $('#fundingSource').chosenIcon().trigger("chosen:updated");
     }

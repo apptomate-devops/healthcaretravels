@@ -139,13 +139,14 @@ class PaymentController extends BaseController
         }
         try {
             $this->dwolla->deleteFundingSource($funding_source);
-            $user->default_funding_source = null;
+            $funding_sources = $this->dwolla->getFundingSourcesForCustomer($user->dwolla_customer);
+            $user->default_funding_source =
+                count($funding_sources) > 0 ? $funding_sources[0]->_links->self->href : null;
             $user->save();
         } catch (\Throwable $th) {
             Logger::error('Error in deleting funding source for user: ' . $id);
             return response()->json(['success' => false, 'error' => $th->getMessage()]);
         }
-        $funding_sources = $this->dwolla->getFundingSourcesForCustomer($user->dwolla_customer);
         return response()->json(['success' => true, 'funding_sources' => $funding_sources]);
     }
 

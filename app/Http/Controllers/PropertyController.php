@@ -2872,6 +2872,11 @@ class PropertyController extends BaseController
 
     public function schedule_auto_cancel_job($booking)
     {
+        // New Requirements:
+        // Users are not able to request booking with 7 days of checkin
+        // Property owner must accept booking 5 days (5x24 hours) before check in
+        // Property owner must accept booking within y days of booking request. before check in
+
         // Getting check in time
         $check_in = $booking->property->check_in;
         $timeSplit = Helper::get_time_split($check_in);
@@ -2880,20 +2885,13 @@ class PropertyController extends BaseController
         $check_in_date_time = Carbon::parse($booking->start_date);
         $check_in_date_time->setTime($timeSplit[0], $timeSplit[1], 0);
 
-        $hoursDiff = $check_in_date_time->diffInHours(now());
+        // Last time that owner can accept booking. 5 days before check in time
+        $last_approval_time = $check_in_date_time->copy()->subDays(5);
 
-        // If request is made in less then 72 hours of check in time, cancel at 12 am on check in date
-        if ($hoursDiff <= 72) {
-            $scheduler_date = Carbon::parse($booking->start_date);
-            $scheduler_date->setTime(0, 0, 0);
-        } else {
-            // If request is made in before 72 hours of check in time,
-            //  within 24 hours of Check-In date OR  7 days after of traveler request, deny request.
-            $day_before_check_in = $check_in_date_time->copy()->subDays(1);
-            $week_after_approval = now()->addDays(7);
-            $scheduler_date = Carbon::parse($day_before_check_in->min($week_after_approval));
-            $scheduler_date->setTime($timeSplit[0], $timeSplit[1], 0);
-        }
+        $week_after_request = now()->addDays(7);
+        $scheduler_date = Carbon::parse($last_approval_time->min($week_after_request));
+        $scheduler_date->setTime($timeSplit[0], $timeSplit[1], 0);
+
         Logger::info('Cancel date: ' . $scheduler_date);
         Logger::info('Current date now: ' . Carbon::now());
         Logger::info('check_in_date_time: ' . $check_in_date_time);

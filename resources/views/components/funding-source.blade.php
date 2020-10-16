@@ -156,6 +156,10 @@ if (!$hasDwollaAccount) {
             $('#noFundingSource').show();
         }
         $('#fundingSource').chosenIcon().trigger("chosen:updated");
+
+        // Reloads side menu and user menu after to update payment Options
+        $('#my-account-nav').load(document.URL +  ' #my-account-nav');
+        $('#user-dropdown-nav').load(document.URL +  ' #user-dropdown-nav');
     }
     function deleteFundingSourceFromUser(fundingSource, cb) {
         var formData = {

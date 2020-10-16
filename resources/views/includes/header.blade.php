@@ -136,7 +136,7 @@
                                 </div>
 
                                 @if(Session::get('role_id') == 1 || Session::get('role_id') == 4) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}
-                                <ul>
+                                <ul id="user-dropdown-nav">
                                     <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
                                     <li><a href="{{url('/')}}/verify-account"><i class="sl sl-icon-user"></i> Verify Account</a></li>
                                     <li><a href="{{url('/')}}/owner/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
@@ -163,7 +163,7 @@
                                 @endif
 
                                 @if(Session::get('role_id') == 0) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}
-                                <ul>
+                                <ul id="user-dropdown-nav">
                                     <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
                                     <li><a href="{{url('/')}}/traveler/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
                                     <li><a href="{{url('/')}}/traveler/my-reservations" class="not-verified-block"><i class="sl sl-icon-credit-card"></i> My Trips</a></li>
@@ -181,7 +181,7 @@
                                 @endif
 
                                 @if(Session::get('role_id') == 2) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}
-                                <ul>
+                                <ul id="user-dropdown-nav">
                                     <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
                                     <li><a href="{{url('/')}}/traveler/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
                                     <li><a href="{{url('/')}}/traveler/my-reservations" class="not-verified-block"><i class="sl sl-icon-credit-card"></i> My Trips</a></li>
@@ -198,7 +198,7 @@
                                 </ul>
                                 @endif
                                 @if(Session::get('role_id') == 3) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency -- 3 -- RV Traveller --}}
-                                <ul>
+                                <ul id="user-dropdown-nav">
                                     <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
 
                                     <li><a href="{{url('/')}}/logout" onclick="signOut();" id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>

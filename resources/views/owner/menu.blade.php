@@ -5,7 +5,7 @@
     }
 </style>
 @if(Session::get('role_id') == 1 || Session::get('role_id') == 3 || Session::get('role_id') == 4)
-    <ul class="my-account-nav">
+    <ul class="my-account-nav" id="my-account-nav">
 
         <li class="sub-nav-title">Manage Account</li>
 
@@ -120,7 +120,7 @@
 @endif
 
 @if(Session::get('role_id') == 0 ) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}
-<ul class="my-account-nav">
+<ul class="my-account-nav" id="my-account-nav">
     <li class="sub-nav-title">Manage Account</li>
 
     <li><a href="{{url('/')}}/profile" {{{ (Request::is('profile') ? 'class=current' : '') }}}>
@@ -166,7 +166,7 @@
 
 
 @if(Session::get('role_id') == 2 ) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}
-<ul class="my-account-nav">
+<ul class="my-account-nav" id="my-account-nav">
     <li class="sub-nav-title">Manage Account</li>
 
     <li><a href="{{url('/')}}/profile" {{{ (Request::is('profile') ? 'class=current' : '') }}}>

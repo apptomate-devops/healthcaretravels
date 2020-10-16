@@ -1087,6 +1087,12 @@
                     cancelLabel: 'Clear'
                 },
                 isInvalidDate: function(date){
+                    var dc = moment();
+                    dc.add(7, 'days');
+                    // Blocking next 7 days for payment security on owner side
+                    if (dc > date) {
+                        return true;
+                    }
                     var disableDates = <?php echo json_encode($booked_dates); ?>;
                     return disableDates.includes(date.format('YYYY-MM-DD'));
                 }

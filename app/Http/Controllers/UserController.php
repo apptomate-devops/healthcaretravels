@@ -673,7 +673,7 @@ class UserController extends BaseController
             'work' => $request->work,
             'work_title' => $request->work_title,
             'website' => $request->website,
-            'timezone' => $request->timezone,
+            'timezone' => $request->timezone || USER_DEFAULT_TIMEZONE,
             'auth_token' => $token,
             'is_encrypted' => 1,
             'login_type' => $login_type,

@@ -15,7 +15,10 @@ class AddTimezoneToUsers extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->string('timezone')->default('America/Chicago');
+            $table
+                ->string('timezone')
+                ->nullable()
+                ->default('America/Chicago');
         });
     }
 

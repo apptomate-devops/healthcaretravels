@@ -339,13 +339,14 @@
                                             You will not be able to edit or upload more documents once they have been submitted.                                </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button id="confirmation-popup-submit" type="submit" class="btn btn-primary">Submit</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </form>
                     </div>
+                    <div id="submitDocumentsProgress" class="loading style-2" style="display: none;"><div class="loading-wheel"></div></div>
                 </div>
             @endif
 
@@ -361,6 +362,10 @@
                 }
 
                 $(function() {
+                    $(document).on('click', '#confirmation-popup-submit', function (event) {
+                        $("#confirmationModal").modal('hide');
+                        $('#submitDocumentsProgress').show();
+                    });
 
                     $(':input').on('input', function() {
                         const ignore_fields = ['_token'];

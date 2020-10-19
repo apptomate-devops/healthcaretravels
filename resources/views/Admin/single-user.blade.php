@@ -429,9 +429,9 @@
             }
         }
         if (responsesLength != totalDocs) {
-            setError('All docuemnts should be responded to submit data');
+            setError('All documents should be responded to submit data');
         } else if (!isValid) {
-            setError('Some denied docuemnts are missing reasons.');
+            setError('Some denied documents are missing reasons.');
             $('html, body').animate({
                 scrollTop: $('.has-error:first').offset().top - 50
             }, 1000);

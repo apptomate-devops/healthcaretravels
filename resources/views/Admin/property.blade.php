@@ -47,7 +47,6 @@
                                         <th>Host Name</th>
                                         <th>Property Type</th>
                                         <th>Created At</th>
-                                        <th>Viewed Count</th>
                                         <th>Featured</th>
                                         <th>Status</th>
                                         <th>View Documents</th>

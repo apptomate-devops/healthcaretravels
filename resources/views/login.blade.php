@@ -879,6 +879,7 @@
     function validate_registration() {
         if ("{{APP_ENV}}" === "local") {
             $('#name_of_agency').val(agencyAutoComplete.value());
+            $('#reg_button').prop("disabled", true);
             return true; // escape validation for local
         }
         let dob_error = $('#dob_validation_error').html();
@@ -900,6 +901,7 @@
             return false;
         }
         $('#name_of_agency').val(agencyAutoComplete.value());
+        $('#reg_button').prop("disabled", true);
         return true;
     }
 

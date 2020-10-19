@@ -53,8 +53,7 @@ class SettingsTableSeeder extends Seeder
             ],
             [
                 'param' => 'client_address',
-                'value' =>
-                    'Health Care Travels,  7075 Fm 1960 Rd West,  Suite 1010,  Houston, Texas 77069,  United States',
+                'value' => 'Health Care Travels,  7075 Fm 1960 Rd West STE 1010,  Houston, Texas 77069,  United States',
             ],
         );
         \App\Models\Settings::updateOrCreate(

@@ -249,7 +249,15 @@
                             data-size="480x360">
                             <img data-enlargable class="gallery-thumbnail card-img-top" src="{{$d->document_url}}" itemprop="thumbnail" alt="Image description">
                             </a> --}}
-                            @if (\Illuminate\Support\Str::endsWith(strtolower($d->document_url), '.pdf'))
+                            @if ($d->data_type == 1)
+                            <div class="link-document">
+                                <a class="link-document-item" href="{{$d->document_url}}" target="_blank">Link</a>
+                            </div>
+                            @elseif ($d->data_type == 2)
+                            <div class="link-document">
+                            <span class="link-document-item">{{$d->document_url}}</span>
+                            </div>
+                            @elseif (\Illuminate\Support\Str::endsWith(strtolower($d->document_url), '.pdf'))
                             {{-- <span>Render PDF</span> --}}
                             <div class="pdf-wrapper">
                                 <canvas data-enlargable class="pdf-links" data-pdf="{{$d->document_url}}" style="direction: ltr;"></canvas>

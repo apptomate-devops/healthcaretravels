@@ -934,7 +934,7 @@ class UserController extends BaseController
 
     public function map_documents(Request $request)
     {
-        $keys = [
+        $docKeys = [
             "work_badge_id",
             "travel_contract_id",
             "government_id",
@@ -945,13 +945,52 @@ class UserController extends BaseController
             "lease_agreement",
         ];
         $all_documents = [];
-        foreach ($keys as $key) {
+        foreach ($docKeys as $key) {
             if ($request->$key) {
                 array_push(
                     $all_documents,
                     (object) [
                         'image' => $this->base_document_upload_with_key($request, $key),
                         'type' => strtoupper($key),
+                        'data_type' => 0,
+                    ],
+                );
+            }
+        }
+        $linkKeys = [
+            "website",
+            "facebook",
+            "linkedin",
+            "instagram",
+            "airbnb_link",
+            "home_away_link",
+            "vrbo_link",
+            "agency_website",
+            "property_tax_url",
+        ];
+        foreach ($linkKeys as $key) {
+            Logger::info('Key: ' . $key);
+            Logger::info('value: ' . $request->$key);
+            if ($request->$key) {
+                array_push(
+                    $all_documents,
+                    (object) [
+                        'image' => $request->$key,
+                        'type' => $key == 'website' ? 'LICENSE_CERTIFICATION_WEBSITE' : strtoupper($key),
+                        'data_type' => 1,
+                    ],
+                );
+            }
+        }
+        $textKeys = ["traveler_license"];
+        foreach ($textKeys as $key) {
+            if ($request->$key) {
+                array_push(
+                    $all_documents,
+                    (object) [
+                        'image' => $request->$key,
+                        'type' => strtoupper($key),
+                        'data_type' => 2,
                     ],
                 );
             }
@@ -1020,6 +1059,7 @@ class UserController extends BaseController
                         'user_id' => $user_id,
                         'document_type' => $doc->type,
                         'document_url' => $doc->image,
+                        'data_type' => $doc->data_type,
                         'status' => 0,
                     ],
                 );

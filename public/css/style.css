@@ -5509,8 +5509,8 @@ section.fullwidth.border-bottom {
     max-height: 2000px;
 }
 
-.show-more.visible p {
-    word-break: break-all;
+.show-more p {
+    text-align: justify;
 }
 
 .show-more.visible:after,

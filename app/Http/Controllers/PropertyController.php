@@ -3290,6 +3290,23 @@ class PropertyController extends BaseController
         return back()->with('success', 'Property removed successfully');
     }
 
+    public function list_pets_health($lat, $lng, $id)
+    {
+        $hospitals = $this->yelp_hospitals($lat, $lng);
+        $data = DB::table('property_list')
+            ->where('id', $id)
+            ->select('pets_allowed')
+            ->first();
+        if ($data->pets_allowed == 1) {
+            $pets = $this->yelp_pets($lat, $lng);
+        } else {
+            $pets = (object) [];
+        }
+        return view('properties.list_pets_health')
+            ->with('hospitals', $hospitals)
+            ->with('pets', $pets);
+    }
+
     public function request_cancellation($booking_id, Request $request)
     {
         $data = DB::table('property_booking')

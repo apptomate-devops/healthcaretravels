@@ -107,11 +107,11 @@
 
                         <div class="row with-forms">
                             <div class="checkboxes in-row">
-                                <input id="instance_booking" name="instance_booking" type="checkbox" @if(isset($request_data['instance_booking'])) checked @endif>
-                                <label for="instance_booking">Instant Booking</label>
+                                {{-- <input id="instance_booking" name="instance_booking" type="checkbox" @if(isset($request_data['instance_booking'])) checked @endif>
+                                <label for="instance_booking">Instant Booking</label> --}}
 
-                                <input id="flexible_cancellation" name="flexible_cancellation" type="checkbox" @if(isset($request_data['flexible_cancellation'])) checked @endif>
-                                <label for="flexible_cancellation">Flexible Cancellation</label>
+                                {{-- <input id="flexible_cancellation" name="flexible_cancellation" type="checkbox" @if(isset($request_data['flexible_cancellation'])) checked @endif>
+                                <label for="flexible_cancellation">Flexible Cancellation</label> --}}
 
 {{--                                <input id="enhanced_cleaning_protocol" name="enhanced_cleaning_protocol" type="checkbox" @if(isset($request_data['enhanced_cleaning_protocol'])) checked @endif>--}}
 {{--                                <label for="enhanced_cleaning_protocol">Enhanced Cleaning Protocol</label>--}}

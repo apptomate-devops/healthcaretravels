@@ -464,7 +464,7 @@
             });
 
             function show_current_occupacy(value) {
-                if(value == 'Private Room' || value == 'Share Room') {
+                if(value == 'Private Room' || value == 'Shared Room') {
                     $('#currently_occupied').show();
                 } else {
                     $('#currently_occupied').hide();

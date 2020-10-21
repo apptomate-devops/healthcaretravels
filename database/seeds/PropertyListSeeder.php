@@ -33,8 +33,8 @@ class PropertyListSeeder extends Seeder
         //            Log::info("Number of properties deleted: " . $delete_records);
         //        }
         DB::table('property_list')
-            ->where(['room_type' => 'Shared Room'])
-            ->update(['room_type' => 'Share Room']);
+            ->where(['room_type' => 'Share Room'])
+            ->update(['room_type' => 'Shared Room']);
         DB::table('property_list')
             ->where(['room_type' => 'Entire House'])
             ->update(['room_type' => 'Entire Place']);

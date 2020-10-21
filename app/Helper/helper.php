@@ -819,7 +819,6 @@ class Helper
             'Traveler requested cancellation',
             'Traveler not responsive',
             'Traveler left their stay',
-            'Traveler was a scam',
             'The property is no longer available',
             'Other reason',
         ]);

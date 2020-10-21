@@ -837,6 +837,7 @@ class BaseController extends ConstantsController
         ];
         $start_delay = 0;
         $end_delay = 0;
+        // TODO: fix the time here and add check in in the start time
         $start_date = Carbon::parse($booking->start_date);
         $start_date_with_padding = $start_date->subDays(1);
         $end_date = Carbon::parse($booking->end_date);

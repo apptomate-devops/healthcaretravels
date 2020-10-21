@@ -33,8 +33,8 @@
                             may affect their capacity to fit the conditions of the booking.</p>
                         <p>In unusual cases, even if Health Care Travels establishes the Traveler’s cause of
                             cancellation falls within just Health Care Travels Extenuating Circumstances Policy, Health
-                            Care Travels can reevaluate the Host’s cancellation policy (ex: Flexible , Moderate, Strict
-                            and Super Strict) and create refund determinations.&nbsp; In case Health Care Travels
+                            Care Travels can reevaluate the Host’s cancellation policy (ex: Flexible , Moderate, Strict)
+                            and create refund determinations.&nbsp; In case Health Care Travels
                             establishes a Host’s cause of cancellation falls within just Health Care Travels Extenuating
                             policy, Health Care Travels may possibly overlook the host cancellation penalties summarized
                             in Health Care Travels Terms of Use and also Health Care Travels Payments Terms of

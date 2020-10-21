@@ -157,7 +157,6 @@
                                                 <option value="Flexible">Flexible</option>
                                                 <option value="Moderate">Moderate</option>
                                                 <option value="Strict">Strict</option>
-                                                <option value="Super Strict">Super Strict</option>
                                             </select>
                                             <p class="caption-text" style="margin-bottom: 12px;">View more on cancellation policies <a href="https://healthcaretravels.com/cancellationpolicy" target="_blank">here</a>.</p>
                                         </div>

@@ -204,9 +204,7 @@ class HomeController extends BaseController
             ->where('reset_date', $cur_date)
             ->first();
         if (!$check) {
-            return view('set-new-password')
-                ->with('error', 1)
-                ->with('email', $check->email);
+            return view('set-new-password')->with('error', 1);
         } else {
             return view('set-new-password')
                 ->with('error', 0)

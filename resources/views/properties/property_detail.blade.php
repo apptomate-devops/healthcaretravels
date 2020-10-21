@@ -296,38 +296,39 @@
                                 </div>
 
                                 <hr>
-                                <button id="add_pet" class="btn bg-orange" style="margin-bottom: 20px; width: auto;">
-                                    Add a Pet
-                                </button>
-                                <div class="row" id="pet_details" style="display: none;">
-                                    <div class="control-group cc-last-name col-md-6">
-                                        <label for="pet_name">Name:
-                                            <input type="text" class="input-text validate" value="{{$pet_details->pet_name ?? ''}}" name="pet_name" id="pet_name" placeholder="Name" autocomplete="off"/>
-                                        </label>
-                                    </div>
+                                @if ($data->pets_allowed)
+                                    <button id="add_pet" class="btn bg-orange" style="margin-bottom: 20px; width: auto;">
+                                        Add a Pet
+                                    </button>
+                                    <div class="row" id="pet_details" style="display: none;">
+                                        <div class="control-group cc-last-name col-md-6">
+                                            <label for="pet_name">Name:
+                                                <input type="text" class="input-text validate" value="{{$pet_details->pet_name ?? ''}}" name="pet_name" id="pet_name" placeholder="Name" autocomplete="off"/>
+                                            </label>
+                                        </div>
 
-                                    <div class="control-group cc-last-name col-md-6">
-                                        <label for="pet_breed">Breed:
-                                            <input type="text" class="input-text validate" value="{{$pet_details->pet_breed ?? ''}}" name="pet_breed" id="pet_breed" placeholder="Breed" autocomplete="off"/>
-                                        </label>
-                                    </div>
+                                        <div class="control-group cc-last-name col-md-6">
+                                            <label for="pet_breed">Breed:
+                                                <input type="text" class="input-text validate" value="{{$pet_details->pet_breed ?? ''}}" name="pet_breed" id="pet_breed" placeholder="Breed" autocomplete="off"/>
+                                            </label>
+                                        </div>
 
-                                    <div class="control-group cc-last-name col-md-6">
-                                        <label for="pet_weight" class="weight-lb">Weight:
-                                            <input type="text" class="price_float input-text validate" value="{{$pet_details->pet_weight ?? ''}}" name="pet_weight" id="pet_weight" placeholder="Weight" autocomplete="off"/>
-                                        </label>
-                                    </div>
+                                        <div class="control-group cc-last-name col-md-6">
+                                            <label for="pet_weight" class="weight-lb">Weight:
+                                                <input type="text" class="price_float input-text validate" value="{{$pet_details->pet_weight ?? ''}}" name="pet_weight" id="pet_weight" placeholder="Weight" autocomplete="off"/>
+                                            </label>
+                                        </div>
 
-                                    <div class="control-group cc-last-name col-md-6">
-                                        <label for="pet_image">
-                                            <div style="margin-bottom: 10px;">Pet Image:</div>
-                                            <input type="file" name="pet_image" id="pet_image" class="form-control" accept="image/*"/>
-                                        </label>
+                                        <div class="control-group cc-last-name col-md-6">
+                                            <label for="pet_image">
+                                                <div style="margin-bottom: 10px;">Pet Image:</div>
+                                                <input type="file" name="pet_image" id="pet_image" class="form-control" accept="image/*"/>
+                                            </label>
+                                        </div>
+                                        <div id="remove_pet" class="add-another" style="cursor: pointer;">Don't want to add a pet?</div>
                                     </div>
-                                    <div id="remove_pet" class="add-another" style="cursor: pointer;">Don't want to add a pet?</div>
-                                </div>
-                                <hr>
-
+                                    <hr>
+                                @endif
                                 <div class="form-row form-row-wide" id="agency_show">
                                     <label for="agency_name">Agency you work for:</label>
                                     <p class="register-info">Select as many agencies that you have worked for in the last 12 months.</p>

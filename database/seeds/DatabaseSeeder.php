@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PropertyListingRoomTypesSeeder::class);
         $this->call(MinDaysPropertyListTableSeeder::class);
         $this->call(HandlePublicURLSeeder::class);
+        $this->call(CancellationPolicyTableSeeder::class);
     }
 }

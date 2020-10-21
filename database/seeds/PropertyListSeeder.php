@@ -38,5 +38,8 @@ class PropertyListSeeder extends Seeder
         DB::table('property_list')
             ->where(['room_type' => 'Entire House'])
             ->update(['room_type' => 'Entire Place']);
+        DB::table('property_list')
+            ->where(['cancellation_policy' => 'Super Strict'])
+            ->update(['cancellation_policy' => 'Strict']);
     }
 }

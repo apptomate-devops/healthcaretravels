@@ -251,3 +251,7 @@
 .ml-10 {
     margin-left: 10px;
 }
+
+.dropzone .dz-preview .dz-error-message {
+    top: 150px !important;
+}

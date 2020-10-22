@@ -837,10 +837,19 @@ class BaseController extends ConstantsController
         ];
         $start_delay = 0;
         $end_delay = 0;
-        // TODO: fix the time here and add check in in the start time
+
+        // Check in and check out time split
+        $checkInTimeSplit = Helper::get_time_split($property->check_in);
+        $checkOutTimeSplit = Helper::get_time_split($property->check_out);
+
+        // Start time with check in set
         $start_date = Carbon::parse($booking->start_date);
+        $start_date->setTime($checkInTimeSplit[0], $checkInTimeSplit[1], 0);
         $start_date_with_padding = $start_date->subDays(1);
+
+        // End time with check out set
         $end_date = Carbon::parse($booking->end_date);
+        $end_date->setTime($checkOutTimeSplit[0], $checkOutTimeSplit[1], 0);
         $end_date_with_padding = $end_date->subDay(1);
         $current_date = Carbon::now();
 

@@ -11,7 +11,7 @@
                         <li class="active">Cancellation Policy</li>
                     </ol>
                 </div>
-                <div class=" col-md-12 ">
+                <div class="col-md-12">
 
 
                     <div class="loader-inner ball-pulse" id="internal-loader">
@@ -20,382 +20,110 @@
                     </div>
 
                     <div id="listing_ajax_container">
-
                     </div>
-                    <div class="single-content">
+                    <div class="single-content col-sm-10" style="text-align: justify">
                         <h1 class="entry-title single-title">Cancellation Policy</h1>
-
-
-                        <p><strong>Health Care Travels Cancellation Policy</strong></p>
-                        <p>In an event the traveler or also the host desires to cancel a booking/reservation, we've
-                            provided the Health Care Travels Cancellation policy below. When creating a listing, the
-                            host can choose 1 out of 4 cancellation options. Keep in your mind it's in the host's
-                            discretion to select the option that best accommodates their listing. Be sure to familiarize
-                            yourself and direct your attention as a traveler to the cancellation policy that applies to
-                            each listing in the cancelation section of the listing. Booking signifies that you have read
-                            and agree with all the listing details.</p>
-                        <p>Please be aware that we will monitor the number of cancellations made by a traveler or host
-                            within a calendar year. We reserve the right to terminate, prohibit or ban your account for
-                            excessive cancellations. This platform was established to ease the stress of securing
-                            short-term housing for working healthcare professionals. To maintain our standard of
-                            practice, it is important to enforce these policies to protect the host and the
-                            traveler.</p>
-                        <p><b>Scouting</b></p>
-                        <p>If you have requested and paid for the services of a scout to verify a listing before
-                            booking, you can only seek a refund if the scout is not already in route or has not visited
-                            the listing.</p>
-                        <p><b>Fully Refundable fees if booking/reservation was canceled before check-in</b></p>
-                        <ul>
-                            <li>Deposits made during the booking process.</li>
-                            <li>Cleaning fees paid with the reservation where applicable.</li>
-                            <li>Fees for extra Travelers included in the reservation.</li>
-                        </ul>
-                        <p>&nbsp;</p>
-                        <p style="text-align: center;"><b>Flexible</b></p>
-                        <ul>
-                            <li>Travelers using the Health Care Travels Platform can request a refund of the service fee
-                                up to 4 times in a year but must do so within 48 hours of reservation. However, if a
-                                Traveler cancels a booking that coincides with an existing booking, Health Care Travels
-                                shall not refund the service fee.
-                            </li>
-                            <li>The accommodation fees, which is the total daily fees the Traveler paid to the host
-                                can be refunded in specific situations including:
-                            </li>
-                            <li>If either party has a complaint, Health Care Travels must be notified within 24 hours of
-                                check-in.
-                            </li>
-                            <li>Where necessary, Health Care Travels will serve as a mediator, and our resolution on
-                                every dispute is final.
-                            </li>
-                            <li>To officially cancel a reservation, the Traveler or Host goes to my
-                                Bookings/Reservations, locate the booking or reservation you want to cancel. Select
-                                Cancel. A page will appear asking you to confirm cancellation.
-                            </li>
-                            <li>Cancellation Policies can be due to a request for refund by the Traveler, justifiable
-                                circumstances, and cancellations by Health Care Travels for any other reasons according
-                                to our Terms of Service. Kindly look at these exceptions.
-                            </li>
-                        </ul>
-                        <ul>
-                            <li>To receive a full refund of accommodation fees, the Traveler must cancel the booking 24
-                                hours before the listing’s local check-in time, and where it is not specified, 3:00 PM
-                                on check-in day. So, if you are to check in on Wednesday, cancellation must be made by
-                                Tuesday of that week before the time of check-in.
-                            </li>
-                        </ul>
-                        <p><span
-                                style="display: inline !important; float: none; background-color: transparent; color: #333333; font-family: Georgia,'Times New Roman','Bitstream Charter',Times,serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; line-height: 24px; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px; word-wrap: break-word;">*In the circumstance where the assignment of the Traveler was terminated or cancelled before check-in or after check-in (Traveler must show proof to Health Care Travels within 24 hours), the full deposit paid to the host shall be refunded to the Traveler, if the host doesn’t report any damage. The Traveler will also receive a full refund of the remaining accommodation fees agreed between the host and Traveler based on the revised checkout date.</span><b></b><i></i><u></u>
+                        <p><b>Care Travels Cancellation Policy</b></p>
+                        <p>
+                            In an event the traveler or also the Property Owner desires to cancel a booking/reservation, we've provided the Health Care Travels Cancellation policy below. When creating a listing, the Property Owner can choose 1 out of 3 cancellation options (Flexible, Moderate and Strict). Keep in mind it is in the Property Owner's discretion to select the option that best accommodates their listing. Be sure to familiarize yourself and direct your attention as a Traveler to the cancellation policy that applies to each listing in the cancelation section of the listing. Booking signifies that you have read and agree with all the listing details.
                         </p>
-                        <p>For example:</p>
-                        <p>&nbsp;</p>
-                        <table style="height: 179px;" width="1070">
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <p style="text-align: center;">1-Day Prior</p>
-                                </td>
-                                <td style="text-align: center;">Check-in</td>
-                                <td style="text-align: center;">Check out</td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: center;">Tues, March 13<p></p>
-                                    <p>3:00 PM</p></td>
-                                <td style="text-align: center;">Wednesday, March 14<p></p>
-                                    <p>3:00 PM</p></td>
-                                <td>
-                                    <p style="text-align: center;">Saturday, March 17</p>
-                                    <p style="text-align: center;">11:00 AM</p>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <p>&nbsp;</p>
-                        <table style="height: 70px;" width="293">
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <p style="text-align: center;"><b>Full Refund</b></p>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <p>&nbsp;</p>
-                        <p style="text-align: center;"><b>Moderate</b></p>
-                        <ul>
-                            <li>Travelers on the Health Care Travels Platform can request for a refund of the service
-                                fee up to 4 times in a year but must do so within 48 hours of reservation and at least
-                                five full days before the check-in day. However, if a Traveler cancels a booking that
-                                coincides with an existing booking, Health Care Travels shall not refund the service
-                                fee.
-                            </li>
-                            <li>The accommodation fees, i.e., the total daily fees the Traveler paid to the host can
-                                be refunded in specific situations including:
-                            </li>
-                            <li>If either party has a complaint, Health Care Travels must be notified within 24 hours of
-                                check-in.
-                            </li>
-                            <li>Where necessary, Health Care Travels will serve as a mediator, and our resolution on
-                                every dispute is final.
-                            </li>
-                            <li>To officially cancel a reservation, the Traveler or Host goes to the my
-                                Bookings/Reservations, locate the booking or reservation you want to cancel. Select
-                                Cancel. A page will appear asking you to confirm cancellation.
-                            </li>
-                            <li>Cancellation Policies are due to a request for refund by the Traveler, justifiable
-                                circumstances, and cancellations by Health Care Travels for any other reasons according
-                                to our Terms of Service. Kindly take a look at these exceptions
-                            </li>
-                        </ul>
-                        <ul>
-                            <li>To receive a full refund of accommodation fees, the Traveler must cancel the booking 5
-                                days before the listings local check in time, and where it is not specified, 3:00PM on
-                                check-in day. So if you are to check in on Friday, cancellation must be made by the
-                                previous Sunday before the time of check-in.
-                            </li>
-                            <li>If the cancellation was made less than 5 days before check-in, we would not refund the
-                                first day, but we will refund 50 percent of the accommodation fees for the remaining
-                                days.
-                            </li>
-                            <li>If the Traveler decides to leave before the end of their reservation, Health Care
-                                Travels will refund 50 percent of the accommodation fees for the unspent days 24 hours
-                                after the Traveler canceled.
-                            </li>
-                        </ul>
-                        <p><span
-                                style="display: inline !important; float: none; background-color: transparent; color: #333333; font-family: Georgia,'Times New Roman','Bitstream Charter',Times,serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; line-height: 24px; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px; word-wrap: break-word;">*In the circumstance where the assignment of the Traveler was terminated or cancelled before check-in or after check-in (Traveler must show proof to Health Care Travels within 24 hours), 50 percent of the deposit paid to the host shall be refunded to the Traveler, if the host doesn’t report any damage. The Traveler will receive a full refund of the remaining accommodation fees agreed between the host and Traveler based on the revised checkout date.</span><b></b><i></i><u></u>
+                        <p>
+                            Please be aware that we will monitor the number of cancellations made by all users within a calendar year. We reserve the right to terminate, prohibit or ban your account for excessive cancellations. This platform was established to ease the stress of securing short-term housing for working healthcare professionals. To maintain our standard of practice, it is important to enforce these policies to protect all users.
                         </p>
-                        <p>For example:</p>
-                        <table style="height: 179px;" width="1070">
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <p style="text-align: center;">5 days before check-in</p>
-                                </td>
-                                <td style="text-align: center;">Check-in</td>
-                                <td>
-                                    <p style="text-align: center;">Check out</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: center;">Sunday, March 11<p></p>
-                                    <p>3:00 PM</p></td>
-                                <td style="text-align: center;">Friday, March 16<p></p>
-                                    <p>3:00 PM</p></td>
-                                <td>
-                                    <p style="text-align: center;">Monday, March 19</p>
-                                    <p style="text-align: center;">11:00 AM</p>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <p>&nbsp;</p>
-                        <table style="height: 48px;" width="406">
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <p style="text-align: center;"><b>Full Refund</b></p>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <p>&nbsp;</p>
-                        <p>&nbsp;</p>
-                        <p style="text-align: center;"><b>Strict</b></p>
-                        <ul>
-                            <li>Travelers using the Health Care Travels Platform can request for a refund of the service
-                                fee up to 4 times in a year but must do so within 48 hours of reservation and a minimum
-                                of 14 full days before the listing’s local check-in time, and where it is not specified,
-                                3:00 PM on check-in day. However, if a Traveler cancels a booking that overlaps with
-                                another booking, Health Care Travels shall not refund the service fee.
-                            </li>
-                            <li>The accommodation fees, i.e., the total nightly fees the traveler paid to the host can
-                                be refunded in specific situations given below:
-                            </li>
-                            <li>If either party has a complaint, Health Care Travels must be notified within 24 hours of
-                                check-in.
-                            </li>
-                            <li>Where necessary, Health Care Travels will serve as a mediator, and our resolution on
-                                every dispute is final.
-                            </li>
-                            <li>To officially cancel a reservation, the Traveler or Host goes to the my
-                                Bookings/Reservations, locate the booking or reservation you want to cancel. Select
-                                Cancel. A page will appear asking you to confirm cancellation.
-                            </li>
-                            <li>Cancellation Policies are due to a request for refund by the Traveler, justifiable
-                                circumstances, and cancellations by Health Care Travels for any other reasons according
-                                to our Terms of Service. Kindly take a look at these exceptions.
-                            </li>
-                        </ul>
-                        <ul>
-                            <li>To receive a full refund of accommodation fees, the Traveler must cancel within 48 hours
-                                of making the reservation and a minimum of 14 days before the listings local check-in
-                                time or where the check-in time is not specific, 3:00PM on check-in day.
-                            </li>
-                            <li>To receive a 50 percent refund of accommodation fees, the Traveler must cancel 7 full
-                                days before the local check-in time of the listing or 3:00 pm on the day of check-in
-                                where the time is not specified, otherwise we will not refund. For instance, if you are
-                                to check-in on Thursday, make your cancellation by Thursday of the previous week before
-                                check-in time. In the event where the traveler cancels less than 7 days in advance or
-                                makes an early exit after check-in, Health Care Travels will not refund the unspent
-                                nights.
-                            </li>
-                        </ul>
-                        <p><span
-                                style="background-color: transparent; color: #333333; display: inline; float: none; font-family: Georgia,&amp;quot; times new roman&amp;quot;,&amp;quot;bitstream charter&amp;quot;,times,serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; line-height: 24px; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px; word-wrap: break-word;">** If the assignment of the Traveler is canceled before check-in or after check-in (Traveler must show proof to Health Care Travels within 24 hours), the deposit paid to the host shall not be refunded to the Traveler, and the Traveler is required to pay an extra $100 if the host reports any damage. However, the Traveler will receive a refund of the remaining accommodation fees agreed between the host and Traveler based on the revised checkout date.</span><b
-                                style="background-color: transparent; color: #333333; font-family: Georgia,&amp;quot; times new roman&amp;quot;,&amp;quot;bitstream charter&amp;quot;,times,serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: bold; letter-spacing: normal; line-height: 24px; max-width: none; min-height: 0px; orphans: 2; overflow: visible; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px; word-wrap: break-word; padding: 0px; margin: 0px;"></b><i
-                                style="background-color: transparent; color: #333333; font-family: Georgia,&amp;quot; times new roman&amp;quot;,&amp;quot;bitstream charter&amp;quot;,times,serif; font-size: 16px; font-style: italic; font-variant: normal; font-weight: 400; letter-spacing: normal; line-height: 24px; max-width: none; min-height: 0px; orphans: 2; overflow: visible; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px; word-wrap: break-word; padding: 0px; margin: 0px;"></i><u
-                                style="background-color: transparent; color: #333333; font-family: Georgia,&amp;quot; times new roman&amp;quot;,&amp;quot;bitstream charter&amp;quot;,times,serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; line-height: 24px; max-width: none; min-height: 0px; orphans: 2; overflow: visible; text-align: left; text-decoration: underline; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px; word-wrap: break-word; padding: 0px; margin: 0px;"></u><b></b><i></i><u></u>
+                        <p>
+                            Accommodation Fees is defined as:
                         </p>
-                        <p>For example:</p>
-                        <p>&nbsp;</p>
-                        <table style="height: 180px;" width="1070">
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <p style="text-align: center;">14 Days Prior to Check-In</p>
-                                    <p style="text-align: center;">or</p>
-                                    <p style="text-align: center;">Cancel Reservation Within 48 Hours of Booking</p>
-                                </td>
-                                <td style="text-align: center;">Check-in</td>
-                                <td style="text-align: center;">Check out</td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: center;">Thursday, 1 May<p></p>
-                                    <p>3:00 PM</p></td>
-                                <td style="text-align: center;">Thursday, 15 May<p></p>
-                                    <p>3:00 PM</p></td>
-                                <td>
-                                    <p style="text-align: center;">Sunday, 6 May</p>
-                                    <p style="text-align: center;">11:00 AM</p>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <p>&nbsp;</p>
-                        <table style="height: 78px;" width="634">
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <p style="text-align: center;"><b>Full Refund</b></p>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <p>&nbsp;</p>
-                        <p><b>-OR-</b></p>
-                        <p>&nbsp;</p>
-                        <table style="height: 173px;" width="1070">
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <p style="text-align: center;">7 Days Prior to Check-In</p>
-                                </td>
-                                <td style="text-align: center;">Check-in</td>
-                                <td style="text-align: center;">Check out</td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: center;">Thursday 8 May<p></p>
-                                    <p>3:00PM</p></td>
-                                <td style="text-align: center;">Thursday, 15 May<p></p>
-                                    <p>3:00 PM</p></td>
-                                <td>
-                                    <p style="text-align: center;">Sunday, 6 May</p>
-                                    <p style="text-align: center;">11:00 AM</p>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <p>&nbsp;</p>
-                        <table style="height: 60px;" width="449">
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <p style="text-align: center;"><b>50% Refund</b></p>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <p>&nbsp;</p>
-                        <p>&nbsp;</p>
-                        <p>&nbsp;</p>
-                        <p style="text-align: center;"><b>Super Strict 30 Days</b></p>
+                        <p><b>Fully Refundable fees if booking/reservation is canceled 48 hours BEFORE check-in</b></p>
                         <ul>
-                            <li>Travelers using the Health Care Travels Platform can request for a refund of the service
-                                fee up to 4 times in a year but must do so within 48 hours of reservation and a minimum
-                                of 30 full days before the listing’s local check-in time and where it is not specified,
-                                3:00 PM on check-in day. However, if a Traveler cancels a booking that overlaps with
-                                another reservation, Health Care Travels shall not refund the service fee.
+                            <li>Security Deposits made during the booking process</li>
+                            <li>Fees for extra Travelers included in the reservation</li>
+                            <li>Cleaning Fee</li>
+                        </ul>
+                        <p><b>Non-Refundable Fees</b></p>
+                        <ul>
+                            <li>Health Care Travels Service fee is non-refundable under any circumstances</li>
+                        </ul>
+                        <p><b>Security Deposits:</b></p>
+                        <p>
+                            Health Care Travels will hold all security deposits until 48 hours after the traveler has checked out. If no damages are reported by the property owner within 48 Hours of the Travelers check out time, the Security Deposit will be returned to the traveler within 3 days of check-out. If any damages are reported to Health Care Travels within 48 hours with proof, Health Care Travels will be the mediator and decide which party will receive the security deposit, decisions are final.
+                        </p>
+                        <p><b>Healthcare Traveler Cancelled Work Assignment policy</b></p>
+                        <p>
+                            In the circumstance where the assignment of the Traveler was terminated or cancelled before check-in or after check-in (Traveler <b>must</b> show proof to Health Care Travels within <b>24 hours</b> of being notified of any cancelled contract). If the Travelers work assignment is cancelled 48 hours before check-in the Traveler will receive a full refund of all fees except Health Care Travels Non-Refundable Service fee. If the Travelers assignment is cancelled after Check-in the security deposit shall be refunded to the Traveler in 3 days, if the Property Owner doesn’t report any damages 48 hours after the revised check out date. If the Property Owner reports any damages the Traveler will be held responsible, if approved by Health Care Travels. The Traveler may or may not receive a refund of the remaining accommodation fees for the current month's rent. Refund determination shall be agreed between the Property Owner and Traveler based on the revised checkout date. If the traveler has any future auto payment(s) for the upcoming month(s) HCT will stop auto payments and the traveler will not be charged. In the event that sufficient proof is <b>not</b> sent to Health Care Travels within 24 hours. The homeowners selected policy will be enforced.
+                        </p>
+                        <p><b>Property Owner/Co-Host Cancels Booking</b></p>
+                        <p>
+                            Full refund to the traveler will be issued for the days unspent. If the property owner cancels after accepting the booking, the Property owner/Co-Host will be charged a penalty fee of $100 for canceling an already confirmed reservation if the cancellation reason does not fall under an Extenuating Circumstance policy with proof.
+                        </p>
+                        <p><b>Flexible</b></p>
+                        <ul>
+                            <li>
+                                Reservations are fully refundable for 48 hours after the booking is confirmed, <b>as long as the cancellation occurs at least 7 days before check-in </b>(3:00 PM in the destination’s local time if not specified)
                             </li>
-                            <li>The accommodation fees, i.e., the total nightly fees the traveler paid to the host can
-                                be refunded in specific situations given below:
-                            </li>
-                            <li>If either party has a complaint, Health Care Travels must be notified within 24 hours of
-                                check-in.
-                            </li>
-                            <li>Where necessary, Health Care Travels will serve as a mediator, and our resolution on
-                                every dispute is final.
-                            </li>
-                            <li>To officially cancel a reservation, the Traveler or Host goes to the my
-                                Bookings/Reservations, locate the booking or reservation you want to cancel. Select
-                                Cancel. A page will appear asking you to confirm cancellation.
-                            </li>
-                            <li>Cancellation Policies are due to a request for refund by the Traveler, justifiable
-                                circumstances, and cancellations by Health Care Travels for any other reasons according
-                                to our Terms of Service. Kindly take a look at these exceptions.
+                            <li>
+                                More than 48 hours after booking, Travelers can cancel before check-in and get a full refund, <b>minus the first 7 days</b> and the service fee
                             </li>
                         </ul>
+                        <div class="policy-image-container mb-10">
+                            <img src="/assets/policies/flexible.png" alt="flexible" class="policy-image">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-sm-12">
+                                For a full refund, cancel within 48 hours of booking and at least 7 full days prior to listing’s local check-in time (3:00 PM if not specified) on the day of check-in.
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                If the Traveler cancels the reservation before the start date, the first 7 days of the reservation is paid to the Property Owner/Co-Host in full and not refunded to the Traveler.
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                If the Traveler cancels the reservation during their stay, the Traveler must submit a request to cancel within their account under in order to request and agree to a new checkout date. Regardless of the checkout date chosen, the Traveler is required to pay the Property Owner/Co-Host for the 7 days following the cancellation date, or up to the end date of the traveler’s original reservation if the remaining portion is less than 7 days.
+                            </div>
+                        </div>
+                        <p><b>Moderate</b></p>
                         <ul>
-                            <li>To receive 50 percent refund of accommodation fees, the Traveler must cancel 30 days in
-                                advance of the listing’s local check-in time or 3:00 PM on check-in day where
-                                unspecified.
+                            <li>
+                                Reservations are fully refundable for 48 hours after the booking is confirmed, <b>as long as the cancellation occurs at least 14 days before check-in </b>(3:00 PM in the destination’s local time if not specified)
                             </li>
-                            <li>If a cancellation is made less than 30 days before check-in, the Traveler will not
-                                receive refunds for nights not spent.
-                            </li>
-                            <li>However, the Traveler will not be refunded for nights not spent if they decide to leave
-                                early.
+                            <li>
+                                More than 48 hours after booking, Travelers can cancel before check-in and get a full refund, <b>minus the first 14 days</b> and the service fee
                             </li>
                         </ul>
-                        <p><span
-                                style="display: inline !important; float: none; background-color: transparent; color: #333333; font-family: Georgia,'Times New Roman','Bitstream Charter',Times,serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; line-height: 24px; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px; word-wrap: break-word;">*** If the assignment of the Traveler is canceled before check-in or after check-in (Traveler must show proof to Health Care Travels within 24 hours) the deposit made to the host shall not be refunded to the Traveler. Also, the Traveler will not be refunded the remainder of the accommodation reservation fees.</span><b></b><i></i><u></u>
-                        </p>
-                        <p>For example:<b></b><i></i><u></u></p>
-                        <p style="background-color: transparent; color: #333333; font-family: Georgia,&amp;quot; times new roman&amp;quot;,&amp;quot;bitstream charter&amp;quot;,times,serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; line-height: 24px; max-width: none; min-height: 0px; orphans: 2; overflow: visible; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px; word-wrap: break-word; padding: 0px; margin: 16px 0px 16px 0px;">
-                        </p>
-                        <table style="height: 178px;" width="1070">
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <p style="text-align: center;">30 days before check-in</p>
-                                </td>
-                                <td style="text-align: center;">Check-in</td>
-                                <td style="text-align: center;">Check out</td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: center;">Wednesday, 2 April<p></p>
-                                    <p>3:00 PM</p></td>
-                                <td style="text-align: center;">Thursday, 3 May<p></p>
-                                    <p>3:00 PM</p></td>
-                                <td>
-                                    <p style="text-align: center;">Sunday, 6 May</p>
-                                    <p style="text-align: center;">11:00 AM</p>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <p>&nbsp;</p>
-                        <table style="height: 47px;" width="454">
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <p style="text-align: center;"><b>50% Refund</b></p>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <p>&nbsp;</p>
-                        <p>&nbsp;</p>
-
+                        <div class="policy-image-container mb-10">
+                            <img src="/assets/policies/moderate.png" alt="moderate" class="policy-image">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-sm-12">
+                                For a full refund, cancel within 48 hours of booking and at least 14 full days prior to listing’s local check-in time (3:00 PM if not specified) on the day of check-in.
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                If the Traveler cancels the reservation before the start date, the first 14 days of the reservation is paid to the Property Owner/Co-Host in full and not refunded to the Traveler.
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                If the Traveler cancels the reservation during their stay, the Traveler must submit a request to cancel within their account under in order to request and agree to a new checkout date. Regardless of the checkout date chosen, the Traveler is required to pay the Property Owner/Co-Host for the 14 days following the cancellation date, or up to the end date of the traveler’s original reservation if the remaining portion is less than 14 days.
+                            </div>
+                        </div>
+                        <p><b>Strict</b></p>
+                        <ul>
+                            <li>
+                                Reservations are fully refundable for 48 hours after the booking is confirmed, <b>as long as the cancellation occurs at least 21 days before check-in </b>(3:00 PM in the destination’s local time if not specified)
+                            </li>
+                            <li>
+                                More than 48 hours after booking, Travelers can cancel before check-in and get a full refund, <b>minus the first 21 days</b> and the service fee
+                            </li>
+                        </ul>
+                        <div class="policy-image-container mb-10">
+                            <img src="/assets/policies/strict.png" alt="strict" class="policy-image">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-sm-12">
+                                For a full refund, cancel within 48 hours of booking and at least 21 full days prior to listing’s local check-in time (3:00 PM if not specified) on the day of check-in.
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                If the Traveler cancels the reservation before the start date, the first 21 days of the reservation is paid to the Property Owner/Co-Host in full and not refunded to the Traveler.
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                If the Traveler cancels the reservation during their stay, the Traveler must submit a request to cancel within their account under in order to request and agree to a new checkout date. Regardless of the checkout date chosen, the Traveler is required to pay the Property Owner/Co-Host for the 21 days following the cancellation date, or up to the end date of the traveler’s original reservation if the remaining portion is less than 21 day.
+                            </div>
+                        </div>
                     </div>
 
                     <!-- #comments start-->

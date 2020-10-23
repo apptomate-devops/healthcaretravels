@@ -113,6 +113,7 @@
                             if(response && response.success) {
                                 // Show success Message
                                 $('.calender-upload-alerts .alert-success').show();
+                                window.location.reload();
                             } else {
                                 // Show error Message
                                 $('.calender-upload-alerts .alert-danger').show();

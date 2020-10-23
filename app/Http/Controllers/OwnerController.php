@@ -5,8 +5,11 @@ use App\Helper\Helper;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Models\Users;
+use ICal\ICal;
 use App\Http\Controllers\Validator;
+use App\Models\Users;
+use App\Models\PropertyBlocking;
+use App\Services\Logger;
 use DB;
 use \stdClass;
 
@@ -138,6 +141,72 @@ class OwnerController extends BaseController
             'owner.calender',
             compact('properties', 'id', 'booked_events', 'icals', 'block_events', 'res', 'property_title'),
         );
+    }
+
+    public function upload_calender(Request $request)
+    {
+        $property_id = $request->property_id;
+        $owner_id = $request->session()->get('user_id');
+        Logger::info('PropertyId: ' . $property_id);
+        if ($property_id) {
+            if ($request->hasfile('calender_files')) {
+                try {
+                    foreach ($request->file('calender_files') as $file) {
+                    $ical = new ICal($file, array(
+                        'defaultSpan'                 => 2,     // Default value
+                        'defaultTimeZone'             => 'UTC',
+                        'defaultWeekStart'            => 'MO',  // Default value
+                        'disableCharacterReplacement' => false, // Default value
+                        'filterDaysAfter'             => null,  // Default value
+                        'filterDaysBefore'            => null,  // Default value
+                        'skipRecurrence'              => false, // Default value
+                    ));
+                    // $ical->initFile($file);
+                    $entries = [];
+                    foreach ($ical->cal as $key => $value) {
+                        if ($key == 'VEVENT' && !empty($value)) {
+                            foreach ($value as $key => $data) {
+                                // getting start date
+                                $start_date = explode('T', $data['DTSTART'])[0];
+                                // getting end date
+                                $end_date = explode('T', $data['DTEND'])[0];
+                                $desc = $data['SUMMARY'] ?? $data['DESCRIPTION'];
+                                array_push($entries, [
+                                    'start_date' => $start_date,
+                                    'end_date' => $end_date,
+                                    'booked_on' => $desc,
+                                    'is_admin' => 0,
+                                    'property_id' => $property_id,
+                                    'owner_id' => $owner_id,
+                                    'client_id' => CLIENT_ID,
+                                ]);
+                            }
+                        }
+                    }
+                    PropertyBlocking::insert($entries);
+                }
+                } catch (\Throwable $th) {
+                    return response()->json([
+                'success' => false,
+                'error' => $th->getMessage() || 'No calender files are provided',
+            ]);
+                }
+            } else {
+                return response()->json([
+                'success' => false,
+                'error' => 'No calender files are provided',
+            ]);
+            }
+            return response()->json([
+                'success' => true,
+                'error' => 'Calender has been uploaded',
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'error' => 'Property id was not found',
+            ]);
+        }
     }
 
     public function my_bookings(Request $request)

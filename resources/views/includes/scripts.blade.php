@@ -30,7 +30,7 @@
 
 <script>
     Dropzone.autoDiscover = false;
-    $(".dropzone").dropzone({
+    $(".dropzone:not(.property-calender)").dropzone({
         dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here or drop files to upload",
         uploadMultiple: true,
         autoProcessQueue: false,
@@ -81,6 +81,74 @@
         accept: function(file, done) {
             file.acceptDimensions = done;
             file.rejectDimensions = function() { done("Please select image with minimum resolution of 1024 x 524"); };
+        }
+    });
+    $(".property-calender.dropzone").dropzone({
+        dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here or drop files to upload",
+        autoProcessQueue: false,
+        acceptedFiles: ".ics",
+        addRemoveLinks: true,
+        dictInvalidFileType: "Invalid File Type",
+        init: function () {
+            var fileDropzone = this;
+
+            $("#upload_ical").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (fileDropzone.files.length) {
+                    $('#calenderLoadingProgress').show();
+                    $('.calender-upload-alerts .alert').hide();
+                    var form = $('#upload_ical_form')[0]; // You need to use standard javascript object here
+                    var formData = new FormData(form);
+                    for (var x = 0; x < fileDropzone.files.length; x++) {
+                        formData.append("calender_files[]", fileDropzone.files[x]);
+                    }
+                    $.ajax({
+                        url: '/owner/upload-calender',
+                        data: formData,
+                        type: 'POST',
+                        contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
+                        processData: false, // NEEDED, DON'T OMIT THIS
+                        success: function(response, textStatus, jqXHR) {
+                            if(response && response.success) {
+                                // Show success Message
+                                $('.calender-upload-alerts .alert-success').show();
+                            } else {
+                                // Show error Message
+                                $('.calender-upload-alerts .alert-danger').show();
+                                $('.calender-upload-alerts .alert-danger').text(response.message);
+                                console.log('Error while uploading calender details');
+                            }
+                            $('#calenderLoadingProgress').hide();
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            // Show error Message
+                            $('#calenderLoadingProgress').hide();
+                            $('.calender-upload-alerts .alert-danger').show();
+                            $('.calender-upload-alerts .alert-danger').text(textStatus);
+                            console.log('Error while uploading calender details');
+                        }
+                    });
+                } else {
+                    alert('Please select a valid file');
+                }
+            });
+            this.on("addedfiles", function(file) {
+                $('#upload_ical').attr('disabled',false);
+            });
+            this.on("success", function(file) {
+                // submit form
+                $('#calenderLoadingProgress').hide();
+                $("#upload_ical_form").submit();
+            });
+            this.on("error", function (file, response) {
+                $('#calenderLoadingProgress').hide();
+                console.log('error uploading calender file', response);
+            });
+        },
+        accept: function(file, done) {
+            file.acceptDimensions = done;
+            file.rejectDimensions = function() { done("Please select a calender file"); };
         }
     });
 </script>

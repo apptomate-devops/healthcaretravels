@@ -152,50 +152,50 @@ class OwnerController extends BaseController
             if ($request->hasfile('calender_files')) {
                 try {
                     foreach ($request->file('calender_files') as $file) {
-                    $ical = new ICal($file, array(
-                        'defaultSpan'                 => 2,     // Default value
-                        'defaultTimeZone'             => 'UTC',
-                        'defaultWeekStart'            => 'MO',  // Default value
-                        'disableCharacterReplacement' => false, // Default value
-                        'filterDaysAfter'             => null,  // Default value
-                        'filterDaysBefore'            => null,  // Default value
-                        'skipRecurrence'              => false, // Default value
-                    ));
-                    // $ical->initFile($file);
-                    $entries = [];
-                    foreach ($ical->cal as $key => $value) {
-                        if ($key == 'VEVENT' && !empty($value)) {
-                            foreach ($value as $key => $data) {
-                                // getting start date
-                                $start_date = explode('T', $data['DTSTART'])[0];
-                                // getting end date
-                                $end_date = explode('T', $data['DTEND'])[0];
-                                $desc = $data['SUMMARY'] ?? $data['DESCRIPTION'];
-                                array_push($entries, [
-                                    'start_date' => $start_date,
-                                    'end_date' => $end_date,
-                                    'booked_on' => $desc,
-                                    'is_admin' => 0,
-                                    'property_id' => $property_id,
-                                    'owner_id' => $owner_id,
-                                    'client_id' => CLIENT_ID,
-                                ]);
+                        $ical = new ICal($file, [
+                            'defaultSpan' => 2, // Default value
+                            'defaultTimeZone' => 'UTC',
+                            'defaultWeekStart' => 'MO', // Default value
+                            'disableCharacterReplacement' => false, // Default value
+                            'filterDaysAfter' => null, // Default value
+                            'filterDaysBefore' => null, // Default value
+                            'skipRecurrence' => false, // Default value
+                        ]);
+                        // $ical->initFile($file);
+                        $entries = [];
+                        foreach ($ical->cal as $key => $value) {
+                            if ($key == 'VEVENT' && !empty($value)) {
+                                foreach ($value as $key => $data) {
+                                    // getting start date
+                                    $start_date = explode('T', $data['DTSTART'])[0];
+                                    // getting end date
+                                    $end_date = explode('T', $data['DTEND'])[0];
+                                    $desc = $data['SUMMARY'] ?? $data['DESCRIPTION'];
+                                    array_push($entries, [
+                                        'start_date' => $start_date,
+                                        'end_date' => $end_date,
+                                        'booked_on' => $desc,
+                                        'is_admin' => 0,
+                                        'property_id' => $property_id,
+                                        'owner_id' => $owner_id,
+                                        'client_id' => CLIENT_ID,
+                                    ]);
+                                }
                             }
                         }
+                        PropertyBlocking::insert($entries);
                     }
-                    PropertyBlocking::insert($entries);
-                }
                 } catch (\Throwable $th) {
                     return response()->json([
-                'success' => false,
-                'error' => $th->getMessage() || 'No calender files are provided',
-            ]);
+                        'success' => false,
+                        'error' => $th->getMessage() || 'No calender files are provided',
+                    ]);
                 }
             } else {
                 return response()->json([
-                'success' => false,
-                'error' => 'No calender files are provided',
-            ]);
+                    'success' => false,
+                    'error' => 'No calender files are provided',
+                ]);
             }
             return response()->json([
                 'success' => true,

@@ -259,3 +259,15 @@
 .dropzone .dz-preview .dz-error-message {
     top: 150px !important;
 }
+
+#property-image .dz-default.dz-message {
+    display: block;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+#property-image .dz-preview.dz-image-preview {
+    z-index: 2;
+}

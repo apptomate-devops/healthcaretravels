@@ -252,6 +252,10 @@
     margin-left: 10px;
 }
 
+.policy-image-container img {
+    width: 100%;
+}
+
 .dropzone .dz-preview .dz-error-message {
     top: 150px !important;
 }

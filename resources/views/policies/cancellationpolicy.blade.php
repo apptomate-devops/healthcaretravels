@@ -64,7 +64,7 @@
                                 More than 48 hours after booking, Travelers can cancel before check-in and get a full refund, <b>minus the first 7 days</b> and the service fee
                             </li>
                         </ul>
-                        <div class="policy-image-container mb-10">
+                        <div class="policy-image-container mb-10 mt-10">
                             <img src="/assets/policies/flexible.png" alt="flexible" class="policy-image">
                         </div>
                         <div class="row">
@@ -87,7 +87,7 @@
                                 More than 48 hours after booking, Travelers can cancel before check-in and get a full refund, <b>minus the first 14 days</b> and the service fee
                             </li>
                         </ul>
-                        <div class="policy-image-container mb-10">
+                        <div class="policy-image-container mb-10 mt-10">
                             <img src="/assets/policies/moderate.png" alt="moderate" class="policy-image">
                         </div>
                         <div class="row">
@@ -110,7 +110,7 @@
                                 More than 48 hours after booking, Travelers can cancel before check-in and get a full refund, <b>minus the first 21 days</b> and the service fee
                             </li>
                         </ul>
-                        <div class="policy-image-container mb-10">
+                        <div class="policy-image-container mb-10 mt-10">
                             <img src="/assets/policies/strict.png" alt="strict" class="policy-image">
                         </div>
                         <div class="row">

@@ -34,11 +34,11 @@
         dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here or drop files to upload",
         uploadMultiple: true,
         autoProcessQueue: false,
-        maxFiles: 10,
+        maxFiles: 20,
         acceptedFiles: ".jpg, .jpeg, .png",
         addRemoveLinks: true,
         dictInvalidFileType: "Invalid File Type",
-        dictMaxFilesExceeded: "Only 10 files are allowed",
+        dictMaxFilesExceeded: "Only 20 files are allowed",
         init: function () {
             var fileDropzone = this;
 

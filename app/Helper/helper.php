@@ -485,6 +485,54 @@ class Helper
         $booking->save();
         return ['success' => true, 'message' => 'Booking request was canceled successfully'];
     }
+    public static function handleOwnerReminderForBooking($id)
+    {
+        $booking = PropertyBooking::where('id', $id)->first();
+        if (empty($booking)) {
+            Logger::error('Booking does not exist: ' . $id);
+            return ['success' => false, 'message' => 'Booking does not exist!'];
+        }
+        // Send email only if booking request is pending for approval
+        if ($booking->status == 1) {
+            $owner = $booking->owner;
+            $owner_name = $owner->first_name . " " . $owner->last_name;
+            $property = $booking->property;
+            $property_img = DB::table('property_images')
+                ->where('property_images.client_id', '=', CLIENT_ID)
+                ->where('property_images.property_id', '=', $property->id)
+                ->orderBy('is_cover', 'DESC')
+                ->first();
+            $cover_img = BASE_URL . ltrim($property_img->image_url, '/');
+            $booking->check_in = $property->check_in;
+            $booking->role_id = 0;
+            $booking->monthly_rate = $property->monthly_rate;
+            $booking_price = (object) Helper::get_price_details($booking, $booking->start_date, $booking->end_date);
+
+            $booking->start_date = date('m/d/Y', strtotime($booking->start_date));
+            $booking->end_date = date('m/d/Y', strtotime($booking->end_date));
+            $mail_data = [
+                'name' => $owner_name,
+                'text' => isset($welcome->message) ? $welcome->message : '',
+                'property' => $property,
+                'cover_img' => $cover_img,
+                'data' => $booking,
+                'booking_price' => $booking_price,
+            ];
+
+            $title = 'Reminder for pending approval - ' . APP_BASE_NAME;
+            $subject = "Urgent: Your booking request is about to expire - " . APP_BASE_NAME;
+            Helper::send_custom_email(
+                $owner->email,
+                $subject,
+                'mail.owner-24hr-before-pending-request',
+                $mail_data,
+                $title,
+            );
+
+            return ['success' => true, 'message' => 'Sent reminder to owner for pending request'];
+        }
+        return ['success' => false, 'message' => 'Booking request was handled already!'];
+    }
 
     public static function generate_booking_payments($booking, $is_owner = 0)
     {

@@ -199,7 +199,7 @@
                             <input type="hidden" id="calender_file" type="file" name="calender_file">
                             <div  class="dz-default dz-message">
                                 <span>
-                                    <i class="sl sl-icon-plus"></i> Click here or drop files to upload
+                                    <i class="sl sl-icon-plus"></i> Click here to upload
                                 </span>
                             </div>
                         </form>

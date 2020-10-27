@@ -72,7 +72,7 @@
                                         <div  class="dz-default dz-message">
                                             <span>
                                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
-                                                <i class="sl sl-icon-plus"></i> Click here or drop files to upload
+                                                <i class="sl sl-icon-plus"></i> Click here to upload
                                             </span>
                                         </div>
                                     </form>

@@ -31,7 +31,7 @@
 <script>
     Dropzone.autoDiscover = false;
     $(".dropzone:not(.property-calender)").dropzone({
-        dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here or drop files to upload",
+        dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here to upload",
         uploadMultiple: true,
         autoProcessQueue: false,
         maxFiles: 20,
@@ -84,7 +84,7 @@
         }
     });
     $(".property-calender.dropzone").dropzone({
-        dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here or drop files to upload",
+        dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here to upload",
         autoProcessQueue: false,
         acceptedFiles: ".ics",
         addRemoveLinks: true,

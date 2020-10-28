@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessOwnerReminder;
 use App\Models\PetInformation;
 use App\Models\PropertyBlocking;
 use App\Services\Logger;
@@ -2891,12 +2892,16 @@ class PropertyController extends BaseController
         $week_after_request = now()->addDays(7);
         $scheduler_date = Carbon::parse($last_approval_time->min($week_after_request));
         $scheduler_date->setTime($timeSplit[0], $timeSplit[1], 0);
+        $owner_reminder_email = $scheduler_date->copy()->subDays(1);
 
         Logger::info('Cancel date: ' . $scheduler_date);
         Logger::info('Current date now: ' . Carbon::now());
         Logger::info('check_in_date_time: ' . $check_in_date_time);
         ProcessAutoCancel::dispatch($booking->id)
             ->delay($scheduler_date)
+            ->onQueue(GENERAL_QUEUE);
+        ProcessOwnerReminder::dispatch($booking->id)
+            ->delay($owner_reminder_email)
             ->onQueue(GENERAL_QUEUE);
     }
 

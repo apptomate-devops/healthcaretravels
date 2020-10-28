@@ -100,6 +100,7 @@
                                                             <tr class="payment_sub_sections sub_sections_{{$i}}">
                                                                 <td class="name">
                                                                     {{$key}}
+                                                                    @if(strpos($key, 'Fee'))<span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">This fee helps us run our platform and offer our services</span></span>@endif
                                                                 </td>
                                                                 <td class="val text-right">
                                                                     $ {{$value}}
@@ -111,7 +112,7 @@
                                                     <tr class="row_border_top row_border">
                                                         <td class="name">
                                                             Cleaning Fee
-                                                            <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Decided by the property owner to clean before your stay</span></span>
+                                                            <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Decided by the property owner to clean after your stay.</span></span>
                                                         </td>
                                                         <td class="val text-right" >
                                                             $ {{$data->cleaning_fee}}
@@ -121,7 +122,7 @@
                                                     <tr class="row_border">
                                                         <td class="name">
                                                             Deposit
-                                                            <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">If property owner reports no damage, your deposit will be returned 72 hours after your stay</span></span>
+                                                            <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">If property owner reports no damage, your deposit will be returned 72 hours after your stay.</span></span>
                                                         </td>
                                                         <td class="val text-right" >
                                                             $ {{$data->security_deposit}}
@@ -331,7 +332,7 @@
                                 @endif
                                 <div class="form-row form-row-wide" id="agency_show">
                                     <label for="agency_name">Agency you work for:</label>
-                                    <p class="register-info">Select as many agencies that you have worked for in the last 12 months.</p>
+                                    <p class="register-info">Select the agency you are traveling with for this assignment.</p>
                                     <span class="autocomplete-select"></span>
                                     <p id="agency_error" class="error-text" style="display: none;">Select at least 1 agency</p>
                                     <div id="add_another_agency" class="add-another" onclick="add_another_agency(true)" style="cursor: pointer;">Can't find it? Add it here.</div>

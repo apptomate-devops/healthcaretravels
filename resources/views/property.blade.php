@@ -1180,12 +1180,12 @@
 
                         scheduled_payments.forEach((e, i) => {
                             tr_data +="<tr class='expandable payment_sections' id='section_"+i+"' onclick='toggle_sub_section("+i+");'><td> "+e.day+" &nbsp;</td><td class='val'> $ "+ e.price +"</td></tr>";
-                            Object.keys(e.section).forEach((key) => {
-                                tr_data +="<tr class='payment_sub_sections sub_sections_"+i+"'><td> "+key+" &nbsp;</td><td class='val'> $ "+ e.section[key] +"</td></tr>";
+                            Object.keys(e.section).forEach((key, index) => {
+                                tr_data +="<tr class='payment_sub_sections sub_sections_"+i+"'><td> "+key+" "+(index === 1 ? "<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext' style='font-weight: bold;'>This fee helps us run our platform and offer our services.</span></span>" : "")+" </td><td class='val'> $ "+ e.section[key] +"</td></tr>";
                             })
                         });
 
-                        tr_data +="<tr class='row_border row_border_top'><td>Cleaning Fee&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Decided by the property owner to clean before your stay.</span></span></td><td>$ "+data.data.cleaning_fee+"</td></tr>";
+                        tr_data +="<tr class='row_border row_border_top'><td>Cleaning Fee&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Decided by the property owner to clean after your stay.</span></span></td><td>$ "+data.data.cleaning_fee+"</td></tr>";
                         tr_data +="<tr class='row_border'><td>Deposit&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>If property owner reports no damage, your deposit will be returned 72 hours after your stay.</span></span></td><td>$ "+data.data.security_deposit+"</td></tr>";
                         tr_data +="<tr class='row_border'><td>Total Cost&nbsp;</td><td><b  id='total_booking_price'>$ "+data.data.total_price+"</b></td></tr>";
 

@@ -3487,7 +3487,13 @@ input[type="month"].form-control {
 
 table.dataTable {
   border-spacing: 0px; }
-
+table.select thead th:first-child {
+    padding-right: 10px !important;
+}
+table.select thead th:first-child::after,
+table.select thead th:first-child::before {
+    display: none;
+}
 .content-wrapper table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, .content-wrapper table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
   background-color: #666EE8;
   border-radius: 0;

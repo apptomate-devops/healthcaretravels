@@ -44,12 +44,10 @@
                             <div class="table-responsive">
                                 @component('components.approve-all-by-user-role', ['user' => count($agencyes) > 0 ? $agencyes[0] : null])
                                 @endcomponent
-                                <table class="table table-striped table-bordered zero-configuration">
+                                <table class="table table-striped table-bordered zero-configuration select" id="hct_users">
                                     <thead>
                                         <tr>
-                                            <th>
-                                                <input type="checkbox" name="check-all" id="check-all" /> Select
-                                            </th>
+                                            <th><input name="select_all" value="1" type="checkbox"> Select</th>
                                             <th>ID</th>
                                             <th>Registered On</th>
                                             <th>Agency Name</th>

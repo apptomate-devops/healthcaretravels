@@ -8,9 +8,8 @@ use GuzzleHttp;
 class Sendgrid
 {
     protected $api_key;
-
     protected $list_id;
-
+    protected $no_contact_list_id;
     protected $client;
 
     /**
@@ -22,9 +21,8 @@ class Sendgrid
     public function __construct()
     {
         $this->api_key = config('services.sendgrid.api_key');
-
         $this->list_id = config('services.sendgrid.list_id');
-
+        $this->no_contact_list_id = config('services.sendgrid.no_contact_list_id');
         $this->client = $this->setUp();
     }
 
@@ -54,11 +52,17 @@ class Sendgrid
         return $this->addUsersToLists((object) $user, $this->list_id);
     }
 
+    public function addUserToNoContactList($user)
+    {
+        return $this->addUsersToLists((object) $user, $this->no_contact_list_id);
+    }
+
     public function addUsersToLists($users, $lists)
     {
         try {
+            $list_ids = is_array($lists) ? $lists : [$lists];
             $body = [
-                'list_ids' => is_array($lists) ? $lists : [$lists],
+                'list_ids' => $list_ids,
                 'contacts' => is_array($users) ? $users : [$users],
             ];
             $res = $this->makeRequest('PUT', 'marketing/contacts', $body);
@@ -68,7 +72,7 @@ class Sendgrid
                 Logger::info('Error Response body: ' . $resBody);
                 return false;
             }
-            Logger::info('User has been added to marketing list');
+            Logger::info('User has been added to list: ' . join(" ", $list_ids));
             return $res;
         } catch (\Exception $ex) {
             Logger::error('Error adding user to sendgrid list: EX: ' . $ex->getMessage());

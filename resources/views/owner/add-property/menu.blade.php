@@ -17,12 +17,12 @@ class="btn" style="background-color: @if($stage == 4) #e78016 @else #9a9595 @end
     Booking
 </a>
 
-<a @if($property_details->is_complete == 1 || $property_details->stage >= 5) href="{{url('/')}}/owner/add-new-property/6/{{$property_details->id}}" @else href="#" @endif
+<a @if($property_details->is_complete == 1 || $property_details->stage >= 6) href="{{url('/')}}/owner/add-new-property/6/{{$property_details->id}}" @else href="#" @endif
 class="btn" style="background-color: @if($stage == 6) #e78016 @else #9a9595 @endif;color:white;">
     Amenities
 </a>
 
-<a @if($property_details->is_complete == 1 || $property_details->stage >= 6) href="{{url('/')}}/owner/add-new-property/5/{{$property_details->id}}" @else href="#" @endif
+<a @if($property_details->is_complete == 1 || $property_details->stage >= 5) href="{{url('/')}}/owner/add-new-property/5/{{$property_details->id}}" @else href="#" @endif
 class="btn" style="background-color: @if($stage == 5) #e78016 @else #9a9595 @endif;color:white;">
     Add Photos
 </a>

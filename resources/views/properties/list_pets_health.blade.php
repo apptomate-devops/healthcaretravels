@@ -117,7 +117,7 @@ div::-webkit-scrollbar-thumb {
         <div class="row">
             <!-- Property Description -->
             <div class="property-description">
-              @if(count($hospitals->businesses) != 0)
+              @if(isset($hospitals->businesses) && count($hospitals->businesses) != 0)
                 <div class="col-sm-12" id="scroll_stop">
                     <div class="wpb_wrapper">
                     <br><br>

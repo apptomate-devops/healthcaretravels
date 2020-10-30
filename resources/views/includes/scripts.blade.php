@@ -35,6 +35,7 @@
         uploadMultiple: true,
         autoProcessQueue: false,
         maxFiles: 20,
+        parallelUploads: 20,
         acceptedFiles: ".jpg, .jpeg, .png",
         addRemoveLinks: true,
         dictInvalidFileType: "Invalid File Type",

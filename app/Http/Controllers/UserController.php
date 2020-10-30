@@ -683,15 +683,18 @@ class UserController extends BaseController
             'profile_image' => $profileImage,
         ]);
 
+        $sendgridUserData = [
+            'email' => $request->email,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'city' => $request->city,
+            'postal_code' => $request->pin_code,
+        ];
         // NOTE: Checking it as 0 as the value stored in database is inverted
         if ($email_opt == 0) {
-            $this->sendgrid->addUserToMarketingList([
-                'email' => $request->email,
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'city' => $request->city,
-                'postal_code' => $request->pin_code,
-            ]);
+            $this->sendgrid->addUserToMarketingList($sendgridUserData);
+        } else {
+            $this->sendgrid->addUserToNoContactList($sendgridUserData);
         }
 
         $d = DB::table('users')
@@ -912,7 +915,7 @@ class UserController extends BaseController
                 ->where('client_id', '=', CLIENT_ID)
                 ->update(['otp' => $OTP, 'phone' => $phone_no]);
 
-            return response()->json(['status' => 'Success', 'message' => 'Otp Sent successfully', 'otp' => $OTP]);
+            return response()->json(['status' => 'Success', 'message' => 'Otp Sent successfully']);
         }
         return response()->json(['status' => 'Failure']);
     }

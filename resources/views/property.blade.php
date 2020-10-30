@@ -496,7 +496,7 @@
                                 </table>
                                 @if(count($hospitals->businesses) > 4)
                                     <center>
-                                        <a href="{{BASE_URL}}list_pets_health/{{$data->lat}}/{{$data->lng}}/{{$property_id}}" class="button  margin-top-5" target="_blank">
+                                        <a href="{{BASE_URL}}list_health/{{$data->lat}}/{{$data->lng}}/{{$property_id}}" class="button  margin-top-5" target="_blank">
                                             show more
                                         </a>
                                     </center>
@@ -560,7 +560,7 @@
                                 </table>
                                 @if(count($pets->businesses) > 4)
                                     <center>
-                                        <a href="{{BASE_URL}}list_pets_health/{{$data->lat}}/{{$data->lng}}/{{$property_id}}" class="button  margin-top-5" target="_blank">
+                                        <a href="{{BASE_URL}}list_pets/{{$data->lat}}/{{$data->lng}}/{{$property_id}}" class="button  margin-top-5" target="_blank">
                                             show more
                                         </a>
                                     </center>
@@ -584,7 +584,7 @@
                         <iframe src="{{BASE_URL}}single-marker/{{$data->lat}}/{{$data->lng}}/{{$data->pets_allowed}}" style="width: 100%; height: 600px;" ></iframe>
                     </div>
                     <div class="clearfix"></div>
-                    <b><h5>72 hours after confirmed booking exact location will be provided</h5></b>
+                    <b><h5> Exact location will be provided 72 hours before Check-In</h5></b>
 
                 <!--   <img src="http://maps.googleapis.com/maps/api/staticmap?key=AIzaSyCR6Vgb6Tg6dvb0_dL9WUtAeNut6clrg9c&zoom=17&size=512x512&markers=icon:http://api.estatevue2.com/cdn/img/marker-green.png|{{$data->lat}},{{$data->lng}}" > -->
 

@@ -496,7 +496,7 @@
                                 </table>
                                 @if(count($hospitals->businesses) > 4)
                                     <center>
-                                        <a href="{{BASE_URL}}list_pets_health/{{$data->lat}}/{{$data->lng}}/{{$property_id}}" class="button  margin-top-5" target="_blank">
+                                        <a href="{{BASE_URL}}list_health/{{$data->lat}}/{{$data->lng}}/{{$property_id}}" class="button  margin-top-5" target="_blank">
                                             show more
                                         </a>
                                     </center>
@@ -560,7 +560,7 @@
                                 </table>
                                 @if(count($pets->businesses) > 4)
                                     <center>
-                                        <a href="{{BASE_URL}}list_pets_health/{{$data->lat}}/{{$data->lng}}/{{$property_id}}" class="button  margin-top-5" target="_blank">
+                                        <a href="{{BASE_URL}}list_pets/{{$data->lat}}/{{$data->lng}}/{{$property_id}}" class="button  margin-top-5" target="_blank">
                                             show more
                                         </a>
                                     </center>

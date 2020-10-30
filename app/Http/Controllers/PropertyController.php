@@ -3295,9 +3295,8 @@ class PropertyController extends BaseController
         return back()->with('success', 'Property removed successfully');
     }
 
-    public function list_pets_health($lat, $lng, $id)
+    public function list_pets($lat, $lng, $id)
     {
-        $hospitals = $this->yelp_hospitals($lat, $lng);
         $data = DB::table('property_list')
             ->where('id', $id)
             ->select('pets_allowed')
@@ -3307,9 +3306,12 @@ class PropertyController extends BaseController
         } else {
             $pets = (object) [];
         }
-        return view('properties.list_pets_health')
-            ->with('hospitals', $hospitals)
-            ->with('pets', $pets);
+        return view('properties.list_pets_health')->with('pets', $pets);
+    }
+    public function list_health($lat, $lng, $id)
+    {
+        $hospitals = $this->yelp_hospitals($lat, $lng);
+        return view('properties.list_pets_health')->with('hospitals', $hospitals);
     }
 
     public function request_cancellation($booking_id, Request $request)

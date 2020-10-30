@@ -61,7 +61,8 @@ class Twilio
                     'body' => $body,
                     'messagingServiceSid' => $this->messagingServiceSid,
                 ]);
-                Logger::info('message has been sent');
+                Logger::info('message has been sent to: ' . $number);
+                Logger::info('messagingServiceSid: ' . $this->messagingServiceSid);
                 return $message;
             } catch (\Exception $ex) {
                 Logger::error('Error sending message to phone number. EX: ' . $ex->getMessage());

@@ -677,7 +677,7 @@ table.fc-header{
     height: 30px;
 }
 .fc-sun, .fc-sat{
-    color: #b8b8b8;
+    /*color: #b8b8b8;*/
 }
 
 .fc-week .fc-day:hover .fc-day-number{

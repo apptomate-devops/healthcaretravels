@@ -915,7 +915,7 @@ class UserController extends BaseController
                 ->where('client_id', '=', CLIENT_ID)
                 ->update(['otp' => $OTP, 'phone' => $phone_no]);
 
-            return response()->json(['status' => 'Success', 'message' => 'Otp Sent successfully', 'otp' => $OTP]);
+            return response()->json(['status' => 'Success', 'message' => 'Otp Sent successfully']);
         }
         return response()->json(['status' => 'Failure']);
     }

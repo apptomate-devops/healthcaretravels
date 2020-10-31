@@ -71,7 +71,7 @@
                     <div class="tab-content" id="tab1" style="display: none;">
                         @component('components.social-buttons', ['type' => 'login'])
                         @endcomponent
-                        <form method="post" class="login" action="{{url('/')}}/login-user">
+                        <form method="post" class="login" id="login_form" action="{{url('/')}}/login-user">
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
                             <input type="hidden" name="timezone" id="timezone">
                             <input type="hidden" name="client_id" value="{{$constants['client_id']}}">
@@ -380,6 +380,8 @@
 
             </div>
         </div>
+        <div id="loadingIndicator" class="loading style-2" style="display: none;"><div class="loading-wheel"></div></div>
+
     </div>
 </div>
 <!-- Content Container / End -->
@@ -902,8 +904,13 @@
         }
         $('#name_of_agency').val(agencyAutoComplete.value());
         $('#reg_button').prop("disabled", true);
+        $('#loadingIndicator').show();
         return true;
     }
+
+    $('#login_form').submit(function () {
+        $('#loadingIndicator').show();
+    });
 
     let strength = 0;
 

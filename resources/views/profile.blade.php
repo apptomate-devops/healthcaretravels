@@ -241,6 +241,7 @@
 
                 </div>
             </div>
+            <div id="loadingIndicator" class="loading style-2" style="display: none;"><div class="loading-wheel"></div></div>
 
         </div>
     </div>
@@ -468,6 +469,7 @@
                 return false;
             }
             $('#name_of_agency').val(agencyAutoComplete.value());
+            $('#loadingIndicator').show();
             return true;
         }
     </script>

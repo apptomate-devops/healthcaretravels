@@ -1240,6 +1240,7 @@ class UserController extends BaseController
                 'work_title' => $request->work_title,
                 'website' => $request->website,
                 'enable_two_factor_auth' => isset($request->enable_two_factor_auth) ? 1 : 0,
+                'about_me' => $request->about,
             ]);
 
         return back()->with('success', 'Profile updated successfully');

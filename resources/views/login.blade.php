@@ -79,32 +79,32 @@
                                 <label for="username">Email Address:
                                     <input type="email" class="input-text {{ Session::has('email_error') ? 'form-error' : ''}}" name="username" id="username" placeholder="Email Address" required value="{{Session::get('email')}}" />
                                 </label>
-                                @if(Session::has('error') && Session::has('email_error'))
-                                    <p class="error-text">{{Session::get('email_error')}}</p>
+                            @if(Session::has('error') && Session::has('email_error'))
+                                <p class="error-text">{{Session::get('email_error')}}</p>
                                 @endif
-                            </p>
-                            <p class="form-row form-row-wide">
-                                <label for="password">Password:
-                                    <input class="input-text {{ Session::has('password_error') ? 'form-error' : ''}}" type="password" name="password" id="password" placeholder="Password" required />
-                                </label>
+                                </p>
+                                <p class="form-row form-row-wide">
+                                    <label for="password">Password:
+                                        <input class="input-text {{ Session::has('password_error') ? 'form-error' : ''}}" type="password" name="password" id="password" placeholder="Password" required />
+                                    </label>
                                 @if(Session::has('error') && Session::has('password_error'))
                                     <p class="error-text">{{Session::get('password_error')}}</p>
-                                @endif
-                            </p>
-                            <div class="checkboxes in-row password-checkbox">
-                                <input id="show_password" name="show_password" type="checkbox" onclick="togglePassword('password')">
-                                <label for="show_password">Show Password</label>
-                            </div>
-                            <div class="checkboxes in-row password-checkbox">
-                                <input type="checkbox" id="remember-email-check" name="remember-email-check" onclick="rememberEmail()">
-                                <label for="remember-email-check">Remember my email</label>
-                            </div>
-                            <p class="form-row">
-                                <input type="submit" onclick="checkRememberEmail()" class="btn btn-primary w-100 m-0" name="login" value="Login" />
-                            </p>
-                            <p class="lost_password text-center">
-                                <a href="{{url('/')}}/reset-password">Lost Your Password?</a>
-                            </p>
+                                    @endif
+                                    </p>
+                                    <div class="checkboxes in-row password-checkbox">
+                                        <input id="show_password" name="show_password" type="checkbox" onclick="togglePassword('password')">
+                                        <label for="show_password">Show Password</label>
+                                    </div>
+                                    <div class="checkboxes in-row password-checkbox">
+                                        <input type="checkbox" id="remember-email-check" name="remember-email-check" onclick="rememberEmail()">
+                                        <label for="remember-email-check">Remember my email</label>
+                                    </div>
+                                    <p class="form-row">
+                                        <input type="submit" onclick="checkRememberEmail()" class="btn btn-primary w-100 m-0" name="login" value="Login" />
+                                    </p>
+                                    <p class="lost_password text-center">
+                                        <a href="{{url('/')}}/reset-password">Lost Your Password?</a>
+                                    </p>
                         </form>
                     </div>
 
@@ -344,55 +344,46 @@
                             </div>
                             <button id="btn_add_apt_number" onclick="on_add_address_line_2(event)" class="btn btn-primary w-100" style="margin-bottom: 30px; margin-top: -40px; display: none;">Add an Apt or Floor #</button>
 
-                            {{--                            <p class="form-row form-row-wide" id="listing_address_field" style="display: none;">--}}
-                            {{--                                <label for="listing_address">Listing Address:--}}
-                            {{--                                    <input type="text" class="input-text validate {{ $errors->has('listing_address') ? 'form-error' : ''}}" value="{{Session::get('listing_address')}}" name="listing_address" id="listing_address" placeholder="Full Street Address" autocomplete="off" style="padding-left: 20px;" @if(Session::has('listing_address')) data-is-valid="true" @endif />--}}
-                            {{--                                </label>--}}
-                            {{--                                {!! $errors->first('listing_address', '<p class="error-text">:message</p>') !!}--}}
-                            {{--                            </p>--}}
-                            {{--                            <div class="error-text" id="listing_address_error" style="display: none;">Please select a valid address from the suggestions.</div>--}}
+                            <div class="checkboxes" id="email_opt_field" style="display: none;">
+                                <input id="email_opt" type="checkbox" name="email_opt" @if(Session::has('email_opt')) checked @endif">
+                                <label for="email_opt">I don’t want to receive marketing messages and offers from Health Care Travels. I can also opt out of receiving these at any time by emailing
+                                    <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com.</a>
+                                    {{--                                {!! $errors->first('email_opt', '<p class="error-text-accept">:message</p>') !!}--}}
+                                </label>
+                            </div>
 
-                    </div>
-                    <div class="checkboxes" id="email_opt_field" style="display: none;">
-                        <input id="email_opt" type="checkbox" name="email_opt" @if(Session::has('email_opt')) checked @endif">
-                        <label for="email_opt">I don’t want to receive marketing messages and offers from Health Care Travels. I can also opt out of receiving these at any time by emailing
-                            <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com.</a>
-                            {{--                                {!! $errors->first('email_opt', '<p class="error-text-accept">:message</p>') !!}--}}
-                        </label>
+                            <div class="checkboxes" id="policy_accept_field" style="display: none;">
+                                <input id="policy_accept" type="checkbox" name="policy_accept" @if(Session::has('policy_accept')) checked @endif">
+                                <label for="policy_accept">
+                                    By checking and selecting Agree and Register below, I agree to Health Care Travels <a href="{{URL('/')}}/terms-of-use">Terms of Service</a>, <a href="{{URL('/')}}/payment-terms">Payments Terms of Service</a>, <a href="{{URL('/')}}/policies">Privacy Policy</a>, and <a href="{{URL('/')}}/non-discrimination-policy">Nondiscrimination Policy.</a>
+                                    {!! $errors->first('policy_accept', '<p class="error-text-accept">Policy must be agreed</p>') !!}
+                                </label>
+
+                            </div>
+                            <div id="recaptcha-block" class="g-recaptcha" style="display: none" data-sitekey="{{RECAPTCHA_SITE_KEY}}" data-expired-callback="recaptcha_expired_callback" data-callback="recaptcha_callback">
+                            </div>
+                            <p class="form-row" id="register_button_field" style="display: none;">
+                                <input type="submit" id="reg_button" class="btn btn-primary w-100" name="register" value="Agree and Register" disabled />
+                            </p>
+
+                        </form>
                     </div>
 
-                    <div class="checkboxes" id="policy_accept_field" style="display: none;">
-                        <input id="policy_accept" type="checkbox" name="policy_accept" @if(Session::has('policy_accept')) checked @endif">
-                        <label for="policy_accept">
-                            By checking and selecting Agree and Register below, I agree to Health Care Travels <a href="{{URL('/')}}/terms-of-use">Terms of Service</a>, <a href="{{URL('/')}}/payment-terms">Payments Terms of Service</a>, <a href="{{URL('/')}}/policies">Privacy Policy</a>, and <a href="{{URL('/')}}/non-discrimination-policy">Nondiscrimination Policy.</a>
-                            {!! $errors->first('policy_accept', '<p class="error-text-accept">Policy must be agreed</p>') !!}
-                        </label>
-
-                    </div>
-                    <div id="recaptcha-block" class="g-recaptcha" style="display: none" data-sitekey="{{RECAPTCHA_SITE_KEY}}" data-expired-callback="recaptcha_expired_callback" data-callback="recaptcha_callback">
-                    </div>
-                    <p class="form-row" id="register_button_field" style="display: none;">
-                        <input type="submit" id="reg_button" class="btn btn-primary w-100" name="register" value="Agree and Register" disabled />
-                    </p>
-
-                    </form>
                 </div>
-
             </div>
+            <div id="loadingIndicator" class="loading style-2" style="display: none;"><div class="loading-wheel"></div></div>
+
         </div>
-        <div id="loadingIndicator" class="loading style-2" style="display: none;"><div class="loading-wheel"></div></div>
-
     </div>
-</div>
-<!-- Content Container / End -->
+    <!-- Content Container / End -->
 
-<!-- Footer Container
-================================================== -->
+    <!-- Footer Container
+    ================================================== -->
 @include('includes.footer')
 <!-- Footer Container / End -->
 
-<!-- Scripts
-================================================== -->
+    <!-- Scripts
+    ================================================== -->
 @include('includes.scripts')
 <!-- Scripts / End -->
 

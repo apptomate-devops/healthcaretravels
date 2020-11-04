@@ -259,7 +259,7 @@ class OwnerController extends BaseController
                 ->first();
             $datum->image_url = $image->image_url;
             if ($traveller->role_id != 2) {
-                $datum->traveller_name = $traveller->username;
+                $datum->traveller_name = Helper::get_user_display_name($traveller);
             } else {
                 $datum->traveller_name = $traveller->name_of_agency;
             }

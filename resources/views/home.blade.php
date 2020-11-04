@@ -489,7 +489,7 @@
 
                                         <div class="listing-footer">
                                             <a href="{{url('/')}}/owner-profile/{{$property->owner_id}}"><i
-                                                    class="fa fa-user"></i> {{$property->first_name}} {{$property->last_name}}
+                                                    class="fa fa-user"></i> {{Helper::get_user_display_name($property)}}
                                             </a>
                                             {{-- <span><i class="fa fa-calendar-o"></i> 1 day ago</span> --}}
                                         </div>

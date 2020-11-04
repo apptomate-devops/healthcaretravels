@@ -37,7 +37,7 @@
                                  alt="">
                         </p>
                         <div class="sub-price">
-                            <a href="{{BASE_URL}}owner-profile/{{$data->user_id}}">{{$data->username}}</a><br>
+                            <a href="{{BASE_URL}}owner-profile/{{$data->user_id}}">{{Helper::get_user_display_name($data)}}</a><br>
                         </div>
 
                     </div>
@@ -85,7 +85,7 @@
                                 <img class="user-icon" src="{{$data->profile_image}}">
                             </p>
                             <div class="sub-price">
-                                <a href="{{BASE_URL}}owner-profile/{{$data->user_id}}">{{$data->username}}</a>
+                                <a href="{{BASE_URL}}owner-profile/{{$data->user_id}}">{{Helper::get_user_display_name($data)}}</a>
                             </div>
                             <div class="sub-price">
                                 @if(Session::get('user_id'))
@@ -418,28 +418,28 @@
                         </div>
                     </div>
                     <br>
-                    <h3>Property Price :</h3>
-                    <div class="col-sm-12" id="scroll_stop">
-                        <table cellpadding="1" cellspacing="1" border="1" style="width: 100%;margin-top: 10px;">
-                            <tbody id="table_bodys">
+{{--                    <h3>Property Price :</h3>--}}
+{{--                    <div class="col-sm-12" id="scroll_stop">--}}
+{{--                        <table cellpadding="1" cellspacing="1" border="1" style="width: 100%;margin-top: 10px;">--}}
+{{--                            <tbody id="table_bodys">--}}
 
-                            <tr>
-                                <td style="text-align: center;">Price per day</td>
-                                <td style="text-align: center; width: 50%">$ {{Helper::get_daily_price($data->monthly_rate)}}</td>
-                            </tr>
+{{--                            <tr>--}}
+{{--                                <td style="text-align: center;">Price per day</td>--}}
+{{--                                <td style="text-align: center; width: 50%">$ {{Helper::get_daily_price($data->monthly_rate)}}</td>--}}
+{{--                            </tr>--}}
 
-                            <tr>
-                                <td style="text-align: center;">Security Deposit</td>
-                                <td style="text-align: center; width: 50%">$ {{$data->security_deposit}}</td>
-                            </tr>
+{{--                            <tr>--}}
+{{--                                <td style="text-align: center;">Security Deposit</td>--}}
+{{--                                <td style="text-align: center; width: 50%">$ {{$data->security_deposit}}</td>--}}
+{{--                            </tr>--}}
 
-                            <tr>
-                                <td style="text-align: center;">Cleaning fee</td>
-                                <td style="text-align: center; width: 50%">$ {{$data->cleaning_fee}}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+{{--                            <tr>--}}
+{{--                                <td style="text-align: center;">Cleaning fee</td>--}}
+{{--                                <td style="text-align: center; width: 50%">$ {{$data->cleaning_fee}}</td>--}}
+{{--                            </tr>--}}
+{{--                            </tbody>--}}
+{{--                        </table>--}}
+{{--                    </div>--}}
                     @if(isset($hospitals->businesses) && count($hospitals->businesses) != 0)
                         <div class="col-sm-12" id="scroll_stop">
                             <div class="wpb_wrapper">
@@ -457,7 +457,10 @@
                                                         <img src="{{BASE_URL}}no-image-icon.png" class="yelp_img">
                                                     @endif
                                                 </td>
-                                                <td><a href="{{$hospitals->businesses[$j]->url}}"><strong>{{$hospitals->businesses[$j]->name}}&nbsp;&nbsp;</strong></a>(<strong>{{round($hospitals->businesses[$j]->distance * 0.00062137)}}&nbsp;Miles</strong>)<br>
+                                                <?php $distance_in_miles = round(
+                                                    $hospitals->businesses[$j]->distance * 0.00062137,
+                                                ); ?>
+                                                <td><a href="{{$hospitals->businesses[$j]->url}}"><strong>{{$hospitals->businesses[$j]->name}}&nbsp;&nbsp;</strong></a>(<strong>@if($distance_in_miles == 0) Less than a Mile @else {{$distance_in_miles}} Miles @endif</strong>)<br>
                                                     <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;@for($k=0;$k<count($hospitals->businesses[$j]->location->display_address);$k++)
                                                         {{$hospitals->businesses[$j]->location->display_address[$k]}}
                                                     @endfor
@@ -479,7 +482,10 @@
                                                         <img src="{{BASE_URL}}no-image-icon.png" class="yelp_img">
                                                     @endif
                                                 </td>
-                                                <td><a href="{{$hospitals->businesses[$j]->url}}"><strong>{{$hospitals->businesses[$j]->name}}&nbsp;&nbsp;</strong></a>(<strong>{{round($hospitals->businesses[$j]->distance * 0.00062137)}}&nbsp;Miles</strong>)<br>
+                                                <?php $distance_in_miles = round(
+                                                    $hospitals->businesses[$j]->distance * 0.00062137,
+                                                ); ?>
+                                                <td><a href="{{$hospitals->businesses[$j]->url}}"><strong>{{$hospitals->businesses[$j]->name}}&nbsp;&nbsp;</strong></a>(<strong>@if($distance_in_miles == 0) Less than a Mile @else {{$distance_in_miles}} Miles @endif</strong>)<br>
                                                     <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;@for($k=0;$k<count($hospitals->businesses[$j]->location->display_address);$k++)
                                                         {{$hospitals->businesses[$j]->location->display_address[$k]}}
                                                     @endfor
@@ -521,7 +527,10 @@
                                                         <img src="{{BASE_URL}}no-image-icon.png" class="yelp_img">
                                                     @endif
                                                 </td>
-                                                <td><a href="{{$pets->businesses[$j]->url}}"><strong>{{$pets->businesses[$j]->name}}&nbsp;&nbsp;</strong></a>(<strong>{{round($pets->businesses[$j]->distance * 0.00062137)}}&nbsp;Miles</strong>)<br>
+                                                <?php $distance_in_miles = round(
+                                                    $pets->businesses[$j]->distance * 0.00062137,
+                                                ); ?>
+                                                <td><a href="{{$pets->businesses[$j]->url}}"><strong>{{$pets->businesses[$j]->name}}&nbsp;&nbsp;</strong></a>(<strong>@if($distance_in_miles == 0) Less than a Mile @else {{$distance_in_miles}} Miles @endif</strong>)<br>
                                                     <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;@for($k=0;$k<count($pets->businesses[$j]->location->display_address);$k++)
                                                         {{$pets->businesses[$j]->location->display_address[$k]}}
                                                     @endfor
@@ -543,7 +552,10 @@
                                                         <img src="{{BASE_URL}}no-image-icon.png" class="yelp_img">
                                                     @endif
                                                 </td>
-                                                <td><a href="{{$pets->businesses[$j]->url}}"><strong>{{$pets->businesses[$j]->name}}&nbsp;&nbsp;</strong></a>(<strong>{{round($pets->businesses[$j]->distance * 0.00062137)}}&nbsp;Miles</strong>)<br>
+                                                <?php $distance_in_miles = round(
+                                                    $pets->businesses[$j]->distance * 0.00062137,
+                                                ); ?>
+                                                <td><a href="{{$pets->businesses[$j]->url}}"><strong>{{$pets->businesses[$j]->name}}&nbsp;&nbsp;</strong></a>(<strong>@if($distance_in_miles == 0) Less than a Mile @else {{$distance_in_miles}} Miles @endif</strong>)<br>
                                                     <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;@for($k=0;$k<count($pets->businesses[$j]->location->display_address);$k++)
                                                         {{$pets->businesses[$j]->location->display_address[$k]}}
                                                     @endfor
@@ -846,7 +858,7 @@
 
                                     <div class="listing-footer">
                                         <a href="{{BASE_URL}}owner-profile/{{$property->owner_id}}">
-                                            <i class="fa fa-user"></i> {{$property->username}}
+                                            <i class="fa fa-user"></i> {{Helper::get_user_display_name($property)}}
                                         </a>
                                         {{-- <span><i class="fa fa-calendar-o"></i> 1 day ago</span> --}}
                                     </div>

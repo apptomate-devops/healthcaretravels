@@ -232,7 +232,7 @@ class BaseController extends ConstantsController
     public function send_email_listing($email, $view_name, $data, $subject)
     {
         try {
-            Mail::send($view_name, $data, function ($message) use ($email) {
+            Mail::send($view_name, $data, function ($message) use ($email, $subject) {
                 $message->from('gotocva@gmail.com', 'Mail from ' . APP_BASE_NAME);
                 $message->to($email);
                 $message->subject($subject);

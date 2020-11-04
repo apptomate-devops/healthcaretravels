@@ -882,7 +882,7 @@ class PropertyController extends BaseController
         $incomplete_bookings = [];
         foreach ($data as $datum) {
             $traveller = DB::select(
-                "SELECT username as name,id FROM users WHERE client_id = CLIENT_ID AND id = $datum->owner_id LIMIT 1",
+                "SELECT first_name, last_name, username, id FROM users WHERE client_id = CLIENT_ID AND id = $datum->owner_id LIMIT 1",
             );
 
             $image = DB::table('property_images')
@@ -890,7 +890,7 @@ class PropertyController extends BaseController
                 ->where('property_id', $datum->property_id)
                 ->first();
             $datum->image_url = $image->image_url;
-            $datum->owner_name = $traveller[0]->name;
+            $datum->owner_name = Helper::get_user_display_name($traveller[0]);
             $datum->owner_id = $traveller[0]->id;
             $datum->start_date = Carbon::parse($datum->start_date)->format('m/d/Y');
             $datum->end_date = Carbon::parse($datum->end_date)->format('m/d/Y');
@@ -1230,7 +1230,7 @@ class PropertyController extends BaseController
             $guest_info = GuestsInformation::where('booking_id', $booking_id)->get();
             $pet_details = PetInformation::where('booking_id', $booking_id)->first();
             $data->traveller_profile_image = $traveller->profile_image;
-            $data->traveller_name = $traveller->username;
+            $data->traveller_name = Helper::get_user_display_name($traveller);
             $data->agency = implode(", ", array_filter([$data->name_of_agency, $data->other_agency])); // Booking agencies
 
             $payment_summary = $this->get_payment_summary($data, 1);
@@ -1318,6 +1318,8 @@ class PropertyController extends BaseController
             ->where('property_list.id', '=', $property_id)
             ->select(
                 'property_list.*',
+                'users.first_name',
+                'users.last_name',
                 'users.username',
                 'users.profile_image',
                 'users.device_token',
@@ -1453,6 +1455,8 @@ class PropertyController extends BaseController
                 'property_room.bedroom_count',
                 'property_room.bathroom_count',
                 'property_list.property_size',
+                'users.first_name',
+                'users.last_name',
                 'users.username',
                 'users.profile_image',
                 'property_list.id as property_id',
@@ -1655,7 +1659,7 @@ class PropertyController extends BaseController
         $data->traveller_name = $traveller->username;
         $data->owner_role_id = $owner->role_id;
         $data->owner_profile_image = $owner->profile_image;
-        $data->owner_name = $owner->username;
+        $data->owner_name = Helper::get_user_display_name($owner);
         $data->agency = implode(", ", array_filter([$data->name_of_agency, $data->other_agency])); // Booking Agency
 
         $payment_summary = $this->get_payment_summary($data);
@@ -2868,6 +2872,8 @@ class PropertyController extends BaseController
             );
             $url = BASE_URL . 'owner/my-properties';
         }
+        Logger::info('After ADDING NEW PROPERTY ' . $property->is_complete);
+
         return redirect($url);
     }
 

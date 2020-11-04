@@ -85,8 +85,8 @@
                                     <input id="lawn_yes" name="lawn_service" type="checkbox" value="1" name="check">
                                     <label for="lawn_yes" >Yes</label>
 
-                                    <input id="lawn_no" name="lawn_service" type="checkbox" value="0" checked  name="check">
-                                    <label for="lawn_no"  value="1">No</label>
+                                    <input id="lawn_no" name="lawn_service" type="checkbox" value="0" name="check">
+                                    <label for="lawn_no" value="1">No</label>
                                 </div>
                             </div>
 
@@ -97,8 +97,8 @@
                                     <input id="pet_yes" name="pets_allowed" type="checkbox" value="1" >
                                     <label for="pet_yes" >Yes</label>
 
-                                    <input id="pet_no" name="pets_allowed" type="checkbox" value="0" checked  >
-                                    <label for="pet_no"  value="1">No</label>
+                                    <input id="pet_no" name="pets_allowed" type="checkbox" value="0" >
+                                    <label for="pet_no" value="1">No</label>
                                 </div>
                             </div>
 
@@ -141,7 +141,7 @@
 
         <?php }
         }
-        if (isset($property_data->lawn_service)) {
+        if (isset($property_data->lawn_service) && $property_data->is_complete == 1) {
             $temp = $property_data->lawn_service;
 
             if ($temp == 1) { ?>
@@ -167,7 +167,7 @@
             }
         })
 
-        <?php if (isset($property_data->pets_allowed)) {
+        <?php if (isset($property_data->pets_allowed) && $property_data->is_complete == 1) {
             $temp = $property_data->pets_allowed;
 
             if ($temp == 1) { ?>

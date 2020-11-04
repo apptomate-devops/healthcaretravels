@@ -251,14 +251,14 @@
         }
         interval_check_vefiried();
         var verifiedInterval = setInterval(interval_check_vefiried, 1000 * 60);
-        $(document).on('click', '.not-verified-block', function(event) {
-            var sessionVerified = "{{Session::has('is_verified') && Session::get('is_verified')}}";
-            if (isUserVerified != 1 && sessionVerified != "1") {
-                event.preventDefault();
-                event.stopPropagation();
-                openVerificationModal();
-            }
-        });
+        // $(document).on('click', '.not-verified-block', function(event) {
+        //     var sessionVerified = "{{Session::has('is_verified') && Session::get('is_verified')}}";
+        //     if (isUserVerified != 1 && sessionVerified != "1") {
+        //         event.preventDefault();
+        //         event.stopPropagation();
+        //         openVerificationModal();
+        //     }
+        // });
         $(document).on('click', '#notification-close', function(evennt) {
             event.preventDefault();
             event.stopPropagation();

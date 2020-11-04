@@ -418,28 +418,28 @@
                         </div>
                     </div>
                     <br>
-                    <h3>Property Price :</h3>
-                    <div class="col-sm-12" id="scroll_stop">
-                        <table cellpadding="1" cellspacing="1" border="1" style="width: 100%;margin-top: 10px;">
-                            <tbody id="table_bodys">
+{{--                    <h3>Property Price :</h3>--}}
+{{--                    <div class="col-sm-12" id="scroll_stop">--}}
+{{--                        <table cellpadding="1" cellspacing="1" border="1" style="width: 100%;margin-top: 10px;">--}}
+{{--                            <tbody id="table_bodys">--}}
 
-                            <tr>
-                                <td style="text-align: center;">Price per day</td>
-                                <td style="text-align: center; width: 50%">$ {{Helper::get_daily_price($data->monthly_rate)}}</td>
-                            </tr>
+{{--                            <tr>--}}
+{{--                                <td style="text-align: center;">Price per day</td>--}}
+{{--                                <td style="text-align: center; width: 50%">$ {{Helper::get_daily_price($data->monthly_rate)}}</td>--}}
+{{--                            </tr>--}}
 
-                            <tr>
-                                <td style="text-align: center;">Security Deposit</td>
-                                <td style="text-align: center; width: 50%">$ {{$data->security_deposit}}</td>
-                            </tr>
+{{--                            <tr>--}}
+{{--                                <td style="text-align: center;">Security Deposit</td>--}}
+{{--                                <td style="text-align: center; width: 50%">$ {{$data->security_deposit}}</td>--}}
+{{--                            </tr>--}}
 
-                            <tr>
-                                <td style="text-align: center;">Cleaning fee</td>
-                                <td style="text-align: center; width: 50%">$ {{$data->cleaning_fee}}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+{{--                            <tr>--}}
+{{--                                <td style="text-align: center;">Cleaning fee</td>--}}
+{{--                                <td style="text-align: center; width: 50%">$ {{$data->cleaning_fee}}</td>--}}
+{{--                            </tr>--}}
+{{--                            </tbody>--}}
+{{--                        </table>--}}
+{{--                    </div>--}}
                     @if(isset($hospitals->businesses) && count($hospitals->businesses) != 0)
                         <div class="col-sm-12" id="scroll_stop">
                             <div class="wpb_wrapper">

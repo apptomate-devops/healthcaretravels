@@ -2872,6 +2872,8 @@ class PropertyController extends BaseController
             );
             $url = BASE_URL . 'owner/my-properties';
         }
+        Logger::info('After ADDING NEW PROPERTY ' . $property->is_complete);
+
         return redirect($url);
     }
 

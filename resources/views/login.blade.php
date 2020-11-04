@@ -213,7 +213,7 @@
                                 <label for="profile_image">Profile Picture:</label>
                                 <label class="register-info">Upload a clear image of your face.</label>
                                 <img src="/user_profile_default.png" alt="" onclick="$('#profile_image').trigger('click'); return false;" style="cursor: pointer;">
-                                <input style="display: none;" type="file" name="profile_image" id="profile_image" class="form-control" accept="image/*"/>
+                                <input style="height: 0;width: 0;padding: 0;margin: -22px auto 25px;" type="file" name="profile_image" id="profile_image" class="form-control" accept="image/*" required/>
                             </p>
 
                             <p class="form-row form-row-wide" id="ethnicity_filed" style="display: none;">

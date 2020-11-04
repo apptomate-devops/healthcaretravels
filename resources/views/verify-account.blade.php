@@ -53,7 +53,7 @@
                 </b>
                 <p class="info-text" style="margin-top: 15px;">You'll receive an email once your account has been reviewed or if we need more information.</p>
             @elseif($user->denied_count >= 3)
-                <b class="info-text" style="color: red; font-size: 18px;">We were unable to verify your account and cannot grant your access to our features. Please contact support for more information.</b>
+                <b class="info-text" style="color: red; font-size: 18px;">Please resubmit at least three of the below verification fields once issues are corrected.</b>
             @else
                 @if($user->is_verified == -1)
                     <div class="denied-details">
@@ -78,7 +78,7 @@
 
                                     @if ($user->is_verified == -1)
                                         <div class="info-text text-error padding-top-10">
-                                            We were unable to verify your account. Please resubmit your information or contact support for more information. Attempts remaining: {{3 - $user->denied_count}}
+                                            Please resubmit at least three of the below verification fields once issues are corrected. <div>Attempts remaining: {{3 - $user->denied_count}}</div>
                                         </div>
                                     @endif
                                     <div class="col-md-6">
@@ -107,7 +107,7 @@
 
                                     @if ($user->is_verified == -1)
                                         <div class="info-text text-error padding-top-10">
-                                            We were unable to verify your account. Please resubmit your information or contact support for more information. Attempts remaining: {{3 - $user->denied_count}}
+                                            Please resubmit at least three of the below verification fields once issues are corrected. <div>Attempts remaining: {{3 - $user->denied_count}}</div>
                                         </div>
                                     @endif
                                     <div class="col-md-6">
@@ -154,7 +154,7 @@
 
                                     @if ($user->is_verified == -1)
                                         <div class="info-text text-error padding-top-10">
-                                            We were unable to verify your account. Please resubmit your information or contact support for more information. Attempts remaining: {{3 - $user->denied_count}}
+                                            Please resubmit at least three of the below verification fields once issues are corrected. <div>Attempts remaining: {{3 - $user->denied_count}}</div>
                                         </div>
                                     @endif
                                     <div class="col-md-6">
@@ -173,7 +173,7 @@
 
                                     @if ($user->is_verified == -1)
                                         <div class="info-text text-error padding-top-10">
-                                            We were unable to verify your account. Please resubmit your information or contact support for more information. Attempts remaining: {{3 - $user->denied_count}}
+                                            Please resubmit at least three of the below verification fields once issues are corrected. <div>Attempts remaining: {{3 - $user->denied_count}}</div>
                                         </div>
                                     @endif
                                     <div class="row m-0">

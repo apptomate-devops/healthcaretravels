@@ -133,7 +133,11 @@ div::-webkit-scrollbar-thumb {
                                             <img src="{{url('/')}}/public/no-image-icon.png" class="yelp_img">
                                         @endif
                                     </td>
-                                    <td><a href="{{$hospitals->businesses[$j]->url}}"><strong>{{$hospitals->businesses[$j]->name}}&nbsp;&nbsp;</strong></a>(<strong>{{round($hospitals->businesses[$j]->distance * 0.00062137)}}&nbsp;Miles</strong>)<br>
+                                    <?php $distance_in_miles = round(
+                                        $hospitals->businesses[$j]->distance * 0.00062137,
+                                    ); ?>
+
+                                    <td><a href="{{$hospitals->businesses[$j]->url}}"><strong>{{$hospitals->businesses[$j]->name}}&nbsp;&nbsp;</strong></a>(<strong>@if($distance_in_miles == 0) Less than a Mile @else {{$distance_in_miles}} Miles @endif</strong>)<br>
                                         <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;@for($k=0;$k<count($hospitals->businesses[$j]->location->display_address);$k++)
                                             {{$hospitals->businesses[$j]->location->display_address[$k]}}
                                         @endfor
@@ -167,7 +171,10 @@ div::-webkit-scrollbar-thumb {
                                                 <img src="{{url('/')}}/public/no-image-icon.png" class="yelp_img">
                                             @endif
                                         </td>
-                                        <td><a href="{{$pets->businesses[$j]->url}}"><strong>{{$pets->businesses[$j]->name}}&nbsp;&nbsp;</strong></a>(<strong>{{round($pets->businesses[$j]->distance * 0.00062137)}}&nbsp;Miles</strong>)<br>
+                                        <?php $distance_in_miles = round(
+                                            $pets->businesses[$j]->distance * 0.00062137,
+                                        ); ?>
+                                        <td><a href="{{$pets->businesses[$j]->url}}"><strong>{{$pets->businesses[$j]->name}}&nbsp;&nbsp;</strong></a>(<strong>@if($distance_in_miles == 0) Less than a Mile @else {{$distance_in_miles}} Miles @endif</strong>)<br>
                                             <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;@for($k=0;$k<count($pets->businesses[$j]->location->display_address);$k++)
                                                 {{$pets->businesses[$j]->location->display_address[$k]}}
                                             @endfor

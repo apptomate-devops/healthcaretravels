@@ -302,6 +302,9 @@
                                             <label>VRBO</label>
                                             <input value="@if($user->vrbo_link == '0' || $user->vrbo_link == null)@else{{$user->vrbo_link}}@endif" type="text" placeholder="VRBO URL" name="vrbo_link" class="form-control" />
 
+                                            <label>Other</label>
+                                            <input value="@if($user->other_listing_link == '0' || $user->other_listing_link == null)@else{{$user->other_listing_link}}@endif" type="text" placeholder="OTHER LISTING URL" name="other_listing_link" class="form-control" />
+
                                         </div>
                                     </div>
                                 @endif
@@ -392,7 +395,7 @@
                             else if(['agency_hr_email', 'homeowner_email'].includes(this.name)) {
                                 regex = validation_regex.email;
                             }
-                            else if(['airbnb_link', 'home_away_link', 'vrbo_link', 'agency_website', 'website', 'property_tax_url'].includes(this.name)) {
+                            else if(['airbnb_link', 'home_away_link', 'vrbo_link', 'other_listing_link', 'agency_website', 'website', 'property_tax_url'].includes(this.name)) {
                                 // URL validations
                                 regex = validation_regex.url;
                             }

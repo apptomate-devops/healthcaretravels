@@ -968,6 +968,7 @@ class UserController extends BaseController
             "airbnb_link",
             "home_away_link",
             "vrbo_link",
+            "other_listing_link",
             "agency_website",
             "property_tax_url",
         ];
@@ -1089,6 +1090,7 @@ class UserController extends BaseController
                     'airbnb_link' => isset($request->airbnb_link) ? $request->airbnb_link : null,
                     'home_away_link' => isset($request->home_away_link) ? $request->home_away_link : null,
                     'vrbo_link' => isset($request->vrbo_link) ? $request->vrbo_link : null,
+                    'other_listing_link' => isset($request->other_listing_link) ? $request->other_listing_link : null,
                     'property_tax_url' => isset($request->property_tax_url) ? $request->property_tax_url : null,
                     'property_address' => isset($request->property_address) ? $request->property_address : null,
                     'agency_hr_email' => isset($request->agency_hr_email) ? $request->agency_hr_email : null,

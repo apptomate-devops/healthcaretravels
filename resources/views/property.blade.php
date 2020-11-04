@@ -37,7 +37,7 @@
                                  alt="">
                         </p>
                         <div class="sub-price">
-                            <a href="{{BASE_URL}}owner-profile/{{$data->user_id}}">{{$data->username}}</a><br>
+                            <a href="{{BASE_URL}}owner-profile/{{$data->user_id}}">{{Helper::get_user_display_name($data)}}</a><br>
                         </div>
 
                     </div>
@@ -85,7 +85,7 @@
                                 <img class="user-icon" src="{{$data->profile_image}}">
                             </p>
                             <div class="sub-price">
-                                <a href="{{BASE_URL}}owner-profile/{{$data->user_id}}">{{$data->username}}</a>
+                                <a href="{{BASE_URL}}owner-profile/{{$data->user_id}}">{{Helper::get_user_display_name($data)}}</a>
                             </div>
                             <div class="sub-price">
                                 @if(Session::get('user_id'))
@@ -846,7 +846,7 @@
 
                                     <div class="listing-footer">
                                         <a href="{{BASE_URL}}owner-profile/{{$property->owner_id}}">
-                                            <i class="fa fa-user"></i> {{$property->username}}
+                                            <i class="fa fa-user"></i> {{Helper::get_user_display_name($property)}}
                                         </a>
                                         {{-- <span><i class="fa fa-calendar-o"></i> 1 day ago</span> --}}
                                     </div>

@@ -90,7 +90,7 @@
                         </div>
                         <h3 class="md-card-toolbar-heading-text large">
                             <span class="uk-text-muted">Chat with</span>
-                            <a href="#">{{$owner->first_name}} {{$owner->last_name}}</a>
+                            <a href="#">{{Helper::get_user_display_name($owner)}}</a>
                             @if(isset($property))
                             , <a href="/property/{{$property->id}}">
                                 {{$property->title}}

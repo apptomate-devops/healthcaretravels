@@ -132,7 +132,7 @@
                                         <img class="user-icon" src="{{Auth::user()->profile_image}}">
                                         <span id="unread_chat_badge"><span class="unread_chat_badge"></span></span>
                                     </span>
-                                    <span>{{ Session::get('username') }}</span>
+                                    <span>{{Helper::get_user_display_name(Auth::user())}}</span>
                                 </div>
 
                                 @if(Session::get('role_id') == 1 || Session::get('role_id') == 4) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}

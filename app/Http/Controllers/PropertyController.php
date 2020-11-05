@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ProcessOwnerReminder;
+use App\Jobs\ProcessPropertyUpdateEmail;
 use App\Models\PetInformation;
 use App\Models\PropertyBlocking;
 use App\Services\Logger;
@@ -2175,6 +2176,9 @@ class PropertyController extends BaseController
             $request->cur_child = 0;
             $request->cur_pets = 0;
         }
+        $property = DB::table('property_list')
+            ->where('id', $request->property_id)
+            ->first();
 
         DB::table('property_list')
             ->where('id', $request->property_id)
@@ -2324,6 +2328,7 @@ class PropertyController extends BaseController
         } else {
             $url = BASE_URL . 'owner/add-new-property/3/' . $request->property_id;
         }
+        $this->schedule_property_update_email($property);
         return redirect($url);
     }
 
@@ -2354,6 +2359,8 @@ class PropertyController extends BaseController
         }
 
         $url = BASE_URL . 'owner/add-new-property/4/' . $request->property_id;
+
+        $this->schedule_property_update_email($prop);
         return redirect($url);
     }
 
@@ -2371,11 +2378,16 @@ class PropertyController extends BaseController
         $ins['is_instant'] = (int) $request->booking_type;
         $ins['stage'] = 4;
 
+        $property = DB::table('property_list')
+            ->where('id', $request->property_id)
+            ->first();
+
         $update_rate = DB::table('property_list')
             ->where('id', $request->property_id)
             ->update($ins);
 
         $url = BASE_URL . 'owner/add-new-property/6/' . $request->property_id;
+        $this->schedule_property_update_email($property);
         return redirect($url);
     }
 
@@ -2461,6 +2473,7 @@ class PropertyController extends BaseController
             $url = BASE_URL . 'owner/add-new-property/7/' . $request->property_id;
         }
 
+        $this->schedule_property_update_email($property_details);
         return redirect($url)->with(compact('property_details', 'booked_events', 'icals', 'block_events', 'res'));
     }
 
@@ -2790,7 +2803,7 @@ class PropertyController extends BaseController
 
         //        $request_data = print_r($request->all());
         //        Logger::info("Aminities add hitted with data :".$request_data);
-        $c_data = DB::table('property_list')
+        $property = DB::table('property_list')
             ->where('client_id', '=', CLIENT_ID)
             ->where('id', $request->property_id)
             ->first();
@@ -2806,6 +2819,7 @@ class PropertyController extends BaseController
             $url = BASE_URL . 'owner/add-new-property/5/' . $request->property_id;
         }
 
+        $this->schedule_property_update_email($property);
         return redirect($url);
     }
 
@@ -2864,17 +2878,26 @@ class PropertyController extends BaseController
             session()->forget('property_id');
             $url = BASE_URL . "owner/calender?id=" . $request->property_id;
         } else {
-            $this->send_email_listing(
-                $mail_email,
-                'mail.listing_update',
-                $mail_data,
-                'You edited your property listing: ' . $address,
-            );
+            $this->schedule_property_update_email($property);
             $url = BASE_URL . 'owner/my-properties';
         }
         Logger::info('After ADDING NEW PROPERTY ' . $property->is_complete);
 
         return redirect($url);
+    }
+
+    public function schedule_property_update_email($property)
+    {
+        if ($property->is_complete == 1) {
+            DB::table('property_list')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('id', $property->id)
+                ->update(['last_edited_at' => Carbon::now('UTC')]);
+            Logger::info('Request sending mail at' . now() . 'for id ' . $property->id);
+            ProcessPropertyUpdateEmail::dispatch($property->id)
+                ->delay(now()->addMinutes(5))
+                ->onQueue(GENERAL_QUEUE);
+        }
     }
 
     public function schedule_auto_cancel_job($booking)

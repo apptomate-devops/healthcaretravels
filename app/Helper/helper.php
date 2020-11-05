@@ -2,6 +2,7 @@
 
 namespace App\Helper;
 
+use App\Http\Controllers\BaseController;
 use DB;
 use Mail;
 use Carbon\Carbon;
@@ -534,6 +535,51 @@ class Helper
         return ['success' => false, 'message' => 'Booking request was handled already!'];
     }
 
+    public static function handlePropertyUpdateEmail($property_id)
+    {
+        Logger::info('got ID' . $property_id);
+        $property = DB::table('property_list')
+            ->where('client_id', '=', CLIENT_ID)
+            ->where('id', $property_id)
+            ->first();
+        if ($property) {
+            $last_updated_at = Carbon::parse($property->last_edited_at);
+            $now = Carbon::now('UTC');
+            Logger::info('Found property with last updated at ' . $last_updated_at);
+            Logger::info('Now ' . $now);
+            Logger::info('Difference ' . $now->diffInSeconds($last_updated_at));
+            if ($now->diffInSeconds($last_updated_at) >= 300) {
+                // 5 minutes
+                Logger::info('Difference is greater send email now');
+                $user = DB::table('users')
+                    ->where('id', $property->user_id)
+                    ->first();
+                $mail_email = $user->email;
+                $address = implode(
+                    ", ",
+                    array_filter([
+                        $property->address,
+                        $property->city,
+                        $property->state,
+                        $property->zip_code,
+                        $property->country,
+                    ]),
+                );
+                $mail_data = [
+                    'name' => $user->first_name . ' ' . $user->last_name,
+                    'property_link' => BASE_URL . 'property/' . $property_id,
+                    'availability_calendar' => BASE_URL . 'ical/' . $property_id,
+                ];
+                Logger::info('sending email to' . $mail_email);
+                BaseController::send_email_listing(
+                    $mail_email,
+                    'mail.listing_update',
+                    $mail_data,
+                    'You edited your property listing: ' . $address,
+                );
+            }
+        }
+    }
     public static function generate_booking_payments($booking, $is_owner = 0)
     {
         $start_date = Carbon::parse($booking->start_date, 'UTC');

@@ -57,7 +57,7 @@
                 @endif --}}
                 <div class="detail-text">{{$title ?? 'Aw, Snap! Something went wrong.'}}</div>
                 <div class="error-details">
-                    {{$message ?? 'We are sorry about. Please go back to home page to continue using the site'}}
+                    {{$message ?? 'We are sorry about. Please go back to continue using the site'}}
                 </div>
                 <a href="{{$url ?? BASE_URL}}" class="button">
                 <div>{{$buttonText ?? 'Go Back'}}</div>

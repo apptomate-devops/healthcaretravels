@@ -229,7 +229,7 @@ class BaseController extends ConstantsController
             return false;
         }
     }
-    public function send_email_listing($email, $view_name, $data, $subject)
+    public static function send_email_listing($email, $view_name, $data, $subject)
     {
         try {
             Mail::send($view_name, $data, function ($message) use ($email, $subject) {

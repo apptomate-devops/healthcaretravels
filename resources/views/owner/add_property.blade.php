@@ -46,6 +46,7 @@
                                     <!-- Title -->
                                     <div class="row with-forms">
                                         <div class="col-md-12">
+                                            <div class="warning-text">Be sure to add your complete and correct address, including your apartment or unit number if relevant. You will not be able to edit the address after listing your property.</div>
                                             <h5>Address <span class="required">*</span></h5>
                                             <input type="text" value="{{Session::get('address')}}" name="address" id="address" placeholder="Full Street Address" autocomplete="off" style="padding-left: 20px;" @if(Session::has('address')) data-is-valid="true" @endif />
                                             <div class="error-text" id="address_error" style="display: none;">Please select a valid address from the suggestions.</div>

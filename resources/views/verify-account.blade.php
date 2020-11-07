@@ -83,17 +83,17 @@
                                     @endif
                                     <div class="col-md-6">
                                         <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control" required accept="{{$filtypes}}" />
+                                        <input type="file" name="government_id" id="government_id" data-field-group="government_id" class="form-control" required accept="{{$filtypes}}" />
                                     </div>
                                     <div class="col-md-6">
                                         <label>Lease Agreement</label>
                                         <div class="caption-text">If approved by your state for subleasing</div>
-                                        <input type="file" name="lease_agreement" id="lease_agreement" class="form-control" accept="{{$filtypes}}" />
+                                        <input type="file" name="lease_agreement" id="lease_agreement" data-field-group="lease_agreement" class="form-control" accept="{{$filtypes}}" />
                                     </div>
                                     <div class="col-md-6">
                                         <label>Utility Bill</label>
                                         <div class="caption-text">With proof of name and listing address</div>
-                                        <input type="file" name="utility_bill" id="utility_bill" class="form-control" accept="{{$filtypes}}" />
+                                        <input type="file" name="utility_bill" id="utility_bill" data-field-group="utility_bill" class="form-control" accept="{{$filtypes}}" />
                                     </div>
 
 
@@ -112,16 +112,16 @@
                                     @endif
                                     <div class="col-md-6">
                                         <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control" required accept="{{$filtypes}}" />
+                                        <input type="file" name="government_id" id="government_id" data-field-group="government_id" class="form-control" required accept="{{$filtypes}}" />
                                     </div>
                                     <div class="col-md-6">
                                         <label>A Traveler's Contract</label>
                                         <div class="caption-text" style="margin-top: 5px;">This should have your name as a contact person in the contract.</div>
-                                        <input type="file" name="traveler_contract_id" id="traveler_contract_id" class="form-control" accept="{{$filtypes}}" />
+                                        <input type="file" name="traveler_contract_id" id="traveler_contract_id" data-field-group="traveler_contract_id" class="form-control" accept="{{$filtypes}}" />
                                     </div>
                                     <div class="col-md-6">
                                         <label>Work Badge </label>
-                                        <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept="{{$filtypes}}" />
+                                        <input type="file" name="work_badge_id" id="work_badge_id" data-field-group="work_badge_id" class="form-control" accept="{{$filtypes}}" />
                                     </div>
                                     <div class="col-md-12" style="margin-top: 40px;">
                                         <div class="card col-md-12" style="padding: 15px;">
@@ -129,17 +129,17 @@
 
                                             <label>Proof of Employment on agency website </label>
                                             <div class="caption-text">If your agency has a page with your name on it, share it here.</div>
-                                            <input value="@if($user->agency_website == '0' || $user->agency_website == null)@else{{$user->agency_website}}@endif" type="text" placeholder="Agency Website" name="agency_website" class="form-control" />
+                                            <input value="@if($user->agency_website == '0' || $user->agency_website == null)@else{{$user->agency_website}}@endif" type="text" placeholder="Agency Website" name="agency_website" data-field-group="agency_details" class="form-control" />
 
                                             <label>Agency HR Business Email</label>
-                                            <input value="@if($user->agency_hr_email == '0' || $user->agency_hr_email == null)@else{{$user->agency_hr_email}}@endif" type="text" placeholder="Agency HR Email Address" name="agency_hr_email" class="form-control" />
+                                            <input value="@if($user->agency_hr_email == '0' || $user->agency_hr_email == null)@else{{$user->agency_hr_email}}@endif" type="text" placeholder="Agency HR Email Address" name="agency_hr_email" data-field-group="agency_details" class="form-control" />
 
                                             <label>Agency HR Direct Phone Number</label>
-                                            <input value="@if($user->agency_hr_phone == '0' || $user->agency_hr_phone == null)@else{{$user->agency_hr_phone}}@endif" type="text" placeholder="Agency HR Phone Number" name="agency_hr_phone" class="form-control" />
+                                            <input value="@if($user->agency_hr_phone == '0' || $user->agency_hr_phone == null)@else{{$user->agency_hr_phone}}@endif" type="text" placeholder="Agency HR Phone Number" name="agency_hr_phone" data-field-group="agency_details" class="form-control" />
 
                                             <label>Direct Office Number</label>
                                             <div class="caption-text">Provide your agency's main office phone number.</div>
-                                            <input value="@if($user->agency_office_number == '0' || $user->agency_office_number == null)@else{{$user->agency_office_number}}@endif" type="text" placeholder="Agency Office Number" name="agency_office_number" class="form-control" />
+                                            <input value="@if($user->agency_office_number == '0' || $user->agency_office_number == null)@else{{$user->agency_office_number}}@endif" type="text" placeholder="Agency Office Number" name="agency_office_number" data-field-group="agency_details" class="form-control" />
 
                                         </div>
                                     </div>
@@ -159,7 +159,7 @@
                                     @endif
                                     <div class="col-md-6">
                                         <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
-                                        <input type="file" name="government_id" id="government_id" class="form-control" required accept="{{$filtypes}}" />
+                                        <input type="file" name="government_id" id="government_id" data-field-group="government_id" class="form-control" required accept="{{$filtypes}}" />
                                         {{--                                        @if(isset($GOVERNMENT_ID->document_type))--}}
                                         {{--                                            <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>--}}
                                         {{--                                        @endif--}}
@@ -179,14 +179,14 @@
                                     <div class="row m-0">
                                         <div class="col-md-6">
                                             <label>Government ID/Driver's License/Passport<span class="required">*</span></label>
-                                            <input type="file" name="government_id" id="government_id" class="form-control" accept="{{$filtypes}}" />
+                                            <input type="file" name="government_id" id="government_id" data-field-group="government_id" class="form-control" accept="{{$filtypes}}" />
                                             {{--                                        @if(isset($GOVERNMENT_ID->document_type))--}}
                                             {{--                                            <a href="{{$GOVERNMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>--}}
                                             {{--                                        @endif--}}
                                         </div>
                                         <div class="col-md-6">
                                             <label>Work Badge </label>
-                                            <input type="file" name="work_badge_id" id="work_badge_id" class="form-control" accept="{{$filtypes}}" />
+                                            <input type="file" name="work_badge_id" id="work_badge_id" data-field-group="work_badge_id" class="form-control" accept="{{$filtypes}}" />
                                             @if(isset($WORK_BADGE_ID->document_type))
                                                 <a href="{{$WORK_BADGE_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                             @endif
@@ -194,7 +194,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label>Travel Contract </label>
-                                        <input type="file" name="travel_contract_id" id="travel_contract_id" class="form-control" accept="{{$filtypes}}" />
+                                        <input type="file" name="travel_contract_id" id="travel_contract_id" data-field-group="travel_contract_id" class="form-control" accept="{{$filtypes}}" />
                                         @if(isset($TRAVEL_CONTRACT_ID->document_type))
                                             <a href="{{$TRAVEL_CONTRACT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                         @endif
@@ -213,10 +213,10 @@
                                             <h4>Certified Traveler License</h4>
                                             <div class="caption-text" style="margin-bottom: 25px;">Please provide your license number and your state's licensing or certification website URL</div>
                                             <div class="col-md-6">
-                                                <input value="@if($user->traveler_license == '0' || $user->traveler_license == null)@else{{$user->traveler_license}}@endif" type="text" placeholder="License/Certification Number" name="traveler_license" id="traveler_license" class="form-control" />
+                                                <input value="@if($user->traveler_license == '0' || $user->traveler_license == null)@else{{$user->traveler_license}}@endif" type="text" placeholder="License/Certification Number" name="traveler_license" id="traveler_license" data-field-group="certified_traveler_license" class="form-control" />
                                             </div>
                                             <div class="col-md-6">
-                                                <input value="@if($user->website == '0' || $user->website == null)@else{{$user->website}}@endif" type="text" placeholder="State Website URL" name="website" id="website" class="form-control" />
+                                                <input value="@if($user->website == '0' || $user->website == null)@else{{$user->website}}@endif" type="text" placeholder="State Website URL" name="website" id="website" data-field-group="certified_traveler_license" class="form-control" />
                                                 <div style="margin-top: -10px; margin-left: 5px;">
                                                     <a href="https://www.bon.texas.gov/" target="_blank" class="info-text">Ex: https://www.bon.texas.gov/</a>
                                                 </div>
@@ -234,7 +234,7 @@
                                             <h4 style="margin-bottom: 20px;">1. Co-Host Agreement Form<span class="required">*</span></h4>
 {{--                                            <label>Signed HCT Co-Hosting Agreement<span class="required">*</span></label>--}}
                                             <div class="caption-text">Only the HCT Standard Agreement will be accepted.</div>
-                                            <input type="file" name="co-hosting_agreement_id" id="co-hosting_agreement_id" class="form-control" required accept="{{$filtypes}}" />
+                                            <input type="file" name="co-hosting_agreement_id" id="co-hosting_agreement_id" data-field-group="property_information" class="form-control" required accept="{{$filtypes}}" />
                                             @if(isset($COHOSTING_AGREEMENT_ID->document_type))
                                                 <a href="{{$COHOSTING_AGREEMENT_ID->document_url}}" target="_blank" style="float: right;">view</a>
                                             @endif
@@ -245,25 +245,25 @@
                                             <h4 style="margin-bottom: 20px;">2. Homeowner's Contact Information</h4>
 
                                             <label>First Name<span class="required">*</span></label>
-                                            <input value="@if($user->homeowner_first_name == '0' || $user->homeowner_first_name == null)@else{{$user->homeowner_first_name}}@endif" type="text" placeholder="First Name" name="homeowner_first_name" id="homeowner_first_name" class="form-control" />
+                                            <input value="@if($user->homeowner_first_name == '0' || $user->homeowner_first_name == null)@else{{$user->homeowner_first_name}}@endif" type="text" placeholder="First Name" name="homeowner_first_name" id="homeowner_first_name" data-field-group="property_information" class="form-control" />
 
                                             <label>Last Name<span class="required">*</span></label>
-                                            <input value="@if($user->homeowner_last_name == '0' || $user->homeowner_last_name == null)@else{{$user->homeowner_last_name}}@endif" type="text" placeholder="Last Name" name="homeowner_last_name" id="homeowner_last_name" class="form-control" />
+                                            <input value="@if($user->homeowner_last_name == '0' || $user->homeowner_last_name == null)@else{{$user->homeowner_last_name}}@endif" type="text" placeholder="Last Name" name="homeowner_last_name" id="homeowner_last_name" data-field-group="property_information" class="form-control" />
 
                                             <label>Email<span class="required">*</span></label>
-                                            <input value="@if($user->homeowner_email == '0' || $user->homeowner_email == null)@else{{$user->homeowner_email}}@endif" type="text" placeholder="Email" name="homeowner_email" id="homeowner_email" class="form-control" />
+                                            <input value="@if($user->homeowner_email == '0' || $user->homeowner_email == null)@else{{$user->homeowner_email}}@endif" type="text" placeholder="Email" name="homeowner_email" id="homeowner_email" data-field-group="property_information" class="form-control" />
 
                                             <label>Phone Number<span class="required">*</span></label>
-                                            <input value="@if($user->homeowner_phone_number == '0' || $user->homeowner_phone_number == null)@else{{$user->homeowner_phone_number}}@endif" type="text" placeholder="Phone Number" name="homeowner_phone_number" id="homeowner_phone_number" class="form-control"/>
+                                            <input value="@if($user->homeowner_phone_number == '0' || $user->homeowner_phone_number == null)@else{{$user->homeowner_phone_number}}@endif" type="text" placeholder="Phone Number" name="homeowner_phone_number" id="homeowner_phone_number" data-field-group="property_information" class="form-control"/>
 
                                         </div>
                                         <div class="card col-md-12" style="padding: 15px; margin-top: 25px;">
                                             <h4>Property Address</h4>
-                                            <input value="@if($user->property_address == '0' || $user->property_address == null)@else{{$user->property_address}}@endif" type="text" placeholder="Property Address" id="property_address" name="property_address" class="form-control" @if($user->property_address) data-is-valid="true" @endif />
+                                            <input value="@if($user->property_address == '0' || $user->property_address == null)@else{{$user->property_address}}@endif" type="text" placeholder="Property Address" id="property_address" data-field-group="property_information" name="property_address" class="form-control" @if($user->property_address) data-is-valid="true" @endif />
                                             <div class="error-text" id="property_address_error" style="display: none;">Please select a valid address from the suggestions.</div>
                                             <div id="add_apt_number_field" style="display: none;">
                                                 <label for="add_apt" style="width: 100%;">Add Apartment Number:
-                                                    <input type="text" class="input-text validate {{ $errors->has('address_line_2') ? 'form-error' : ''}}" value="{{Session::get('address_line_2')}}" name="address_line_2" id="address_line_2" placeholder="Apt, Unit, Suite, or Floor #" style="padding-left: 20px;" />
+                                                    <input type="text" class="input-text validate {{ $errors->has('address_line_2') ? 'form-error' : ''}}" value="{{Session::get('address_line_2')}}" name="address_line_2" id="address_line_2" data-field-group="property_information" placeholder="Apt, Unit, Suite, or Floor #" style="padding-left: 20px;" />
                                                 </label>
                                                 <button id="remove_add_apt_number" class="button" style="float: right; margin-bottom: 25px;" >Don't Add</button>
                                             </div>
@@ -277,12 +277,12 @@
                                         <div class="card col-md-12" style="padding: 15px; margin-bottom: 25px;">
                                             <div>
                                                 <h4>Property Tax Proof URL</h4>
-                                                <input value="@if($user->property_tax_url == '0' || $user->property_tax_url == null)@else{{$user->property_tax_url}}@endif" type="text" placeholder="Property Tax Proof URL" name="property_tax_url" id="property_tax_url" class="form-control" />
+                                                <input value="@if($user->property_tax_url == '0' || $user->property_tax_url == null)@else{{$user->property_tax_url}}@endif" type="text" placeholder="Property Tax Proof URL" name="property_tax_url" id="property_tax_url" data-field-group="property_tax" class="form-control" />
                                             </div>
                                             <div>
                                                 <label>Property Tax Document</label>
                                                 <div class="caption-text">With proof of name and listing address</div>
-                                                <input type="file" name="property_tax_document" id="property_tax_document" class="form-control" accept="{{$filtypes}}" />
+                                                <input type="file" name="property_tax_document" id="property_tax_document" data-field-group="property_tax" class="form-control" accept="{{$filtypes}}" />
                                             </div>
                                         </div>
                                     </div>
@@ -294,16 +294,16 @@
                                             <h4>Existing Listing URL</h4>
 
                                             <label>Airbnb</label>
-                                            <input value="@if($user->airbnb_link == '0' || $user->airbnb_link == null)@else{{$user->airbnb_link}}@endif" type="text" placeholder="Airbnb URL" name="airbnb_link" class="form-control" />
+                                            <input value="@if($user->airbnb_link == '0' || $user->airbnb_link == null)@else{{$user->airbnb_link}}@endif" type="text" placeholder="Airbnb URL" name="airbnb_link" data-field-group="listing_url" class="form-control" />
 
                                             <label>Homeaway</label>
-                                            <input value="@if($user->home_away_link == '0' || $user->home_away_link == null)@else{{$user->home_away_link}}@endif" type="text" placeholder="Homeaway URL" name="home_away_link" class="form-control" />
+                                            <input value="@if($user->home_away_link == '0' || $user->home_away_link == null)@else{{$user->home_away_link}}@endif" type="text" placeholder="Homeaway URL" name="home_away_link" data-field-group="listing_url" class="form-control" />
 
                                             <label>VRBO</label>
-                                            <input value="@if($user->vrbo_link == '0' || $user->vrbo_link == null)@else{{$user->vrbo_link}}@endif" type="text" placeholder="VRBO URL" name="vrbo_link" class="form-control" />
+                                            <input value="@if($user->vrbo_link == '0' || $user->vrbo_link == null)@else{{$user->vrbo_link}}@endif" type="text" placeholder="VRBO URL" name="vrbo_link" data-field-group="listing_url" class="form-control" />
 
                                             <label>Other</label>
-                                            <input value="@if($user->other_listing_link == '0' || $user->other_listing_link == null)@else{{$user->other_listing_link}}@endif" type="text" placeholder="OTHER LISTING URL" name="other_listing_link" class="form-control" />
+                                            <input value="@if($user->other_listing_link == '0' || $user->other_listing_link == null)@else{{$user->other_listing_link}}@endif" type="text" placeholder="OTHER LISTING URL" name="other_listing_link" data-field-group="listing_url" class="form-control" />
 
                                         </div>
                                     </div>
@@ -315,13 +315,13 @@
                                         <h4>Your Social Media Account Links</h4>
 
                                         <label>Facebook</label>
-                                        <input value="@if($user->facebook_url == '0' || $user->facebook_url == null)@else{{$user->facebook_url}}@endif" type="text" placeholder="Enter your facebook url (ex: https://www.facebook.com/healthcaretravels/)" name="facebook" class="form-control" />
+                                        <input value="@if($user->facebook_url == '0' || $user->facebook_url == null)@else{{$user->facebook_url}}@endif" type="text" placeholder="Enter your facebook url (ex: https://www.facebook.com/healthcaretravels/)" name="facebook" data-field-group="social_media_links" class="form-control" />
 
                                         <label>Linkedin</label>
-                                        <input value="@if($user->linkedin_url == '0' || $user->linkedin_url == null)@else{{$user->linkedin_url}}@endif" type="text" placeholder="Enter your LinkedIn url (ex: https://www.linkedin.com/company/health-care-travels/)" name="linkedin" class="form-control" />
+                                        <input value="@if($user->linkedin_url == '0' || $user->linkedin_url == null)@else{{$user->linkedin_url}}@endif" type="text" placeholder="Enter your LinkedIn url (ex: https://www.linkedin.com/company/health-care-travels/)" name="linkedin" data-field-group="social_media_links" class="form-control" />
 
                                         <label>Instagram</label>
-                                        <input value="@if($user->instagram_url == '0' || $user->instagram_url == null)@else{{$user->instagram_url}}@endif" type="text" placeholder="Enter your Instagram url (ex: https://www.instagram.com/healthcaretravels/)" name="instagram" class="form-control" />
+                                        <input value="@if($user->instagram_url == '0' || $user->instagram_url == null)@else{{$user->instagram_url}}@endif" type="text" placeholder="Enter your Instagram url (ex: https://www.instagram.com/healthcaretravels/)" name="instagram" data-field-group="social_media_links" class="form-control" />
 
                                     </div>
                                 </div>
@@ -339,7 +339,8 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            You will not be able to edit or upload more documents once they have been submitted.                                </div>
+                                            You will not be able to edit or upload more documents once they have been submitted.
+                                        </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                             <button id="confirmation-popup-submit" type="submit" class="btn btn-primary">Submit</button>
@@ -372,8 +373,8 @@
 
                     $(':input').on('input', function() {
                         const ignore_fields = ['_token'];
-                        let completed_inputs = $(':input').filter(function() {
-
+                        let completed_inputs = [];
+                        $(':input').map(function() {
                             if(!this.value || ignore_fields.includes(this.name)) { return false; }
 
                             let input_value = this.value;
@@ -399,7 +400,10 @@
                                 // URL validations
                                 regex = validation_regex.url;
                             }
-                            return regex.test(input_value);
+                            const field_group = $(this).attr("data-field-group");
+                            if(regex.test(input_value) && !completed_inputs.includes(field_group)) {
+                                completed_inputs.push(field_group);
+                            };
                         });
                         $("#submit_documents").prop('disabled', completed_inputs.length < 3);
                     });

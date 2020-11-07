@@ -822,8 +822,8 @@ class PropertyController extends BaseController
                     'booking_id' => $booking->booking_id,
                     'property_title' => $booking->title,
                     'property_room_type' => $booking->room_type,
-                    'start_date' => date('Y-m-d', strtotime($booking->start_date)),
-                    'end_date' => date('Y-m-d', strtotime($booking->end_date)),
+                    'start_date' => date('m-d-Y', strtotime($booking->start_date)),
+                    'end_date' => date('m-d-Y', strtotime($booking->end_date)),
                     'cover_img' => $cover_img,
                 ];
 

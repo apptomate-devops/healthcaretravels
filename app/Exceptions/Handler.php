@@ -61,7 +61,17 @@ class Handler extends ExceptionHandler
             // return redirect('/login')
             //         ->with('error', 'Your session has expired. Please log back in to continue.');
         }
-        return parent::render($request, $exception);
+        if (!defined("BASE_URL")) {
+            define("BASE_URL", config('app.url') . '/');
+        }
+        if (!defined("APP_ENV")) {
+            define("APP_ENV", env("APP_ENV", "local"));
+        }
+        if (!defined("GOOGLE_MAPS_API_KEY")) {
+            define("GOOGLE_MAPS_API_KEY", config("services.google.maps_api_key"));
+        }
+        return response()->view('errors.500');
+        // return parent::render($request, $exception);
     }
 
     /**

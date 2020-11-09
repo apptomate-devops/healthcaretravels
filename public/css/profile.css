@@ -83,6 +83,11 @@ li.sub-nav-title {
 .error-text {
     color: red;
 }
+.warning-text {
+    font-weight: 500;
+    color: #e78016;
+    margin-bottom: 20px;
+}
 .verify-account .error-text {
     margin-top: -10px;
     margin-bottom: 15px;

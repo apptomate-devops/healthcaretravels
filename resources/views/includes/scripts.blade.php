@@ -163,9 +163,7 @@
             "days": 30
         },
         autoUpdateInput: false,
-        locale: {
-            cancelLabel: 'Clear'
-        }
+        autoApply: true,
     });
 
     $('input[id="date_range_picker"]').on('apply.daterangepicker', function(ev, picker) {
@@ -173,9 +171,7 @@
         $('input[name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
     });
 
-    $('input[id="date_range_picker"]').on('cancel.daterangepicker', function(ev, picker) {
-        $('input[name="from_date"], input[name="to_date"]').val('');
-    });
+
 </script>
 @include('includes.mask')
 <style type="text/css">

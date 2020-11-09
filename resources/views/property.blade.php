@@ -1095,9 +1095,7 @@
                     "days": ({{$data->min_days ?? 30}} + 1)
                 },
                 autoUpdateInput: false,
-                locale: {
-                    cancelLabel: 'Clear'
-                },
+                autoApply: true,
                 isInvalidDate: function(date){
                     var dc = moment();
                     dc.add(7, 'days');
@@ -1117,11 +1115,6 @@
                 $('input[id="booking_date_range_picker"][name="check_in"]').val(picker.startDate.format('MM/DD/YYYY'));
                 $('input[id="booking_date_range_picker"][name="check_out"]').val(picker.endDate.format('MM/DD/YYYY'));
                 get_price();
-            });
-
-            $('input[id="booking_date_range_picker"]').on('cancel.daterangepicker', function (ev, picker) {
-                $('input[id="booking_date_range_picker"][name="check_in"]').val();
-                $('input[id="booking_date_range_picker"][name="check_out"]').val();
             });
 
             var aboutHeight = $('#head_scroll').height();

@@ -126,18 +126,12 @@
                     "days": 30
                 },
                 autoUpdateInput: false,
-                locale: {
-                    cancelLabel: 'Clear'
-                }
+                autoApply: true,
             });
 
             $('input[id="property_from_date"], input[id="property_to_date"]').on('apply.daterangepicker', function(ev, picker) {
                 $('input[id="property_from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
                 $('input[id="property_to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
-            });
-
-            $('input[id="property_from_date"], input[id="property_to_date"]').on('cancel.daterangepicker', function(ev, picker) {
-                $('input[id="property_from_date"], input[id="property_to_date"]').val('');
             });
         });
     </script>

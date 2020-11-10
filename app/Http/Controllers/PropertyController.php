@@ -204,7 +204,9 @@ class PropertyController extends BaseController
                 'message' =>
                     'You have already <a style="color: white;text-decoration-line: underline;" href=' .
                     $my_trips_url .
-                    '>submitted a request</a> for these dates.',
+                    '>submitted a request</a> for these dates.<br>Try a different date range or visit <a style="color: white;text-decoration-line: underline;" href=' .
+                    $my_trips_url .
+                    '>My Trips</a> page to view your submitted request.',
                 'status_code' => ZERO,
                 'request_already_exists' => ONE,
                 'request_data' => $requestAlreadyExists,

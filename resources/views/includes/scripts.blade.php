@@ -58,7 +58,30 @@
                     $("#property_submit_5").submit();
                 }
             });
+            $(document).on('change',"input[name='dropzone-cover-image']", function(){
+                    var selected = $("input[name='dropzone-cover-image']:checked").val();
+                    if(!fileDropzone.options.baseUrl) {
+                        fileDropzone.options.baseUrl =fileDropzone.options.url;
+                    }
+                    fileDropzone.options.url = fileDropzone.options.url + '/' +selected
+            });
             this.on("addedfiles", function(file) {
+                $('.dropzone-make-cover-image').remove();
+                $('.dz-preview').each(function(key,e){
+                    e.append($('<div/>',{
+                        class: 'dropzone-make-cover-image',
+                        html: 'Select as cover',
+                        style: 'display: flex;flex-direction: column;justify-content: center;align-items: center;',
+                        value: key,
+                    }).append($('<input/>', {
+                        id: key,
+                        type: 'radio',
+                        name: 'dropzone-cover-image',
+                        value: key,
+                        style: "height:12px;margin-bottom: 0;",
+                        class: 'dropzone-make-cover-image',
+                    })[0])[0]);
+                });
                 $('#propertyImageSubmit').attr('disabled',false);
             });
             this.on("successmultiple", function(file) {
@@ -82,7 +105,7 @@
         accept: function(file, done) {
             file.acceptDimensions = done;
             file.rejectDimensions = function() { done("Please select image with minimum resolution of 1024 x 524"); };
-        }
+        },
     });
     $(".property-calender.dropzone").dropzone({
         dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here to upload",

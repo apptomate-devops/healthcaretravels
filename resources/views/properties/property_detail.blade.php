@@ -379,7 +379,9 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <div>
+                                    <button id="scrollToSubmit" class="btn btn-default btn-block bg-orange" style="width: auto; margin: 20px auto;">Scroll Up to Accept Terms, Review, and Submit</button>
+                                </div>
                             </section>
                         </div>
                     </div>
@@ -505,6 +507,10 @@
                     return false;
                 }
             });
+        });
+
+        $('#scrollToSubmit').click(function (event) {
+            $(window).scrollTop($('#requestBooking').offset().top-500);
         });
 
         function validate_submit() {

@@ -43,7 +43,7 @@
                     <div>Check-in: <span>{{date('m-d-Y',strtotime($data->start_date))}}</span></div>
                     <div>Check-out: <span>{{date('m-d-Y',strtotime($data->end_date))}}</span></div>
                     <div>Guests: <span>{{$data->guest_count}}</span></div>
-                    <div>Total Payment: <span>$ {{$total_payment}}</span></div>
+                    <div>Total Due: <span>$ {{$total_payment}} (*incl. $ {{$data->security_deposit}} security deposit)</span></div>
                 </div>
                 <table class="pricing-table responsive-table">
                     <tr>

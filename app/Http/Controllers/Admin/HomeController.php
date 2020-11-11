@@ -545,6 +545,7 @@ class HomeController extends BaseController
                 "users.rep_code",
                 "users.linkedin_url",
                 "users.airbnb_link",
+                "users.other_listing_link",
                 "users.home_away_link",
                 "users.tax_home",
                 "users.listing_address",

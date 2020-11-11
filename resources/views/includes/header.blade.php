@@ -132,7 +132,7 @@
                                         <img class="user-icon" src="{{Auth::user()->profile_image}}">
                                         <span id="unread_chat_badge"><span class="unread_chat_badge"></span></span>
                                     </span>
-                                    <span>{{ Session::get('username') }}</span>
+                                    <span>{{Helper::get_user_display_name(Auth::user())}}</span>
                                 </div>
 
                                 @if(Session::get('role_id') == 1 || Session::get('role_id') == 4) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency --}}
@@ -140,13 +140,13 @@
                                     <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
                                     <li><a href="{{url('/')}}/verify-account"><i class="sl sl-icon-user"></i> Verify Account</a></li>
                                     <li><a href="{{url('/')}}/owner/favorites"><i class="sl sl-icon-star"></i> Favorites</a></li>
-                                    @if(Session::get('role_id') == 1)
                                     <li><a href="{{url('/')}}/owner/my-properties" class="not-verified-block"><i class="sl sl-icon-home"></i> My Properties</a></li>
                                     <li><a href="{{url('/')}}/owner/add-property" class="not-verified-block"><i class="sl sl-icon-plus"></i> Add Property</a></li>
+{{--                                    @if(Session::get('role_id') == 1)--}}
                                     <li><a href="{{url('/')}}/owner/bookings"><i class="sl sl-icon-basket"></i> Bookings</a></li>
                                     {{-- <li><a href="{{url('/')}}/owner/reservations"><i class="sl sl-icon-credit-card"></i> My Trips</a></li> --}}
                                     <li><a href="{{url('/')}}/owner/calender"><i class="sl sl-icon-credit-card"></i> Calender</a></li>
-                                    @endif
+{{--                                    @endif--}}
                                     <li><a href="{{url('/')}}/owner/inbox" class="not-verified-block" style="position:relative"><i class="fa fa-inbox"></i> <span id="unread_chat_badge_inbox"><span class="unread_chat_badge_inbox"></span></span> Inbox</a></li>
                                     <li><a href="{{url('/')}}/owner/invoices"><i class="sl sl-icon-note"></i> Transaction History </a></li>
                                     @if(Auth::user()->default_funding_source)
@@ -251,14 +251,14 @@
         }
         interval_check_vefiried();
         var verifiedInterval = setInterval(interval_check_vefiried, 1000 * 60);
-        $(document).on('click', '.not-verified-block', function(event) {
-            var sessionVerified = "{{Session::has('is_verified') && Session::get('is_verified')}}";
-            if (isUserVerified != 1 && sessionVerified != "1") {
-                event.preventDefault();
-                event.stopPropagation();
-                openVerificationModal();
-            }
-        });
+        // $(document).on('click', '.not-verified-block', function(event) {
+        //     var sessionVerified = "{{Session::has('is_verified') && Session::get('is_verified')}}";
+        //     if (isUserVerified != 1 && sessionVerified != "1") {
+        //         event.preventDefault();
+        //         event.stopPropagation();
+        //         openVerificationModal();
+        //     }
+        // });
         $(document).on('click', '#notification-close', function(evennt) {
             event.preventDefault();
             event.stopPropagation();

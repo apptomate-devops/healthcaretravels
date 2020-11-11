@@ -93,7 +93,8 @@ Route::GET('/update-calender/{id}', 'CalenderController@update_calender');
 Route::GET('/delete-calender/{id}', 'CalenderController@delete_calender');
 Route::GET('/block_booking', 'CalenderController@block_booking');
 Route::GET('/delete_block_booking', 'CalenderController@delete_block_booking');
-Route::GET('/list_pets_health/{lat}/{lng}/{id}', 'PropertyController@list_pets_health');
+Route::GET('/list_pets/{lat}/{lng}/{id}', 'PropertyController@list_pets');
+Route::GET('/list_health/{lat}/{lng}/{id}', 'PropertyController@list_health');
 
 // Property related :: Maps Controller
 Route::GET('/single-marker/{lat}/{lng}/{pets}', 'MapController@single_marker');
@@ -168,13 +169,14 @@ Route::middleware(['LoginCheck'])->group(function () {
         Route::GET('/owner/single-booking/{id}', 'PropertyController@single_booking');
         Route::get('/owner/reservations', 'PropertyController@reservations');
         Route::get('/owner/reservations/{id}', 'PropertyController@single_reservations');
-        Route::POST('/owner/property/file-upload', 'PropertyController@property_image_upload');
+        Route::POST('/owner/property/file-upload/{cover_id}', 'PropertyController@property_image_upload');
         Route::POST('/owner-update-booking', 'PropertyController@owner_update_booking');
         Route::get('/owner/update-property/{id}', 'PropertyController@update_property');
         Route::GET('/disable-property/{id}', 'PropertyController@disable_property');
         Route::GET('/delete-property/{id}', 'PropertyController@delete_property');
         Route::GET('/payment-default/{id}', 'OwnerController@payment_default');
         Route::GET('/owner/calender', 'OwnerController@calender');
+        Route::POST('/owner/upload-calender', 'OwnerController@upload_calender');
         Route::get('/owner/chat/{id}', 'PropertyController@owner_fire_chat');
         Route::GET('/ical/{id}', 'IcalController@ical');
 

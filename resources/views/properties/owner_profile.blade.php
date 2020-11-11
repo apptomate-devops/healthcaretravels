@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-md-12">
 
-                <h2><span style="color:#e78016;font-size:32px">Hey I'm</span> {{ucfirst($user->first_name)}} {{ucfirst($user->last_name)}} !</h2>
+                <h2><span style="color:#e78016;font-size:32px">Hey I'm</span> {{Helper::get_user_display_name($user)}}!</h2>
                 <span>@if($user->address != 0){{$user->address}}@endif</span><br>
                 <span id="report_user" style="margin-left: 2px;"><i class="sl sl-icon-flag"></i>&nbsp;Report this User</span>
                 <!-- Breadcrumbs -->
@@ -42,7 +42,7 @@
 
                 <div class="agent-content">
                     <div class="agent-name">
-                        <h4>Name:{{ucfirst($user->first_name)}} {{ucfirst($user->last_name)}}
+                        <h4>Name: {{Helper::get_user_display_name($user)}}
                             {{-- <img src="{{url('/')}}/public/tick.png" height="40" width="40"> --}}
                         </h4>
                         {{-- <span>Account Verification:Verified</span> --}}
@@ -51,10 +51,12 @@
                             {{$user->languages_known}}
                         </span>
 
-                        <h3>About me:</h3>
-                        <p>
-                            {{($user->about_me != "0") ? $user->about_me : ''}}
-                        </p>
+                        @if(!empty($user->about_me) && $user->about_me != "0")
+                            <h3>About me:</h3>
+                            <p>
+                                {{$user->about_me}}
+                            </p>
+                        @endif
 
                     </div>
 

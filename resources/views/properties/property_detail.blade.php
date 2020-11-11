@@ -100,6 +100,7 @@
                                                             <tr class="payment_sub_sections sub_sections_{{$i}}">
                                                                 <td class="name">
                                                                     {{$key}}
+                                                                    @if(strpos($key, 'Fee'))<span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">This fee helps us run our platform and offer our services</span></span>@endif
                                                                 </td>
                                                                 <td class="val text-right">
                                                                     $ {{$value}}
@@ -111,7 +112,7 @@
                                                     <tr class="row_border_top row_border">
                                                         <td class="name">
                                                             Cleaning Fee
-                                                            <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Decided by the property owner to clean before your stay</span></span>
+                                                            <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">Decided by the property owner to clean after your stay.</span></span>
                                                         </td>
                                                         <td class="val text-right" >
                                                             $ {{$data->cleaning_fee}}
@@ -121,7 +122,7 @@
                                                     <tr class="row_border">
                                                         <td class="name">
                                                             Deposit
-                                                            <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">If property owner reports no damage, your deposit will be returned 72 hours after your stay</span></span>
+                                                            <span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">If property owner reports no damage, your deposit will be returned 72 hours after your stay.</span></span>
                                                         </td>
                                                         <td class="val text-right" >
                                                             $ {{$data->security_deposit}}
@@ -225,8 +226,8 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <h2>Billing Information</h2>
-                                        To complete this booking, you will need your bank account number and routing number an invoice will be sent to the verified email associated with your Health Care Travels account within 24 hours. Once the invoice has been sent you should pay the invoice as soon as possible. Bookings are confirmed on a first come first serve basis and the invoice will expire 24 hours after invoice is created. Please review this listing in its entirety and the selected cancellation policy.<br><br>
-                                        *Please note to speed up this process make sure your account is Up-To-Date, Complete, Verified and all of the necessary documents are uploaded to your account. If you have any question or concerns email <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com</a>
+                                        To complete this booking, you will need your bank account login details and bank account number and routing number. Select the add account details button below and setup your account details by logging in and answer any questions that are required to verify your identify.  You will not be charged until the property owner confirms your request. Bookings are confirmed on a first come first serve basis. Please review this listing in its entirety and the selected cancellation policy prior to booking. To change or add new bank account visit "My Payment Options" tab in your account. To check the status of your booking visit "My Trips" tab in your account.<br><br>
+                                        *Please Note: Make sure your account is Up-To-Date and Complete including the (About Me) in your profile. This allows property owners to approve your stay quicker. If you have any questions or concerns email <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com</a>
                                         <p></p>
                                     </div>
                                 </div>
@@ -331,7 +332,7 @@
                                 @endif
                                 <div class="form-row form-row-wide" id="agency_show">
                                     <label for="agency_name">Agency you work for:</label>
-                                    <p class="register-info">Select as many agencies that you have worked for in the last 12 months.</p>
+                                    <p class="register-info">Select the agency you are traveling with for this assignment.</p>
                                     <span class="autocomplete-select"></span>
                                     <p id="agency_error" class="error-text" style="display: none;">Select at least 1 agency</p>
                                     <div id="add_another_agency" class="add-another" onclick="add_another_agency(true)" style="cursor: pointer;">Can't find it? Add it here.</div>
@@ -378,7 +379,9 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <div>
+                                    <button id="scrollToSubmit" class="btn btn-default btn-block bg-orange" style="width: auto; margin: 20px auto;">Scroll Up to Accept Terms, Review, and Submit</button>
+                                </div>
                             </section>
                         </div>
                     </div>
@@ -504,6 +507,10 @@
                     return false;
                 }
             });
+        });
+
+        $('#scrollToSubmit').click(function (event) {
+            $(window).scrollTop($('#requestBooking').offset().top-500);
         });
 
         function validate_submit() {

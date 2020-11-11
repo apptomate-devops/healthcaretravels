@@ -67,9 +67,9 @@
             modal.remove();
             $('body').off('keyup.modal-close');
         }
-        // var downloadLink = '<a class="modal-buttons button-download" href="'+ src +'" target="_blank" itemprop="contentUrl"><img src="/assets/icons/others/download_white.svg"></a>';
+        var downloadLink = '<a class="modal-buttons button-download" href="'+ src +'" target="_blank" itemprop="contentUrl"><img src="/assets/icons/others/download_white.svg"></a>';
         var closeButton = '<span class="modal-buttons modal-close-x">X</span>';
-        modal = $('<div><div class="modal-buttons-wrapper">' + closeButton +'</div></div>').css({
+        modal = $('<div><div class="modal-buttons-wrapper">' + downloadLink + closeButton +'</div></div>').css({
             background: 'RGBA(0,0,0,.8) url('+src+') no-repeat center',
             backgroundSize: 'contain',
             width: '100%',
@@ -99,10 +99,10 @@
             modal.remove();
             $('body').off('keyup.modal-close');
         }
-        // var downloadLink = '<a class="modal-buttons button-download" href="'+ src +'" target="_blank" itemprop="contentUrl"><img src="/assets/icons/others/download_white.svg"></a>';
+        var downloadLink = '<a class="modal-buttons button-download" href="'+ src +'" target="_blank" itemprop="contentUrl"><img src="/assets/icons/others/download_white.svg"></a>';
         var closeButton = '<span class="modal-buttons modal-close-x">X</span>';
         var canvas = '<canvas id="enlarged-canvas" data-pdf="'+ src +'" style="border: 1px solid black; direction: ltr;"></canvas>';
-        var extras = '<div class="modal-buttons-wrapper">' + closeButton + '</div>';
+        var extras = '<div class="modal-buttons-wrapper">' + downloadLink + closeButton + '</div>';
         modal = $('<div>' + canvas + extras + '</div>').css({
             background: 'RGBA(0,0,0,.8) no-repeat center',
             backgroundSize: 'contain',

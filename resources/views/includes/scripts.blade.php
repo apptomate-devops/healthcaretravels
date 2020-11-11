@@ -30,15 +30,16 @@
 
 <script>
     Dropzone.autoDiscover = false;
-    $(".dropzone").dropzone({
-        dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here or drop files to upload",
+    $(".dropzone:not(.property-calender)").dropzone({
+        dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here to upload",
         uploadMultiple: true,
         autoProcessQueue: false,
-        maxFiles: 10,
+        maxFiles: 20,
+        parallelUploads: 20,
         acceptedFiles: ".jpg, .jpeg, .png",
         addRemoveLinks: true,
         dictInvalidFileType: "Invalid File Type",
-        dictMaxFilesExceeded: "Only 10 files are allowed",
+        dictMaxFilesExceeded: "Only 20 files are allowed",
         init: function () {
             var fileDropzone = this;
 
@@ -57,7 +58,30 @@
                     $("#property_submit_5").submit();
                 }
             });
+            $(document).on('change',"input[name='dropzone-cover-image']", function(){
+                    var selected = $("input[name='dropzone-cover-image']:checked").val();
+                    if(!fileDropzone.options.baseUrl) {
+                        fileDropzone.options.baseUrl =fileDropzone.options.url;
+                    }
+                    fileDropzone.options.url = fileDropzone.options.url + '/' +selected
+            });
             this.on("addedfiles", function(file) {
+                $('.dropzone-make-cover-image').remove();
+                $('.dz-preview').each(function(key,e){
+                    e.append($('<div/>',{
+                        class: 'dropzone-make-cover-image',
+                        html: 'Select as cover',
+                        style: 'display: flex;flex-direction: column;justify-content: center;align-items: center;',
+                        value: key,
+                    }).append($('<input/>', {
+                        id: key,
+                        type: 'radio',
+                        name: 'dropzone-cover-image',
+                        value: key,
+                        style: "height:12px;margin-bottom: 0;",
+                        class: 'dropzone-make-cover-image',
+                    })[0])[0]);
+                });
                 $('#propertyImageSubmit').attr('disabled',false);
             });
             this.on("successmultiple", function(file) {
@@ -81,6 +105,75 @@
         accept: function(file, done) {
             file.acceptDimensions = done;
             file.rejectDimensions = function() { done("Please select image with minimum resolution of 1024 x 524"); };
+        },
+    });
+    $(".property-calender.dropzone").dropzone({
+        dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here to upload",
+        autoProcessQueue: false,
+        acceptedFiles: ".ics",
+        addRemoveLinks: true,
+        dictInvalidFileType: "Invalid File Type",
+        init: function () {
+            var fileDropzone = this;
+
+            $("#upload_ical").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (fileDropzone.files.length) {
+                    $('#calenderLoadingProgress').show();
+                    $('.calender-upload-alerts .alert').hide();
+                    var form = $('#upload_ical_form')[0]; // You need to use standard javascript object here
+                    var formData = new FormData(form);
+                    for (var x = 0; x < fileDropzone.files.length; x++) {
+                        formData.append("calender_files[]", fileDropzone.files[x]);
+                    }
+                    $.ajax({
+                        url: '/owner/upload-calender',
+                        data: formData,
+                        type: 'POST',
+                        contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
+                        processData: false, // NEEDED, DON'T OMIT THIS
+                        success: function(response, textStatus, jqXHR) {
+                            if(response && response.success) {
+                                // Show success Message
+                                $('.calender-upload-alerts .alert-success').show();
+                                window.location.reload();
+                            } else {
+                                // Show error Message
+                                $('.calender-upload-alerts .alert-danger').show();
+                                $('.calender-upload-alerts .alert-danger').text(response.message);
+                                console.log('Error while uploading calender details');
+                            }
+                            $('#calenderLoadingProgress').hide();
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            // Show error Message
+                            $('#calenderLoadingProgress').hide();
+                            $('.calender-upload-alerts .alert-danger').show();
+                            $('.calender-upload-alerts .alert-danger').text(textStatus);
+                            console.log('Error while uploading calender details');
+                        }
+                    });
+                } else {
+                    alert('Please select a valid file');
+                }
+            });
+            this.on("addedfiles", function(file) {
+                $('#upload_ical').attr('disabled',false);
+            });
+            this.on("success", function(file) {
+                // submit form
+                $('#calenderLoadingProgress').hide();
+                $("#upload_ical_form").submit();
+            });
+            this.on("error", function (file, response) {
+                $('#calenderLoadingProgress').hide();
+                console.log('error uploading calender file', response);
+            });
+        },
+        accept: function(file, done) {
+            file.acceptDimensions = done;
+            file.rejectDimensions = function() { done("Please select a calender file"); };
         }
     });
 </script>
@@ -93,9 +186,7 @@
             "days": 30
         },
         autoUpdateInput: false,
-        locale: {
-            cancelLabel: 'Clear'
-        }
+        autoApply: true,
     });
 
     $('input[id="date_range_picker"]').on('apply.daterangepicker', function(ev, picker) {
@@ -103,9 +194,7 @@
         $('input[name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
     });
 
-    $('input[id="date_range_picker"]').on('cancel.daterangepicker', function(ev, picker) {
-        $('input[name="from_date"], input[name="to_date"]').val('');
-    });
+
 </script>
 @include('includes.mask')
 <style type="text/css">
@@ -510,7 +599,10 @@
                 break;
             case 'otp-verify-register':
             case 'otp-verify-login':
-                limitNavigationUsingLinks();
+                setTimeout(() => {
+                    window.location.href = "/login";
+                    // Redirecting user to login screen after 5 mins
+                }, 5 * 1000 * 60);
                 break;
             default:
                 break;

@@ -4,12 +4,17 @@
     <br />
     <!--'.$content.'-->
     <div style="margin: 0; font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif; padding: 0; margin-top: 1em">
-        You successfully shared your property on Health Care Travels. You can view your public listing <a href="{{$property_link}}">here</a>.
+        You successfully shared your property on Health Care Travels!
         <br>
         <br>
-        Please remember to keep your property's <a href="{{$availability_calendar}}">availability calendar</a> updated.
+        Please remember to keep your property's <a href="{{$availability_calendar}}">availability calendar</a> updated. Don't forget to share your listing by email or social Media with Friends and Family.
         <br>
         <br>
-        Congratulations!
+        Quick Steps to sharing:
+        <br>
+        You can now view your public listing by clicking <a href="{{$property_link}}">here</a> and share by clicking this share bottom found on your listing.
+        <br>
+        <br>
+        Congratulations and Welcome!"
     </div>
 @endsection

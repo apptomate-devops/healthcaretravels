@@ -117,14 +117,15 @@
                 </span>
                 </a>
             </li>
-            <li {{{ (Request::is('admin/become_scout*') ? 'class=active' : '') }}}>
+            {{-- Hide beocme scount in admin --}}
+            {{-- <li {{{ (Request::is('admin/become_scout*') ? 'class=active' : '') }}}>
                 <a href="{{url('admin/become_scout')}}">
                     <i class="la la-user"></i>
                     <span class="menu-title" data-i18n="nav.dash.main">
                    Become Scout
                 </span>
                 </a>
-            </li>
+            </li> --}}
 
             <li {{{ (Request::is('admin/request_roommate*') ? 'class=active' : '') }}}>
                 <a href="{{url('admin/request_roommate')}}">

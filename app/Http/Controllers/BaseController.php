@@ -229,10 +229,10 @@ class BaseController extends ConstantsController
             return false;
         }
     }
-    public function send_email_listing($email, $view_name, $data, $subject)
+    public static function send_email_listing($email, $view_name, $data, $subject)
     {
         try {
-            Mail::send($view_name, $data, function ($message) use ($email) {
+            Mail::send($view_name, $data, function ($message) use ($email, $subject) {
                 $message->from('gotocva@gmail.com', 'Mail from ' . APP_BASE_NAME);
                 $message->to($email);
                 $message->subject($subject);
@@ -836,6 +836,7 @@ class BaseController extends ConstantsController
             'contact' => "{$request->getSchemeAndHttpHost()}/owner/chat/{$chat_data['chat_id']}?fb-key=personal_chat&fbkey=personal_chat",
         ];
         $start_delay = 0;
+        $start_delay_72_hr = 0;
         $end_delay = 0;
 
         // Check in and check out time split
@@ -845,7 +846,7 @@ class BaseController extends ConstantsController
         // Start time with check in set
         $start_date = Carbon::parse($booking->start_date);
         $start_date->setTime($checkInTimeSplit[0], $checkInTimeSplit[1], 0);
-        $start_date_with_padding = $start_date->subDays(1);
+        $start_date_with_padding = $start_date->copy()->subDays(1);
 
         // End time with check out set
         $end_date = Carbon::parse($booking->end_date);
@@ -888,13 +889,20 @@ class BaseController extends ConstantsController
             'propertyZip' => $property->zip_code,
             'contact' => "{$request->getSchemeAndHttpHost()}/traveler/chat/{$chat_data['chat_id']}?fb-key=personal_chat&fbkey=personal_chat",
         ];
+
+        // Send email to traveler 72 hours before checkin
+        $start_date_72_hr_with_padding = $start_date->copy()->subDays(3);
+        if ($start_date_72_hr_with_padding->gt($current_date)) {
+            $start_delay_72_hr = $start_date_72_hr_with_padding->diffInSeconds($current_date);
+        }
+
         $subject = 'Your Stay at ' . $propertyTitle;
         $this->send_scheduled_email(
             $traveler->email,
             'traveler-24hr-before-checkin',
             $subject,
             $traveler_mail_data,
-            $start_delay,
+            $start_delay_72_hr,
         );
         $subject = 'Your Stay at ' . $propertyTitle . ' is Ending';
         $this->send_scheduled_email(

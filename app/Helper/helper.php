@@ -2,6 +2,7 @@
 
 namespace App\Helper;
 
+use App\Http\Controllers\BaseController;
 use DB;
 use Mail;
 use Carbon\Carbon;
@@ -485,7 +486,100 @@ class Helper
         $booking->save();
         return ['success' => true, 'message' => 'Booking request was canceled successfully'];
     }
+    public static function handleOwnerReminderForBooking($id)
+    {
+        $booking = PropertyBooking::where('id', $id)->first();
+        if (empty($booking)) {
+            Logger::error('Booking does not exist: ' . $id);
+            return ['success' => false, 'message' => 'Booking does not exist!'];
+        }
+        // Send email only if booking request is pending for approval
+        if ($booking->status == 1) {
+            $owner = $booking->owner;
+            $owner_name = $owner->first_name . " " . $owner->last_name;
+            $property = $booking->property;
+            $property_img = DB::table('property_images')
+                ->where('property_images.client_id', '=', CLIENT_ID)
+                ->where('property_images.property_id', '=', $property->id)
+                ->orderBy('is_cover', 'DESC')
+                ->first();
+            $cover_img = BASE_URL . ltrim($property_img->image_url, '/');
+            $booking->check_in = $property->check_in;
+            $booking->role_id = 0;
+            $booking->monthly_rate = $property->monthly_rate;
+            $booking_price = (object) Helper::get_price_details($booking, $booking->start_date, $booking->end_date);
 
+            $booking->start_date = date('m/d/Y', strtotime($booking->start_date));
+            $booking->end_date = date('m/d/Y', strtotime($booking->end_date));
+            $mail_data = [
+                'name' => $owner_name,
+                'text' => isset($welcome->message) ? $welcome->message : '',
+                'property' => $property,
+                'cover_img' => $cover_img,
+                'data' => $booking,
+                'booking_price' => $booking_price,
+            ];
+
+            $title = 'Reminder for pending approval - ' . APP_BASE_NAME;
+            $subject = "Urgent: Your booking request is about to expire - " . APP_BASE_NAME;
+            Helper::send_custom_email(
+                $owner->email,
+                $subject,
+                'mail.owner-24hr-before-pending-request',
+                $mail_data,
+                $title,
+            );
+
+            return ['success' => true, 'message' => 'Sent reminder to owner for pending request'];
+        }
+        return ['success' => false, 'message' => 'Booking request was handled already!'];
+    }
+
+    public static function handlePropertyUpdateEmail($property_id)
+    {
+        Logger::info('got ID' . $property_id);
+        $property = DB::table('property_list')
+            ->where('client_id', '=', CLIENT_ID)
+            ->where('id', $property_id)
+            ->first();
+        if ($property) {
+            $last_updated_at = Carbon::parse($property->last_edited_at);
+            $now = Carbon::now('UTC');
+            Logger::info('Found property with last updated at ' . $last_updated_at);
+            Logger::info('Now ' . $now);
+            Logger::info('Difference ' . $now->diffInSeconds($last_updated_at));
+            if ($now->diffInSeconds($last_updated_at) >= 300) {
+                // 5 minutes
+                Logger::info('Difference is greater send email now');
+                $user = DB::table('users')
+                    ->where('id', $property->user_id)
+                    ->first();
+                $mail_email = $user->email;
+                $address = implode(
+                    ", ",
+                    array_filter([
+                        $property->address,
+                        $property->city,
+                        $property->state,
+                        $property->zip_code,
+                        $property->country,
+                    ]),
+                );
+                $mail_data = [
+                    'name' => $user->first_name . ' ' . $user->last_name,
+                    'property_link' => BASE_URL . 'property/' . $property_id,
+                    'availability_calendar' => BASE_URL . 'ical/' . $property_id,
+                ];
+                Logger::info('sending email to' . $mail_email);
+                BaseController::send_email_listing(
+                    $mail_email,
+                    'mail.listing_update',
+                    $mail_data,
+                    'You edited your property listing: ' . $address,
+                );
+            }
+        }
+    }
     public static function generate_booking_payments($booking, $is_owner = 0)
     {
         $start_date = Carbon::parse($booking->start_date, 'UTC');
@@ -1066,5 +1160,14 @@ class Helper
         return Carbon::parse($dateObj)
             ->timezone($timezone)
             ->format($format);
+    }
+
+    public static function get_user_display_name($user)
+    {
+        $displayName = $user->first_name;
+        if (!empty($user->last_name)) {
+            $displayName .= " " . $user->last_name[0] . ".";
+        }
+        return ucwords($displayName);
     }
 }

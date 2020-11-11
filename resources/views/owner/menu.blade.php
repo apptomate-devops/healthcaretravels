@@ -26,7 +26,7 @@
 
         <li class="sub-nav-title">Manage Listings</li>
 
-        @if(Session::get('role_id') == 1)
+        @if(Session::get('role_id') == 1 || Session::get('role_id') == 4)
             <li>
                 <a href="{{url('/')}}/owner/my-properties" {{{ (Request::is('owner/my-properties') ? 'class=current' : '') }}}>
                     <i class="sl sl-icon-home"></i> My Properties

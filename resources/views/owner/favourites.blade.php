@@ -24,7 +24,7 @@
                 <table class="manage-table responsive-table">
 
                     <tr>
-                        <th><i class="fa fa-file-text"></i> Favorite  Properties</th>
+                        <th><i class="fa fa-file-text"></i> Favorite Properties</th>
                         <th></th>
                         <th class="expire-date"><i class="fa fa-calendar"></i> Action</th>
 
@@ -58,8 +58,8 @@
 
 
                 </table>
-                @if($role_id != 2)
-                <a href="{{url('/')}}/owner/add-property" class="margin-top-40 button">Submit New Property</a>
+                @if(in_array($role_id, [1, 4]))
+                    <a href="{{url('/')}}/owner/add-property" class="margin-top-40 button">Submit New Property</a>
                 @endif
             </div>
 

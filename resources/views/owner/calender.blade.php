@@ -183,6 +183,46 @@
                 <center><div id='calendar' style="max-width: 600px;margin-top: 15px;margin-bottom: 15px;"></div></center>
             </div>
 
+            @if($id != 0)
+                    <div class="col-md-4"></div>
+                    <div class="col-md-8 card" style="margin-top: 20px;">
+                        <label style="margin-top: 20px;">Upload an iCalendar from another booking site</label>
+                        <div class="alert alert-info">
+                            <span>
+                                If your property is listed on another website like Airbnb, you can upload an iCalendar (.ics) file from that website to automatically block out dates that your property is not available.
+                                Please be sure that the calendar you add only has events for stays at your property that were booked through alternate services. Any day with an event will be considered unavailable.
+                            </span>
+                        </div>
+                        <form class="dropzone property-calender" id="upload_ical_form" method="post" action="{{url('/')}}/owner/upload-calender">
+                            <input type="hidden" name="_token" value="{{csrf_token()}}">
+                            <input type="hidden" id="property_id" name="property_id" value="{{$id}}">
+                            <input type="hidden" id="calender_file" type="file" name="calender_file">
+                            <div  class="dz-default dz-message">
+                                <span>
+                                    <i class="sl sl-icon-plus"></i> Click here to upload
+                                </span>
+                            </div>
+                        </form>
+                        <div class="calender-upload-alerts">
+                            <div class="alert alert-danger" style="display: none">
+                            <span>
+                                Error in uploading calender events
+                            </span>
+                        </div>
+                        <div class="alert alert-success" style="display: none">
+                            <span>
+                                Calender events are added successfully
+                            </span>
+                        </div>
+                        </div>
+                        <button type="submit" disabled id="upload_ical" class="button preview margin-top-5" style="margin-bottom: 20px;float: right;">
+                            Upload
+                        </button>
+                    </div>
+                    <div id="calenderLoadingProgress" class="loading style-2" style="display: none;"><div class="loading-wheel"></div></div>
+
+            @endif
+
             <div class="col-md-4"></div>
             <div class="col-md-8 card" style="margin-top: 20px;">
                 @if($id != 0)

@@ -43,7 +43,7 @@
                             <span class="unread_message_badge"></span>
                             @endif
                             <div class="title">
-                                <h4><a href="#">{{$property->owner->first_name}} {{$property->owner->last_name}}</a></h4>
+                                <h4><a href="#">{{Helper::get_user_display_name($property->owner)}}</a></h4>
                                 <span> {{$property->last_message}} </span>
 
                             </div>
@@ -73,7 +73,7 @@
                             <span class="unread_message_badge"></span>
                             @endif
                             <div class="title">
-                                <h4><a href="#">{{$property->owner->first_name}} {{$property->owner->last_name}}</a></h4>
+                                <h4><a href="#">{{Helper::get_user_display_name($property->owner)}}</a></h4>
                                 <span> {{$property->last_message}} </span>
 
                             </div>
@@ -101,7 +101,7 @@
                             <span class="unread_message_badge"></span>
                             @endif
                             <div class="title">
-                                <h4><a href="#">{{$property->owner->first_name}} {{$property->owner->last_name}}</a></h4>
+                                <h4><a href="#">{{Helper::get_user_display_name($property->owner)}}</a></h4>
                                 <span> {{$property->last_message}} </span>
 
                             </div>

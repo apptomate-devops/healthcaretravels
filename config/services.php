@@ -68,5 +68,6 @@ return [
     'sendgrid' => [
         'api_key' => env('SENDGRID_API_KEY'),
         'list_id' => env('SENDGRID_LIST_ID'),
+        'no_contact_list_id' => env('SENDGRID_LIST_ID'),
     ],
 ];

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessOwnerReminder;
+use App\Jobs\ProcessPropertyUpdateEmail;
 use App\Models\PetInformation;
 use App\Models\PropertyBlocking;
 use App\Services\Logger;
@@ -202,7 +204,9 @@ class PropertyController extends BaseController
                 'message' =>
                     'You have already <a style="color: white;text-decoration-line: underline;" href=' .
                     $my_trips_url .
-                    '>submitted a request</a> for these dates.',
+                    '>submitted a request</a> for these dates.<br>Try a different date range or visit <a style="color: white;text-decoration-line: underline;" href=' .
+                    $my_trips_url .
+                    '>My Trips</a> page to view your submitted request.',
                 'status_code' => ZERO,
                 'request_already_exists' => ONE,
                 'request_data' => $requestAlreadyExists,
@@ -820,8 +824,8 @@ class PropertyController extends BaseController
                     'booking_id' => $booking->booking_id,
                     'property_title' => $booking->title,
                     'property_room_type' => $booking->room_type,
-                    'start_date' => date('Y-m-d', strtotime($booking->start_date)),
-                    'end_date' => date('Y-m-d', strtotime($booking->end_date)),
+                    'start_date' => date('m-d-Y', strtotime($booking->start_date)),
+                    'end_date' => date('m-d-Y', strtotime($booking->end_date)),
                     'cover_img' => $cover_img,
                 ];
 
@@ -881,7 +885,7 @@ class PropertyController extends BaseController
         $incomplete_bookings = [];
         foreach ($data as $datum) {
             $traveller = DB::select(
-                "SELECT username as name,id FROM users WHERE client_id = CLIENT_ID AND id = $datum->owner_id LIMIT 1",
+                "SELECT first_name, last_name, username, id FROM users WHERE client_id = CLIENT_ID AND id = $datum->owner_id LIMIT 1",
             );
 
             $image = DB::table('property_images')
@@ -889,7 +893,7 @@ class PropertyController extends BaseController
                 ->where('property_id', $datum->property_id)
                 ->first();
             $datum->image_url = $image->image_url;
-            $datum->owner_name = $traveller[0]->name;
+            $datum->owner_name = Helper::get_user_display_name($traveller[0]);
             $datum->owner_id = $traveller[0]->id;
             $datum->start_date = Carbon::parse($datum->start_date)->format('m/d/Y');
             $datum->end_date = Carbon::parse($datum->end_date)->format('m/d/Y');
@@ -1229,7 +1233,7 @@ class PropertyController extends BaseController
             $guest_info = GuestsInformation::where('booking_id', $booking_id)->get();
             $pet_details = PetInformation::where('booking_id', $booking_id)->first();
             $data->traveller_profile_image = $traveller->profile_image;
-            $data->traveller_name = $traveller->username;
+            $data->traveller_name = Helper::get_user_display_name($traveller);
             $data->agency = implode(", ", array_filter([$data->name_of_agency, $data->other_agency])); // Booking agencies
 
             $payment_summary = $this->get_payment_summary($data, 1);
@@ -1317,6 +1321,8 @@ class PropertyController extends BaseController
             ->where('property_list.id', '=', $property_id)
             ->select(
                 'property_list.*',
+                'users.first_name',
+                'users.last_name',
                 'users.username',
                 'users.profile_image',
                 'users.device_token',
@@ -1452,6 +1458,8 @@ class PropertyController extends BaseController
                 'property_room.bedroom_count',
                 'property_room.bathroom_count',
                 'property_list.property_size',
+                'users.first_name',
+                'users.last_name',
                 'users.username',
                 'users.profile_image',
                 'property_list.id as property_id',
@@ -1654,7 +1662,7 @@ class PropertyController extends BaseController
         $data->traveller_name = $traveller->username;
         $data->owner_role_id = $owner->role_id;
         $data->owner_profile_image = $owner->profile_image;
-        $data->owner_name = $owner->username;
+        $data->owner_name = Helper::get_user_display_name($owner);
         $data->agency = implode(", ", array_filter([$data->name_of_agency, $data->other_agency])); // Booking Agency
 
         $payment_summary = $this->get_payment_summary($data);
@@ -2170,6 +2178,9 @@ class PropertyController extends BaseController
             $request->cur_child = 0;
             $request->cur_pets = 0;
         }
+        $property = DB::table('property_list')
+            ->where('id', $request->property_id)
+            ->first();
 
         DB::table('property_list')
             ->where('id', $request->property_id)
@@ -2319,6 +2330,7 @@ class PropertyController extends BaseController
         } else {
             $url = BASE_URL . 'owner/add-new-property/3/' . $request->property_id;
         }
+        $this->schedule_property_update_email($property);
         return redirect($url);
     }
 
@@ -2349,6 +2361,8 @@ class PropertyController extends BaseController
         }
 
         $url = BASE_URL . 'owner/add-new-property/4/' . $request->property_id;
+
+        $this->schedule_property_update_email($prop);
         return redirect($url);
     }
 
@@ -2366,11 +2380,16 @@ class PropertyController extends BaseController
         $ins['is_instant'] = (int) $request->booking_type;
         $ins['stage'] = 4;
 
+        $property = DB::table('property_list')
+            ->where('id', $request->property_id)
+            ->first();
+
         $update_rate = DB::table('property_list')
             ->where('id', $request->property_id)
             ->update($ins);
 
         $url = BASE_URL . 'owner/add-new-property/6/' . $request->property_id;
+        $this->schedule_property_update_email($property);
         return redirect($url);
     }
 
@@ -2456,6 +2475,7 @@ class PropertyController extends BaseController
             $url = BASE_URL . 'owner/add-new-property/7/' . $request->property_id;
         }
 
+        $this->schedule_property_update_email($property_details);
         return redirect($url)->with(compact('property_details', 'booked_events', 'icals', 'block_events', 'res'));
     }
 
@@ -2785,7 +2805,7 @@ class PropertyController extends BaseController
 
         //        $request_data = print_r($request->all());
         //        Logger::info("Aminities add hitted with data :".$request_data);
-        $c_data = DB::table('property_list')
+        $property = DB::table('property_list')
             ->where('client_id', '=', CLIENT_ID)
             ->where('id', $request->property_id)
             ->first();
@@ -2801,6 +2821,7 @@ class PropertyController extends BaseController
             $url = BASE_URL . 'owner/add-new-property/5/' . $request->property_id;
         }
 
+        $this->schedule_property_update_email($property);
         return redirect($url);
     }
 
@@ -2859,15 +2880,26 @@ class PropertyController extends BaseController
             session()->forget('property_id');
             $url = BASE_URL . "owner/calender?id=" . $request->property_id;
         } else {
-            $this->send_email_listing(
-                $mail_email,
-                'mail.listing_update',
-                $mail_data,
-                'You edited your property listing: ' . $address,
-            );
+            $this->schedule_property_update_email($property);
             $url = BASE_URL . 'owner/my-properties';
         }
+        Logger::info('After ADDING NEW PROPERTY ' . $property->is_complete);
+
         return redirect($url);
+    }
+
+    public function schedule_property_update_email($property)
+    {
+        if ($property->is_complete == 1) {
+            DB::table('property_list')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('id', $property->id)
+                ->update(['last_edited_at' => Carbon::now('UTC')]);
+            Logger::info('Request sending mail at' . now() . 'for id ' . $property->id);
+            ProcessPropertyUpdateEmail::dispatch($property->id)
+                ->delay(now()->addMinutes(5))
+                ->onQueue(GENERAL_QUEUE);
+        }
     }
 
     public function schedule_auto_cancel_job($booking)
@@ -2891,12 +2923,16 @@ class PropertyController extends BaseController
         $week_after_request = now()->addDays(7);
         $scheduler_date = Carbon::parse($last_approval_time->min($week_after_request));
         $scheduler_date->setTime($timeSplit[0], $timeSplit[1], 0);
+        $owner_reminder_email = $scheduler_date->copy()->subDays(1);
 
         Logger::info('Cancel date: ' . $scheduler_date);
         Logger::info('Current date now: ' . Carbon::now());
         Logger::info('check_in_date_time: ' . $check_in_date_time);
         ProcessAutoCancel::dispatch($booking->id)
             ->delay($scheduler_date)
+            ->onQueue(GENERAL_QUEUE);
+        ProcessOwnerReminder::dispatch($booking->id)
+            ->delay($owner_reminder_email)
             ->onQueue(GENERAL_QUEUE);
     }
 
@@ -3198,19 +3234,21 @@ class PropertyController extends BaseController
         return view('owner.my_properties', ['properties' => $properties_near]);
     }
 
-    public function property_image_upload(Request $request)
+    public function property_image_upload($cover_id, Request $request)
     {
         //
         $property_id = $request->session()->get('property_id');
         $complete_url = '';
         if ($property_id) {
             if ($request->hasfile('file')) {
-                foreach ($request->file('file') as $file) {
+                foreach ($request->file('file') as $key => $file) {
                     $complete_url = $this->base_image_upload_array($file, 'properties');
+                    $is_cover = strval($key) == $cover_id;
                     $insert = DB::table('property_images')->insert([
                         'client_id' => CLIENT_ID,
                         'property_id' => $property_id,
                         'image_url' => $complete_url,
+                        'is_cover' => $is_cover,
                         'sort' => ONE,
                         'status' => ONE,
                     ]);
@@ -3290,9 +3328,8 @@ class PropertyController extends BaseController
         return back()->with('success', 'Property removed successfully');
     }
 
-    public function list_pets_health($lat, $lng, $id)
+    public function list_pets($lat, $lng, $id)
     {
-        $hospitals = $this->yelp_hospitals($lat, $lng);
         $data = DB::table('property_list')
             ->where('id', $id)
             ->select('pets_allowed')
@@ -3302,9 +3339,12 @@ class PropertyController extends BaseController
         } else {
             $pets = (object) [];
         }
-        return view('properties.list_pets_health')
-            ->with('hospitals', $hospitals)
-            ->with('pets', $pets);
+        return view('properties.list_pets_health')->with('pets', $pets);
+    }
+    public function list_health($lat, $lng, $id)
+    {
+        $hospitals = $this->yelp_hospitals($lat, $lng);
+        return view('properties.list_pets_health')->with('hospitals', $hospitals);
     }
 
     public function request_cancellation($booking_id, Request $request)

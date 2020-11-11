@@ -44,7 +44,7 @@
                         <span class="unread_message_badge"></span>
                         @endif
                         <div class="title">
-                            <h4><a href="#">{{$property->traveller->first_name}} {{$property->traveller->last_name}}</a></h4>
+                            <h4><a href="#">{{Helper::get_user_display_name($property->traveller)}}</a></h4>
                             <span> {{$property->last_message}} </span>
                         </div>
                     </td>
@@ -73,7 +73,7 @@
                         <span class="unread_message_badge"></span>
                         @endif
                         <div class="title">
-                            <h4><a href="#">{{$property->traveller->first_name}} {{$property->traveller->last_name}}</a></h4>
+                            <h4><a href="#">{{Helper::get_user_display_name($property->traveller)}}</a></h4>
                             <span> {{$property->last_message}} </span>
                         </div>
                     </td>
@@ -102,7 +102,7 @@
                         <span class="unread_message_badge"></span>
                         @endif
                         <div class="title">
-                            <h4><a href="#">{{$property->traveller->first_name}} {{$property->traveller->last_name}}</a></h4>
+                            <h4><a href="#">{{Helper::get_user_display_name($property->traveller)}}</a></h4>
                             <span> {{$property->last_message}} </span>
 
                         </div>

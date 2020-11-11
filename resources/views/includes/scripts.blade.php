@@ -576,7 +576,10 @@
                 break;
             case 'otp-verify-register':
             case 'otp-verify-login':
-                limitNavigationUsingLinks();
+                setTimeout(() => {
+                    window.location.href = "/login";
+                    // Redirecting user to login screen after 5 mins
+                }, 5 * 1000 * 60);
                 break;
             default:
                 break;

@@ -3234,19 +3234,21 @@ class PropertyController extends BaseController
         return view('owner.my_properties', ['properties' => $properties_near]);
     }
 
-    public function property_image_upload(Request $request)
+    public function property_image_upload($cover_id, Request $request)
     {
         //
         $property_id = $request->session()->get('property_id');
         $complete_url = '';
         if ($property_id) {
             if ($request->hasfile('file')) {
-                foreach ($request->file('file') as $file) {
+                foreach ($request->file('file') as $key => $file) {
                     $complete_url = $this->base_image_upload_array($file, 'properties');
+                    $is_cover = strval($key) == $cover_id;
                     $insert = DB::table('property_images')->insert([
                         'client_id' => CLIENT_ID,
                         'property_id' => $property_id,
                         'image_url' => $complete_url,
+                        'is_cover' => $is_cover,
                         'sort' => ONE,
                         'status' => ONE,
                     ]);

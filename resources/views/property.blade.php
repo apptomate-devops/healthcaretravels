@@ -752,7 +752,7 @@
                                         <thead>
                                         <tr class="row_border">
                                             <th style="text-align: left;padding: 5px">Detail</th>
-                                            <th style="text-align: left;padding: 5px">Price</th>
+                                            <th style="text-align: right;padding: 5px">Price</th>
                                         </tr>
                                         </thead>
                                         <tbody id="table_body">

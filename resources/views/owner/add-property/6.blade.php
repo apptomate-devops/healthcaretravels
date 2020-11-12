@@ -78,9 +78,13 @@
 
                                     <div class="col-md-12">
                                         <div class="col-md-3">
-                                            <input id="Essentials" type="checkbox" name="essentials" value="Essentials">
-                                            <label for="Essentials">Essentials</label>
+                                            <input id="Roku" type="checkbox" name="roku" value="Roku">
+                                            <label for="Roku">Roku</label>
                                         </div>
+{{--                                        <div class="col-md-3">--}}
+{{--                                            <input id="Essentials" type="checkbox" name="essentials" value="Essentials">--}}
+{{--                                            <label for="Essentials">Essentials</label>--}}
+{{--                                        </div>--}}
                                         <div class="col-md-3">
                                             <input id="Doorman" type="checkbox" name="door_man" value="Doorman">
                                             <label for="Doorman">Doorman</label>
@@ -177,13 +181,17 @@
                                             <label for="Fax">Fax</label>
                                         </div>
                                         <div class="col-md-3">
-                                            <input id="Breakfast_Included" type="checkbox" name="breakfast_included" value="Breakfast Included">
-                                            <label for="Breakfast_Included">Breakfast Included</label>
+                                            <input id="Exterior" type="checkbox" name="exterior" value="Exterior">
+                                            <label for="Exterior">Exterior</label>
                                         </div>
                                     </div>
 
 
                                     <div class="col-md-12">
+                                        <div class="col-md-3">
+                                            <input id="Breakfast_Included" type="checkbox" name="breakfast_included" value="Breakfast Included">
+                                            <label for="Breakfast_Included">Breakfast Included</label>
+                                        </div>
                                         <div class="col-md-3">
                                             <input id="Smart_TV" type="checkbox" name="smart_tv" value="Smart Tv">
                                             <label for="Smart_TV">Smart TV</label>
@@ -196,13 +204,12 @@
                                             <input id="Towels" type="checkbox" name="towels" value="Towels">
                                             <label for="Towels">Towels</label>
                                         </div>
-
+                                    </div>
+                                    <div class="col-md-12">
                                         <div class="col-md-3">
                                             <input id="Free_Parking_on_Premises" type="checkbox" name="free_parking_on_premises" value="Free Parking on Premises">
                                             <label for="Free_Parking_on_Premises">Free Parking on Premises</label>
                                         </div>
-                                    </div>
-                                    <div class="col-md-12">
                                         <div class="col-md-3">
                                             <input id="Netflix" type="checkbox" name="netflix" value="Netflix">
                                             <label for="Netflix">Netflix</label>
@@ -213,6 +220,9 @@
                                         </div>
 
                                     </div>
+                                    <div class="col-md-12">
+                                        <div style="margin-top: 30px;">Health Care Travels <b>does not</b> allow any cameras inside of any listing. If it is reported that any cameras hidden or visible are inside your listing, the account will be banned indefinitely.</div>
+                                    </div>
 
 
 
@@ -220,6 +230,7 @@
                                 <!-- Checkboxes / End -->
 
                             </div>
+
                             <div class="text-center">
                                 {{--  @if(isset($property_details->is_complete) && $property_details->is_complete == 1)
                                                 <button id="button" class="button border margin-top-5" name="save" value="save" style="background-color: #e78016;">Save<i class="fa fa-save"></i></button>

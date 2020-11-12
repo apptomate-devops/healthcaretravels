@@ -2552,14 +2552,31 @@ class PropertyController extends BaseController
             $property_aminities->amenties_icon = 'Heating_icon';
             $property_aminities->save();
         }
-        if ($request->essentials) {
+        //        if ($request->essentials) {
+        //            $property_aminities = new Propertyamenties();
+        //            $property_aminities->client_id = CLIENT_ID;
+        //            $property_aminities->property_id = $request->property_id;
+        //            $property_aminities->amenties_name = 'Essentials';
+        //            $property_aminities->amenties_icon = 'Essentials_icon';
+        //            $property_aminities->save();
+        //        }
+        if ($request->roku) {
             $property_aminities = new Propertyamenties();
             $property_aminities->client_id = CLIENT_ID;
             $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Essentials';
-            $property_aminities->amenties_icon = 'Essentials_icon';
+            $property_aminities->amenties_name = 'Roku';
+            $property_aminities->amenties_icon = 'roku_icon';
             $property_aminities->save();
         }
+        if ($request->exterior) {
+            $property_aminities = new Propertyamenties();
+            $property_aminities->client_id = CLIENT_ID;
+            $property_aminities->property_id = $request->property_id;
+            $property_aminities->amenties_name = 'Exterior';
+            $property_aminities->amenties_icon = 'exterior_icon';
+            $property_aminities->save();
+        }
+
         if ($request->door_man) {
             $property_aminities = new Propertyamenties();
             $property_aminities->client_id = CLIENT_ID;

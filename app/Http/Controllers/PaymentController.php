@@ -387,7 +387,7 @@ class PaymentController extends BaseController
             foreach ($payments as $payment) {
                 $payment->confirmed_time = Carbon::now();
                 $transaction_record['transaction_date'] = Carbon::parse($payment->confirmed_time)->toDateString();
-                $transaction_record['name'] = 'Stay Payment';
+                $transaction_record['name'] = 'Housing Payment';
                 $transaction_record['booking_id'] = $payment->booking_id;
 
                 if ($is_owner) {

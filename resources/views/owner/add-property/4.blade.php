@@ -68,7 +68,8 @@
 
                                         <div class="col-md-6">
                                             <h5>Monthly Rate (USD)<span class="required">*</span></h5>
-                                            <p class="caption-text">Booking prices will be calculated based on this rate, starting at a minimum of 30 days.</p>
+{{--                                            <p class="caption-text">Booking prices will be calculated based on this rate, starting at a minimum of 30 days.</p>--}}
+                                            <p class="caption-text">Pay outs will reflect: <br>(1) a service fee of $50 for the 1st month of a traveler's stay <br>(2) a processing fee of $10 for the remaining months of the stay.</p>
                                             <input class="search-field validate price_int" type="text" name="monthly_rate" id="monthly_rate" value="{{isset($property_details->monthly_rate)?$property_details->monthly_rate:''}}" autocomplete="off"/>
                                         </div>
 

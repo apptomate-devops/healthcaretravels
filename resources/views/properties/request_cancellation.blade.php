@@ -36,8 +36,8 @@
                             <div class="col-md-6">
                                 <div>
                                     <label for="cancellation_reason" style="margin-top: 10px;">Select a reason:</label>
-                                    <select class="chosen-select" id="cancellation_reason" name="cancellation_reason">
-                                        {{--                                    <option value="" selected disabled>Select a reason</option>--}}
+                                    <select class="chosen-select validate" id="cancellation_reason" name="cancellation_reason">
+                                        <option selected disabled>Select a reason</option>
                                         @foreach($reasons as $reason)
                                             <option value="{{$reason}}" label="{{$reason}}">{{$reason}}</option>
                                         @endforeach
@@ -56,7 +56,7 @@
                                     <input id="checked_in_no" name="checked_in" type="checkbox" value="0" checked>
                                     <label for="checked_in_no">No</label>
                                 </div>
-                                <button class="button margin-top-40" type="submit">Submit Request</button>
+                                <button class="button margin-top-40" type="submit" id="button">Submit Request</button>
                             </div>
                         </div>
                     </form>

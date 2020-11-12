@@ -145,16 +145,11 @@ class PropertyController extends BaseController
         }
     }
 
-    public function get_price(Request $request)
+    public function get_valid_date_range_for_booking_request($property_id, $check_in, $check_out, $user_id, $booking_id)
     {
-        $guest_count = $request->guest_count == 0 ? 20 : $request->guest_count;
-        $request->adults_count = $guest_count;
-        $check_in = date('Y-m-d', strtotime($request->check_in));
-        $check_out = date('Y-m-d', strtotime($request->check_out));
-
         $isBlocked = PropertyBlocking::whereRaw(
             'property_id = "' .
-                $request->property_id .
+                $property_id .
                 '" AND ((start_date BETWEEN "' .
                 $check_in .
                 '" AND "' .
@@ -168,24 +163,14 @@ class PropertyController extends BaseController
                 '" BETWEEN start_date AND end_date))',
         )->get();
         if (count($isBlocked)) {
-            return response()->json([
-                'status' => 'FAILED',
-                'message' =>
-                    'Sorry! This property is not available during all of your selected dates. Try changing your dates or finding another property.',
-                'status_code' => ZERO,
-                'is_blocked' => ONE,
-                'blocked_data' => $isBlocked,
-            ]);
+            return ['isBlocked' => $isBlocked];
         }
-
-        $user_id = $request->session()->get('user_id');
-        $booking_id = $request->booking_id;
 
         $requestAlreadyExists = PropertyBooking::whereRaw(
             'traveller_id = "' .
                 $user_id .
                 ($booking_id ? '" AND booking_id != "' . $booking_id : '') .
-                '" AND status NOT IN (4, 8) AND ((start_date BETWEEN "' .
+                '" AND status NOT IN (0, 4, 8) AND ((start_date BETWEEN "' .
                 $check_in .
                 '" AND "' .
                 $check_out .
@@ -198,6 +183,41 @@ class PropertyController extends BaseController
                 '" BETWEEN start_date AND end_date))',
         )->get();
         if (count($requestAlreadyExists)) {
+            return ['requestAlreadyExists' => $requestAlreadyExists];
+        }
+        return [];
+    }
+    public function get_price(Request $request)
+    {
+        $guest_count = $request->guest_count == 0 ? 20 : $request->guest_count;
+        $request->adults_count = $guest_count;
+        $check_in = date('Y-m-d', strtotime($request->check_in));
+        $check_out = date('Y-m-d', strtotime($request->check_out));
+        $user_id = $request->session()->get('user_id');
+        $booking_id = $request->booking_id;
+
+        $isValidRequest = $this->get_valid_date_range_for_booking_request(
+            $request->property_id,
+            $check_in,
+            $check_out,
+            $user_id,
+            $booking_id,
+        );
+
+        // Padding 24 hours for property owner
+
+        if (isset($isValidRequest['isBlocked'])) {
+            return response()->json([
+                'status' => 'FAILED',
+                'message' =>
+                    'Sorry! This property is not available during all of your selected dates. Try changing your dates or finding another property.',
+                'status_code' => ZERO,
+                'is_blocked' => ONE,
+                'blocked_data' => $isValidRequest['isBlocked'],
+            ]);
+        }
+
+        if (isset($isValidRequest['requestAlreadyExists'])) {
             $my_trips_url = BASE_URL . 'traveler/my-reservations';
             return response()->json([
                 'status' => 'FAILED',
@@ -209,11 +229,9 @@ class PropertyController extends BaseController
                     '>My Trips</a> page to view your submitted request.',
                 'status_code' => ZERO,
                 'request_already_exists' => ONE,
-                'request_data' => $requestAlreadyExists,
+                'request_data' => $isValidRequest['requestAlreadyExists'],
             ]);
         }
-
-        // Padding 24 hours for property owner
 
         $c_in = Carbon::parse($check_in);
         $c_out = Carbon::parse($check_out);
@@ -312,6 +330,30 @@ class PropertyController extends BaseController
         if ($user_id != $data->traveller_id) {
             // Do not allow other user to access booking details
             return view('general_error', ['message' => 'Invalid Access']);
+        }
+
+        $isValidRequest = $this->get_valid_date_range_for_booking_request(
+            $data->property_id,
+            $data->start_date,
+            $data->end_date,
+            $user_id,
+            $booking_id,
+        );
+
+        if (count($isValidRequest) > 0) {
+            $error_title = "You can't complete this booking.";
+            if (isset($isValidRequest['isBlocked'])) {
+                $error_message = "Dates are blocked for this property.";
+            } else {
+                $error_message = 'You have already submitted request for these dates';
+            }
+            $my_trips_url = BASE_URL . 'traveler/my-reservations';
+            return view('general_error', [
+                'title' => $error_title,
+                'message' => $error_message,
+                'hideImage' => true,
+                'url' => $my_trips_url,
+            ]);
         }
 
         $agency = DB::table('agency')

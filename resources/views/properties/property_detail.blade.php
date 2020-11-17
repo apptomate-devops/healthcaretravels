@@ -100,7 +100,7 @@
                                                             <tr class="payment_sub_sections sub_sections_{{$i}}">
                                                                 <td class="name">
                                                                     {{$key}}
-                                                                    @if(strpos($key, 'Fee'))<span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">This fee helps us run our platform and offer our services</span></span>@endif
+                                                                    @if(strpos($key, 'Fee'))<span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important; font-weight: bold;">This fee helps us run our platform and offer our services</span></span>@endif
                                                                 </td>
                                                                 <td class="val text-right">
                                                                     $ {{$value}}

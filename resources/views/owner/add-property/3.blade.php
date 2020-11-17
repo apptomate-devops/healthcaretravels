@@ -19,7 +19,7 @@
 
                     <!-- Tabs Content -->
                     <div class="tab-content" id="tab5" style="display: none;">
-                        <form action="{{url('/')}}/owner/add-new-property/3" method="post" name="form-add-new">
+                            <form action="{{url('/')}}/owner/add-new-property/3" method="post" name="form-add-new" onsubmit="return validate_submit()" autocomplete="off" onkeydown="return event.key != 'Enter';">
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
                             <input type="hidden" name="client_id" value="{{$client_id}}">
                             <input type="hidden" name="property_id" value="{{$property_details->id}}">
@@ -80,6 +80,7 @@
 
                             <div class="col-md-12"><br><br>
                                 <h3>Lawn Services<span class="required">*</span> :</h3>
+                                <div class="error-text" id="lawn_service_error" style="display: none;">This field is required</div>
                                 <div class="checkboxes in-row">
 
                                     <input id="lawn_yes" name="lawn_service" type="checkbox" value="1" name="check">
@@ -92,6 +93,7 @@
 
                             <div class="col-md-12"><br><br>
                                 <h3>Pets Allowed<span class="required">*</span> :</h3>
+                                <div class="error-text" id="pets_allowed_error" style="display: none;">This field is required</div>
                                 <div class="checkboxes in-row">
 
                                     <input id="pet_yes" name="pets_allowed" type="checkbox" value="1" >
@@ -131,7 +133,6 @@
     </div>
     <script type="text/javascript">
         var propertyData = <?php echo json_encode($property_data); ?>;
-        debugger
         if(propertyData.trash_pickup_days) {
             var pickupDays = propertyData.trash_pickup_days.split(',');
             console.log(pickupDays);
@@ -168,6 +169,26 @@
         })
 
 
+        function validate_submit() {
+            var isLawnService = $('input[name="lawn_service"]').is(':checked');
+            var isPetsAllowed = $('input[name="pets_allowed"]').is(':checked');
+            if(!isLawnService || !isPetsAllowed) {
+                if(!isLawnService) {
+                    $('#lawn_service_error').show();
+                } else {
+                    $('#lawn_service_error').hide();
+                }
+                if(!isPetsAllowed) {
+                    $('#pets_allowed_error').show();
+                } else {
+                    $('#pets_allowed_error').hide();
+                }
+                return false;
+            }
+            $('#lawn_service_error').hide();
+            $('#pets_allowed_error').hide();
+            return true;
+        }
     </script>
 
 

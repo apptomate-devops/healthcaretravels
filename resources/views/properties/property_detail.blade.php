@@ -337,7 +337,7 @@
                                     <p id="agency_error" class="error-text" style="display: none;">Select at least 1 agency</p>
                                     <div id="add_another_agency" class="add-another" onclick="add_another_agency(true)" style="cursor: pointer;">Can't find it? Add it here.</div>
                                     <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
-                                    <label for="other_agency_name" id="other_agency_name" style="display: none;">Other Angency:</label>
+                                    <label for="other_agency_name" id="other_agency_name" style="display: none;">Other Agency:</label>
                                     <input type="text" style="display: none;" class="input-text validate" name="other_agency" id="other_agency" value="{{$traveller->other_agency}}" placeholder="Other agency" autocomplete="off">
                                     <div style="display: none;" id="other_agency_cancel" class="add-another" onclick="add_another_agency()" style="cursor: pointer;">Cancel</div>
                                 </div>

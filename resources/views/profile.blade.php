@@ -113,7 +113,8 @@
                                     <div id="add_another_agency" class="add-another" onclick="add_another_agency(true)" style="cursor: pointer;">Can't find it? Add it here.</div>
                                     <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
                                     <label for="other_agency_name" id="other_agency_name" style="display: none;">Other Angency:</label>
-                                    <input type="text" style="display: none;" class="input-text validate" name="other_agency" id="other_agency" onclick="add_another_agency()" value="{{Session::get('other_agency') ?? $user_detail->other_agency}}" placeholder="Other agency" autocomplete="off">
+                                    <input type="text" style="display: none; margin: 0 0 20px;" class="input-text validate" name="other_agency" id="other_agency" value="{{Session::get('other_agency') ?? $user_detail->other_agency}}" placeholder="Other agency" autocomplete="off">
+                                    <div style="display: none;" id="other_agency_cancel" class="add-another" onclick="add_another_agency(false, true)" style="cursor: pointer;">Cancel</div>
                                 </div>
                             @endif
                             @if($user_detail->role_id == 0 || $user_detail->role_id == 3)

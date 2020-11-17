@@ -41,10 +41,15 @@
     display: block;
     font-size: 19px;
     font-weight: 600;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .property-image p img {
     border-radius: 50%;
     width: 100px;
+    height: 100px;
     margin-bottom: 0px;
 }
 
@@ -110,15 +115,15 @@ div::-webkit-scrollbar-thumb {
 }
 
 @media only screen and (min-width: 990px) {
-    .property-image p {
-        text-align: right;
-    }
+    /*.property-image p {*/
+    /*    text-align: right;*/
+    /*}*/
     .property-pricing {
         margin-top: 40px;
     }
-    .property-image .sub-price a {
-        text-align: right;
-    }
+    /*.property-image .sub-price a {*/
+    /*    text-align: right;*/
+    /*}*/
     .show-990{
         display: none;
     }

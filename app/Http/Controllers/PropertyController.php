@@ -3342,17 +3342,17 @@ class PropertyController extends BaseController
         //print_r($check);exit;
         if ($check->is_disable == 0) {
             $disable = 1;
-            $status = 0;
+            //            $status = 0;
             $content = "Your Property : " . $check->title . "(Property ID : " . $check->id . ") Has been Disabled.";
         } else {
             $disable = 0;
-            $status = 1;
+            //            $status = 1;
             $content = "Your Property : " . $check->title . "(Property ID : " . $check->id . ") Has been Enabled.";
         }
         $update = DB::table('property_list')
             ->where('client_id', CLIENT_ID)
             ->where('id', $id)
-            ->update(['is_disable' => $disable, 'status' => $status]);
+            ->update(['is_disable' => $disable]);
         $mail_email = $this->get_email($check->user_id);
         $mail_data = [
             'username' => $username,

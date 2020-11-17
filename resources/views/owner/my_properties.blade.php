@@ -52,12 +52,9 @@
                                 </td>
                                 @if($property->is_complete == ZERO) {{--// incomplete--}}
                                 <td class="expire-date">Pending</td>
-                                @endif
-                                @if($property->is_complete == ONE && $property->propertyStatus == ZERO) {{--// incomplete--}}
+                                @elseif($property->is_complete == ONE && $property->is_disable == ONE) {{--// incomplete--}}
                                 <td class="expire-date">Disabled</td>
-                                @endif
-
-                                @if($property->is_complete == ONE && $property->propertyStatus == ONE) {{--// incomplete--}}
+                                @elseif($property->is_complete == ONE && $property->propertyStatus == ONE) {{--// incomplete--}}
                                 <td class="expire-date">Working</td>
                                 @endif
 

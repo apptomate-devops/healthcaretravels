@@ -41,7 +41,7 @@
                         </div>
 
                     </div>
-                    <div class="property-title col-md-6 col-sm-6 col-xs-12" style="margin-left: 0px;">
+                    <div class="property-title col-md-10 col-sm-10 col-xs-12" style="margin-left: 0px;">
                         <h2>
                             <font style="vertical-align: inherit;">
                                 <font style="vertical-align: inherit;">{{$data->title}} </font>
@@ -78,9 +78,9 @@
                             </font>
                         </div>
                     </div>
-                    <div class="col-md-3"></div>
+
                     <center>
-                        <div style="margin-left: 18%;" class="col-md-3 col-sm-6 col-xs-6 property-image hide-990">
+                        <div class="col-md-2 col-sm-2 col-xs-6 property-image hide-990">
                             <p>
                                 <img class="user-icon" src="{{$data->profile_image}}">
                             </p>
@@ -90,10 +90,10 @@
                             <div class="sub-price">
                                 @if(Session::get('user_id'))
                                     @if($data->user_id != Session::get('user_id'))
-                                    <a><h3 id="contact_host"><span class="property-badge"  id="chat_host">Message Host</span></h3></a>
+                                        <a><h3 id="contact_host"><span class="property-badge"  id="chat_host">Message Host</span></h3></a>
                                     @endif
                                 @else
-                                    <button style="background: transparent;border: 0;float: right;" onclick="$('#request-chat').click()"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8">Login to Chat</span></h3></button>
+                                    <button style="background: transparent;border: 0;" onclick="$('#request-chat').click()"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8">Login to Chat</span></h3></button>
                                 @endif
                             </div>
 

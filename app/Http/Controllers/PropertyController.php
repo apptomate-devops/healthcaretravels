@@ -2607,15 +2607,15 @@ class PropertyController extends BaseController
             $property_aminities->client_id = CLIENT_ID;
             $property_aminities->property_id = $request->property_id;
             $property_aminities->amenties_name = 'Roku';
-            $property_aminities->amenties_icon = 'roku_icon';
+            $property_aminities->amenties_icon = 'roku';
             $property_aminities->save();
         }
-        if ($request->exterior) {
+        if ($request->iron) {
             $property_aminities = new Propertyamenties();
             $property_aminities->client_id = CLIENT_ID;
             $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Exterior';
-            $property_aminities->amenties_icon = 'exterior_icon';
+            $property_aminities->amenties_name = 'Iron/Ironing board';
+            $property_aminities->amenties_icon = 'iron';
             $property_aminities->save();
         }
 
@@ -2814,6 +2814,15 @@ class PropertyController extends BaseController
             $property_aminities->property_id = $request->property_id;
             $property_aminities->amenties_name = 'Smart Tv';
             $property_aminities->amenties_icon = 'Smart_Tv_icon';
+            $property_aminities->save();
+        }
+
+        if ($request->utilities) {
+            $property_aminities = new Propertyamenties();
+            $property_aminities->client_id = CLIENT_ID;
+            $property_aminities->property_id = $request->property_id;
+            $property_aminities->amenties_name = 'Utilities';
+            $property_aminities->amenties_icon = 'utilities';
             $property_aminities->save();
         }
 
@@ -3333,17 +3342,17 @@ class PropertyController extends BaseController
         //print_r($check);exit;
         if ($check->is_disable == 0) {
             $disable = 1;
-            $status = 0;
+            //            $status = 0;
             $content = "Your Property : " . $check->title . "(Property ID : " . $check->id . ") Has been Disabled.";
         } else {
             $disable = 0;
-            $status = 1;
+            //            $status = 1;
             $content = "Your Property : " . $check->title . "(Property ID : " . $check->id . ") Has been Enabled.";
         }
         $update = DB::table('property_list')
             ->where('client_id', CLIENT_ID)
             ->where('id', $id)
-            ->update(['is_disable' => $disable, 'status' => $status]);
+            ->update(['is_disable' => $disable]);
         $mail_email = $this->get_email($check->user_id);
         $mail_data = [
             'username' => $username,

@@ -1,3 +1,4 @@
+
 @extends('layout.master') @section('title','Health Care Travels') @section('main_content')
     <!-- Header Container / End -->
     <script src='https://www.google.com/recaptcha/api.js'></script>
@@ -25,6 +26,7 @@
 
         #map {
             height: auto !important;
+            flex: 1;
         }
 
         .contact_map {

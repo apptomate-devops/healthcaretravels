@@ -1,3 +1,7 @@
+@if(isset($property_details->is_disable) && $property_details->is_disable == 1)
+    <h4 style="position: absolute; top: -25px;">This property is disabled.</h4>
+@endif
+
 <a class="btn" style="background-color: @if($stage == 0) #e78016 @else #9a9595 @endif;color:white;">
     Address
 </a>

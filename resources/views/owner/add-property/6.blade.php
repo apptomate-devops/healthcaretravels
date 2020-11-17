@@ -162,7 +162,7 @@
                                         </div>
                                         <div class="col-md-3">
                                             <input id="security_cameras" type="checkbox" name="security_cameras" value="Security Cameras">
-                                            <label for="security_cameras"> Security Cameras</label>
+                                            <label for="security_cameras"> Security Cameras (Exterior)</label>
                                         </div>
                                     </div>
 
@@ -181,17 +181,13 @@
                                             <label for="Fax">Fax</label>
                                         </div>
                                         <div class="col-md-3">
-                                            <input id="Exterior" type="checkbox" name="exterior" value="Exterior">
-                                            <label for="Exterior">Exterior</label>
+                                            <input id="Breakfast_Included" type="checkbox" name="breakfast_included" value="Breakfast Included">
+                                            <label for="Breakfast_Included">Breakfast Included</label>
                                         </div>
                                     </div>
 
 
                                     <div class="col-md-12">
-                                        <div class="col-md-3">
-                                            <input id="Breakfast_Included" type="checkbox" name="breakfast_included" value="Breakfast Included">
-                                            <label for="Breakfast_Included">Breakfast Included</label>
-                                        </div>
                                         <div class="col-md-3">
                                             <input id="Smart_TV" type="checkbox" name="smart_tv" value="Smart Tv">
                                             <label for="Smart_TV">Smart TV</label>
@@ -204,12 +200,13 @@
                                             <input id="Towels" type="checkbox" name="towels" value="Towels">
                                             <label for="Towels">Towels</label>
                                         </div>
-                                    </div>
-                                    <div class="col-md-12">
                                         <div class="col-md-3">
                                             <input id="Free_Parking_on_Premises" type="checkbox" name="free_parking_on_premises" value="Free Parking on Premises">
                                             <label for="Free_Parking_on_Premises">Free Parking on Premises</label>
                                         </div>
+                                    </div>
+                                    <div class="col-md-12">
+
                                         <div class="col-md-3">
                                             <input id="Netflix" type="checkbox" name="netflix" value="Netflix">
                                             <label for="Netflix">Netflix</label>
@@ -217,6 +214,14 @@
                                         <div class="col-md-3">
                                             <input id="Coffee-pot" type="checkbox" name="coffee_pot" value="Coffee Pot">
                                             <label for="Coffee-pot">Coffee Pot</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input id="iron" type="checkbox" name="iron" value="Iron/Ironing board">
+                                            <label for="iron">Iron/Ironing Board</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input id="utilities" type="checkbox" name="utilities" value="All Utilities Included">
+                                            <label for="utilities">All Utilities Included</label>
                                         </div>
 
                                     </div>

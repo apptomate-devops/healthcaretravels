@@ -1,4 +1,4 @@
-@if($property_details->is_disable == 1)
+@if(isset($property_details->is_disable) && $property_details->is_disable == 1)
     <h4 style="position: absolute; top: -25px;">This property is disabled.</h4>
 @endif
 

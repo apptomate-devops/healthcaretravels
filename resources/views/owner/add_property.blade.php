@@ -51,7 +51,7 @@
                                             <input type="text" value="{{Session::get('address')}}" name="address" id="address" placeholder="Full Street Address" autocomplete="off" style="padding-left: 20px;" @if(Session::has('address')) data-is-valid="true" @endif />
                                             <div class="error-text" id="address_error" style="display: none;">Please select a valid address from the suggestions.</div>
                                         </div>
-                                        <div class="col-md-12 text-right">
+                                        <div class="col-md-12">
                                             <button id="btn_add_apt_number" onclick="on_add_address_line_2(event)" class="btn btn-primary">Add an Apt or Floor #</button>
                                         </div>
                                         <div class="col-md-12">

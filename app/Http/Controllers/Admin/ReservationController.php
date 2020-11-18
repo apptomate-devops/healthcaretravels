@@ -178,8 +178,9 @@ class ReservationController extends BaseController
             'property_title' => $property->title,
             'check_in' => date('d-m-Y', strtotime($data->start_date)),
             'check_out' => date('d-m-Y', strtotime($data->check_out)),
-            'traveler_name' => $traveller->username,
-            'owner_name' => $owner->username,
+            'traveler_name' => Helper::get_user_display_name($traveller),
+            'owner_name' => Helper::get_user_display_name($owner),
+            'cancellation_reason' => $request->cancellation_reason,
         ];
         $this->send_custom_email($owner->email, $subject, 'mail.admin-cancel-booking', $mail_data, $title);
         $this->send_custom_email($traveller->email, $subject, 'mail.admin-cancel-booking', $mail_data, $title);

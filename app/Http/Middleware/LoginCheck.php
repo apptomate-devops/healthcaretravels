@@ -23,7 +23,7 @@ class LoginCheck
             Session::flash('error_message', "Please Login to access application");
             Session::put('url.intended', URL::full());
             return redirect('login')->with([
-                'error' => 'You need to be authenticated to access the page',
+                'error' => 'Please Log in to access the page',
             ]);
         }
         return $next($request);

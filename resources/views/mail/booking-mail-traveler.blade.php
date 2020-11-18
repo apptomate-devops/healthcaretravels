@@ -4,7 +4,7 @@
         Hi {{$name}},
     </div>
     <div style="padding-top: 5px;">
-        You requested a booking at <strong>{{$property->title}}</strong> for <strong>{{date('m-d-Y', strtotime($data->start_date))}}</strong> to <strong>{{date('m-d-Y', strtotime($data->end_date))}}</strong>. The property owner has received your request. Please allow time for your request to be approved. If you have any questions or want to check on the booking status, please don't hesitate to reach out to the property owner. You can also log into your account and go to the My Trips Tab or click the View Request button below.
+        You requested a booking at <strong>{{$property->title}}</strong> for <strong>{{date('m-d-Y', strtotime($data->start_date))}}</strong> to <strong>{{date('m-d-Y', strtotime($data->end_date))}}</strong>. The property owner has received your request. Please allow time for your request to be approved. If you have any questions or want to check on the booking status, please don't hesitate to reach out to the property owner. You can also log into your account and go to the <a href="{{URL('/')}}/traveler/my-reservations">My Trips</a> Tab or click the View Request button below.
     </div>
     <div style="padding-top: 5px;">
         <div class="panel payments-listing payment_list_right">

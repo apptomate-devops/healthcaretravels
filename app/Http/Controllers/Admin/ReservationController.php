@@ -212,6 +212,7 @@ class ReservationController extends BaseController
             ->where('property_images.property_id', '=', $property_id)
             ->select('image_url')
             ->orderBy('property_images.sort', 'asc')
+            ->orderBy('property_images.is_cover', 'desc')
             ->get();
 
         $property->aminities = DB::table('property_amenties')
@@ -223,6 +224,7 @@ class ReservationController extends BaseController
             ->join('property_booking_price', 'property_booking_price.property_booking_id', '=', 'property_booking.id')
             ->where('property_booking.client_id', CLIENT_ID)
             ->where('property_booking.booking_id', $booking_id)
+            ->orderBy('property_images.is_cover', 'desc')
             ->first();
         $traveller = DB::select(
             "SELECT concat(first_name,last_name) as name,email FROM users WHERE id = $data->traveller_id",

@@ -64,6 +64,7 @@ class PropertyController extends BaseController
                 'users.last_name',
                 'users.profile_image',
                 'property_images.image_url',
+                'property_images.is_cover',
                 'property_room.property_size',
                 'property_room.bathroom_count',
                 'property_room.bedroom_count',
@@ -72,6 +73,7 @@ class PropertyController extends BaseController
                 'users.languages_known',
                 'property_list.pets_allowed',
             )
+            ->orderBy('property_images.is_cover', 'desc')
             ->first();
 
         //        $sql = "UPDATE `property_list` SET `view_count` = `view_count` + 1 WHERE `id` = $property_id";
@@ -189,6 +191,7 @@ class PropertyController extends BaseController
                 ->where('property_images.client_id', '=', $request->header('clientId'))
                 ->where('property_images.property_id', '=', $property_id)
                 ->orderBy('property_images.sort', 'asc')
+                ->orderBy('property_images.is_cover', 'desc')
                 ->select('property_images.image_url')
                 ->get();
             $properties->property_images = $pd;
@@ -943,6 +946,7 @@ FROM `property_list` A , `property_short_term_pricing` B WHERE  A.status = '1'  
                 ->where('property_images.client_id', '=', $request->header('clientId'))
                 ->where('property_images.property_id', '=', $property->property_id)
                 ->orderBy('property_images.sort', 'desc')
+                ->orderBy('property_images.is_cover', 'desc')
                 ->select('property_images.image_url')
                 ->get();
             $propertys = [];

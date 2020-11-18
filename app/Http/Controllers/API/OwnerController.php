@@ -27,6 +27,7 @@ class OwnerController extends BaseController
                 ->where('property_images.client_id', '=', CLIENT_ID)
                 ->where('property_images.property_id', '=', $property->property_id)
                 ->orderBy('property_images.sort', 'asc')
+                ->orderBy('property_images.is_cover', 'desc')
                 ->get();
 
             foreach ($pd as $images) {

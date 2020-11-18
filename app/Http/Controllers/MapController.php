@@ -62,6 +62,7 @@ class MapController extends BaseController
             $property = DB::table('property_images')
                 ->where('client_id', CLIENT_ID)
                 ->where('property_id', $result['id'])
+                ->orderBy('property_images.is_cover', 'desc')
                 ->first();
             $propertys = DB::table('property_list')
                 ->where('client_id', CLIENT_ID)

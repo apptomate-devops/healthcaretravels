@@ -322,6 +322,7 @@ class PropertyController extends BaseController
                 'property_list.*',
                 'property_images.*',
             )
+            ->orderBy('property_images.is_cover', 'desc')
             ->first();
         if (empty($data)) {
             return view('general_error', ['message' => 'Booking you are looking for does not exists!']);
@@ -497,6 +498,7 @@ class PropertyController extends BaseController
                 ->where('property_images.client_id', '=', CLIENT_ID)
                 ->where('property_images.property_id', '=', $property->property_id)
                 ->orderBy('property_images.sort', 'asc')
+                ->orderBy('property_images.is_cover', 'desc')
                 ->get();
 
             foreach ($pd as $images) {
@@ -934,6 +936,7 @@ class PropertyController extends BaseController
             $image = DB::table('property_images')
                 ->where('client_id', CLIENT_ID)
                 ->where('property_id', $datum->property_id)
+                ->orderBy('is_cover', 'desc')
                 ->first();
             $datum->image_url = $image->image_url;
             $datum->owner_name = Helper::get_user_display_name($traveller[0]);
@@ -1106,6 +1109,7 @@ class PropertyController extends BaseController
             foreach ($nearby_properties as $key => $value) {
                 $image = DB::table('property_images')
                     ->where('property_id', $value->id)
+                    ->orderBy('is_cover', 'desc')
                     ->first();
                 $value->image_url = isset($image->image_url) ? $image->image_url : '';
             }
@@ -1333,6 +1337,7 @@ class PropertyController extends BaseController
                     'property_list.state as prop_state',
                     'property_list.city as prop_city',
                 )
+                ->orderBy('property_images.is_cover', 'desc')
                 ->first();
             //print_r($properties);exit;
 
@@ -1370,8 +1375,10 @@ class PropertyController extends BaseController
                 'users.profile_image',
                 'users.device_token',
                 'property_images.image_url',
+                'property_images.is_cover',
                 'property_room.*',
             )
+            ->orderBy('property_images.is_cover', 'DESC')
             ->first();
 
         if ($properties) {
@@ -1468,6 +1475,7 @@ class PropertyController extends BaseController
                 ->where('property_images.client_id', '=', CLIENT_ID)
                 ->where('property_images.property_id', '=', $property_id)
                 ->orderBy('property_images.sort', 'asc')
+                ->orderBy('property_images.is_cover', 'desc')
                 ->select('property_images.image_url')
                 ->get();
             $properties->property_images = $pd;
@@ -1530,6 +1538,7 @@ class PropertyController extends BaseController
                 ->where('property_images.client_id', '=', CLIENT_ID)
                 ->where('property_images.property_id', '=', $property->property_id)
                 ->orderBy('property_images.sort', 'asc')
+                ->orderBy('property_images.is_cover', 'desc')
                 ->first();
 
             $property->image_url = isset($pd->image_url) ? $pd->image_url : '';
@@ -1545,6 +1554,7 @@ class PropertyController extends BaseController
                 ->where('property_images.client_id', '=', CLIENT_ID)
                 ->where('property_images.property_id', '=', $property->property_id)
                 ->orderBy('property_images.sort', 'asc')
+                ->orderBy('property_images.is_cover', 'desc')
                 ->select('property_images.image_url')
                 ->get();
             $propertys = [];
@@ -2090,6 +2100,7 @@ class PropertyController extends BaseController
                 $property_images = DB::table('property_images')
                     ->where('client_id', '=', CLIENT_ID)
                     ->where('property_id', '=', $property_id)
+                    ->orderBy('is_cover', 'desc')
                     ->get();
                 //var_dump($property_details); exit;
                 return view('owner.add-property.5', [
@@ -2950,6 +2961,7 @@ class PropertyController extends BaseController
                 ->where('property_images.client_id', '=', CLIENT_ID)
                 ->where('property_images.property_id', '=', $property->propertyId)
                 ->orderBy('property_images.sort', 'asc')
+                ->orderBy('property_images.is_cover', 'desc')
                 ->get();
 
             $cover_img = DB::table('property_images')
@@ -2992,19 +3004,30 @@ class PropertyController extends BaseController
         //
         $property_id = $request->session()->get('property_id');
         $complete_url = '';
+        $cover_image_id = null;
         if ($property_id) {
             if ($request->hasfile('file')) {
                 foreach ($request->file('file') as $key => $file) {
                     $complete_url = $this->base_image_upload_array($file, 'properties');
-                    $is_cover = strval($key) == $cover_id;
-                    $insert = DB::table('property_images')->insert([
+                    $insert_id = DB::table('property_images')->insertGetId([
                         'client_id' => CLIENT_ID,
                         'property_id' => $property_id,
                         'image_url' => $complete_url,
-                        'is_cover' => $is_cover,
                         'sort' => ONE,
                         'status' => ONE,
                     ]);
+                    if (strval($key) == $cover_id) {
+                        $cover_image_id = $insert_id;
+                    }
+                }
+                if ($cover_image_id) {
+                    DB::table('property_images')
+                        ->where('property_id', $property_id)
+                        ->update(['is_cover' => 0]);
+                    DB::table('property_images')
+                        ->where('property_id', $property_id)
+                        ->where('id', $cover_image_id)
+                        ->update(['is_cover' => 1]);
                 }
             }
         }

@@ -327,6 +327,7 @@ class OwnerController extends BaseController
 
             $property->images = DB::table('property_images')
                 ->where('property_id', $property->property_id)
+                ->orderBy('is_cover', 'desc')
                 ->get();
         }
         return view('properties.owner_profile', [

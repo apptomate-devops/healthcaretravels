@@ -1,256 +1,66 @@
 @extends('layout.master') @section('title','Profile') @section('main_content')
 
-<div class="container" style="margin-top: 35px;">
-    <div class="row">
+    <div class="container" style="margin-top: 35px;">
+        <div class="row">
 
-        <div class="col-md-12">
-            <hr>
-            <div>
+            <div class="col-md-12">
+                <hr>
+                <div>
 
 
-                <div class="dashboard-header">
+                    <div class="dashboard-header">
 
-                    <div class=" user_dashboard_panel_guide">
+                        <div class=" user_dashboard_panel_guide">
 
-                        @include('owner.add-property.menu')
+                            @include('owner.add-property.menu')
 
+                        </div>
                     </div>
-                </div>
 
-                <!-- Tabs Content -->
-                <div class="tabs-container">
+                    <!-- Tabs Content -->
+                    <div class="tabs-container">
 
-                    <div class="tab-content" id="tab6" style="display: none;">
+                        <div class="tab-content" id="tab6" style="display: none;">
 
-                        <form action="{{url('/')}}/owner/add-new-property/6" method="post" name="form-add-new">
-                            <input type="hidden" name="_token" value="{{csrf_token()}}">
-                            <input type="hidden" name="client_id" value="{{$client_id}}">
-                            <input type="hidden" name="property_id" value="{{$property_details->id}}">
+                            <form action="{{url('/')}}/owner/add-new-property/6" method="post" name="form-add-new">
+                                <input type="hidden" name="_token" value="{{csrf_token()}}">
+                                <input type="hidden" name="client_id" value="{{$client_id}}">
+                                <input type="hidden" name="property_id" value="{{$property_details->id}}">
 
-                            <h3>Amenities and Features</h3>
-                            <div class="submit-section">
+                                <h3>Amenities and Features</h3>
+                                <div class="submit-section">
 
-                                <!-- Checkboxes -->
-                                <h5><b>Select the amenities and features that apply for your property</b></h5>
-                                <div class="checkboxes in-row margin-bottom-20">
-
-                                    <div class="col-md-12">
-                                        <div class="col-md-3">
-                                            <input id="Kitchen" type="checkbox" name="Kitchen" value="Kitchen">
-                                            <label for="Kitchen">Kitchen</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Cable" type="checkbox" name="Cable" value="Cable">
-                                            <label for="Cable">Cable</label>
-                                        </div><!--   <div class="col-md-3">
-                                            <input id="Internet" type="checkbox" name="internet">
-                                            <label for="Internet">Internet</label>
-                                        </div> -->
-                                        <div class="col-md-3">
-                                            <input id="Smoking_Allowed" type="checkbox" name="smoking_allowed" value="Smoking Allowed">
-                                            <label for="Smoking_Allowed">Smoking Allowed</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Tv" type="checkbox" name="tv" value="Tv">
-                                            <label for="Tv">TV</label>
-                                        </div>
+                                    <!-- Checkboxes -->
+                                    <h5><b>Select the amenities and features that apply for your property</b></h5>
+                                    <div id="all_amenties" class="checkboxes in-row margin-bottom-20">
+                                        @foreach($all_amenties->chunk(4) as $chunk)
+                                            <div class='col-md-12'>
+                                                @foreach($chunk as $amenty)
+                                                    <div class="col-md-3">
+                                                        <input id="{{$amenty->amenities_name}}" type="checkbox" name="{{str_replace(' ', '_', strtolower($amenty->amenities_name))}}" value="{{$amenty->amenities_name}}">
+                                                        <label for="{{$amenty->amenities_name}}">{{$amenty->amenities_name}}</label>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endforeach
                                     </div>
-
-                                    <div class="col-md-12">
-                                        <div class="col-md-3">
-                                            <input id="Wheelchair_Accessible" type="checkbox" name="wheelchair_accessible" value="Wheelchair Accessible">
-                                            <label for="Wheelchair_Accessible">Wheelchair Accessible</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Elevator_in_Building" type="checkbox" name="elevator_in_building" value="Elevator in Building">
-                                            <label for="Elevator_in_Building">Elevator in Building</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Indoor_Fireplace" type="checkbox" name="indoor_fireplace" value="Indoor Fireplace">
-                                            <label for="Indoor_Fireplace">Indoor Fireplace</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Heating" type="checkbox" name="heating" value="Heating">
-                                            <label for="Heating">Heating</label>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-md-12">
-                                        <div class="col-md-3">
-                                            <input id="Roku" type="checkbox" name="roku" value="Roku">
-                                            <label for="Roku">Roku</label>
-                                        </div>
-{{--                                        <div class="col-md-3">--}}
-{{--                                            <input id="Essentials" type="checkbox" name="essentials" value="Essentials">--}}
-{{--                                            <label for="Essentials">Essentials</label>--}}
-{{--                                        </div>--}}
-                                        <div class="col-md-3">
-                                            <input id="Doorman" type="checkbox" name="door_man" value="Doorman">
-                                            <label for="Doorman">Doorman</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Pool" type="checkbox" name="pool" value="Pool">
-                                            <label for="Pool">Pool</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Washer" type="checkbox" name="washer" value="Washer">
-                                            <label for="Washer">Washer</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <div class="col-md-3">
-                                            <input id="Hot_Tub" type="checkbox" name="hot_tub" value="Hot Tub">
-                                            <label for="Hot_Tub">Hot Tub</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Dryer" type="checkbox" name="dryer" value="Dryer">
-                                            <label for="Dryer">Dryer</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Gym" type="checkbox" name="gym" value="Gym">
-                                            <label for="Gym">Gym</label>
-                                        </div>
-                                         <div class="col-md-3">
-                                            <input id="Pots_Pans" type="checkbox" name="pots_and_pans" value="Pots and Pans">
-                                            <label for="Pots_Pans">Pots/Pans</label>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-md-12">
-                                        <div class="col-md-3">
-                                            <input id="Wireless_Internet" type="checkbox" name="wireless_internet" value="Wireless Internet">
-                                            <label for="Wireless_Internet">Wireless Internet</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Pets_Allowed" type="checkbox" name="pets_allowed" value="Pets Allowed">
-                                            <label for="Pets_Allowed">Pets Allowed</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Kid_Friendly" type="checkbox" name="kid_friendly" value="Kid Friendly">
-                                            <label for="Kid_Friendly">Kid Friendly</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Computer" type="checkbox" name="computer" value="Computer">
-                                            <label for="Computer">Computer</label>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-md-12">
-                                        <div class="col-md-3">
-                                            <input id="Non_Smoking" type="checkbox" name="non_smoking" value="Non Smoking">
-                                            <label for="Non_Smoking">Non Smoking</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Phone" type="checkbox" name="phone" value="Phone">
-                                            <label for="Phone">Phone</label>
-                                        </div>
-                                        <!-- <div class="col-md-3">
-                                            <input id="Projector" type="checkbox" name="projector">
-                                            <label for="Projector">Projector</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Restaurant" type="checkbox" name="restaurant">
-                                            <label for="Restaurant">Restaurant</label>
-                                        </div> -->
-                                        <div class="col-md-3">
-                                            <input id="all_bils_included" type="checkbox" name="all_bils_included" value="All Bils Included">
-                                            <label for="all_bils_included">All Bills Included</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="security_cameras" type="checkbox" name="security_cameras" value="Security Cameras">
-                                            <label for="security_cameras"> Security Cameras (Exterior)</label>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-md-12">
-                                        <div class="col-md-3">
-                                            <input id="Air_Conditioner" type="checkbox" name="air_conditioner" value="Air Conditioner">
-                                            <label for="Air_Conditioner">Air Conditioner</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Scanner_Printer" type="checkbox" name="scanner_printer" value="Scanner Printer">
-                                            <label for="Scanner_Printer">Scanner / Printer</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Fax" type="checkbox" name="fax" value="Fax">
-                                            <label for="Fax">Fax</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Breakfast_Included" type="checkbox" name="breakfast_included" value="Breakfast Included">
-                                            <label for="Breakfast_Included">Breakfast Included</label>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-md-12">
-                                        <div class="col-md-3">
-                                            <input id="Smart_TV" type="checkbox" name="smart_tv" value="Smart Tv">
-                                            <label for="Smart_TV">Smart TV</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Garage" type="checkbox" name="garage" value="Garage">
-                                            <label for="Garage">Garage</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Towels" type="checkbox" name="towels" value="Towels">
-                                            <label for="Towels">Towels</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Free_Parking_on_Premises" type="checkbox" name="free_parking_on_premises" value="Free Parking on Premises">
-                                            <label for="Free_Parking_on_Premises">Free Parking on Premises</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-
-                                        <div class="col-md-3">
-                                            <input id="Netflix" type="checkbox" name="netflix" value="Netflix">
-                                            <label for="Netflix">Netflix</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="Coffee-pot" type="checkbox" name="coffee_pot" value="Coffee Pot">
-                                            <label for="Coffee-pot">Coffee Pot</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="iron" type="checkbox" name="iron" value="Iron/Ironing board">
-                                            <label for="iron">Iron/Ironing Board</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input id="utilities" type="checkbox" name="utilities" value="All Utilities Included">
-                                            <label for="utilities">All Utilities Included</label>
-                                        </div>
-
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div style="margin-top: 30px;">Health Care Travels <b>does not</b> allow any cameras inside of any listing. If it is reported that any cameras hidden or visible are inside your listing, the account will be banned indefinitely.</div>
-                                    </div>
-
-
+                                    <!-- Checkboxes / End -->
 
                                 </div>
-                                <!-- Checkboxes / End -->
 
-                            </div>
-
-                            <div class="text-center">
-                                {{--  @if(isset($property_details->is_complete) && $property_details->is_complete == 1)
-                                                <button id="button" class="button border margin-top-5" name="save" value="save" style="background-color: #e78016;">Save<i class="fa fa-save"></i></button>
-                                            @endif --}}
-                                <button type="submit" class="button preview margin-top-50" value="NEXT">Save  <i class="fa fa-arrow-circle-right"></i></button>
-                            </div>
+                                <div class="text-center">
+                                    {{--  @if(isset($property_details->is_complete) && $property_details->is_complete == 1)
+                                                    <button id="button" class="button border margin-top-5" name="save" value="save" style="background-color: #e78016;">Save<i class="fa fa-save"></i></button>
+                                                @endif --}}
+                                    <button type="submit" class="button preview margin-top-50" value="NEXT">Save  <i class="fa fa-arrow-circle-right"></i></button>
+                                </div>
 
 
 
-                        </form>
+                            </form>
+                        </div>
+
                     </div>
-
-
-
-
 
                 </div>
 
@@ -260,38 +70,18 @@
 
     </div>
 
-</div>
-</div>
-<script type="text/javascript">
-    $('.date_picker').datepicker({});
-    var date = new Date();
-    //date.setDate(date.getDate()-1);
-    $('#from_date').datepicker({
-        startDate: date
-    });
+    <script type="text/javascript">
+        // var amenities = [{name: "Air Conditioner", id: 'Air_Conditioner', input_name: 'air_conditioner'}, {name: "All Bills Included", id: 'all_bils_included', input_name: 'all_bils_included'}, {name: "All Utilities Included", id: 'utilities', input_name: 'utilities'}, {name: "Breakfast Included", id: 'Breakfast_Included', input_name: 'breakfast_included'}, {name: "Cable", id: 'Cable', input_name: 'Cable'}, {name: "Coffee Pot", id: 'coffee_pot', input_name: 'coffee_pot'}, {name: "Computer", id: '', input_name: ''}, {name: "Doorman", id: '', input_name: ''}, {name: "Dryer", id: '', input_name: ''}, {name: "Elevator in Building", id: '', input_name: ''}, {name: "Fax", id: '', input_name: ''}, {name: "Free Parking on Premises", id: '', input_name: ''}, {name: "Garage", id: '', input_name: ''}, {name: "Gym", id: '', input_name: ''}, {name: "Heating", id: '', input_name: ''}, {name: "Hot Tub", id: '', input_name: ''}, {name: "Indoor Fireplace", id: '', input_name: ''}, {name: "Iron/Ironing Board", id: '', input_name: ''}, {name: "Kid Friendly", id: '', input_name: ''}, {name: "Kitchen", id: '', input_name: ''}, {name: "Netflix", id: '', input_name: ''}, {name: "Non Smoking", id: '', input_name: ''}, {name: "Pets Allowed", id: '', input_name: ''}, {name: "Phone", id: '', input_name: ''}, {name: "Pool", id: '', input_name: ''}, {name: "Pots/Pans", id: '', input_name: ''}, {name: "Roku", id: '', input_name: ''}, {name: "Scanner / Printer", id: '', input_name: ''}, {name: "Security Cameras (Exterior)", id: '', input_name: ''}, {name: "Smart TV", id: '', input_name: ''}, {name: "Smoking Allowed", id: '', input_name: ''}, {name: "TV", id: '', input_name: ''}, {name: "Towels", id: '', input_name: ''}, {name: "Washer", id: '', input_name: ''}, {name: "Wheelchair Accessible", id: '', input_name: ''}, {name: "Wireless Internet", id: '', input_name: ''}]
 
-    function set_to_date() {
-        // body...
-        var from_date = $('#from_date').val();
-        $('#to_date').datepicker({
-            startDate: from_date
-        });
-    }
+        var allAmenities = "";
 
     <?php if (count($amenties) != 0) {
         // $value=$amenties->amenties_name;
         foreach ($amenties as $a) { ?>
         console.log('{{$a->amenties_name}}');
                 $("input[type=checkbox][value='{{$a->amenties_name}}']").prop("checked",true);
-
         <?php }
     } ?>
 
-
-</script>
-
-
-</body>{{-- https://maps.googleapis.com/maps/api/js?libraries=places&#038;language=en&#038;key=AIzaSyBWoWfqptSqcHj_tAT3khy2jjj7fuANNaM&#038;ver=1.0 --}}
-</html>
-
+    </script>
 @endsection

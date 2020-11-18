@@ -11,6 +11,7 @@ class AmenityListSeeder extends Seeder
      */
     public function run()
     {
+        // newly added amenities
         \App\Models\AmenitiesList::updateOrCreate(
             [
                 'amenities_name' => 'Roku',
@@ -51,6 +52,16 @@ class AmenityListSeeder extends Seeder
             [
                 'amenities_name' => 'All Utilities Included',
                 'icon_url' => 'amenities/utilities.png',
+                'client_id' => 15465793,
+                'status' => 1,
+            ],
+        );
+        \App\Models\AmenitiesList::updateOrCreate(
+            [
+                'amenities_name' => 'Security Cameras',
+            ],
+            [
+                'amenities_name' => 'Security Cameras (Exterior)',
                 'client_id' => 15465793,
                 'status' => 1,
             ],

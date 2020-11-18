@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ProcessOwnerReminder;
 use App\Jobs\ProcessPropertyUpdateEmail;
+use App\Models\AmenitiesList;
 use App\Models\PetInformation;
 use App\Models\PropertyBlocking;
 use App\Services\Logger;
@@ -1435,6 +1436,7 @@ class PropertyController extends BaseController
                 ->where('property_amenties.property_id', '=', $property_id)
                 ->join('amenities_list', 'property_amenties.amenties_name', '=', 'amenities_list.amenities_name')
                 ->select('amenities_list.amenities_name as amenties_name', 'amenities_list.icon_url as amenties_icon')
+                ->orderBy('amenties_name', 'ASC')
                 ->get();
 
             //print_r($amenties);exit;
@@ -2099,6 +2101,10 @@ class PropertyController extends BaseController
                 break;
 
             case 6:
+                $all_amenties = AmenitiesList::where('client_id', '=', CLIENT_ID)
+                    ->where('status', "=", ONE)
+                    ->orderBy('amenities_name', 'ASC')
+                    ->get();
                 $amenties = Propertyamenties::where('property_id', $property_id)->get();
                 $stage_update = DB::table('property_list')
                     ->where('client_id', '=', CLIENT_ID)
@@ -2107,7 +2113,11 @@ class PropertyController extends BaseController
                 $client_id = CLIENT_ID;
                 //code to be executed if n=label3;
                 // print_r($amenties);exit;
-                return view('owner.add-property.6', ['amenties' => $amenties, 'property_details' => $property_details])
+                return view('owner.add-property.6', [
+                    'amenties' => $amenties,
+                    'all_amenties' => $all_amenties,
+                    'property_details' => $property_details,
+                ])
                     ->with('stage', $stage)
                     ->with('client_id', $client_id);
                 break;
@@ -2530,345 +2540,20 @@ class PropertyController extends BaseController
             ->where('client_id', CLIENT_ID)
             ->where('property_id', $request->property_id)
             ->delete();
-        if ($request->Kitchen) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Kitchen';
-            $property_aminities->amenties_icon = 'kitchen_icon';
-            $property_aminities->save();
-        }
-        if ($request->internet) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Internet';
-            $property_aminities->amenties_icon = 'Internet_icon';
-            $property_aminities->save();
-        }
-        if ($request->smoking_allowed) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Smoking Allowed';
-            $property_aminities->amenties_icon = 'Smoking_Allowed_icon';
-            $property_aminities->save();
-        }
-        if ($request->tv) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Tv';
-            $property_aminities->amenties_icon = 'Tv_icon';
-            $property_aminities->save();
-        }
-        if ($request->wheelchair_accessible) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Wheelchair Accessible';
-            $property_aminities->amenties_icon = 'Wheelchair_Accessible_icon';
-            $property_aminities->save();
-        }
-        if ($request->elevator_in_building) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Elevator in Building';
-            $property_aminities->amenties_icon = 'Elevator_in_building_icon';
-            $property_aminities->save();
-        }
-        if ($request->indoor_fireplace) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Indoor Fireplace';
-            $property_aminities->amenties_icon = 'Indoor_Fireplace_icon';
-            $property_aminities->save();
-        }
-        if ($request->heating) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Heating';
-            $property_aminities->amenties_icon = 'Heating_icon';
-            $property_aminities->save();
-        }
-        //        if ($request->essentials) {
-        //            $property_aminities = new Propertyamenties();
-        //            $property_aminities->client_id = CLIENT_ID;
-        //            $property_aminities->property_id = $request->property_id;
-        //            $property_aminities->amenties_name = 'Essentials';
-        //            $property_aminities->amenties_icon = 'Essentials_icon';
-        //            $property_aminities->save();
-        //        }
-        if ($request->roku) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Roku';
-            $property_aminities->amenties_icon = 'roku';
-            $property_aminities->save();
-        }
-        if ($request->iron) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Iron/Ironing board';
-            $property_aminities->amenties_icon = 'iron';
-            $property_aminities->save();
-        }
-
-        if ($request->door_man) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Doorman';
-            $property_aminities->amenties_icon = 'Doorman_icon';
-            $property_aminities->save();
-        }
-        if ($request->pool) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Pool';
-            $property_aminities->amenties_icon = 'Pool_icon';
-            $property_aminities->save();
-        }
-        if ($request->washer) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Washer';
-            $property_aminities->amenties_icon = 'Washer_icon';
-            $property_aminities->save();
-        }
-        if ($request->hot_tub) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Hot Tub';
-            $property_aminities->amenties_icon = 'Hot_Tub_icon';
-            $property_aminities->save();
-        }
-        if ($request->dryer) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Dryer';
-            $property_aminities->amenties_icon = 'Dryer_icon';
-            $property_aminities->save();
-        }
-        if ($request->gym) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Gym';
-            $property_aminities->amenties_icon = 'Gym_icon';
-            $property_aminities->save();
-        }
-        if ($request->free_parking_on_premises) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Free Parking on Premises';
-            $property_aminities->amenties_icon = 'Free_Parking_on_Premises_icon';
-            $property_aminities->save();
-        }
-        if ($request->wireless_internet) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Wireless Internet';
-            $property_aminities->amenties_icon = 'Wireless_Internet_icon';
-            $property_aminities->save();
-        }
-        if ($request->pets_allowed) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Pets Allowed';
-            $property_aminities->amenties_icon = 'Pets_Allowed_icon';
-            $property_aminities->save();
-        }
-        if ($request->kid_friendly) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Kid Friendly';
-            $property_aminities->amenties_icon = 'Kid_Friendly_icon';
-            $property_aminities->save();
-        }
-        if ($request->suitable_for_events) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Suitable for Events';
-            $property_aminities->amenties_icon = 'Suitable_for_Events_icon';
-            $property_aminities->save();
-        }
-        if ($request->non_smoking) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Non Smoking';
-            $property_aminities->amenties_icon = 'Non_Smoking_icon';
-            $property_aminities->save();
-        }
-        if ($request->phone) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Phone';
-            $property_aminities->amenties_icon = 'Phone_icon';
-            $property_aminities->save();
-        }
-        if ($request->projector) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Projector';
-            $property_aminities->amenties_icon = 'Projector_icon';
-            $property_aminities->save();
-        }
-        if ($request->restaurant) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Restaurant';
-            $property_aminities->amenties_icon = 'Restaurant_icon';
-            $property_aminities->save();
-        }
-        if ($request->air_conditioner) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Air Conditioner';
-            $property_aminities->amenties_icon = 'Air_Conditioner_icon';
-            $property_aminities->save();
-        }
-        if ($request->scanner_printer) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Scanner Printer';
-            $property_aminities->amenties_icon = 'Scanner_Printer_icon';
-            $property_aminities->save();
-        }
-        if ($request->fax) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Fax';
-            $property_aminities->amenties_icon = 'Fax_icon';
-            $property_aminities->save();
-        }
-        if ($request->breakfast_included) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Breakfast Included';
-            $property_aminities->amenties_icon = 'Breakfast_Included_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->Cable) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Cable';
-            $property_aminities->amenties_icon = 'cable_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->pots_and_pans) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Pots and Pans';
-            $property_aminities->amenties_icon = 'pots_and_pans_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->towels) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Towels';
-            $property_aminities->amenties_icon = 'Towels_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->garage) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Garage';
-            $property_aminities->amenties_icon = 'Garage_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->smart_tv) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Smart Tv';
-            $property_aminities->amenties_icon = 'Smart_Tv_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->utilities) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Utilities';
-            $property_aminities->amenties_icon = 'utilities';
-            $property_aminities->save();
-        }
-
-        if ($request->all_bils_included) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'All Bils Included';
-            $property_aminities->amenties_icon = 'All_Bils_Included_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->security_cameras) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Security Cameras';
-            $property_aminities->amenties_icon = 'Security_Cameras_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->computer) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Computer';
-            $property_aminities->amenties_icon = 'Computer_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->netflix) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Netflix';
-            $property_aminities->amenties_icon = 'Netflix_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->coffee_pot) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Coffee Pot';
-            $property_aminities->amenties_icon = 'Coffee_Pot_icon';
-            $property_aminities->save();
+        foreach ($request->all() as $key => $value) {
+            if (!in_array($key, ['_token', 'client_id', 'property_id'])) {
+                $icon = DB::table('amenities_list')
+                    ->select('icon_url')
+                    ->where('amenities_name', '=', $value)
+                    ->value('user_id');
+                $icon = str_replace('amenities/', '', $icon);
+                $property_aminities = new Propertyamenties();
+                $property_aminities->client_id = CLIENT_ID;
+                $property_aminities->property_id = $request->property_id;
+                $property_aminities->amenties_name = $value;
+                $property_aminities->amenties_icon = $icon;
+                $property_aminities->save();
+            }
         }
 
         //        $request_data = print_r($request->all());

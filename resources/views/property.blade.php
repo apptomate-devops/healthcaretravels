@@ -245,7 +245,7 @@
 
                     </ul>
 
-                    @if($data->room_type != "Entire Place")
+                    @if($data->room_type != "Entire Place" || $data->room_type != "RV Parking")
                         <br><h4>Current Occupancy</h4>
                         <div class="col-sm-12" id="scroll_stop">
                             <ul class="property-features margin-top-0">

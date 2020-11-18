@@ -1151,7 +1151,7 @@ class UserController extends BaseController
 
         $messages = [
             'required' => 'Please complete :attribute field',
-            'required_without' => 'Please complete this field',
+            'required_without' => 'Please complete :attribute field',
             'accepted' => 'Terms and Policy must be agreed',
             'same' => 'Password must match repeat password',
             'password1.regex' => PASSWORD_REGEX_MESSAGE,
@@ -1175,8 +1175,8 @@ class UserController extends BaseController
             // Travel Agency
             $rules["work_title"] = 'required';
             $rules["website"] = 'required|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
-            $rules["occupation"] = 'required_without:other_occupation';
-            $rules["other_occupation"] = 'required_without:occupation';
+            $rules["name_of_agency"] = 'required_without:other_agency';
+            $rules["other_agency"] = 'required_without:name_of_agency';
         } else {
             // Traveler or RV traveler
             $rules["occupation"] = 'required_without:other_occupation';

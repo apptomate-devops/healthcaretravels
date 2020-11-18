@@ -232,7 +232,7 @@
                             <td>Payment Cycle</td>
                             <td>Due Date</td>
                             <td>Covering Range</td>
-                            <td>Service Tax</td>
+                            <td>Service Fee</td>
                             <td>Cleaning Fee</td>
                             <td>Security Deposit</td>
                             <td>Monthly Rate</td>

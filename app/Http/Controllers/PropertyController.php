@@ -1223,7 +1223,7 @@ class PropertyController extends BaseController
                 }
 
                 $service_tax_entry['due_date'] = $payment['due_date'];
-                $service_tax_entry['name'] = 'Service Tax';
+                $service_tax_entry['name'] = 'Service Fee';
                 $service_tax_entry['amount'] = $payment['service_tax'];
                 $service_tax_entry['is_cleared'] = $payment['is_cleared'];
                 $service_tax_entry['status'] = $payment['status'];

@@ -261,19 +261,19 @@
                                                             <label class="control-label" for="credit-card-first-name">
                                                                 Occupation
                                                             </label>
-                                                            <input id="occupation_{{$i}}" name="guest_occupation[]" type="text" value="{{$guest_data->occupation ?? ''}}">
+                                                            <input id="occupation_{{$i}}" name="guest_occupation[]" type="text" value="{{$guest_data->occupation ?? ''}}" required>
                                                         </div>
                                                         <div class="control-group cc-last-name col-md-6">
                                                             <label class="control-label" for="credit-card-first-name">
                                                                 Phone Number
                                                             </label>
-                                                            <input class="masked_phone_us" id="phone_{{$i}}"  name="phone_number[]" type="text" value="{{$guest_data->phone_number?? ''}}">
+                                                            <input class="masked_phone_us" id="phone_{{$i}}"  name="phone_number[]" type="text" value="{{$guest_data->phone_number?? ''}}" required>
                                                         </div>
                                                         <div class="control-group cc-last-name col-md-6">
                                                             <label class="control-label" for="credit-card-first-name">
                                                                 Email
                                                             </label>
-                                                            <input id="email_{{$i}}" name="email[]" type="email" value="{{$guest_data->email ?? ''}}">
+                                                            <input id="email_{{$i}}" name="email[]" type="email" value="{{$guest_data->email ?? ''}}" required>
                                                         </div>
                                                         <div class="control-group cc-last-name col-md-6">
                                                             <label class="control-label" for="credit-card-first-name">

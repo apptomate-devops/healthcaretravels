@@ -161,7 +161,7 @@
                                                             <tr class="editable-fields">
                                                                 <td colspan="2">
                                                                     <label class="checkbox-container">
-                                                                        I agree to the <a href="{{BASE_URL}}/terms-of-use" target="_blank">Terms of Use</a>, <a href="{{BASE_URL}}/privacy-policy" target="_blank">Privacy Policy</a>, <a href="{{BASE_URL}}/policies" target="_blank">Policies</a>, <a href="{{BASE_URL}}/payment-terms" target="_blank">Payment Terms</a> and <a href="{{BASE_URL}}/non-discrimination-policy" target="_blank">Nondiscrimination Policy</a>.
+                                                                        I agree to the <a href="{{BASE_URL}}/terms-of-use" target="_blank">Terms of Use</a>, <a href="{{BASE_URL}}/privacy-policy" target="_blank">Privacy Policy</a>, <a href="{{BASE_URL}}/policies" target="_blank">Policies</a>, <a href="{{BASE_URL}}/payment-terms" target="_blank">Payment Terms</a>, <a href="{{BASE_URL}}/non-discrimination-policy" target="_blank">Nondiscrimination Policy</a> and <a href="{{URL('/')}}/cancellationpolicy">Cancellation Policy</a>.
                                                                         <input type="checkbox" required name="terms" id="terms">
                                                                         <span class="checkmark"></span>
                                                                     </label>

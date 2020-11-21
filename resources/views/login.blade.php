@@ -355,7 +355,7 @@
                             <div class="checkboxes" id="policy_accept_field" style="display: none;">
                                 <input id="policy_accept" type="checkbox" name="policy_accept" @if(Session::has('policy_accept')) checked @endif">
                                 <label for="policy_accept">
-                                    By checking and selecting Agree and Register below, I agree to Health Care Travels <a href="{{URL('/')}}/terms-of-use">Terms of Use</a>, <a href="{{URL('/')}}/privacy-policy">Privacy Policy</a>, <a href="{{URL('/')}}/policies">Policies</a>, <a href="{{URL('/')}}/payment-terms">Payment Terms</a> and <a href="{{URL('/')}}/non-discrimination-policy">Nondiscrimination Policy</a>.
+                                    By checking and selecting Agree and Register below, I agree to Health Care Travels <a href="{{URL('/')}}/terms-of-use">Terms of Use</a>, <a href="{{URL('/')}}/privacy-policy">Privacy Policy</a>, <a href="{{URL('/')}}/policies">Policies</a>, <a href="{{URL('/')}}/payment-terms">Payment Terms</a>, <a href="{{URL('/')}}/non-discrimination-policy">Nondiscrimination Policy</a> and <a href="{{URL('/')}}/cancellationpolicy">Cancellation Policy</a>.
                                     {!! $errors->first('policy_accept', '<p class="error-text-accept">Policy must be agreed</p>') !!}
                                 </label>
 

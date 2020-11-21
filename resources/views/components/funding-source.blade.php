@@ -1,9 +1,6 @@
 @php
 $buttonText = $button_label ?? 'Add Account Details';
 $hasDwollaAccount = isset($user->dwolla_customer);
-if (!$hasDwollaAccount) {
-    $buttonText = 'Agree and ' . $buttonText;
-}
 @endphp
 <div>
     <h2>{{$label ?? 'Select an Account'}}</h2>
@@ -20,7 +17,7 @@ if (!$hasDwollaAccount) {
         <div class="checkboxes mt-10" id="policy_accept_field">
             <input id="dwolla_policy_accept" type="checkbox" name="dwolla_policy_accept">
             <label for="dwolla_policy_accept">
-                By checking and selecting {{$buttonText}} below, You agree to <a target="_blank" href="https://www.dwolla.com/legal/tos/">Dwolla Terms of Service</a> and <a target="_blank" href="https://www.dwolla.com/legal/privacy/">Dwolla Privacy Policy</a>
+                By checking and selecting {{$buttonText}} below, I agree to the <a href="{{BASE_URL}}/terms-of-use" target="_blank">Terms of Use</a>, <a href="{{BASE_URL}}/privacy-policy" target="_blank">Privacy Policy</a>, <a href="{{BASE_URL}}/policies" target="_blank">Policies</a>, <a href="{{BASE_URL}}/payment-terms" target="_blank">Payment Terms</a>, <a href="{{BASE_URL}}/non-discrimination-policy" target="_blank">Nondiscrimination Policy</a> and <a href="{{URL('/')}}/cancellationpolicy">Cancellation Policy</a>.
                 <p class="error-text-accept" style="display: none">Policy must be agreed</p>
             </label>
         </div>

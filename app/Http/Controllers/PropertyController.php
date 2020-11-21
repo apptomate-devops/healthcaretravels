@@ -1150,6 +1150,14 @@ class PropertyController extends BaseController
         }
     }
 
+    public static function format_amount($amount, $sign = '+')
+    {
+        if ($amount < 0) {
+            $sign = '-';
+        }
+        return $sign . '$' . abs($amount);
+    }
+
     public static function get_payment_summary($booking, $is_owner = 0)
     {
         $grand_total = 0;
@@ -1182,30 +1190,30 @@ class PropertyController extends BaseController
                 $neat_rate = round(($payment['monthly_rate'] * $payment['is_partial_days']) / 30);
             }
             if ($is_owner == 1) {
-                $payment['amount'] = $neat_rate - $payment['service_tax'];
+                $payment['amount'] = self::format_amount($neat_rate - $payment['service_tax']);
                 $grand_total = $grand_total + $payment['total_amount'] - $payment['service_tax'];
                 $payment['covering_range'] =
                     "Covering " . $payment['covering_range'] . ", Minus $" . $payment['service_tax'] . " fee";
 
                 if ($payment['payment_cycle'] == 1) {
                     $cleaning_fee_entry['name'] = 'Cleaning Fee';
-                    $cleaning_fee_entry['amount'] = $booking->cleaning_fee;
+                    $cleaning_fee_entry['amount'] = self::format_amount($booking->cleaning_fee);
                     $cleaning_fee_entry['covering_range'] = '';
                     array_push($scheduled_payments, $cleaning_fee_entry);
                 }
             } else {
-                $payment['amount'] = $neat_rate;
+                $payment['amount'] = self::format_amount($neat_rate, '-');
                 $grand_total = $grand_total + $payment['total_amount'] + $payment['service_tax'];
 
                 if ($payment['payment_cycle'] == 1) {
                     $grand_total = $grand_total - $booking->security_deposit;
 
                     $cleaning_fee_entry['name'] = 'Cleaning Fee';
-                    $cleaning_fee_entry['amount'] = $booking->cleaning_fee;
+                    $cleaning_fee_entry['amount'] = self::format_amount($booking->cleaning_fee, '-');
                     $cleaning_fee_entry['covering_range'] = 'One-time charge';
 
                     $security_deposit_entry['name'] = 'Security Deposit';
-                    $security_deposit_entry['amount'] = $booking->security_deposit;
+                    $security_deposit_entry['amount'] = self::format_amount($booking->security_deposit, '-');
                     $security_deposit_entry['covering_range'] = 'Refunded 72 hours after check-out';
                     // Showing pending if the booking is not yet approved
                     if ($booking->status < 2) {
@@ -1222,7 +1230,7 @@ class PropertyController extends BaseController
 
                 $service_tax_entry['due_date'] = $payment['due_date'];
                 $service_tax_entry['name'] = 'Service Fee';
-                $service_tax_entry['amount'] = $payment['service_tax'];
+                $service_tax_entry['amount'] = self::format_amount($payment['service_tax'], '-');
                 $service_tax_entry['is_cleared'] = $payment['is_cleared'];
                 $service_tax_entry['status'] = $payment['status'];
                 $service_tax_entry['covering_range'] = 'One-time charge';

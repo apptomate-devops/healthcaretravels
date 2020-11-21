@@ -1177,8 +1177,10 @@ class PropertyController extends BaseController
             $security_deposit_entry = array_merge([], $payment);
             $service_tax_entry = array_merge([], $payment);
             $is_partial_days_payment = boolval($payment['is_partial_days'] ?? 0);
-            $neat_rate = $is_partial_days_payment ? $payment['total_amount'] : $payment['monthly_rate'];
-
+            $neat_rate = $payment['monthly_rate'];
+            if ($is_partial_days_payment) {
+                $neat_rate = round(($payment['monthly_rate'] * $payment['is_partial_days']) / 30);
+            }
             if ($is_owner == 1) {
                 $payment['amount'] = $neat_rate - $payment['service_tax'];
                 $grand_total = $grand_total + $payment['total_amount'] - $payment['service_tax'];
@@ -1186,11 +1188,6 @@ class PropertyController extends BaseController
                     "Covering " . $payment['covering_range'] . ", Minus $" . $payment['service_tax'] . " fee";
 
                 if ($payment['payment_cycle'] == 1) {
-                    if ($is_partial_days_payment) {
-                        // In case of partial days, add cleaning fees to neat amount
-                        $grand_total = $grand_total + $booking->cleaning_fee;
-                    }
-
                     $cleaning_fee_entry['name'] = 'Cleaning Fee';
                     $cleaning_fee_entry['amount'] = $booking->cleaning_fee;
                     $cleaning_fee_entry['covering_range'] = '';
@@ -1201,12 +1198,8 @@ class PropertyController extends BaseController
                 $grand_total = $grand_total + $payment['total_amount'] + $payment['service_tax'];
 
                 if ($payment['payment_cycle'] == 1) {
-                    if ($is_partial_days_payment) {
-                        // In case of partial days, add cleaning fees to neat amount
-                        $grand_total = $grand_total + $booking->cleaning_fee;
-                    } else {
-                        $grand_total = $grand_total - $booking->security_deposit;
-                    }
+                    $grand_total = $grand_total - $booking->security_deposit;
+
                     $cleaning_fee_entry['name'] = 'Cleaning Fee';
                     $cleaning_fee_entry['amount'] = $booking->cleaning_fee;
                     $cleaning_fee_entry['covering_range'] = 'One-time charge';
@@ -1691,6 +1684,9 @@ class PropertyController extends BaseController
 
     public function single_reservations($booking_id, Request $request)
     {
+        if (empty($booking_id)) {
+            return view('general_error', ['message' => 'We can’t find the booking you’re looking for.']);
+        }
         $data = DB::table('property_booking')
             ->leftJoin('property_list', 'property_list.id', '=', 'property_booking.property_id')
             ->where('property_booking.client_id', CLIENT_ID)

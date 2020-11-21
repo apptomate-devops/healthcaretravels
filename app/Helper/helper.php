@@ -67,9 +67,10 @@ class Helper
         $name = $user->first_name . ' ' . $user->last_name;
         $fundingSourceDetails = null;
         $subjectDate = Carbon::now()->format('m/d');
+        $amount = self::get_payable_amount($payment, $is_owner);
         $data = [
             'name' => $name,
-            'amount' => $payment->total_amount,
+            'amount' => $amount,
             'booking_id' => $booking->booking_id,
             'deposit' => $is_owner,
         ];
@@ -87,6 +88,18 @@ class Helper
         $data['accountName'] = $fundingSourceDetails->name;
         Helper::send_custom_email($user->email, $subject, $mailTemplate, $data, 'Payment Processed');
     }
+
+    public static function get_payable_amount($payment, $is_owner = 0)
+    {
+        // Total amount is rent - service for traveler
+        $amount = $payment->total_amount + $payment->service_tax;
+        if ($is_owner) {
+            // Total amount is rent - service for traveler
+            $amount = $payment->total_amount - $payment->service_tax;
+        }
+        return $amount;
+    }
+
     public static function process_booking_payment($booking_id, $payment_cycle, $is_owner = 0)
     {
         Helper::setConstantsHelper();
@@ -114,11 +127,8 @@ class Helper
                     $payment_cycle .
                     ($is_owner ? ' To Owner' : ' From Traveler'),
             );
-            // Total amount is rent - service for traveler
-            $amount = $payment->total_amount + $payment->service_tax;
+            $amount = self::get_payable_amount($payment, $is_owner);
             if ($is_owner) {
-                // Total amount is rent - service for traveler
-                $amount = $payment->total_amount - $payment->service_tax;
                 $fundingSource = $booking->owner_funding_source;
             }
             $transferDetails = null;
@@ -212,9 +222,10 @@ class Helper
 
             if (isset($payment['is_partial_days'])) {
                 $partialDayCount = $payment['is_partial_days'];
-                $neat_price = $payment['total_amount'] + $payment['service_tax']; // consider price for remaining days
+                $partial_monthly_rate = round(($payment['monthly_rate'] * $partialDayCount) / 30);
+                $neat_price = $partial_monthly_rate + $payment['service_tax']; // consider price for remaining days
                 $section = [
-                    $partialDayCount . ' Days' => $payment['total_amount'],
+                    $partialDayCount . ' Days' => $partial_monthly_rate,
                     'Processing Fee' => $payment['service_tax'],
                 ];
             } else {
@@ -659,7 +670,18 @@ class Helper
                 ->addMonth()
                 ->subDay();
             if ($i == $totalCycles && $isPartial) {
-                $data['total_amount'] = round(($data['monthly_rate'] * $partialDays) / 30);
+                $partialDaysAmount = round(($data['monthly_rate'] * $partialDays) / 30);
+
+                if ($totalCycles == 1) {
+                    // Add cleaning fee and security deposit for 1st cycle of partial days (Ex. total 30 days stay)
+                    if ($is_owner) {
+                        $partialDaysAmount += $data['cleaning_fee'];
+                    } else {
+                        $partialDaysAmount += $data['cleaning_fee'] + $data['security_deposit'];
+                    }
+                }
+
+                $data['total_amount'] = $partialDaysAmount;
                 $data['is_partial_days'] = $partialDays;
                 $covering_end_date = $covering_start_date->copy()->addDays($partialDays);
             }

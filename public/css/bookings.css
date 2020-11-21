@@ -125,6 +125,7 @@ div::-webkit-scrollbar-thumb {
     -ms-user-select: none;
     user-select: none;
     font-weight: normal;
+    text-align: left;
 }
 
 /* Hide the browser's default checkbox */

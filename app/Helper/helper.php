@@ -805,7 +805,7 @@ class Helper
         if ($owner->email != "0") {
             $content = $message;
 
-            $data = ['username' => $owner->username, 'content' => $content];
+            $data = ['username' => Helper::get_user_display_name($owner), 'content' => $content];
 
             $subject = "Enquiry for Your Property";
             $title = $traveler->username . " sends Enquiry for Your Property";

@@ -820,7 +820,7 @@ class PropertyController extends BaseController
             ->where('client_id', $client_id)
             ->where('id', $user_id)
             ->first();
-        $username = $user->first_name . ' ' . $user->last_name;
+        $username = Helper::get_user_display_name($user);
         $check = DB::table('property_list')
             ->where('client_id', $client_id)
             ->where('id', $id)

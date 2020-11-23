@@ -100,10 +100,13 @@
                     </div>
                 </div>
                 <div class="md-card-content padding-reset">
-                    <div class="md-card-toolbar" style="display: flex;align-items: center;justify-content: center; flex-direction: column;">
-                        <div>To protect your payment, always communicate and pay through Health Care Travels.</div>
-                        <div>Chats are monitored for your safety.</div>
-
+                    <div class="md-card-toolbar" style="display: flex;align-items: center;justify-content: center;flex-direction: column;">
+                        <div style="">
+                            To protect your payment, always communicate and pay through Health Care Travels.
+                        </div>
+                        <div>
+                            Chats are monitored for your safety.
+                        </div>
                     </div>
                     <div class="chat_box_wrapper" id="chat_box_wrapper" style="display:none">
                         <div class="chat_box touchscroll chat_box_colors_a" id="chat">
@@ -113,7 +116,7 @@
                             </div>
                             <img ng-hide="loader == 'yes'" src="http://52.14.214.241/public/loader.gif" style="height: 100px;margin-left: 300px;margin-top: 20px;">
 
-                            <div ng-repeat="message in messages | orderBy : 'date'" ng-hide="header == 1">
+                            <div ng-repeat="message in messages | orderBy : sortFunction" ng-hide="header == 1">
                                 <div ng-show="message.$id == 'start'"><%message.start_date%></div>
                                 <input type="hidden" name="" value="{{$traveller_id}}" ng-model="userid">
                                 <div class="chat_message_wrapper" ng-show="message.sent_by != userid">

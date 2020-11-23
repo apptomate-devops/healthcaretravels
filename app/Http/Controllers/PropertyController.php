@@ -3207,6 +3207,7 @@ class PropertyController extends BaseController
             $property = $bookingModel->property;
             $is_owner = $user_id == $booking->owner_id;
             $user = $is_owner ? $owner : $traveler;
+            $other_user = $is_owner ? $traveler : $owner;
 
             $mail_traveler = EmailConfig::where('type', 15)
                 ->where('role_id', 0)
@@ -3226,6 +3227,26 @@ class PropertyController extends BaseController
                 'text' => $content,
             ];
             $this->send_custom_email($user->email, $subject, 'mail.cancellation_request', $mail_data, $title);
+
+            // TODO: send email to other user
+
+            $other_user_mail_data = [
+                'name' => $other_user->first_name . " " . $other_user->last_name,
+                'title' => $property->title,
+                'requested_by' => $is_owner ? 'host' : 'traveler',
+                'check_in' => date('m-d-Y', strtotime($bookingModel->start_date)),
+                'check_out' => date('m-d-Y', strtotime($bookingModel->end_date)),
+                'cancellation_reason' => $request->cancellation_reason,
+                'cancellation_explanation' => $request->cancellation_explanation,
+            ];
+            Logger::info('Sending email to ' . $other_user->email . ' with data ' . json_encode($other_user_mail_data));
+            $this->send_custom_email(
+                $other_user->email,
+                "Booking Cancellation Requested for " . $property->title,
+                'mail.cancellation_request_another_user',
+                $other_user_mail_data,
+                $title,
+            );
 
             // TODO: send email to Admin: support@healthcaretravels.com
             $mail_data_admin = [
@@ -3253,7 +3274,7 @@ class PropertyController extends BaseController
                 'You have successfully requested cancellation for this booking, we will contact you soon!',
             );
         } catch (\Exception $ex) {
-            Logger::error('Error sending email to: Error: ' . $ex->getMessage());
+            Logger::error('Error Submitting request for cancelllation: ' . $ex->getMessage());
             return back()->withErrors([$ex->getMessage()]);
         }
     }

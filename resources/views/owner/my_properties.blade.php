@@ -88,12 +88,12 @@
                                                 <h4 class="modal-title" id="exampleModalLabel"><b><span style="color:red">Warning</span></b></h4>
                                             </div>
                                             <div class="modal-body">
-                                                Are you sure you want to delete this property
+                                                Are you sure you want to delete this property?
                                                 <br> <br>
                                                 <span style="float: right;">
-            	<a href="{{BASE_URL}}delete-property/{{$property->propertyId}}"><button type="button" class="btn btn-primary" >Yes</button></a>
+            	<a href="{{BASE_URL}}delete-property/{{$property->id}}"><button type="button" class="btn btn-primary" >Yes</button></a>
             	{{-- <a href="{{BASE_URL}}delete-property/"><button type="button" class="btn btn-primary" >Yes</button></a>  --}}
-            	<a href=""><button type="button" class="btn btn-danger">No</button></a>
+            	<a href=""><button type="button" class="btn btn-danger" style="width: 60px;">No</button></a>
             </span>
                                                 <br> <br>
                                             </div>

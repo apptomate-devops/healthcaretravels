@@ -51,7 +51,7 @@
                                             <th>Booking ID</th>
                                             <th>Property Title</th>
                                             <th>Owner</th>
-                                            <th>Traveller</th>
+                                            <th>Traveler</th>
                                             <th>Start Date</th>
                                             <th>End Date</th>
                                             <th>Status</th>
@@ -97,8 +97,8 @@
                                             <td>
                                                 <a href="{{BASE_URL}}admin/bookings/{{$booking->id}}">
                                                     <span class="btn btn-success btn-default btn-block">
-                                                        View 
-                                                    </span> 
+                                                        View
+                                                    </span>
                                                 </a>
                                             </td>
                                         </tr>

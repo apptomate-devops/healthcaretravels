@@ -56,13 +56,13 @@
                                             <td>Vishnu</td>
                                             <td>krishna</td>
                                             <td>$600</td>
-                                            <td>Vishnu (Traveller)</td>
+                                            <td>Vishnu (Traveler)</td>
                                             <td>In Process</td>
                                             <td>
                                                 <fieldset class="form-group">
                                                     <select class="form-control" id="basicSelect" style="width: 200px;">
                                                         <option>Make..</option>
-                                                        <option>Approve To Traveller</option>
+                                                        <option>Approve To Traveler</option>
                                                         <option>Approve To Host</option>
                                                     </select>
                                                 </fieldset>
@@ -81,7 +81,7 @@
                                                 <fieldset class="form-group">
                                                     <select class="form-control" id="basicSelect" style="width: 200px;">
                                                         <option>Make..</option>
-                                                        <option>Approve To Traveller</option>
+                                                        <option>Approve To Traveler</option>
                                                         <option>Approve To Host</option>
                                                     </select>
                                                 </fieldset>

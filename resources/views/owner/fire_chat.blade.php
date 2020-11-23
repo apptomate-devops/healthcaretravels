@@ -111,8 +111,8 @@
                     <div class="chat_box_wrapper" id="chat_box_wrapper" style="display: none">
                         <div class="chat_box touchscroll chat_box_colors_a" id="chat">
 
-                            <div ng-repeat="message in messages | orderBy : 'date.date'" ng-hide="header == 1">
-                                <div ng-show="message.id == 'start'"><%message.start_date%></div>
+                            <div ng-repeat="message in messages | orderBy : sortFunction" ng-hide="header == 1">
+                                <!-- <div ng-show="message.id == 'start'"><%message.start_date%></div> -->
                                 <input type="hidden" name="" value="{{$owner->id}}" ng-model="userid">
                                 <div class="chat_message_wrapper" ng-show="message.sent_by != userid">
                                     <div class="chat_user_avatar">
@@ -360,7 +360,12 @@
             var product = $firebaseObject(ref)
             product.$remove();
         };
-
+        $scope.sortFunction = function(data) {
+            if(typeof data.date === 'string') {
+                return moment(data.date);
+            }
+            return moment(data.date.date);
+        };
         $scope.markAsRead = function(messages) {
             var updates = {};
             messages.forEach(function(message) {

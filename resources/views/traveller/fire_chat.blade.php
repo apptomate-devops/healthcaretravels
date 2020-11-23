@@ -116,7 +116,7 @@
                             </div>
                             <img ng-hide="loader == 'yes'" src="http://52.14.214.241/public/loader.gif" style="height: 100px;margin-left: 300px;margin-top: 20px;">
 
-                            <div ng-repeat="message in messages | orderBy : 'date.date'" ng-hide="header == 1">
+                            <div ng-repeat="message in messages | orderBy : sortFunction" ng-hide="header == 1">
                                 <div ng-show="message.$id == 'start'"><%message.start_date%></div>
                                 <input type="hidden" name="" value="{{$traveller_id}}" ng-model="userid">
                                 <div class="chat_message_wrapper" ng-show="message.sent_by != userid">
@@ -373,6 +373,13 @@
             var ref = new Firebase('{{FB_URL}}' + node_name + '/' + request_id + '/' + id);
             var product = $firebaseObject(ref)
             product.$remove();
+        };
+
+        $scope.sortFunction = function(data) {
+            if(typeof data.date === 'string') {
+                return moment(data.date);
+            }
+            return moment(data.date.date);
         };
 
         $scope.markAsRead = function(messages) {

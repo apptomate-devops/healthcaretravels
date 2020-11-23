@@ -423,17 +423,34 @@ class BaseController extends ConstantsController
         return RADIUS;
     }
 
+    public static function date_compare($a, $b)
+    {
+        error_log(json_encode($b) . gettype($a->date));
+        if (gettype($a->date) == "string") {
+            $t1 = strtotime($a->date);
+        } else {
+            $t1 = strtotime($a->date->date);
+        }
+        if (gettype($b->date) == "string") {
+            $t2 = strtotime($b->date);
+        } else {
+            $t2 = strtotime($b->date->date);
+        }
+        return $t1 - $t2;
+    }
+
     public function get_firebase_last_message($key, $id)
     {
         $data = file_get_contents(FB_URL . $key . "/" . $id . "/.json");
         $data = json_decode($data);
         $data = (array) $data;
-        $d = count($data);
+
+        usort($data, [$this, 'date_compare']);
         $numItems = count($data);
         $i = 0;
         foreach ($data as $key => $value) {
             if (++$i === $numItems) {
-                return $value->message;
+                return $value;
             }
         }
     }

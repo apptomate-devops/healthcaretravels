@@ -370,6 +370,13 @@
             });
         })
 
+        $scope.sortFunction = function(data) {
+            if(typeof data.date === 'string') {
+                return moment(data.date);
+            }
+            return moment(data.date.date);
+        };
+
         $scope.userid = '{{$traveller_id}}';
         $scope.removeProduct = function(id) {
             var ref = new Firebase('{{FB_URL}}' + node_name + '/' + request_id + '/' + id);

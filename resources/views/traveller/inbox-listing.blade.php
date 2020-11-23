@@ -45,7 +45,6 @@
                             <div class="title">
                                 <h4><a href="#">{{Helper::get_user_display_name($property->owner)}}</a></h4>
                                 <span> {{$property->last_message}} </span>
-
                             </div>
                         </td>
 
@@ -102,8 +101,8 @@
                             @endif
                             <div class="title">
                                 <h4><a href="#">{{Helper::get_user_display_name($property->owner)}}</a></h4>
-                                <span> {{$property->last_message}} </span>
-
+                                <span> {{$property->last_message->username}}: {{$property->last_message->message}} </span><br/>
+                                <span> {{$property->last_message->status}} {{$property->last_message->time}} {{$property->last_message->date}} </span>
                             </div>
                         </td>
                         <td class="action">

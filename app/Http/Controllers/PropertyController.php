@@ -697,7 +697,22 @@ class PropertyController extends BaseController
             ) {
                 $request_chat->has_unread_message = true;
             }
-            $request_chat->last_message = $this->get_firebase_last_message('personal_chat', $request_chat->id);
+            $last_message = $this->get_firebase_last_message('personal_chat', $request_chat->id);
+
+            if ($last_message->sent_by == $request_chat->owner->id) {
+                $last_message->username = Helper::get_user_display_name($request_chat->owner);
+            } else {
+                $last_message->username = Helper::get_user_display_name($request_chat->traveller);
+            }
+            if ($last_message->sent_by == $user_id) {
+                $last_message->status = 'Sent';
+            } else {
+                $last_message->status = 'Received';
+            }
+            $date = strtotime($last_message->date);
+            $last_message->date = date('m/d/Y', $date);
+            $last_message->time = date('h:m a', $date);
+            $request_chat->last_message = $last_message;
         }
 
         $results = [];
@@ -790,7 +805,22 @@ class PropertyController extends BaseController
             ) {
                 $request_chat->has_unread_message = true;
             }
-            $request_chat->last_message = $this->get_firebase_last_message('personal_chat', $request_chat->id);
+            $last_message = $this->get_firebase_last_message('personal_chat', $request_chat->id);
+
+            if ($last_message->sent_by == $request_chat->owner->id) {
+                $last_message->username = Helper::get_user_display_name($request_chat->owner);
+            } else {
+                $last_message->username = Helper::get_user_display_name($request_chat->traveller);
+            }
+            if ($last_message->sent_by == $user_id) {
+                $last_message->status = 'Sent';
+            } else {
+                $last_message->status = 'Received';
+            }
+            $date = strtotime($last_message->date);
+            $last_message->date = date('m/d/Y', $date);
+            $last_message->time = date('h:m a', $date);
+            $request_chat->last_message = $last_message;
         }
 
         $results = [];

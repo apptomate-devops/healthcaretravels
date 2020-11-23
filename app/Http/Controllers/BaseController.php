@@ -439,8 +439,9 @@ class BaseController extends ConstantsController
         return $t1 - $t2;
     }
 
-    public function get_firebase_last_message($key, $id)
+    public function get_firebase_last_message($key, $request_chat, $user_id)
     {
+        $id = $request_chat->id;
         $data = file_get_contents(FB_URL . $key . "/" . $id . "/.json");
         $data = json_decode($data);
         $data = (array) $data;
@@ -448,11 +449,28 @@ class BaseController extends ConstantsController
         usort($data, [$this, 'date_compare']);
         $numItems = count($data);
         $i = 0;
+        $last_message = null;
         foreach ($data as $key => $value) {
             if (++$i === $numItems) {
-                return $value;
+                $last_message = $value;
+                break;
             }
         }
+
+        if ($last_message->sent_by == $request_chat->owner->id) {
+            $last_message->username = Helper::get_user_display_name($request_chat->owner);
+        } else {
+            $last_message->username = Helper::get_user_display_name($request_chat->traveller);
+        }
+        if ($last_message->sent_by == $user_id) {
+            $last_message->status = 'Sent';
+        } else {
+            $last_message->status = 'Received';
+        }
+        $date = strtotime($last_message->date);
+        $last_message->date = date('m/d/Y', $date);
+        $last_message->time = date('h:i a', $date);
+        return $last_message;
     }
 
     public function image_upload($width, $height, $image)

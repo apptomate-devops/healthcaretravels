@@ -865,7 +865,7 @@ class PropertyController extends BaseController
                 $mail_data = [
                     'traveler' => $traveler,
                     'owner' => $owner,
-                    'mail_to' => 'traveller',
+                    'mail_to' => 'traveler',
                     'booking_id' => $booking->booking_id,
                     'property_title' => $booking->title,
                     'property_room_type' => $booking->room_type,

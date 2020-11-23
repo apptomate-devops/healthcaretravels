@@ -16,9 +16,9 @@
         <br>
         <b>Owner Email:</b> {{$owner->email}}
         <br>
-        <b>Traveller Name:</b> {{$traveler->first_name . ' ' . $traveler->last_name}}
+        <b>Traveler Name:</b> {{$traveler->first_name . ' ' . $traveler->last_name}}
         <br>
-        <b>Traveller Email:</b> {{$traveler->email}}
+        <b>Traveler Email:</b> {{$traveler->email}}
         <br>
         <b>Reason:</b> {{$reason}}
         <br>

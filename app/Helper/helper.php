@@ -1195,4 +1195,15 @@ class Helper
         }
         return ucwords($displayName);
     }
+    public static function get_formatted_amount_for_admin($amount, $is_owner = 0, $forced_sign = null)
+    {
+        if ($forced_sign) {
+            return $forced_sign . '$' . $amount;
+        }
+        if ($is_owner) {
+            return '+$' . $amount;
+        } else {
+            return '-$' . $amount;
+        }
+    }
 }

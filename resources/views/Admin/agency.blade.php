@@ -16,7 +16,7 @@
 </style>
 <div class="content-header row">
     <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
-        <h3 class="content-header-title mb-0 d-inline-block">Traveller Agency <small>Management</small></h3>
+        <h3 class="content-header-title mb-0 d-inline-block">Traveler Agency <small>Management</small></h3>
         <div class="row breadcrumbs-top d-inline-block float-md-right">
             <div class="breadcrumb-wrapper  col-12">
                 <ol class="breadcrumb">

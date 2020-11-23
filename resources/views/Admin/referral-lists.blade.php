@@ -59,7 +59,7 @@
                                     <thead>
                                     <tr>
                                         <th>S. No.</th>
-                                        <th>Traveller</th>
+                                        <th>Traveler</th>
                                         <th>Host</th>
                                         <th>Referred By</th>
                                         <th>Referral Amount</th>
@@ -94,7 +94,7 @@
                                     <tfoot>
                                     <tr>
                                         <th>S. No.</th>
-                                        <th>Traveller</th>
+                                        <th>Traveler</th>
                                         <th>Host</th>
                                         <th>Referred By</th>
                                         <th>Referral Amount</th>

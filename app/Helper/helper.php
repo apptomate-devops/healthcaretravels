@@ -91,10 +91,10 @@ class Helper
 
     public static function get_payable_amount($payment, $is_owner = 0)
     {
-        // Total amount is rent - service for traveler
+        // Total amount is rent + service for traveler
         $amount = $payment->total_amount + $payment->service_tax;
         if ($is_owner) {
-            // Total amount is rent - service for traveler
+            // Total amount is rent - service for owner
             $amount = $payment->total_amount - $payment->service_tax;
         }
         return $amount;

@@ -980,6 +980,7 @@ class PropertyController extends BaseController
             $query = $property_list_obj->select('property_list.*')->where([
                 'is_complete' => ACTIVE,
                 'status' => 1,
+                'is_disable' => 0,
                 'property_status' => 1,
             ]);
 
@@ -1505,6 +1506,7 @@ class PropertyController extends BaseController
             ->where('property_list.is_complete', '=', ACTIVE)
             ->where('property_list.property_status', '=', 1)
             ->where('property_list.status', '=', 1)
+            ->where('property_list.is_disable', '=', ZERO)
             ->where('property_list.id', '!=', $property_id)
             ->select(
                 'property_list.title',

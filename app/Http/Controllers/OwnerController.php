@@ -316,6 +316,7 @@ class OwnerController extends BaseController
         }
         $properties = DB::table('property_list')
             ->join('property_room', 'property_room.property_id', '=', 'property_list.id')
+            ->where('property_list.is_disable', '=', ZERO)
             ->where('property_list.user_id', $id)
             ->get();
         $current_date = date('Y-m-d H:i:s');

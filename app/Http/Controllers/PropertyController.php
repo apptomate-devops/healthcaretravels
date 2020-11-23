@@ -453,15 +453,15 @@ class PropertyController extends BaseController
                 ->where('client_id', CLIENT_ID)
                 ->where('id', $id)
                 ->update(['owner_visible' => 0]);
+            return redirect('owner/inbox');
         }
         if ($chat->traveller_id == $user_id) {
             DB::table('personal_chat')
                 ->where('client_id', CLIENT_ID)
                 ->where('id', $id)
                 ->update(['traveler_visible' => 0]);
+            return redirect('traveler/inbox');
         }
-
-        return redirect('owner/inbox');
     }
 
     public function delete_property_image($id)

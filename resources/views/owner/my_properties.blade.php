@@ -95,7 +95,8 @@
             	{{-- <a href="{{BASE_URL}}delete-property/"><button type="button" class="btn btn-primary" >Yes</button></a>  --}}
             	<a href=""><button type="button" class="btn btn-danger" style="width: 60px;">No</button></a>
             </span>
-                                                <br> <br>
+                                                <br>
+                                                <br>
                                             </div>
                                             {{-- <div class="modal-footer">
                                               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

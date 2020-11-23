@@ -932,13 +932,15 @@ class PropertyController extends BaseController
             $traveller = DB::select(
                 "SELECT first_name, last_name, username, id FROM users WHERE client_id = CLIENT_ID AND id = $datum->owner_id LIMIT 1",
             );
-
             $image = DB::table('property_images')
                 ->where('client_id', CLIENT_ID)
                 ->where('property_id', $datum->property_id)
                 ->orderBy('is_cover', 'desc')
                 ->first();
-            $datum->image_url = $image->image_url;
+            $datum->image_url = '';
+            if ($image) {
+                $datum->image_url = $image->image_url;
+            }
             $datum->owner_name = Helper::get_user_display_name($traveller[0]);
             $datum->owner_id = $traveller[0]->id;
             $datum->start_date = Carbon::parse($datum->start_date)->format('m/d/Y');
@@ -3126,22 +3128,22 @@ class PropertyController extends BaseController
             ->where('property_id', $property_id)
             ->delete();
         // DB::table('property_short_term_pricing')->where('client_id', CLIENT_ID)->where('property_id', $property_id)->delete();
-        DB::table('property_images')
-            ->where('client_id', CLIENT_ID)
-            ->where('property_id', $property_id)
-            ->delete();
-        DB::table('property_rating')
-            ->where('client_id', CLIENT_ID)
-            ->where('property_id', $property_id)
-            ->delete();
-        DB::table('property_review')
-            ->where('client_id', CLIENT_ID)
-            ->where('property_id', $property_id)
-            ->delete();
-        DB::table('property_room')
-            ->where('client_id', CLIENT_ID)
-            ->where('property_id', $property_id)
-            ->delete();
+        //        DB::table('property_images')
+        //            ->where('client_id', CLIENT_ID)
+        //            ->where('property_id', $property_id)
+        //            ->delete();
+        //        DB::table('property_rating')
+        //            ->where('client_id', CLIENT_ID)
+        //            ->where('property_id', $property_id)
+        //            ->delete();
+        //        DB::table('property_review')
+        //            ->where('client_id', CLIENT_ID)
+        //            ->where('property_id', $property_id)
+        //            ->delete();
+        //        DB::table('property_room')
+        //            ->where('client_id', CLIENT_ID)
+        //            ->where('property_id', $property_id)
+        //            ->delete();
         return back()->with('success', 'Property removed successfully');
     }
 

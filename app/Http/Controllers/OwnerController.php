@@ -256,8 +256,12 @@ class OwnerController extends BaseController
             $image = DB::table('property_images')
                 ->where('client_id', CLIENT_ID)
                 ->where('property_id', $datum->property_id)
+                ->orderBy('is_cover', 'desc')
                 ->first();
-            $datum->image_url = $image->image_url;
+            $datum->image_url = '';
+            if ($image) {
+                $datum->image_url = $image->image_url;
+            }
             if ($traveller->role_id != 2) {
                 $datum->traveller_name = Helper::get_user_display_name($traveller);
             } else {

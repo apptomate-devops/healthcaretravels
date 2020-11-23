@@ -690,8 +690,7 @@ class UserController extends BaseController
             'city' => $request->city,
             'postal_code' => $request->pin_code,
         ];
-        // NOTE: Checking it as 0 as the value stored in database is inverted
-        if ($email_opt == 0) {
+        if ($email_opt == 1) {
             $this->sendgrid->addUserToMarketingList($sendgridUserData);
         } else {
             $this->sendgrid->addUserToNoContactList($sendgridUserData);

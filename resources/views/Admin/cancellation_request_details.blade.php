@@ -42,7 +42,7 @@
                                     <div class="details"><b>Cancellation Status: </b><span>{{$booking->cancellation_requested == 3 ? 'In Progress' : ($booking->cancellation_requested == 2 ? 'Completed' : 'Pending') }}</span></div>
                                     <div class="details"><b>Cancellation Reason: </b><span>{{$booking->cancellation_reason}}</span></div>
                                     <div class="details"><b>Explanation: </b><span>{{$booking->cancellation_explanation}}</span></div>
-                                    <div class="details"><b>Has the traveler checked in to this property?: </b><span>{{$booking->already_checked_in ? 'Yes' : 'No'}}</span></div>
+                                    <div class="details"><b>Has the traveler checked into this property?: </b><span>{{$booking->already_checked_in ? 'Yes' : 'No'}}</span></div>
 
 {{--                                TODO: confirm if we need to make the request in progress fiorst or allow direct cancellation for request --}}
                                     @if($booking->cancellation_requested == 1 || $booking->cancellation_requested == 3)

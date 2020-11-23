@@ -48,7 +48,7 @@
                                     <label for="cancellation_explanation" style="margin-top: 10px;">Add an explanation</label>
                                     <textarea id="cancellation_explanation" name="cancellation_explanation" required></textarea>
                                 </div>
-                                <h3 class="margin-top-40">Has the traveler checked in to this property?</h3>
+                                <h3 class="margin-top-40">Has the traveler checked into this property?</h3>
                                 <div class="checkboxes in-row">
                                     <input id="checked_in_yes" name="checked_in" type="checkbox" value="1">
                                     <label for="checked_in_yes">Yes</label>

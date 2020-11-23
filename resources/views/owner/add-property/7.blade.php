@@ -6,6 +6,7 @@
 
             <div class="col-md-12">
 
+                <hr>
                 <div class="style-1">
 
                     <div class="dashboard-header">

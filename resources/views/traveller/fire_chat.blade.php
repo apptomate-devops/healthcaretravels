@@ -294,6 +294,8 @@
                 'Bank',
                 'Money',
                 'Text ',
+                'FB',
+                'IG'
             ];
 
             var isEvery = checkInput(str, arr);

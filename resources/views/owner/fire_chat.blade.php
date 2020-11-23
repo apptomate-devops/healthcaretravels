@@ -362,12 +362,7 @@
             var product = $firebaseObject(ref)
             product.$remove();
         };
-        $scope.sortFunction = function(data) {
-            if(typeof data.date === 'string') {
-                return moment(data.date);
-            }
-            return moment(data.date.date);
-        };
+
         $scope.markAsRead = function(messages) {
             var updates = {};
             messages.forEach(function(message) {

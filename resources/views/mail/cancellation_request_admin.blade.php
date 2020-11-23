@@ -24,6 +24,6 @@
         <br>
         <b>Explanation:</b> {{$explanation}}
         <br>
-        <b>Has the traveler checked in to this property?:</b> {{$checked_in}}
+        <b>Has the traveler checked into this property?:</b> {{$checked_in}}
     </div>
 @endsection

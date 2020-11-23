@@ -67,7 +67,7 @@
         <tr>
             <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
             <td>{{$payment['name'] ?? 'Housing Payment'}}</td>
-            <td>${{$payment['amount']}}</td>
+            <td>{{$payment['amount']}}</td>
             <td>
                 <p>
                     <b>{{Helper::get_payment_status($payment)}}</b>
@@ -80,7 +80,7 @@
         <tr style="height: 54px;">
             <td>{{\Carbon\Carbon::parse($data->end_date)->addHours(72)->format('m/d/Y')}}</td>
             <td>Security Deposit</td>
-            <td>${{$data->traveler_cut}}</td>
+            <td>{{\App\Http\Controllers\PropertyController::format_amount($data->traveler_cut)}}</td>
             <td>
                 <b>{{Helper::get_security_payment_status($data)}}</b>
             </td>
@@ -95,7 +95,7 @@
         </th>
         <th colspan="4" style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
             <p style="color: #000;font-size: 35px;">
-                <b>$  {{$data->grand_total}}</b>
+                <b>{{\App\Http\Controllers\PropertyController::format_amount($data->grand_total)}}</b>
             </p>
         </th>
 

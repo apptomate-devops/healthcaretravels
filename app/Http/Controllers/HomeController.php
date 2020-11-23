@@ -378,7 +378,7 @@ class HomeController extends BaseController
         if ($user->role_id == 2) {
             $username = $user->name_of_agency;
         } else {
-            $username = $user->first_name . " " . $user->last_name;
+            $username = Helper::get_user_display_name($user);
         }
         $data = [
             'content' =>

@@ -44,7 +44,7 @@
             <div class="details"><b>Cancellation Status: </b><span>{{$booking->cancellation_requested == 3 ? 'In Progress' : ($booking->cancellation_requested == 2 ? 'Completed' : 'Pending') }}</span></div>
             <div class="details"><b>Cancellation Reason: </b><span>{{$booking->cancellation_reason}}</span></div>
             <div class="details"><b>Explanation: </b><span>{{$booking->cancellation_explanation}}</span></div>
-            <div class="details"><b>Has the traveler checked in to this property?: </b><span>{{$booking->already_checked_in ? 'Yes' : 'No'}}</span></div>
+            <div class="details"><b>Has the traveler checked into this property?: </b><span>{{$booking->already_checked_in ? 'Yes' : 'No'}}</span></div>
             <div class="details"><b>Start Date: </b><span>{{date('m-d-Y',strtotime($booking->start_date))}}</span></div>
             <div class="details"><b>End Date: </b><span>{{date('m-d-Y',strtotime($booking->end_date))}}</span></div>
             <div class="details"><b>Status: </b><span>@if($booking->status == 1)
@@ -93,7 +93,7 @@
                         <textarea class="form-control" id="cancellation_explanation" name="cancellation_explanation" required></textarea>
                     </div>
                     <div class="form-group">
-                        <h5 class="margin-top-40">Has the traveler checked in to this property?</h5>
+                        <h5 class="margin-top-40">Has the traveler checked into this property?</h5>
                         <div class="checkboxes in-row">
                             <input id="checked_in_yes" name="checked_in" type="checkbox" value="1">
                             <label for="checked_in_yes">Yes</label>

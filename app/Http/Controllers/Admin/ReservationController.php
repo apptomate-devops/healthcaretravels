@@ -176,8 +176,8 @@ class ReservationController extends BaseController
         $subject = "Booking Cancelled";
         $mail_data = [
             'property_title' => $property->title,
-            'check_in' => date('d-m-Y', strtotime($data->start_date)),
-            'check_out' => date('d-m-Y', strtotime($data->check_out)),
+            'check_in' => date('m-d-Y', strtotime($data->start_date)),
+            'check_out' => date('m-d-Y', strtotime($data->end_date)),
             'traveler_name' => Helper::get_user_display_name($traveller),
             'owner_name' => Helper::get_user_display_name($owner),
             'cancellation_reason' => $request->cancellation_reason,

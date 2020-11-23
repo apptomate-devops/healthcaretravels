@@ -3032,6 +3032,11 @@ class PropertyController extends BaseController
                         ->where('property_id', $property_id)
                         ->where('id', $cover_image_id)
                         ->update(['is_cover' => 1]);
+                } else {
+                    DB::table('property_images')
+                        ->where('property_id', $property_id)
+                        ->first()
+                        ->update(['is_cover' => 1]);
                 }
             }
         }

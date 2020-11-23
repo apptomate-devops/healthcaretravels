@@ -335,7 +335,7 @@ class Helper
         }
     }
 
-    public static function get_traveller_status($status, $start_date, $end_date)
+    public static function get_traveller_status($status, $start_date, $end_date, $cancellation_requested = 0)
     {
         switch ($status) {
             case 1:
@@ -344,6 +344,9 @@ class Helper
                 $now = Carbon::now()->startOfDay();
                 $booking_starts_on = Carbon::parse($start_date)->startOfDay();
                 $booking_ends_on = Carbon::parse($end_date)->startOfDay();
+                if ($cancellation_requested) {
+                    return 'Cancellation Pending';
+                }
                 if ($now->between($booking_starts_on, $booking_ends_on)) {
                     return 'Happening Now';
                 }

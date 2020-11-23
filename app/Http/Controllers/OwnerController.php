@@ -265,7 +265,12 @@ class OwnerController extends BaseController
             }
             $datum->start_date = Carbon::parse($datum->start_date)->format('m/d/Y');
             $datum->end_date = Carbon::parse($datum->end_date)->format('m/d/Y');
-            $datum->bookStatus = Helper::get_traveller_status($datum->status, $datum->start_date, $datum->end_date);
+            $datum->bookStatus = Helper::get_traveller_status(
+                $datum->status,
+                $datum->start_date,
+                $datum->end_date,
+                $datum->cancellation_requested,
+            );
             if ($datum->status < 2) {
                 array_push($booking_requests, $datum);
             } else {

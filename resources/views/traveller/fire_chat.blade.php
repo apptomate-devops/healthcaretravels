@@ -100,9 +100,12 @@
                     </div>
                 </div>
                 <div class="md-card-content padding-reset">
-                    <div class="md-card-toolbar" style="display: flex;align-items: center;justify-content: center;">
+                    <div class="md-card-toolbar" style="display: flex;align-items: center;justify-content: center;flex-direction: column;">
                         <div style="">
                             To protect your payment, always communicate and pay through Health Care Travels.
+                        </div>
+                        <div>
+                            Chats are monitored for your safety.
                         </div>
                     </div>
                     <div class="chat_box_wrapper" id="chat_box_wrapper" style="display:none">

@@ -3005,7 +3005,7 @@ class PropertyController extends BaseController
         return view('owner.my_properties', ['properties' => $properties_near]);
     }
 
-    public function property_image_upload($cover_id, Request $request)
+    public function property_image_upload($cover_id = null, Request $request)
     {
         //
         $property_id = $request->session()->get('property_id');
@@ -3035,10 +3035,16 @@ class PropertyController extends BaseController
                         ->where('id', $cover_image_id)
                         ->update(['is_cover' => 1]);
                 } else {
-                    DB::table('property_images')
+                    $cover_image_available = DB::table('property_images')
                         ->where('property_id', $property_id)
-                        ->first()
-                        ->update(['is_cover' => 1]);
+                        ->where('is_cover', '=', 1)
+                        ->first();
+                    if (!$cover_image_available) {
+                        DB::table('property_images')
+                            ->where("property_id", '=', $property_id)
+                            ->limit(1)
+                            ->update(['is_cover' => 1]);
+                    }
                 }
             }
         }

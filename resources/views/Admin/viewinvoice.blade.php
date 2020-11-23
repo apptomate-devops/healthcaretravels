@@ -67,7 +67,7 @@
                     </div>
                     <div class="col-md-6 col-sm-12 text-center text-md-left">
                         <ul class="px-0 list-unstyled">
-                            <li class="text-bold-800">Traveller Details</li>
+                            <li class="text-bold-800">Traveler Details</li>
                             <li>Address,</li>
                             <li></li>
                             <li></li>

@@ -133,6 +133,7 @@ class HomeController extends BaseController
             ->where('property_list.property_status', '=', 1)
             ->where('property_list.status', '=', 1)
             ->where('property_list.is_complete', '=', ACTIVE)
+            ->where('property_list.is_disable', '=', ZERO)
             ->select(
                 'property_list.title',
                 'property_list.monthly_rate',

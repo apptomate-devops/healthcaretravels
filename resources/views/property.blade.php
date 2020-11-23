@@ -766,7 +766,9 @@
 
                                 </div>
                                 @if(Session::get('user_id') !=  $data->user_id)
-                                    @if(!Session::get('user_id'))
+                                    @if (isset($data->is_disable) && $data->is_disable == 1)
+                                        <center><h4 class="margin-top-30">This Property is disabled</h4></center>
+                                    @elseif(!Session::get('user_id'))
                                         <button onclick="location.href='{{BASE_URL}}login';" class="button fullwidth margin-top-5">
                                             Login to Book
                                         </button>

@@ -346,7 +346,7 @@
 
                             <div class="checkboxes" id="email_opt_field" style="display: none;">
                                 <input id="email_opt" type="checkbox" name="email_opt" checked>
-                                <label for="email_opt">I would like to receive marketing messages and offers from Health Care Travels. I can also opt out of receiving these at any time by emailing
+                                <label for="email_opt">I would like to receive any offers and promotional emails from Health Care Travels. I can also opt out of receiving these at any time by emailing
                                     <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com.</a>
                                     {{--                                {!! $errors->first('email_opt', '<p class="error-text-accept">:message</p>') !!}--}}
                                 </label>
@@ -1013,11 +1013,11 @@
         }
     }
 
-    $("[data-strength]").focus(function() {
+    $("input[name='password1']").focus(function() {
         $("#password-strength, #password-strength-text, #password_message").show();
     });
 
-    $("[data-strength]").keyup(function() {
+    $("input[name='password1']").keyup(function() {
         strength = 0;
         var password = $(this).val();
         passwordCheck(password);

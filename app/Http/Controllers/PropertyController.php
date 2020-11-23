@@ -867,7 +867,7 @@ class PropertyController extends BaseController
                 $mail_data = [
                     'traveler' => $traveler,
                     'owner' => $owner,
-                    'mail_to' => 'traveller',
+                    'mail_to' => 'traveler',
                     'booking_id' => $booking->booking_id,
                     'property_title' => $booking->title,
                     'property_room_type' => $booking->room_type,
@@ -982,6 +982,7 @@ class PropertyController extends BaseController
             $query = $property_list_obj->select('property_list.*')->where([
                 'is_complete' => ACTIVE,
                 'status' => 1,
+                'is_disable' => 0,
                 'property_status' => 1,
             ]);
 
@@ -1507,6 +1508,7 @@ class PropertyController extends BaseController
             ->where('property_list.is_complete', '=', ACTIVE)
             ->where('property_list.property_status', '=', 1)
             ->where('property_list.status', '=', 1)
+            ->where('property_list.is_disable', '=', ZERO)
             ->where('property_list.id', '!=', $property_id)
             ->select(
                 'property_list.title',
@@ -3034,6 +3036,11 @@ class PropertyController extends BaseController
                         ->where('property_id', $property_id)
                         ->where('id', $cover_image_id)
                         ->update(['is_cover' => 1]);
+                } else {
+                    DB::table('property_images')
+                        ->where('property_id', $property_id)
+                        ->first()
+                        ->update(['is_cover' => 1]);
                 }
             }
         }
@@ -3204,6 +3211,7 @@ class PropertyController extends BaseController
             $property = $bookingModel->property;
             $is_owner = $user_id == $booking->owner_id;
             $user = $is_owner ? $owner : $traveler;
+            $other_user = $is_owner ? $traveler : $owner;
 
             $mail_traveler = EmailConfig::where('type', 15)
                 ->where('role_id', 0)
@@ -3223,6 +3231,26 @@ class PropertyController extends BaseController
                 'text' => $content,
             ];
             $this->send_custom_email($user->email, $subject, 'mail.cancellation_request', $mail_data, $title);
+
+            // TODO: send email to other user
+
+            $other_user_mail_data = [
+                'name' => $other_user->first_name . " " . $other_user->last_name,
+                'title' => $property->title,
+                'requested_by' => $is_owner ? 'host' : 'traveler',
+                'check_in' => date('m-d-Y', strtotime($bookingModel->start_date)),
+                'check_out' => date('m-d-Y', strtotime($bookingModel->end_date)),
+                'cancellation_reason' => $request->cancellation_reason,
+                'cancellation_explanation' => $request->cancellation_explanation,
+            ];
+            Logger::info('Sending email to ' . $other_user->email . ' with data ' . json_encode($other_user_mail_data));
+            $this->send_custom_email(
+                $other_user->email,
+                "Booking Cancellation Requested for " . $property->title,
+                'mail.cancellation_request_another_user',
+                $other_user_mail_data,
+                $title,
+            );
 
             // TODO: send email to Admin: support@healthcaretravels.com
             $mail_data_admin = [
@@ -3250,7 +3278,7 @@ class PropertyController extends BaseController
                 'You have successfully requested cancellation for this booking, we will contact you soon!',
             );
         } catch (\Exception $ex) {
-            Logger::error('Error sending email to: Error: ' . $ex->getMessage());
+            Logger::error('Error Submitting request for cancelllation: ' . $ex->getMessage());
             return back()->withErrors([$ex->getMessage()]);
         }
     }

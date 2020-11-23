@@ -259,13 +259,13 @@
                                     @endif
                                 </td>
                                 <td>{{$payment->payment_cycle}}</td>
-                                <td>{{$payment->due_date}}</td>
+                                <td>{{date('m-d-Y',strtotime($payment->due_date))}}</td>
                                 <td>{{$payment->covering_range}}</td>
-                                <td>{{$payment->service_tax}}</td>
-                                <td>{{$payment->cleaning_fee}}</td>
-                                <td>{{$payment->security_deposit}}</td>
-                                <td>{{$payment->monthly_rate}}</td>
-                                <td>{{$payment->total_amount}}</td>
+                                <td>{{Helper::get_formatted_amount_for_admin($payment->service_tax, $payment->is_owner, '-')}}</td>
+                                <td>{{Helper::get_formatted_amount_for_admin($payment->cleaning_fee, $payment->is_owner)}}</td>
+                                <td>{{Helper::get_formatted_amount_for_admin($payment->security_deposit, $payment->is_owner)}}</td>
+                                <td>${{$payment->monthly_rate}}</td>
+                                <td>{{Helper::get_formatted_amount_for_admin($payment->total_amount, $payment->is_owner)}}</td>
                                 <td>{{Helper::get_payment_status($payment, true)}}</td>
                                 <td>{{Helper::get_local_date_time($payment->processed_time)}}</td>
                                 <td>{{Helper::get_local_date_time($payment->confirmed_time)}}</td>

@@ -3109,60 +3109,69 @@ class PropertyController extends BaseController
 
     public function delete_property($property_id, Request $request)
     {
-        $file_name = 'data/' . $property_id . '.json';
-        if (file_exists($file_name)) {
-            unlink($file_name);
-        }
-        DB::table('property_list')
-            ->where('client_id', '=', CLIENT_ID)
-            ->where('id', '=', $property_id)
-            ->update(['status' => 0]);
-        //        $data = DB::table('property_list')
-        //            ->join('users', 'users.id', '=', 'property_list.user_id')
-        //            ->where('property_list.client_id', CLIENT_ID)
-        //            ->where('property_list.id', $property_id)
-        //            ->first();
-        //        $mail_data = [
-        //            'name' => $data->first_name . " " . $data->last_name,
-        //            'data' => $data,
-        //            'text' => 'Trying to delete his/her property',
-        //        ];
-        //        $title = 'Alert from - ' . APP_BASE_NAME;
-        //        $subject = "Property Deletion request from - " . APP_BASE_NAME;
-        //        $email = "guru@sparkouttech.com";
-        //        // $email = "info@healthcaretravels.com";
-        //        $this->send_custom_email($email, $subject, 'mail.property-delete-mail', $mail_data, $title);
+        try {
+            $file_name = 'data/' . $property_id . '.json';
+            if (file_exists($file_name)) {
+                unlink($file_name);
+            }
+            Logger::info('delete proprty for id' . $property_id);
+            DB::table('property_list')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('id', '=', $property_id)
+                ->update(['status' => 0]);
+            //        $data = DB::table('property_list')
+            //            ->join('users', 'users.id', '=', 'property_list.user_id')
+            //            ->where('property_list.client_id', CLIENT_ID)
+            //            ->where('property_list.id', $property_id)
+            //            ->first();
+            //        $mail_data = [
+            //            'name' => $data->first_name . " " . $data->last_name,
+            //            'data' => $data,
+            //            'text' => 'Trying to delete his/her property',
+            //        ];
+            //        $title = 'Alert from - ' . APP_BASE_NAME;
+            //        $subject = "Property Deletion request from - " . APP_BASE_NAME;
+            //        $email = "guru@sparkouttech.com";
+            //        // $email = "info@healthcaretravels.com";
+            //        $this->send_custom_email($email, $subject, 'mail.property-delete-mail', $mail_data, $title);
 
-        DB::table('property_amenties')
-            ->where('client_id', CLIENT_ID)
-            ->where('property_id', $property_id)
-            ->delete();
-        DB::table('property_bedrooms')
-            ->where('client_id', CLIENT_ID)
-            ->where('property_id', $property_id)
-            ->delete();
-        DB::table('property_room')
-            ->where('client_id', CLIENT_ID)
-            ->where('property_id', $property_id)
-            ->delete();
-        // DB::table('property_short_term_pricing')->where('client_id', CLIENT_ID)->where('property_id', $property_id)->delete();
-        //        DB::table('property_images')
-        //            ->where('client_id', CLIENT_ID)
-        //            ->where('property_id', $property_id)
-        //            ->delete();
-        //        DB::table('property_rating')
-        //            ->where('client_id', CLIENT_ID)
-        //            ->where('property_id', $property_id)
-        //            ->delete();
-        //        DB::table('property_review')
-        //            ->where('client_id', CLIENT_ID)
-        //            ->where('property_id', $property_id)
-        //            ->delete();
-        //        DB::table('property_room')
-        //            ->where('client_id', CLIENT_ID)
-        //            ->where('property_id', $property_id)
-        //            ->delete();
-        return back()->with('success', 'Property removed successfully');
+            DB::table('property_amenties')
+                ->where('client_id', CLIENT_ID)
+                ->where('property_id', $property_id)
+                ->delete();
+            DB::table('property_bedrooms')
+                ->where('client_id', CLIENT_ID)
+                ->where('property_id', $property_id)
+                ->delete();
+            DB::table('property_room')
+                ->where('client_id', CLIENT_ID)
+                ->where('property_id', $property_id)
+                ->delete();
+            // DB::table('property_short_term_pricing')->where('client_id', CLIENT_ID)->where('property_id', $property_id)->delete();
+            //        DB::table('property_images')
+            //            ->where('client_id', CLIENT_ID)
+            //            ->where('property_id', $property_id)
+            //            ->delete();
+            //        DB::table('property_rating')
+            //            ->where('client_id', CLIENT_ID)
+            //            ->where('property_id', $property_id)
+            //            ->delete();
+            //        DB::table('property_review')
+            //            ->where('client_id', CLIENT_ID)
+            //            ->where('property_id', $property_id)
+            //            ->delete();
+            //        DB::table('property_room')
+            //            ->where('client_id', CLIENT_ID)
+            //            ->where('property_id', $property_id)
+            //            ->delete();
+            return response()->json(['status' => 'SUCCESS', 'message' => 'Property removed successfully']);
+        } catch (\Exception $ex) {
+            return response()->json([
+                'status' => 'FAILED',
+                'message' => $ex->getMessage(),
+                'status_code' => ZERO,
+            ]);
+        }
     }
 
     public function list_pets($lat, $lng, $id)

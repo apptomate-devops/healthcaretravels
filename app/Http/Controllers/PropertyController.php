@@ -2459,9 +2459,9 @@ class PropertyController extends BaseController
     {
         $ins = [];
         $ins['client_id'] = CLIENT_ID;
-        $ins['monthly_rate'] = $request->monthly_rate;
-        $ins['cleaning_fee'] = $request->cleaning_fee;
-        $ins['security_deposit'] = $request->security_deposit;
+        $ins['monthly_rate'] = ltrim($request->monthly_rate, "0");
+        $ins['cleaning_fee'] = ltrim($request->cleaning_fee, "0");
+        $ins['security_deposit'] = ltrim($request->security_deposit, "0");
         $ins['check_in'] = $request->check_in;
         $ins['check_out'] = $request->check_out;
         $ins['cancellation_policy'] = $request->cancellation_policy;

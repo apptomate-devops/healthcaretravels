@@ -314,7 +314,7 @@
       ================================================== -->
 
     <div class="parallax home-slide" data-background="/background_blur_crop.jpeg" data-color="#36383e" data-color-opacity="0.5"
-        data-img-width="1200" data-img-height="1000">
+         data-img-width="1200" data-img-height="1000">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -330,7 +330,7 @@
                                     <div class="col-md-3 col-sm-12 col-xs-12">
                                         <div class="main-search-input">
                                             <input type="text" required id="search-address-input" @if(isset($request_data['formatted_address'])) data-is-valid="true" @endif
-                                                placeholder="Hospital, City, or Address"/>
+                                            placeholder="Hospital, City, or Address"/>
                                             <p id="search-address-input_error" style="display: none;">Please select a valid address from the suggestions.</p>
                                             {{--                                            <input class="field" type="hidden" id="street_number" name="street_number" value="{{Session::get('street_number')}}" />--}}
                                             {{--                                            <input class="field" type="hidden" id="route" name="route" value="{{Session::get('route')}}" />--}}
@@ -365,10 +365,10 @@
                                         <div class="check-in-out-wrapper">
                                             <input type="text" name="from_date"
                                                    placeholder="Check in"
-                                                   id="date_range_picker" autocomplete="off"/>
+                                                   id="home_date_range_picker" autocomplete="off"/>
                                             <input type="text" name="to_date"
                                                    placeholder="Check out"
-                                                   id="date_range_picker" autocomplete="off"/>
+                                                   id="home_date_range_picker" autocomplete="off"/>
                                         </div>
                                     </div>
                                     <div class="col-md-2 col-sm-2 col-xs-12 text-center">
@@ -379,14 +379,14 @@
                                 </div>
                                 <div class="row">
                                     <div id="search_location"></div>
-{{--                                    <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">--}}
-{{--                                        <select name="property_type" required data-placeholder="Any Status"--}}
-{{--                                                class="chosen-select-no-single">--}}
-{{--                                            <option value="" selected disabled>Property Type</option>--}}
-{{--                                            <option value="1">Short Term Rental</option>--}}
-{{--                                            <option value="2">Long Term Rental</option>--}}
-{{--                                        </select>--}}
-{{--                                    </div>--}}
+                                    {{--                                    <div class="col-md-2 col-sm-6 col-xs-6" style="margin-top: 10px;">--}}
+                                    {{--                                        <select name="property_type" required data-placeholder="Any Status"--}}
+                                    {{--                                                class="chosen-select-no-single">--}}
+                                    {{--                                            <option value="" selected disabled>Property Type</option>--}}
+                                    {{--                                            <option value="1">Short Term Rental</option>--}}
+                                    {{--                                            <option value="2">Long Term Rental</option>--}}
+                                    {{--                                        </select>--}}
+                                    {{--                                    </div>--}}
                                 </div>
                             </form>
                         </div>
@@ -648,71 +648,105 @@
   ================================================== -->
 </div>
 <!-- Wrapper / End -->
-
+@include('includes.scripts')
 <script type="text/javascript">
-    $(function () {
-        var dateFormat = "mm/dd/yy";
-        var date_today = new Date();
-        var date_today_next_month = new Date();
-        date_today_next_month.setMonth(date_today_next_month.getMonth() + 1);
-        var fromOptions = {
-            startDate: date_today,
-            changeMonth: true,
-        };
-        var toOptions = {
-            startDate: date_today_next_month,
-            changeMonth: true,
-        };
-        var from = $("#from_date")
-                .datepicker(fromOptions)
-                .on("change", function () {
-                    var selectedDate = getDate(this);
-                    if (selectedDate) {
-                        selectedDate.setMonth(selectedDate.getMonth() + 1);
-                        toOptions.startDate = selectedDate;
-                        toOptions.minDate = selectedDate;
-                        to.datepicker("destroy");
-                        to.datepicker(toOptions);
-                    }
-                });
-        var to = $("#to_date").datepicker(toOptions)
-                .on("change", function () {
-                    var selectedDate = getDate(this);
-                });
+    // $(function () {
+    //     var dateFormat = "mm/dd/yy";
+    //     var date_today = new Date();
+    //     var date_today_next_month = new Date();
+    //     date_today_next_month.setMonth(date_today_next_month.getMonth() + 1);
+    //     var fromOptions = {
+    //         startDate: date_today,
+    //         changeMonth: true,
+    //     };
+    //     var toOptions = {
+    //         startDate: date_today_next_month,
+    //         changeMonth: true,
+    //     };
+    //     var from = $("#from_date")
+    //             .datepicker(fromOptions)
+    //             .on("change", function () {
+    //                 var selectedDate = getDate(this);
+    //                 if (selectedDate) {
+    //                     selectedDate.setMonth(selectedDate.getMonth() + 1);
+    //                     toOptions.startDate = selectedDate;
+    //                     toOptions.minDate = selectedDate;
+    //                     to.datepicker("destroy");
+    //                     to.datepicker(toOptions);
+    //                 }
+    //             });
+    //     var to = $("#to_date").datepicker(toOptions)
+    //             .on("change", function () {
+    //                 var selectedDate = getDate(this);
+    //             });
+    //
+    //     function getDate(element) {
+    //         var date;
+    //         try {
+    //             date = new Date(element.value);
+    //         } catch (error) {
+    //             date = null;
+    //         }
+    //         return date;
+    //     }
+    // });
+    //
+    // function check_to_date() {
+    //     var to_date = $('#to_date').val();
+    //     var from_date = $('#from_date').val();
+    //     if (to_date && from_date) {
+    //         var td = new Date(to_date);
+    //         var fd = new Date(from_date);
+    //         td.setHours(0,0,0,0);
+    //         fd.setHours(0,0,0,0);
+    //         if (td => fd) {
+    //             var diffTime = td.getTime() - fd.getTime();
+    //             var diffDays = diffTime / (1000 * 3600 * 24);
+    //             if (diffDays >= 30) {
+    //                 return false;
+    //             }
+    //         }
+    //         var mintoDate = new Date(from_date);
+    //         mintoDate.setMonth(mintoDate.getMonth() + 1);
+    //         var minDateString = (mintoDate.getMonth() + 1) + "/" + mintoDate.getDate() + "/" + mintoDate.getFullYear();
+    //         alert("Please choose date after " + minDateString);
+    //         $('#to_date').val("");
+    //         return false;
+    //     }
+    // }
 
-        function getDate(element) {
-            var date;
-            try {
-                date = new Date(element.value);
-            } catch (error) {
-                date = null;
-            }
-            return date;
+    // Book Now: Date Range Picker
+    var disableDates = <?php echo json_encode($blocked_dates); ?>;
+    $('input[id="home_date_range_picker"]').daterangepicker({
+        minDate: new Date(),
+        opens: 'center',
+        minSpan: {
+            "days": ({{$data->min_days ?? 30}} + 1)
+        },
+        autoUpdateInput: false,
+        autoApply: true,
+        isInvalidDate: function(date){
+            return disableDates.includes(date.format('YYYY-MM-DD'));
+        }
+    });
+    $('input[id="home_date_range_picker"]').keydown(function (e) {
+        e.preventDefault();
+        return false;
+    });
+
+    $('input[id="home_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
+        var is_valid = check_valid_date_range(picker.startDate, picker.endDate)
+        if(is_valid) {
+            $('input[id="home_date_range_picker"][name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
+            $('input[id="home_date_range_picker"][name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
         }
     });
 
-    function check_to_date() {
-        var to_date = $('#to_date').val();
-        var from_date = $('#from_date').val();
-        if (to_date && from_date) {
-            var td = new Date(to_date);
-            var fd = new Date(from_date);
-            td.setHours(0,0,0,0);
-            fd.setHours(0,0,0,0);
-            if (td => fd) {
-                var diffTime = td.getTime() - fd.getTime();
-                var diffDays = diffTime / (1000 * 3600 * 24);
-                if (diffDays >= 30) {
-                    return false;
-                }
-            }
-            var mintoDate = new Date(from_date);
-            mintoDate.setMonth(mintoDate.getMonth() + 1);
-            var minDateString = (mintoDate.getMonth() + 1) + "/" + mintoDate.getDate() + "/" + mintoDate.getFullYear();
-            alert("Please choose date after " + minDateString);
-            $('#to_date').val("");
-            return false;
-        }
+    function check_valid_date_range(startDate, endDate) {
+        var getDaysArray = function(s,e) {for(var a=[],d=new Date(s);d<=e;d.setDate(d.getDate()+1)){ a.push(d.toISOString().split('T')[0]);}return a;};
+        var dates = getDaysArray(startDate, endDate);
+        let collideDates = dates.filter(x => disableDates.includes(x));
+        return !collideDates.length
     }
 
     function set_favourite(property_id) {
@@ -817,8 +851,6 @@
         return false;
     }
 </script>
-
-
 <script>
     // Get the modal
     var modal = document.getElementById('myModal');
@@ -845,7 +877,6 @@
         }
     }
 </script>
-@include('includes.scripts')
 
 </body>
 </html>

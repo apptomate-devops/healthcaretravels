@@ -1119,6 +1119,21 @@ class PropertyController extends BaseController
                 $value->image_url = isset($image->image_url) ? $image->image_url : '';
             }
         }
+        $blocked_dates = [];
+        $user_id = $request->session()->get('user_id');
+
+        if ($user_id) {
+            $booking_start_dates = DB::table('property_booking')
+                ->where('traveller_id', '=', $user_id)
+                ->whereNotIn('status', [0, 4, 8])
+                ->whereDate('start_date', '>=', Carbon::now())
+                ->pluck('start_date');
+            foreach ($booking_start_dates as $key => $value) {
+                $start_date = Carbon::parse($value);
+                $dates_list = $this->getDatesBetweenRange($start_date->copy()->subDays(7), $start_date);
+                $blocked_dates = array_merge($blocked_dates, $dates_list);
+            }
+        }
         return view('search_property')
             ->with('properties', $nearby_properties)
             ->with('total_count', $total_count)
@@ -1127,7 +1142,8 @@ class PropertyController extends BaseController
             ->with('total_properties', count($nearby_properties))
             ->with('next', $page)
             ->with('room_types', $room_types)
-            ->with('offset', $offset);
+            ->with('offset', $offset)
+            ->with('blocked_dates', $blocked_dates);
     }
 
     public function set_favourite($property_id, Request $request)

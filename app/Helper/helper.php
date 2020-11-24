@@ -805,7 +805,7 @@ class Helper
             ->where('id', $property_detail->user_id)
             ->first();
 
-        if ($owner->email != "0") {
+        if ($owner && $owner->email != "0") {
             $content = $message;
 
             $data = ['username' => Helper::get_user_display_name($owner), 'content' => $content];

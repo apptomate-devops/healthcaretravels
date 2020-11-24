@@ -38,7 +38,6 @@
 
                                     <img src="{{$property->image_url}}" alt="">
                                     <div class="title">
-                                        <h1>{{$property->id}}</h1>
                                         <h4><a href="{{BASE_URL}}property/{{$property->propertyId}}">{{$property->title}}</a></h4>
                                         <div class="description">
                                             <span>{{$property->description}} </span>

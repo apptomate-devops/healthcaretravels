@@ -86,7 +86,11 @@
                     </div>
                     <div class="" style="display: flex; align-items: center;">
                         <div class="chat_user_avatar" style="margin-right: 6px">
-                            <img class="md-user-image" src="{{$owner->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt="" />
+                            @if($owner && $owner->profile_image != " ")
+                                <img class="md-user-image" src="{{$owner->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt="" />
+                            @else
+                                <img class="md-user-image" src="/user_profile_default.png" alt="" />
+                            @endif
                         </div>
                         <h3 class="md-card-toolbar-heading-text large">
                             <span class="uk-text-muted">Chat with</span>
@@ -116,7 +120,7 @@
                                 <input type="hidden" name="" value="{{$owner->id}}" ng-model="userid">
                                 <div class="chat_message_wrapper" ng-show="message.sent_by != userid">
                                     <div class="chat_user_avatar">
-                                        @if($traveller->profile_image != " ")
+                                        @if($traveller && $traveller->profile_image != " ")
                                         <img class="md-user-image" src="{{$traveller->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt="" />
                                         @else
                                         <img class="md-user-image" src="/user_profile_default.png" alt="" />
@@ -137,7 +141,7 @@
 
                                 <div class="chat_message_wrapper chat_message_right" ng-show="message.sent_by == userid">
                                     <div class="chat_user_avatar">
-                                        @if($owner->profile_image != " ")
+                                        @if($owner && $owner->profile_image != " ")
                                         <img class="md-user-image" src="{{$owner->profile_image}}" alt="" onerror="this.onerror=null;this.src='/user_profile_default.png';" />
                                         @else
                                         <img class="md-user-image" src="/user_profile_default.png" alt="" />

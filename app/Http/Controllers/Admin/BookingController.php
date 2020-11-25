@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
+use App\Http\Controllers\PropertyController;
 use App\Models\PropertyBooking;
 use App\Models\BookingPayments;
 use App\Services\Logger;
@@ -91,6 +92,24 @@ class BookingController extends BaseController
                         $lastPaidByTraveler = $payment;
                     }
                 }
+            }
+            $sign = $payment->is_owner ? '+$' : '-$';
+            $payment->display_cleaning_fee = $payment->payment_cycle === 1 ? $sign . $payment->cleaning_fee : '-';
+            $payment->display_security_deposit =
+                $payment->payment_cycle === 1 && !$payment->is_owner ? $sign . $payment->security_deposit : '-';
+            $net_monthly_rate = $payment->is_partial_days
+                ? round(($payment->monthly_rate * $payment->is_partial_days) / 30)
+                : $payment->monthly_rate;
+            $payment->display_monthly_rate = $sign . $net_monthly_rate;
+            if ($payment->is_owner) {
+                $payment->display_total_amount = PropertyController::format_amount(
+                    $payment->total_amount - $payment->service_tax,
+                );
+            } else {
+                $payment->display_total_amount = PropertyController::format_amount(
+                    $payment->total_amount + $payment->service_tax,
+                    '-',
+                );
             }
         }
         $paymentInProcessing = $this->filter_payments($payments, PAYMENT_INIT);

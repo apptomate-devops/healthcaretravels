@@ -205,8 +205,6 @@ class PropertyController extends BaseController
             $booking_id,
         );
 
-        // Padding 24 hours for property owner
-
         if (isset($isValidRequest['isBlocked'])) {
             return response()->json([
                 'status' => 'FAILED',
@@ -233,6 +231,7 @@ class PropertyController extends BaseController
                 'request_data' => $isValidRequest['requestAlreadyExists'],
             ]);
         }
+        // Padding 24 hours for property owner
 
         $c_in = Carbon::parse($check_in);
         $c_out = Carbon::parse($check_out);

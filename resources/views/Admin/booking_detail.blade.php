@@ -235,7 +235,7 @@
                             <td>Service Fee</td>
                             <td>Cleaning Fee</td>
                             <td>Security Deposit</td>
-                            <td>Monthly Rate</td>
+                            <td>Stay Payment</td>
                             <td>Total Amount</td>
                             <td>Status</td>
                             <td>Processed Time</td>
@@ -261,11 +261,11 @@
                                 <td>{{$payment->payment_cycle}}</td>
                                 <td>{{date('m-d-Y',strtotime($payment->due_date))}}</td>
                                 <td>{{$payment->covering_range}}</td>
-                                <td>{{Helper::get_formatted_amount_for_admin($payment->service_tax, $payment->is_owner, '-')}}</td>
-                                <td>{{$payment->payment_cycle !== 1 ? '-' : Helper::get_formatted_amount_for_admin($payment->cleaning_fee, $payment->is_owner)}}</td>
-                                <td>{{$payment->is_owner || $payment->payment_cycle !== 1 ? '-' : Helper::get_formatted_amount_for_admin($payment->security_deposit)}}</td>
-                                <td>{{Helper::get_formatted_amount_for_admin($payment->monthly_rate, $payment->is_owner)}}</td>
-                                <td>{{\App\Http\Controllers\PropertyController::format_amount($payment->total_amount + $payment->service_tax)}}</td>
+                                <td>-${{$payment->service_tax}}</td>
+                                <td>{{$payment->display_cleaning_fee}}</td>
+                                <td>{{$payment->display_security_deposit}}</td>
+                                <td>{{$payment->display_monthly_rate}}</td>
+                                <td>{{$payment->display_total_amount}}</td>
                                 <td>{{Helper::get_payment_status($payment, true)}}</td>
                                 <td>{{Helper::get_local_date_time($payment->processed_time)}}</td>
                                 <td>{{Helper::get_local_date_time($payment->confirmed_time)}}</td>

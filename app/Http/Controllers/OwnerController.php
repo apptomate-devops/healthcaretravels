@@ -53,7 +53,12 @@ class OwnerController extends BaseController
     {
         $user_id = $request->session()->get('user_id');
         $properties = DB::table('property_list')
-            ->where('user_id', $user_id)
+            ->where('property_list.client_id', '=', CLIENT_ID)
+            ->where('property_list.user_id', $user_id)
+            ->where('property_list.is_complete', '=', 1)
+            ->where('property_list.property_status', '=', 1)
+            ->where('property_list.status', '=', 1)
+            ->where('property_list.is_disable', '=', 0)
             ->select('id', 'title')
             ->orderBy('title', 'ASC')
             ->get();

@@ -46,19 +46,17 @@ class PropertyController extends BaseController
         $check_in = date('Y-m-d', strtotime($request->check_in));
         $check_out = date('Y-m-d', strtotime($request->check_out));
 
-        // Padding 24 hours for property owner
-        $c_in = Carbon::parse($check_in);
+        // Padding 24 hours for property owner after check-out
         $c_out = Carbon::parse($check_out);
-        $check_in_date = $c_in->subDay()->toDateString();
         $check_out_date = $c_out->addDay()->toDateString();
 
         $sql =
             "SELECT count(*) as is_available,B.total_guests FROM `property_booking` A, `property_list` B WHERE (A.start_date BETWEEN '" .
-            $check_in_date .
+            $check_in .
             "' AND '" .
             $check_out_date .
             "') AND (A.end_date BETWEEN '" .
-            $check_in_date .
+            $check_in .
             "' AND '" .
             $check_out_date .
             "')  AND B.total_guests < " .
@@ -231,20 +229,18 @@ class PropertyController extends BaseController
                 'request_data' => $isValidRequest['requestAlreadyExists'],
             ]);
         }
-        // Padding 24 hours for property owner
+        // Padding 24 hours for property owner after check-out
 
-        $c_in = Carbon::parse($check_in);
         $c_out = Carbon::parse($check_out);
-        $check_in_date = $c_in->subDay()->toDateString();
         $check_out_date = $c_out->addDay()->toDateString();
 
         $sql =
             "SELECT count(*) as is_available,B.total_guests FROM `property_booking` A, `property_list` B WHERE (A.start_date BETWEEN '" .
-            $check_in_date .
+            $check_in .
             "' AND '" .
             $check_out_date .
             "') AND (A.end_date BETWEEN '" .
-            $check_in_date .
+            $check_in .
             "' AND '" .
             $check_out_date .
             "')  AND B.total_guests < " .

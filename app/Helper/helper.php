@@ -755,7 +755,7 @@ class Helper
         }
 
         // firebase write starts
-        $date_fmt = Carbon::now()->toDateTimeString();
+        $date_fmt = date('D M d Y H:i:s O');
         $values = [];
         $values['traveller_id'] = $traveler_id;
         $values['owner_id'] = $property_detail->user_id;

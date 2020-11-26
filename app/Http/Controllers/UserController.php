@@ -691,7 +691,7 @@ class UserController extends BaseController
             'postal_code' => $request->pin_code,
         ];
         if ($email_opt == 1) {
-            $this->sendgrid->addUserToMarketingList($sendgridUserData);
+            $this->sendgrid->addUserToMarketingList($sendgridUserData, $request->user_type);
         } else {
             $this->sendgrid->addUserToNoContactList($sendgridUserData);
         }

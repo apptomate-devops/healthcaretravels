@@ -69,5 +69,10 @@ return [
         'api_key' => env('SENDGRID_API_KEY'),
         'list_id' => env('SENDGRID_LIST_ID'),
         'no_contact_list_id' => env('SENDGRID_LIST_ID'),
+        'contact_list_traveler' => env('SENDGRID_TRAVELER'),
+        'contact_list_owner' => env('SENDGRID_OWNER'),
+        'contact_list_agency' => env('SENDGRID_AGENCY'),
+        'contact_list_rv_traveler' => env('SENDGRID_RV_TRAVELER'),
+        'contact_list_co_host' => env('SENDGRID_COHOST'),
     ],
 ];

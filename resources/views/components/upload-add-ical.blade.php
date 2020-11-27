@@ -37,10 +37,22 @@
     <div>
         <label style="margin-left: 12px;">Enter Third party ICAL URL here</label>
         <div style="display: flex; justify-content: space-between;">
-            <input style="margin-left: 10px;width: 80%;" type="text" placeholder="Enter Third party ICAL URL here" name="ical_url" value="https://calendar.google.com/calendar/ical/patelpooja300876%40gmail.com/public/basic.ics">
+            <input style="margin-left: 10px;width: 80%;" type="text" placeholder="Enter Third party ICAL URL here" name="ical_url">
             <button type="button" id="add_ical" class="button preview margin-top-5" style="margin-bottom: 20px;float: right;">
                 Add
             </button>
+        </div>
+    </div>
+    <div class="calender-add-url-alerts">
+        <div class="alert alert-danger" style="display: none">
+                            <span>
+                                Error in uploading calender events
+                            </span>
+        </div>
+        <div class="alert alert-success" style="display: none">
+                            <span>
+                                Calender events are added successfully
+                            </span>
         </div>
     </div>
 </div>
@@ -60,20 +72,32 @@
         var ical_url = $('input[name="ical_url"]').val();
 
         var data = {_token, property_id, ical_url};
-        console.log(data)
-        debugger
+        $('#calenderLoadingProgress').show();
+        $('.calender-add-url-alerts .alert').hide();
         $.ajax({
             type: "POST",
             data,
             json: true,
             url: '{{BASE_URL}}' + 'owner/upload-calender',
-            success: function(data) {
-                console.log(data);
-                debugger
+            success: function(response) {
+                $('#calenderLoadingProgress').hide();
+                if(response && response.success) {
+                    // Show success Message
+                    $('.calender-add-url-alerts .alert-success').show();
+                    window.location.reload();
+                } else {
+                    // Show error Message
+                    $('.calender-add-url-alerts .alert-danger').show();
+                    $('.calender-add-url-alerts .alert-danger').text(response.message);
+                    console.log('Error while uploading calender details');
+                }
             },
-            error: function (error) {
-                console.log(error);
-                debugger
+            error: function(jqXHR, textStatus, errorThrown) {
+                $('#calenderLoadingProgress').hide();
+                $('.calender-add-url-alerts .alert-danger').show();
+                $('.calender-add-url-alerts .alert-danger').text(textStatus);
+                console.log('Error while uploading calender details');
+
             }
         });
     })

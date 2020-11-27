@@ -207,18 +207,21 @@ class OwnerController extends BaseController
                         'error' => 'Calender has been uploaded',
                     ]);
                 } else {
+                    Logger::info('No calender files or url are provided');
                     return response()->json([
                         'success' => false,
                         'error' => 'No calender files or url are provided',
                     ]);
                 }
             } catch (\Throwable $th) {
+                Logger::info(json_encode($th->getMessage()));
                 return response()->json([
                     'success' => false,
                     'error' => $th->getMessage() || 'No calender files or url are provided',
                 ]);
             }
         } else {
+            Logger::info('Property id was not found');
             return response()->json([
                 'success' => false,
                 'error' => 'Property id was not found',

@@ -35,11 +35,9 @@ class IcalController extends BaseController
 
         // only display confirmed bookings
 
-        $vCalendar = new \Eluceo\iCal\Component\Calendar(
-            'https://holidaykeepers.com/ical/?ical=7958b1a42e0b57448e7cdaada56990c3',
-        );
+        $vCalendar = new \Eluceo\iCal\Component\Calendar(BASE_URL);
+        $vCalendar->setMethod('PUBLISH');
 
-        $all_bookings = [];
         foreach ($bookings as $booking) {
             $traveler_name = Helper::get_user_display_name($booking);
             $booking_event = new \Eluceo\iCal\Component\Event();
@@ -48,10 +46,9 @@ class IcalController extends BaseController
                 ->setDtEnd(new \DateTime($booking->end_date))
                 ->setNoTime(true)
                 ->setSummary($traveler_name . "'s stay at " . $booking->title);
-            array_push($all_bookings, $booking_event);
+            $vCalendar->addComponent($booking_event);
         }
 
-        $vCalendar->setComponents($all_bookings);
         header('Content-Type: text/calendar; charset=utf-8');
         header('Content-Disposition: attachment; filename="cal.ics"');
         echo $vCalendar->render();

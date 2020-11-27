@@ -18,6 +18,9 @@ Route::get('/storage/{filePath}', 'BaseController@get_storage_file')->where(['fi
 Route::GET('/logout', 'LogoutController@logout');
 Route::GET('/is_user_active', 'LogoutController@is_user_active');
 
+// Public route for iCal
+Route::GET('/ical/{id}', 'IcalController@ical');
+
 // User Controller Routes
 // User Controller Auth Routes
 Route::GET('/check_email/{email}/{client_id}', 'UserController@check_email');
@@ -178,7 +181,6 @@ Route::middleware(['LoginCheck'])->group(function () {
         Route::GET('/owner/calender', 'OwnerController@calender');
         Route::POST('/owner/upload-calender', 'OwnerController@upload_calender');
         Route::get('/owner/chat/{id}', 'PropertyController@owner_fire_chat');
-        Route::GET('/ical/{id}', 'IcalController@ical');
 
         // Payment and Invoices
         Route::GET('/payment-options', 'PaymentController@get_payment_options');

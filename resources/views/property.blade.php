@@ -910,13 +910,19 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="control-label" for="chat_from_date">Check In</label>
-                                        <input name="check_in" id="chat_from_date" placeholder="Check In date"  type="text" style="width: 273px;" >
+                                        <input type="text" name="check_in"
+                                               placeholder="Check in"
+                                               id="chat_date_range_picker" autocomplete="off"/>
+{{--                                        <input name="check_in" id="chat_from_date" placeholder="Check In date"  type="text" style="width: 273px;" >--}}
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="control-label" for="date">Check Out</label>
-                                        <input name="check_out"  id="chat_to_date"  placeholder="Check Out date" type="text" style="width: 273px;" >
+                                        <input type="text" name="check_out"
+                                               placeholder="Check out"
+                                               id="chat_date_range_picker" autocomplete="off"/>
+{{--                                        <input name="check_out"  id="chat_to_date"  placeholder="Check Out date" type="text" style="width: 273px;" >--}}
                                         <input name="property_id" type="hidden" value="{{$property_id}}" >
                                     </div>
                                 </div>
@@ -927,7 +933,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" style="float:left;" data-dismiss="modal">Close</button>
-                            <button id="request-chat" class="button margin-top-5"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                            <button id="request-chat" disabled class="button margin-top-5"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
                                         Request Chat
                                     </font></font>
                             </button>
@@ -1119,6 +1125,26 @@
                 get_price();
             });
 
+            // Chat with host: Date Range Picker
+            $('input[id="chat_date_range_picker"]').daterangepicker({
+                minDate: new Date(),
+                opens: 'center',
+                minSpan: {
+                    "days": ({{$data->min_days ?? 30}} + 1)
+                },
+                autoUpdateInput: false,
+                autoApply: true,
+            });
+            $('input[id="chat_date_range_picker"]').keydown(function (e) {
+                e.preventDefault();
+                return false;
+            })
+            $('input[id="chat_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
+                $('input[id="chat_date_range_picker"][name="check_in"]').val(picker.startDate.format('MM/DD/YYYY'));
+                $('input[id="chat_date_range_picker"][name="check_out"]').val(picker.endDate.format('MM/DD/YYYY'));
+                $('#request-chat').prop('disabled', false);
+            });
+
             var aboutHeight = $('#head_scroll').height();
             if(aboutHeight > 240) {
                 $(".show-more").removeClass("visible");
@@ -1255,24 +1281,6 @@
 
         $("#chat_host").click(function(){
             $('#myModal').modal();
-            var date=new Date();
-            $("#chat_from_date").datepicker({
-                startDate: date,
-                autoclose: true,
-                {{--datesDisabled:[ @foreach($booked_dates as $d) "{{$d['dates']}}" ,@endforeach ]--}}
-            });
-
-            $("#chat_from_date").change(function(){
-
-                var fDate = $("#chat_from_date").val();
-                $("#chat_to_date").datepicker('remove');
-                $("#chat_to_date").datepicker({
-                    startDate: fDate,
-                    autoclose: true,
-                    {{--datesDisabled: [ @foreach($booked_dates as $d) "{{$d['dates']}}",@endforeach ]--}}
-                });
-
-            });
         });
 
         $("#post_comment").click(function(){

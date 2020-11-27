@@ -7,7 +7,7 @@
                 Hi Admin,
             @elseif($mail_to == 'owner')
                 Hi {{$owner->first_name . ' ' . $owner->last_name}},
-            @elseif($mail_to == 'traveller')
+            @elseif($mail_to == 'traveler')
                 Hi {{$traveler->first_name . ' ' . $traveler->last_name}},
             @else
                 Hi,
@@ -49,7 +49,7 @@
                 </div>
 
 
-            @elseif($mail_to == 'traveller')
+            @elseif($mail_to == 'traveler')
                 <div style="padding-top: 5px;">
                     {{Helper::get_user_display_name($owner)}} confirmed your booking at {{$property_title}} for {{$start_date}} to {{$end_date}}. Please visit the <a href="{{URL('/')}}/traveler/my-reservations">My Trips</a> page on Health Care Travels to view more details. Note that the address and check-in details will be available to you 72 hours before your stay.
                     <br>

@@ -9534,6 +9534,9 @@ img.mfp-img {
     opacity: 0.4;
 }
 
+.property-calender.dropzone .dz-message {
+    z-index: 1;
+}
 .dropzone .dz-message {
     text-align: center;
     margin: 30px 0;

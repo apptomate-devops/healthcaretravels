@@ -87,7 +87,7 @@
                     // place the added events
                         @foreach($booked_events as $event)
                     {
-                        title: "{{$property_title}} booked by {{$event->username}} from {{date("F d, Y", strtotime($event->start_date))}} to {{date("F d, Y", strtotime($event->end_date))}}",
+                        title: "{{$property_title}} booked by {{Helper::get_user_display_name($event)}} from {{date("F d, Y", strtotime($event->start_date))}} to {{date("F d, Y", strtotime($event->end_date))}}",
                         start: "{{$event->start_date}}",
                         end: get_end_date("{{$event->start_date}}", "{{$event->end_date}}"),
                         className: 'booked',
@@ -184,99 +184,29 @@
             </div>
 
             @if($id != 0)
-                    <div class="col-md-4"></div>
-                    <div class="col-md-8 card" style="margin-top: 20px;">
-                        <label style="margin-top: 20px;">Upload an iCalendar from another booking site</label>
-                        <div class="alert alert-info">
-                            <span>
-                                If your property is listed on another website like Airbnb, you can upload an iCalendar (.ics) file from that website to automatically block out dates that your property is not available.
-                                Please be sure that the calendar you add only has events for stays at your property that were booked through alternate services. Any day with an event will be considered unavailable.
-                            </span>
-                        </div>
-                        <form class="dropzone property-calender" id="upload_ical_form" method="post" action="{{url('/')}}/owner/upload-calender">
-                            <input type="hidden" name="_token" value="{{csrf_token()}}">
-                            <input type="hidden" id="property_id" name="property_id" value="{{$id}}">
-                            <input type="hidden" id="calender_file" type="file" name="calender_file">
-                            <div  class="dz-default dz-message">
-                                <span>
-                                    <i class="sl sl-icon-plus"></i> Click here to upload
-                                </span>
-                            </div>
-                        </form>
-                        <div class="calender-upload-alerts">
-                            <div class="alert alert-danger" style="display: none">
-                            <span>
-                                Error in uploading calender events
-                            </span>
-                        </div>
-                        <div class="alert alert-success" style="display: none">
-                            <span>
-                                Calender events are added successfully
-                            </span>
-                        </div>
-                        </div>
-                        <button type="submit" disabled id="upload_ical" class="button preview margin-top-5" style="margin-bottom: 20px;float: right;">
-                            Upload
-                        </button>
-                    </div>
-                    <div id="calenderLoadingProgress" class="loading style-2" style="display: none;"><div class="loading-wheel"></div></div>
+                <div class="col-md-4"></div>
+                <div class="col-md-8 card" style="margin-top: 20px;">
+                    @component('components.upload-add-ical', ['property_id' => $id,])
+                    @endcomponent
+                </div>
 
             @endif
 
             <div class="col-md-4"></div>
-            <div class="col-md-8 card" style="margin-top: 20px;">
+            <div class="col-md-8 card" style="margin-top: 20px;margin-bottom: 20px;">
                 @if($id != 0)
+                    <?php $ical_url = BASE_URL . 'ical/' . $id; ?>
                     <h4>
                         {{APP_BASE_NAME}} Icalender :
-                        <a href="{{BASE_URL}}ical/{{$id}}">
-                            {{BASE_URL}}ical/{{$id}}
-                        </a>
+                        <a id="my_ical_url_text" href="{{$ical_url}}">{{$ical_url}}</a>
+                        <span id="my_ical_url_copy" style="color: #b0b0b0; cursor: pointer;">&nbsp;(click here to copy)</span>
                     </h4>
                 @else
                     <h4>Please select property</h4>
                 @endif
             </div>
-
-            @if($id != 0)
-                <div class="col-md-4"></div>
-                <div class="col-md-8 card" style="margin-top: 20px;">
-                    <input type="hidden" id="property_id" name="property_id" value="{{$id}}">
-                    <label style="margin-top: 20px;" >Enter Third party Name</label>
-                    <input style="margin-left: 10px;max-width: 518px;" type="text" id="ical_name" placeholder="Enter Third party Name" name="ical_name">
-                    <label>Enter Third party ICAL URL here</label>
-                    <input style="margin-left: 10px;max-width: 518px;" type="text" id="ical_url" placeholder="Enter Third party ICAL URL here" name="ical_url">
-                    <center>
-                        <button type="button" id="add_ical" class="button preview margin-top-5" style="margin-bottom: 20px;float: right;">
-                            Add
-                        </button>
-                    </center>
-                </div>
-            @endif
-
-            @foreach($icals as $ical)
-                <form method="get" action="{{url('/')}}/delete-calender/{{$ical->id}}">
-                    <div class="col-md-4"></div>
-                    <div class="col-md-8 card" style="margin-top: 20px;">
-                        <input type="hidden" id="property_id" name="property_id" value="{{$id}}">
-                        <label style="margin-top: 20px;" >Enter Third party Name</label>
-                        <input style="margin-left: 10px;max-width: 518px;" type="text" id="ical_name_{{$ical->id}}" value="{{$ical->third_party_name}}" name="ical_name">
-                        <label>Enter Third party ICAL URL here</label>
-                        <input style="margin-left: 10px;max-width: 518px;" type="text" id="ical_url_{{$ical->id}}" value="{{$ical->third_party_url}}" name="ical_url">
-
-                        <button type="submit" id="delete_ical" class="button preview margin-top-5" style="margin-bottom: 20px;float: right;">
-                            Delete
-                        </button>
-
-                        <button type="button" id="update_ical" data-id="{{$ical->id}}" class="button preview margin-top-5" style="margin-bottom: 20px;float: right;">
-                            Update
-                        </button>
-                    </div>
-                </form>
-            @endforeach
-
-        </div>
     </div>
-
+    </div>
     <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -311,61 +241,14 @@
             show_snackbar(msg);
             setTimeout(function(){ remove_snackbar(); }, 4000);
         };
-
-        $("#add_ical").click(function(){
-
-            var property_id = $("#property_id").val();
-            var ical_name = $("#ical_name").val();
-            var ical_url = $("#ical_url").val();
-
-            if(ical_name == "" || ical_url == "") {
-                show_alert_message();
-                return;
-            }
-            var ajax_url = "{{BASE_URL}}"+"add-calender/"+property_id+"?ical_name="+ical_name+"&ical_url="+ical_url;
-            $.ajax({
-                url:ajax_url,
-                type:"get",
-                success: function(data){
-                    if(data.status === 'SUCCESS') {
-                        location.reload();
-                    } else {
-                        show_alert_message();
-                    }
-                },
-                error: function(){ show_alert_message(); }
-            });
-
-        });
-        $("#update_ical").click(function(){
-
-            var id = $(this).data("id");
-            var ical_name = $(`#ical_name_${id}`).val();
-            var ical_url = $(`#ical_url_${id}`).val();
-            if(ical_name == "" || ical_url == "" || !id) {
-                show_alert_message();
-                return;
-            }
-
-            var ajax_url = "{{BASE_URL}}"+"update-calender/"+id+"?ical_name="+ical_name+"&ical_url="+ical_url;
-            $.ajax({
-                url:ajax_url,
-                type:"get",
-                beforeSend: function() {
-                    show_snackbar("Loading...");
-                },
-                success: function(data){
-                    if(data.status === 'SUCCESS') {
-                        show_alert_message("Calender updated successfully");
-                    } else {
-                        show_alert_message();
-                    }
-                },
-                error: function(){
-                    show_alert_message();
-                }
-            });
-
+        $('#my_ical_url_copy').click(function (e) {
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val($('#my_ical_url_text').text()).select();
+            document.execCommand("copy");
+            $temp.remove();
+            $('#my_ical_url_copy').text('(copied!)');
+            $('#my_ical_url_copy').css({color: 'green'});
         });
     </script>
 @endsection

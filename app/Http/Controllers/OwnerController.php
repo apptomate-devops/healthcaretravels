@@ -94,7 +94,8 @@ class OwnerController extends BaseController
                     'property_booking.end_date',
                     //                    DB::raw('DATE_FORMAT(property_booking.start_date, "%M %d, %Y") as start_date'),
                     //                    DB::raw('DATE_FORMAT(property_booking.end_date, "%M %d, %Y") as end_date'),
-                    'traveller.username',
+                    'traveller.first_name',
+                    'traveller.last_name',
                 )
                 ->get();
             $block_events = DB::table('property_blocking')
@@ -148,64 +149,75 @@ class OwnerController extends BaseController
         );
     }
 
+    public function add_calender_blocking($fileOrurl, $property_id, $owner_id)
+    {
+        $ical = new ICal($fileOrurl, [
+            'defaultSpan' => 2, // Default value
+            'defaultTimeZone' => 'UTC',
+            'defaultWeekStart' => 'MO', // Default value
+            'disableCharacterReplacement' => false, // Default value
+            'filterDaysAfter' => null, // Default value
+            'filterDaysBefore' => null, // Default value
+            'skipRecurrence' => false, // Default value
+        ]);
+        $entries = [];
+        foreach ($ical->cal as $key => $value) {
+            if ($key == 'VEVENT' && !empty($value)) {
+                foreach ($value as $key => $data) {
+                    // getting start date
+                    $start_date = explode('T', $data['DTSTART'])[0];
+                    // getting end date
+                    $end_date = explode('T', $data['DTEND'])[0];
+                    $desc = $data['SUMMARY'] ?? $data['DESCRIPTION'];
+                    array_push($entries, [
+                        'start_date' => $start_date,
+                        'end_date' => $end_date,
+                        'booked_on' => $desc,
+                        'is_admin' => 0,
+                        'property_id' => $property_id,
+                        'owner_id' => $owner_id,
+                        'client_id' => CLIENT_ID,
+                    ]);
+                }
+            }
+        }
+        Logger::info(json_encode($entries));
+        PropertyBlocking::insert($entries);
+    }
+
     public function upload_calender(Request $request)
     {
         $property_id = $request->property_id;
         $owner_id = $request->session()->get('user_id');
-        Logger::info('PropertyId: ' . $property_id);
+        $ical_url = $request->ical_url;
         if ($property_id) {
-            if ($request->hasfile('calender_files')) {
-                try {
+            try {
+                if ($request->hasfile('calender_files')) {
                     foreach ($request->file('calender_files') as $file) {
-                        $ical = new ICal($file, [
-                            'defaultSpan' => 2, // Default value
-                            'defaultTimeZone' => 'UTC',
-                            'defaultWeekStart' => 'MO', // Default value
-                            'disableCharacterReplacement' => false, // Default value
-                            'filterDaysAfter' => null, // Default value
-                            'filterDaysBefore' => null, // Default value
-                            'skipRecurrence' => false, // Default value
-                        ]);
-                        // $ical->initFile($file);
-                        $entries = [];
-                        foreach ($ical->cal as $key => $value) {
-                            if ($key == 'VEVENT' && !empty($value)) {
-                                foreach ($value as $key => $data) {
-                                    // getting start date
-                                    $start_date = explode('T', $data['DTSTART'])[0];
-                                    // getting end date
-                                    $end_date = explode('T', $data['DTEND'])[0];
-                                    $desc = $data['SUMMARY'] ?? $data['DESCRIPTION'];
-                                    array_push($entries, [
-                                        'start_date' => $start_date,
-                                        'end_date' => $end_date,
-                                        'booked_on' => $desc,
-                                        'is_admin' => 0,
-                                        'property_id' => $property_id,
-                                        'owner_id' => $owner_id,
-                                        'client_id' => CLIENT_ID,
-                                    ]);
-                                }
-                            }
-                        }
-                        PropertyBlocking::insert($entries);
+                        $this->add_calender_blocking($file, $property_id, $owner_id);
                     }
-                } catch (\Throwable $th) {
+                    return response()->json([
+                        'success' => true,
+                        'error' => 'Calender has been uploaded',
+                    ]);
+                } elseif ($ical_url) {
+                    $this->add_calender_blocking($ical_url, $property_id, $owner_id);
+                    return response()->json([
+                        'success' => true,
+                        'error' => 'Calender has been uploaded',
+                    ]);
+                } else {
                     return response()->json([
                         'success' => false,
-                        'error' => $th->getMessage() || 'No calender files are provided',
+                        'error' => 'No calender files or url are provided',
                     ]);
                 }
-            } else {
+            } catch (\Throwable $th) {
                 return response()->json([
                     'success' => false,
-                    'error' => 'No calender files are provided',
+                    'error' => $th->getMessage() || 'No calender files or url are provided',
                 ]);
             }
-            return response()->json([
-                'success' => true,
-                'error' => 'Calender has been uploaded',
-            ]);
         } else {
             return response()->json([
                 'success' => false,

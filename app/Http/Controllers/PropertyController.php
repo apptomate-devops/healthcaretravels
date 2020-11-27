@@ -2194,7 +2194,8 @@ class PropertyController extends BaseController
                             'property_booking.end_date',
                             //                            DB::raw('DATE_FORMAT(property_booking.start_date, "%M %d, %Y") as start_date'),
                             //                            DB::raw('DATE_FORMAT(property_booking.end_date, "%M %d, %Y") as end_date'),
-                            'traveller.username',
+                            'traveller.first_name',
+                            'traveller.last_name',
                         )
                         ->get();
                     $block_events = DB::table('property_blocking')
@@ -2515,7 +2516,8 @@ class PropertyController extends BaseController
                     'property_booking.is_instant',
                     DB::raw('DATE_FORMAT(property_booking.start_date, "%M %d, %Y") as start_date'),
                     DB::raw('DATE_FORMAT(property_booking.end_date, "%M %d, %Y") as end_date'),
-                    'traveller.username',
+                    'traveller.first_name',
+                    'traveller.last_name',
                 )
                 ->get();
             $block_events = DB::table('property_blocking')

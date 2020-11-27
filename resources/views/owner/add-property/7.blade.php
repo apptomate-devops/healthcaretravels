@@ -21,13 +21,13 @@
                     <!-- Tabs Content -->
                     <div class="tabs-container">
                         <div id='wrap1'>
-                            <label style="margin-top: 30px;">Select and drag to block out dates for this listing:</div>
+                            <label style="margin-top: 30px;">Select and drag to block out dates for this listing:</label>
+                        </div>
                         <center><div id='calendar' style="max-width: 600px;margin-top: 15px;margin-bottom: 15px;"></div></center>
                     </div>
 
                     <div id="wrap2">
 
-                        <form action="{{url('/')}}/owner/add-new-property/7" method="post" name="form-add-new">
 
                             <div class="col-md-3"></div>
                             <div class="col-md-6" style="padding-bottom: 50px;padding-top: 15px;">
@@ -38,13 +38,13 @@
                                         <li class="active">
                                             <a href="#tab1a">
                                                 <i class="sl sl-icon-pin"></i>
-                                                ICAL URL
+                                                My iCal Link
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#tab2a">
                                                 <i class="sl sl-icon-pin"></i>
-                                                Add other ICAL URL
+                                                Add Another iCal
                                             </a>
                                         </li>
                                     </ul>
@@ -53,37 +53,30 @@
                                     <div class="tabs-container">
                                         <div class="tab-content" id="tab1a">
                                             <center>
-                                                <p>Ical URL :  <a href="{{BASE_URL}}ical/{{$property_details->id}}">{{BASE_URL}}ical/{{$property_details->id}}</a></p>
+                                                <?php $ical_url = BASE_URL . 'ical/' . $property_details->id; ?>
+                                                <p style="margin-bottom: 0;">My iCal Link :  <a id="my_ical_url_text" href="{{$ical_url}}">{{$ical_url}}</a></p>
+                                                <div id="my_ical_url_copy" style="color: #b0b0b0; cursor: pointer;">click here to copy</div>
                                                 <br>
-                                                <input type="hidden" name="id" value="{{$property_details->id}}">
-                                                <input type="hidden" name="_token" value="{{csrf_token()}}">
-
                                             </center>
                                         </div>
 
-                                        <div class="tab-content" id="tab2a">
-                                            <form name="test" method="get" action="{{BASE_URL}}add-ical-url">
-                                                <input type="hidden" id="property_id" name="property_id" value="{{$property_details->id}}">
-                                                <input style="margin-left: 10px;max-width: 518px;" type="text" id="ical_name" placeholder="Enter Third party Name" name="ical_name">
-                                                <input style="margin-left: 10px;max-width: 518px;" type="text" id="ical_url" placeholder="Enter Third party ICAL URL here" name="ical_url">
-                                                <center>
-                                                    <button type="button" id="add_ical" class="button preview margin-top-5" style="margin-bottom: 20px;">
-                                                        Add
-                                                    </button>
-                                                </center>
-                                            </form>
+                                        <div class="tab-content" id="tab2a" style="padding: 30px;">
+                                            @component('components.upload-add-ical', ['property_id' => $property_details->id])
+                                            @endcomponent
                                         </div>
 
 
                                     </div>
 
-                                    <button type="submit" style="margin-bottom: 20px;float: right;" class="button preview margin-top-5" value="NEXT">FINISH</button>
                                 </div>
+                                <form action="{{url('/')}}/owner/add-new-property/7" method="post" name="form-add-new" style="margin-top: 30px">
+                                    <input type="hidden" name="property_id" value="{{$property_details->id}}">
+                                    <input type="hidden" name="_token" value="{{csrf_token()}}">
 
+                                    <button type="submit" style="margin-bottom: 20px;float: right;" class="button preview margin-top-5" value="NEXT">FINISH</button>
+                                </form>
                             </div>
 
-
-                        </form>
                         <div class="modal fade in" id="confirmationModal" tabindex="-1" role="dialog" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -110,27 +103,9 @@
 
     </div>
     <div id="calendar_blocking_loading" class="loading style-2" style="display: none;"><div class="loading-wheel"></div></div>
-
-    </div>
-    </div>
     <script type="text/javascript">
 
         $(document).ready(function() {
-            //$('#cale').hide();
-            var date = new Date();
-            var d = date.getDate();
-            var m = date.getMonth();
-            var y = date.getFullYear();
-
-            /*  className colors
-
-            className: default(transparent), important(red), chill(pink), success(green), info(blue)
-
-            */
-
-
-            /* initialize the external events
-            -----------------------------------------------------------------*/
 
             $('#external-events div.external-event').each(function() {
 
@@ -185,10 +160,6 @@
                         $("[data-date='" + start_date + "']").attr("id", "start_date");
                     }
 
-                    // var e_date=convert(end);
-                    // $("[data-date='" + e_date + "']").attr("id", "start_date");
-                    var roomtxt = $('#selector1  option:selected').text();
-                    //var title = prompt('Block a Room', roomtxt);
                     var title = 'Manual Dates - Property Not Available';
                     var pro_id = $("#property_id").val();
                     if(!pro_id){
@@ -231,7 +202,7 @@
                 events: [
                         @foreach($booked_events as $event)
                     {
-                        title: "{{$property_details->title}} booked by {{$event->username}} from {{date("F d, Y", strtotime($event->start_date))}} to {{date("F d, Y", strtotime($event->end_date))}}",
+                        title: "{{$property_details->title}} booked by {{Helper::get_user_display_name($event)}} from {{date("F d, Y", strtotime($event->start_date))}} to {{date("F d, Y", strtotime($event->end_date))}}",
                         start: "{{$event->start_date}}",
                         end: get_end_date("{{$event->start_date}}", "{{$event->end_date}}"),
                         className: 'booked',
@@ -312,54 +283,16 @@
             return moment(end_date, "YYYY-MM_DD").add(1, 'days'); // full day calendar end date display issue
         }
 
-    </script>
-
-@endsection
-
-
-@section('custom_script')
-
-    <script type="text/javascript">
-        function show_alert_message(msg = "Please fill all fields") {
-            show_snackbar(msg);
-            setTimeout(function(){ remove_snackbar(); }, 4000);
-        };
-
-        $("#add_ical").click(function(){
-
-            var property_id = $("#property_id").val();
-            var ical_name = $("#ical_name").val();
-            var ical_url = $("#ical_url").val();
-
-            if(ical_name == "" || ical_url == "") {
-                show_alert_message();
-                return;
-            }
-            var ajax_url = "{{BASE_URL}}"+"add-calender/"+property_id+"?ical_name="+ical_name+"&ical_url="+ical_url;
-            $('#calendar_blocking_loading').show();
-            $.ajax({
-                url:ajax_url,
-                type:"get",
-                beforeSend: function() {
-                    show_snackbar("Loading...");
-                },
-                success: function(data){
-                    $('#calendar_blocking_loading').hide();
-                    if(data.status === 'SUCCESS') {
-                        $("#ical_name").val("");
-                        $("#ical_url").val("");
-                        $("#ical_name").focus();
-                        show_alert_message("Calender added successfully");
-                    } else {
-                        show_alert_message();
-                    }
-                },
-                error: function(){
-                    $('#calendar_blocking_loading').hide();
-                    show_alert_message();
-                }
-            });
-
+        $('#my_ical_url_copy').click(function (e) {
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val($('#my_ical_url_text').text()).select();
+            document.execCommand("copy");
+            $temp.remove();
+            $('#my_ical_url_copy').text('copied!');
+            $('#my_ical_url_copy').css({color: 'green'});
         });
     </script>
+
 @endsection
+

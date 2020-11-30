@@ -2703,11 +2703,12 @@ class PropertyController extends BaseController
         // Exact check in time with date
         $check_in_date_time = Carbon::parse($booking->start_date);
         $check_in_date_time->setTime($timeSplit[0], $timeSplit[1], 0);
+        $check_in_date_time = Helper::get_utc_time_user($check_in_date_time);
 
         // Last time that owner can accept booking. 5 days before check in time
         $last_approval_time = $check_in_date_time->copy()->subDays(5);
 
-        $week_after_request = now()->addDays(7);
+        $week_after_request = now('UTC')->addDays(7);
         $scheduler_date = Carbon::parse($last_approval_time->min($week_after_request));
         $scheduler_date->setTime($timeSplit[0], $timeSplit[1], 0);
         $owner_reminder_email = $scheduler_date->copy()->subDays(1);
@@ -2771,7 +2772,10 @@ class PropertyController extends BaseController
             ->where('property_images.property_id', '=', $property->id)
             ->orderBy('is_cover', 'DESC')
             ->first();
-        $cover_img = BASE_URL . ltrim($property_img->image_url, '/');
+        $cover_img = '';
+        if ($property_img && $property_img->image_url) {
+            $cover_img = BASE_URL . ltrim($property_img->image_url, '/');
+        }
 
         // Owner Mail
         $property_details = DB::table('property_list')
@@ -2802,7 +2806,7 @@ class PropertyController extends BaseController
             $booking->start_date,
             $booking->end_date,
             $property_details->title,
-            $request->booking_id,
+            $booking->id,
             OWNER_NEW_BOOKING,
         );
 

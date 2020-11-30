@@ -369,13 +369,13 @@
                                             <label class="control-label" for="contract_start_date">
                                                 Contract Start Date
                                             </label>
-                                            <input type="date" id="contract_start_date" name="contract_start_date" required min="1950-01-01" max="2050-12-31">
+                                            <input type="date" id="contract_start_date" name="contract_start_date" required min="1950-01-01" max="2050-12-31"  value="{{$data->contract_start_date ?? ''}}">
                                         </div>
                                         <div class="control-group cc-first-name col-md-4">
                                             <label class="control-label" for="contract_end_date">
                                                 Contract End Date
                                             </label>
-                                            <input type="date" id="contract_end_date" name="contract_end_date" required min="1950-01-01" max="2050-12-31">
+                                            <input type="date" id="contract_end_date" name="contract_end_date" required min="1950-01-01" max="2050-12-31"  value="{{$data->contract_end_date ?? ''}}">
                                         </div>
                                     </div>
                                 </div>

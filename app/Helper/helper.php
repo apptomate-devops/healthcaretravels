@@ -1125,7 +1125,7 @@ class Helper
 
             case TRAVELER_CHECK_IN_APPROVAL:
                 $message = "Hi {$name}, this is Health Care Travels. Please reply 'Y' once you are safely checked in at your booking location. Please reach out to support@healthcaretravels.com if you encounter any issues.";
-                $timestamp = $check_in->setTime(11, 0, 0);
+                $timestamp = $check_in->copy()->setTime(11, 0, 0);
 
                 return ProcessMessage::dispatch($number, $message, $booking_id, TRAVELER_CHECK_IN_APPROVAL)
                     ->delay($timestamp)
@@ -1133,7 +1133,10 @@ class Helper
 
             case TRAVELER_CHECK_IN_APPROVAL_REMINDER:
                 $message = "Hi {$name}, this is Health Care Travels. Please reply 'Y' once you are safely checked in at your booking location. Please reach out to support@healthcaretravels.com if you encounter any issues.";
-                $timestamp = $check_in->addDay(1)->setTime(11, 0, 0);
+                $timestamp = $check_in
+                    ->copy()
+                    ->addDay(1)
+                    ->setTime(11, 0, 0);
 
                 return ProcessMessage::dispatch($number, $message, $booking_id, TRAVELER_CHECK_IN_APPROVAL_REMINDER)
                     ->delay($timestamp)
@@ -1160,11 +1163,17 @@ class Helper
                 }
                 break;
             case TRAVELER_CHECK_IN_APPROVAL:
-                // do nothing
+                // logic for checking if owner approved booking or not.
+
+                if ($booking->status != 2) {
+                    $should_send_message = false;
+                }
                 break;
             case TRAVELER_CHECK_IN_APPROVAL_REMINDER:
                 // logic for checking if traveler has checkin or not
-                if ($booking->already_checked_in == 1) {
+                if ($booking->status == 2 && $booking->already_checked_in != 1) {
+                    $should_send_message = true;
+                } else {
                     $should_send_message = false;
                 }
                 break;
@@ -1172,6 +1181,19 @@ class Helper
         if ($should_send_message) {
             $twilio = new Twilio();
             $twilio->sendMessage(COUNTRY_CODE . $number, $message);
+        }
+        return;
+    }
+
+    public static function handleBookingEmails($to, $subject, $view, $data, $bookingId)
+    {
+        Helper::setConstantsHelper();
+        $booking = DB::table('property_booking')
+            ->where('id', $bookingId)
+            ->first();
+        Logger::info('Got status for booking ' . $booking->status);
+        if ($booking->status != 8) {
+            Helper::send_custom_email($to, $subject, $view, $data, null, null);
         }
         return;
     }

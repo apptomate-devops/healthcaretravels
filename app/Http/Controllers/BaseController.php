@@ -258,10 +258,10 @@ class BaseController extends ConstantsController
         }
     }
 
-    public function send_scheduled_email($to, $template, $subject, $data, $delayInSeconds)
+    public function send_scheduled_email($to, $template, $subject, $data, $delayInSeconds, $bookingId)
     {
         Logger::info('Scheduling email to: ' . $to . ' after: ' . $delayInSeconds . ' for template: ' . $template);
-        ProcessEmail::dispatch($to, 'mail.' . $template, $subject, $data)
+        ProcessEmail::dispatch($to, 'mail.' . $template, $subject, $data, $bookingId)
             ->delay(now()->addSeconds($delayInSeconds))
             ->onQueue(EMAIL_QUEUE);
     }
@@ -858,6 +858,7 @@ class BaseController extends ConstantsController
                     'Automatic Payment Reminder',
                     $mail_data,
                     $mailDelay,
+                    $booking->id,
                 );
             }
         }
@@ -905,6 +906,7 @@ class BaseController extends ConstantsController
             $subject,
             $owner_mail_data,
             $start_delay,
+            $booking->id,
         );
         $subject = 'Your Booking at ' . $propertyTitle . ' is Ending';
         $this->send_scheduled_email(
@@ -913,6 +915,7 @@ class BaseController extends ConstantsController
             $subject,
             $owner_mail_data,
             $end_delay,
+            $booking->id,
         );
 
         $traveler_mail_data = [
@@ -938,6 +941,7 @@ class BaseController extends ConstantsController
             $subject,
             $traveler_mail_data,
             $start_delay_72_hr,
+            $booking->id,
         );
         $subject = 'Your Stay at ' . $propertyTitle . ' is Ending';
         $this->send_scheduled_email(
@@ -946,6 +950,7 @@ class BaseController extends ConstantsController
             $subject,
             $traveler_mail_data,
             $end_delay,
+            $booking->id,
         );
     }
 

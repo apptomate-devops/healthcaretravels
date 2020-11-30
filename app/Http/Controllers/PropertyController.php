@@ -2802,7 +2802,7 @@ class PropertyController extends BaseController
             $booking->start_date,
             $booking->end_date,
             $property_details->title,
-            $request->booking_id,
+            $booking->id,
             OWNER_NEW_BOOKING,
         );
 

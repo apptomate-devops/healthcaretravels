@@ -1126,9 +1126,9 @@ class Helper
             case TRAVELER_CHECK_IN_APPROVAL:
                 $message = "Hi {$name}, this is Health Care Travels. Please reply 'Y' once you are safely checked in at your booking location. Please reach out to support@healthcaretravels.com if you encounter any issues.";
                 $timestamp = $check_in->copy()->setTime(11, 0, 0);
-
+                $utc_time = self::get_utc_time_user($timestamp);
                 return ProcessMessage::dispatch($number, $message, $booking_id, TRAVELER_CHECK_IN_APPROVAL)
-                    ->delay($timestamp)
+                    ->delay($utc_time)
                     ->onQueue(MESSAGE_QUEUE);
 
             case TRAVELER_CHECK_IN_APPROVAL_REMINDER:
@@ -1137,9 +1137,9 @@ class Helper
                     ->copy()
                     ->addDay(1)
                     ->setTime(11, 0, 0);
-
+                $utc_time = self::get_utc_time_user($timestamp);
                 return ProcessMessage::dispatch($number, $message, $booking_id, TRAVELER_CHECK_IN_APPROVAL_REMINDER)
-                    ->delay($timestamp)
+                    ->delay($utc_time)
                     ->onQueue(MESSAGE_QUEUE);
         }
     }
@@ -1206,6 +1206,14 @@ class Helper
         return Carbon::parse($dateObj)
             ->timezone($timezone)
             ->format($format);
+    }
+
+    public static function get_utc_time_user($timestamp)
+    {
+        $timezone = optional(auth()->user())->timezone ?? USER_DEFAULT_TIMEZONE;
+        $utc_date = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, $timezone);
+        $utc_date->setTimezone('UTC');
+        return $utc_date;
     }
 
     public static function get_user_display_name($user)

@@ -42,7 +42,7 @@
         <div class="login-container">
 
             <!--Tab -->
-            <div class="my-account style-1" id="login_form">
+            <div class="my-account style-1">
 
                 @if(Session::has('success'))
                     <div class="alert alert-success">

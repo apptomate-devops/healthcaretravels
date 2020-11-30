@@ -34,7 +34,7 @@
         var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
         var icons = {
             test: {
-                icon: 'http://api.estatevue2.com/cdn/img/marker-green.png'
+                icon: "{{MAP_MARKER_ICON}}"
             }
         };
 

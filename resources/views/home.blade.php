@@ -441,7 +441,7 @@
 
                                         <div class="listing-img-content">
                                             <span
-                                                class="listing-price">$ {{$property->monthly_rate}}/Month</i></span>
+                                                class="listing-price">$ {{$property->monthly_rate}}/Month</span>
                                             @if(Session::get('user_id'))
                                                 <span @if($property->is_favourite == "0") class="like-icon with-tip"
                                                       @else class="like-icon with-tip liked"

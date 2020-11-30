@@ -1191,7 +1191,6 @@ class Helper
         $booking = DB::table('property_booking')
             ->where('id', $bookingId)
             ->first();
-        Logger::info('Got status for booking ' . $booking->status);
         if ($booking->status != 8) {
             Helper::send_custom_email($to, $subject, $view, $data, null, null);
         }

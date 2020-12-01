@@ -37,7 +37,7 @@
                             @if($property->owner->profile_image != null)
                             <img style="border-radius: 11px;object-fit:contain;" src="{{$property->owner->profile_image}}" alt="">
                             @else
-                            <img style="border-radius: 11px;object-fit:contain;" src="http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg" alt="">
+                            <img style="border-radius: 11px;object-fit:contain;" src="{{STATIC_IMAGE}}" alt="">
                             @endif
                             @if(isset($property->has_unread_message) && $property->has_unread_message)
                             <span class="unread_message_badge"></span>
@@ -67,7 +67,7 @@
                             @if($property->owner->profile_image != null)
                             <img style="border-radius: 11px;object-fit:contain;" src="{{$property->owner->profile_image}}" alt="">
                             @else
-                            <img style="border-radius: 11px;object-fit:contain;" src="http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg" alt="">
+                            <img style="border-radius: 11px;object-fit:contain;" src="{{STATIC_IMAGE}}" alt="">
                             @endif
                             @if(isset($property->has_unread_message) && $property->has_unread_message)
                             <span class="unread_message_badge"></span>
@@ -96,7 +96,7 @@
                             @if($property->owner->profile_image != null)
                             <img style="border-radius: 11px;object-fit:contain;" src="{{$property->owner->profile_image}}" alt="">
                             @else
-                            <img style="border-radius: 11px;object-fit:contain;" src="http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg" alt="">
+                            <img style="border-radius: 11px;object-fit:contain;" src="{{STATIC_IMAGE}}" alt="">
                             @endif
                             @if(isset($property->has_unread_message) && $property->has_unread_message)
                             <span class="unread_message_badge"></span>

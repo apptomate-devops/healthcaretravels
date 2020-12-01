@@ -825,9 +825,9 @@ class Helper
         Helper::reloadEnv();
         $BASE_URL = config("app.url");
 
-        define("MAP_MARKER_ICON", "http://api.estatevue2.com/cdn/img/marker-green.png");
-        define("PROFILE_IMAGE", "https://demo.rentalslew.com/public/user_profile_default.png");
-        define("STATIC_IMAGE", "http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg");
+        define("MAP_MARKER_ICON", "/marker-green.png");
+        define("PROFILE_IMAGE", "/user_profile_default.png");
+        define("STATIC_IMAGE", "/no_property_image.jpg");
         define("APP_BASE_NAME", "Health Care Travels");
         define("APP_ENV", env("APP_ENV", "local"));
         define("IS_LOCAL", APP_ENV == "local");

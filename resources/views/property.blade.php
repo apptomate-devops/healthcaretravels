@@ -822,7 +822,7 @@
                                     @endif
 
                                     <div class="listing-img-content">
-                                        <span class="listing-price">$ {{$data->monthly_rate}}/Month</span>
+                                        <span class="listing-price">$ {{$property->monthly_rate}}/Month</span>
                                     </div>
 
                                     <!-- <div class="listing-carousel"> -->

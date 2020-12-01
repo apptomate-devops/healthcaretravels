@@ -38,7 +38,7 @@
                                 @if($property->image_url != null)
                                     <img src="{{$property->image_url}}" alt="">
                                 @else
-                                    <img src="http://vyrelilkudumbam.com/wp-content/uploads/2014/07/NO_DATAy.jpg" alt="">
+                                    <img src="{{STATIC_IMAGE}}" alt="">
                                 @endif
                                 <div class="title">
                                     <h4><a href="{{BASE_URL}}property/{{$property->property_id}}">{{$property->title}}</a></h4>

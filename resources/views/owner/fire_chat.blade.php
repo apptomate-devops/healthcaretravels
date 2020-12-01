@@ -86,7 +86,11 @@
                     </div>
                     <div class="" style="display: flex; align-items: center;">
                         <div class="chat_user_avatar" style="margin-right: 6px">
-                            <img class="md-user-image" src="{{$owner->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt="" />
+                            @if($owner && $owner->profile_image != " ")
+                                <img class="md-user-image" src="{{$owner->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt="" />
+                            @else
+                                <img class="md-user-image" src="/user_profile_default.png" alt="" />
+                            @endif
                         </div>
                         <h3 class="md-card-toolbar-heading-text large">
                             <span class="uk-text-muted">Chat with</span>
@@ -100,20 +104,23 @@
                     </div>
                 </div>
                 <div class="md-card-content padding-reset">
-                    <div class="md-card-toolbar" style="display: flex;align-items: center;justify-content: center;">
+                    <div class="md-card-toolbar" style="display: flex;align-items: center;justify-content: center;flex-direction: column;">
                         <div style="">
                             To protect your payment, always communicate and pay through Health Care Travels.
+                        </div>
+                        <div>
+                            Chats are monitored for your safety.
                         </div>
                     </div>
                     <div class="chat_box_wrapper" id="chat_box_wrapper" style="display: none">
                         <div class="chat_box touchscroll chat_box_colors_a" id="chat">
 
-                            <div ng-repeat="message in messages | orderBy : 'date'" ng-hide="header == 1">
-                                <div ng-show="message.id == 'start'"><%message.start_date%></div>
+                            <div ng-repeat="message in messages | orderBy : sortFunction" ng-hide="header == 1">
+                                <!-- <div ng-show="message.id == 'start'"><%message.start_date%></div> -->
                                 <input type="hidden" name="" value="{{$owner->id}}" ng-model="userid">
                                 <div class="chat_message_wrapper" ng-show="message.sent_by != userid">
                                     <div class="chat_user_avatar">
-                                        @if($traveller->profile_image != " ")
+                                        @if($traveller && $traveller->profile_image != " ")
                                         <img class="md-user-image" src="{{$traveller->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt="" />
                                         @else
                                         <img class="md-user-image" src="/user_profile_default.png" alt="" />
@@ -134,7 +141,7 @@
 
                                 <div class="chat_message_wrapper chat_message_right" ng-show="message.sent_by == userid">
                                     <div class="chat_user_avatar">
-                                        @if($owner->profile_image != " ")
+                                        @if($owner && $owner->profile_image != " ")
                                         <img class="md-user-image" src="{{$owner->profile_image}}" alt="" onerror="this.onerror=null;this.src='/user_profile_default.png';" />
                                         @else
                                         <img class="md-user-image" src="/user_profile_default.png" alt="" />
@@ -283,6 +290,8 @@
                 'Bank',
                 'Money',
                 'Text ',
+                'FB',
+                'IG'
             ];
 
             var isEvery = checkInput(str, arr);
@@ -356,6 +365,13 @@
             var ref = new Firebase('{{FB_URL}}' + node_name + '/' + request_id + '/' + id);
             var product = $firebaseObject(ref)
             product.$remove();
+        };
+
+        $scope.sortFunction = function(data) {
+            if(typeof data.date === 'string') {
+                return moment(data.date);
+            }
+            return moment(data.date.date);
         };
 
         $scope.markAsRead = function(messages) {

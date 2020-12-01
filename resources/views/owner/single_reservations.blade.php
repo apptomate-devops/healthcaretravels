@@ -43,7 +43,7 @@
                     <div>Check-in: <span>{{date('m-d-Y',strtotime($data->start_date))}}</span></div>
                     <div>Check-out: <span>{{date('m-d-Y',strtotime($data->end_date))}}</span></div>
                     <div>Guests: <span>{{$data->guest_count}}</span></div>
-                    <div>Total Due: <span>$ {{$total_payment}} (*incl. $ {{$data->security_deposit}} security deposit)</span></div>
+                    <div>Total Due: <span>{{\App\Http\Controllers\PropertyController::format_amount($total_payment)}} (*incl. $ {{$data->security_deposit}} security deposit)</span></div>
                 </div>
                 <table class="pricing-table responsive-table">
                     <tr>
@@ -56,8 +56,8 @@
                     @foreach($scheduled_payments as $payment)
                         <tr>
                             <td>{{$payment['due_date_override'] ?? date('m/d/Y',strtotime($payment['due_date']))}}</td>
-                            <td>{{$payment['name'] ?? 'Stay payment'}}</td>
-                            <td>-${{$payment['amount']}}</td>
+                            <td>{{$payment['name'] ?? 'Housing Payment'}}</td>
+                            <td>{{$payment['amount']}}</td>
                             <td>
                                 <p>
                                     <b>{{Helper::get_payment_status($payment)}}</b>
@@ -70,7 +70,7 @@
                     <tr>
                         <td>{{\Carbon\Carbon::parse($data->end_date)->addHours(72)->format('m/d/Y')}}</td>
                         <td>Security Deposit</td>
-                        <td>+${{$data->traveler_cut}}</td>
+                        <td>{{\App\Http\Controllers\PropertyController::format_amount($data->traveler_cut)}}</td>
                         <td>
                             <b>{{Helper::get_security_payment_status($data)}}</b>
                         </td>

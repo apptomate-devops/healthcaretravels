@@ -41,7 +41,7 @@
                         </div>
 
                     </div>
-                    <div class="property-title col-md-6 col-sm-6 col-xs-12" style="margin-left: 0px;">
+                    <div class="property-title col-md-10 col-sm-10 col-xs-12" style="margin-left: 0px;">
                         <h2>
                             <font style="vertical-align: inherit;">
                                 <font style="vertical-align: inherit;">{{$data->title}} </font>
@@ -78,9 +78,9 @@
                             </font>
                         </div>
                     </div>
-                    <div class="col-md-3"></div>
+
                     <center>
-                        <div style="margin-left: 18%;" class="col-md-3 col-sm-6 col-xs-6 property-image hide-990">
+                        <div class="col-md-2 col-sm-2 col-xs-6 property-image hide-990">
                             <p>
                                 <img class="user-icon" src="{{$data->profile_image}}">
                             </p>
@@ -90,10 +90,10 @@
                             <div class="sub-price">
                                 @if(Session::get('user_id'))
                                     @if($data->user_id != Session::get('user_id'))
-                                    <a><h3 id="contact_host"><span class="property-badge"  id="chat_host">Message Host</span></h3></a>
+                                        <a><h3 id="contact_host"><span class="property-badge"  id="chat_host">Message Host</span></h3></a>
                                     @endif
                                 @else
-                                    <button style="background: transparent;border: 0;float: right;" onclick="$('#request-chat').click()"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8">Login to Chat</span></h3></button>
+                                    <button style="background: transparent;border: 0;" onclick="$('#request-chat').click()"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8">Login to Chat</span></h3></button>
                                 @endif
                             </div>
 
@@ -245,7 +245,7 @@
 
                     </ul>
 
-                    @if($data->room_type != "Entire Place")
+                    @if(!in_array($data->room_type, ['Entire Place', 'RV Parking']))
                         <br><h4>Current Occupancy</h4>
                         <div class="col-sm-12" id="scroll_stop">
                             <ul class="property-features margin-top-0">
@@ -752,7 +752,7 @@
                                         <thead>
                                         <tr class="row_border">
                                             <th style="text-align: left;padding: 5px">Detail</th>
-                                            <th style="text-align: left;padding: 5px">Price</th>
+                                            <th style="text-align: right;padding: 5px">Price</th>
                                         </tr>
                                         </thead>
                                         <tbody id="table_body">
@@ -766,7 +766,9 @@
 
                                 </div>
                                 @if(Session::get('user_id') !=  $data->user_id)
-                                    @if(!Session::get('user_id'))
+                                    @if (isset($data->is_disable) && $data->is_disable == 1)
+                                        <center><h4 class="margin-top-30">This Property is disabled</h4></center>
+                                    @elseif(!Session::get('user_id'))
                                         <button onclick="location.href='{{BASE_URL}}login';" class="button fullwidth margin-top-5">
                                             Login to Book
                                         </button>
@@ -908,13 +910,19 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="control-label" for="chat_from_date">Check In</label>
-                                        <input name="check_in" id="chat_from_date" placeholder="Check In date"  type="text" style="width: 273px;" >
+                                        <input type="text" name="check_in"
+                                               placeholder="Check in"
+                                               id="chat_date_range_picker" autocomplete="off"/>
+{{--                                        <input name="check_in" id="chat_from_date" placeholder="Check In date"  type="text" style="width: 273px;" >--}}
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="control-label" for="date">Check Out</label>
-                                        <input name="check_out"  id="chat_to_date"  placeholder="Check Out date" type="text" style="width: 273px;" >
+                                        <input type="text" name="check_out"
+                                               placeholder="Check out"
+                                               id="chat_date_range_picker" autocomplete="off"/>
+{{--                                        <input name="check_out"  id="chat_to_date"  placeholder="Check Out date" type="text" style="width: 273px;" >--}}
                                         <input name="property_id" type="hidden" value="{{$property_id}}" >
                                     </div>
                                 </div>
@@ -925,7 +933,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" style="float:left;" data-dismiss="modal">Close</button>
-                            <button id="request-chat" class="button margin-top-5"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                            <button id="request-chat" disabled class="button margin-top-5"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
                                         Request Chat
                                     </font></font>
                             </button>
@@ -1117,6 +1125,26 @@
                 get_price();
             });
 
+            // Chat with host: Date Range Picker
+            $('input[id="chat_date_range_picker"]').daterangepicker({
+                minDate: new Date(),
+                opens: 'center',
+                minSpan: {
+                    "days": ({{$data->min_days ?? 30}} + 1)
+                },
+                autoUpdateInput: false,
+                autoApply: true,
+            });
+            $('input[id="chat_date_range_picker"]').keydown(function (e) {
+                e.preventDefault();
+                return false;
+            })
+            $('input[id="chat_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
+                $('input[id="chat_date_range_picker"][name="check_in"]').val(picker.startDate.format('MM/DD/YYYY'));
+                $('input[id="chat_date_range_picker"][name="check_out"]').val(picker.endDate.format('MM/DD/YYYY'));
+                $('#request-chat').prop('disabled', false);
+            });
+
             var aboutHeight = $('#head_scroll').height();
             if(aboutHeight > 240) {
                 $(".show-more").removeClass("visible");
@@ -1253,24 +1281,6 @@
 
         $("#chat_host").click(function(){
             $('#myModal').modal();
-            var date=new Date();
-            $("#chat_from_date").datepicker({
-                startDate: date,
-                autoclose: true,
-                {{--datesDisabled:[ @foreach($booked_dates as $d) "{{$d['dates']}}" ,@endforeach ]--}}
-            });
-
-            $("#chat_from_date").change(function(){
-
-                var fDate = $("#chat_from_date").val();
-                $("#chat_to_date").datepicker('remove');
-                $("#chat_to_date").datepicker({
-                    startDate: fDate,
-                    autoclose: true,
-                    {{--datesDisabled: [ @foreach($booked_dates as $d) "{{$d['dates']}}",@endforeach ]--}}
-                });
-
-            });
         });
 
         $("#post_comment").click(function(){

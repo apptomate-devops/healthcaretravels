@@ -36,8 +36,8 @@
                             <div class="col-md-6">
                                 <div>
                                     <label for="cancellation_reason" style="margin-top: 10px;">Select a reason:</label>
-                                    <select class="chosen-select" id="cancellation_reason" name="cancellation_reason">
-                                        {{--                                    <option value="" selected disabled>Select a reason</option>--}}
+                                    <select class="chosen-select validate" id="cancellation_reason" name="cancellation_reason">
+                                        <option selected disabled>Select a reason</option>
                                         @foreach($reasons as $reason)
                                             <option value="{{$reason}}" label="{{$reason}}">{{$reason}}</option>
                                         @endforeach
@@ -48,7 +48,7 @@
                                     <label for="cancellation_explanation" style="margin-top: 10px;">Add an explanation</label>
                                     <textarea id="cancellation_explanation" name="cancellation_explanation" required></textarea>
                                 </div>
-                                <h3 class="margin-top-40">Has the traveler checked in to this property?</h3>
+                                <h3 class="margin-top-40">Has the traveler checked into this property?</h3>
                                 <div class="checkboxes in-row">
                                     <input id="checked_in_yes" name="checked_in" type="checkbox" value="1">
                                     <label for="checked_in_yes">Yes</label>
@@ -56,7 +56,14 @@
                                     <input id="checked_in_no" name="checked_in" type="checkbox" value="0" checked>
                                     <label for="checked_in_no">No</label>
                                 </div>
-                                <button class="button margin-top-40" type="submit">Submit Request</button>
+                                <div class="margin-top-40">
+                                    <label class="checkbox-container">
+                                        I agree and understand that I may be charged a penalty fee for cancelling an existing booking that I have approved based on <a href="{{URL('/')}}/cancellationpolicy">HCT Cancellation Policy</a>.
+                                        <input type="checkbox" required name="cancellation_policy" id="cancellation_policy">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <button class="button margin-top-10" type="submit" id="button" disabled>Submit Request</button>
                             </div>
                         </div>
                     </form>
@@ -68,6 +75,16 @@
         $('#checked_in_yes,#checked_in_no').change(function(){
             $("input[type=checkbox][name='checked_in']").prop('checked',false);
             $(this).prop('checked',true);
+        });
+        $('#cancellation_policy').change(function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            if($(this).is(":checked")) {
+                $('#button').attr('disabled',false);
+            } else {
+                $('#button').attr('disabled',true);
+            }
+            return !$(this).is(":checked");
         });
     </script>
 @endsection

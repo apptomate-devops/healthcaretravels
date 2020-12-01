@@ -34,12 +34,17 @@ class PDF_Controller extends BaseController
         $data->grand_total = $payment_summary['grand_total'];
         $data->is_owner = $is_owner;
 
-        $bookingModel = PropertyBooking::find($data->id);
         if ($is_owner) {
-            $owner = $bookingModel->owner;
+            $owner = DB::table('users')
+                ->where('id', $data->owner_id)
+                ->select('first_name', 'last_name')
+                ->first();
             $data->name = $owner->first_name . " " . $owner->last_name;
         } else {
-            $traveller = $bookingModel->traveler;
+            $traveller = DB::table('users')
+                ->where('id', $data->traveller_id)
+                ->select('first_name', 'last_name')
+                ->first();
             $data->name = $traveller->first_name . " " . $traveller->last_name;
         }
 

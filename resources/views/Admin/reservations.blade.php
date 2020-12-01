@@ -103,7 +103,7 @@
                                                     @endif
 
                                                     @if($booking->booking_status == 6)
-                                                        Traveller Cancelled
+                                                            Traveler Cancelled
                                                     @endif
 
                                                     @if($booking->booking_status == 7)

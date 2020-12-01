@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ProcessOwnerReminder;
 use App\Jobs\ProcessPropertyUpdateEmail;
+use App\Models\AmenitiesList;
 use App\Models\PetInformation;
 use App\Models\PropertyBlocking;
 use App\Services\Logger;
@@ -45,19 +46,17 @@ class PropertyController extends BaseController
         $check_in = date('Y-m-d', strtotime($request->check_in));
         $check_out = date('Y-m-d', strtotime($request->check_out));
 
-        // Padding 24 hours for property owner
-        $c_in = Carbon::parse($check_in);
+        // Padding 24 hours for property owner after check-out
         $c_out = Carbon::parse($check_out);
-        $check_in_date = $c_in->subDay()->toDateString();
         $check_out_date = $c_out->addDay()->toDateString();
 
         $sql =
             "SELECT count(*) as is_available,B.total_guests FROM `property_booking` A, `property_list` B WHERE (A.start_date BETWEEN '" .
-            $check_in_date .
+            $check_in .
             "' AND '" .
             $check_out_date .
             "') AND (A.end_date BETWEEN '" .
-            $check_in_date .
+            $check_in .
             "' AND '" .
             $check_out_date .
             "')  AND B.total_guests < " .
@@ -145,16 +144,11 @@ class PropertyController extends BaseController
         }
     }
 
-    public function get_price(Request $request)
+    public function get_valid_date_range_for_booking_request($property_id, $check_in, $check_out, $user_id, $booking_id)
     {
-        $guest_count = $request->guest_count == 0 ? 20 : $request->guest_count;
-        $request->adults_count = $guest_count;
-        $check_in = date('Y-m-d', strtotime($request->check_in));
-        $check_out = date('Y-m-d', strtotime($request->check_out));
-
         $isBlocked = PropertyBlocking::whereRaw(
             'property_id = "' .
-                $request->property_id .
+                $property_id .
                 '" AND ((start_date BETWEEN "' .
                 $check_in .
                 '" AND "' .
@@ -168,24 +162,14 @@ class PropertyController extends BaseController
                 '" BETWEEN start_date AND end_date))',
         )->get();
         if (count($isBlocked)) {
-            return response()->json([
-                'status' => 'FAILED',
-                'message' =>
-                    'Sorry! This property is not available during all of your selected dates. Try changing your dates or finding another property.',
-                'status_code' => ZERO,
-                'is_blocked' => ONE,
-                'blocked_data' => $isBlocked,
-            ]);
+            return ['isBlocked' => $isBlocked];
         }
-
-        $user_id = $request->session()->get('user_id');
-        $booking_id = $request->booking_id;
 
         $requestAlreadyExists = PropertyBooking::whereRaw(
             'traveller_id = "' .
                 $user_id .
                 ($booking_id ? '" AND booking_id != "' . $booking_id : '') .
-                '" AND status NOT IN (4, 8) AND ((start_date BETWEEN "' .
+                '" AND status NOT IN (0, 4, 8) AND ((start_date BETWEEN "' .
                 $check_in .
                 '" AND "' .
                 $check_out .
@@ -198,6 +182,39 @@ class PropertyController extends BaseController
                 '" BETWEEN start_date AND end_date))',
         )->get();
         if (count($requestAlreadyExists)) {
+            return ['requestAlreadyExists' => $requestAlreadyExists];
+        }
+        return [];
+    }
+    public function get_price(Request $request)
+    {
+        $guest_count = $request->guest_count == 0 ? 20 : $request->guest_count;
+        $request->adults_count = $guest_count;
+        $check_in = date('Y-m-d', strtotime($request->check_in));
+        $check_out = date('Y-m-d', strtotime($request->check_out));
+        $user_id = $request->session()->get('user_id');
+        $booking_id = $request->booking_id;
+
+        $isValidRequest = $this->get_valid_date_range_for_booking_request(
+            $request->property_id,
+            $check_in,
+            $check_out,
+            $user_id,
+            $booking_id,
+        );
+
+        if (isset($isValidRequest['isBlocked'])) {
+            return response()->json([
+                'status' => 'FAILED',
+                'message' =>
+                    'Sorry! This property is not available during all of your selected dates. Try changing your dates or finding another property.',
+                'status_code' => ZERO,
+                'is_blocked' => ONE,
+                'blocked_data' => $isValidRequest['isBlocked'],
+            ]);
+        }
+
+        if (isset($isValidRequest['requestAlreadyExists'])) {
             $my_trips_url = BASE_URL . 'traveler/my-reservations';
             return response()->json([
                 'status' => 'FAILED',
@@ -209,24 +226,21 @@ class PropertyController extends BaseController
                     '>My Trips</a> page to view your submitted request.',
                 'status_code' => ZERO,
                 'request_already_exists' => ONE,
-                'request_data' => $requestAlreadyExists,
+                'request_data' => $isValidRequest['requestAlreadyExists'],
             ]);
         }
+        // Padding 24 hours for property owner after check-out
 
-        // Padding 24 hours for property owner
-
-        $c_in = Carbon::parse($check_in);
         $c_out = Carbon::parse($check_out);
-        $check_in_date = $c_in->subDay()->toDateString();
         $check_out_date = $c_out->addDay()->toDateString();
 
         $sql =
             "SELECT count(*) as is_available,B.total_guests FROM `property_booking` A, `property_list` B WHERE (A.start_date BETWEEN '" .
-            $check_in_date .
+            $check_in .
             "' AND '" .
             $check_out_date .
             "') AND (A.end_date BETWEEN '" .
-            $check_in_date .
+            $check_in .
             "' AND '" .
             $check_out_date .
             "')  AND B.total_guests < " .
@@ -303,6 +317,7 @@ class PropertyController extends BaseController
                 'property_list.*',
                 'property_images.*',
             )
+            ->orderBy('property_images.is_cover', 'desc')
             ->first();
         if (empty($data)) {
             return view('general_error', ['message' => 'Booking you are looking for does not exists!']);
@@ -312,6 +327,30 @@ class PropertyController extends BaseController
         if ($user_id != $data->traveller_id) {
             // Do not allow other user to access booking details
             return view('general_error', ['message' => 'Invalid Access']);
+        }
+
+        $isValidRequest = $this->get_valid_date_range_for_booking_request(
+            $data->property_id,
+            $data->start_date,
+            $data->end_date,
+            $user_id,
+            $booking_id,
+        );
+
+        if (count($isValidRequest) > 0) {
+            $error_title = "You can't complete this booking.";
+            if (isset($isValidRequest['isBlocked'])) {
+                $error_message = "Dates are blocked for this property.";
+            } else {
+                $error_message = 'You have already submitted request for these dates';
+            }
+            $my_trips_url = BASE_URL . 'traveler/my-reservations';
+            return view('general_error', [
+                'title' => $error_title,
+                'message' => $error_message,
+                'hideImage' => true,
+                'url' => $my_trips_url,
+            ]);
         }
 
         $agency = DB::table('agency')
@@ -409,15 +448,15 @@ class PropertyController extends BaseController
                 ->where('client_id', CLIENT_ID)
                 ->where('id', $id)
                 ->update(['owner_visible' => 0]);
+            return redirect('owner/inbox');
         }
         if ($chat->traveller_id == $user_id) {
             DB::table('personal_chat')
                 ->where('client_id', CLIENT_ID)
                 ->where('id', $id)
                 ->update(['traveler_visible' => 0]);
+            return redirect('traveler/inbox');
         }
-
-        return redirect('owner/inbox');
     }
 
     public function delete_property_image($id)
@@ -454,6 +493,7 @@ class PropertyController extends BaseController
                 ->where('property_images.client_id', '=', CLIENT_ID)
                 ->where('property_images.property_id', '=', $property->property_id)
                 ->orderBy('property_images.sort', 'asc')
+                ->orderBy('property_images.is_cover', 'desc')
                 ->get();
 
             foreach ($pd as $images) {
@@ -592,7 +632,7 @@ class PropertyController extends BaseController
             ) {
                 $request_chat->has_unread_message = true;
             }
-            $request_chat->last_message = $this->get_firebase_last_message('request_chat', $request_chat->id);
+            $request_chat->last_message = $this->get_firebase_last_message('request_chat', $request_chat, $user_id);
         }
 
         $instant_chats = DB::table('instant_chat')
@@ -621,7 +661,7 @@ class PropertyController extends BaseController
             ) {
                 $request_chat->has_unread_message = true;
             }
-            $request_chat->last_message = $this->get_firebase_last_message('instant_chat', $request_chat->id);
+            $request_chat->last_message = $this->get_firebase_last_message('instant_chat', $request_chat, $user_id);
         }
         // echo $user_id;
         $personal_chats = DB::table('personal_chat')
@@ -652,7 +692,8 @@ class PropertyController extends BaseController
             ) {
                 $request_chat->has_unread_message = true;
             }
-            $request_chat->last_message = $this->get_firebase_last_message('personal_chat', $request_chat->id);
+            $last_message = $this->get_firebase_last_message('personal_chat', $request_chat, $user_id);
+            $request_chat->last_message = $last_message;
         }
 
         $results = [];
@@ -694,7 +735,7 @@ class PropertyController extends BaseController
             ) {
                 $request_chat->has_unread_message = true;
             }
-            $request_chat->last_message = $this->get_firebase_last_message('request_chat', $request_chat->id);
+            $request_chat->last_message = $this->get_firebase_last_message('request_chat', $request_chat, $user_id);
         }
 
         $instant_chats = DB::table('instant_chat')
@@ -719,7 +760,7 @@ class PropertyController extends BaseController
             ) {
                 $request_chat->has_unread_message = true;
             }
-            $request_chat->last_message = $this->get_firebase_last_message('instant_chat', $request_chat->id);
+            $request_chat->last_message = $this->get_firebase_last_message('instant_chat', $request_chat, $user_id);
         }
 
         $personal_chats = DB::table('personal_chat')
@@ -745,7 +786,8 @@ class PropertyController extends BaseController
             ) {
                 $request_chat->has_unread_message = true;
             }
-            $request_chat->last_message = $this->get_firebase_last_message('personal_chat', $request_chat->id);
+            $last_message = $this->get_firebase_last_message('personal_chat', $request_chat, $user_id);
+            $request_chat->last_message = $last_message;
         }
 
         $results = [];
@@ -820,7 +862,7 @@ class PropertyController extends BaseController
                 $mail_data = [
                     'traveler' => $traveler,
                     'owner' => $owner,
-                    'mail_to' => 'traveller',
+                    'mail_to' => 'traveler',
                     'booking_id' => $booking->booking_id,
                     'property_title' => $booking->title,
                     'property_room_type' => $booking->room_type,
@@ -887,12 +929,15 @@ class PropertyController extends BaseController
             $traveller = DB::select(
                 "SELECT first_name, last_name, username, id FROM users WHERE client_id = CLIENT_ID AND id = $datum->owner_id LIMIT 1",
             );
-
             $image = DB::table('property_images')
                 ->where('client_id', CLIENT_ID)
                 ->where('property_id', $datum->property_id)
+                ->orderBy('is_cover', 'desc')
                 ->first();
-            $datum->image_url = $image->image_url;
+            $datum->image_url = '';
+            if ($image) {
+                $datum->image_url = $image->image_url;
+            }
             $datum->owner_name = Helper::get_user_display_name($traveller[0]);
             $datum->owner_id = $traveller[0]->id;
             $datum->start_date = Carbon::parse($datum->start_date)->format('m/d/Y');
@@ -934,6 +979,7 @@ class PropertyController extends BaseController
             $query = $property_list_obj->select('property_list.*')->where([
                 'is_complete' => ACTIVE,
                 'status' => 1,
+                'is_disable' => 0,
                 'property_status' => 1,
             ]);
 
@@ -1063,8 +1109,24 @@ class PropertyController extends BaseController
             foreach ($nearby_properties as $key => $value) {
                 $image = DB::table('property_images')
                     ->where('property_id', $value->id)
+                    ->orderBy('is_cover', 'desc')
                     ->first();
                 $value->image_url = isset($image->image_url) ? $image->image_url : '';
+            }
+        }
+        $blocked_dates = [];
+        $user_id = $request->session()->get('user_id');
+
+        if ($user_id) {
+            $booking_start_dates = DB::table('property_booking')
+                ->where('traveller_id', '=', $user_id)
+                ->whereNotIn('status', [0, 4, 8])
+                ->whereDate('start_date', '>=', Carbon::now())
+                ->pluck('start_date');
+            foreach ($booking_start_dates as $key => $value) {
+                $start_date = Carbon::parse($value);
+                $dates_list = $this->getDatesBetweenRange($start_date->copy()->subDays(7), $start_date);
+                $blocked_dates = array_merge($blocked_dates, $dates_list);
             }
         }
         return view('search_property')
@@ -1075,7 +1137,8 @@ class PropertyController extends BaseController
             ->with('total_properties', count($nearby_properties))
             ->with('next', $page)
             ->with('room_types', $room_types)
-            ->with('offset', $offset);
+            ->with('offset', $offset)
+            ->with('blocked_dates', $blocked_dates);
     }
 
     public function set_favourite($property_id, Request $request)
@@ -1101,6 +1164,14 @@ class PropertyController extends BaseController
             ]);
             return response()->json(['status' => 'SUCCESS', 'message' => 'Added to favourites', 'code' => 1]);
         }
+    }
+
+    public static function format_amount($amount, $sign = '+')
+    {
+        if ($amount < 0) {
+            $sign = '-';
+        }
+        return $sign . '$' . abs($amount);
     }
 
     public static function get_payment_summary($booking, $is_owner = 0)
@@ -1130,42 +1201,35 @@ class PropertyController extends BaseController
             $security_deposit_entry = array_merge([], $payment);
             $service_tax_entry = array_merge([], $payment);
             $is_partial_days_payment = boolval($payment['is_partial_days'] ?? 0);
-            $neat_rate = $is_partial_days_payment ? $payment['total_amount'] : $payment['monthly_rate'];
-
+            $neat_rate = $payment['monthly_rate'];
+            if ($is_partial_days_payment) {
+                $neat_rate = round(($payment['monthly_rate'] * $payment['is_partial_days']) / 30);
+            }
             if ($is_owner == 1) {
-                $payment['amount'] = $neat_rate - $payment['service_tax'];
+                $payment['amount'] = self::format_amount($neat_rate - $payment['service_tax']);
                 $grand_total = $grand_total + $payment['total_amount'] - $payment['service_tax'];
                 $payment['covering_range'] =
                     "Covering " . $payment['covering_range'] . ", Minus $" . $payment['service_tax'] . " fee";
 
                 if ($payment['payment_cycle'] == 1) {
-                    if ($is_partial_days_payment) {
-                        // In case of partial days, add cleaning fees to neat amount
-                        $grand_total = $grand_total + $booking->cleaning_fee;
-                    }
-
                     $cleaning_fee_entry['name'] = 'Cleaning Fee';
-                    $cleaning_fee_entry['amount'] = $booking->cleaning_fee;
+                    $cleaning_fee_entry['amount'] = self::format_amount($booking->cleaning_fee);
                     $cleaning_fee_entry['covering_range'] = '';
                     array_push($scheduled_payments, $cleaning_fee_entry);
                 }
             } else {
-                $payment['amount'] = $neat_rate;
+                $payment['amount'] = self::format_amount($neat_rate, '-');
                 $grand_total = $grand_total + $payment['total_amount'] + $payment['service_tax'];
 
                 if ($payment['payment_cycle'] == 1) {
-                    if ($is_partial_days_payment) {
-                        // In case of partial days, add cleaning fees to neat amount
-                        $grand_total = $grand_total + $booking->cleaning_fee;
-                    } else {
-                        $grand_total = $grand_total - $booking->security_deposit;
-                    }
+                    $grand_total = $grand_total - $booking->security_deposit;
+
                     $cleaning_fee_entry['name'] = 'Cleaning Fee';
-                    $cleaning_fee_entry['amount'] = $booking->cleaning_fee;
+                    $cleaning_fee_entry['amount'] = self::format_amount($booking->cleaning_fee, '-');
                     $cleaning_fee_entry['covering_range'] = 'One-time charge';
 
                     $security_deposit_entry['name'] = 'Security Deposit';
-                    $security_deposit_entry['amount'] = $booking->security_deposit;
+                    $security_deposit_entry['amount'] = self::format_amount($booking->security_deposit, '-');
                     $security_deposit_entry['covering_range'] = 'Refunded 72 hours after check-out';
                     // Showing pending if the booking is not yet approved
                     if ($booking->status < 2) {
@@ -1181,8 +1245,8 @@ class PropertyController extends BaseController
                 }
 
                 $service_tax_entry['due_date'] = $payment['due_date'];
-                $service_tax_entry['name'] = 'Service Tax';
-                $service_tax_entry['amount'] = $payment['service_tax'];
+                $service_tax_entry['name'] = $payment['payment_cycle'] == 1 ? 'Service Fee' : 'Processing Fee';
+                $service_tax_entry['amount'] = self::format_amount($payment['service_tax'], '-');
                 $service_tax_entry['is_cleared'] = $payment['is_cleared'];
                 $service_tax_entry['status'] = $payment['status'];
                 $service_tax_entry['covering_range'] = 'One-time charge';
@@ -1290,6 +1354,7 @@ class PropertyController extends BaseController
                     'property_list.state as prop_state',
                     'property_list.city as prop_city',
                 )
+                ->orderBy('property_images.is_cover', 'desc')
                 ->first();
             //print_r($properties);exit;
 
@@ -1327,8 +1392,10 @@ class PropertyController extends BaseController
                 'users.profile_image',
                 'users.device_token',
                 'property_images.image_url',
+                'property_images.is_cover',
                 'property_room.*',
             )
+            ->orderBy('property_images.is_cover', 'DESC')
             ->first();
 
         if ($properties) {
@@ -1393,6 +1460,7 @@ class PropertyController extends BaseController
                 ->where('property_amenties.property_id', '=', $property_id)
                 ->join('amenities_list', 'property_amenties.amenties_name', '=', 'amenities_list.amenities_name')
                 ->select('amenities_list.amenities_name as amenties_name', 'amenities_list.icon_url as amenties_icon')
+                ->orderBy('amenties_name', 'ASC')
                 ->get();
 
             //print_r($amenties);exit;
@@ -1424,6 +1492,7 @@ class PropertyController extends BaseController
                 ->where('property_images.client_id', '=', CLIENT_ID)
                 ->where('property_images.property_id', '=', $property_id)
                 ->orderBy('property_images.sort', 'asc')
+                ->orderBy('property_images.is_cover', 'desc')
                 ->select('property_images.image_url')
                 ->get();
             $properties->property_images = $pd;
@@ -1452,6 +1521,7 @@ class PropertyController extends BaseController
             ->where('property_list.is_complete', '=', ACTIVE)
             ->where('property_list.property_status', '=', 1)
             ->where('property_list.status', '=', 1)
+            ->where('property_list.is_disable', '=', ZERO)
             ->where('property_list.id', '!=', $property_id)
             ->select(
                 'property_list.title',
@@ -1486,6 +1556,7 @@ class PropertyController extends BaseController
                 ->where('property_images.client_id', '=', CLIENT_ID)
                 ->where('property_images.property_id', '=', $property->property_id)
                 ->orderBy('property_images.sort', 'asc')
+                ->orderBy('property_images.is_cover', 'desc')
                 ->first();
 
             $property->image_url = isset($pd->image_url) ? $pd->image_url : '';
@@ -1501,6 +1572,7 @@ class PropertyController extends BaseController
                 ->where('property_images.client_id', '=', CLIENT_ID)
                 ->where('property_images.property_id', '=', $property->property_id)
                 ->orderBy('property_images.sort', 'asc')
+                ->orderBy('property_images.is_cover', 'desc')
                 ->select('property_images.image_url')
                 ->get();
             $propertys = [];
@@ -1637,6 +1709,9 @@ class PropertyController extends BaseController
 
     public function single_reservations($booking_id, Request $request)
     {
+        if (empty($booking_id)) {
+            return view('general_error', ['message' => 'We can’t find the booking you’re looking for.']);
+        }
         $data = DB::table('property_booking')
             ->leftJoin('property_list', 'property_list.id', '=', 'property_booking.property_id')
             ->where('property_booking.client_id', CLIENT_ID)
@@ -2046,6 +2121,7 @@ class PropertyController extends BaseController
                 $property_images = DB::table('property_images')
                     ->where('client_id', '=', CLIENT_ID)
                     ->where('property_id', '=', $property_id)
+                    ->orderBy('is_cover', 'desc')
                     ->get();
                 //var_dump($property_details); exit;
                 return view('owner.add-property.5', [
@@ -2057,6 +2133,10 @@ class PropertyController extends BaseController
                 break;
 
             case 6:
+                $all_amenties = AmenitiesList::where('client_id', '=', CLIENT_ID)
+                    ->where('status', "=", ONE)
+                    ->orderBy('amenities_name', 'ASC')
+                    ->get();
                 $amenties = Propertyamenties::where('property_id', $property_id)->get();
                 $stage_update = DB::table('property_list')
                     ->where('client_id', '=', CLIENT_ID)
@@ -2065,7 +2145,11 @@ class PropertyController extends BaseController
                 $client_id = CLIENT_ID;
                 //code to be executed if n=label3;
                 // print_r($amenties);exit;
-                return view('owner.add-property.6', ['amenties' => $amenties, 'property_details' => $property_details])
+                return view('owner.add-property.6', [
+                    'amenties' => $amenties,
+                    'all_amenties' => $all_amenties,
+                    'property_details' => $property_details,
+                ])
                     ->with('stage', $stage)
                     ->with('client_id', $client_id);
                 break;
@@ -2110,7 +2194,8 @@ class PropertyController extends BaseController
                             'property_booking.end_date',
                             //                            DB::raw('DATE_FORMAT(property_booking.start_date, "%M %d, %Y") as start_date'),
                             //                            DB::raw('DATE_FORMAT(property_booking.end_date, "%M %d, %Y") as end_date'),
-                            'traveller.username',
+                            'traveller.first_name',
+                            'traveller.last_name',
                         )
                         ->get();
                     $block_events = DB::table('property_blocking')
@@ -2370,9 +2455,9 @@ class PropertyController extends BaseController
     {
         $ins = [];
         $ins['client_id'] = CLIENT_ID;
-        $ins['monthly_rate'] = $request->monthly_rate;
-        $ins['cleaning_fee'] = $request->cleaning_fee;
-        $ins['security_deposit'] = $request->security_deposit;
+        $ins['monthly_rate'] = ltrim($request->monthly_rate, "0");
+        $ins['cleaning_fee'] = ltrim($request->cleaning_fee, "0");
+        $ins['security_deposit'] = ltrim($request->security_deposit, "0");
         $ins['check_in'] = $request->check_in;
         $ins['check_out'] = $request->check_out;
         $ins['cancellation_policy'] = $request->cancellation_policy;
@@ -2431,7 +2516,8 @@ class PropertyController extends BaseController
                     'property_booking.is_instant',
                     DB::raw('DATE_FORMAT(property_booking.start_date, "%M %d, %Y") as start_date'),
                     DB::raw('DATE_FORMAT(property_booking.end_date, "%M %d, %Y") as end_date'),
-                    'traveller.username',
+                    'traveller.first_name',
+                    'traveller.last_name',
                 )
                 ->get();
             $block_events = DB::table('property_blocking')
@@ -2488,319 +2574,20 @@ class PropertyController extends BaseController
             ->where('client_id', CLIENT_ID)
             ->where('property_id', $request->property_id)
             ->delete();
-        if ($request->Kitchen) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Kitchen';
-            $property_aminities->amenties_icon = 'kitchen_icon';
-            $property_aminities->save();
-        }
-        if ($request->internet) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Internet';
-            $property_aminities->amenties_icon = 'Internet_icon';
-            $property_aminities->save();
-        }
-        if ($request->smoking_allowed) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Smoking Allowed';
-            $property_aminities->amenties_icon = 'Smoking_Allowed_icon';
-            $property_aminities->save();
-        }
-        if ($request->tv) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Tv';
-            $property_aminities->amenties_icon = 'Tv_icon';
-            $property_aminities->save();
-        }
-        if ($request->wheelchair_accessible) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Wheelchair Accessible';
-            $property_aminities->amenties_icon = 'Wheelchair_Accessible_icon';
-            $property_aminities->save();
-        }
-        if ($request->elevator_in_building) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Elevator in Building';
-            $property_aminities->amenties_icon = 'Elevator_in_building_icon';
-            $property_aminities->save();
-        }
-        if ($request->indoor_fireplace) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Indoor Fireplace';
-            $property_aminities->amenties_icon = 'Indoor_Fireplace_icon';
-            $property_aminities->save();
-        }
-        if ($request->heating) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Heating';
-            $property_aminities->amenties_icon = 'Heating_icon';
-            $property_aminities->save();
-        }
-        if ($request->essentials) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Essentials';
-            $property_aminities->amenties_icon = 'Essentials_icon';
-            $property_aminities->save();
-        }
-        if ($request->door_man) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Doorman';
-            $property_aminities->amenties_icon = 'Doorman_icon';
-            $property_aminities->save();
-        }
-        if ($request->pool) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Pool';
-            $property_aminities->amenties_icon = 'Pool_icon';
-            $property_aminities->save();
-        }
-        if ($request->washer) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Washer';
-            $property_aminities->amenties_icon = 'Washer_icon';
-            $property_aminities->save();
-        }
-        if ($request->hot_tub) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Hot Tub';
-            $property_aminities->amenties_icon = 'Hot_Tub_icon';
-            $property_aminities->save();
-        }
-        if ($request->dryer) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Dryer';
-            $property_aminities->amenties_icon = 'Dryer_icon';
-            $property_aminities->save();
-        }
-        if ($request->gym) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Gym';
-            $property_aminities->amenties_icon = 'Gym_icon';
-            $property_aminities->save();
-        }
-        if ($request->free_parking_on_premises) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Free Parking on Premises';
-            $property_aminities->amenties_icon = 'Free_Parking_on_Premises_icon';
-            $property_aminities->save();
-        }
-        if ($request->wireless_internet) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Wireless Internet';
-            $property_aminities->amenties_icon = 'Wireless_Internet_icon';
-            $property_aminities->save();
-        }
-        if ($request->pets_allowed) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Pets Allowed';
-            $property_aminities->amenties_icon = 'Pets_Allowed_icon';
-            $property_aminities->save();
-        }
-        if ($request->kid_friendly) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Kid Friendly';
-            $property_aminities->amenties_icon = 'Kid_Friendly_icon';
-            $property_aminities->save();
-        }
-        if ($request->suitable_for_events) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Suitable for Events';
-            $property_aminities->amenties_icon = 'Suitable_for_Events_icon';
-            $property_aminities->save();
-        }
-        if ($request->non_smoking) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Non Smoking';
-            $property_aminities->amenties_icon = 'Non_Smoking_icon';
-            $property_aminities->save();
-        }
-        if ($request->phone) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Phone';
-            $property_aminities->amenties_icon = 'Phone_icon';
-            $property_aminities->save();
-        }
-        if ($request->projector) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Projector';
-            $property_aminities->amenties_icon = 'Projector_icon';
-            $property_aminities->save();
-        }
-        if ($request->restaurant) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Restaurant';
-            $property_aminities->amenties_icon = 'Restaurant_icon';
-            $property_aminities->save();
-        }
-        if ($request->air_conditioner) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Air Conditioner';
-            $property_aminities->amenties_icon = 'Air_Conditioner_icon';
-            $property_aminities->save();
-        }
-        if ($request->scanner_printer) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Scanner Printer';
-            $property_aminities->amenties_icon = 'Scanner_Printer_icon';
-            $property_aminities->save();
-        }
-        if ($request->fax) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Fax';
-            $property_aminities->amenties_icon = 'Fax_icon';
-            $property_aminities->save();
-        }
-        if ($request->breakfast_included) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Breakfast Included';
-            $property_aminities->amenties_icon = 'Breakfast_Included_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->Cable) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Cable';
-            $property_aminities->amenties_icon = 'cable_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->pots_and_pans) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Pots and Pans';
-            $property_aminities->amenties_icon = 'pots_and_pans_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->towels) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Towels';
-            $property_aminities->amenties_icon = 'Towels_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->garage) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Garage';
-            $property_aminities->amenties_icon = 'Garage_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->smart_tv) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Smart Tv';
-            $property_aminities->amenties_icon = 'Smart_Tv_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->all_bils_included) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'All Bils Included';
-            $property_aminities->amenties_icon = 'All_Bils_Included_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->security_cameras) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Security Cameras';
-            $property_aminities->amenties_icon = 'Security_Cameras_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->computer) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Computer';
-            $property_aminities->amenties_icon = 'Computer_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->netflix) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Netflix';
-            $property_aminities->amenties_icon = 'Netflix_icon';
-            $property_aminities->save();
-        }
-
-        if ($request->coffee_pot) {
-            $property_aminities = new Propertyamenties();
-            $property_aminities->client_id = CLIENT_ID;
-            $property_aminities->property_id = $request->property_id;
-            $property_aminities->amenties_name = 'Coffee Pot';
-            $property_aminities->amenties_icon = 'Coffee_Pot_icon';
-            $property_aminities->save();
+        foreach ($request->all() as $key => $value) {
+            if (!in_array($key, ['_token', 'client_id', 'property_id'])) {
+                $icon = DB::table('amenities_list')
+                    ->select('icon_url')
+                    ->where('amenities_name', '=', $value)
+                    ->value('user_id');
+                $icon = str_replace('amenities/', '', $icon);
+                $property_aminities = new Propertyamenties();
+                $property_aminities->client_id = CLIENT_ID;
+                $property_aminities->property_id = $request->property_id;
+                $property_aminities->amenties_name = $value;
+                $property_aminities->amenties_icon = $icon;
+                $property_aminities->save();
+            }
         }
 
         //        $request_data = print_r($request->all());
@@ -2916,11 +2703,12 @@ class PropertyController extends BaseController
         // Exact check in time with date
         $check_in_date_time = Carbon::parse($booking->start_date);
         $check_in_date_time->setTime($timeSplit[0], $timeSplit[1], 0);
+        $check_in_date_time = Helper::get_utc_time_user($check_in_date_time);
 
         // Last time that owner can accept booking. 5 days before check in time
         $last_approval_time = $check_in_date_time->copy()->subDays(5);
 
-        $week_after_request = now()->addDays(7);
+        $week_after_request = now('UTC')->addDays(7);
         $scheduler_date = Carbon::parse($last_approval_time->min($week_after_request));
         $scheduler_date->setTime($timeSplit[0], $timeSplit[1], 0);
         $owner_reminder_email = $scheduler_date->copy()->subDays(1);
@@ -2984,7 +2772,10 @@ class PropertyController extends BaseController
             ->where('property_images.property_id', '=', $property->id)
             ->orderBy('is_cover', 'DESC')
             ->first();
-        $cover_img = BASE_URL . ltrim($property_img->image_url, '/');
+        $cover_img = '';
+        if ($property_img && $property_img->image_url) {
+            $cover_img = BASE_URL . ltrim($property_img->image_url, '/');
+        }
 
         // Owner Mail
         $property_details = DB::table('property_list')
@@ -3015,7 +2806,7 @@ class PropertyController extends BaseController
             $booking->start_date,
             $booking->end_date,
             $property_details->title,
-            $request->booking_id,
+            $booking->id,
             OWNER_NEW_BOOKING,
         );
 
@@ -3197,6 +2988,7 @@ class PropertyController extends BaseController
                 ->where('property_images.client_id', '=', CLIENT_ID)
                 ->where('property_images.property_id', '=', $property->propertyId)
                 ->orderBy('property_images.sort', 'asc')
+                ->orderBy('property_images.is_cover', 'desc')
                 ->get();
 
             $cover_img = DB::table('property_images')
@@ -3234,24 +3026,46 @@ class PropertyController extends BaseController
         return view('owner.my_properties', ['properties' => $properties_near]);
     }
 
-    public function property_image_upload($cover_id, Request $request)
+    public function property_image_upload($cover_id = null, Request $request)
     {
         //
         $property_id = $request->session()->get('property_id');
         $complete_url = '';
+        $cover_image_id = null;
         if ($property_id) {
             if ($request->hasfile('file')) {
                 foreach ($request->file('file') as $key => $file) {
                     $complete_url = $this->base_image_upload_array($file, 'properties');
-                    $is_cover = strval($key) == $cover_id;
-                    $insert = DB::table('property_images')->insert([
+                    $insert_id = DB::table('property_images')->insertGetId([
                         'client_id' => CLIENT_ID,
                         'property_id' => $property_id,
                         'image_url' => $complete_url,
-                        'is_cover' => $is_cover,
                         'sort' => ONE,
                         'status' => ONE,
                     ]);
+                    if (strval($key) == $cover_id) {
+                        $cover_image_id = $insert_id;
+                    }
+                }
+                if ($cover_image_id) {
+                    DB::table('property_images')
+                        ->where('property_id', $property_id)
+                        ->update(['is_cover' => 0]);
+                    DB::table('property_images')
+                        ->where('property_id', $property_id)
+                        ->where('id', $cover_image_id)
+                        ->update(['is_cover' => 1]);
+                } else {
+                    $cover_image_available = DB::table('property_images')
+                        ->where('property_id', $property_id)
+                        ->where('is_cover', '=', 1)
+                        ->first();
+                    if (!$cover_image_available) {
+                        DB::table('property_images')
+                            ->where("property_id", '=', $property_id)
+                            ->limit(1)
+                            ->update(['is_cover' => 1]);
+                    }
                 }
             }
         }
@@ -3266,7 +3080,7 @@ class PropertyController extends BaseController
             ->where('client_id', CLIENT_ID)
             ->where('id', $user_id)
             ->first();
-        $username = $user->first_name . ' ' . $user->last_name;
+        $username = Helper::get_user_display_name($user);
         $check = DB::table('property_list')
             ->where('client_id', CLIENT_ID)
             ->where('id', $id)
@@ -3274,17 +3088,17 @@ class PropertyController extends BaseController
         //print_r($check);exit;
         if ($check->is_disable == 0) {
             $disable = 1;
-            $status = 0;
+            //            $status = 0;
             $content = "Your Property : " . $check->title . "(Property ID : " . $check->id . ") Has been Disabled.";
         } else {
             $disable = 0;
-            $status = 1;
+            //            $status = 1;
             $content = "Your Property : " . $check->title . "(Property ID : " . $check->id . ") Has been Enabled.";
         }
         $update = DB::table('property_list')
             ->where('client_id', CLIENT_ID)
             ->where('id', $id)
-            ->update(['is_disable' => $disable, 'status' => $status]);
+            ->update(['is_disable' => $disable]);
         $mail_email = $this->get_email($check->user_id);
         $mail_data = [
             'username' => $username,
@@ -3296,36 +3110,69 @@ class PropertyController extends BaseController
 
     public function delete_property($property_id, Request $request)
     {
-        $file_name = 'data/' . $property_id . '.json';
-        if (file_exists($file_name)) {
-            unlink($file_name);
-        }
-        DB::table('property_list')
-            ->where('client_id', CLIENT_ID)
-            ->where('id', $property_id)
-            ->update(['status' => 0]);
-        $data = DB::table('property_list')
-            ->join('users', 'users.id', '=', 'property_list.user_id')
-            ->where('property_list.client_id', CLIENT_ID)
-            ->where('property_list.id', $property_id)
-            ->first();
-        $mail_data = [
-            'name' => $data->first_name . " " . $data->last_name,
-            'data' => $data,
-            'text' => 'Trying to delete his/her property',
-        ];
-        $title = 'Alert from - ' . APP_BASE_NAME;
-        $subject = "Property Deletion request from - " . APP_BASE_NAME;
-        $email = "guru@sparkouttech.com";
-        // $email = "info@healthcaretravels.com";
-        $this->send_custom_email($email, $subject, 'mail.property-delete-mail', $mail_data, $title);
+        try {
+            $file_name = 'data/' . $property_id . '.json';
+            if (file_exists($file_name)) {
+                unlink($file_name);
+            }
+            Logger::info('delete proprty for id' . $property_id);
+            DB::table('property_list')
+                ->where('client_id', '=', CLIENT_ID)
+                ->where('id', '=', $property_id)
+                ->update(['status' => 0]);
+            //        $data = DB::table('property_list')
+            //            ->join('users', 'users.id', '=', 'property_list.user_id')
+            //            ->where('property_list.client_id', CLIENT_ID)
+            //            ->where('property_list.id', $property_id)
+            //            ->first();
+            //        $mail_data = [
+            //            'name' => $data->first_name . " " . $data->last_name,
+            //            'data' => $data,
+            //            'text' => 'Trying to delete his/her property',
+            //        ];
+            //        $title = 'Alert from - ' . APP_BASE_NAME;
+            //        $subject = "Property Deletion request from - " . APP_BASE_NAME;
+            //        $email = "guru@sparkouttech.com";
+            //        // $email = "info@healthcaretravels.com";
+            //        $this->send_custom_email($email, $subject, 'mail.property-delete-mail', $mail_data, $title);
 
-        // DB::table('property_amenties')->where('client_id', CLIENT_ID)->where('property_id', $property_id)->delete();
-        // DB::table('property_bedrooms')->where('client_id', CLIENT_ID)->where('property_id', $property_id)->delete();
-        // DB::table('property_room')->where('client_id', CLIENT_ID)->where('property_id', $property_id)->delete();
-        // DB::table('property_short_term_pricing')->where('client_id', CLIENT_ID)->where('property_id', $property_id)->delete();
-        // DB::table('property_images')->where('client_id', CLIENT_ID)->where('property_id', $property_id)->delete();
-        return back()->with('success', 'Property removed successfully');
+            DB::table('property_amenties')
+                ->where('client_id', CLIENT_ID)
+                ->where('property_id', $property_id)
+                ->delete();
+            DB::table('property_bedrooms')
+                ->where('client_id', CLIENT_ID)
+                ->where('property_id', $property_id)
+                ->delete();
+            DB::table('property_room')
+                ->where('client_id', CLIENT_ID)
+                ->where('property_id', $property_id)
+                ->delete();
+            // DB::table('property_short_term_pricing')->where('client_id', CLIENT_ID)->where('property_id', $property_id)->delete();
+            //        DB::table('property_images')
+            //            ->where('client_id', CLIENT_ID)
+            //            ->where('property_id', $property_id)
+            //            ->delete();
+            //        DB::table('property_rating')
+            //            ->where('client_id', CLIENT_ID)
+            //            ->where('property_id', $property_id)
+            //            ->delete();
+            //        DB::table('property_review')
+            //            ->where('client_id', CLIENT_ID)
+            //            ->where('property_id', $property_id)
+            //            ->delete();
+            //        DB::table('property_room')
+            //            ->where('client_id', CLIENT_ID)
+            //            ->where('property_id', $property_id)
+            //            ->delete();
+            return response()->json(['status' => 'SUCCESS', 'message' => 'Property removed successfully']);
+        } catch (\Exception $ex) {
+            return response()->json([
+                'status' => 'FAILED',
+                'message' => $ex->getMessage(),
+                'status_code' => ZERO,
+            ]);
+        }
     }
 
     public function list_pets($lat, $lng, $id)
@@ -3422,6 +3269,7 @@ class PropertyController extends BaseController
             $property = $bookingModel->property;
             $is_owner = $user_id == $booking->owner_id;
             $user = $is_owner ? $owner : $traveler;
+            $other_user = $is_owner ? $traveler : $owner;
 
             $mail_traveler = EmailConfig::where('type', 15)
                 ->where('role_id', 0)
@@ -3441,6 +3289,26 @@ class PropertyController extends BaseController
                 'text' => $content,
             ];
             $this->send_custom_email($user->email, $subject, 'mail.cancellation_request', $mail_data, $title);
+
+            // TODO: send email to other user
+
+            $other_user_mail_data = [
+                'name' => $other_user->first_name . " " . $other_user->last_name,
+                'title' => $property->title,
+                'requested_by' => $is_owner ? 'host' : 'traveler',
+                'check_in' => date('m-d-Y', strtotime($bookingModel->start_date)),
+                'check_out' => date('m-d-Y', strtotime($bookingModel->end_date)),
+                'cancellation_reason' => $request->cancellation_reason,
+                'cancellation_explanation' => $request->cancellation_explanation,
+            ];
+            Logger::info('Sending email to ' . $other_user->email . ' with data ' . json_encode($other_user_mail_data));
+            $this->send_custom_email(
+                $other_user->email,
+                "Booking Cancellation Requested for " . $property->title,
+                'mail.cancellation_request_another_user',
+                $other_user_mail_data,
+                $title,
+            );
 
             // TODO: send email to Admin: support@healthcaretravels.com
             $mail_data_admin = [
@@ -3468,7 +3336,7 @@ class PropertyController extends BaseController
                 'You have successfully requested cancellation for this booking, we will contact you soon!',
             );
         } catch (\Exception $ex) {
-            Logger::error('Error sending email to: Error: ' . $ex->getMessage());
+            Logger::error('Error Submitting request for cancelllation: ' . $ex->getMessage());
             return back()->withErrors([$ex->getMessage()]);
         }
     }

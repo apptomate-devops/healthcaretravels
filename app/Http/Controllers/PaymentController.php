@@ -387,7 +387,7 @@ class PaymentController extends BaseController
             foreach ($payments as $payment) {
                 $payment->confirmed_time = Carbon::now();
                 $transaction_record['transaction_date'] = Carbon::parse($payment->confirmed_time)->toDateString();
-                $transaction_record['name'] = 'Stay Payment';
+                $transaction_record['name'] = 'Housing Payment';
                 $transaction_record['booking_id'] = $payment->booking_id;
 
                 if ($is_owner) {
@@ -426,8 +426,8 @@ class PaymentController extends BaseController
                         $security_deposit_record['transaction_date'] = $transaction_record['transaction_date'];
                         array_push($all_payments, $security_deposit_record);
 
-                        // For Service Tax entry
-                        $service_tax_record['name'] = 'Service Tax';
+                        // For Service fee entry
+                        $service_tax_record['name'] = $payment['payment_cycle'] == 1 ? 'Service Fee' : 'Processing Fee';
                         $service_tax_record['payment'] = $payment->service_tax;
                         $service_tax_record['status'] = 'Debited';
                         $service_tax_record['booking_id'] = $payment->booking_id;

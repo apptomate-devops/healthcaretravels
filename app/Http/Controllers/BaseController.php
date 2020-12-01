@@ -258,10 +258,10 @@ class BaseController extends ConstantsController
         }
     }
 
-    public function send_scheduled_email($to, $template, $subject, $data, $delayInSeconds)
+    public function send_scheduled_email($to, $template, $subject, $data, $delayInSeconds, $bookingId)
     {
         Logger::info('Scheduling email to: ' . $to . ' after: ' . $delayInSeconds . ' for template: ' . $template);
-        ProcessEmail::dispatch($to, 'mail.' . $template, $subject, $data)
+        ProcessEmail::dispatch($to, 'mail.' . $template, $subject, $data, $bookingId)
             ->delay(now()->addSeconds($delayInSeconds))
             ->onQueue(EMAIL_QUEUE);
     }
@@ -423,19 +423,54 @@ class BaseController extends ConstantsController
         return RADIUS;
     }
 
-    public function get_firebase_last_message($key, $id)
+    public static function date_compare($a, $b)
     {
+        error_log(json_encode($b) . gettype($a->date));
+        if (gettype($a->date) == "string") {
+            $t1 = strtotime($a->date);
+        } else {
+            $t1 = strtotime($a->date->date);
+        }
+        if (gettype($b->date) == "string") {
+            $t2 = strtotime($b->date);
+        } else {
+            $t2 = strtotime($b->date->date);
+        }
+        return $t1 - $t2;
+    }
+
+    public function get_firebase_last_message($key, $request_chat, $user_id)
+    {
+        $id = $request_chat->id;
         $data = file_get_contents(FB_URL . $key . "/" . $id . "/.json");
         $data = json_decode($data);
         $data = (array) $data;
-        $d = count($data);
+
+        usort($data, [$this, 'date_compare']);
         $numItems = count($data);
         $i = 0;
+        $last_message = null;
         foreach ($data as $key => $value) {
             if (++$i === $numItems) {
-                return $value->message;
+                $last_message = $value;
+                break;
             }
         }
+
+        if ($last_message->sent_by == $request_chat->owner->id) {
+            $last_message->username = Helper::get_user_display_name($request_chat->owner);
+        } else {
+            $last_message->username = Helper::get_user_display_name($request_chat->traveller);
+        }
+        if ($last_message->sent_by == $user_id) {
+            $last_message->status = 'Sent';
+        } else {
+            $last_message->status = 'Received';
+        }
+        $date = strtotime($last_message->date);
+        $last_message->date = date('m/d/Y', $date);
+        $last_message->time = date('h:i a', $date);
+        return $last_message;
     }
 
     public function image_upload($width, $height, $image)
@@ -823,6 +858,7 @@ class BaseController extends ConstantsController
                     'Automatic Payment Reminder',
                     $mail_data,
                     $mailDelay,
+                    $booking->id,
                 );
             }
         }
@@ -846,13 +882,15 @@ class BaseController extends ConstantsController
         // Start time with check in set
         $start_date = Carbon::parse($booking->start_date);
         $start_date->setTime($checkInTimeSplit[0], $checkInTimeSplit[1], 0);
+        $start_date = Helper::get_utc_time_user($start_date);
         $start_date_with_padding = $start_date->copy()->subDays(1);
 
         // End time with check out set
         $end_date = Carbon::parse($booking->end_date);
         $end_date->setTime($checkOutTimeSplit[0], $checkOutTimeSplit[1], 0);
+        $end_date = Helper::get_utc_time_user($end_date);
         $end_date_with_padding = $end_date->subDay(1);
-        $current_date = Carbon::now();
+        $current_date = Carbon::now('UTC');
 
         // if there is no padding of 24 hr send email right away.
         if ($start_date_with_padding->gt($current_date)) {
@@ -870,6 +908,7 @@ class BaseController extends ConstantsController
             $subject,
             $owner_mail_data,
             $start_delay,
+            $booking->id,
         );
         $subject = 'Your Booking at ' . $propertyTitle . ' is Ending';
         $this->send_scheduled_email(
@@ -878,6 +917,7 @@ class BaseController extends ConstantsController
             $subject,
             $owner_mail_data,
             $end_delay,
+            $booking->id,
         );
 
         $traveler_mail_data = [
@@ -903,6 +943,7 @@ class BaseController extends ConstantsController
             $subject,
             $traveler_mail_data,
             $start_delay_72_hr,
+            $booking->id,
         );
         $subject = 'Your Stay at ' . $propertyTitle . ' is Ending';
         $this->send_scheduled_email(
@@ -911,6 +952,7 @@ class BaseController extends ConstantsController
             $subject,
             $traveler_mail_data,
             $end_delay,
+            $booking->id,
         );
     }
 

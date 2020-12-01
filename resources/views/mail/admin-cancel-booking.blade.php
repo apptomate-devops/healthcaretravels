@@ -1,7 +1,7 @@
 @extends('layout.mail')
 @section('content')
     <div style="padding-top: 5px;">
-        Your booking at <b>{{$property_title}}</b> for {{$check_in}} to {{$check_out}} has been cancelled. Please reach out to support for more information.
+        You booking at <b>{{$property_title}}</b> for <b>{{$check_in}} to {{$check_out}} </b> has been cancelled. The reason for Cancelled Booking: {{$cancellation_reason}}. If you feel this is in error please reach out to <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com</a> for more information.
     </div>
     <div style="padding-top: 5px;">
         Traveler: <b>{{$traveler_name}}</b>

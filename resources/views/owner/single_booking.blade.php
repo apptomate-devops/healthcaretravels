@@ -39,7 +39,7 @@
                     <div>Check-in: <span>{{date('m-d-Y',strtotime($data->start_date))}}</span></div>
                     <div>Check-out: <span>{{date('m-d-Y',strtotime($data->end_date))}}</span></div>
                     <div>Guests: <span>{{$data->guest_count}}</span></div>
-                    <div>Total Earnings: <span>$ {{$total_earning}}</span></div>
+                    <div>Total Earnings: <span>{{\App\Http\Controllers\PropertyController::format_amount($total_earning)}}</span></div>
                 </div>
 
                 <input type="hidden" id="booking_id" value="{{$data->booking_id}}">
@@ -54,8 +54,8 @@
                     @foreach($scheduled_payments as $payment)
                         <tr>
                             <td>{{date('m/d/Y',strtotime($payment['due_date']))}}</td>
-                            <td>{{$payment['name'] ?? 'Stay payment'}}</td>
-                            <td>+${{$payment['amount']}}</td>
+                            <td>{{$payment['name'] ?? 'Housing Payment'}}</td>
+                            <td>{{$payment['amount']}}</td>
                             <td>
                                 <p>
                                     <b>{{Helper::get_payment_status($payment)}}</b>

@@ -67,9 +67,10 @@ class Helper
         $name = $user->first_name . ' ' . $user->last_name;
         $fundingSourceDetails = null;
         $subjectDate = Carbon::now()->format('m/d');
+        $amount = self::get_payable_amount($payment, $is_owner);
         $data = [
             'name' => $name,
-            'amount' => $payment->total_amount,
+            'amount' => $amount,
             'booking_id' => $booking->booking_id,
             'deposit' => $is_owner,
         ];
@@ -87,6 +88,18 @@ class Helper
         $data['accountName'] = $fundingSourceDetails->name;
         Helper::send_custom_email($user->email, $subject, $mailTemplate, $data, 'Payment Processed');
     }
+
+    public static function get_payable_amount($payment, $is_owner = 0)
+    {
+        // Total amount is rent + service for traveler
+        $amount = $payment->total_amount + $payment->service_tax;
+        if ($is_owner) {
+            // Total amount is rent - service for owner
+            $amount = $payment->total_amount - $payment->service_tax;
+        }
+        return $amount;
+    }
+
     public static function process_booking_payment($booking_id, $payment_cycle, $is_owner = 0)
     {
         Helper::setConstantsHelper();
@@ -114,11 +127,8 @@ class Helper
                     $payment_cycle .
                     ($is_owner ? ' To Owner' : ' From Traveler'),
             );
-            // Total amount is rent - service for traveler
-            $amount = $payment->total_amount + $payment->service_tax;
+            $amount = self::get_payable_amount($payment, $is_owner);
             if ($is_owner) {
-                // Total amount is rent - service for traveler
-                $amount = $payment->total_amount - $payment->service_tax;
                 $fundingSource = $booking->owner_funding_source;
             }
             $transferDetails = null;
@@ -212,9 +222,10 @@ class Helper
 
             if (isset($payment['is_partial_days'])) {
                 $partialDayCount = $payment['is_partial_days'];
-                $neat_price = $payment['total_amount'] + $payment['service_tax']; // consider price for remaining days
+                $partial_monthly_rate = round(($payment['monthly_rate'] * $partialDayCount) / 30);
+                $neat_price = $partial_monthly_rate + $payment['service_tax']; // consider price for remaining days
                 $section = [
-                    $partialDayCount . ' Days' => $payment['total_amount'],
+                    $partialDayCount . ' Days' => $partial_monthly_rate,
                     'Processing Fee' => $payment['service_tax'],
                 ];
             } else {
@@ -324,7 +335,7 @@ class Helper
         }
     }
 
-    public static function get_traveller_status($status, $start_date, $end_date)
+    public static function get_traveller_status($status, $start_date, $end_date, $cancellation_requested = 0)
     {
         switch ($status) {
             case 1:
@@ -333,6 +344,9 @@ class Helper
                 $now = Carbon::now()->startOfDay();
                 $booking_starts_on = Carbon::parse($start_date)->startOfDay();
                 $booking_ends_on = Carbon::parse($end_date)->startOfDay();
+                if ($cancellation_requested) {
+                    return 'Cancellation Pending';
+                }
                 if ($now->between($booking_starts_on, $booking_ends_on)) {
                     return 'Happening Now';
                 }
@@ -659,7 +673,18 @@ class Helper
                 ->addMonth()
                 ->subDay();
             if ($i == $totalCycles && $isPartial) {
-                $data['total_amount'] = round(($data['monthly_rate'] * $partialDays) / 30);
+                $partialDaysAmount = round(($data['monthly_rate'] * $partialDays) / 30);
+
+                if ($totalCycles == 1) {
+                    // Add cleaning fee and security deposit for 1st cycle of partial days (Ex. total 30 days stay)
+                    if ($is_owner) {
+                        $partialDaysAmount += $data['cleaning_fee'];
+                    } else {
+                        $partialDaysAmount += $data['cleaning_fee'] + $data['security_deposit'];
+                    }
+                }
+
+                $data['total_amount'] = $partialDaysAmount;
                 $data['is_partial_days'] = $partialDays;
                 $covering_end_date = $covering_start_date->copy()->addDays($partialDays);
             }
@@ -730,7 +755,7 @@ class Helper
         }
 
         // firebase write starts
-        $date_fmt = now();
+        $date_fmt = date('D M d Y H:i:s O');
         $values = [];
         $values['traveller_id'] = $traveler_id;
         $values['owner_id'] = $property_detail->user_id;
@@ -780,10 +805,10 @@ class Helper
             ->where('id', $property_detail->user_id)
             ->first();
 
-        if ($owner->email != "0") {
+        if ($owner && $owner->email != "0") {
             $content = $message;
 
-            $data = ['username' => $owner->username, 'content' => $content];
+            $data = ['username' => Helper::get_user_display_name($owner), 'content' => $content];
 
             $subject = "Enquiry for Your Property";
             $title = $traveler->username . " sends Enquiry for Your Property";
@@ -1083,7 +1108,7 @@ class Helper
 
         switch ($type) {
             case OWNER_NEW_BOOKING:
-                $message = "Hi {$name}, you received a booking request for {$check_in_date} - {$check_out_date} at {$property_name}. Please log into Health Care Travels to approve or deny this request. Your response time is very important!";
+                $message = "Hi {$name}, you received a booking request for {$check_in_date} - {$check_out_date} at {$property_name}. Please log into Health Care Travels to approve or deny this request. Your response time is very important! Thank You.";
                 $timestamp = now()->addSeconds(1);
 
                 return ProcessMessage::dispatch($number, $message, $booking_id, OWNER_NEW_BOOKING)
@@ -1100,18 +1125,21 @@ class Helper
 
             case TRAVELER_CHECK_IN_APPROVAL:
                 $message = "Hi {$name}, this is Health Care Travels. Please reply 'Y' once you are safely checked in at your booking location. Please reach out to support@healthcaretravels.com if you encounter any issues.";
-                $timestamp = $check_in->setTime(11, 0, 0);
-
+                $timestamp = $check_in->copy()->setTime(11, 0, 0);
+                $utc_time = self::get_utc_time_user($timestamp);
                 return ProcessMessage::dispatch($number, $message, $booking_id, TRAVELER_CHECK_IN_APPROVAL)
-                    ->delay($timestamp)
+                    ->delay($utc_time)
                     ->onQueue(MESSAGE_QUEUE);
 
             case TRAVELER_CHECK_IN_APPROVAL_REMINDER:
                 $message = "Hi {$name}, this is Health Care Travels. Please reply 'Y' once you are safely checked in at your booking location. Please reach out to support@healthcaretravels.com if you encounter any issues.";
-                $timestamp = $check_in->addDay(1)->setTime(11, 0, 0);
-
+                $timestamp = $check_in
+                    ->copy()
+                    ->addDay(1)
+                    ->setTime(11, 0, 0);
+                $utc_time = self::get_utc_time_user($timestamp);
                 return ProcessMessage::dispatch($number, $message, $booking_id, TRAVELER_CHECK_IN_APPROVAL_REMINDER)
-                    ->delay($timestamp)
+                    ->delay($utc_time)
                     ->onQueue(MESSAGE_QUEUE);
         }
     }
@@ -1135,11 +1163,17 @@ class Helper
                 }
                 break;
             case TRAVELER_CHECK_IN_APPROVAL:
-                // do nothing
+                // logic for checking if owner approved booking or not.
+
+                if ($booking->status != 2) {
+                    $should_send_message = false;
+                }
                 break;
             case TRAVELER_CHECK_IN_APPROVAL_REMINDER:
                 // logic for checking if traveler has checkin or not
-                if ($booking->already_checked_in == 1) {
+                if ($booking->status == 2 && $booking->already_checked_in != 1) {
+                    $should_send_message = true;
+                } else {
                     $should_send_message = false;
                 }
                 break;
@@ -1147,6 +1181,18 @@ class Helper
         if ($should_send_message) {
             $twilio = new Twilio();
             $twilio->sendMessage(COUNTRY_CODE . $number, $message);
+        }
+        return;
+    }
+
+    public static function handleBookingEmails($to, $subject, $view, $data, $bookingId)
+    {
+        Helper::setConstantsHelper();
+        $booking = DB::table('property_booking')
+            ->where('id', $bookingId)
+            ->first();
+        if ($booking->status != 8) {
+            Helper::send_custom_email($to, $subject, $view, $data, null, null);
         }
         return;
     }
@@ -1162,6 +1208,14 @@ class Helper
             ->format($format);
     }
 
+    public static function get_utc_time_user($timestamp)
+    {
+        $timezone = optional(auth()->user())->timezone ?? USER_DEFAULT_TIMEZONE;
+        $utc_date = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, $timezone);
+        $utc_date->setTimezone('UTC');
+        return $utc_date;
+    }
+
     public static function get_user_display_name($user)
     {
         $displayName = $user->first_name;
@@ -1169,5 +1223,16 @@ class Helper
             $displayName .= " " . $user->last_name[0] . ".";
         }
         return ucwords($displayName);
+    }
+    public static function get_formatted_amount_for_admin($amount, $is_owner = 0, $forced_sign = null)
+    {
+        if ($forced_sign) {
+            return $forced_sign . '$' . $amount;
+        }
+        if ($is_owner) {
+            return '+$' . $amount;
+        } else {
+            return '-$' . $amount;
+        }
     }
 }

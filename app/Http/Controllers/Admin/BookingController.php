@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
+use App\Http\Controllers\PropertyController;
 use App\Models\PropertyBooking;
 use App\Models\BookingPayments;
 use App\Services\Logger;
@@ -38,13 +39,17 @@ class BookingController extends BaseController
         return view('Admin.bookings', compact('bookings'));
     }
 
-    public function extract_ids($data) {
-        return $data->map(function ($entry) {
-            return $entry->id;
-        })->all();
+    public function extract_ids($data)
+    {
+        return $data
+            ->map(function ($entry) {
+                return $entry->id;
+            })
+            ->all();
     }
 
-    public function filter_payments($payments, $status) {
+    public function filter_payments($payments, $status)
+    {
         return $payments->filter(function ($payment) use ($status) {
             return $payment->status == $status;
         });
@@ -73,20 +78,38 @@ class BookingController extends BaseController
         foreach ($payments as $payment) {
             if ($payment->status == PAYMENT_SUCCESS) {
                 if ($payment->is_owner) {
-                    $owner_total += $payment->total_amount;
+                    $owner_total += $payment->total_amount + $payment->service_tax;
                     if (empty($lastPaidToOwner)) {
                         $lastPaidToOwner = $payment;
                     } elseif ($payment->payment_cycle > $lastPaidToOwner->payment_cycle) {
                         $lastPaidToOwner = $payment;
                     }
                 } else {
-                    $traveler_total += $payment->total_amount;
+                    $traveler_total += $payment->total_amount + $payment->service_tax;
                     if (empty($lastPaidByTraveler)) {
                         $lastPaidByTraveler = $payment;
                     } elseif ($payment->payment_cycle > $lastPaidByTraveler->payment_cycle) {
                         $lastPaidByTraveler = $payment;
                     }
                 }
+            }
+            $sign = $payment->is_owner ? '+$' : '-$';
+            $payment->display_cleaning_fee = $payment->payment_cycle === 1 ? $sign . $payment->cleaning_fee : '-';
+            $payment->display_security_deposit =
+                $payment->payment_cycle === 1 && !$payment->is_owner ? $sign . $payment->security_deposit : '-';
+            $net_monthly_rate = $payment->is_partial_days
+                ? round(($payment->monthly_rate * $payment->is_partial_days) / 30)
+                : $payment->monthly_rate;
+            $payment->display_monthly_rate = $sign . $net_monthly_rate;
+            if ($payment->is_owner) {
+                $payment->display_total_amount = PropertyController::format_amount(
+                    $payment->total_amount - $payment->service_tax,
+                );
+            } else {
+                $payment->display_total_amount = PropertyController::format_amount(
+                    $payment->total_amount + $payment->service_tax,
+                    '-',
+                );
             }
         }
         $paymentInProcessing = $this->filter_payments($payments, PAYMENT_INIT);
@@ -95,7 +118,9 @@ class BookingController extends BaseController
         $hasPaymentsInProcessing = count($paymentsInProcessing) > 0;
         $canPaymentsCanceled = false;
         if ($hasPaymentsInProcessing) {
-            $latestInProgress = BookingPayments::where('booking_row_id', $request->id)->orderBy('processed_time','DESC')->first();
+            $latestInProgress = BookingPayments::where('booking_row_id', $request->id)
+                ->orderBy('processed_time', 'DESC')
+                ->first();
             $transferDetails = $this->dwolla->transfersApi->byId($latestInProgress->transfer_url);
             if ($transferDetails && $transferDetails->_links && $transferDetails->_links['cancel']) {
                 $canPaymentsCanceled = true;
@@ -121,7 +146,8 @@ class BookingController extends BaseController
         );
     }
 
-    public function cancel_payments_processing(Request $request) {
+    public function cancel_payments_processing(Request $request)
+    {
         $ids = $request->query('payments');
         if (empty($ids)) {
             return back()->with([
@@ -144,7 +170,9 @@ class BookingController extends BaseController
                 $payment->canceled_at = now();
                 $payment->save();
             } catch (\Exception $ex) {
-                Logger::error('Error in canceling payment: payment id' . $payment->id . '. EX: ' . $ex->getResponseBody());
+                Logger::error(
+                    'Error in canceling payment: payment id' . $payment->id . '. EX: ' . $ex->getResponseBody(),
+                );
                 $errorCount++;
             }
         }

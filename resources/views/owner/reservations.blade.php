@@ -46,7 +46,7 @@
                                     </td>
                                     <td class="expire-date">
                                 <span>
-                                    {{Helper::get_traveller_status($booking->bookStatus, $booking->start_date, $booking->end_date)}}
+                                    {{Helper::get_traveller_status($booking->bookStatus, $booking->start_date, $booking->end_date, $booking->cancellation_requested)}}
                                     @if($booking->bookStatus == 4) <span style="font-size: 12px; color: #e78016">{{$booking->deny_reason ?? ''}}</span> @endif
                                 </span>
                                     </td>

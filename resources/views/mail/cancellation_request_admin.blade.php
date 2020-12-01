@@ -16,14 +16,14 @@
         <br>
         <b>Owner Email:</b> {{$owner->email}}
         <br>
-        <b>Traveller Name:</b> {{$traveler->first_name . ' ' . $traveler->last_name}}
+        <b>Traveler Name:</b> {{$traveler->first_name . ' ' . $traveler->last_name}}
         <br>
-        <b>Traveller Email:</b> {{$traveler->email}}
+        <b>Traveler Email:</b> {{$traveler->email}}
         <br>
         <b>Reason:</b> {{$reason}}
         <br>
         <b>Explanation:</b> {{$explanation}}
         <br>
-        <b>Has the traveler checked in to this property?:</b> {{$checked_in}}
+        <b>Has the traveler checked into this property?:</b> {{$checked_in}}
     </div>
 @endsection

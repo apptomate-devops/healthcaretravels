@@ -44,7 +44,7 @@
             <div class="details"><b>Cancellation Status: </b><span>{{$booking->cancellation_requested == 3 ? 'In Progress' : ($booking->cancellation_requested == 2 ? 'Completed' : 'Pending') }}</span></div>
             <div class="details"><b>Cancellation Reason: </b><span>{{$booking->cancellation_reason}}</span></div>
             <div class="details"><b>Explanation: </b><span>{{$booking->cancellation_explanation}}</span></div>
-            <div class="details"><b>Has the traveler checked in to this property?: </b><span>{{$booking->already_checked_in ? 'Yes' : 'No'}}</span></div>
+            <div class="details"><b>Has the traveler checked into this property?: </b><span>{{$booking->already_checked_in ? 'Yes' : 'No'}}</span></div>
             <div class="details"><b>Start Date: </b><span>{{date('m-d-Y',strtotime($booking->start_date))}}</span></div>
             <div class="details"><b>End Date: </b><span>{{date('m-d-Y',strtotime($booking->end_date))}}</span></div>
             <div class="details"><b>Status: </b><span>@if($booking->status == 1)
@@ -93,7 +93,7 @@
                         <textarea class="form-control" id="cancellation_explanation" name="cancellation_explanation" required></textarea>
                     </div>
                     <div class="form-group">
-                        <h5 class="margin-top-40">Has the traveler checked in to this property?</h5>
+                        <h5 class="margin-top-40">Has the traveler checked into this property?</h5>
                         <div class="checkboxes in-row">
                             <input id="checked_in_yes" name="checked_in" type="checkbox" value="1">
                             <label for="checked_in_yes">Yes</label>
@@ -232,10 +232,10 @@
                             <td>Payment Cycle</td>
                             <td>Due Date</td>
                             <td>Covering Range</td>
-                            <td>Service Tax</td>
+                            <td>Service Fee</td>
                             <td>Cleaning Fee</td>
                             <td>Security Deposit</td>
-                            <td>Monthly Rate</td>
+                            <td>Stay Payment</td>
                             <td>Total Amount</td>
                             <td>Status</td>
                             <td>Processed Time</td>
@@ -259,13 +259,13 @@
                                     @endif
                                 </td>
                                 <td>{{$payment->payment_cycle}}</td>
-                                <td>{{$payment->due_date}}</td>
+                                <td>{{date('m-d-Y',strtotime($payment->due_date))}}</td>
                                 <td>{{$payment->covering_range}}</td>
-                                <td>{{$payment->service_tax}}</td>
-                                <td>{{$payment->cleaning_fee}}</td>
-                                <td>{{$payment->security_deposit}}</td>
-                                <td>{{$payment->monthly_rate}}</td>
-                                <td>{{$payment->total_amount}}</td>
+                                <td>-${{$payment->service_tax}}</td>
+                                <td>{{$payment->display_cleaning_fee}}</td>
+                                <td>{{$payment->display_security_deposit}}</td>
+                                <td>{{$payment->display_monthly_rate}}</td>
+                                <td>{{$payment->display_total_amount}}</td>
                                 <td>{{Helper::get_payment_status($payment, true)}}</td>
                                 <td>{{Helper::get_local_date_time($payment->processed_time)}}</td>
                                 <td>{{Helper::get_local_date_time($payment->confirmed_time)}}</td>

@@ -42,7 +42,7 @@
         <div class="login-container">
 
             <!--Tab -->
-            <div class="my-account style-1" id="login_form">
+            <div class="my-account style-1">
 
                 @if(Session::has('success'))
                     <div class="alert alert-success">
@@ -345,8 +345,8 @@
                             <button id="btn_add_apt_number" onclick="on_add_address_line_2(event)" class="btn btn-primary w-100" style="margin-bottom: 30px; margin-top: -40px; display: none;">Add an Apt or Floor #</button>
 
                             <div class="checkboxes" id="email_opt_field" style="display: none;">
-                                <input id="email_opt" type="checkbox" name="email_opt" @if(Session::has('email_opt')) checked @endif">
-                                <label for="email_opt">I don’t want to receive marketing messages and offers from Health Care Travels. I can also opt out of receiving these at any time by emailing
+                                <input id="email_opt" type="checkbox" name="email_opt" checked>
+                                <label for="email_opt">I would like to receive any offers and promotional emails from Health Care Travels. I can also opt out of receiving these at any time by emailing
                                     <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com.</a>
                                     {{--                                {!! $errors->first('email_opt', '<p class="error-text-accept">:message</p>') !!}--}}
                                 </label>
@@ -355,7 +355,7 @@
                             <div class="checkboxes" id="policy_accept_field" style="display: none;">
                                 <input id="policy_accept" type="checkbox" name="policy_accept" @if(Session::has('policy_accept')) checked @endif">
                                 <label for="policy_accept">
-                                    By checking and selecting Agree and Register below, I agree to Health Care Travels <a href="{{URL('/')}}/terms-of-use">Terms of Service</a>, <a href="{{URL('/')}}/payment-terms">Payments Terms of Service</a>, <a href="{{URL('/')}}/policies">Privacy Policy</a>, and <a href="{{URL('/')}}/non-discrimination-policy">Nondiscrimination Policy.</a>
+                                    By checking and selecting Agree and Register below, I agree to Health Care Travels <a href="{{URL('/')}}/terms-of-use">Terms of Use</a>, <a href="{{URL('/')}}/privacy-policy">Privacy Policy</a>, <a href="{{URL('/')}}/policies">Policies</a>, <a href="{{URL('/')}}/payment-terms">Payment Terms</a>, <a href="{{URL('/')}}/non-discrimination-policy">Nondiscrimination Policy</a> and <a href="{{URL('/')}}/cancellationpolicy">Cancellation Policy</a>.
                                     {!! $errors->first('policy_accept', '<p class="error-text-accept">Policy must be agreed</p>') !!}
                                 </label>
 
@@ -451,6 +451,12 @@
 
         get_form("{{ Session::get('type') }}", true);
 
+        let has_errors = "{{Session::has('errors')}}";
+        let email_opt = "{{Session::get('email_opt')}}";
+
+        if(has_errors && !email_opt) {
+            $('#email_opt').prop('checked', false)
+        }
         let dob_value = "{{Session::get('dob')}}";
         if (dob_value) {
             on_dob_change(dob_value);
@@ -727,6 +733,18 @@
             }
         } catch (e) {}
     }
+
+    $('#address, #password, #password1, #password2').on('mouseup keyup', function () {
+        if ($(this).val()) {
+            $(this).attr('autocomplete', 'chrome-off');
+        } else {
+            $(this).attr('autocomplete', 'on');
+        }
+    }).on('mousedown keydown', function () {
+        if (!$(this).val()) {
+            $(this).attr('autocomplete', 'chrome-off');
+        }
+    })
 
     function clear_errors() {
         $(".form-error").removeClass('form-error');
@@ -1007,11 +1025,11 @@
         }
     }
 
-    $("[data-strength]").focus(function() {
+    $("input[name='password1']").focus(function() {
         $("#password-strength, #password-strength-text, #password_message").show();
     });
 
-    $("[data-strength]").keyup(function() {
+    $("input[name='password1']").keyup(function() {
         strength = 0;
         var password = $(this).val();
         passwordCheck(password);

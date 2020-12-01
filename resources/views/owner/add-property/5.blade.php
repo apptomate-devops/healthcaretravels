@@ -94,7 +94,7 @@
                                 <div class="submit-section">
                                     <div class="row with-forms">
                                         @foreach($property_images as $img)
-                                            <div class="col-md-2">
+                                            <div class="col-md-2" style="margin-top: 15px;">
                                                 <img src="{{$img->image_url}}" height="150px" width="200px">
                                                 <button class="img_btn" onclick="delete_image({{$img->id}})"><i class="fa fa-trash"></i>
                                                 </button>

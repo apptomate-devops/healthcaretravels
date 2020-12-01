@@ -8,13 +8,24 @@
             <div class="col-md-12">
 
                 <h2><span style="color:#e78016;font-size:32px">Hey I'm</span> {{Helper::get_user_display_name($user)}}!</h2>
-                <span>@if($user->address != 0){{$user->address}}@endif</span><br>
                 <span id="report_user" style="margin-left: 2px;"><i class="sl sl-icon-flag"></i>&nbsp;Report this User</span>
                 <!-- Breadcrumbs -->
                 <nav id="breadcrumbs">
                     <ul>
                         <li><a href="{{BASE_URL}}">Home</a></li>
-                        <li>Owner Profile</li>
+                        <li>
+                            @if($user->role_id == 1)
+                                Owner
+                            @elseif ($user->role_id == 2)
+                                Agency
+                            @elseif ($user->role_id == 3)
+                                RV Healthcare Traveler
+                            @elseif ($user->role_id == 4)
+                                Co-Host
+                            @else
+                                Traveler
+                            @endif
+                            Profile</li>
                     </ul>
                 </nav>
 

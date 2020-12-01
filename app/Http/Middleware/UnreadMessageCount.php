@@ -47,57 +47,62 @@ class UnreadMessageCount
      */
     public function handle($request, Closure $next)
     {
-        $user_id = $request->session()->get('user_id');
-        $this->request = $request;
-        $unread_data = [
-            'unread_message_data' => [],
-            'unread_count' => 0,
-        ];
-        if ($user_id) {
-            $personal_chats = DB::table('personal_chat')
-                ->where(function ($query) use ($user_id) {
-                    $query->where('owner_id', '=', $user_id)->orWhere('traveller_id', '=', $user_id);
-                })
-                ->get();
-            foreach ($personal_chats as $personal_chat) {
-                $unread_data = $this->get_unread_chat_count('personal_chat', $personal_chat->id);
-                if ($unread_data['unread_count']) {
-                    break;
-                }
-            }
-
-            if ($unread_data['unread_count'] == 0) {
-                $instant_chats = DB::table('instant_chat')
+        $ignore_urls = ['logout'];
+        $isIgnored = in_array($request->path(), $ignore_urls);
+        $is_public_ical_path = strpos($request->path(), 'ical/');
+        if (!$isIgnored && !$is_public_ical_path) {
+            $user_id = $request->session()->get('user_id');
+            $this->request = $request;
+            $unread_data = [
+                'unread_message_data' => [],
+                'unread_count' => 0,
+            ];
+            if ($user_id) {
+                $personal_chats = DB::table('personal_chat')
                     ->where(function ($query) use ($user_id) {
                         $query->where('owner_id', '=', $user_id)->orWhere('traveller_id', '=', $user_id);
                     })
                     ->get();
-
-                foreach ($instant_chats as $instant_chat) {
-                    $unread_data = $this->get_unread_chat_count('instant_chat', $instant_chat->id);
+                foreach ($personal_chats as $personal_chat) {
+                    $unread_data = $this->get_unread_chat_count('personal_chat', $personal_chat->id);
                     if ($unread_data['unread_count']) {
                         break;
                     }
                 }
-            }
 
-            if ($unread_data['unread_count'] == 0) {
-                $request_chats = DB::table('request_chat')
-                    ->where(function ($query) use ($user_id) {
-                        $query->where('owner_id', '=', $user_id)->orWhere('traveller_id', '=', $user_id);
-                    })
-                    ->get();
-                foreach ($request_chats as $request_chat) {
-                    $unread_data = $this->get_unread_chat_count('request_chat', $request_chat->id);
-                    if ($unread_data['unread_count']) {
-                        break;
+                if ($unread_data['unread_count'] == 0) {
+                    $instant_chats = DB::table('instant_chat')
+                        ->where(function ($query) use ($user_id) {
+                            $query->where('owner_id', '=', $user_id)->orWhere('traveller_id', '=', $user_id);
+                        })
+                        ->get();
+
+                    foreach ($instant_chats as $instant_chat) {
+                        $unread_data = $this->get_unread_chat_count('instant_chat', $instant_chat->id);
+                        if ($unread_data['unread_count']) {
+                            break;
+                        }
+                    }
+                }
+
+                if ($unread_data['unread_count'] == 0) {
+                    $request_chats = DB::table('request_chat')
+                        ->where(function ($query) use ($user_id) {
+                            $query->where('owner_id', '=', $user_id)->orWhere('traveller_id', '=', $user_id);
+                        })
+                        ->get();
+                    foreach ($request_chats as $request_chat) {
+                        $unread_data = $this->get_unread_chat_count('request_chat', $request_chat->id);
+                        if ($unread_data['unread_count']) {
+                            break;
+                        }
                     }
                 }
             }
+            $request->session()->put('has_unread_message', $unread_data['unread_count']);
+            $request->session()->put('unread_message_data', $unread_data['unread_message_data']);
+            $request->has_unread_message = $unread_data['unread_count'];
         }
-        $request->session()->put('has_unread_message', $unread_data['unread_count']);
-        $request->session()->put('unread_message_data', $unread_data['unread_message_data']);
-        $request->has_unread_message = $unread_data['unread_count'];
         return $next($request);
     }
 }

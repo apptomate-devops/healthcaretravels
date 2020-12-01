@@ -176,10 +176,11 @@ class ReservationController extends BaseController
         $subject = "Booking Cancelled";
         $mail_data = [
             'property_title' => $property->title,
-            'check_in' => date('d-m-Y', strtotime($data->start_date)),
-            'check_out' => date('d-m-Y', strtotime($data->check_out)),
-            'traveler_name' => $traveller->username,
-            'owner_name' => $owner->username,
+            'check_in' => date('m-d-Y', strtotime($data->start_date)),
+            'check_out' => date('m-d-Y', strtotime($data->end_date)),
+            'traveler_name' => Helper::get_user_display_name($traveller),
+            'owner_name' => Helper::get_user_display_name($owner),
+            'cancellation_reason' => $request->cancellation_reason,
         ];
         $this->send_custom_email($owner->email, $subject, 'mail.admin-cancel-booking', $mail_data, $title);
         $this->send_custom_email($traveller->email, $subject, 'mail.admin-cancel-booking', $mail_data, $title);
@@ -211,6 +212,7 @@ class ReservationController extends BaseController
             ->where('property_images.property_id', '=', $property_id)
             ->select('image_url')
             ->orderBy('property_images.sort', 'asc')
+            ->orderBy('property_images.is_cover', 'desc')
             ->get();
 
         $property->aminities = DB::table('property_amenties')
@@ -222,6 +224,7 @@ class ReservationController extends BaseController
             ->join('property_booking_price', 'property_booking_price.property_booking_id', '=', 'property_booking.id')
             ->where('property_booking.client_id', CLIENT_ID)
             ->where('property_booking.booking_id', $booking_id)
+            ->orderBy('property_images.is_cover', 'desc')
             ->first();
         $traveller = DB::select(
             "SELECT concat(first_name,last_name) as name,email FROM users WHERE id = $data->traveller_id",

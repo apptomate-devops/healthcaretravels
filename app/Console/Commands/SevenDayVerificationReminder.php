@@ -52,7 +52,7 @@ class SevenDayVerificationReminder extends Command
         foreach ($users as $user) {
             Logger::info('User data found: ' . $user->email);
             $data = [
-                'name' => $user->first_name,
+                'name' => $user->first_name . ' ' . $user->last_name,
                 'email' => $user->email,
                 'text' => $reg->message,
                 'BASE_URL' => config('app.url') . '/',

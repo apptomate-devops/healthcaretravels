@@ -100,7 +100,7 @@
                                                             <tr class="payment_sub_sections sub_sections_{{$i}}">
                                                                 <td class="name">
                                                                     {{$key}}
-                                                                    @if(strpos($key, 'Fee'))<span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important">This fee helps us run our platform and offer our services</span></span>@endif
+                                                                    @if(strpos($key, 'Fee'))<span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important; font-weight: bold;">This fee helps us run our platform and offer our services</span></span>@endif
                                                                 </td>
                                                                 <td class="val text-right">
                                                                     $ {{$value}}
@@ -161,7 +161,7 @@
                                                             <tr class="editable-fields">
                                                                 <td colspan="2">
                                                                     <label class="checkbox-container">
-                                                                        I agree with the <a href="{{BASE_URL}}/terms-of-use" target="_blank"> Term of Use </a> and <a href="{{BASE_URL}}/cancellationpolicy" target="_blank"> Cancellation Policy </a>
+                                                                        I agree to the <a href="{{BASE_URL}}/terms-of-use" target="_blank">Terms of Use</a>, <a href="{{BASE_URL}}/privacy-policy" target="_blank">Privacy Policy</a>, <a href="{{BASE_URL}}/policies" target="_blank">Policies</a>, <a href="{{BASE_URL}}/payment-terms" target="_blank">Payment Terms</a>, <a href="{{BASE_URL}}/non-discrimination-policy" target="_blank">Nondiscrimination Policy</a> and <a href="{{URL('/')}}/cancellationpolicy">Cancellation Policy</a>.
                                                                         <input type="checkbox" required name="terms" id="terms">
                                                                         <span class="checkmark"></span>
                                                                     </label>
@@ -261,19 +261,19 @@
                                                             <label class="control-label" for="credit-card-first-name">
                                                                 Occupation
                                                             </label>
-                                                            <input id="occupation_{{$i}}" name="guest_occupation[]" type="text" value="{{$guest_data->occupation ?? ''}}">
+                                                            <input id="occupation_{{$i}}" name="guest_occupation[]" type="text" value="{{$guest_data->occupation ?? ''}}" required>
                                                         </div>
                                                         <div class="control-group cc-last-name col-md-6">
                                                             <label class="control-label" for="credit-card-first-name">
                                                                 Phone Number
                                                             </label>
-                                                            <input class="masked_phone_us" id="phone_{{$i}}"  name="phone_number[]" type="text" value="{{$guest_data->phone_number?? ''}}">
+                                                            <input class="masked_phone_us" id="phone_{{$i}}"  name="phone_number[]" type="text" value="{{$guest_data->phone_number?? ''}}" required>
                                                         </div>
                                                         <div class="control-group cc-last-name col-md-6">
                                                             <label class="control-label" for="credit-card-first-name">
                                                                 Email
                                                             </label>
-                                                            <input id="email_{{$i}}" name="email[]" type="email" value="{{$guest_data->email ?? ''}}">
+                                                            <input id="email_{{$i}}" name="email[]" type="email" value="{{$guest_data->email ?? ''}}" required>
                                                         </div>
                                                         <div class="control-group cc-last-name col-md-6">
                                                             <label class="control-label" for="credit-card-first-name">
@@ -337,7 +337,7 @@
                                     <p id="agency_error" class="error-text" style="display: none;">Select at least 1 agency</p>
                                     <div id="add_another_agency" class="add-another" onclick="add_another_agency(true)" style="cursor: pointer;">Can't find it? Add it here.</div>
                                     <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
-                                    <label for="other_agency_name" id="other_agency_name" style="display: none;">Other Angency:</label>
+                                    <label for="other_agency_name" id="other_agency_name" style="display: none;">Other Agency:</label>
                                     <input type="text" style="display: none;" class="input-text validate" name="other_agency" id="other_agency" value="{{$traveller->other_agency}}" placeholder="Other agency" autocomplete="off">
                                     <div style="display: none;" id="other_agency_cancel" class="add-another" onclick="add_another_agency()" style="cursor: pointer;">Cancel</div>
                                 </div>
@@ -369,13 +369,13 @@
                                             <label class="control-label" for="contract_start_date">
                                                 Contract Start Date
                                             </label>
-                                            <input type="date" id="contract_start_date" name="contract_start_date" required>
+                                            <input type="date" id="contract_start_date" name="contract_start_date" required min="1950-01-01" max="2050-12-31"  value="{{$data->contract_start_date ?? ''}}">
                                         </div>
                                         <div class="control-group cc-first-name col-md-4">
                                             <label class="control-label" for="contract_end_date">
                                                 Contract End Date
                                             </label>
-                                            <input type="date" id="contract_end_date" name="contract_end_date" required>
+                                            <input type="date" id="contract_end_date" name="contract_end_date" required min="1950-01-01" max="2050-12-31"  value="{{$data->contract_end_date ?? ''}}">
                                         </div>
                                     </div>
                                 </div>
@@ -510,7 +510,10 @@
         });
 
         $('#scrollToSubmit').click(function (event) {
+            event.preventDefault();
+            event.stopPropagation();
             $(window).scrollTop($('#requestBooking').offset().top-500);
+            return false;
         });
 
         function validate_submit() {

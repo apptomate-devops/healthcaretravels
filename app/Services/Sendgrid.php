@@ -11,6 +11,11 @@ class Sendgrid
     protected $list_id;
     protected $no_contact_list_id;
     protected $client;
+    protected $contact_list_traveler;
+    protected $contact_list_owner;
+    protected $contact_list_agency;
+    protected $contact_list_rv_traveler;
+    protected $contact_list_co_host;
 
     /**
      * Create a new instance
@@ -23,6 +28,11 @@ class Sendgrid
         $this->api_key = config('services.sendgrid.api_key');
         $this->list_id = config('services.sendgrid.list_id');
         $this->no_contact_list_id = config('services.sendgrid.no_contact_list_id');
+        $this->contact_list_traveler = config('services.sendgrid.contact_list_traveler');
+        $this->contact_list_rv_traveler = config('services.sendgrid.contact_list_rv_traveler');
+        $this->contact_list_owner = config('services.sendgrid.contact_list_owner');
+        $this->contact_list_agency = config('services.sendgrid.contact_list_agency');
+        $this->contact_list_co_host = config('services.sendgrid.contact_list_co_host');
         $this->client = $this->setUp();
     }
 
@@ -47,9 +57,33 @@ class Sendgrid
         return $res;
     }
 
-    public function addUserToMarketingList($user)
+    public function get_sendgrid_list_id($type)
     {
-        return $this->addUsersToLists((object) $user, $this->list_id);
+        switch ($type) {
+            case "0":
+                // Traveler
+                return $this->contact_list_traveler;
+            case "1":
+                // Owner
+                return $this->contact_list_owner;
+            case "2":
+                // Agency
+                return $this->contact_list_agency;
+            case "3":
+                // RV Traveler
+                return $this->contact_list_rv_traveler;
+            case "4":
+                // CO-HOST
+                return $this->contact_list_co_host;
+            default:
+                return '';
+        }
+    }
+
+    public function addUserToMarketingList($user, $type)
+    {
+        $list_id = $this->get_sendgrid_list_id($type);
+        return $this->addUsersToLists((object) $user, $list_id);
     }
 
     public function addUserToNoContactList($user)

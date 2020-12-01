@@ -21,7 +21,7 @@
             </div>
 
             <div class="col-md-8">
-
+                <input type="hidden" id="delete_property_id" />
                 <!-- Item #1 -->
                 @if($properties != NULL && count($properties) != 0)
                     <table class="manage-table responsive-table">
@@ -52,12 +52,9 @@
                                 </td>
                                 @if($property->is_complete == ZERO) {{--// incomplete--}}
                                 <td class="expire-date">Pending</td>
-                                @endif
-                                @if($property->is_complete == ONE && $property->propertyStatus == ZERO) {{--// incomplete--}}
+                                @elseif($property->is_complete == ONE && $property->is_disable == ONE) {{--// incomplete--}}
                                 <td class="expire-date">Disabled</td>
-                                @endif
-
-                                @if($property->is_complete == ONE && $property->propertyStatus == ONE) {{--// incomplete--}}
+                                @elseif($property->is_complete == ONE && $property->propertyStatus == ONE) {{--// incomplete--}}
                                 <td class="expire-date">Working</td>
                                 @endif
 
@@ -67,7 +64,7 @@
                                         <img src="{{BASE_URL}}action_icons/edit24.png" title="Edit" />
                                     </a>
                                     {{-- <a href="{{BASE_URL}}delete-property/{{$property->propertyId}}" class="delete"  id="delete" title="Delete"> --}}
-                                    <a class="delete"  onclick="delete_property();" id="delete" title="Delete">
+                                    <a class="delete" onclick="delete_property({{$property->id}});" id="delete" title="Delete">
                                         <img src="{{BASE_URL}}action_icons/24d.png" />
                                     </a>
 
@@ -91,14 +88,14 @@
                                                 <h4 class="modal-title" id="exampleModalLabel"><b><span style="color:red">Warning</span></b></h4>
                                             </div>
                                             <div class="modal-body">
-                                                Are you sure you want to delete this property
+                                                Are you sure you want to delete this property?
                                                 <br> <br>
                                                 <span style="float: right;">
-            	<a href="{{BASE_URL}}delete-property/{{$property->propertyId}}"><button type="button" class="btn btn-primary" >Yes</button></a>
-            	{{-- <a href="{{BASE_URL}}delete-property/"><button type="button" class="btn btn-primary" >Yes</button></a>  --}}
-            	<a href=""><button type="button" class="btn btn-danger">No</button></a>
+            	<button type="button" class="btn btn-primary" onclick="delete_property_with_id();" >Yes</button>
+            	<a href=""><button type="button" class="btn btn-danger" style="width: 60px; border-radius: 9px;">No</button></a>
             </span>
-                                                <br> <br>
+                                                <br>
+                                                <br>
                                             </div>
                                             {{-- <div class="modal-footer">
                                               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -114,19 +111,40 @@
                 @endif
                 <a href="{{url('/')}}/owner/add-property" class="margin-top-40 button">Submit New Property</a>
             </div>
-
+            <div id="addDetailsProgress" class="loading style-2" style="display: none;"><div class="loading-wheel"></div></div>
         </div>
     </div>
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script type="text/javascript">
 
-        function delete_property(){
+        function delete_property(property_id){
 
             $('#myModal').modal();
+            $("#delete_property_id").val(property_id);
         }
 
-
+        function delete_property_with_id() {
+            $('#myModal').modal('hide');
+            $('#addDetailsProgress').show();
+            var val = $("#delete_property_id").val();
+            $.ajax({
+                "type": "get",
+                "url" : `{{BASE_URL}}delete-property/${val}`,
+                success: function(data) {
+                    $('#addDetailsProgress').hide();
+                    if(data.status=="SUCCESS"){
+                        window.location.reload();
+                    } else {
+                        console.log('Error Deleting property');
+                    }
+                },
+                error: function (e) {
+                    $('#addDetailsProgress').hide();
+                    console.log('Error Deleting property');
+                }
+            });
+        }
     </script>
 
 @endsection

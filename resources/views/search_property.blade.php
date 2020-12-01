@@ -50,12 +50,6 @@
                                            placeholder="Hospital, City, or Address"
                                            value="@if(isset($request_data['formatted_address']))  {{$request_data['formatted_address']}} @endif" autocomplete="off" @if(isset($request_data['formatted_address'])) data-is-valid="true" @endif/>
                                     <p id="search-address-input_error" style="display: none;">Please select a valid address from the suggestions.</p>
-                                    {{--                                    <input class="field" type="hidden" id="street_number" name="street_number" value="{{$request_data['street_number'] ?? ''}}" />--}}
-                                    {{--                                    <input class="field" type="hidden" id="route" name="route" value="{{$request_data['route'] ?? ''}}" />--}}
-                                    {{--                                    <input class="field" type="hidden" id="locality" name="city" value="{{$request_data['city'] ?? ''}}" />--}}
-                                    {{--                                    <input class="field" type="hidden" id="administrative_area_level_1" name="state" value="{{$request_data['state'] ?? ''}}" />--}}
-                                    {{--                                    <input class="field" type="hidden" id="postal_code" name="pin_code" value="{{$request_data['pin_code'] ?? ''}}" />--}}
-                                    {{--                                    <input class="field" type="hidden" id="country" name="country" value="{{$request_data['country'] ?? ''}}" />--}}
                                     <input class="field" type="hidden" id="formatted_address" name="formatted_address" value="{{$request_data['formatted_address'] ?? ''}}" />
                                     <input class="field" type="hidden" id="lat" name="lat" value="{{$request_data['lat'] ?? ''}}" />
                                     <input class="field" type="hidden" id="lng" name="lng" value="{{$request_data['lng'] ?? ''}}" />
@@ -88,11 +82,11 @@
                                     <input type="text" name="from_date"
                                            placeholder="Check in"
                                            value="@if(isset($request_data['from_date'])){{$request_data['from_date']}}@endif"
-                                           id="date_range_picker" autocomplete="off"/>
+                                           id="home_date_range_picker" autocomplete="off"/>
                                     <input type="text" name="to_date"
                                            placeholder="Check out"
                                            value="@if(isset($request_data['to_date'])){{$request_data['to_date']}}@endif"
-                                           id="date_range_picker" autocomplete="off"/>
+                                           id="home_date_range_picker" autocomplete="off"/>
                                 </div>
                             </div>
                             <div class="col-lg-5 col-md-4 col-sm-4">
@@ -240,6 +234,7 @@
         </div>
     </div>
 
+    @include('includes.scripts')
 
     <script type="text/javascript">
         function initSearchPropertySearchInput() {
@@ -485,28 +480,37 @@
             }
         });
 
-        function check_to_date() {
-            var to_date = $('#to_date').val();
-            var from_date = $('#from_date').val();
-            if (to_date && from_date) {
-                var td = new Date(to_date);
-                var fd = new Date(from_date);
-                td.setHours(0,0,0,0);
-                fd.setHours(0,0,0,0);
-                if (td => fd) {
-                    var diffTime = td.getTime() - fd.getTime();
-                    var diffDays = diffTime / (1000 * 3600 * 24);
-                    if (diffDays >= 30) {
-                        return false;
-                    }
-                }
-                var mintoDate = new Date(from_date);
-                mintoDate.setMonth(mintoDate.getMonth() + 1);
-                var minDateString = (mintoDate.getMonth() + 1) + "/" + mintoDate.getDate() + "/" + mintoDate.getFullYear();
-                alert("Please choose date after " + minDateString);
-                $('#to_date').val("");
-                return false;
+        // Book Now: Date Range Picker
+        var disableDates = <?php echo json_encode($blocked_dates); ?>;
+        $('input[id="home_date_range_picker"]').daterangepicker({
+            minDate: new Date(),
+            opens: 'center',
+            minSpan: {
+                "days": ({{$data->min_days ?? 30}} + 1)
+            },
+            autoUpdateInput: false,
+            autoApply: true,
+            isInvalidDate: function(date){
+                return disableDates.includes(date.format('YYYY-MM-DD'));
             }
+        });
+        $('input[id="home_date_range_picker"]').keydown(function (e) {
+            e.preventDefault();
+            return false;
+        })
+        $('input[id="home_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
+            var is_valid = check_valid_date_range(picker.startDate, picker.endDate)
+            if(is_valid) {
+                $('input[id="home_date_range_picker"][name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
+                $('input[id="home_date_range_picker"][name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
+            }
+        });
+
+        function check_valid_date_range(startDate, endDate) {
+            var getDaysArray = function(s,e) {for(var a=[],d=new Date(s);d<=e;d.setDate(d.getDate()+1)){ a.push(d.toISOString().split('T')[0]);}return a;};
+            var dates = getDaysArray(startDate, endDate);
+            let collideDates = dates.filter(x => disableDates.includes(x));
+            return !collideDates.length
         }
 
         function nextpage(page) {
@@ -515,7 +519,6 @@
             $("#filter_form").submit();
         }
     </script>
-    @include('includes.scripts')
 
     <!-- Maps -->
 @endsection

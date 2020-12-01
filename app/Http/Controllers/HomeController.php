@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use App\Models\BecomeScout;
@@ -133,6 +134,7 @@ class HomeController extends BaseController
             ->where('property_list.property_status', '=', 1)
             ->where('property_list.status', '=', 1)
             ->where('property_list.is_complete', '=', ACTIVE)
+            ->where('property_list.is_disable', '=', ZERO)
             ->select(
                 'property_list.title',
                 'property_list.monthly_rate',
@@ -166,6 +168,7 @@ class HomeController extends BaseController
                 ->where('property_images.client_id', '=', CLIENT_ID)
                 ->where('property_images.property_id', '=', $property->property_id)
                 ->orderBy('property_images.sort', 'asc')
+                ->orderBy('property_images.is_cover', 'desc')
                 ->first();
             $cover_img = DB::table('property_images')
                 ->where('property_images.client_id', '=', CLIENT_ID)
@@ -183,15 +186,33 @@ class HomeController extends BaseController
             }
         }
         $categories = DB::select(
-            "SELECT A.image_url,A.title FROM `home_listings` A, `home_category` B WHERE A.category_id = B.id",
+            "SELECT A.image_url,A.title,A.lat,A.lng FROM `home_listings` A, `home_category` B WHERE A.category_id = B.id",
         );
         $room_types = DB::table('property_room_types')
             ->orderBy('name', 'ASC')
             ->get();
+
+        $blocked_dates = [];
+        $user_id = $request->session()->get('user_id');
+
+        if ($user_id) {
+            $booking_start_dates = DB::table('property_booking')
+                ->where('traveller_id', '=', $user_id)
+                ->whereNotIn('status', [0, 4, 8])
+                ->whereDate('start_date', '>=', Carbon::now())
+                ->pluck('start_date');
+            foreach ($booking_start_dates as $key => $value) {
+                $start_date = Carbon::parse($value);
+                $dates_list = $this->getDatesBetweenRange($start_date->copy()->subDays(7), $start_date);
+                $blocked_dates = array_merge($blocked_dates, $dates_list);
+            }
+        }
+
         return view('home', [
             'latest_properties' => $latest_properties,
             'categories' => $categories,
             'room_types' => $room_types,
+            'blocked_dates' => $blocked_dates,
         ]);
     }
 
@@ -377,7 +398,7 @@ class HomeController extends BaseController
         if ($user->role_id == 2) {
             $username = $user->name_of_agency;
         } else {
-            $username = $user->first_name . " " . $user->last_name;
+            $username = Helper::get_user_display_name($user);
         }
         $data = [
             'content' =>

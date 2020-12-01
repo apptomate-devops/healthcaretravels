@@ -20,6 +20,7 @@ class ProcessEmail implements ShouldQueue
     protected $view;
     protected $data;
     protected $subject;
+    protected $bookingId;
     /**
      * The number of seconds to wait before retrying the job.
      *
@@ -31,12 +32,13 @@ class ProcessEmail implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($to, $view, $subject, $data)
+    public function __construct($to, $view, $subject, $data, $bookingId)
     {
         $this->to = $to;
         $this->view = $view;
         $this->subject = $subject;
         $this->data = $data;
+        $this->bookingId = $bookingId;
     }
 
     /**
@@ -46,7 +48,7 @@ class ProcessEmail implements ShouldQueue
      */
     public function handle()
     {
-        Helper::send_custom_email($this->to, $this->subject, $this->view, $this->data, null, null);
+        Helper::handleBookingEmails($this->to, $this->subject, $this->view, $this->data, $this->bookingId);
     }
 
     public function failed()

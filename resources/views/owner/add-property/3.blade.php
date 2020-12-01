@@ -19,7 +19,7 @@
 
                     <!-- Tabs Content -->
                     <div class="tab-content" id="tab5" style="display: none;">
-                        <form action="{{url('/')}}/owner/add-new-property/3" method="post" name="form-add-new">
+                            <form action="{{url('/')}}/owner/add-new-property/3" method="post" name="form-add-new" onsubmit="return validate_submit()" autocomplete="off" onkeydown="return event.key != 'Enter';">
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
                             <input type="hidden" name="client_id" value="{{$client_id}}">
                             <input type="hidden" name="property_id" value="{{$property_details->id}}">
@@ -80,6 +80,7 @@
 
                             <div class="col-md-12"><br><br>
                                 <h3>Lawn Services<span class="required">*</span> :</h3>
+                                <div class="error-text" id="lawn_service_error" style="display: none;">This field is required</div>
                                 <div class="checkboxes in-row">
 
                                     <input id="lawn_yes" name="lawn_service" type="checkbox" value="1" name="check">
@@ -91,7 +92,8 @@
                             </div>
 
                             <div class="col-md-12"><br><br>
-                                <h3>Pets Allowed :</h3>
+                                <h3>Pets Allowed<span class="required">*</span> :</h3>
+                                <div class="error-text" id="pets_allowed_error" style="display: none;">This field is required</div>
                                 <div class="checkboxes in-row">
 
                                     <input id="pet_yes" name="pets_allowed" type="checkbox" value="1" >
@@ -128,35 +130,26 @@
             </div>
 
         </div>
-
-    </div>
     </div>
     <script type="text/javascript">
-
-        <?php
-        if (isset($property_data->trash_pickup_days)) {
-            $value = explode(',', $property_data->trash_pickup_days);
-            foreach ($value as $v) { ?>
-        $("input[type=checkbox][value={{$v}}]").prop("checked",true);
-
-        <?php }
+        var propertyData = <?php echo json_encode($property_data); ?>;
+        if(propertyData.trash_pickup_days) {
+            var pickupDays = propertyData.trash_pickup_days.split(',');
+            console.log(pickupDays);
+            pickupDays.forEach(function (day) {
+                $(`input[type=checkbox][value=${day}]`).prop("checked",true);
+            })
         }
-        if (isset($property_data->lawn_service) && $property_data->is_complete == 1) {
-            $temp = $property_data->lawn_service;
 
-            if ($temp == 1) { ?>
+        if(propertyData.is_complete == 1) {
+            var isLawnServiceAvailable = propertyData.lawn_service;
+            $('#lawn_no').attr('checked', !isLawnServiceAvailable);
+            $('#lawn_yes').attr('checked', !!isLawnServiceAvailable);
 
-        $('#lawn_no').attr('checked',false);
-        $('#lawn_yes').attr('checked',true);
-        <?php }
-            if ($temp == 0) { ?>
-        $('#lawn_no').attr('checked',true);
-        $('#lawn_yes').attr('checked',false);
-        <?php }
+            var isPetsAllowed = propertyData.pets_allowed;
+            $('#pet_no').attr('checked', !isPetsAllowed);
+            $('#pet_yes').attr('checked', !!isPetsAllowed);
         }
-        ?>
-
-
 
         $('#lawn_no,#lawn_yes').change(function(){
             var value=$(this).val();
@@ -166,23 +159,6 @@
                 $('#lawn_yes').attr('checked',false);
             }
         })
-
-        <?php if (isset($property_data->pets_allowed) && $property_data->is_complete == 1) {
-            $temp = $property_data->pets_allowed;
-
-            if ($temp == 1) { ?>
-
-        $('#pet_no').attr('checked',false);
-        $('#pet_yes').attr('checked',true);
-        <?php }
-            if ($temp == 0) { ?>
-        $('#pet_no').attr('checked',true);
-        $('#pet_yes').attr('checked',false);
-        <?php }
-        } ?>
-
-
-
         $('#pet_no,#pet_yes').change(function(){
             var value=$(this).val();
             if(value==1){
@@ -191,125 +167,29 @@
                 $('#pet_yes').attr('checked',false);
             }
         })
-    </script>
-    {{--    <script type="text/javascript">
-            $('.date_picker').datepicker({});
-            var date = new Date();
-            //date.setDate(date.getDate()-1);
-            $('#from_date').datepicker({
-                startDate: date
-            });
 
-            function set_to_date() {
-                // body...
-                var from_date = $('#from_date').val();
-                $('#to_date').datepicker({
-                    startDate: from_date
-                });
+
+        function validate_submit() {
+            var isLawnService = $('input[name="lawn_service"]').is(':checked');
+            var isPetsAllowed = $('input[name="pets_allowed"]').is(':checked');
+            if(!isLawnService || !isPetsAllowed) {
+                if(!isLawnService) {
+                    $('#lawn_service_error').show();
+                } else {
+                    $('#lawn_service_error').hide();
+                }
+                if(!isPetsAllowed) {
+                    $('#pets_allowed_error').show();
+                } else {
+                    $('#pets_allowed_error').hide();
+                }
+                return false;
             }
-
-        </script>--}}
-
-    <!--    <script type="text/javascript">
-//        var markers = [
-//            {
-//                "title": 'Alibaug',
-//                "lat": '18.641400',
-//                "lng": '72.872200',
-//                "description": 'Alibaug is a coastal town and a municipal council in Raigad District in the Konkan region of Maharashtra, India.'
-//            },
-//            {
-//                "title": 'Lonavla',
-//                "lat": '18.750000',
-//                "lng": '73.416700',
-//                "description": 'Lonavla'
-//            },
-//            {
-//                "title": 'Mumbai',
-//                "lat": '18.964700',
-//                "lng": '72.825800',
-//                "description": 'Mumbai formerly Bombay, is the capital city of the Indian state of Maharashtra.'
-//            },
-//            {
-//                "title": 'Pune',
-//                "lat": '18.523600',
-//                "lng": '73.847800',
-//                "description": 'Pune is the seventh largest metropolis in India, the second largest in the state of Maharashtra after Mumbai.'
-//            },
-//            {
-//                "title": 'Thane',
-//                "lat": '19.182800',
-//                "lng": '72.961200',
-//                "description": 'Thane'
-//            },
-//            {
-//                "title": 'Vashi',
-//                "lat": '18.750000',
-//                "lng": '73.033300',
-//                "description": 'Vashi'
-//            }
-//        ];
-
-        var lat = document.getElementById("before_lat").value;
-        var lng = document.getElementById("before_lng").value;
-        console.log('Lat is '+lat);
-        console.log('Lng is '+lng);
-        var markers = [
-            {
-                "title": 'Alibaug',
-                "lat": lat,
-                "lng": lng,
-                "description": 'Alibaug is a coastal town and a municipal council in Raigad District in the Konkan region of Maharashtra, India.'
-            }
-        ];
-
-        window.onload = function () {
-            var mapOptions = {
-                center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
-                zoom: 4,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            var infoWindow = new google.maps.InfoWindow();
-            var latlngbounds = new google.maps.LatLngBounds();
-            var geocoder = geocoder = new google.maps.Geocoder();
-            var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
-            for (var i = 0; i < markers.length; i++) {
-                var data = markers[i]
-                var myLatlng = new google.maps.LatLng(data.lat, data.lng);
-                var marker = new google.maps.Marker({
-                    position: myLatlng,
-                    map: map,
-                    title: data.title,
-                    draggable: true,
-                    animation: google.maps.Animation.DROP
-                });
-                (function (marker, data) {
-                    google.maps.event.addListener(marker, "click", function (e) {
-                        infoWindow.setContent(data.description);
-                        infoWindow.open(map, marker);
-                    });
-                    google.maps.event.addListener(marker, "dragend", function (e) {
-                        var lat, lng, address;
-                        geocoder.geocode({ 'latLng': marker.getPosition() }, function (results, status) {
-                            if (status == google.maps.GeocoderStatus.OK) {
-                                lat = marker.getPosition().lat();
-                                lng = marker.getPosition().lng();
-                                address = results[0].formatted_address;
-                                infoWindow.setContent(address);
-                                infoWindow.open(map, marker);
-                                document.getElementById("lat").value = lat;
-                                document.getElementById("lng").value = lng;
-                                //alert("Latitude: " + lat + "\nLongitude: " + lng + "\nAddress: " + address);
-                            }
-                        });
-                    });
-                })(marker, data);
-                latlngbounds.extend(marker.position);
-            }
-            var bounds = new google.maps.LatLngBounds();
-            map.setCenter(latlngbounds.getCenter());
-            map.fitBounds(latlngbounds);
+            $('#lawn_service_error').hide();
+            $('#pets_allowed_error').hide();
+            return true;
         }
-    </script> -->
+    </script>
+
 
 @endsection

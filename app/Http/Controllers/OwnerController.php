@@ -53,7 +53,12 @@ class OwnerController extends BaseController
     {
         $user_id = $request->session()->get('user_id');
         $properties = DB::table('property_list')
-            ->where('user_id', $user_id)
+            ->where('property_list.client_id', '=', CLIENT_ID)
+            ->where('property_list.user_id', $user_id)
+            ->where('property_list.is_complete', '=', 1)
+            ->where('property_list.property_status', '=', 1)
+            ->where('property_list.status', '=', 1)
+            ->where('property_list.is_disable', '=', 0)
             ->select('id', 'title')
             ->orderBy('title', 'ASC')
             ->get();
@@ -89,7 +94,8 @@ class OwnerController extends BaseController
                     'property_booking.end_date',
                     //                    DB::raw('DATE_FORMAT(property_booking.start_date, "%M %d, %Y") as start_date'),
                     //                    DB::raw('DATE_FORMAT(property_booking.end_date, "%M %d, %Y") as end_date'),
-                    'traveller.username',
+                    'traveller.first_name',
+                    'traveller.last_name',
                 )
                 ->get();
             $block_events = DB::table('property_blocking')
@@ -143,65 +149,79 @@ class OwnerController extends BaseController
         );
     }
 
+    public function add_calender_blocking($fileOrurl, $property_id, $owner_id)
+    {
+        $ical = new ICal($fileOrurl, [
+            'defaultSpan' => 2, // Default value
+            'defaultTimeZone' => 'UTC',
+            'defaultWeekStart' => 'MO', // Default value
+            'disableCharacterReplacement' => false, // Default value
+            'filterDaysAfter' => null, // Default value
+            'filterDaysBefore' => null, // Default value
+            'skipRecurrence' => false, // Default value
+        ]);
+        $entries = [];
+        foreach ($ical->cal as $key => $value) {
+            if ($key == 'VEVENT' && !empty($value)) {
+                foreach ($value as $key => $data) {
+                    // getting start date
+                    $start_date = explode('T', $data['DTSTART'])[0];
+                    // getting end date
+                    $end_date = explode('T', $data['DTEND'])[0];
+                    $desc = $data['SUMMARY'] ?? $data['DESCRIPTION'];
+                    array_push($entries, [
+                        'start_date' => $start_date,
+                        'end_date' => $end_date,
+                        'booked_on' => $desc,
+                        'is_admin' => 0,
+                        'property_id' => $property_id,
+                        'owner_id' => $owner_id,
+                        'client_id' => CLIENT_ID,
+                    ]);
+                }
+            }
+        }
+        Logger::info(json_encode($entries));
+        PropertyBlocking::insert($entries);
+    }
+
     public function upload_calender(Request $request)
     {
         $property_id = $request->property_id;
         $owner_id = $request->session()->get('user_id');
-        Logger::info('PropertyId: ' . $property_id);
+        $ical_url = $request->ical_url;
         if ($property_id) {
-            if ($request->hasfile('calender_files')) {
-                try {
+            try {
+                if ($request->hasfile('calender_files')) {
                     foreach ($request->file('calender_files') as $file) {
-                        $ical = new ICal($file, [
-                            'defaultSpan' => 2, // Default value
-                            'defaultTimeZone' => 'UTC',
-                            'defaultWeekStart' => 'MO', // Default value
-                            'disableCharacterReplacement' => false, // Default value
-                            'filterDaysAfter' => null, // Default value
-                            'filterDaysBefore' => null, // Default value
-                            'skipRecurrence' => false, // Default value
-                        ]);
-                        // $ical->initFile($file);
-                        $entries = [];
-                        foreach ($ical->cal as $key => $value) {
-                            if ($key == 'VEVENT' && !empty($value)) {
-                                foreach ($value as $key => $data) {
-                                    // getting start date
-                                    $start_date = explode('T', $data['DTSTART'])[0];
-                                    // getting end date
-                                    $end_date = explode('T', $data['DTEND'])[0];
-                                    $desc = $data['SUMMARY'] ?? $data['DESCRIPTION'];
-                                    array_push($entries, [
-                                        'start_date' => $start_date,
-                                        'end_date' => $end_date,
-                                        'booked_on' => $desc,
-                                        'is_admin' => 0,
-                                        'property_id' => $property_id,
-                                        'owner_id' => $owner_id,
-                                        'client_id' => CLIENT_ID,
-                                    ]);
-                                }
-                            }
-                        }
-                        PropertyBlocking::insert($entries);
+                        $this->add_calender_blocking($file, $property_id, $owner_id);
                     }
-                } catch (\Throwable $th) {
+                    return response()->json([
+                        'success' => true,
+                        'error' => 'Calender has been uploaded',
+                    ]);
+                } elseif ($ical_url) {
+                    $this->add_calender_blocking($ical_url, $property_id, $owner_id);
+                    return response()->json([
+                        'success' => true,
+                        'error' => 'Calender has been uploaded',
+                    ]);
+                } else {
+                    Logger::info('No calender files or url are provided');
                     return response()->json([
                         'success' => false,
-                        'error' => $th->getMessage() || 'No calender files are provided',
+                        'error' => 'No calender files or url are provided',
                     ]);
                 }
-            } else {
+            } catch (\Throwable $th) {
+                Logger::info(json_encode($th->getMessage()));
                 return response()->json([
                     'success' => false,
-                    'error' => 'No calender files are provided',
+                    'error' => $th->getMessage() || 'No calender files or url are provided',
                 ]);
             }
-            return response()->json([
-                'success' => true,
-                'error' => 'Calender has been uploaded',
-            ]);
         } else {
+            Logger::info('Property id was not found');
             return response()->json([
                 'success' => false,
                 'error' => 'Property id was not found',
@@ -256,8 +276,12 @@ class OwnerController extends BaseController
             $image = DB::table('property_images')
                 ->where('client_id', CLIENT_ID)
                 ->where('property_id', $datum->property_id)
+                ->orderBy('is_cover', 'desc')
                 ->first();
-            $datum->image_url = $image->image_url;
+            $datum->image_url = '';
+            if ($image) {
+                $datum->image_url = $image->image_url;
+            }
             if ($traveller->role_id != 2) {
                 $datum->traveller_name = Helper::get_user_display_name($traveller);
             } else {
@@ -265,7 +289,12 @@ class OwnerController extends BaseController
             }
             $datum->start_date = Carbon::parse($datum->start_date)->format('m/d/Y');
             $datum->end_date = Carbon::parse($datum->end_date)->format('m/d/Y');
-            $datum->bookStatus = Helper::get_traveller_status($datum->status, $datum->start_date, $datum->end_date);
+            $datum->bookStatus = Helper::get_traveller_status(
+                $datum->status,
+                $datum->start_date,
+                $datum->end_date,
+                $datum->cancellation_requested,
+            );
             if ($datum->status < 2) {
                 array_push($booking_requests, $datum);
             } else {
@@ -311,6 +340,7 @@ class OwnerController extends BaseController
         }
         $properties = DB::table('property_list')
             ->join('property_room', 'property_room.property_id', '=', 'property_list.id')
+            ->where('property_list.is_disable', '=', ZERO)
             ->where('property_list.user_id', $id)
             ->get();
         $current_date = date('Y-m-d H:i:s');
@@ -327,6 +357,7 @@ class OwnerController extends BaseController
 
             $property->images = DB::table('property_images')
                 ->where('property_id', $property->property_id)
+                ->orderBy('is_cover', 'desc')
                 ->get();
         }
         return view('properties.owner_profile', [

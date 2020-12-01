@@ -1,3 +1,4 @@
+
 @extends('layout.master') @section('title','Health Care Travels') @section('main_content')
     <!-- Header Container / End -->
     <script src='https://www.google.com/recaptcha/api.js'></script>
@@ -25,6 +26,7 @@
 
         #map {
             height: auto !important;
+            flex: 1;
         }
 
         .contact_map {
@@ -105,7 +107,7 @@
                         <li><a class="facebook" href="{{FACEBOOK}}" target="_blank"><i class="icon-facebook"></i></a>
                         </li>
                         <li><a class="twitter" href="{{TWITTER}}" target="_blank"><i class="icon-twitter"></i></a></li>
-                        <li><a class="gplus" href="{{GOOGLE}}" target="_blank"><i class="icon-gplus"></i></a></li>
+{{--                        <li><a class="gplus" href="{{GOOGLE}}" target="_blank"><i class="icon-gplus"></i></a></li>--}}
                         <li><a class="instagram" href="{{INSTAGRAM}}" target="_blank"><i class="icon-instagram"></i></a>
                         </li>
                     </ul>

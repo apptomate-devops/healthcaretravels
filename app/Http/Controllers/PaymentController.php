@@ -427,7 +427,7 @@ class PaymentController extends BaseController
                         array_push($all_payments, $security_deposit_record);
 
                         // For Service fee entry
-                        $service_tax_record['name'] = 'Service Fee';
+                        $service_tax_record['name'] = $payment['payment_cycle'] == 1 ? 'Service Fee' : 'Processing Fee';
                         $service_tax_record['payment'] = $payment->service_tax;
                         $service_tax_record['status'] = 'Debited';
                         $service_tax_record['booking_id'] = $payment->booking_id;

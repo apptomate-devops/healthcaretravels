@@ -42,7 +42,7 @@
         <div class="login-container">
 
             <!--Tab -->
-            <div class="my-account style-1" id="login_form">
+            <div class="my-account style-1">
 
                 @if(Session::has('success'))
                     <div class="alert alert-success">
@@ -733,6 +733,18 @@
             }
         } catch (e) {}
     }
+
+    $('#address, #password, #password1, #password2').on('mouseup keyup', function () {
+        if ($(this).val()) {
+            $(this).attr('autocomplete', 'chrome-off');
+        } else {
+            $(this).attr('autocomplete', 'on');
+        }
+    }).on('mousedown keydown', function () {
+        if (!$(this).val()) {
+            $(this).attr('autocomplete', 'chrome-off');
+        }
+    })
 
     function clear_errors() {
         $(".form-error").removeClass('form-error');

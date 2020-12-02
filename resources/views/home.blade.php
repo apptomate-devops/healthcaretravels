@@ -446,7 +446,7 @@
                                                 <span @if($property->is_favourite == "0") class="like-icon with-tip"
                                                       @else class="like-icon with-tip liked"
                                                       @endif data-tip-content="Add to Favorites"
-                                                      onclick="favourite({{$property->property_id}})"></span>
+                                                      onclick="favourite({{$property->property_id}});"></span>
                                                 {{-- <span class="like-icon with-tip" data-tip-content="Add to Favourites" onclick="favourite({{$property->property_id}})"></span> --}}
                                             @endif
                                             <span class="compare-button with-tip"
@@ -743,15 +743,15 @@
     });
 
     function check_valid_date_range(startDate, endDate) {
-        var getDaysArray = function(s,e) {for(var a=[],d=new Date(s);d<=e;d.setDate(d.getDate()+1)){ a.push(d.toISOString().split('T')[0]);}return a;};
+        var getDaysArray = function (s, e) {
+            for (var a = [], d = new Date(s); d <= e; d.setDate(d.getDate() + 1)) {
+                a.push(d.toISOString().split('T')[0]);
+            }
+            return a;
+        };
         var dates = getDaysArray(startDate, endDate);
         let collideDates = dates.filter(x => disableDates.includes(x));
         return !collideDates.length
-    }
-
-    function set_favourite(property_id) {
-        console.log("Set favourite clicked with id :-" + property_id);
-        return false;
     }
 
     function get_current_location() {
@@ -769,19 +769,6 @@
             "<br>Longitude: " + position.coords.longitude;
         alert(HTML);
     }
-
-    function favourite(id) {
-        var url = 'property/set-favourite/' + id;
-        $.ajax({
-            "type": "get",
-            "url": url,
-            success: function (data) {
-                console.log("Set favourite success ====:" + data);
-                location.reload();
-            }
-        });
-    }
-
 </script>
 <script>
     $(document).ready(function () {
@@ -850,6 +837,22 @@
         $(window).scrollTop($(`#search-address-input`).offset().top-200);
         return false;
     }
+    function favourite(id) {
+        var url = '{{BASE_URL}}add_property_to_favourite/' + id;
+        $.ajax({
+            "type": "get",
+            "url": url,
+            success: function (data) {
+                if(data.status == 'SUCCESS') {
+                    location.reload();
+                }
+            },
+            error: function (error) {
+                console.log("error adding data to success", error);
+            }
+        });
+    }
+
 </script>
 <script>
     // Get the modal

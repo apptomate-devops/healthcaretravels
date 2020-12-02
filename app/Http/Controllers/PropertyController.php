@@ -480,8 +480,7 @@ class PropertyController extends BaseController
 
         $properties = DB::table('user_favourites')
             ->join('property_list', 'property_list.id', '=', 'user_favourites.property_id')
-            ->join('property_room', 'property_room.property_id', '=', 'user_favourites.property_id')
-            ->where('property_list.client_id', '=', CLIENT_ID)
+            ->where('user_favourites.client_id', '=', CLIENT_ID)
             ->where('user_favourites.user_id', '=', $user_id)
             ->get();
 
@@ -1141,28 +1140,33 @@ class PropertyController extends BaseController
             ->with('blocked_dates', $blocked_dates);
     }
 
-    public function set_favourite($property_id, Request $request)
+    public static function add_property_to_favourite($property_id, Request $request)
     {
-        $user_id = $request->session()->get('user_id');
-        $favourite = DB::table('user_favourites')
-            ->where('user_favourites.client_id', '=', CLIENT_ID)
-            ->where('user_favourites.user_id', '=', $user_id)
-            ->where('user_favourites.property_id', '=', $property_id)
-            ->get();
-        if (count($favourite) != 0) {
+        try {
+            $user_id = $request->session()->get('user_id');
             $favourite = DB::table('user_favourites')
                 ->where('user_favourites.client_id', '=', CLIENT_ID)
                 ->where('user_favourites.user_id', '=', $user_id)
                 ->where('user_favourites.property_id', '=', $property_id)
-                ->delete();
-            return response()->json(['status' => 'SUCCESS', 'message' => 'Removed from favourites', 'code' => 0]);
-        } else {
-            $insert = DB::table('user_favourites')->insert([
-                'client_id' => CLIENT_ID,
-                'user_id' => $user_id,
-                'property_id' => $property_id,
-            ]);
-            return response()->json(['status' => 'SUCCESS', 'message' => 'Added to favourites', 'code' => 1]);
+                ->get();
+
+            if (count($favourite)) {
+                DB::table('user_favourites')
+                    ->where('user_favourites.client_id', '=', CLIENT_ID)
+                    ->where('user_favourites.user_id', '=', $user_id)
+                    ->where('user_favourites.property_id', '=', $property_id)
+                    ->delete();
+                return response()->json(['status' => 'SUCCESS', 'message' => 'Removed from favourites', 'code' => 0]);
+            } else {
+                DB::table('user_favourites')->insert([
+                    'client_id' => CLIENT_ID,
+                    'user_id' => $user_id,
+                    'property_id' => $property_id,
+                ]);
+                return response()->json(['status' => 'SUCCESS', 'message' => 'Added to favourites', 'code' => 1]);
+            }
+        } catch (Exception $e) {
+            return response()->json(['status' => 'ERROR', 'message' => 'Error adding to favourites', 'code' => -1]);
         }
     }
 

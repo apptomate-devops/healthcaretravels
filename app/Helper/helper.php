@@ -818,82 +818,98 @@ class Helper
         return redirect()->intended('/traveler/chat/' . $chat_id . '?fb-key=personal_chat&fbkey=personal_chat');
     }
 
+    public static function setHCTConstant($name, $value)
+    {
+        if (!defined($name)) {
+            define($name, $value);
+        }
+    }
+
     public static function set_settings_constants()
     {
         Helper::reloadEnv();
         $BASE_URL = config("app.url");
 
-        define("MAP_MARKER_ICON", "/marker-green.png");
-        define("PROFILE_IMAGE", "/user_profile_default.png");
-        define("STATIC_IMAGE", "/no_property_image.jpg");
-        define("APP_BASE_NAME", "Health Care Travels");
-        define("APP_ENV", env("APP_ENV", "local"));
-        define("IS_LOCAL", APP_ENV == "local");
-        define("EMAIL_QUEUE", APP_ENV . ":emails");
-        define("PAYMENT_QUEUE", APP_ENV . ":payments");
-        define("GENERAL_QUEUE", APP_ENV . ":general");
-        define("MESSAGE_QUEUE", APP_ENV . ":message");
-        define("DWOLLA_ENV", config('services.dwolla.env'));
+        Helper::setHCTConstant("MAP_MARKER_ICON", "/marker-green.png");
+        Helper::setHCTConstant("PROFILE_IMAGE", "/user_profile_default.png");
+        Helper::setHCTConstant("STATIC_IMAGE", "/no_property_image.jpg");
+        Helper::setHCTConstant("APP_BASE_NAME", "Health Care Travels");
+        Helper::setHCTConstant("APP_ENV", env("APP_ENV", "local"));
+        Helper::setHCTConstant("IS_LOCAL", APP_ENV == "local");
+        Helper::setHCTConstant("EMAIL_QUEUE", APP_ENV . ":emails");
+        Helper::setHCTConstant("PAYMENT_QUEUE", APP_ENV . ":payments");
+        Helper::setHCTConstant("GENERAL_QUEUE", APP_ENV . ":general");
+        Helper::setHCTConstant("MESSAGE_QUEUE", APP_ENV . ":message");
+        Helper::setHCTConstant("DWOLLA_ENV", config('services.dwolla.env'));
 
-        define("APP_LOGO_URL", "https://demo.rentalslew.com/public/keepers_logo.png");
-        define("USER_DEFAULT_TIMEZONE", "America/Chicago");
+        Helper::setHCTConstant("APP_LOGO_URL", "https://demo.rentalslew.com/public/keepers_logo.png");
+        Helper::setHCTConstant("USER_DEFAULT_TIMEZONE", "America/Chicago");
 
-        define("BASE_URL", $BASE_URL . "/");
+        Helper::setHCTConstant("BASE_URL", $BASE_URL . "/");
 
-        define("BASE_COLOR", "e88016");
-        define("CLIENT_ID", "15465793");
-        define("RADIUS", 100);
-        define("MOST_POPULAR", 1);
-        define("ACTIVE", 1);
-        define("BLOCK", 0);
-        define("SUCCESS", "SUCCESS");
-        define("SAMPLE_IMAGE", "http://res.cloudinary.com/dazx7zpzb/image/upload/v1519884570/sample.jpg");
-        define("CLEANING_FEE_TYPES", serialize(["Per Night", "Per Guest", "Per Night Per Guest", "Single Fee"]));
-        define("CITY_FEE_TYPES", serialize(["Per Night", "Per Guest", "Per Night Per Guest", "Single Fee"]));
+        Helper::setHCTConstant("BASE_COLOR", "e88016");
+        Helper::setHCTConstant("CLIENT_ID", "15465793");
+        Helper::setHCTConstant("RADIUS", 100);
+        Helper::setHCTConstant("MOST_POPULAR", 1);
+        Helper::setHCTConstant("ACTIVE", 1);
+        Helper::setHCTConstant("BLOCK", 0);
+        Helper::setHCTConstant("SUCCESS", "SUCCESS");
+        Helper::setHCTConstant(
+            "SAMPLE_IMAGE",
+            "http://res.cloudinary.com/dazx7zpzb/image/upload/v1519884570/sample.jpg",
+        );
+        Helper::setHCTConstant(
+            "CLEANING_FEE_TYPES",
+            serialize(["Per Night", "Per Guest", "Per Night Per Guest", "Single Fee"]),
+        );
+        Helper::setHCTConstant(
+            "CITY_FEE_TYPES",
+            serialize(["Per Night", "Per Guest", "Per Night Per Guest", "Single Fee"]),
+        );
 
-        define("UPLOAD_CLOUD_NAME", "dazx7zpzb");
-        define("UPLOAD_API_KEY", "139546971995199");
-        define("UPLOAD_API_SECRET", "knkkiEXjEsceHTNjfSRADRvmSHQ");
-        define("UPLOAD_BASE_DELIVERY_URL", "http://res.cloudinary.com/dazx7zpzb");
-        define("UPLOAD_SECURE_DELIVERY_URL", "https://res.cloudinary.com/dazx7zpzb");
+        Helper::setHCTConstant("UPLOAD_CLOUD_NAME", "dazx7zpzb");
+        Helper::setHCTConstant("UPLOAD_API_KEY", "139546971995199");
+        Helper::setHCTConstant("UPLOAD_API_SECRET", "knkkiEXjEsceHTNjfSRADRvmSHQ");
+        Helper::setHCTConstant("UPLOAD_BASE_DELIVERY_URL", "http://res.cloudinary.com/dazx7zpzb");
+        Helper::setHCTConstant("UPLOAD_SECURE_DELIVERY_URL", "https://res.cloudinary.com/dazx7zpzb");
 
-        define("UPLOAD_API_BASE_URL", "https://api.cloudinary.com/v1_1/dazx7zpzb");
+        Helper::setHCTConstant("UPLOAD_API_BASE_URL", "https://api.cloudinary.com/v1_1/dazx7zpzb");
 
-        define("COUNTRY_CODE", config("app.country_code"));
+        Helper::setHCTConstant("COUNTRY_CODE", config("app.country_code"));
 
-        define("ZERO", 0);
-        define("ONE", 1);
-        define("TWO", 2);
-        define("THREE", 3);
-        define("FOUR", 4);
-        define("FIVE", 5);
-        define("SIX", 6);
-        define("SEVEN", 7);
-        define("EIGHT", 8);
-        define("NINE", 9);
-        define("TEN", 10);
+        Helper::setHCTConstant("ZERO", 0);
+        Helper::setHCTConstant("ONE", 1);
+        Helper::setHCTConstant("TWO", 2);
+        Helper::setHCTConstant("THREE", 3);
+        Helper::setHCTConstant("FOUR", 4);
+        Helper::setHCTConstant("FIVE", 5);
+        Helper::setHCTConstant("SIX", 6);
+        Helper::setHCTConstant("SEVEN", 7);
+        Helper::setHCTConstant("EIGHT", 8);
+        Helper::setHCTConstant("NINE", 9);
+        Helper::setHCTConstant("TEN", 10);
 
-        define("PROPERTY_IMAGE_WIDTH", 520);
-        define("PROPERTY_IMAGE_HEIGHT", 400);
-        define("DOUBLE_BED", $BASE_URL . "/bedicons/King,-Queen,Double-Bed.png");
-        define("QUEEN_BED", $BASE_URL . "/bedicons/King,-Queen,Double-Bed.png");
-        define("SINGLE_BED", $BASE_URL . "/bedicons/Single.png");
-        define("SOFA_BED", $BASE_URL . "/bedicons/Sofa.png");
-        define("BUNK_BED", $BASE_URL . "/bedicons/Bunk-Bed.png");
-        define("COMMON_SPACE_BED", $BASE_URL . "/bedicons/Couch.png");
+        Helper::setHCTConstant("PROPERTY_IMAGE_WIDTH", 520);
+        Helper::setHCTConstant("PROPERTY_IMAGE_HEIGHT", 400);
+        Helper::setHCTConstant("DOUBLE_BED", $BASE_URL . "/bedicons/King,-Queen,Double-Bed.png");
+        Helper::setHCTConstant("QUEEN_BED", $BASE_URL . "/bedicons/King,-Queen,Double-Bed.png");
+        Helper::setHCTConstant("SINGLE_BED", $BASE_URL . "/bedicons/Single.png");
+        Helper::setHCTConstant("SOFA_BED", $BASE_URL . "/bedicons/Sofa.png");
+        Helper::setHCTConstant("BUNK_BED", $BASE_URL . "/bedicons/Bunk-Bed.png");
+        Helper::setHCTConstant("COMMON_SPACE_BED", $BASE_URL . "/bedicons/Couch.png");
 
-        define("GOOGLE_MAPS_API_KEY", config("services.google.maps_api_key"));
-        define("RECAPTCHA_SITE_KEY", config("services.google.captcha_site_key"));
-        define("RECAPTCHA_SECRET_KEY", config("services.google.captcha_secret_key"));
+        Helper::setHCTConstant("GOOGLE_MAPS_API_KEY", config("services.google.maps_api_key"));
+        Helper::setHCTConstant("RECAPTCHA_SITE_KEY", config("services.google.captcha_site_key"));
+        Helper::setHCTConstant("RECAPTCHA_SECRET_KEY", config("services.google.captcha_secret_key"));
 
-        define("IS_GOOGLE_SOCIAL_ENABLED", (bool) config("services.google.client_id"));
-        define("IS_FACEBOOK_SOCIAL_ENABLED", (bool) config("services.facebook.client_id"));
+        Helper::setHCTConstant("IS_GOOGLE_SOCIAL_ENABLED", (bool) config("services.google.client_id"));
+        Helper::setHCTConstant("IS_FACEBOOK_SOCIAL_ENABLED", (bool) config("services.facebook.client_id"));
 
-        define("INSTANT_CHAT", "instant_chat");
-        define("REQUEST_CHAT", "request_chat");
-        define("PERSONAL_CHAT", "personal_chat");
+        Helper::setHCTConstant("INSTANT_CHAT", "instant_chat");
+        Helper::setHCTConstant("REQUEST_CHAT", "request_chat");
+        Helper::setHCTConstant("PERSONAL_CHAT", "personal_chat");
 
-        define(
+        Helper::setHCTConstant(
             "MONTHS",
             serialize([
                 "January",
@@ -911,16 +927,16 @@ class Helper
             ]),
         );
 
-        define(
+        Helper::setHCTConstant(
             'PASSWORD_REGEX',
             'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#^_+=.:;><~$!%*?&])[A-Za-z\d@#^_+=.:;><~$!%*?&]{8,}$/i',
         );
-        define(
+        Helper::setHCTConstant(
             'PASSWORD_REGEX_MESSAGE',
             'Password should be at least 8 characters long and should contain at least 1 uppercase, 1 lowercase, 1 number and 1 special character',
         );
 
-        define('ETHNICITY', [
+        Helper::setHCTConstant('ETHNICITY', [
             'American Indian or Alaskan Native',
             'Asian',
             'Black or African American',
@@ -929,7 +945,7 @@ class Helper
             'Other',
         ]);
 
-        define('OWNER_CANCELLATION_REASONS', [
+        Helper::setHCTConstant('OWNER_CANCELLATION_REASONS', [
             'Personal reasons',
             'Traveler damaged or disrespected property',
             'Traveler broke property rules',
@@ -940,7 +956,7 @@ class Helper
             'Other reason',
         ]);
 
-        define('TRAVELLER_CANCELLATION_REASONS', [
+        Helper::setHCTConstant('TRAVELLER_CANCELLATION_REASONS', [
             'Personal / Sick',
             'Lost/ended job offer',
             'Found another place to stay',
@@ -948,97 +964,97 @@ class Helper
             'Other reason',
         ]);
 
-        //define("UPLOAD_CLOUD_NAME","dazx7zpzb");
-        define("START_YEAR", "2018");
-        define("END_YEAR", "2040");
-        define("SEARCH_ITEM_COUNT", 10);
+        //Helper::setHCTConstant("UPLOAD_CLOUD_NAME","dazx7zpzb");
+        Helper::setHCTConstant("START_YEAR", "2018");
+        Helper::setHCTConstant("END_YEAR", "2040");
+        Helper::setHCTConstant("SEARCH_ITEM_COUNT", 10);
         $all_settings = Settings::all();
         foreach ($all_settings as $setting) {
             switch ($setting->param) {
                 case 'logo':
-                    define("LOGO", $setting->value);
+                    Helper::setHCTConstant("LOGO", $setting->value);
                     break;
                 case 'app_name':
-                    define("APP_NAME", $setting->value);
+                    Helper::setHCTConstant("APP_NAME", $setting->value);
                     break;
                 case 'currency':
-                    define("CURRENCY", $setting->value);
+                    Helper::setHCTConstant("CURRENCY", $setting->value);
                     break;
                 case 'client_email':
-                    define("CLIENT_MAIL", $setting->value);
+                    Helper::setHCTConstant("CLIENT_MAIL", $setting->value);
                     break;
                 case 'client_phone':
-                    define("CLIENT_PHONE", $setting->value);
+                    Helper::setHCTConstant("CLIENT_PHONE", $setting->value);
                     break;
                 case 'client_web':
-                    define("CLIENT_WEB", $setting->value);
+                    Helper::setHCTConstant("CLIENT_WEB", $setting->value);
                     break;
                 case 'client_address':
-                    define("CLIENT_ADDRESS", $setting->value);
+                    Helper::setHCTConstant("CLIENT_ADDRESS", $setting->value);
                     break;
                 case 'contact_content':
-                    define("CONTACT_CONTENT", $setting->value);
+                    Helper::setHCTConstant("CONTACT_CONTENT", $setting->value);
                     break;
                 case 'verification_mail':
-                    define("VERIFY_MAIL", $setting->value);
+                    Helper::setHCTConstant("VERIFY_MAIL", $setting->value);
                     break;
                 case 'support_mail':
-                    define("SUPPORT_MAIL", $setting->value);
+                    Helper::setHCTConstant("SUPPORT_MAIL", $setting->value);
                     break;
                 case 'general_mail':
-                    define("GENERAL_MAIL", $setting->value);
+                    Helper::setHCTConstant("GENERAL_MAIL", $setting->value);
                     break;
                 case 'facebook':
-                    define("FACEBOOK", $setting->value);
+                    Helper::setHCTConstant("FACEBOOK", $setting->value);
                     break;
                 case 'twitter':
-                    define("TWITTER", $setting->value);
+                    Helper::setHCTConstant("TWITTER", $setting->value);
                     break;
                 case 'google':
-                    define("GOOGLE", $setting->value);
+                    Helper::setHCTConstant("GOOGLE", $setting->value);
                     break;
                 case 'instagram':
-                    define("INSTAGRAM", $setting->value);
+                    Helper::setHCTConstant("INSTAGRAM", $setting->value);
                     break;
                 case 'service_tax':
-                    define("SERVICE_TAX", $setting->value);
+                    Helper::setHCTConstant("SERVICE_TAX", $setting->value);
                     break;
                 case 'agency_service_tax':
-                    define("AGENCY_SERVICE_TAX", $setting->value);
+                    Helper::setHCTConstant("AGENCY_SERVICE_TAX", $setting->value);
                     break;
                 case 'service_tax_second':
-                    define("SERVICE_TAX_SECOND", $setting->value);
+                    Helper::setHCTConstant("SERVICE_TAX_SECOND", $setting->value);
                     break;
                 default:
                     break;
             }
         }
 
-        define("TEMPLATE_REGISTER", 1);
-        define("TEMPLATE_VERIFICATION", 2);
-        define("TEMPLATE_BOOKING", 3);
-        define("TEMPLATE_CANCEL_BOOKING", 4);
-        define("TEMPLATE_PASSWORD_RESET", 5);
-        define("TEMPLATE_APPROVAL", 6);
-        define("TEMPLATE_DENIAL", 7);
-        define("TEMPLATE_VERIFICATION_REMINDER", 8);
-        define("TEMPLATE_REMOVE_PROFILE_IMAGE", 9);
-        define("TEMPLATE_TRAVELER_24HR_BEFORE_CHECKIN", 10);
-        define("TEMPLATE_OWNER_24HR_BEFORE_CHECKIN", 11);
-        define("TEMPLATE_TRAVELER_24HR_BEFORE_CHECKOUT", 12);
-        define("TEMPLATE_OWNER_24HR_BEFORE_CHECKOUT", 13);
-        define("TEMPLATE_SECURITY_DEPOSIT_REFUND", 14);
+        Helper::setHCTConstant("TEMPLATE_REGISTER", 1);
+        Helper::setHCTConstant("TEMPLATE_VERIFICATION", 2);
+        Helper::setHCTConstant("TEMPLATE_BOOKING", 3);
+        Helper::setHCTConstant("TEMPLATE_CANCEL_BOOKING", 4);
+        Helper::setHCTConstant("TEMPLATE_PASSWORD_RESET", 5);
+        Helper::setHCTConstant("TEMPLATE_APPROVAL", 6);
+        Helper::setHCTConstant("TEMPLATE_DENIAL", 7);
+        Helper::setHCTConstant("TEMPLATE_VERIFICATION_REMINDER", 8);
+        Helper::setHCTConstant("TEMPLATE_REMOVE_PROFILE_IMAGE", 9);
+        Helper::setHCTConstant("TEMPLATE_TRAVELER_24HR_BEFORE_CHECKIN", 10);
+        Helper::setHCTConstant("TEMPLATE_OWNER_24HR_BEFORE_CHECKIN", 11);
+        Helper::setHCTConstant("TEMPLATE_TRAVELER_24HR_BEFORE_CHECKOUT", 12);
+        Helper::setHCTConstant("TEMPLATE_OWNER_24HR_BEFORE_CHECKOUT", 13);
+        Helper::setHCTConstant("TEMPLATE_SECURITY_DEPOSIT_REFUND", 14);
 
-        define("OWNER_NEW_BOOKING", 1);
-        define("OWNER_BOOKING_REMINDER", 2);
-        define("TRAVELER_CHECK_IN_APPROVAL", 3);
-        define("TRAVELER_CHECK_IN_APPROVAL_REMINDER", 4);
+        Helper::setHCTConstant("OWNER_NEW_BOOKING", 1);
+        Helper::setHCTConstant("OWNER_BOOKING_REMINDER", 2);
+        Helper::setHCTConstant("TRAVELER_CHECK_IN_APPROVAL", 3);
+        Helper::setHCTConstant("TRAVELER_CHECK_IN_APPROVAL_REMINDER", 4);
 
-        define('FB_URL', 'https://health-care-travels.firebaseio.com/');
-        define("PAYMENT_INIT", 1);
-        define("PAYMENT_SUCCESS", 2);
-        define("PAYMENT_FAILED", 3);
-        define("PAYMENT_CANCELED", 4);
+        Helper::setHCTConstant('FB_URL', 'https://health-care-travels.firebaseio.com/');
+        Helper::setHCTConstant("PAYMENT_INIT", 1);
+        Helper::setHCTConstant("PAYMENT_SUCCESS", 2);
+        Helper::setHCTConstant("PAYMENT_FAILED", 3);
+        Helper::setHCTConstant("PAYMENT_CANCELED", 4);
     }
 
     public static function changeEnv($data = [])

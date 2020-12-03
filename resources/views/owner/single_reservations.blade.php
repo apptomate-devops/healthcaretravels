@@ -133,10 +133,10 @@
                     </table>
                 @endif
                 @if($data->status == 1)
-                        <div style="text-align: center;margin-top: 30px;">
-                            <button class="button" onclick="cancel_booking('{{$data->booking_id}}')" >Cancel Booking</button>
-                        </div>
-                        <br>
+                    <div style="text-align: center;margin-top: 30px;">
+                        <button class="button" onclick="cancel_booking()" >Cancel Booking</button>
+                    </div>
+                    <br>
                 @elseif($data->status == 2)
                     @if($data->cancellation_requested == 1)
                         <div style="text-align: center; font-size: 18px; font-weight: bold;">Cancellation Pending</div>
@@ -178,29 +178,46 @@
             </div>
 
         </div>
+        <div class="modal fade in" id="confirmationModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            Are you sure you want to Cancel booking?
+                        </h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-default" id="cancelBooking">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script type="text/javascript">
-        function cancel_booking(id) {
-            var r = confirm("Are you sure you want to cancel?");
-            if (r == true) {
-                var url = '{{BASE_URL}}cancel-booking/'+id;
-                $.ajax({
-                    "type": "get",
-                    "url" : url,
-                    success: function(data) {
-                        if(data.status=="SUCCESS"){
-                            window.location.reload();
-                        } else {
-                            console.log('Error Updating cancel status for booking');
-                        }
-                    },
-                    error: function (e) {
+        function cancel_booking() {
+            $('#confirmationModal').modal('show');
+        }
+        $('#cancelBooking').click(function () {
+            $('#confirmationModal').modal('hide');
+            var id = '{{$data->booking_id}}';
+            var url = '{{BASE_URL}}cancel-booking/'+id;
+            $.ajax({
+                "type": "get",
+                "url" : url,
+                success: function(data) {
+                    if(data.status=="SUCCESS"){
+                        window.location.reload();
+                    } else {
                         console.log('Error Updating cancel status for booking');
                     }
-                });
-            }
-        }
+                },
+                error: function (e) {
+                    console.log('Error Updating cancel status for booking');
+                }
+            });
+        });
     </script>
 @endsection
 

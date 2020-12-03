@@ -648,7 +648,6 @@
   ================================================== -->
 </div>
 <!-- Wrapper / End -->
-@include('includes.scripts')
 <script type="text/javascript">
     // $(function () {
     //     var dateFormat = "mm/dd/yy";
@@ -880,6 +879,6 @@
         }
     }
 </script>
-
+@include('includes.scripts')
 </body>
 </html>

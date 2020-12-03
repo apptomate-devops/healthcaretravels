@@ -23,6 +23,12 @@ php artisan serve
 This project is built using [Laravel](https://laravel.com/).
 Laravel generates it's own readme file which can be accessed [here](https://gitlab.com/healthcaretravels/hct/-/blob/master/laravel_readme.md)
 
+### To run redis queue, execute following script 
+
+```bash
+sh queue-worker.sh
+```
+
 ## Database migration notes:
 
 #### For creating database migrations

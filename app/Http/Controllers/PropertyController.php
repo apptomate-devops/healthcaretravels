@@ -2686,10 +2686,9 @@ class PropertyController extends BaseController
                 ->where('client_id', '=', CLIENT_ID)
                 ->where('id', $property->id)
                 ->update(['last_edited_at' => Carbon::now('UTC')]);
-            Logger::info('Request sending mail at' . now() . 'for id ' . $property->id);
             ProcessPropertyUpdateEmail::dispatch($property->id)
                 ->delay(now()->addMinutes(5))
-                ->onQueue(GENERAL_QUEUE);
+                ->onQueue(EMAIL_QUEUE);
         }
     }
 

@@ -38,7 +38,7 @@
         <label style="margin-left: 12px;">Enter Third party ICAL URL here</label>
         <div style="display: flex; justify-content: space-between;">
             <input style="margin-left: 10px;width: 80%;" type="text" placeholder="Enter Third party ICAL URL here" name="ical_url">
-            <button type="button" id="add_ical" class="button preview margin-top-5" style="margin-bottom: 20px;float: right;">
+            <button type="button" id="add_ical" class="button preview margin-top-5" style="margin-bottom: 20px;float: right;" disabled>
                 Add
             </button>
         </div>

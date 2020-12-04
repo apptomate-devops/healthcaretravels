@@ -71,13 +71,17 @@
 
         var r = confirm("You are about to remove this listing from your favorites");
         if (r == true) {
-            var url = '{{BASE_URL}}property/set-favourite/'+id;
+            var url = '{{BASE_URL}}add_property_to_favourite/'+id;
             $.ajax({
                 "type": "get",
                 "url" : url,
-                success: function(data) {
-                    console.log("Set favourite success ====:"+data);
-                    location.reload();
+                success: function (data) {
+                    if(data.status == 'SUCCESS') {
+                        location.reload();
+                    }
+                },
+                error: function (error) {
+                    console.log("error adding data to success", error);
                 }
             });
         }

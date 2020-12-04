@@ -1083,18 +1083,6 @@
                 $("#not_favourite").show();
             }
 
-            function favourite(id) {
-                var url = 'set-favourite/' + id;
-                $.ajax({
-                    "type": "get",
-                    "url": url,
-                    success: function (data) {
-                        console.log("Set favourite success ====:" + data);
-                        location.reload();
-                    }
-                });
-            }
-
             // Book Now: Date Range Picker
             $('input[id="booking_date_range_picker"]').daterangepicker({
                 minDate: new Date(),
@@ -1299,6 +1287,21 @@
                 }
             });
         });
+        function favourite(id) {
+            var url = '{{BASE_URL}}add_property_to_favourite/' + id;
+            $.ajax({
+                "type": "get",
+                "url": url,
+                success: function (data) {
+                    if(data.status == 'SUCCESS') {
+                        location.reload();
+                    }
+                },
+                error: function (error) {
+                    console.log("error adding data to success", error);
+                }
+            });
+        }
     </script>
 
     <script>

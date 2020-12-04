@@ -45,7 +45,8 @@ class IcalController extends BaseController
                 ->setDtStart(new \DateTime($booking->start_date))
                 ->setDtEnd(new \DateTime($booking->end_date))
                 ->setNoTime(true)
-                ->setSummary($traveler_name . "'s stay at " . $booking->title);
+                ->setSummary($booking->title . "booked by" . $traveler_name);
+
             $vCalendar->addComponent($booking_event);
         }
 

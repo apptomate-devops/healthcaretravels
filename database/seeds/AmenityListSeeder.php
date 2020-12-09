@@ -58,7 +58,7 @@ class AmenityListSeeder extends Seeder
         );
         \App\Models\AmenitiesList::updateOrCreate(
             [
-                'amenities_name' => 'Security Cameras',
+                'amenities_name' => 'Security Cameras (Exterior)',
             ],
             [
                 'amenities_name' => 'Security Cameras (Exterior)',

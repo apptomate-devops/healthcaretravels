@@ -47,7 +47,9 @@
                                     <!-- Checkboxes / End -->
 
                                 </div>
-
+                                <b>
+                                    Note: Health Care Travels does not allow any cameras inside of any listing. If it is reported that any cameras hidden or visible are inside your listing, the account will be banned indefinitely.
+                                </b>
                                 <div class="text-center">
                                     {{--  @if(isset($property_details->is_complete) && $property_details->is_complete == 1)
                                                     <button id="button" class="button border margin-top-5" name="save" value="save" style="background-color: #e78016;">Save<i class="fa fa-save"></i></button>
@@ -75,13 +77,13 @@
 
         var allAmenities = "";
 
-    <?php if (count($amenties) != 0) {
-        // $value=$amenties->amenties_name;
-        foreach ($amenties as $a) { ?>
+        <?php if (count($amenties) != 0) {
+            // $value=$amenties->amenties_name;
+            foreach ($amenties as $a) { ?>
         console.log('{{$a->amenties_name}}');
-                $("input[type=checkbox][value='{{$a->amenties_name}}']").prop("checked",true);
+        $("input[type=checkbox][value='{{$a->amenties_name}}']").prop("checked",true);
         <?php }
-    } ?>
+        } ?>
 
     </script>
 @endsection

@@ -1211,7 +1211,7 @@ class Helper
         return;
     }
 
-    public static function get_local_date_time($dateObj, $format = 'm-d-y H:i:s')
+    public static function get_local_date_time($dateObj, $format = 'm/d/Y H:i:s')
     {
         if (empty($dateObj)) {
             return '';

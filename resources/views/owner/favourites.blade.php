@@ -58,9 +58,6 @@
 
 
                 </table>
-                @if(in_array($role_id, [1, 4]))
-                    <a href="{{url('/')}}/owner/add-property" class="margin-top-40 button">Submit New Property</a>
-                @endif
             </div>
 
         </div>

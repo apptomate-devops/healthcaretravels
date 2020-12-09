@@ -493,24 +493,9 @@ class PropertyController extends BaseController
                 ->where('property_images.property_id', '=', $property->property_id)
                 ->orderBy('property_images.sort', 'asc')
                 ->orderBy('property_images.is_cover', 'desc')
-                ->get();
+                ->first();
 
-            foreach ($pd as $images) {
-                $img_url = $images->image_url;
-                $property->image_url = $img_url;
-            }
-
-            $propertys = [];
-            $propertysd = [];
-            $propertys['image_url'] = STATIC_IMAGE;
-            if (count($pd) == 0) {
-                $propertysd[] = $propertys;
-                $property->property_images = $propertysd;
-                $property->image_url = STATIC_IMAGE;
-            } else {
-                $property->property_images = $pd;
-            }
-
+            $property->image_url = $pd->image_url;
             $properties_near[] = $property;
         }
 

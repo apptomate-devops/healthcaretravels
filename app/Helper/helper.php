@@ -727,6 +727,7 @@ class Helper
             ->where('owner_id', $property_detail->user_id)
             ->where('traveller_id', $traveler_id)
             ->where('property_id', $property_id)
+            ->where('owner_visible', 1)
             ->first();
 
         if ($chat_check) {

@@ -30,7 +30,14 @@
                     <div style="font-weight: bold; color: #e08716; margin-bottom: 15px;">Your request has been sent to the property owner. We'll let you know when your request is approved. In the mean time, feel free to start a chat with the property owner to say hello!</div>
                 @endif
                 <div class="booking-details">
-                    <a class="btn bg-orange" id="chat_now" href="{{$chat_url}}">Chat now with {{$data->owner_name}}</a>
+                    <form action="{{url('/')}}/owner/chat-with-traveler" method="post" >
+                        <input type="hidden" name="_token" value="{{csrf_token()}}">
+                        <input type="hidden" name="check_in" value="{{$data->start_date}}">
+                        <input type="hidden" name="check_out" value="{{$data->end_date}}">
+                        <input type="hidden" name="traveller_id" value="{{$data->traveller_id}}">
+                        <input type="hidden" name="property_id" value="{{$data->property_id}}">
+                        <button type="submit" class="btn bg-orange" id="chat_now">Chat now with {{$data->owner_name}}</button>
+                    </form>
                     <h3>Details</h3>
                     <div>Booking Reservation: <span>{{$data->booking_id}}</span></div>
                     <div>Property Name: <a href="/property/{{$data->property_id}}">{{$property->title}}</a></div>

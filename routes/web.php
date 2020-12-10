@@ -170,6 +170,7 @@ Route::middleware(['LoginCheck'])->group(function () {
         Route::GET('/owner/my-bookings', 'OwnerController@my_bookings');
         Route::GET('/owner/bookings', 'OwnerController@my_bookings');
         Route::GET('/owner/single-booking/{id}', 'PropertyController@single_booking');
+        Route::POST('/owner/chat-with-traveler', 'PropertyController@chat_with_traveler');
         Route::get('/owner/reservations', 'PropertyController@reservations');
         Route::get('/owner/reservations/{id}', 'PropertyController@single_reservations');
         Route::POST('/owner/property/file-upload/{cover_id?}', 'PropertyController@property_image_upload');

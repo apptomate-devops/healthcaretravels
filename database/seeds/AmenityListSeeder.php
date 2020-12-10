@@ -56,12 +56,34 @@ class AmenityListSeeder extends Seeder
                 'status' => 1,
             ],
         );
-        \App\Models\AmenitiesList::updateOrCreate(
+        \App\Models\AmenitiesList::update(
             [
                 'amenities_name' => 'Security Cameras',
             ],
             [
                 'amenities_name' => 'Security Cameras (Exterior)',
+                'client_id' => 15465793,
+                'status' => 1,
+            ],
+        );
+        \App\Models\AmenitiesList::update(
+            [
+                'amenities_name' => 'Dryer',
+            ],
+            [
+                'amenities_name' => 'Dryer',
+                'icon_url' => 'amenities/Washer.png',
+                'client_id' => 15465793,
+                'status' => 1,
+            ],
+        );
+        \App\Models\AmenitiesList::updateOrCreate(
+            [
+                'amenities_name' => 'Blow dryer',
+            ],
+            [
+                'amenities_name' => 'Blow dryer',
+                'icon_url' => 'amenities/hair-dyer.png',
                 'client_id' => 15465793,
                 'status' => 1,
             ],

@@ -108,10 +108,10 @@
                     </div>
                     <div class="form-group">
                         @if($lastPaidByTraveler)
-                        <div class="details"><b>Last payment received from traveler of: </b><span>${{$lastPaidByTraveler->total_amount}} on {{$lastPaidByTraveler->confirmed_time}}</span></div>
+                        <div class="details"><b>Last payment received from traveler of: </b><span>${{$lastPaidByTraveler->total_amount}} on {{Helper::get_local_date_time($lastPaidByTraveler->confirmed_time)}}</span></div>
                         @endif
                         @if($lastPaidToOwner)
-                        <div class="details"><b>Last payment paid to owner of: </b><span>${{$lastPaidToOwner->total_amount}} on {{$lastPaidToOwner->confirmed_time}}</span></div>
+                        <div class="details"><b>Last payment paid to owner of: </b><span>${{$lastPaidToOwner->total_amount}} on {{Helper::get_local_date_time($lastPaidToOwner->confirmed_time)}}</span></div>
                         @endif
                     </div>
                     @if($hasPaymentsInProcessing)

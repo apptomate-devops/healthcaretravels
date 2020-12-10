@@ -727,6 +727,7 @@ class Helper
             ->where('owner_id', $property_detail->user_id)
             ->where('traveller_id', $traveler_id)
             ->where('property_id', $property_id)
+            ->where('owner_visible', 1)
             ->first();
 
         if ($chat_check) {
@@ -1211,7 +1212,7 @@ class Helper
         return;
     }
 
-    public static function get_local_date_time($dateObj, $format = 'm-d-y H:i:s')
+    public static function get_local_date_time($dateObj, $format = 'm/d/Y H:i:s')
     {
         if (empty($dateObj)) {
             return '';

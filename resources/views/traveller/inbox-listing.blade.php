@@ -45,7 +45,7 @@
                             <div class="title">
                                 <h4><a href="#">{{Helper::get_user_display_name($property->owner)}}</a></h4>
                                 <span> {{$property->last_message->username}}: {{$property->last_message->message}} </span><br/>
-                                <span> {{$property->last_message->status}} {{$property->last_message->time}} {{$property->last_message->date}} </span>
+                                <span> {{$property->last_message->status}} {{Helper::get_local_date_time(\Carbon\Carbon::parse($property->last_message->date . ' ' . $property->last_message->time), 'H:i a m-d-Y')}} </span>
                             </div>
                         </td>
 
@@ -75,7 +75,7 @@
                             <div class="title">
                                 <h4><a href="#">{{Helper::get_user_display_name($property->owner)}}</a></h4>
                                 <span> {{$property->last_message->username}}: {{$property->last_message->message}} </span><br/>
-                                <span> {{$property->last_message->status}} {{$property->last_message->time}} {{$property->last_message->date}} </span>
+                                <span> {{$property->last_message->status}} {{Helper::get_local_date_time(\Carbon\Carbon::parse($property->last_message->date . ' ' . $property->last_message->time), 'H:i a m-d-Y')}} </span>
 
                             </div>
                         </td>
@@ -104,7 +104,7 @@
                             <div class="title">
                                 <h4><a href="#">{{Helper::get_user_display_name($property->owner)}}</a></h4>
                                 <span> {{$property->last_message->username}}: {{$property->last_message->message}} </span><br/>
-                                <span> {{$property->last_message->status}} {{$property->last_message->time}} {{$property->last_message->date}} </span>
+                                <span> {{$property->last_message->status}} {{Helper::get_local_date_time(\Carbon\Carbon::parse($property->last_message->date . ' ' . $property->last_message->time), 'H:i a m-d-Y')}} </span>
                             </div>
                         </td>
                         <td class="action">

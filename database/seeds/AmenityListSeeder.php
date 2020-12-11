@@ -63,7 +63,7 @@ class AmenityListSeeder extends Seeder
         ]);
         \App\Models\AmenitiesList::where('amenities_name', 'Dryer')->update([
             'amenities_name' => 'Dryer',
-            'icon_url' => 'amenities/Washer.png',
+            'icon_url' => 'amenities/dryer-machine.png',
             'client_id' => 15465793,
             'status' => 1,
         ]);

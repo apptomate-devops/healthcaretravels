@@ -303,7 +303,7 @@
                                             <input value="@if($user->vrbo_link == '0' || $user->vrbo_link == null)@else{{$user->vrbo_link}}@endif" type="text" placeholder="VRBO URL" name="vrbo_link" data-field-group="listing_url" class="form-control" />
 
                                             <label>Other</label>
-                                            <input value="@if($user->other_listing_link == '0' || $user->other_listing_link == null)@else{{$user->other_listing_link}}@endif" type="text" placeholder="OTHER LISTING URL" name="other_listing_link" data-field-group="listing_url" class="form-control" />
+                                            <input value="@if($user->other_listing_link == '0' || $user->other_listing_link == null)@else{{$user->other_listing_link}}@endif" type="text" placeholder="Other Listing URL" name="other_listing_link" data-field-group="listing_url" class="form-control" />
 
                                         </div>
                                     </div>

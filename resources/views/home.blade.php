@@ -22,6 +22,8 @@
 
         section.fullwidth.sec2 {
             background-color: white;
+            max-height: 530px;
+            overflow-y: hidden;
         }
 
         .headline-box {

@@ -194,7 +194,25 @@
         $('input[name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
     });
 
-
+    $('input[id="dob"]').datepicker({
+        format: 'mm/dd/yyyy',
+        autoclose: true,
+        startDate: new Date('01/01/1990'),
+        endDate: new Date(),
+    }).on('changeDate', function(event) {
+        let today = new Date();
+        let birthDate = new Date(event.date);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        let m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        if (age < 18 || age > 100) {
+            $('#dob_validation_error').html('You must be 18 or older to register online. Contact <br>​<a href="mailto:{{VERIFY_MAIL}}">{{VERIFY_MAIL}}</a> to create a minor account.')
+        } else {
+            $('#dob_validation_error').html('');
+        }
+    });
 </script>
 @include('includes.mask')
 <style type="text/css">

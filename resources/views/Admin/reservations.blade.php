@@ -116,7 +116,7 @@
 
                                                 </td>
                                                 <td>
-                                                    {{$booking->start_date}}
+                                                    {{date('m-d-Y', strtotime($booking->start_date))}}
                                                 </td>
                                                 <td>
                                                     @if($booking->payment_done == 1)

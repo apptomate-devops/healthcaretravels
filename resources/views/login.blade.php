@@ -260,7 +260,7 @@
 
                             <p class="form-row form-row-wide label-margin" id="dob_field" style="display: none;">
                                 <label for="dob">Date of Birth:
-                                    <input type="date" onchange="on_dob_change(this.value)" class="input-text validate {{ $errors->has('dob') ? 'form-error' : ''}}" value="{{Session::get('dob')}}" name="dob" id="dob" autocomplete="off" required />
+                                    <input type="text" placeholder="MM-DD-YYYY" class="input-text validate {{ $errors->has('dob') ? 'form-error' : ''}}" value="{{Session::get('dob') ? date('m/d/Y', strtotime(Session::get('dob'))) : ''}}" name="dob" id="dob" autocomplete="off" required onkeydown="return false" />
                                 </label>
                             {!! $errors->first('dob', '<p class="error-text">:message</p>') !!}
                             <p id="dob_validation_error" style="margin-bottom: 20px;"></p>
@@ -439,7 +439,6 @@
         $('#timezone').val(moment.tz.guess())
 
         load_agencies();
-        set_max_date();
         checkRememberEmail(true);
 
         if ("{{ Session::get('selectedTab'), 'tab1' }}" === 'tab2') {
@@ -749,29 +748,6 @@
     function clear_errors() {
         $(".form-error").removeClass('form-error');
         $(".error-text").hide();
-    }
-
-    function set_max_date() {
-        let dd = new Date().getDate();
-        let mm = new Date().getMonth() + 1;
-        let yyyy = new Date().getFullYear();
-        document.getElementById("dob").max = `${yyyy}-${ mm<10 ? '0'+mm : mm }-${ dd<10 ? '0'+dd : dd }`;
-    }
-
-    function on_dob_change(value) {
-        const dateString = value;
-        let today = new Date();
-        let birthDate = new Date(dateString);
-        let age = today.getFullYear() - birthDate.getFullYear();
-        let m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
-        if (age < 18 || age > 100) {
-            $('#dob_validation_error').html('You must be 18 or older to register online. Contact <br>​<a href="mailto:{{VERIFY_MAIL}}">{{VERIFY_MAIL}}</a> to create a minor account.')
-        } else {
-            $('#dob_validation_error').html('');
-        }
     }
 
     function on_add_address_line_2(e, value = '') {

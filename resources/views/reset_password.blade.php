@@ -12,7 +12,6 @@
 <style>
     .my-account label input {
     margin-top: 8px;
-    padding-left: 50px;
     height: 53px;
 }
 </style>

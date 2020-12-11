@@ -548,7 +548,7 @@
 <script>
     function onLoad() {
         gapi.load('auth2', function() {
-            gapi.auth2.init();
+            gapi.auth2.init({client_id: "{{GOOGLE_CLIENT_ID}}" });
         });
     }
 </script>

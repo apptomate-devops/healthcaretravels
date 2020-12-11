@@ -234,7 +234,6 @@
         </div>
     </div>
 
-    @include('includes.scripts')
 
     <script type="text/javascript">
         function initSearchPropertySearchInput() {
@@ -466,7 +465,10 @@
                 }
             }
         });
+    </script>
+    @include('includes.scripts')
 
+    <script>
         $("#next").click(function (event) {
             let page = $("#page").val();
             let dynamicHtml = '<input type="hidden" name="page" value="' + page + '">';
@@ -519,6 +521,5 @@
             $("#filter_form").submit();
         }
     </script>
-
     <!-- Maps -->
 @endsection

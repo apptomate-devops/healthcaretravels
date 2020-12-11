@@ -850,7 +850,7 @@ class Helper
 
         Helper::setHCTConstant("BASE_COLOR", "e88016");
         Helper::setHCTConstant("CLIENT_ID", "15465793");
-        Helper::setHCTConstant("RADIUS", 100);
+        Helper::setHCTConstant("RADIUS", 500);
         Helper::setHCTConstant("MOST_POPULAR", 1);
         Helper::setHCTConstant("ACTIVE", 1);
         Helper::setHCTConstant("BLOCK", 0);
@@ -903,6 +903,7 @@ class Helper
         Helper::setHCTConstant("RECAPTCHA_SITE_KEY", config("services.google.captcha_site_key"));
         Helper::setHCTConstant("RECAPTCHA_SECRET_KEY", config("services.google.captcha_secret_key"));
 
+        Helper::setHCTConstant("GOOGLE_CLIENT_ID", config("services.google.client_id"));
         Helper::setHCTConstant("IS_GOOGLE_SOCIAL_ENABLED", (bool) config("services.google.client_id"));
         Helper::setHCTConstant("IS_FACEBOOK_SOCIAL_ENABLED", (bool) config("services.facebook.client_id"));
 

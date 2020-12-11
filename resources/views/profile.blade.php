@@ -83,7 +83,7 @@
                             <div class="caption">{{$user_detail->email_verified==1?'Email is Verified':'Email not Verified'}}</div>
 
                             <label> Date of Birth</label>
-                            <input type="date" onchange="on_dob_change(this.value)" class="input-text validate" value="{{Session::get('date_of_birth') ?? $user_detail->date_of_birth}}" name="dob" id="dob" autocomplete="off" required />
+                            <input type="text" placeholder="MM/DD/YYYY" class="input-text validate" value="{{Session::get('date_of_birth') ?? date('m/d/Y', strtotime($user_detail->date_of_birth))}}" name="dob" id="dob" autocomplete="off" required onkeydown="return false" />
                             <p id="dob_validation_error" style="margin-bottom: 20px;"></p>
 
                             <label> Gender</label>
@@ -252,7 +252,6 @@
         var agencyAutoComplete;
         var addressFields = [];
         $(document).ready(function(){
-            set_max_date();
             load_agencies();
 
             let occupation = "{{Session::get('other_occupation') ?? $user_detail->other_occupation}}";
@@ -269,29 +268,6 @@
                 on_add_address_line_2(undefined, address_line_2);
             }
         });
-
-        function set_max_date() {
-            let dd = new Date().getDate();
-            let mm = new Date().getMonth() + 1;
-            let yyyy = new Date().getFullYear();
-            document.getElementById("dob").max = `${yyyy}-${ mm<10 ? '0'+mm : mm }-${ dd<10 ? '0'+dd : dd }`;
-        }
-
-        function on_dob_change(value) {
-            const dateString = value;
-            let today = new Date();
-            let birthDate = new Date(dateString);
-            let age = today.getFullYear() - birthDate.getFullYear();
-            let m = today.getMonth() - birthDate.getMonth();
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-            }
-            if (age < 18 || age > 100) {
-                $('#dob_validation_error').html('You must be 18 or older to register online. Contact <br>​<a href="mailto:{{VERIFY_MAIL}}">{{VERIFY_MAIL}}</a> to create a minor account.')
-            } else {
-                $('#dob_validation_error').html('');
-            }
-        }
 
         function add_another_occupation(show = false, isCancel = false) {
             if(show) {

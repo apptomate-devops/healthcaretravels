@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -655,7 +656,7 @@ class UserController extends BaseController
             'last_name' => $request->last_name,
             'ethnicity' => $request->ethnicity,
             'phone' => $request->phone,
-            'date_of_birth' => $request->dob,
+            'date_of_birth' => Carbon::createFromFormat('m/d/Y', $request->dob)->toDateString(),
             'gender' => $request->gender,
             'languages_known' => $request->languages_known,
             'occupation' => $request->occupation,
@@ -1223,7 +1224,7 @@ class UserController extends BaseController
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'ethnicity' => $request->ethnicity,
-                'date_of_birth' => $request->dob,
+                'date_of_birth' => Carbon::createFromFormat('m/d/Y', $request->dob)->toDateString(),
                 'gender' => $request->gender,
                 'languages_known' => $request->languages_known,
                 'occupation' => $request->occupation,

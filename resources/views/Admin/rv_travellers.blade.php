@@ -115,7 +115,7 @@
                                             </td>
                                             <td>
                                                 @if($traveller->date_of_birth!='0')
-                                                {{date('m-d-Y',strtotime($traveller->date_of_birth))}}
+                                                {{date('m/d/Y',strtotime($traveller->date_of_birth))}}
                                                 @else
                                                 <center>-</center>
                                                 @endif

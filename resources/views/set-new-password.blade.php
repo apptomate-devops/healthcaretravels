@@ -180,7 +180,7 @@
                     $('#length').removeClass('valid-password').addClass('invalid-password');
                 }
 
-                if (password.match(/(?=.*[!,%,&,@,#,$,^,*,?,_,~,<,>,])/)) {
+                if (password.match(/(?=.*[!,%,&,@,#,$,^,*,?,_,~,<,>,.])/)) {
                     strength += 1;
                     $('#special_character').removeClass('invalid-password').addClass('valid-password');
                 } else {

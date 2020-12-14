@@ -48,6 +48,7 @@ class PropertyBooking extends Model
         'traveler_deposit_failed_reason',
         'traveler_deposit_transfer_id',
         'traveler_cut',
+        'monthly_rate',
         'security_deposit',
         'cleaning_fee',
         'cancellation_requested',
@@ -112,11 +113,10 @@ class PropertyBooking extends Model
     public static function getActiveBookingForUser($id)
     {
         return PropertyBooking::where(function ($query) use ($id) {
-            return $query->where('traveller_id', $id)
-                    ->orWhere('owner_id', $id);
-                })
-                ->whereDate('start_date', '<=', date("Y-m-d"))
-                ->whereDate('end_date', '>=', date("Y-m-d"))
-                ->get();
+            return $query->where('traveller_id', $id)->orWhere('owner_id', $id);
+        })
+            ->whereDate('start_date', '<=', date("Y-m-d"))
+            ->whereDate('end_date', '>=', date("Y-m-d"))
+            ->get();
     }
 }

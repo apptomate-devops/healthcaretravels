@@ -956,6 +956,7 @@ class PropertyController extends BaseController
             }
             $source_lat = $request->lat;
             $source_lng = $request->lng;
+            $source_place = $request->place;
             $property_list_obj = new PropertyList();
 
             $query = $property_list_obj->select('property_list.*')->where([
@@ -978,7 +979,8 @@ class PropertyController extends BaseController
                             "))
                                         * sin(radians(`lat`)))) as distance",
                     )
-                    ->having('distance', '<=', RADIUS)
+                    ->orHaving('distance', '<=', RADIUS)
+                    ->orHaving('property_list.state', '=', $source_place)
                     ->orderBy('distance');
             }
             $where = [];
@@ -1019,7 +1021,7 @@ class PropertyController extends BaseController
                 $where[] =
                     'property_list.monthly_rate BETWEEN "' . $request->minprice . '" and "' . $request->maxprice . '" ';
             } elseif ($request->minprice != "" && $request->maxprice == "") {
-                $where[] = 'property_list.monthly_rate <= "' . $request->minprice . '" ';
+                $where[] = 'property_list.monthly_rate >= "' . $request->minprice . '" ';
             } elseif ($request->minprice == "" && $request->maxprice != "") {
                 $where[] = 'property_list.monthly_rate <= "' . $request->maxprice . '" ';
             }

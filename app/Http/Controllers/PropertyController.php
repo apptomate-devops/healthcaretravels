@@ -958,6 +958,7 @@ class PropertyController extends BaseController
             $source_lng = $request->lng;
             $source_place = $request->place;
             $property_list_obj = new PropertyList();
+            DB::enableQueryLog(); // Enable query log
 
             $query = $property_list_obj->select('property_list.*')->where([
                 'is_complete' => ACTIVE,
@@ -988,48 +989,45 @@ class PropertyController extends BaseController
                     ->orHaving('property_list.city', '=', $source_place)
                     ->orHaving('property_list.state', '=', $source_place);
             }
-            $where = [];
 
+            if ($request->minprice != "" && $request->maxprice != "") {
+                $query->whereBetween('property_list.monthly_rate', [
+                    (int) $request->minprice,
+                    (int) $request->maxprice,
+                ]);
+            } elseif ($request->minprice != "") {
+                $query->where('property_list.monthly_rate', '>=', (int) $request->minprice);
+            } elseif ($request->maxprice != "") {
+                $query->where('property_list.monthly_rate', '<=', (int) $request->maxprice);
+            }
             if ($request->guests != "") {
-                $where[] = 'property_list.total_guests >= "' . $request->guests . '" ';
+                $query->where('property_list.total_guests', '<=', (int) $request->guests);
             }
 
             if ($request->room_type != "") {
-                $where[] = 'property_list.room_type = "' . $request->room_type . '" ';
+                $query->where('property_list.room_type', '=', $request->room_type);
             }
 
-            //            if (isset($request->instance_booking)) {
-            //                $where[] = 'property_list.is_instant = 1';
-            //            }
-
             if (isset($request->flexible_cancellation)) {
-                $where[] = "property_list.cancellation_policy = 'Flexible'";
+                $query->where('property_list.cancellation_policy', '=', 'Flexible');
             }
 
             if (isset($request->pets_allowed)) {
-                $where[] = 'property_list.pets_allowed = 1';
+                $query->where('property_list.pets_allowed', '=', 1);
             }
 
             if (isset($request->no_child)) {
-                $where[] = 'property_list.cur_child = 0';
+                $query->where('property_list.cur_child', '=', 0);
             }
 
             if (isset($request->no_pets)) {
-                $where[] = 'property_list.cur_pets = 0';
+                $query->where('property_list.cur_pets', '=', 0);
             }
 
             // TODO: check in check out filter for block date
 
             // TODO: instant booking, flexible cancellation, enhanced cleaning pool, no kids, no pets filter
 
-            if ($request->minprice != "" && $request->maxprice != "") {
-                $where[] =
-                    'property_list.monthly_rate BETWEEN "' . $request->minprice . '" and "' . $request->maxprice . '" ';
-            } elseif ($request->minprice != "") {
-                $where[] = 'property_list.monthly_rate >= "' . $request->minprice . '" ';
-            } elseif ($request->maxprice != "") {
-                $where[] = 'property_list.monthly_rate <= "' . $request->maxprice . '" ';
-            }
             $from = strtotime($request->from_date);
             $to = strtotime($request->to_date);
             $query_blocking = [];
@@ -1079,11 +1077,6 @@ class PropertyController extends BaseController
                     ->pluck('property_id')
                     ->toArray();
                 $query_blocking = array_unique(array_merge($query_blocking, $query_booking));
-            }
-
-            $dataWhere = implode(" and ", $where);
-            if ($dataWhere != "") {
-                $query->whereRaw($dataWhere);
             }
 
             if (count($query_blocking)) {

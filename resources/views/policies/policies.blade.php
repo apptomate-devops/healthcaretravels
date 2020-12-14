@@ -6,7 +6,7 @@
             <div id="post" class="row  post-2328 page type-page status-publish hentry">
                 <div class="col-md-12 breadcrumb_container">
                     <ol class="breadcrumb">
-                        <li><a href="http://healthcaretravels.com">Home</a></li>
+                        <li><a href="{{url('/')}}">Home</a></li>
                         <li class="active">Policies</li>
                     </ol>
                 </div>

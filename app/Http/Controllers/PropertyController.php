@@ -1634,9 +1634,9 @@ class PropertyController extends BaseController
 
             $booking_start = Carbon::parse($booked_date->start_date);
             $booking_end = Carbon::parse($booked_date->end_date);
-            $booking_start_date = $booking_start->subDay()->toDateString();
+            //            $booking_start_date = $booking_start->subDay()->toDateString();
             $booking_end_date = $booking_end->addDay()->toDateString();
-            $dates_list = $this->getDatesBetweenRange($booking_start_date, $booking_end_date);
+            $dates_list = $this->getDatesBetweenRange($booking_start, $booking_end_date);
             $b_dates = array_merge($b_dates, $dates_list);
         }
 

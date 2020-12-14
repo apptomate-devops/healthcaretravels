@@ -388,7 +388,7 @@
                     $('#minprice').val() ? `$${$('#minprice').val()}` : '',
                     $('#maxprice').val() ? `$${$('#maxprice').val()}` : ''
                 ].filter(Boolean).join('-');
-                return price_range ? price_range + '/day' : '';
+                return price_range ? price_range + '/month' : '';
             }
             function get_date_range() {
                 var date_range = [$('#from_date').val(), $('#to_date').val()].filter(Boolean).join('-');
@@ -438,8 +438,8 @@
             }
 
             $('.price_float').change(function(){
-                var value = parseFloat(parseFloat(this.value)).toFixed(2);
-                this.value = isNaN(value) ? 0 : value;
+                var value = parseInt(parseInt(this.value));
+                this.value = isNaN(value) ? '' : value;
             });
 
 

@@ -7,7 +7,7 @@
             <div id="post" class="row  post-1948 page type-page status-publish hentry">
                 <div class="col-md-12 breadcrumb_container">
                     <ol class="breadcrumb">
-                        <li><a href="http://healthcaretravels.com">Home</a></li>
+                        <li><a href="{{url('/')}}">Home</a></li>
                         <li class="active">Privacy Policy</li>
                     </ol>
                 </div>
@@ -31,8 +31,8 @@
                             <strong>“Company”</strong> or<strong>&nbsp;“We”</strong>) respects your privacy and are
                             committed to protecting it through our compliance with this Privacy Policy. This Privacy
                             Policy (“<strong>Privacy Policy”</strong>) applies to our website, <a
-                                href="http://healthcaretravels.com">healthcaretravels.COM</a> or <a
-                                href="http://HEALTHCARETRAVELS.COM">HEALTHCARETRAVELS.COM</a> (our
+                                href="{{url('/')}}">healthcaretravels.COM</a> or <a
+                                href="{{url('/')}}">HEALTHCARETRAVELS.COM</a> (our
                             <strong>“Website”</strong>) and Services (collectively, “<strong>Platform</strong>”). This
                             Privacy Policy explains how and for what purposes we use the information collected about you
                             via this Platform. Your use of the Platform is at all times subject to the <a

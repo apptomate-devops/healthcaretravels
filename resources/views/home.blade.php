@@ -96,6 +96,13 @@
             right: -2.25rem;
         }
 
+        .featured-places img {
+            transition: all 0.55s;
+            transition: transform 0.35s ease-out;
+        }
+        .featured-places:hover img {
+            transform: scale(1.06);
+        }
         @media screen and (max-width: 768px) {
             .testimonials {
                 max-height: 700px;
@@ -315,7 +322,7 @@
     <!-- Banner data-background="/home.jpg"
       ================================================== -->
 
-    <div class="parallax home-slide" data-background="/background_blur_crop.jpeg" data-color="#36383e" data-color-opacity="0.5"
+    <div class="parallax home-slide" data-background="/storage/HomePage/background_blur_crop.jpeg" data-color="#36383e" data-color-opacity="0.5"
          data-img-width="1200" data-img-height="1000">
         <div class="container">
             <div class="row">
@@ -477,7 +484,7 @@
                                             </a>
                                             @if($property->pets_allowed == 1)
                                                 <div style="float: right;" title="Pets Allowed">
-                                                    <img src="{{BASE_URL}}action_icons/Paw.png"/>
+                                                    <img src="/storage/HomePage/Paw.png"/>
                                                 </div>
                                             @endif
                                         </div>
@@ -535,10 +542,11 @@
                                                 @if($i < count($categories))
                                                     <!-- Image Box -->
                                                         <a href="{{url('/')}}/properties?place={{$category->title}}&lat={{$category->lat}}&lng={{$category->lng}}"
-                                                           class="img-box"
+                                                           class="featured-places img-box"
                                                            @if($i==0 || $i==4 || $i==11 || $i==15 || $i==5) style="height: 525px;"
                                                            @endif @if($i==3 || $i==7 || $i==8 ||$i==12) style="height: 250px;"
-                                                           @endif data-background-image="{{$category->image_url}}">
+                                                           @endif>
+                                                            <img src="{{$category->image_url}}" height="100%" width="100%" style="object-fit: cover">
                                                             <!-- Badge -->
                                                             <div class="listing-badges">
                                                                 <span class="featured">Featured</span>

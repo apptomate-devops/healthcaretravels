@@ -88,6 +88,7 @@ class PropertyController extends BaseController
             $insert_booking['is_instant'] = $property_details->is_instant;
             // Add deposit amount and traveler cut
             $insert_booking['traveler_cut'] = $property_details->security_deposit;
+            $insert_booking['monthly_rate'] = $property_details->monthly_rate;
             $insert_booking['security_deposit'] = $property_details->security_deposit;
             $insert_booking['cleaning_fee'] = $property_details->cleaning_fee;
             //            $insert_booking['status'] = ONE;
@@ -312,9 +313,9 @@ class PropertyController extends BaseController
             ->where('property_booking.client_id', CLIENT_ID)
             ->where('property_booking.booking_id', $booking_id)
             ->select(
-                'property_booking.*',
                 'property_booking.status as bookingStatus',
                 'property_list.*',
+                'property_booking.*',
                 'property_images.*',
             )
             ->orderBy('property_images.is_cover', 'desc')
@@ -1261,9 +1262,6 @@ class PropertyController extends BaseController
                     'property_list.title',
                     'property_list.id as property_id',
                     'property_list.min_days',
-                    'property_list.monthly_rate',
-                    'property_list.security_deposit',
-                    'property_list.cleaning_fee',
                     'property_list.check_in',
                     'property_list.check_out',
                 )
@@ -1276,7 +1274,6 @@ class PropertyController extends BaseController
             $bookingModel = PropertyBooking::find($data->id);
             $owner = $bookingModel->owner;
             $traveller = $bookingModel->traveler;
-            $property = $bookingModel->property;
 
             $guest_info = GuestsInformation::where('booking_id', $booking_id)->get();
             $pet_details = PetInformation::where('booking_id', $booking_id)->first();
@@ -1713,12 +1710,7 @@ class PropertyController extends BaseController
             ->leftJoin('property_list', 'property_list.id', '=', 'property_booking.property_id')
             ->where('property_booking.client_id', CLIENT_ID)
             ->where('property_booking.booking_id', $booking_id)
-            ->select(
-                'property_booking.*',
-                'property_list.monthly_rate',
-                'property_list.check_in',
-                'property_list.check_out',
-            )
+            ->select('property_booking.*', 'property_list.check_in', 'property_list.check_out')
             ->first();
 
         $bookingModel = PropertyBooking::find($data->id);
@@ -2450,7 +2442,7 @@ class PropertyController extends BaseController
         $ins = [];
         $ins['client_id'] = CLIENT_ID;
         $ins['monthly_rate'] = empty($request->monthly_rate) ? 0 : ltrim($request->monthly_rate, "0");
-        $ins['cleaning_fee'] = empty($request->cleaning_fee) ? 0 : ltrim($request->security_deposit, "0");
+        $ins['cleaning_fee'] = empty($request->cleaning_fee) ? 0 : ltrim($request->cleaning_fee, "0");
         $ins['security_deposit'] = empty($request->security_deposit) ? 0 : ltrim($request->security_deposit, "0");
         $ins['check_in'] = $request->check_in;
         $ins['check_out'] = $request->check_out;
@@ -2777,7 +2769,6 @@ class PropertyController extends BaseController
             ->select('monthly_rate', 'check_in', 'check_out', 'title', 'id')
             ->first();
 
-        $booking->monthly_rate = $property_details->monthly_rate;
         $booking->check_in = $property_details->check_in;
         $booking->check_out = $property_details->check_out;
         $booking_price = (object) Helper::get_price_details($booking, $booking->start_date, $booking->end_date);

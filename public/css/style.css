@@ -7425,7 +7425,7 @@ body .carousel {
 }
 
 .carousel-item {
-    width: 29%;
+    width: 370.5px;
     display: inline-block;
 }
 
@@ -14581,6 +14581,9 @@ div.layout-style {
     #style-switcher {
         display: none;
     }
+    .carousel-item {
+        width: 293px;
+    }
 }
 
 @media only screen and (max-width: 1024px) and (min-width: 992px) {
@@ -14588,4 +14591,18 @@ div.layout-style {
     select {
         font-size: 12px !important;
     }
+    .carousel-item {
+        width: 293px;
+    }
 }
+@media only screen and (max-width: 992px) {
+    .carousel-item {
+        width: 345px;
+    }
+}
+@media only screen and (max-width: 768px) {
+    .carousel-item {
+        width: 100%;
+    }
+}
+

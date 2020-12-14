@@ -17,6 +17,7 @@ class HomeCategorySeeder extends Seeder
             ],
             [
                 'location' => 'Nevada',
+                'image_url' => '/storage/HomePage/Nevada.png',
                 'lat' => 38.8026,
                 'lng' => -116.4194,
             ],
@@ -27,6 +28,7 @@ class HomeCategorySeeder extends Seeder
             ],
             [
                 'location' => 'New York',
+                'image_url' => '/storage/HomePage/NewYork.png',
                 'lat' => 40.7128,
                 'lng' => -74.006,
             ],
@@ -37,6 +39,7 @@ class HomeCategorySeeder extends Seeder
             ],
             [
                 'location' => 'Oregon',
+                'image_url' => '/storage/HomePage/Oregon.png',
                 'lat' => 43.8041,
                 'lng' => -120.5542,
             ],
@@ -47,6 +50,7 @@ class HomeCategorySeeder extends Seeder
             ],
             [
                 'location' => 'New Jersey',
+                'image_url' => '/storage/HomePage/NewJersey.png',
                 'lat' => 40.0583,
                 'lng' => -74.4057,
             ],
@@ -57,6 +61,7 @@ class HomeCategorySeeder extends Seeder
             ],
             [
                 'location' => 'Texas',
+                'image_url' => '/storage/HomePage/Texas.png',
                 'lat' => 31.9686,
                 'lng' => -99.9018,
             ],
@@ -67,6 +72,7 @@ class HomeCategorySeeder extends Seeder
             ],
             [
                 'location' => 'Arizona',
+                'image_url' => '/storage/HomePage/Arizona.png',
                 'lat' => 34.0489,
                 'lng' => -111.0937,
             ],
@@ -77,6 +83,7 @@ class HomeCategorySeeder extends Seeder
             ],
             [
                 'location' => 'South Dakota',
+                'image_url' => '/storage/HomePage/SouthDakota.png',
                 'lat' => 43.9695,
                 'lng' => -99.9018,
             ],
@@ -87,6 +94,7 @@ class HomeCategorySeeder extends Seeder
             ],
             [
                 'location' => 'California',
+                'image_url' => '/storage/HomePage/California.png',
                 'lat' => 36.7783,
                 'lng' => -119.4179,
             ],

@@ -545,7 +545,7 @@
                                                            class="featured-places img-box"
                                                            @if($i==0 || $i==4 || $i==11 || $i==15 || $i==5) style="height: 525px;"
                                                            @endif @if($i==3 || $i==7 || $i==8 ||$i==12) style="height: 250px;"
-                                                           @endif>
+                                                            @endif>
                                                             <img src="{{$category->image_url}}" height="100%" width="100%" style="object-fit: cover">
                                                             <!-- Badge -->
                                                             <div class="listing-badges">
@@ -789,18 +789,21 @@
 @include('includes.scripts')
 <script>
     // Book Now: Date Range Picker
-    var disableDates = <?php echo json_encode($blocked_dates); ?>;
+    var minDate = new Date();
+    minDate.setDate(minDate.getDate() + 7);
+
     $('input[id="home_date_range_picker"]').daterangepicker({
-        minDate: new Date(),
+        startDate: undefined,
+        minDate,
         opens: 'center',
         minSpan: {
             "days": ({{$data->min_days ?? 30}} + 1)
         },
         autoUpdateInput: false,
         autoApply: true,
-        isInvalidDate: function(date){
-            return disableDates.includes(date.format('YYYY-MM-DD'));
-        }
+        // isInvalidDate: function(date){
+        //     return disableDates.includes(date.format('YYYY-MM-DD'));
+        // }
     });
     $('input[id="home_date_range_picker"]').keydown(function (e) {
         e.preventDefault();
@@ -808,11 +811,14 @@
     });
 
     $('input[id="home_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
-        var is_valid = check_valid_date_range(picker.startDate, picker.endDate)
-        if(is_valid) {
-            $('input[id="home_date_range_picker"][name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
-            $('input[id="home_date_range_picker"][name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
-        }
+        $('input[id="home_date_range_picker"][name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
+        $('input[id="home_date_range_picker"][name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
+
+        // var is_valid = check_valid_date_range(picker.startDate, picker.endDate)
+        // if(is_valid) {
+        //     $('input[id="home_date_range_picker"][name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
+        //     $('input[id="home_date_range_picker"][name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
+        // }
     });
 
     function check_valid_date_range(startDate, endDate) {

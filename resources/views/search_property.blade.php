@@ -26,7 +26,7 @@
                     <h4>{{ Session::get('error') }}</h4>
                 </div>
             @endif
-                <div class="alert alert-danger no-properties" style="display: none;">There aren't any properties near this location yet. Try expanding your search.</div>
+            <div class="alert alert-danger no-properties" style="display: none;">There aren't any properties near this location yet. Try expanding your search.</div>
         </section>
         <div class="main-container">
             <div class="col-md-4">
@@ -107,8 +107,8 @@
                                 {{-- <input id="flexible_cancellation" name="flexible_cancellation" type="checkbox" @if(isset($request_data['flexible_cancellation'])) checked @endif>
                                 <label for="flexible_cancellation">Flexible Cancellation</label> --}}
 
-{{--                                <input id="enhanced_cleaning_protocol" name="enhanced_cleaning_protocol" type="checkbox" @if(isset($request_data['enhanced_cleaning_protocol'])) checked @endif>--}}
-{{--                                <label for="enhanced_cleaning_protocol">Enhanced Cleaning Protocol</label>--}}
+                                {{--                                <input id="enhanced_cleaning_protocol" name="enhanced_cleaning_protocol" type="checkbox" @if(isset($request_data['enhanced_cleaning_protocol'])) checked @endif>--}}
+                                {{--                                <label for="enhanced_cleaning_protocol">Enhanced Cleaning Protocol</label>--}}
 
                             </div>
                             <div class="checkboxes in-row">
@@ -483,29 +483,34 @@
         });
 
         // Book Now: Date Range Picker
-        var disableDates = <?php echo json_encode($blocked_dates); ?>;
+        var minDate = new Date();
+        minDate.setDate(minDate.getDate() + 7);
+
         $('input[id="home_date_range_picker"]').daterangepicker({
-            minDate: new Date(),
+            minDate,
             opens: 'center',
             minSpan: {
                 "days": ({{$data->min_days ?? 30}} + 1)
             },
             autoUpdateInput: false,
             autoApply: true,
-            isInvalidDate: function(date){
-                return disableDates.includes(date.format('YYYY-MM-DD'));
-            }
+            // isInvalidDate: function(date){
+            //     return disableDates.includes(date.format('YYYY-MM-DD'));
+            // }
         });
         $('input[id="home_date_range_picker"]').keydown(function (e) {
             e.preventDefault();
             return false;
         })
         $('input[id="home_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
-            var is_valid = check_valid_date_range(picker.startDate, picker.endDate)
-            if(is_valid) {
-                $('input[id="home_date_range_picker"][name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
-                $('input[id="home_date_range_picker"][name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
-            }
+            $('input[id="home_date_range_picker"][name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
+            $('input[id="home_date_range_picker"][name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
+
+            // var is_valid = check_valid_date_range(picker.startDate, picker.endDate)
+            // if(is_valid) {
+            //     $('input[id="home_date_range_picker"][name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
+            //     $('input[id="home_date_range_picker"][name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
+            // }
         });
 
         function check_valid_date_range(startDate, endDate) {

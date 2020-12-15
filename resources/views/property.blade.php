@@ -1208,7 +1208,7 @@
 
                         tr_data +="<tr class='row_border row_border_top'><td>Cleaning Fee&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Decided by the property owner to clean after your stay.</span></span></td><td>$ "+data.data.cleaning_fee+"</td></tr>";
                         tr_data +="<tr class='row_border'><td>Deposit&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>If property owner reports no damage, your deposit will be returned 72 hours after your stay.</span></span></td><td>$ "+data.data.security_deposit+"</td></tr>";
-                        tr_data +="<tr class='row_border'><td>Total Cost&nbsp;</td><td><b  id='total_booking_price'>$ "+data.data.total_price+"</b></td></tr>";
+                        tr_data +="<tr><td>Total Cost&nbsp;</td><td><b  id='total_booking_price'>$ "+data.data.total_price+"</b></td></tr>";
 
                         if(data.data.no_extra_guest==1){
                             if(totalguestcount < guest_count){

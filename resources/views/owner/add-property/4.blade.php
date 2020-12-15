@@ -68,9 +68,10 @@
 
                                         <div class="col-md-6">
                                             <h5>Monthly Rate (USD)<span class="required">*</span></h5>
-{{--                                            <p class="caption-text">Booking prices will be calculated based on this rate, starting at a minimum of 30 days.</p>--}}
+                                            {{--                                            <p class="caption-text">Booking prices will be calculated based on this rate, starting at a minimum of 30 days.</p>--}}
                                             <p class="caption-text">Pay outs will reflect: <br>(1) a service fee of $50 for the 1st month of a traveler's stay <br>(2) a processing fee of $10 for the remaining months of the stay.</p>
                                             <input class="search-field validate price_int" type="text" name="monthly_rate" id="monthly_rate" value="{{isset($property_details->monthly_rate)?$property_details->monthly_rate:''}}" autocomplete="off"/>
+                                            <i class="price">$</i>
                                         </div>
 
                                         <div class="col-md-6">
@@ -143,9 +144,10 @@
                                         </div>
 
                                         <div class="col-md-6">
-                                            <h5>Cleaning Fees<span class="required">*</span></h5>
+                                            <h5>Cleaning Fee (USD)<span class="required">*</span></h5>
                                             <p class="caption-text">This fee will be charged once per stay</p>
                                             <input class="search-field price_int validate" id="cleaning_fee" name="cleaning_fee" type="text" value="{{isset($property_details->cleaning_fee)?$property_details->cleaning_fee:'0'}}" autocomplete="off"  />
+                                            <i class="price">$</i>
                                         </div>
                                     </div>
 
@@ -162,8 +164,9 @@
                                             <p class="caption-text" style="margin-bottom: 12px;">View more on cancellation policies <a href="https://healthcaretravels.com/cancellationpolicy" target="_blank">here</a>.</p>
                                         </div>
                                         <div class="col-md-6">
-                                            <h5>Security Deposit<span class="required">*</span></h5>
+                                            <h5>Security Deposit (USD)<span class="required">*</span></h5>
                                             <input class="search-field price_int validate" id="security_deposit" name="security_deposit" type="text" value="{{isset($property_details->security_deposit)?$property_details->security_deposit:'0'}}" autocomplete="off"  />
+                                            <i class="price">$</i>
                                         </div>
                                         <br><br>
                                     </div>

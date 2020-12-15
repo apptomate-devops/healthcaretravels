@@ -60,6 +60,7 @@ class Helper
 
     public static function send_payment_email($payment, $fundingSource, $success = false, $is_init = false)
     {
+        Logger::info('sending payment email');
         $dwolla = new Dwolla();
         $booking = $payment->booking;
         $is_owner = boolval($payment->is_owner);
@@ -226,7 +227,7 @@ class Helper
                 $neat_price = $partial_monthly_rate + $payment['service_tax']; // consider price for remaining days
                 $section = [
                     $partialDayCount . ' Days' => $partial_monthly_rate,
-                    'Processing Fee' => $payment['service_tax'],
+                    $payment['payment_cycle'] == 1 ? 'Service Fee' : 'Processing Fee' => $payment['service_tax'],
                 ];
             } else {
                 $months++;

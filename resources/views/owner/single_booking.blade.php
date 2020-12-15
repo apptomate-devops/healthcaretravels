@@ -2,6 +2,12 @@
 @section('title',APP_BASE_NAME.' | Owner Account | My Bookings page')
 @section('main_content')
     <link rel="stylesheet" href="{{ URL::asset('css/bookings.css') }}">
+    <style>
+        .show {
+            opacity: 1;
+            padding-top: 60px;
+        }
+    </style>
 
     @php
         $payment_error_message = 'Please add a new account or contact support';
@@ -140,7 +146,7 @@
                             @endcomponent
 
                             <button class="button" id="acceptRequest" onclick="owner_status_update(2)" style="margin-top: 40px;" disabled>Accept Request</button>
-                            <button class="button" onclick="owner_status_update(4)" style="background-color: #e78016;">Decline Request</button>
+                            <button class="button" onclick="owner_cancel_booking();" style="background-color: #e78016;">Decline Request</button>
                             <br><br>
 
                         @elseif($data->status == 2)
@@ -168,6 +174,24 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"><b><span style="color:red">Warning</span></b></h4>
+                    </div>
+                    <div class="modal-body">
+                        Do you want to cancel this Booking Request?
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="owner_status_update(4);" >Yes</button>
+                        <button type="button" class="btn btn-danger" style="width: 60px; border-radius: 9px;" data-dismiss="modal">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="update_status_loading" class="loading style-2" style="display: none;"><div class="loading-wheel"></div></div>
 
     </div>
@@ -188,42 +212,39 @@
         });
     </script>
     <script type="text/javascript">
+        function owner_cancel_booking() {
+            $('#myModal').modal('show');
+        }
         function owner_status_update(status){
+            $('#myModal').modal('hide');
             var id = $('#booking_id').val();
             var owner_funding_source = $('#fundingSource').val();
 
-            if(status == 4){
-                var r = confirm("Do you want to cancel this Booking Request?");
-            }else{
-                var r = true;
-            }
-            if (r == true) {
-                $('#update_status_loading').show();
-                var formData = {
-                    booking_id: id,
-                    status: status,
-                    owner_funding_source: owner_funding_source,
-                    _token: '{{ csrf_token() }}'
-                };
-                $.ajax({
-                    url: "/owner-update-booking",
-                    type: "POST",
-                    data: formData,
-                    json: true,
-                    success: function(response, textStatus, jqXHR) {
-                        $('#update_status_loading').hide();
-                        if(response.success) {
-                            window.location.reload();
-                        } else {
-                            console.log('Error updating status');
-                        }
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        $('#update_status_loading').hide();
+            $('#update_status_loading').show();
+            var formData = {
+                booking_id: id,
+                status: status,
+                owner_funding_source: owner_funding_source,
+                _token: '{{ csrf_token() }}'
+            };
+            $.ajax({
+                url: "/owner-update-booking",
+                type: "POST",
+                data: formData,
+                json: true,
+                success: function(response, textStatus, jqXHR) {
+                    $('#update_status_loading').hide();
+                    if(response.success) {
+                        window.location.reload();
+                    } else {
                         console.log('Error updating status');
                     }
-                });
-            }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    $('#update_status_loading').hide();
+                    console.log('Error updating status');
+                }
+            });
         }
     </script>
 @endsection

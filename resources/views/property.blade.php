@@ -1268,7 +1268,7 @@
         });
 
         $("#chat_host").click(function(){
-            $('#myModal').modal();
+            $('#myModal').modal('show');
         });
 
         $("#post_comment").click(function(){

@@ -496,7 +496,7 @@ class PropertyController extends BaseController
                 ->orderBy('property_images.is_cover', 'desc')
                 ->first();
 
-            $property->image_url = $pd->image_url;
+            $property->image_url = $pd ? $pd->image_url : '';
             $properties_near[] = $property;
         }
 

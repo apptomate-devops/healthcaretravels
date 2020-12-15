@@ -231,7 +231,7 @@
     <script>
 
         $("#report_user").click(function(){
-            $('#myModal').modal();
+            $('#myModal').modal('show');
         });
     </script>
 

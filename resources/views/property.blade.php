@@ -1294,7 +1294,7 @@
                 "url": url,
                 success: function (data) {
                     if(data.status == 'SUCCESS') {
-                        location.reload();
+                        // location.reload();
                     }
                 },
                 error: function (error) {

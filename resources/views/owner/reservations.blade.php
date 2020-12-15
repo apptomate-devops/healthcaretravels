@@ -4,6 +4,12 @@
 @endsection
 @section('main_content')
     <link rel="stylesheet" href="{{ URL::asset('css/reservations.css') }}">
+    <style>
+        .show {
+            opacity: 1;
+            padding-top: 60px;
+        }
+    </style>
 
     <div class="container my-reservations">
         <div class="row">
@@ -21,6 +27,7 @@
             </div>
 
             <div class="col-md-8">
+                <input type="hidden" id="cancel_booking_for_id" />
                 <div style="overflow-x:auto;">
                     <table class="manage-table responsive-table">
                         <tr>
@@ -111,33 +118,53 @@
                     </div>
                 @endif
             </div>
-
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="exampleModalLabel"><b><span style="color:red">Warning</span></b></h4>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to cancel this booking?
+                            <br>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="cancel_booking_for_property();" >Yes</button>
+                            <button type="button" class="btn btn-danger" style="width: 60px; border-radius: 9px;" data-dismiss="modal">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="addDetailsProgress" class="loading style-2" style="display: none;"><div class="loading-wheel"></div></div>
         </div>
     </div>
-
-@endsection
-
-@section('custom_script')
     <script type="text/javascript">
         function cancel_booking(id) {
-            var r = confirm("Are you sure you want to cancel?");
-            if (r == true) {
-                var url = '{{BASE_URL}}cancel-booking/'+id;
-                $.ajax({
-                    "type": "get",
-                    "url" : url,
-                    success: function(data) {
-                        if(data.status=="SUCCESS"){
-                            window.location.reload();
-                        } else {
-                            console.log('Error Updating cancel status for booking');
-                        }
-                    },
-                    error: function (e) {
+            $('#myModal').modal('show');
+            $("#cancel_booking_for_id").val(id);
+        }
+        function cancel_booking_for_property() {
+            $('#myModal').modal('hide');
+            $('#addDetailsProgress').show();
+            var id = $("#cancel_booking_for_id").val();
+            var url = '{{BASE_URL}}cancel-booking/'+id;
+            $.ajax({
+                "type": "get",
+                "url" : url,
+                success: function(data) {
+                    $('#addDetailsProgress').hide();
+                    if(data.status=="SUCCESS"){
+                        window.location.reload();
+                    } else {
                         console.log('Error Updating cancel status for booking');
                     }
-                });
-            }
+                },
+                error: function (e) {
+                    $('#addDetailsProgress').hide();
+                    console.log('Error Updating cancel status for booking');
+                }
+            });
         }
         function delete_booking(id) {
             var url = '{{BASE_URL}}delete-booking/'+id;
@@ -158,3 +185,4 @@
         }
     </script>
 @endsection
+

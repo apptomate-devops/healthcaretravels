@@ -1268,7 +1268,7 @@
         });
 
         $("#chat_host").click(function(){
-            $('#myModal').modal();
+            $('#myModal').modal('show');
         });
 
         $("#post_comment").click(function(){
@@ -1294,7 +1294,7 @@
                 "url": url,
                 success: function (data) {
                     if(data.status == 'SUCCESS') {
-                        location.reload();
+                        // location.reload();
                     }
                 },
                 error: function (error) {

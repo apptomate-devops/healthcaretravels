@@ -93,11 +93,8 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" onclick="delete_property_with_id();" >Yes</button>
-                                                <button type="button" class="btn btn-danger" style="width: 60px; border-radius: 9px;">No</button>
+                                                <button type="button" class="btn btn-danger" style="width: 60px; border-radius: 9px;" data-dismiss="modal">No</button>
                                             </div>
-                                            {{-- <div class="modal-footer">
-                                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -117,8 +114,7 @@
     <script type="text/javascript">
 
         function delete_property(property_id){
-
-            $('#myModal').modal();
+            $('#myModal').modal('show');
             $("#delete_property_id").val(property_id);
         }
 

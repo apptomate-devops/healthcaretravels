@@ -81,9 +81,12 @@
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">
-                                            Are you sure you want to delete blocking for these dates?
-                                        </h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title"><b><span style="color:red">Warning</span></b></h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete blocking for these dates?
+                                        <br>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>

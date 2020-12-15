@@ -86,13 +86,17 @@
                             <th>Name</th>
                             <th>Occupation</th>
                             <th>Age</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
                         </tr>
                         @foreach($guest_info as $key => $g)
                             <tr>
                                 <td>{{$key+1}}</td>
                                 <td>{{$g->name}}</td>
-                                <td>{{$g->occupation}}</td>
-                                <td>{{$g->age}}</td>
+                                <td>{{$g->occupation ?? '-'}}</td>
+                                <td>{{$g->age ?? '-'}}</td>
+                                <td>{{$g->email ?? '-'}}</td>
+                                <td>{{$g->phone_number ?? '-'}}</td>
                             </tr>
                         @endforeach
                     </table>

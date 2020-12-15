@@ -193,27 +193,27 @@ class HomeController extends BaseController
             ->orderBy('name', 'ASC')
             ->get();
 
-        $blocked_dates = [];
-        $user_id = $request->session()->get('user_id');
-
-        if ($user_id) {
-            $booking_start_dates = DB::table('property_booking')
-                ->where('traveller_id', '=', $user_id)
-                ->whereNotIn('status', [0, 4, 8])
-                ->whereDate('start_date', '>=', Carbon::now())
-                ->pluck('start_date');
-            foreach ($booking_start_dates as $key => $value) {
-                $start_date = Carbon::parse($value);
-                $dates_list = $this->getDatesBetweenRange($start_date->copy()->subDays(7), $start_date);
-                $blocked_dates = array_merge($blocked_dates, $dates_list);
-            }
-        }
+        //        $blocked_dates = [];
+        //        $user_id = $request->session()->get('user_id');
+        //
+        //        if ($user_id) {
+        //            $booking_start_dates = DB::table('property_booking')
+        //                ->where('traveller_id', '=', $user_id)
+        //                ->whereNotIn('status', [0, 4, 8])
+        //                ->whereDate('start_date', '>=', Carbon::now())
+        //                ->pluck('start_date');
+        //            foreach ($booking_start_dates as $key => $value) {
+        //                $start_date = Carbon::parse($value);
+        //                $dates_list = $this->getDatesBetweenRange($start_date->copy()->subDays(7), $start_date);
+        //                $blocked_dates = array_merge($blocked_dates, $dates_list);
+        //            }
+        //        }
 
         return view('home', [
             'latest_properties' => $latest_properties,
             'categories' => $categories,
             'room_types' => $room_types,
-            'blocked_dates' => $blocked_dates,
+            //            'blocked_dates' => $blocked_dates,
         ]);
     }
 

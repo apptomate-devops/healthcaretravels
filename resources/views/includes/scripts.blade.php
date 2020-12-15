@@ -180,8 +180,11 @@
 
 <script>
     // Date Range Picker
+    var minDate = new Date();
+    minDate.setDate(minDate.getDate() + 7);
+
     $('input[id="date_range_picker"]').daterangepicker({
-        minDate: new Date(),
+        minDate,
         maxSpan: {
             "days": 30
         },

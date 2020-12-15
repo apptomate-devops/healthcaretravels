@@ -102,6 +102,20 @@
     font-weight: 500;
     margin: 25px 0 10px;
 }
+input.price_int {
+    padding-left: 30px;
+}
+input.price_int + i.price {
+    position: absolute;
+    display: block;
+    pointer-events: none;
+    width: 30px;
+    font-size: 17px;
+    bottom: 30px;
+    left: 15px;
+    font-style: normal;
+    text-align: center;
+}
 div::-webkit-scrollbar {
     width: 12px;
 }

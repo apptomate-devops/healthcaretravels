@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{APP_BASE_NAME}}| Invoice</title>
+    <title>{{APP_BASE_NAME}} Invoice</title>
 </head>
 <style>
     table.invoice_details {
@@ -11,12 +11,21 @@
 </style>
 
 {{-- <body > --}}
-    <body onload="window.print()">
-<div id="logo" class="margin-top-10">
+<body onload="window.print()">
+<div id="logo" style="margin-top: 30px;">
     <center>
-        <a href="{{url('/')}}"><img src="{{url('/')}}/public/keepers_logo.png" alt="" style="width:30%;"></a></br></br>
-        <b><span class="data"> PO BOX 14565,<br>
-        Humble TX 77347 </span></b>
+        <a href="{{url('/')}}"><img src="/storage/public/HomePage/healthcaretravel.png" alt="" width="100"></a>
+        <br>
+        <br>
+        <b><span class="data">
+                Health Care Travels
+                <br>
+                7075 FM 1960 Rd West STE 1010
+                <br>
+                Houston, Texas 77069
+                <br>
+                United States
+            </span></b>
     </center>
 </div>
 <br><br>
@@ -105,7 +114,7 @@
 <br><br>
 <div class="col-md-12">
     <center>
-        <div class="copyrights">© 2019 Health Care Travels. All Rights Reserved.</div>
+        <div class="copyrights">© {{date('Y')}} Health Care Travels. All Rights Reserved.</div>
     </center>
 
 </div>

@@ -342,7 +342,7 @@
                                             You will not be able to edit or upload more documents once they have been submitted.
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                                             <button id="confirmation-popup-submit" type="submit" class="btn btn-primary">Submit</button>
                                         </div>
                                     </div>

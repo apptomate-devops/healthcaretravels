@@ -89,13 +89,11 @@
                                             </div>
                                             <div class="modal-body">
                                                 Are you sure you want to delete this property?
-                                                <br> <br>
-                                                <span style="float: right;">
-            	<button type="button" class="btn btn-primary" onclick="delete_property_with_id();" >Yes</button>
-            	<a href=""><button type="button" class="btn btn-danger" style="width: 60px; border-radius: 9px;">No</button></a>
-            </span>
                                                 <br>
-                                                <br>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" onclick="delete_property_with_id();" >Yes</button>
+                                                <button type="button" class="btn btn-danger" style="width: 60px; border-radius: 9px;">No</button>
                                             </div>
                                             {{-- <div class="modal-footer">
                                               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

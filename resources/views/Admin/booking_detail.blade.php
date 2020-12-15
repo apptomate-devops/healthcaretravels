@@ -35,10 +35,15 @@
             <div class="details">Username: <span>{{$traveler->username}}</span></div>
             <div class="details">Email: <span>{{$traveler->email}}</span></div>
             <br>
+            <div class="details"><b>Agency Details</b></div>
+            <div class="details">{{$booking->agency}}</div>
+            <br>
             <div class="details"><b>Recruiter Details</b></div>
             <div class="details">Name: <span>{{$booking->recruiter_name}}</span></div>
             <div class="details">Phone: <span>{{$booking->recruiter_phone_number}}</span></div>
             <div class="details">Email: <span>{{$booking->recruiter_email}}</span></div>
+            <div class="details">Contract starts on: <span>{{date('m-d-Y', strtotime($booking->contract_start_date))}}</span></div>
+            <div class="details">Contract ends on: <span>{{date('m-d-Y', strtotime($booking->contract_end_date))}}</span></div>
             <br>
             <div class="details"><b>Submitted By: </b><span>{{$cancelled_by}}</span></div>
             <div class="details"><b>Cancellation Status: </b><span>{{$booking->cancellation_requested == 3 ? 'In Progress' : ($booking->cancellation_requested == 2 ? 'Completed' : 'Pending') }}</span></div>
@@ -58,8 +63,52 @@
             @else
                 Canceled
             @endif</span></div>
+
         </div>
     </div>
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Guest Information</h4>
+            <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+            <div class="heading-elements">
+                <ul class="list-inline mb-0">
+                    <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                    <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                    <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                    <li><a data-action="close"><i class="ft-x"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card-content card-body-padding">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered zero-configuration">
+                    <thead>
+                    <tr>
+                        <td>ID</td>
+                        <td>Name</td>
+                        <td>Occupation</td>
+                        <td>Age</td>
+                        <td>Email</td>
+                        <td>Phone Number</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach ($guest_info as $guest)
+                        <tr>
+                            <td>{{$guest->id}}</td>
+                            <td>{{$guest->name}}</td>
+                            <td>{{$guest->occupation ?? '-'}}</td>
+                            <td>{{$guest->age ?? '-'}}</td>
+                            <td>{{$guest->email ?? '-'}}</td>
+                            <td>{{$guest->phone_number ?? '-'}}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-header">
             <h4 class="card-title">Cancel Booking</h4>

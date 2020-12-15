@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\GuestsInformation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\PropertyController;
@@ -58,6 +59,8 @@ class BookingController extends BaseController
     public function booking_details(Request $request)
     {
         $booking = PropertyBooking::find($request->id);
+        $guest_info = GuestsInformation::where('booking_id', $booking->booking_id)->get();
+        $booking->agency = implode(", ", array_filter([$booking->name_of_agency, $booking->other_agency])); // Booking Agency
         $owner = $booking->owner;
         $traveler = $booking->traveler;
         $property = $booking->property;
@@ -142,6 +145,7 @@ class BookingController extends BaseController
                 'paymentsInProcessing',
                 'hasPaymentsInProcessing',
                 'canPaymentsCanceled',
+                'guest_info',
             ),
         );
     }

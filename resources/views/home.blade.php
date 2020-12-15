@@ -748,11 +748,6 @@
         $.ajax({
             "type": "get",
             "url": url,
-            success: function (data) {
-                if(data.status == 'SUCCESS') {
-                    location.reload();
-                }
-            },
             error: function (error) {
                 console.log("error adding data to success", error);
             }

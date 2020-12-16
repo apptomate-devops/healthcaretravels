@@ -369,13 +369,17 @@
                                             <label class="control-label" for="contract_start_date">
                                                 Contract Start Date
                                             </label>
-                                            <input type="date" id="contract_start_date" name="contract_start_date" required min="1950-01-01" max="2050-12-31"  value="{{$data->contract_start_date ?? ''}}">
+                                            <input type="text" name="contract_start_date"
+                                                   placeholder="mm/dd/yyyy"
+                                                   id="contract_date_range_picker" autocomplete="off" required/>
                                         </div>
                                         <div class="control-group cc-first-name col-md-4">
                                             <label class="control-label" for="contract_end_date">
                                                 Contract End Date
                                             </label>
-                                            <input type="date" id="contract_end_date" name="contract_end_date" required min="1950-01-01" max="2050-12-31"  value="{{$data->contract_end_date ?? ''}}">
+                                            <input type="text" name="contract_end_date"
+                                                   placeholder="mm/dd/yyyy"
+                                                   id="contract_date_range_picker" autocomplete="off" required/>
                                         </div>
                                     </div>
                                 </div>
@@ -429,6 +433,27 @@
                 e.stopPropagation();
                 e.preventDefault();
                 change_pet_travelling(0);
+            });
+            var bookingData = <?php echo json_encode($data); ?>;
+            if(bookingData.contract_start_date && bookingData.contract_start_date !='0000-00-00' && bookingData.contract_end_date != '0000-00-00') {
+                var start = moment(bookingData.contract_start_date, "YYYY-MM-DD").format("MM/DD/YYYY")
+                var end = moment(bookingData.contract_end_date, "YYYY-MM-DD").format("MM/DD/YYYY")
+                $('input[id="contract_date_range_picker"][name="contract_start_date"]').val(start);
+                $('input[id="contract_date_range_picker"][name="contract_end_date"]').val(end);
+            }
+
+            $('input[id="contract_date_range_picker"]').daterangepicker({
+                opens: 'center',
+                autoUpdateInput: false,
+                autoApply: true,
+            });
+            $('input[id="contract_date_range_picker"]').keydown(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $('input[id="contract_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
+                $('input[id="contract_date_range_picker"][name="contract_start_date"]').val(picker.startDate.format('MM/DD/YYYY'));
+                $('input[id="contract_date_range_picker"][name="contract_end_date"]').val(picker.endDate.format('MM/DD/YYYY'));
             });
         });
 
@@ -600,5 +625,6 @@
 
             });
         }
+
     </script>
 @endsection

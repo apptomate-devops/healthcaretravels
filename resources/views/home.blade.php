@@ -784,36 +784,35 @@
 @include('includes.scripts')
 <script>
     // Book Now: Date Range Picker
-    var minDate = new Date();
-    minDate.setDate(minDate.getDate() + 7);
-
+    var disableDates = <?php echo json_encode($users_booked_dates); ?>;
     $('input[id="home_date_range_picker"]').daterangepicker({
-        startDate: undefined,
-        minDate,
+        minDate: new Date(),
         opens: 'center',
         minSpan: {
             "days": ({{$data->min_days ?? 30}} + 1)
         },
         autoUpdateInput: false,
         autoApply: true,
-        // isInvalidDate: function(date){
-        //     return disableDates.includes(date.format('YYYY-MM-DD'));
-        // }
+        isInvalidDate: function(date){
+            var dc = moment();
+            dc.add(7, 'days');
+            // Blocking next 7 days for payment security on owner side
+            if (dc > date) {
+                return true;
+            }
+            return disableDates.includes(date.format('YYYY-MM-DD'));
+        }
     });
     $('input[id="home_date_range_picker"]').keydown(function (e) {
         e.preventDefault();
         return false;
     });
-
     $('input[id="home_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
-        $('input[id="home_date_range_picker"][name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
-        $('input[id="home_date_range_picker"][name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
-
-        // var is_valid = check_valid_date_range(picker.startDate, picker.endDate)
-        // if(is_valid) {
-        //     $('input[id="home_date_range_picker"][name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
-        //     $('input[id="home_date_range_picker"][name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
-        // }
+        var is_valid = check_valid_date_range(picker.startDate, picker.endDate)
+        if(is_valid) {
+            $('input[id="home_date_range_picker"][name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
+            $('input[id="home_date_range_picker"][name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
+        }
     });
 
     function check_valid_date_range(startDate, endDate) {

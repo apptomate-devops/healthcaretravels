@@ -180,16 +180,26 @@
 
 <script>
     // Date Range Picker
-    var minDate = new Date();
-    minDate.setDate(minDate.getDate() + 7);
-
     $('input[id="date_range_picker"]').daterangepicker({
-        minDate,
+        minDate: new Date(),
         maxSpan: {
             "days": 30
         },
         autoUpdateInput: false,
         autoApply: true,
+        isInvalidDate: function(date){
+            var dc = moment();
+            dc.add(7, 'days');
+            // Blocking next 7 days for payment security on owner side
+            if (dc > date) {
+                return true;
+            }
+        }
+    });
+
+    $('input[id="date_range_picker"]').keydown(function (e) {
+        e.preventDefault();
+        return false;
     });
 
     $('input[id="date_range_picker"]').on('apply.daterangepicker', function(ev, picker) {
@@ -211,7 +221,7 @@
             age--;
         }
         if (age < 18 || age > 100) {
-            $('#dob_validation_error').html('You must be 18 or older to register online. Contact <br>​<a href="mailto:{{VERIFY_MAIL}}">{{VERIFY_MAIL}}</a> to create a minor account.')
+            $('#dob_validation_error').html('You must be 18 or older to register online. Contact <br>​<a href="mailto:info@healthcaretravels.com">info@healthcaretravels.com</a> to create a minor account.')
         } else {
             $('#dob_validation_error').html('');
         }

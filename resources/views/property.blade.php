@@ -13,10 +13,10 @@
                         <div class="check-in-out-wrapper">
                             <input type="text" name="from_date"
                                    placeholder="Check in"
-                                   id="date_range_picker" autocomplete="off"/>
+                                   id="search_date_range_picker" autocomplete="off"/>
                             <input type="text" name="to_date"
                                    placeholder="Check out"
-                                   id="date_range_picker" autocomplete="off"/>
+                                   id="search_date_range_picker" autocomplete="off"/>
                         </div>
                     </div>
 
@@ -1083,8 +1083,7 @@
                 $("#not_favourite").show();
             }
 
-            // Book Now: Date Range Picker
-            $('input[id="booking_date_range_picker"]').daterangepicker({
+            var calenderConfig = {
                 minDate: new Date(),
                 opens: 'center',
                 minSpan: {
@@ -1092,6 +1091,10 @@
                 },
                 autoUpdateInput: false,
                 autoApply: true,
+            }
+            // Book Now: Date Range Picker
+            $('input[id="booking_date_range_picker"], input[id="chat_date_range_picker"]').daterangepicker({
+                ...calenderConfig,
                 isInvalidDate: function(date){
                     var dc = moment();
                     dc.add(7, 'days');
@@ -1103,7 +1106,21 @@
                     return disableDates.includes(date.format('YYYY-MM-DD'));
                 }
             });
-            $('input[id="booking_date_range_picker"]').keydown(function (e) {
+            // Book Now: Date Range Picker
+            $('input[id="search_date_range_picker"]').daterangepicker({
+                ...calenderConfig,
+                isInvalidDate: function(date){
+                    var dc = moment();
+                    dc.add(7, 'days');
+                    // Blocking next 7 days for payment security on owner side
+                    if (dc > date) {
+                        return true;
+                    }
+                    var disableDates = <?php echo json_encode($users_booked_dates); ?>;
+                    return disableDates.includes(date.format('YYYY-MM-DD'));
+                }
+            });
+            $('input[id="booking_date_range_picker"], input[id="chat_date_range_picker"], input[id="search_date_range_picker"]').keydown(function (e) {
                 e.preventDefault();
                 return false;
             })
@@ -1114,22 +1131,16 @@
             });
 
             // Chat with host: Date Range Picker
-            $('input[id="chat_date_range_picker"]').daterangepicker({
-                minDate: new Date(),
-                opens: 'center',
-                minSpan: {
-                    "days": ({{$data->min_days ?? 30}} + 1)
-                },
-                autoUpdateInput: false,
-                autoApply: true,
-            });
-            $('input[id="chat_date_range_picker"]').keydown(function (e) {
-                e.preventDefault();
-                return false;
-            })
             $('input[id="chat_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
                 $('input[id="chat_date_range_picker"][name="check_in"]').val(picker.startDate.format('MM/DD/YYYY'));
                 $('input[id="chat_date_range_picker"][name="check_out"]').val(picker.endDate.format('MM/DD/YYYY'));
+                $('#request-chat').prop('disabled', false);
+            });
+
+            // Chat with host: Date Range Picker
+            $('input[id="search_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
+                $('input[id="search_date_range_picker"][name="check_in"]').val(picker.startDate.format('MM/DD/YYYY'));
+                $('input[id="search_date_range_picker"][name="check_out"]').val(picker.endDate.format('MM/DD/YYYY'));
                 $('#request-chat').prop('disabled', false);
             });
 

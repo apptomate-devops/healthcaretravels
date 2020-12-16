@@ -187,7 +187,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" onclick="owner_status_update(4);" >Yes</button>
-                        <button type="button" class="btn btn-danger" style="width: 60px; border-radius: 9px;" data-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-danger" style="width: 60px;" data-dismiss="modal">No</button>
                     </div>
                 </div>
             </div>

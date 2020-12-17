@@ -1006,6 +1006,7 @@ class UserController extends BaseController
     {
         $messages = [
             'new_password.regex' => PASSWORD_REGEX_MESSAGE,
+            'confirm_password.same' => "Sorry, Please try again. The passwords didn't match",
         ];
         $rules = [
             'new_password' => PASSWORD_REGEX,

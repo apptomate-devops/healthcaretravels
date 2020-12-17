@@ -27,12 +27,12 @@
                 <div style="padding-top: 5px;">
                     Your booking with {{Helper::get_user_display_name($traveler)}} at {{$property_title}} for {{$start_date}} to {{$end_date}} is confirmed. Please visit the <a href="{{URL('/')}}/owner/my-bookings">Your Bookings</a> page on Health Care Travels to view more details.
                 </div>
-                <div>
-                    @if($traveler->profile_image && $traveler->profile_image != ' ')
-                        <img src="{{BASE_URL . ltrim($traveler->profile_image, '/')}}" style="width: 30px; height: 30px; border-radius: 15px; border: 1px solid #e08716" alt="">
-                    @endif
-                    <span> {{Helper::get_user_display_name($traveler)}} </span>
-                </div>
+{{--                <div>--}}
+{{--                    @if($traveler->profile_image && $traveler->profile_image != ' ')--}}
+{{--                        <img src="{{BASE_URL . ltrim($traveler->profile_image, '/')}}" style="width: 30px; height: 30px; border-radius: 15px; border: 1px solid #e08716" alt="">--}}
+{{--                    @endif--}}
+{{--                    <span> {{Helper::get_user_display_name($traveler)}} </span>--}}
+{{--                </div>--}}
                 <div>
                     <h2><b>{{$property_title}}</b></h2>
                     <div class="row-space-1">
@@ -56,12 +56,12 @@
                     <br>
                     Please check your inbox for another email regarding your first housing payment.
                 </div>
-                <div>
-                    @if($owner->profile_image && $owner->profile_image != ' ')
-                        <img src="{{BASE_URL . ltrim($owner->profile_image, '/')}}" style="width: 30px; height: 30px; border-radius: 15px; border: 1px solid #e08716" alt="">
-                    @endif
-                    <span> {{Helper::get_user_display_name($owner)}} </span>
-                </div>
+{{--                <div>--}}
+{{--                    @if($owner->profile_image && $owner->profile_image != ' ')--}}
+{{--                        <img src="{{BASE_URL . ltrim($owner->profile_image, '/')}}" style="width: 30px; height: 30px; border-radius: 15px; border: 1px solid #e08716" alt="">--}}
+{{--                    @endif--}}
+{{--                    <span> {{Helper::get_user_display_name($owner)}} </span>--}}
+{{--                </div>--}}
                 <div>
                     <h2><b>{{$property_title}}</b></h2>
                     <div class="row-space-1">

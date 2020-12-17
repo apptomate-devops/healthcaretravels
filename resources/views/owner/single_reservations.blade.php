@@ -96,13 +96,17 @@
                             <th>Name</th>
                             <th>Occupation</th>
                             <th>Age</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
                         </tr>
                         @foreach($guest_info as $key => $g)
                             <tr>
                                 <td>{{$key+1}}</td>
                                 <td>{{$g->name}}</td>
-                                <td>{{$g->occupation}}</td>
-                                <td>{{$g->age}}</td>
+                                <td>{{$g->occupation ?? '-'}}</td>
+                                <td>{{$g->age ?? '-'}}</td>
+                                <td>{{$g->email ?? '-'}}</td>
+                                <td>{{$g->phone_number ?? '-'}}</td>
                             </tr>
                         @endforeach
                     </table>
@@ -189,13 +193,16 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">
-                            Are you sure you want to Cancel booking?
-                        </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"><b><span style="color:red">Warning</span></b></h4>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to Cancel booking?
+                        <br>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
                         <button type="button" class="btn btn-default" id="cancelBooking">Yes</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
                     </div>
                 </div>
             </div>

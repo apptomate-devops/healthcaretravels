@@ -26,7 +26,7 @@
                     <h4>{{ Session::get('error') }}</h4>
                 </div>
             @endif
-                <div class="alert alert-danger no-properties" style="display: none;">There aren't any properties near this location yet. Try expanding your search.</div>
+            <div class="alert alert-danger no-properties" style="display: none;">There aren't any properties near this location yet. Try expanding your search.</div>
         </section>
         <div class="main-container">
             <div class="col-md-4">
@@ -91,9 +91,9 @@
                             </div>
                             <div class="col-lg-5 col-md-4 col-sm-4">
                                 <div class="check-in-out-wrapper">
-                                    <input type="text" class="price_float" placeholder="$ Min" name="minprice" id="minprice"
+                                    <input type="text" class="price_int" placeholder="$ Min" name="minprice" id="minprice"
                                            value="@if(isset($request_data['minprice'])){{$request_data['minprice']}}@endif">
-                                    <input type="text" class="price_float" placeholder="$ Max" name="maxprice" id="maxprice"
+                                    <input type="text" class="price_int" placeholder="$ Max" name="maxprice" id="maxprice"
                                            value="@if(isset($request_data['maxprice'])){{$request_data['maxprice']}}@endif">
                                 </div>
                             </div>
@@ -107,8 +107,8 @@
                                 {{-- <input id="flexible_cancellation" name="flexible_cancellation" type="checkbox" @if(isset($request_data['flexible_cancellation'])) checked @endif>
                                 <label for="flexible_cancellation">Flexible Cancellation</label> --}}
 
-{{--                                <input id="enhanced_cleaning_protocol" name="enhanced_cleaning_protocol" type="checkbox" @if(isset($request_data['enhanced_cleaning_protocol'])) checked @endif>--}}
-{{--                                <label for="enhanced_cleaning_protocol">Enhanced Cleaning Protocol</label>--}}
+                                {{--                                <input id="enhanced_cleaning_protocol" name="enhanced_cleaning_protocol" type="checkbox" @if(isset($request_data['enhanced_cleaning_protocol'])) checked @endif>--}}
+                                {{--                                <label for="enhanced_cleaning_protocol">Enhanced Cleaning Protocol</label>--}}
 
                             </div>
                             <div class="checkboxes in-row">
@@ -438,6 +438,11 @@
             }
 
             $('.price_float').change(function(){
+                var value = parseFloat(parseFloat(this.value));
+                this.value = isNaN(value) ? '' : value;
+            });
+
+            $('.price_int').change(function(){
                 var value = parseInt(parseInt(this.value));
                 this.value = isNaN(value) ? '' : value;
             });
@@ -446,6 +451,15 @@
             $('.price_float').keypress(function(event) {
                 if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
                     event.preventDefault();
+                }
+            });
+
+            $('.price_int').keypress(function(event) {
+                var regex = new RegExp("^[0-9+]$");
+                var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+                if (!regex.test(key)) {
+                    event.preventDefault();
+                    return false;
                 }
             });
 
@@ -483,7 +497,7 @@
         });
 
         // Book Now: Date Range Picker
-        var disableDates = <?php echo json_encode($blocked_dates); ?>;
+        var disableDates = <?php echo json_encode($users_booked_dates); ?>;
         $('input[id="home_date_range_picker"]').daterangepicker({
             minDate: new Date(),
             opens: 'center',
@@ -493,13 +507,19 @@
             autoUpdateInput: false,
             autoApply: true,
             isInvalidDate: function(date){
+                var dc = moment();
+                dc.add(7, 'days');
+                // Blocking next 7 days for payment security on owner side
+                if (dc > date) {
+                    return true;
+                }
                 return disableDates.includes(date.format('YYYY-MM-DD'));
             }
         });
         $('input[id="home_date_range_picker"]').keydown(function (e) {
             e.preventDefault();
             return false;
-        })
+        });
         $('input[id="home_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
             var is_valid = check_valid_date_range(picker.startDate, picker.endDate)
             if(is_valid) {
@@ -507,6 +527,7 @@
                 $('input[id="home_date_range_picker"][name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
             }
         });
+
 
         function check_valid_date_range(startDate, endDate) {
             var getDaysArray = function(s,e) {for(var a=[],d=new Date(s);d<=e;d.setDate(d.getDate()+1)){ a.push(d.toISOString().split('T')[0]);}return a;};

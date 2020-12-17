@@ -496,7 +496,7 @@ class PropertyController extends BaseController
                 ->orderBy('property_images.is_cover', 'desc')
                 ->first();
 
-            $property->image_url = $pd->image_url;
+            $property->image_url = $pd ? $pd->image_url : '';
             $properties_near[] = $property;
         }
 
@@ -1096,20 +1096,19 @@ class PropertyController extends BaseController
                 $value->image_url = isset($image->image_url) ? $image->image_url : '';
             }
         }
-        $blocked_dates = [];
-        $user_id = $request->session()->get('user_id');
 
-        if ($user_id) {
-            $booking_start_dates = DB::table('property_booking')
-                ->where('traveller_id', '=', $user_id)
-                ->whereNotIn('status', [0, 4, 8])
-                ->whereDate('start_date', '>=', Carbon::now())
-                ->pluck('start_date');
-            foreach ($booking_start_dates as $key => $value) {
-                $start_date = Carbon::parse($value);
-                $dates_list = $this->getDatesBetweenRange($start_date->copy()->subDays(7), $start_date);
-                $blocked_dates = array_merge($blocked_dates, $dates_list);
-            }
+        $user_id = $request->session()->get('user_id');
+        $users_bookings = DB::table('property_booking')
+            ->where('property_booking.client_id', '=', CLIENT_ID)
+            ->where('property_booking.status', '=', 2)
+            ->where('property_booking.traveller_id', '=', $user_id)
+            ->select('start_date', 'end_date')
+            ->get();
+
+        $users_booked_dates = [];
+        foreach ($users_bookings as $booking_date) {
+            $dates = $this->getDatesBetweenRange($booking_date->start_date, $booking_date->end_date);
+            $users_booked_dates = array_merge($users_booked_dates, $dates);
         }
         return view('search_property')
             ->with('properties', $nearby_properties)
@@ -1120,7 +1119,7 @@ class PropertyController extends BaseController
             ->with('next', $page)
             ->with('room_types', $room_types)
             ->with('offset', $offset)
-            ->with('blocked_dates', $blocked_dates);
+            ->with('users_booked_dates', $users_booked_dates);
     }
 
     public static function add_property_to_favourite($property_id, Request $request)
@@ -1317,6 +1316,7 @@ class PropertyController extends BaseController
     public function single_property($property_id, $booking_id = null, Request $request)
     {
         $booking_details = null;
+        $user_id = $request->session()->get('user_id');
         if ($booking_id) {
             $booking_details = PropertyBooking::where('booking_id', $booking_id)->first();
             if (!$booking_details) {
@@ -1325,7 +1325,6 @@ class PropertyController extends BaseController
             if ($booking_details && !in_array($booking_details->status, [0, 1])) {
                 return view('general_error', ['message' => 'You can not edit booking now.']);
             }
-            $user_id = $request->session()->get('user_id');
             if ($user_id != $booking_details->traveller_id) {
                 // Do not allow other user to access booking details
                 return view('general_error', ['message' => 'Invalid Access']);
@@ -1378,6 +1377,7 @@ class PropertyController extends BaseController
             ->leftjoin('property_room', 'property_room.property_id', '=', 'property_list.id')
             ->where('property_list.client_id', '=', CLIENT_ID)
             ->where('property_list.id', '=', $property_id)
+            ->where('property_list.status', '=', 1)
             ->select(
                 'property_list.*',
                 'users.first_name',
@@ -1392,7 +1392,9 @@ class PropertyController extends BaseController
             ->orderBy('property_images.is_cover', 'DESC')
             ->first();
 
-        if ($properties) {
+        if (!$properties) {
+            return view('general_error', ['message' => 'We can’t find the property you’re looking for.']);
+        } else {
             // SELECT GROUP_CONCAT(bed_type) FROM `property_bedrooms` WHERE `property_id` = 1 AND `bedroom_number` = 1
 
             $property_bedrooms = DB::table('property_bedrooms')
@@ -1490,8 +1492,6 @@ class PropertyController extends BaseController
                 ->select('property_images.image_url')
                 ->get();
             $properties->property_images = $pd;
-        } else {
-            return view('general_error', ['message' => 'We can’t find the property you’re looking for.']);
         }
         $result = $properties;
 
@@ -1644,12 +1644,24 @@ class PropertyController extends BaseController
             ->select('start_date', 'end_date')
             ->get();
 
+        $users_bookings = DB::table('property_booking')
+            ->where('property_booking.client_id', '=', CLIENT_ID)
+            ->where('property_booking.status', '=', 2)
+            ->where('property_booking.traveller_id', '=', $user_id)
+            ->select('start_date', 'end_date')
+            ->get();
+
+        $users_booked_dates = [];
+        foreach ($users_bookings as $booking_date) {
+            $dates = $this->getDatesBetweenRange($booking_date->start_date, $booking_date->end_date);
+            $users_booked_dates = array_merge($users_booked_dates, $dates);
+        }
+
         foreach ($blocked_dates as $blocked_date) {
             $blocked_dates_list = $this->getDatesBetweenRange($blocked_date->start_date, $blocked_date->end_date);
             $b_dates = array_merge($b_dates, $blocked_dates_list);
         }
         // print_r($b_dates);exit;
-        $user_id = $request->session()->get('user_id');
         $current_user = DB::table('users')
             ->where('id', $user_id)
             ->first();
@@ -1668,8 +1680,8 @@ class PropertyController extends BaseController
             $request->session()->forget('guest_count');
         }
 
-        $user_id = $request->session()->get('role_id');
-        if ($user_id) {
+        $is_user_id = $request->session()->get('role_id');
+        if ($is_user_id) {
             $is_user = 1;
         } else {
             $is_user = 0;
@@ -1682,6 +1694,7 @@ class PropertyController extends BaseController
             'bed_rooms' => $temp_bed_rooms,
             'data' => $result,
             'booked_dates' => $b_dates,
+            'users_booked_dates' => $users_booked_dates,
             'properties_near' => $properties_near,
             'property_id' => $property_id,
             'session' => $arr,
@@ -2233,6 +2246,13 @@ class PropertyController extends BaseController
 
     public function property_next2(Request $request)
     {
+        $property = DB::table('property_list')
+            ->where('id', $request->property_id)
+            ->where('status', 1)
+            ->first();
+        if (!$property) {
+            return view('general_error', ['message' => 'We can’t find the property you’re looking for.']);
+        }
         DB::table('property_bedrooms')
             ->where('client_id', CLIENT_ID)
             ->where('property_id', $request->property_id)
@@ -2249,9 +2269,6 @@ class PropertyController extends BaseController
             $request->cur_child = 0;
             $request->cur_pets = 0;
         }
-        $property = DB::table('property_list')
-            ->where('id', $request->property_id)
-            ->first();
 
         DB::table('property_list')
             ->where('id', $request->property_id)

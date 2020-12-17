@@ -57,7 +57,7 @@
             @else
                 @if($user->is_verified == -1)
                     <div class="denied-details">
-                        <b class="info-text" style="color: red; font-size: 18px;">One or more document(s) was denied:</b>
+                        <b class="info-text" style="color: red; font-size: 18px;">One or more verification fields were denied:</b>
                         @foreach ($documents as $d)
                             <br><b class="info-text" style="color: red; font-size: 18px;">{{ucfirst(str_replace("_"," ",$d->document_type))}}: {{$d->reason}}</b>
                         @endforeach
@@ -342,7 +342,7 @@
                                             You will not be able to edit or upload more documents once they have been submitted.
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                                             <button id="confirmation-popup-submit" type="submit" class="btn btn-primary">Submit</button>
                                         </div>
                                     </div>

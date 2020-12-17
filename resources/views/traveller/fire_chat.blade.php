@@ -302,7 +302,7 @@
 
             if (isEvery == true) {
                 $("#send_msg").hide();
-                $('#myModal').modal();
+                $('#myModal').modal('show');
                 // alert('You are receiving this message either because you are attempting to send information that is either NOT allowed by Health Care Travels Terms of Use and Polices or in error. If you feel this message is in error contact support@healthcaretravels.com');
             } else {
                 $("#send_msg").show();
@@ -310,7 +310,7 @@
         } else {
 
             $("#send_msg").hide();
-            $('#myModal').modal();
+            $('#myModal').modal('show');
             // alert('You are receiving this message either because you are attempting to send information that is either NOT allowed by Health Care Travels Terms of Use and Polices or in error. If you feel this message is in error contact support@healthcaretravels.com');
         }
 

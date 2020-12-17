@@ -14,6 +14,7 @@ class PropertyController extends BaseController
     {
         $properties = $this->propertyList
             ->join('users as owner', 'owner.id', '=', 'property_list.user_id')
+            ->where('property_list.status', '=', 1)
             ->select(
                 'property_list.id',
                 'property_list.title',

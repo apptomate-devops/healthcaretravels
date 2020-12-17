@@ -13,10 +13,10 @@
                         <div class="check-in-out-wrapper">
                             <input type="text" name="from_date"
                                    placeholder="Check in"
-                                   id="date_range_picker" autocomplete="off"/>
+                                   id="search_date_range_picker" autocomplete="off"/>
                             <input type="text" name="to_date"
                                    placeholder="Check out"
-                                   id="date_range_picker" autocomplete="off"/>
+                                   id="search_date_range_picker" autocomplete="off"/>
                         </div>
                     </div>
 
@@ -1083,8 +1083,7 @@
                 $("#not_favourite").show();
             }
 
-            // Book Now: Date Range Picker
-            $('input[id="booking_date_range_picker"]').daterangepicker({
+            var calenderConfig = {
                 minDate: new Date(),
                 opens: 'center',
                 minSpan: {
@@ -1092,6 +1091,10 @@
                 },
                 autoUpdateInput: false,
                 autoApply: true,
+            }
+            // Book Now: Date Range Picker
+            $('input[id="booking_date_range_picker"], input[id="chat_date_range_picker"]').daterangepicker({
+                ...calenderConfig,
                 isInvalidDate: function(date){
                     var dc = moment();
                     dc.add(7, 'days');
@@ -1103,7 +1106,21 @@
                     return disableDates.includes(date.format('YYYY-MM-DD'));
                 }
             });
-            $('input[id="booking_date_range_picker"]').keydown(function (e) {
+            // Book Now: Date Range Picker
+            $('input[id="search_date_range_picker"]').daterangepicker({
+                ...calenderConfig,
+                isInvalidDate: function(date){
+                    var dc = moment();
+                    dc.add(7, 'days');
+                    // Blocking next 7 days for payment security on owner side
+                    if (dc > date) {
+                        return true;
+                    }
+                    var disableDates = <?php echo json_encode($users_booked_dates); ?>;
+                    return disableDates.includes(date.format('YYYY-MM-DD'));
+                }
+            });
+            $('input[id="booking_date_range_picker"], input[id="chat_date_range_picker"], input[id="search_date_range_picker"]').keydown(function (e) {
                 e.preventDefault();
                 return false;
             })
@@ -1114,22 +1131,16 @@
             });
 
             // Chat with host: Date Range Picker
-            $('input[id="chat_date_range_picker"]').daterangepicker({
-                minDate: new Date(),
-                opens: 'center',
-                minSpan: {
-                    "days": ({{$data->min_days ?? 30}} + 1)
-                },
-                autoUpdateInput: false,
-                autoApply: true,
-            });
-            $('input[id="chat_date_range_picker"]').keydown(function (e) {
-                e.preventDefault();
-                return false;
-            })
             $('input[id="chat_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
                 $('input[id="chat_date_range_picker"][name="check_in"]').val(picker.startDate.format('MM/DD/YYYY'));
                 $('input[id="chat_date_range_picker"][name="check_out"]').val(picker.endDate.format('MM/DD/YYYY'));
+                $('#request-chat').prop('disabled', false);
+            });
+
+            // Chat with host: Date Range Picker
+            $('input[id="search_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
+                $('input[id="search_date_range_picker"][name="check_in"]').val(picker.startDate.format('MM/DD/YYYY'));
+                $('input[id="search_date_range_picker"][name="check_out"]').val(picker.endDate.format('MM/DD/YYYY'));
                 $('#request-chat').prop('disabled', false);
             });
 
@@ -1208,7 +1219,7 @@
 
                         tr_data +="<tr class='row_border row_border_top'><td>Cleaning Fee&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Decided by the property owner to clean after your stay.</span></span></td><td>$ "+data.data.cleaning_fee+"</td></tr>";
                         tr_data +="<tr class='row_border'><td>Deposit&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>If property owner reports no damage, your deposit will be returned 72 hours after your stay.</span></span></td><td>$ "+data.data.security_deposit+"</td></tr>";
-                        tr_data +="<tr class='row_border'><td>Total Cost&nbsp;</td><td><b  id='total_booking_price'>$ "+data.data.total_price+"</b></td></tr>";
+                        tr_data +="<tr><td>Total Cost&nbsp;</td><td><b  id='total_booking_price'>$ "+data.data.total_price+"</b></td></tr>";
 
                         if(data.data.no_extra_guest==1){
                             if(totalguestcount < guest_count){
@@ -1268,7 +1279,7 @@
         });
 
         $("#chat_host").click(function(){
-            $('#myModal').modal();
+            $('#myModal').modal('show');
         });
 
         $("#post_comment").click(function(){
@@ -1294,7 +1305,7 @@
                 "url": url,
                 success: function (data) {
                     if(data.status == 'SUCCESS') {
-                        location.reload();
+                        // location.reload();
                     }
                 },
                 error: function (error) {

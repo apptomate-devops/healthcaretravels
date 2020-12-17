@@ -40,16 +40,18 @@ $hasDwollaAccount = isset($user->dwolla_customer);
     <div id="delete_funding_source_modal" data-backdrop="static" data-keyboard="false" class="modal fade in" role="dialog">
         <div class="modal-dialog modal-md">
             <!-- Modal content-->
-            <div class="modal-content">
+            <div class="modal-content" style="text-align: left;">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Are you sure you want to remove the account <span id="delete-account-name"></span></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><b><span style="color:red">Warning</span></b></h4>
                 </div>
                 <div class="modal-body">
-                    <div class="flex-row">
-                        <div class="btn btn-default w-mc" data-dismiss="modal">Cancel</div>
-                        <div class="btn btn-danger w-mc ml-10" id="confirm-delete-fs">Remove now</div>
-                    </div>
+                    Are you sure you want to remove the account <span id="delete-account-name"></span>?
+                    <br>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default w-mc" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-danger w-mc ml-10" id="confirm-delete-fs">Remove now</button>
                 </div>
             </div>
         </div>

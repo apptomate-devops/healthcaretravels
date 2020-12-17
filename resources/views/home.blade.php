@@ -374,10 +374,10 @@
                                         <div class="check-in-out-wrapper">
                                             <input type="text" name="from_date"
                                                    placeholder="Check in"
-                                                   id="home_date_range_picker" autocomplete="off"/>
+                                                   id="home_date_range_picker" autocomplete="off" style="border-width: 0 1px 0 0;"/>
                                             <input type="text" name="to_date"
                                                    placeholder="Check out"
-                                                   id="home_date_range_picker" autocomplete="off"/>
+                                                   id="home_date_range_picker" autocomplete="off" style="border-width: 0;"/>
                                         </div>
                                     </div>
                                     <div class="col-md-2 col-sm-2 col-xs-12 text-center">
@@ -545,7 +545,7 @@
                                                            class="featured-places img-box"
                                                            @if($i==0 || $i==4 || $i==11 || $i==15 || $i==5) style="height: 525px;"
                                                            @endif @if($i==3 || $i==7 || $i==8 ||$i==12) style="height: 250px;"
-                                                           @endif>
+                                                            @endif>
                                                             <img src="{{$category->image_url}}" height="100%" width="100%" style="object-fit: cover">
                                                             <!-- Badge -->
                                                             <div class="listing-badges">
@@ -748,11 +748,6 @@
         $.ajax({
             "type": "get",
             "url": url,
-            success: function (data) {
-                if(data.status == 'SUCCESS') {
-                    location.reload();
-                }
-            },
             error: function (error) {
                 console.log("error adding data to success", error);
             }
@@ -789,7 +784,7 @@
 @include('includes.scripts')
 <script>
     // Book Now: Date Range Picker
-    var disableDates = <?php echo json_encode($blocked_dates); ?>;
+    var disableDates = <?php echo json_encode($users_booked_dates); ?>;
     $('input[id="home_date_range_picker"]').daterangepicker({
         minDate: new Date(),
         opens: 'center',
@@ -799,6 +794,12 @@
         autoUpdateInput: false,
         autoApply: true,
         isInvalidDate: function(date){
+            var dc = moment();
+            dc.add(7, 'days');
+            // Blocking next 7 days for payment security on owner side
+            if (dc > date) {
+                return true;
+            }
             return disableDates.includes(date.format('YYYY-MM-DD'));
         }
     });
@@ -806,7 +807,6 @@
         e.preventDefault();
         return false;
     });
-
     $('input[id="home_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
         var is_valid = check_valid_date_range(picker.startDate, picker.endDate)
         if(is_valid) {

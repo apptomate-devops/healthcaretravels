@@ -587,8 +587,12 @@ class HomeController extends BaseController
             )
             ->leftjoin('users', 'users.id', '=', 'property_list.user_id')
             ->where('property_list.id', '=', $property_id)
-            ->get();
+            ->where('property_list.status', '=', 1)
+            ->first();
 
+        if (!$property) {
+            return view('general_error', ['message' => 'We can’t find the property you’re looking for.']);
+        }
         $property->images = DB::table('property_images')
             ->where('property_images.property_id', '=', $property_id)
             ->select('image_url')

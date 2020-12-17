@@ -374,10 +374,10 @@
                                         <div class="check-in-out-wrapper">
                                             <input type="text" name="from_date"
                                                    placeholder="Check in"
-                                                   id="home_date_range_picker" autocomplete="off"/>
+                                                   id="home_date_range_picker" autocomplete="off" style="border-width: 0 1px 0 0;"/>
                                             <input type="text" name="to_date"
                                                    placeholder="Check out"
-                                                   id="home_date_range_picker" autocomplete="off"/>
+                                                   id="home_date_range_picker" autocomplete="off" style="border-width: 0;"/>
                                         </div>
                                     </div>
                                     <div class="col-md-2 col-sm-2 col-xs-12 text-center">

@@ -1377,6 +1377,7 @@ class PropertyController extends BaseController
             ->leftjoin('property_room', 'property_room.property_id', '=', 'property_list.id')
             ->where('property_list.client_id', '=', CLIENT_ID)
             ->where('property_list.id', '=', $property_id)
+            ->where('property_list.status', '=', 1)
             ->select(
                 'property_list.*',
                 'users.first_name',
@@ -1391,7 +1392,9 @@ class PropertyController extends BaseController
             ->orderBy('property_images.is_cover', 'DESC')
             ->first();
 
-        if ($properties) {
+        if (!$properties) {
+            return view('general_error', ['message' => 'We can’t find the property you’re looking for.']);
+        } else {
             // SELECT GROUP_CONCAT(bed_type) FROM `property_bedrooms` WHERE `property_id` = 1 AND `bedroom_number` = 1
 
             $property_bedrooms = DB::table('property_bedrooms')
@@ -1489,8 +1492,6 @@ class PropertyController extends BaseController
                 ->select('property_images.image_url')
                 ->get();
             $properties->property_images = $pd;
-        } else {
-            return view('general_error', ['message' => 'We can’t find the property you’re looking for.']);
         }
         $result = $properties;
 
@@ -2245,6 +2246,13 @@ class PropertyController extends BaseController
 
     public function property_next2(Request $request)
     {
+        $property = DB::table('property_list')
+            ->where('id', $request->property_id)
+            ->where('status', 1)
+            ->first();
+        if (!$property) {
+            return view('general_error', ['message' => 'We can’t find the property you’re looking for.']);
+        }
         DB::table('property_bedrooms')
             ->where('client_id', CLIENT_ID)
             ->where('property_id', $request->property_id)
@@ -2261,9 +2269,6 @@ class PropertyController extends BaseController
             $request->cur_child = 0;
             $request->cur_pets = 0;
         }
-        $property = DB::table('property_list')
-            ->where('id', $request->property_id)
-            ->first();
 
         DB::table('property_list')
             ->where('id', $request->property_id)

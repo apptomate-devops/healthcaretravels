@@ -40,8 +40,8 @@
           </div>
         </div> -->
 
-    @if($property[0]->verified==0)
-    <a style="float:right" class="btn btn-default btn-danger btn-block" href="{{BASE_URL}}admin/verify_property/{{$property[0]->id}}"><span>Click here to Verify This Property </span></a>
+    @if($property->verified==0)
+    <a style="float:right" class="btn btn-default btn-danger btn-block" href="{{BASE_URL}}admin/verify_property/{{$property->id}}"><span>Click here to Verify This Property </span></a>
     @else
     <span class="btn btn-default btn-success btn-block">Verified</span>
     @endif
@@ -75,24 +75,24 @@
                             <table class="table table-xl mb-0">
                                 <tr>
                                     <td>Property Name</td>
-                                    <td><b>{{$property[0]->title}}</b></td>
+                                    <td><b>{{$property->title}}</b></td>
                                     <td>Category</td>
-                                    <td><b>{{$property[0]->property_category}}</b></td>
+                                    <td><b>{{$property->property_category}}</b></td>
                                 </tr>
                                 <tr>
                                     <td>Location</td>
-                                    <td><b>{{$property[0]->address}},{{$property[0]->city}},{{$property[0]->state}}
-                                            ,{{$property[0]->state}}-{{$property[0]->zip_code}}</b></td>
+                                    <td><b>{{$property->address}},{{$property->city}},{{$property->state}}
+                                            ,{{$property->state}}-{{$property->zip_code}}</b></td>
                                     <td>Property Type</td>
-                                    <td><b>{{$property[0]->room_type}}</b></td>
+                                    <td><b>{{$property->room_type}}</b></td>
                                 </tr>
                                 <tr>
                                     <td>Booking Type</td>
-                                    <td><b>{{$property[0]->is_instant==1?'Instant Booking' :'Request Booking'}}</b>
+                                    <td><b>{{$property->is_instant==1?'Instant Booking' :'Request Booking'}}</b>
                                     </td>
                                     <td>Property Status</td>
                                     <td>
-                                        @if($property[0]->is_disable == 0)
+                                        @if($property->is_disable == 0)
                                         <span class="btn btn-default btn-success">Enabled</span>
                                         @else
                                         <span class="btn btn-default btn-danger">Disabled</span>
@@ -102,14 +102,14 @@
 
                                 <tr>
                                     <td>Guests</td>
-                                    <td><b>{{$property[0]->total_guests}} /Day</b></td>
+                                    <td><b>{{$property->total_guests}} /Day</b></td>
                                     <td>Property Length</td>
-                                    <td><b>{{$property[0]->property_size}} ft</b></td>
+                                    <td><b>{{$property->property_size}} ft</b></td>
                                 </tr>
 
                                 <tr>
                                     <td colspan="1">Description</td>
-                                    <td colspan="3"><b>{{$property[0]->description}}</b></td>
+                                    <td colspan="3"><b>{{$property->description}}</b></td>
                                 </tr>
                             </table>
                         </div>
@@ -118,26 +118,26 @@
                             <table class="table table-xl mb-0">
                                 <tr>
                                     <td>Price per day</td>
-                                    <td><b>{{CURRENCY}} {{($property[0]->monthly_rate) / 30}}</b></td>
+                                    <td><b>{{CURRENCY}} {{($property->monthly_rate) / 30}}</b></td>
 
                                 </tr>
                                 {{-- <tr>--}}
                                 {{-- <td>Price per Week</td>--}}
-                                {{-- <td><b>{{CURRENCY}} {{$property[0]->price_more_than_one_week}}</b></td>--}}
+                                {{-- <td><b>{{CURRENCY}} {{$property->price_more_than_one_week}}</b></td>--}}
 
                                 {{-- </tr>--}}
                                 <tr>
                                     <td>Price per Month</td>
-                                    <td><b>{{CURRENCY}} {{$property[0]->monthly_rate}}</b></td>
+                                    <td><b>{{CURRENCY}} {{$property->monthly_rate}}</b></td>
                                 </tr>
                                 <tr>
                                     <td>Cleaning fee</td>
-                                    <td><b>{{CURRENCY}} {{$property[0]->cleaning_fee}} /Day</b></td>
+                                    <td><b>{{CURRENCY}} {{$property->cleaning_fee}} /Day</b></td>
 
                                 </tr>
                                 <tr>
                                     <td>Minimum no of days</td>
-                                    <td><b> {{$property[0]->min_days}} </b></td>
+                                    <td><b> {{$property->min_days}} </b></td>
 
                                 </tr>
                             </table>
@@ -165,31 +165,31 @@
                             <table class="table table-xl mb-0">
                                 <tr>
                                     <td>Owner ID</td>
-                                    <td><b>{{$property[0]->user_id}}</b></td>
+                                    <td><b>{{$property->user_id}}</b></td>
 
                                 </tr>
                                 <tr>
                                     <td>Name</td>
-                                    <td><b>{{$property[0]->first_name}} {{$property[0]->last_name}}</b></td>
+                                    <td><b>{{$property->first_name}} {{$property->last_name}}</b></td>
 
                                 </tr>
                                 <tr>
                                     <td>User Name</td>
-                                    <td><b>{{$property[0]->username}}</b></td>
+                                    <td><b>{{$property->username}}</b></td>
                                 </tr>
                                 <tr>
                                     <td>Email</td>
-                                    <td><b>{{$property[0]->email}}</b></td>
+                                    <td><b>{{$property->email}}</b></td>
 
                                 </tr>
                                 <tr>
                                     <td>Contact Number</td>
-                                    <td><b>{{$property[0]->phone}} </b></td>
+                                    <td><b>{{$property->phone}} </b></td>
 
                                 </tr>
                                 <tr>
                                     <td>About</td>
-                                    <td><b>{{$property[0]->about_me}} </b></td>
+                                    <td><b>{{$property->about_me}} </b></td>
 
                                 </tr>
                             </table>
@@ -198,7 +198,7 @@
                 </div>
             </div>
         </div>
-        @include('Admin.Includes.notes',['id'=>$property[0]->id,'admin_notes'=>$property[0]->admin_notes,'type'=>'property_list'])
+        @include('Admin.Includes.notes',['id'=>$property->id,'admin_notes'=>$property->admin_notes,'type'=>'property_list'])
     </section>
     <!-- Form wizard with vertical tabs section end -->
     <!-- // Basic form layout section end -->

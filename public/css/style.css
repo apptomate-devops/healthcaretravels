@@ -107,7 +107,7 @@ button {
 
 #wrapper .btn.btn-primary {
     background: #0983B8;
-    border-radius: 9px;
+    border-radius: 5px;
 }
 
 /* snackbar ==========*/
@@ -2380,6 +2380,14 @@ body #backtotop a {
     border-width: 0;
     border-radius: 5px !important;
 }
+
+.modal-footer button.btn-danger.focus,
+.modal-footer button.btn-danger:focus,
+.modal-footer button.btn-danger:hover {
+    color: #fff;
+    background-color: #E78016;
+    border-width: 0;
+}
 #backtotop a:after {
     content: "\f106";
     font-family: "FontAwesome";
@@ -2625,18 +2633,13 @@ button.widget-button {
     border: none;
 }
 
-.search-container input:focus {
-    border: none;
-}
-
 .search-container .main-search-input button.button {
     width: initial;
     min-width: 100px;
     max-width: 100px;
-    margin: 0;
     font-size: 18px;
     position: relative;
-    margin-left: 20px;
+    margin: 0 0 0 20px;
     flex: 0 auto;
     height: 57px;
 }

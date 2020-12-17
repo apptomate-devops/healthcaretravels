@@ -377,6 +377,7 @@ class HomeController extends BaseController
     {
         $messages = [
             'password.regex' => PASSWORD_REGEX_MESSAGE,
+            'confirm_password.same' => "Sorry, Please try again. The passwords didn't match",
         ];
         $rules = [
             'password' => PASSWORD_REGEX,

@@ -159,7 +159,7 @@
             <i class="sl sl-icon-lock"></i> Change Password
         </a>
     </li>
-    <li><a href="{{url('/')}}/logout" onclick="signOut();" {{{ (Request::is('logout') ? 'class=current' : '') }}}>
+    <li><a href="{{url('/')}}/logout" {{{ (Request::is('logout') ? 'class=current' : '') }}}>
             <i class="sl sl-icon-power"></i> Log Out</a></li>
 </ul>
 @endif
@@ -204,7 +204,7 @@
             <i class="sl sl-icon-lock"></i> Change Password
         </a>
     </li>
-    <li><a href="{{url('/')}}/logout" onclick="signOut();" {{{ (Request::is('logout') ? 'class=current' : '') }}}>
+    <li><a href="{{url('/')}}/logout" {{{ (Request::is('logout') ? 'class=current' : '') }}}>
             <i class="sl sl-icon-power"></i> Log Out</a></li>
 </ul>
 @endif

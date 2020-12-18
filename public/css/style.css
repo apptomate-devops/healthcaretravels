@@ -2374,19 +2374,17 @@ body #backtotop a {
     border-width: 0;
     border-radius: 5px !important;
 }
-.modal-footer button.btn-danger {
-    background-color: #E78016;
+button.btn-danger,
+button.btn-danger.focus,
+button.btn-danger:focus,
+button.btn-danger:hover {
+    background-color: #E78016 !important;
     color: white;
-    border-width: 0;
-    border-radius: 5px !important;
+    border-width: 0 !important;
+    border-radius: 9px !important;
 }
-
-.modal-footer button.btn-danger.focus,
-.modal-footer button.btn-danger:focus,
-.modal-footer button.btn-danger:hover {
-    color: #fff;
-    background-color: #E78016;
-    border-width: 0;
+.modal-footer button.btn-danger {
+    border-radius: 5px !important;
 }
 #backtotop a:after {
     content: "\f106";

@@ -1118,8 +1118,8 @@ class UserController extends BaseController
                 'id' => $user->id,
             ];
 
-            $subject = "Verification documents Uploads";
-            $title = $user->username . " uploaded their Verification documents";
+            $subject = "Verification documents uploaded";
+            $title = $user->username . " uploaded their verification documents";
             $usermail = $user->email;
 
             Mail::send('mail.document-upload', $data, function ($message) use ($usermail, $title, $subject) {

@@ -53,7 +53,7 @@
                         <td clas s="action">
                             <button class="button mb-10" onclick="location.href ='{{url('/')}}/traveler/chat/{{$property->id}}?fb-key={{$property->chat_key}}&fbkey={{$property->chat_key}}';"><i class="fa fa-reply"></i> Reply</button>
                             {{--<a href="#"><i class="fa  fa-eye-slash"></i> Hide</a>--}}
-                            <button class="button" style="background-color: #ef585f;" onclick="location.href ='{{url('/')}}/delete_chat/{{$property->id}}';" class="delete"><i class="fa fa-remove"></i> Delete</button>
+                            <button class="button btn-danger" onclick="location.href ='{{url('/')}}/delete_chat/{{$property->id}}';" class="delete"><i class="fa fa-remove"></i> Delete</button>
                         </td>
                     </tr>
                 <?php } ?>
@@ -82,7 +82,7 @@
                         <td class="action">
                             <button class="button mb-10" onclick="location.href ='{{url('/')}}/traveler/chat/{{$property->id}}?fb-key={{$property->chat_key}}&fbkey={{$property->chat_key}}';"><i class="fa fa-reply"></i> Reply</button>
                             {{--<a href="#"><i class="fa  fa-eye-slash"></i> Hide</a>--}}
-                            <button class="button" style="background-color: #ef585f;" onclick="location.href ='{{url('/')}}/delete_chat/{{$property->id}}';" class="delete"><i class="fa fa-remove"></i> Delete</button>
+                            <button class="button btn-danger" onclick="location.href ='{{url('/')}}/delete_chat/{{$property->id}}';" class="delete"><i class="fa fa-remove"></i> Delete</button>
                         </td>
                     </tr>
                 <?php } ?>
@@ -110,7 +110,7 @@
                         <td class="action">
                             <button class="button mb-10" onclick="location.href ='{{url('/')}}/traveler/chat/{{$property->id}}?fb-key={{$property->chat_key}}&fbkey={{$property->chat_key}}';"><i class="fa fa-reply"></i> Reply</button>
                             {{--<a href="#"><i class="fa  fa-eye-slash"></i> Hide</a>--}}
-                            <button class="button " style="background-color: #ef585f;" onclick="location.href ='{{url('/')}}/delete_chat/{{$property->id}}';" class="delete"><i class="fa fa-remove"></i> Delete</button>
+                            <button class="button btn-danger" onclick="location.href ='{{url('/')}}/delete_chat/{{$property->id}}';" class="delete"><i class="fa fa-remove"></i> Delete</button>
                         </td>
                     </tr>
                 <?php } ?>

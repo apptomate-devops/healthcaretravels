@@ -282,11 +282,11 @@ class OwnerController extends BaseController
             if ($image) {
                 $datum->image_url = $image->image_url;
             }
-            if ($traveller->role_id != 2) {
-                $datum->traveller_name = Helper::get_user_display_name($traveller);
-            } else {
-                $datum->traveller_name = $traveller->name_of_agency;
-            }
+            //            if ($traveller->role_id != 2) {
+            $datum->traveller_name = Helper::get_user_display_name($traveller);
+            //            } else {
+            //                $datum->traveller_name = $traveller->name_of_agency;
+            //            }
             $datum->start_date = Carbon::parse($datum->start_date)->format('m/d/Y');
             $datum->end_date = Carbon::parse($datum->end_date)->format('m/d/Y');
             $datum->bookStatus = Helper::get_traveller_status(

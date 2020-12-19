@@ -196,7 +196,7 @@
 
                             <p class="form-row form-row-wide" id="first_name_field" style="display: none;">
                                 <label for="username2">First Name:
-                                    <label class="register-info" id="name-caption">Your name will not appear in your listing.</label>
+                                    <label class="register-info" id="name-caption">Your full name will not appear in your listing.</label>
                                     <input type="text" class="input-text validate {{ $errors->has('first_name') ? 'form-error' : ''}}" value="{{Session::get('fname')}}" name="first_name" id="first_name" autocomplete="off" placeholder="First Name" required />
                                 </label>
                                 {!! $errors->first('first_name', '<p class="error-text">:message</p>') !!}

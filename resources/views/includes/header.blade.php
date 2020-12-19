@@ -158,7 +158,7 @@
                                     @endif
                                     {{-- <li><a href="{{url('/')}}/owner/special_price"><i class="sl sl-icon-star"></i> Special Pricing </a></li>--}}
                                     {{-- <li><a href="{{url('/')}}/delete_account/"><i class="sl sl-icon-trash"></i> Delete Account </a></li> --}}
-                                    <li><a href="{{url('/')}}/logout" onclick="signOut();" id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
+                                    <li><a href="{{url('/')}}/logout" id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
                                 </ul>
                                 @endif
 
@@ -176,7 +176,7 @@
                                         </li>
                                     @endif
                                     {{-- <li><a href="{{url('/')}}/delete_account/"><i class="sl sl-icon-trash"></i> Delete Account </a></li> --}}
-                                    <li><a href="{{url('/')}}/logout" onclick="signOut();" id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
+                                    <li><a href="{{url('/')}}/logout" id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
                                 </ul>
                                 @endif
 
@@ -194,14 +194,14 @@
                                         </li>
                                     @endif
                                     {{-- <li><a href="{{url('/')}}/delete_account/"><i class="sl sl-icon-trash"></i> Delete Account </a></li> --}}
-                                    <li><a href="{{url('/')}}/logout" onclick="signOut();" id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
+                                    <li><a href="{{url('/')}}/logout" id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
                                 </ul>
                                 @endif
                                 @if(Session::get('role_id') == 3) {{-- 1- owner 0 - traveller-- 2 -- Travel Agency -- 3 -- RV Traveller --}}
                                 <ul id="user-dropdown-nav">
                                     <li><a href="{{url('/')}}/profile"><i class="sl sl-icon-user"></i> My Profile</a></li>
 
-                                    <li><a href="{{url('/')}}/logout" onclick="signOut();" id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
+                                    <li><a href="{{url('/')}}/logout" id="logout"><i class="sl sl-icon-power"></i> Log Out</a></li>
                                 </ul>
                                 @endif
                             </div>

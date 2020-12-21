@@ -61,7 +61,7 @@
             @elseif($booking->status == 4)
                 Denied
             @else
-                Canceled
+                Cancelled
             @endif</span></div>
 
         </div>

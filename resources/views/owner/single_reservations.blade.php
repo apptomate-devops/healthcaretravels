@@ -85,9 +85,11 @@
                     </tr>
                 </table>
                 <div>The selected account will be used to process any future payments for this booking.</div>
-                <div class="text-right">
-                    <a target="_blank" href="{{BASE_URL}}invoice/{{$data->booking_id}}" class="margin-top-40 button border">Print Invoice</a>
-                </div>
+                    @if(in_array($data->status, [2, 3]))
+                        <div class="text-right">
+                            <a target="_blank" href="{{BASE_URL}}invoice/{{$data->booking_id}}" class="margin-top-40 button border">Print Invoice</a>
+                        </div>
+                    @endif
                 @if(count($guest_info) > 0)
                     <h2>Guest Information</h2>
                     <table class="table table-striped">

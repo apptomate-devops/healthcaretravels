@@ -91,7 +91,7 @@
                                                 @elseif($booking->status == 3)
                                                 Completed
                                                 @else
-                                                Canceled
+                                                Cancelled
                                                 @endif
                                             </td>
                                             <td>

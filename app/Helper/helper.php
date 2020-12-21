@@ -241,7 +241,7 @@ class Helper
                 $months++;
                 $neat_price = $payment['monthly_rate'] + $payment['service_tax']; // consider price for full month
                 $section = [
-                    $months . ' Month' => $payment['monthly_rate'],
+                    '1 Month' => $payment['monthly_rate'],
                     $service_fee_label => $payment['service_tax'],
                 ];
             }
@@ -613,10 +613,15 @@ class Helper
         if ($lastMonthRenew->day < $start_date->day) {
             $lastMonthRenew->subMonth();
         }
-        $lastMonthRenew->day = $start_date->day;
+
+        if (checkdate($lastMonthRenew->month, $start_date->day, $lastMonthRenew->year)) {
+            $lastMonthRenew->day = $start_date->day;
+        } else {
+            $lastMonthRenew = $lastMonthRenew->endOfMonth();
+        }
         $partialDays = $end_date->diffInDays($lastMonthRenew);
         // Getting total payment Cycles
-        $totalCycles = $start_date->diffInMonths($end_date);
+        $totalCycles = $end_date->diffInMonths($start_date);
         $isPartial = $partialDays > 0;
         if ($isPartial) {
             $totalCycles++;

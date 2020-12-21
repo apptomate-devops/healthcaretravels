@@ -74,7 +74,7 @@
                                                 <input class="search-field validate price_int" type="text" name="monthly_rate" id="monthly_rate" value="{{isset($property_details->monthly_rate)?$property_details->monthly_rate:''}}" autocomplete="off"/>
                                                 <i class="price">$</i>
                                             </div>
-                                            <div>Travelers are charged this monthly rate once per calendar month. If the end of a stay is less than 30 days, a daily rate will be automatically calculated by dividing your monthly rate by 30.</div>
+                                            <div class="caption-text" style="line-height: 18px;">Travelers are charged this monthly rate once per calendar month. If the end of a stay is less than 30 days, a daily rate will be automatically calculated by dividing your monthly rate by 30.</div>
                                         </div>
 
                                         <div class="col-md-6">

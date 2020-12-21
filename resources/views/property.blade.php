@@ -1156,8 +1156,8 @@
 
             // Chat with host: Date Range Picker
             $('input[id="search_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
-                $('input[id="search_date_range_picker"][name="check_in"]').val(picker.startDate.format('MM/DD/YYYY'));
-                $('input[id="search_date_range_picker"][name="check_out"]').val(picker.endDate.format('MM/DD/YYYY'));
+                $('input[id="search_date_range_picker"][name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
+                $('input[id="search_date_range_picker"][name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
                 $('#request-chat').prop('disabled', false);
             });
 

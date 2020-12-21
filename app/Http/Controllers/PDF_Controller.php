@@ -15,12 +15,12 @@ class PDF_Controller extends BaseController
     {
         $data = DB::table('property_booking')
             ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
-            ->join('property_booking_price', 'property_booking_price.property_booking_id', '=', 'property_booking.id')
             ->where('property_booking.client_id', CLIENT_ID)
             ->where('property_booking.booking_id', $booking_id)
+            ->select('property_booking.*', 'property_list.title')
             ->first();
-        if (empty($data)) {
-            return view('general_error', ['message' => 'Booking invoice  you are looking for does not exists!']);
+        if (empty($data) || !in_array($data->status, [2, 3])) {
+            return view('general_error', ['message' => 'Booking invoice you are looking for does not exists!']);
         }
         $user_id = $request->session()->get('user_id');
         $is_owner = $user_id == $data->owner_id ? 1 : 0;

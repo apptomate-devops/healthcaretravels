@@ -116,8 +116,8 @@ class Helper
         $booking = $payment->booking;
         $fundingSource = $booking->funding_source;
         if (in_array($booking->status, [4, 8])) {
-            Logger::info('Property booking was canceled: ' . $booking_id . ' :: paymentCycle: ' . $payment_cycle);
-            return ['success' => false, 'message' => 'Property Booking was canceled'];
+            Logger::info('Property booking was cancelled: ' . $booking_id . ' :: paymentCycle: ' . $payment_cycle);
+            return ['success' => false, 'message' => 'Property Booking was cancelled'];
         }
         try {
             // Processing first payment cycle from user's side
@@ -300,6 +300,9 @@ class Helper
         $processedAt = $type . '_deposit_processed_at';
         $confirmedAt = $type . '_deposit_confirmed_at';
         $failedAt = $type . '_deposit_failed_at';
+        if (in_array($booking->status, [4, 8])) {
+            return 'Cancelled';
+        }
         if ($booking->$confirmedAt) {
             return 'Completed';
         }
@@ -330,7 +333,7 @@ class Helper
             case PAYMENT_FAILED:
                 return 'Failed';
             case PAYMENT_CANCELED:
-                return 'Canceled';
+                return 'Cancelled';
             default:
                 return 'Pending';
         }
@@ -499,7 +502,7 @@ class Helper
         $booking->status = 8;
         $booking->auto_canceled = 1;
         $booking->save();
-        return ['success' => true, 'message' => 'Booking request was canceled successfully'];
+        return ['success' => true, 'message' => 'Booking request was cancelled successfully'];
     }
     public static function handleOwnerReminderForBooking($id)
     {

@@ -1183,6 +1183,10 @@ class PropertyController extends BaseController
 
             $payment['is_cleared'] = $payment['is_cleared'] ?? 0;
             $payment['status'] = $payment['status'] ?? 0;
+            if (in_array($booking->status, [4, 8])) {
+                // booking is cancelled or denied
+                $payment['status'] = 4;
+            }
             $cleaning_fee_entry = array_merge([], $payment);
             $security_deposit_entry = array_merge([], $payment);
             $service_tax_entry = array_merge([], $payment);

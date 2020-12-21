@@ -293,7 +293,7 @@
                     @endif
 
                     <br>
-                    <h3 class="desc-headline">
+                    <h3 class="desc-headline" id="house_rules">
                         <font style="vertical-align: inherit;">
                             <font style="vertical-align: inherit;">House Rules</font>
                         </font>
@@ -1086,14 +1086,11 @@
             var calenderConfig = {
                 minDate: new Date(),
                 opens: 'center',
-                minSpan: {
-                    "days": ({{$data->min_days ?? 30}} + 1)
-                },
                 autoUpdateInput: false,
                 autoApply: true,
             }
             // Book Now: Date Range Picker
-            $('input[id="booking_date_range_picker"], input[id="chat_date_range_picker"]').daterangepicker({
+            $('input[id="booking_date_range_picker"]').daterangepicker({
                 ...calenderConfig,
                 isInvalidDate: function(date){
                     var dc = moment();
@@ -1106,9 +1103,29 @@
                     return disableDates.includes(date.format('YYYY-MM-DD'));
                 }
             });
-            // Book Now: Date Range Picker
+            // Chat now: Date Range Picker
+            $('input[id="chat_date_range_picker"]').daterangepicker({
+                ...calenderConfig,
+                minSpan: {
+                    "days": ({{$data->min_days ?? 30}} + 1)
+                },
+                isInvalidDate: function(date){
+                    var dc = moment();
+                    dc.add(7, 'days');
+                    // Blocking next 7 days for payment security on owner side
+                    if (dc > date) {
+                        return true;
+                    }
+                    var disableDates = <?php echo json_encode($booked_dates); ?>;
+                    return disableDates.includes(date.format('YYYY-MM-DD'));
+                }
+            });
+            // Search: Date Range Picker
             $('input[id="search_date_range_picker"]').daterangepicker({
                 ...calenderConfig,
+                minSpan: {
+                    "days": ({{$data->min_days ?? 30}} + 1)
+                },
                 isInvalidDate: function(date){
                     var dc = moment();
                     dc.add(7, 'days');
@@ -1182,7 +1199,7 @@
 
                     }
                     if (data.status == 'FAILED' && data.status_code == 1) {
-                        $(".alert").html(data.message || "Please review the house rules for Minimum days stay.");
+                        $(".alert").html(data.message || "Please review the <a href='' onclick='scroll_to_house_rules();' style='color: white; text-decoration-line: underline;'>house rules</a> for minimum days stay.");
                         $(".alert").show();
                         $("#table_body").html("");
                         $("#pricing_details").hide();
@@ -1267,6 +1284,12 @@
     </script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script>
+        function scroll_to_house_rules() {
+            event.preventDefault();
+            event.stopPropagation();
+            $(window).scrollTop($('#house_rules').offset().top-500);
+            return false;
+        }
         $("#share").click(function(){
             var aux = document.createElement("input");
             aux.setAttribute("value",window.location.protocol + "//" + window.location.host + "/property/{{$data->property_id}}");

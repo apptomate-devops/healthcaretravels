@@ -266,7 +266,8 @@ class PropertyController extends BaseController
         if ($weeks['total'] < $property_details->min_days) {
             return response()->json([
                 'status' => 'FAILED',
-                'message' => 'Please review the house rules for Minimum days stay.',
+                'message' =>
+                    "Please review the <a href='' onclick='scroll_to_house_rules();' style='color: white; text-decoration-line: underline;'>house rules</a> for minimum days stay.",
                 'status_code' => ONE,
             ]);
         }

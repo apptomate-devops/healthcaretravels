@@ -82,6 +82,8 @@
                     <br>
                     <h6 class="card-subtitle text-muted"><span class="field-label">Work Title:</span>{{$data->work_title ?? '-'}}</h6>
                     <br>
+                    <h6 class="card-subtitle text-muted"><span class="field-label">Agency URL:</span>{{$data->website ?? '-'}}</h6>
+                    <br>
                 @endif
                 @if(strtolower($data->role) != 'co-host' && strtolower($data->role) != 'property owner')
                     <h6 class="card-subtitle text-muted"><span class="field-label">Name of Agency:</span>{{implode(", ", array_filter([$data->name_of_agency, $data->other_agency]))}}</h6>

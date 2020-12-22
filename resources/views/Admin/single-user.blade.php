@@ -68,7 +68,7 @@
                 ]),
             ); ?>
                 @if($data->role_id==0 || $data->role_id==3)
-                    <h6 class="card-subtitle text-muted"><span class="field-label">Occupation:</span>{{$data->occupation ?? '-'}}</h6>
+                    <h6 class="card-subtitle text-muted"><span class="field-label">Occupation:</span>{{$data->other_occupation ?? $data->occupation ?? '-'}}</h6>
                     <br>
                     <h6 class="card-subtitle text-muted"><span class="field-label">Tax Home:</span>{{$data->tax_home ?? '-'}}</h6>
                     <br>

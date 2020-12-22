@@ -84,7 +84,7 @@
                     <br>
                 @endif
                 @if(strtolower($data->role) != 'co-host' && strtolower($data->role) != 'property owner')
-                    <h6 class="card-subtitle text-muted"><span class="field-label">Name of Agency:</span>{{$data->other_agency ?? $data->name_of_agency ?? ""}}</h6>
+                    <h6 class="card-subtitle text-muted"><span class="field-label">Name of Agency:</span>{{implode(", ", array_filter([$data->name_of_agency, $data->other_agency]))}}</h6>
                 @endif
                 <br>
                 <div class="text-center">

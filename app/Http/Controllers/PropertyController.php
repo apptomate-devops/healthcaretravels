@@ -3023,6 +3023,14 @@ class PropertyController extends BaseController
                 $property->property_images = $pd;
             }
 
+            // check if any existing or future bookings
+            $current_property_bookings = DB::table('property_booking')
+                ->where('property_booking.client_id', CLIENT_ID)
+                ->where('property_booking.property_id', '=', $property->propertyId)
+                ->where('property_booking.status', '=', 2)
+                ->whereDate('property_booking.end_date', '>=', Carbon::now())
+                ->count();
+            $property->delete_not_allowed = (bool) $current_property_bookings > 0;
             $properties_near[] = $property;
         }
 
@@ -3123,6 +3131,18 @@ class PropertyController extends BaseController
                 ->where('client_id', '=', CLIENT_ID)
                 ->where('id', '=', $property_id)
                 ->update(['status' => 0]);
+
+            DB::table('property_booking')
+                ->where('property_booking.client_id', CLIENT_ID)
+                ->where('property_booking.property_id', '=', $property_id)
+                ->where('property_booking.status', '=', 1)
+                ->update(['status' => 4]);
+
+            DB::table('property_booking')
+                ->where('property_booking.client_id', CLIENT_ID)
+                ->where('property_booking.property_id', '=', $property_id)
+                ->where('property_booking.status', '=', 0)
+                ->delete();
             //        $data = DB::table('property_list')
             //            ->join('users', 'users.id', '=', 'property_list.user_id')
             //            ->where('property_list.client_id', CLIENT_ID)

@@ -64,7 +64,7 @@
                                         <img src="{{BASE_URL}}action_icons/edit24.png" title="Edit" />
                                     </a>
                                     {{-- <a href="{{BASE_URL}}delete-property/{{$property->propertyId}}" class="delete"  id="delete" title="Delete"> --}}
-                                    <a class="delete" onclick="delete_property({{$property->id}});" id="delete" title="Delete">
+                                    <a class="delete" @if($property->delete_not_allowed) onclick="delete_property_not_allowed_alert();" @else onclick="delete_property({{$property->id}});" @endif id="delete" title="Delete">
                                         <img src="{{BASE_URL}}action_icons/24d.png" />
                                     </a>
 
@@ -98,6 +98,23 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="modal fade" id="deleteNotAllowed" tabindex="-1" role="dialog" aria-labelledby="deleteNotAllowedLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="deleteNotAllowedLabel"><b><span style="color:red">Warning</span></b></h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                You have current or future bookings for this property. Please complete or cancel your bookings to delete your property.
+                                                <br>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal">close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </tr>
                         @endforeach
                     </table>
@@ -112,6 +129,10 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script type="text/javascript">
+
+        function delete_property_not_allowed_alert(){
+            $('#deleteNotAllowed').modal('show');
+        }
 
         function delete_property(property_id){
             $('#myModal').modal('show');

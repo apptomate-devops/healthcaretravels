@@ -1223,7 +1223,7 @@ class UserController extends BaseController
                 ->with('enable_two_factor_auth', $request->enable_two_factor_auth)
                 ->withErrors($validator);
         }
-
+        $request->session()->forget('name_of_agency');
         // Considered as Address_line_1
         $address = implode(", ", array_filter([$request->street_number, $request->route]));
         DB::table('users')

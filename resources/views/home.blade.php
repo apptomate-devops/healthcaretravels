@@ -442,9 +442,7 @@
 
                                         @if($property->verified==1)
                                             <div class="listing-badges">
-                                                <span class="featured"
-                                                      style="background-color: {{$property->verified==1?'green':''}}"> {{$property->verified==1?'Verified':''}}</span>
-
+                                                <span class="featured verified"> {{$property->verified==1?'Verified':''}}</span>
                                             </div>
                                         @endif
 

@@ -52,7 +52,7 @@
                                 </font></font>
                             </span>
                             @if($data->verified==1)
-                                <span class="property-badge" style="background-color: green">
+                                <span class="property-badge" style="background-color: #0983b8">
                                     <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
                                         Verified
                                     </font></font>
@@ -816,8 +816,7 @@
 
                                     @if($property->verified==1)
                                         <div class="listing-badges">
-                                            <span class="featured" style="background-color: {{$property->verified==1?'green':''}}"> {{$property->verified==1?'Verified':''}}</span>
-
+                                            <span class="featured verified">Verified</span>
                                         </div>
                                     @endif
 

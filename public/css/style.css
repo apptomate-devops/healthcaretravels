@@ -4510,7 +4510,7 @@ button.fs-map-btn.button {
 }
 
 .listing-badges .featured {
-    background-color: #66676b;
+    background-color: #e08716 !important;
     float: left;
     transform: rotate(-45deg);
     left: -67px;
@@ -4521,7 +4521,9 @@ button.fs-map-btn.button {
     font-size: 12.5px;
     margin: 0;
 }
-
+.listing-badges .featured.verified {
+    background-color: #0983b8 !important;
+}
 span.like-icon {
     color: #fff;
     font-size: 24px;
@@ -10574,8 +10576,8 @@ mark.color {
 }
 
 .plan.featured .listing-badges .featured {
-    background: #fff;
-    color: #66676b;
+    background: #0983b8 !important;
+    color: #fff;
 }
 
 .ui-accordion .ui-accordion-header,

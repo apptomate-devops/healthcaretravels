@@ -263,91 +263,98 @@ class UserController extends BaseController
 
     public function login_user(Request $request)
     {
-        if ($this->hasTooManyLoginAttempts($request)) {
-            $this->fireLockoutEvent($request);
-            $error_message = 'Your account is locked due to too many failed login attempts.';
-            $error_message .= ' Please wait 5 minutes before reattempting.';
-            $error_message .= ' If you can not access your account you can reset your password or contact';
-            $error_message .= ' <a href="mailto:' . SUPPORT_MAIL . '" style="color: white">' . SUPPORT_MAIL . '</a>';
-            return back()->with('error', $error_message);
-        }
-        if ($request->phone_no) {
-            $request->username = $request->username;
+        try {
+            if ($this->hasTooManyLoginAttempts($request)) {
+                $this->fireLockoutEvent($request);
+                $error_message = 'Your account is locked due to too many failed login attempts.';
+                $error_message .= ' Please wait 5 minutes before reattempting.';
+                $error_message .= ' If you can not access your account you can reset your password or contact';
+                $error_message .=
+                    ' <a href="mailto:' . SUPPORT_MAIL . '" style="color: white">' . SUPPORT_MAIL . '</a>';
+                return back()->with('error', $error_message);
+            }
+            if ($request->phone_no) {
+                $check = DB::table('users')
+                    ->where('client_id', '=', CLIENT_ID)
+                    ->where('email', '=', $request->user_email)
+                    ->first();
+
+                if ($check) {
+                    if ($check->otp_verified != 1) {
+                        $OTP = rand(1111, 9999);
+                        // send otp
+                        $this->sendOTPMessage($request->phone, $OTP);
+                        $update = DB::table('users')
+                            ->where('client_id', '=', CLIENT_ID)
+                            ->where('phone', '=', $check->phone)
+                            ->where('id', '=', $check->id)
+                            ->update(['otp' => $OTP]);
+
+                        $check = DB::table('users')
+                            ->where('client_id', '=', CLIENT_ID)
+                            ->where('phone', '=', $check->phone)
+                            ->where('id', '=', $check->id)
+                            ->first();
+
+                        $url = $this->get_base_url() . 'otp-verify-register';
+
+                        return redirect($url)->with('phone', $check->phone);
+                    }
+                } else {
+                    return back()->with('error', 'This Email is not registered');
+                }
+            }
+            Logger::info("Login with user hitted at :" . date('d-m-Y H:i:s'));
+            $this->validate($request, [
+                'user_email' => 'required',
+                'password' => 'required|min:4',
+            ]);
 
             $check = DB::table('users')
-                ->where('client_id', '=', CLIENT_ID)
-                ->where('email', '=', $request->username)
+                ->where('client_id', '=', $request->client_id)
+                ->where('email', '=', $request->user_email)
                 ->first();
-
             if ($check) {
-                if ($check->otp_verified != 1) {
-                    $OTP = rand(1111, 9999);
-                    // send otp
-                    $this->sendOTPMessage($request->phone, $OTP);
+                if ($check->login_type != 1) {
+                    $login_provider = $check->login_type == 2 ? "google" : "facebook";
+                    return back()->with(
+                        'error',
+                        'This email is linked with ' .
+                            $login_provider .
+                            '. Please sign in with ' .
+                            $login_provider .
+                            '.',
+                    );
+                }
+                $credentials = [
+                    'email' => $request->user_email,
+                    'password' => $request->password,
+                    'client_id' => $request->client_id,
+                ];
+                if (!Auth::attempt($credentials)) {
+                    $this->incrementLoginAttempts($request);
+                    return back()->with([
+                        'error' => '',
+                        'password_error' => 'You have entered the wrong password. Please try again.',
+                    ]);
+                }
+                if (\Hash::needsRehash($check->password)) {
+                    $hashed = $this->encrypt_password($request->password);
                     $update = DB::table('users')
                         ->where('client_id', '=', CLIENT_ID)
-                        ->where('phone', '=', $check->phone)
                         ->where('id', '=', $check->id)
-                        ->update(['otp' => $OTP]);
-
-                    $check = DB::table('users')
-                        ->where('client_id', '=', CLIENT_ID)
-                        ->where('phone', '=', $check->phone)
-                        ->where('id', '=', $check->id)
-                        ->first();
-
-                    $url = $this->get_base_url() . 'otp-verify-register';
-
-                    return redirect($url)->with('phone', $check->phone);
+                        ->update(['password' => $hashed]);
                 }
+                return $this->login_user_success($check, $request);
             } else {
-                return back()->with('error', 'This Email is not registered');
-            }
-        }
-        Logger::info("Login with user hitted at :" . date('d-m-Y H:i:s'));
-        $this->validate($request, [
-            'username' => 'required',
-            'password' => 'required|min:4',
-        ]);
-
-        $check = DB::table('users')
-            ->where('client_id', '=', $request->client_id)
-            ->where('email', '=', $request->username)
-            ->first();
-        if ($check) {
-            if ($check->login_type != 1) {
-                $login_provider = $check->login_type == 2 ? "google" : "facebook";
-                return back()->with(
-                    'error',
-                    'This email is linked with ' . $login_provider . '. Please sign in with ' . $login_provider . '.',
-                );
-            }
-            $credentials = [
-                'email' => $request->username,
-                'password' => $request->password,
-                'client_id' => $request->client_id,
-            ];
-            if (!Auth::attempt($credentials)) {
-                $this->incrementLoginAttempts($request);
                 return back()->with([
                     'error' => '',
-                    'password_error' => 'You have entered the wrong password. Please try again.',
+                    'email' => $request->user_email,
+                    'email_error' => 'This email is not registered.',
                 ]);
             }
-            if (\Hash::needsRehash($check->password)) {
-                $hashed = $this->encrypt_password($request->password);
-                $update = DB::table('users')
-                    ->where('client_id', '=', CLIENT_ID)
-                    ->where('id', '=', $check->id)
-                    ->update(['password' => $hashed]);
-            }
-            return $this->login_user_success($check, $request);
-        } else {
-            return back()->with([
-                'error' => '',
-                'email' => $request->username,
-                'email_error' => 'This email is not registered.',
-            ]);
+        } catch (\Exception $ex) {
+            Logger::error('Error while login' . $ex);
         }
     }
 
@@ -432,7 +439,7 @@ class UserController extends BaseController
             $request->session()->put('user_id_v', $check->id);
             $request->session()->put('phone_v', $check->phone);
             $request->session()->put('role_id', $check->role_id);
-            $request->session()->put('username', $check->username);
+            $request->session()->put('email', $check->email);
             $request->session()->put('name_of_agency', $check->name_of_agency);
             $request->session()->put('phone', $check->phone);
             $request->session()->put('user_funding_source', $check->default_funding_source);
@@ -704,7 +711,7 @@ class UserController extends BaseController
 
         $request->session()->put('phone', $d->phone);
         $request->session()->put('role_id', $d->role_id);
-        $request->session()->put('username', $d->username);
+        $request->session()->put('email', $d->email);
         $request->session()->put('user_id', $d->id);
         $request->session()->put('is_verified', $d->is_verified);
         $request->session()->put('user_id_v', $d->id);
@@ -713,7 +720,7 @@ class UserController extends BaseController
         //  Send Welcome mail
         $welcome = EmailConfig::where('type', TEMPLATE_REGISTER)->first();
         $mail_data = [
-            'username' => $request->first_name . ' ' . $request->last_name,
+            'user_name' => Helper::get_user_display_name($request),
             'text' => isset($welcome->message) ? $welcome->message : '',
             'email' => $request->email,
             'phone' => $d->phone,
@@ -777,7 +784,7 @@ class UserController extends BaseController
                 $request->session()->put('user_id_v', $check->id);
                 $request->session()->put('phone_v', $check->phone);
                 $request->session()->put('role_id', $check->role_id);
-                $request->session()->put('username', $check->username);
+                $request->session()->put('email', $check->email);
                 $request->session()->put('name_of_agency', $check->name_of_agency);
                 $request->session()->put('phone', $check->phone);
                 $request->session()->put('user_funding_source', $check->default_funding_source);
@@ -846,7 +853,7 @@ class UserController extends BaseController
             $request->session()->put('user_id', $check->id);
             $request->session()->put('is_verified', $check->is_verified);
             $request->session()->put('role_id', $check->role_id);
-            $request->session()->put('username', $check->username);
+            $request->session()->put('email', $check->email);
             $request->session()->put('name_of_agency', $check->name_of_agency);
             $request->session()->put('phone', $check->phone);
             $userProfileImage = $check->profile_image ? $check->profile_image : BASE_URL . 'user_profile_default.png';
@@ -1113,7 +1120,7 @@ class UserController extends BaseController
                 ]);
 
             $data = [
-                'username' => $user->first_name . ' ' . $user->last_name,
+                'user_name' => Helper::get_user_display_name($user),
                 'type' => $user_role->role,
                 'id' => $user->id,
             ];

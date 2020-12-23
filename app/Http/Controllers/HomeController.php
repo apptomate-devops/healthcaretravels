@@ -282,14 +282,14 @@ class HomeController extends BaseController
         $mail_data = EmailConfig::where('type', TEMPLATE_PASSWORD_RESET)->first();
         $email = $request->email;
         if ($user->role_id == 2) {
-            $username = $user->name_of_agency;
+            $user_name = $user->name_of_agency;
         } else {
-            $username = $user->first_name . " " . $user->last_name;
+            $user_name = Helper::get_user_display_name($user);
         }
         $data = [
             'token' => $token,
             'text' => isset($mail_data->message) ? $mail_data->message : '',
-            'username' => $username,
+            'user_name' => $user_name,
         ];
         $title = isset($mail_data->title) ? $mail_data->title : 'Mail from - ' . APP_BASE_NAME;
         $subject = isset($mail_data->subject) ? $mail_data->subject : "Mail from - " . APP_BASE_NAME;
@@ -396,9 +396,9 @@ class HomeController extends BaseController
             ->where('email', $request->email)
             ->first();
         if ($user->role_id == 2) {
-            $username = $user->name_of_agency;
+            $user_name = $user->name_of_agency;
         } else {
-            $username = Helper::get_user_display_name($user);
+            $user_name = Helper::get_user_display_name($user);
         }
         $data = [
             'content' =>
@@ -406,7 +406,7 @@ class HomeController extends BaseController
                 SUPPORT_MAIL .
                 ' or call us at ' .
                 CLIENT_PHONE,
-            'username' => $username,
+            'user_name' => $user_name,
         ];
         $title = 'Your Password Changed Successfully';
         $subject = 'Your Password Changed Successfully';

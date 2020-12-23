@@ -820,7 +820,7 @@ class PropertyController extends BaseController
             ->where('client_id', $client_id)
             ->where('id', $user_id)
             ->first();
-        $username = Helper::get_user_display_name($user);
+        $user_name = Helper::get_user_display_name($user);
         $check = DB::table('property_list')
             ->where('client_id', $client_id)
             ->where('id', $id)
@@ -839,7 +839,7 @@ class PropertyController extends BaseController
             ->update(['is_disable' => $disable]);
         $mail_email = $this->get_email($check->user_id);
         $mail_data = [
-            'username' => $username,
+            'user_name' => $user_name,
             'content' => $content,
         ];
         $this->send_email($mail_email, 'mail.custom-email', $mail_data);

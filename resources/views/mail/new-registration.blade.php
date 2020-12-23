@@ -4,7 +4,7 @@
         A new user just signed up for Health Care Travels:
     </div>
     <div style="padding-top: 5px;">
-        {{$username}}
+        {{$user_name}}
     </div>
     <div style="padding-top: 5px;">
         {{$email}}

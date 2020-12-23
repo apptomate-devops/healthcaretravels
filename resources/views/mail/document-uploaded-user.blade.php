@@ -1,7 +1,7 @@
 @extends('layout.mail')
 @section('content')
     <div>
-        Hi {{$username}},
+        Hi {{$user_name}},
     </div>
     <div style="padding-top: 5px;">
         Thanks for submitting your verification information. Your profile will be reviewed within 1 to 3 business days. We will send you an email upon approval.

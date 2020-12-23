@@ -39,13 +39,13 @@ class PDF_Controller extends BaseController
                 ->where('id', $data->owner_id)
                 ->select('first_name', 'last_name')
                 ->first();
-            $data->name = $owner->first_name . " " . $owner->last_name;
+            $data->name = Helper::get_user_display_name($owner);
         } else {
             $traveller = DB::table('users')
                 ->where('id', $data->traveller_id)
                 ->select('first_name', 'last_name')
                 ->first();
-            $data->name = $traveller->first_name . " " . $traveller->last_name;
+            $data->name = Helper::get_user_display_name($traveller);
         }
 
         return view('pdf.invoice', ['data' => $data]);

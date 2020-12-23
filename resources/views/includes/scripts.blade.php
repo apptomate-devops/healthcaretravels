@@ -56,6 +56,7 @@
             };
 
             this.on("addedfiles", function (files) {
+                $('#propertyImageSubmit').prop("disabled",true);
                 setTimeout(function (e) {
                     var invalidImages = fileDropzone.getFilesWithStatus('error');
                     if(invalidImages.length) {

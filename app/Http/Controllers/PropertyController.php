@@ -479,9 +479,7 @@ class PropertyController extends BaseController
                     ->where('id', $new_cover_image->id)
                     ->update(['is_cover' => 1]);
             }
-            if (File::exists($data->image_url)) {
-                File::delete($data->image_url);
-            }
+            unlink(storage_path(str_replace('storage', 'app', $data->image_url)));
             return response()->json(['status' => 'SUCCESS', 'file_path' => $data->image_url]);
         } catch (\Exception $ex) {
             Logger::error('Error deleting property image' . $ex->getMessage());

@@ -106,11 +106,10 @@
                                                 <h4 class="modal-title" id="deleteNotAllowedLabel"><b><span style="color:red">Warning</span></b></h4>
                                             </div>
                                             <div class="modal-body">
-                                                You have current or future bookings for this property. Please complete or cancel your bookings to delete your property.
-                                                <br>
+                                                You have current or future bookings for this property. Please complete or cancel your bookings to delete your property.<br>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-danger" data-dismiss="modal">close</button>
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                                             </div>
                                         </div>
                                     </div>

@@ -10,6 +10,7 @@ use App\Models\PropertyBlocking;
 use App\Services\Logger;
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Facades\File;
 use Session;
 use App\Models\Users;
 use App\Models\Propertyamenties;
@@ -463,16 +464,28 @@ class PropertyController extends BaseController
 
     public function delete_property_image($id)
     {
-        $data = DB::table('property_images')
-            ->where('id', $id)
-            ->first();
-
-        //$file_name = 'data/'.$property_id.'.json';
-        //unlink($data->image_url);
-        DB::table('property_images')
-            ->where('id', $id)
-            ->delete();
-        return response()->json(['status' => 'SUCCESS']);
+        try {
+            $data = DB::table('property_images')
+                ->where('id', $id)
+                ->first();
+            DB::table('property_images')
+                ->where('id', $id)
+                ->delete();
+            if ($data->is_cover) {
+                $new_cover_image = DB::table('property_images')
+                    ->where('property_id', $data->property_id)
+                    ->first();
+                DB::table('property_images')
+                    ->where('id', $new_cover_image->id)
+                    ->update(['is_cover' => 1]);
+            }
+            if (File::exists($data->image_url)) {
+                File::delete($data->image_url);
+            }
+            return response()->json(['status' => 'SUCCESS', 'file_path' => $data->image_url]);
+        } catch (\Exception $ex) {
+            Logger::error('Error deleting property image' . $ex->getMessage());
+        }
     }
 
     public function favorites(Request $request)

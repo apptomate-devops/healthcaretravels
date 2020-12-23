@@ -790,7 +790,6 @@ class PropertyController extends BaseController
             ->leftjoin('property_list', 'property_list.id', '=', 'property_booking.property_id')
             ->leftjoin('users', 'users.id', '=', 'property_booking.traveller_id')
             ->select(
-                'users.username',
                 'users.first_name',
                 'users.last_name',
                 'property_list.title',
@@ -910,7 +909,7 @@ class PropertyController extends BaseController
         $incomplete_bookings = [];
         foreach ($data as $datum) {
             $traveller = DB::select(
-                "SELECT first_name, last_name, username, id FROM users WHERE client_id = CLIENT_ID AND id = $datum->owner_id LIMIT 1",
+                "SELECT first_name, last_name, id FROM users WHERE client_id = CLIENT_ID AND id = $datum->owner_id LIMIT 1",
             );
             $image = DB::table('property_images')
                 ->where('client_id', CLIENT_ID)
@@ -1387,7 +1386,6 @@ class PropertyController extends BaseController
                 'property_list.*',
                 'users.first_name',
                 'users.last_name',
-                'users.username',
                 'users.profile_image',
                 'users.device_token',
                 'property_images.image_url',
@@ -1529,7 +1527,6 @@ class PropertyController extends BaseController
                 'property_list.property_size',
                 'users.first_name',
                 'users.last_name',
-                'users.username',
                 'users.profile_image',
                 'property_list.id as property_id',
                 'property_list.verified',
@@ -1740,7 +1737,7 @@ class PropertyController extends BaseController
         $pet_details = PetInformation::where('booking_id', $booking_id)->first();
         $data->role_id = $traveller->role_id;
         $data->traveller_profile_image = $traveller->profile_image;
-        $data->traveller_name = $traveller->username;
+        $data->traveller_name = Helper::get_user_display_name($traveller);
         $data->owner_role_id = $owner->role_id;
         $data->owner_profile_image = $owner->profile_image;
         $data->owner_name = Helper::get_user_display_name($owner);
@@ -2803,8 +2800,8 @@ class PropertyController extends BaseController
             ->where('role_id', $bookingEmailType)
             ->first();
 
-        $owner_name = $owner->first_name . " " . $owner->last_name;
-        $traveler_name = $traveller->first_name . " " . $traveller->last_name;
+        $owner_name = Helper::get_user_display_name($owner);
+        $traveler_name = Helper::get_user_display_name($traveller);
 
         Helper::send_booking_message(
             $owner_name,
@@ -3086,7 +3083,7 @@ class PropertyController extends BaseController
             ->where('client_id', CLIENT_ID)
             ->where('id', $user_id)
             ->first();
-        $username = Helper::get_user_display_name($user);
+        $user_name = Helper::get_user_display_name($user);
         $check = DB::table('property_list')
             ->where('client_id', CLIENT_ID)
             ->where('id', $id)
@@ -3107,7 +3104,7 @@ class PropertyController extends BaseController
             ->update(['is_disable' => $disable]);
         $mail_email = $this->get_email($check->user_id);
         $mail_data = [
-            'username' => $username,
+            'user_name' => $user_name,
             'content' => $content,
         ];
         $this->send_email($mail_email, 'mail.custom-email', $mail_data);
@@ -3283,7 +3280,7 @@ class PropertyController extends BaseController
 
             // TODO: send email to user
 
-            $name = $user->first_name . " " . $user->last_name;
+            $name = Helper::get_user_display_name($user);
 
             $title = $mail_traveler->title ?? APP_BASE_NAME . "Cancellation Request";
             $subject = $mail_traveler->subject ?? "Your Cancellation Request";
@@ -3299,7 +3296,7 @@ class PropertyController extends BaseController
             // TODO: send email to other user
 
             $other_user_mail_data = [
-                'name' => $other_user->first_name . " " . $other_user->last_name,
+                'name' => Helper::get_user_display_name($other_user),
                 'title' => $property->title,
                 'requested_by' => $is_owner ? 'host' : 'traveler',
                 'check_in' => date('m-d-Y', strtotime($bookingModel->start_date)),

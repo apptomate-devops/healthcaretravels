@@ -52,7 +52,7 @@
                                 </font></font>
                             </span>
                             @if($data->verified==1)
-                                <span class="property-badge" style="background-color: green">
+                                <span class="property-badge" style="background-color: #0983b8">
                                     <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
                                         Verified
                                     </font></font>
@@ -769,9 +769,9 @@
                                     @if (isset($data->is_disable) && $data->is_disable == 1)
                                         <center><h4 class="margin-top-30">This Property is disabled</h4></center>
                                     @elseif(!Session::get('user_id'))
-                                        <button onclick="location.href='{{BASE_URL}}login';" class="button fullwidth margin-top-5">
+                                        <a href="{{url('/')}}/login" class="button fullwidth margin-top-5">
                                             Login to Book
-                                        </button>
+                                        </a>
                                     @else
                                         <button disabled id="btn_book_now" class="button fullwidth mt-10 booking_button">
                                             Book Now
@@ -816,8 +816,7 @@
 
                                     @if($property->verified==1)
                                         <div class="listing-badges">
-                                            <span class="featured" style="background-color: {{$property->verified==1?'green':''}}"> {{$property->verified==1?'Verified':''}}</span>
-
+                                            <span class="featured verified">Verified</span>
                                         </div>
                                     @endif
 

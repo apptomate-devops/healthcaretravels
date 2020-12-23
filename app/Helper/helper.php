@@ -516,7 +516,7 @@ class Helper
         // Send email only if booking request is pending for approval
         if ($booking->status == 1) {
             $owner = $booking->owner;
-            $owner_name = $owner->first_name . " " . $owner->last_name;
+            $owner_name = Helper::get_user_display_name($owner);
             $property = $booking->property;
             $property_img = DB::table('property_images')
                 ->where('property_images.client_id', '=', CLIENT_ID)

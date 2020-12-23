@@ -6,9 +6,9 @@
                     @if($mail_to == 'admin')
                 Hi Admin,
             @elseif($mail_to == 'owner')
-                Hi {{$owner->first_name . ' ' . $owner->last_name}},
+                Hi {{Helper::get_user_display_name($owner)}},
             @elseif($mail_to == 'traveler')
-                Hi {{$traveler->first_name . ' ' . $traveler->last_name}},
+                Hi {{Helper::get_user_display_name($traveler)}},
             @else
                 Hi,
             @endif

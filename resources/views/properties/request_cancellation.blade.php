@@ -21,7 +21,7 @@
                     <h3>You have requested to cancel this booking</h3>
                     <div>We’ll keep you updated on the status of your request. If we need more information, we’ll reach out to you within 48 hours.</div>
                 @else
-                    <form id="cancel_request_form" name="cancel_request_form" action="{{url('/')}}/submit_cancellation_request" method="post" autocomplete="off" >
+                    <form action="{{url('/')}}/submit_cancellation_request" method="post" id="cancel_request_form" name="cancel_request_form" onsubmit="return validate_submit()" autocomplete="off" onkeydown="return event.key != 'Enter';">
                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                         <input type="hidden" name="client_id" value="{{CLIENT_ID}}">
                         <input type="hidden" name="booking_id" value="{{$booking->booking_id}}">
@@ -53,9 +53,10 @@
                                     <input id="checked_in_yes" name="checked_in" type="checkbox" value="1">
                                     <label for="checked_in_yes">Yes</label>
 
-                                    <input id="checked_in_no" name="checked_in" type="checkbox" value="0" checked>
+                                    <input id="checked_in_no" name="checked_in" type="checkbox" value="0">
                                     <label for="checked_in_no">No</label>
                                 </div>
+                                <div class="error-text" id="checked_box_error" style="display: none;">This field is required</div>
                                 <div class="margin-top-40">
                                     <label class="checkbox-container">
                                         I agree and understand that I may be charged a penalty fee for cancelling an existing booking that I have approved based on <a href="{{URL('/')}}/cancellationpolicy">HCT Cancellation Policy</a>.
@@ -86,5 +87,14 @@
             }
             return !$(this).is(":checked");
         });
+        function validate_submit() {
+            var isCheckedIn = $('input[name="checked_in"]').is(':checked');
+            if(!isCheckedIn) {
+                $('#checked_box_error').show();
+                return false;
+            }
+            $('#checked_box_error').hide();
+            return true;
+        }
     </script>
 @endsection

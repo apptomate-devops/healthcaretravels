@@ -162,9 +162,7 @@
                                        class="listing-img-container">
                                         @if($property->verified==1)
                                             <div class="listing-badges">
-                                                                <span class="featured"
-                                                                      style="background-color: {{$property->verified==1?'#ff5468':''}}"> {{$property->verified==1?'Verified':''}}</span>
-
+                                                <span class="featured verified">Verified</span>
                                             </div>
                                         @endif
                                         <div class="listing-img-content">

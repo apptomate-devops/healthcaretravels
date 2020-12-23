@@ -361,7 +361,7 @@
         var marker = new google.maps.Marker({
             position: uluru,
             map: map,
-            icon: 'https://www.healthcaretravels.com/public/assets/icons/others/Map.png',
+            icon: '/storage/public/marker-blue.png',
             title: 'Health Care Travels',
         });
 
@@ -401,11 +401,6 @@
                 lng: {{ $propmap->lng }}},
             @endforeach
         ];
-
-    console.log(markers);
-    var mapIcons = [
-        'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-    ];
     var mapMarkers = [];
     var mapMarkers1 = [];
         @if(Request::path()=='properties')
@@ -431,7 +426,7 @@
                 position: {lat: element.lat, lng: element.lng},
                 map: map,
                 title: element.name,
-                icon: mapIcons[element.available],
+                icon: '/storage/public/marker-blue.png',
             });
             google.maps.event.addListener(marker, 'click', (function (marker, i) {
                 return function () {

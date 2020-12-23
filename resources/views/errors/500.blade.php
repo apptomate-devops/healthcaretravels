@@ -55,9 +55,9 @@
                 {{-- @if (empty($hideImage))
                     <img src="/404.png" alt="404 image">
                 @endif --}}
-                <div class="detail-text">{{$title ?? 'Aw, Snap! Something went wrong.'}}</div>
+                <div class="detail-text">{{$title ?? 'Aw, Snap! something went wrong.'}}</div>
                 <div class="error-details">
-                    {{$message ?? 'We are sorry about. Please go back to continue using the site'}}
+                    {{$message ?? 'Please go back to continue using the site.'}}
                 </div>
                 <a href="{{$url ?? BASE_URL}}" class="button">
                 <div>{{$buttonText ?? 'Go Back'}}</div>

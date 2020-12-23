@@ -34,7 +34,9 @@
         dictDefaultMessage: "<i class='sl sl-icon-plus'></i> Click here to upload",
         uploadMultiple: true,
         autoProcessQueue: false,
-        maxFiles: 20,
+        // maxFiles: 20,
+        maxFilesize: 10,
+        dictFileTooBig: 'File is too big. Please select image with minimum size of 10MB.',
         parallelUploads: 20,
         acceptedFiles: ".jpg, .jpeg, .png",
         addRemoveLinks: true,
@@ -43,68 +45,51 @@
         init: function () {
             var fileDropzone = this;
 
-            $("#propertyImageSubmit").click(function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var acceptedFiles = fileDropzone.files.filter(f => f.accepted);
-                if (fileDropzone.files.length) {
-                    if(acceptedFiles.length) {
-                        $('#propertyImagesProgress').show();
-                        fileDropzone.processQueue();
-                    } else {
-                        alert('please select valid image')
+            var maximumImages = 20 - $('.dz-default.dz-message').attr("data-property-images-count");
+            if(maximumImages <= 0) {
+                $(".dz-hidden-input").prop("disabled",true);
+                $(".dz-default.dz-message").html('You have already uploaded maximum images. No more images allowed');
+            }
+            function continue_upload() {
+                fileDropzone.options.autoProcessQueue = true;
+                fileDropzone.processQueue();
+            };
+
+            this.on("addedfiles", function (files) {
+                setTimeout(function (e) {
+                    var invalidImages = fileDropzone.getFilesWithStatus('error');
+                    if(invalidImages.length) {
+                        console.log('invalid images', invalidImages.length);
                     }
-                } else {
-                    $("#property_submit_5").submit();
+                    // Remove extra images
+                    if(files.length > maximumImages) {
+                        for (var x = 0; x < files.length; x++) {
+                            if(x >= maximumImages) {
+                                fileDropzone.removeFile(files[x])
+                            }
+                        }
+                    }
+                    continue_upload();
+                }, 300);
+            });
+
+            this.on("successmultiple", function (file) {
+                if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                   window.location.reload();
                 }
             });
-            $(document).on('change',"input[name='dropzone-cover-image']", function(){
-                    var selected = $("input[name='dropzone-cover-image']:checked").val();
-                    if(!fileDropzone.options.baseUrl) {
-                        fileDropzone.options.baseUrl =fileDropzone.options.url;
-                    }
-                    fileDropzone.options.url = fileDropzone.options.url + '/' +selected
-            });
-            this.on("addedfiles", function(file) {
-                $('.dropzone-make-cover-image').remove();
-                $('.dz-preview').each(function(key,e){
-                    e.append($('<div/>',{
-                        class: 'dropzone-make-cover-image',
-                        html: 'Select as cover',
-                        style: 'display: flex;flex-direction: column;justify-content: center;align-items: center;',
-                        value: key,
-                    }).append($('<input/>', {
-                        id: key,
-                        type: 'radio',
-                        name: 'dropzone-cover-image',
-                        value: key,
-                        style: "height:12px;margin-bottom: 0;",
-                        class: 'dropzone-make-cover-image',
-                    })[0])[0]);
-                });
-                $('#propertyImageSubmit').attr('disabled',false);
-            });
-            this.on("successmultiple", function(file) {
-                // submit form
-                $('#propertyImagesProgress').hide();
-                $("#property_submit_5").submit();
-            });
-            this.on("errormultiple", function (file, response) {
-                $('#propertyImagesProgress').hide();
-                console.log('errormultiple uploading property images', response);
-            });
+
             this.on("thumbnail", function(file) {
                 if (file.width < 1024 || file.height < 524) {
-                    file.rejectDimensions()
-                }
-                else {
+                    file.rejectDimensions();
+                } else {
                     file.acceptDimensions();
                 }
             });
         },
         accept: function(file, done) {
             file.acceptDimensions = done;
-            file.rejectDimensions = function() { done("Please select image with minimum resolution of 1024 x 524"); };
+            file.rejectDimensions = function() { done("File is too small. Please select image with minimum resolution of 1024 x 524"); };
         },
     });
     $(".property-calender.dropzone").dropzone({

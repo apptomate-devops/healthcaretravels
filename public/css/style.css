@@ -181,6 +181,7 @@ span.required {
 }
 button[disabled], html input[disabled] {
     opacity: 0.7;
+    cursor: not-allowed !important;
 }
 
 /* tabs nav ==========*/
@@ -9261,6 +9262,14 @@ img.mfp-img {
     margin: 16px;
     min-height: 100px;
 }
+.dropzone .dz-preview.dz-error {
+    background: linear-gradient(to bottom, #be2626, #a92222) !important;
+    padding: 5px;
+    border-radius: 20px;
+}
+.dropzone .dz-preview.dz-error .dz-remove {
+    color: white;
+}
 
 .dropzone .dz-preview:hover {
     z-index: 1000;
@@ -9372,6 +9381,7 @@ img.mfp-img {
     transition: all 0.3s;
     display: block;
     z-index: 10;
+    background-color: #eee !important;
 }
 
 .dropzone .dz-preview .dz-image img {

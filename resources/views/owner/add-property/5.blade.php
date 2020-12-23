@@ -69,7 +69,7 @@
                             <div class="submit-section">
                                 <div class="row with-forms" style="padding: 0 15px;">
                                     <form action="{{BASE_URL}}owner/property/file-upload" method="post" enctype="multipart/form-data" class="dropzone" id="property-image">
-                                        <div  class="dz-default dz-message">
+                                        <div  class="dz-default dz-message" data-property-images-count="{{count($property_images)}}">
                                             <span>
                                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                                                 <i class="sl sl-icon-plus"></i> Click here to upload
@@ -78,6 +78,7 @@
                                     </form>
                                     <p>Add up to 20 images of your property. Check out our <a href="{{BASE_URL}}eye-catching-photos" target="_blank">article</a> on how to take great photos.</p>
                                     <p><span style="color: #e78016">* </span>You Can Upload Multiple Images</p>
+                                    <p><span style="color: #e78016">* </span>Each image must be below 10 MB.</p>
                                     {{-- <h5>**Change images order with Drag & Drop.</h5> --}}
                                 </div>
                             </div>
@@ -120,14 +121,13 @@
                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                         <input type="hidden" name="client_id" value="{{$client_id}}">
                         <input type="hidden" name="property_id" value="{{$property_details->id}}">
+                        <div class="text-center">
+                            <button type="submit" id="propertyImageSubmit" class="button preview" @if(count($property_images) == 0) disabled @endif>
+                                SAVE
+                                <i class="fa fa-arrow-circle-right"></i>
+                            </button>
+                        </div>
                     </form>
-
-                    <div class="text-center">
-                        <button type="button" id="propertyImageSubmit" class="button preview" @if(count($property_images) == 0) disabled @endif>
-                            SAVE
-                            <i class="fa fa-arrow-circle-right"></i>
-                        </button>
-                    </div>
                 </div>
             </div>
             <div id="propertyImagesProgress" class="loading style-2" style="display: none;"><div class="loading-wheel"></div></div>

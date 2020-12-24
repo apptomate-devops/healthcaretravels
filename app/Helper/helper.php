@@ -1214,11 +1214,13 @@ class Helper
 
     public static function handleBookingEmails($to, $subject, $view, $data, $bookingId)
     {
+        Logger::info('sending payemnt reminder for iD' . $bookingId);
         Helper::setConstantsHelper();
         $booking = DB::table('property_booking')
             ->where('id', $bookingId)
             ->first();
-        if ($booking->status != 8) {
+        Logger::info('sending payemnt reminder email' . json_encode($booking));
+        if ($booking && $booking->status != 8) {
             Helper::send_custom_email($to, $subject, $view, $data, null, null);
         }
         return;

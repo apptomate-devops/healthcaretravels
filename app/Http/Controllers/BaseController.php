@@ -852,6 +852,13 @@ class BaseController extends ConstantsController
                 if ($mailing_date->gt(now())) {
                     $mailDelay = $mailing_date->diffInSeconds(now());
                 }
+                Logger::info(
+                    'scheduling payment reminder email for travelller' .
+                        $traveler->email .
+                        'for booking id' .
+                        $booking->id,
+                );
+                Logger::info('$mailDelay ' . $mailDelay);
                 $this->send_scheduled_email(
                     $traveler->email,
                     'automatic-payment',

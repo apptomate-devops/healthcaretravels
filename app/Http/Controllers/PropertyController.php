@@ -464,6 +464,7 @@ class PropertyController extends BaseController
 
     public function delete_property_image($id)
     {
+        $new_cover_image = false;
         try {
             $data = DB::table('property_images')
                 ->where('id', $id)
@@ -480,7 +481,11 @@ class PropertyController extends BaseController
                     ->update(['is_cover' => 1]);
             }
             unlink(storage_path(str_replace('storage', 'app', $data->image_url)));
-            return response()->json(['status' => 'SUCCESS', 'file_path' => $data->image_url]);
+            return response()->json([
+                'status' => 'SUCCESS',
+                'file_path' => $data->image_url,
+                'new_cover_image' => $new_cover_image,
+            ]);
         } catch (\Exception $ex) {
             Logger::error('Error deleting property image' . $ex->getMessage());
         }

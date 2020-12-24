@@ -95,14 +95,14 @@
                                 <div class="submit-section">
                                     <div class="row with-forms">
                                         @foreach($property_images as $img)
-                                            <div class="col-md-2" style="margin-top: 15px;">
+                                            <div class="col-md-2" style="margin-top: 15px;" id="cover-img-{{$img->id}}">
                                                 <img src="{{$img->image_url}}" height="150px" width="200px">
                                                 <button class="img_btn" onclick="delete_image({{$img->id}})"><i class="fa fa-trash"></i>
                                                 </button>
                                                 @if($img->is_cover == 0)
-                                                    <button  class="new_button" onclick="cover_image({{$img->id}})">Make Cover Photo</button>
+                                                    <button id="cover-{{$img->id}}"  class="new_button" onclick="cover_image({{$img->id}})">Make Cover Photo</button>
                                                 @else
-                                                    <button  class="new_button cover_image" disabled="disabled">Cover Photo</button>
+                                                    <button id="cover-{{$img->id}}"  class="new_button cover_image" disabled="disabled">Cover Photo</button>
                                                 @endif
                                             </div>
                                         @endforeach
@@ -141,23 +141,43 @@
 
         function delete_image(id){
             var url = window.location.protocol + "//" + window.location.host + "/delete_property_image/"+id;
-
+            $('#propertyImagesProgress').show();
             $.ajax({
                 "type": "get",
                 "url" : url,
                 success: function(data) {
-                    location.reload();
+                    $(`div#cover-img-${id}`).remove();
+                    $('#propertyImagesProgress').hide();
+                    debugger
+                    if(data.new_cover_image && data.new_cover_image.id) {
+                        $(`button#cover-${data.new_cover_image.id}`).prop('disabled', true);
+                        $(`button#cover-${data.new_cover_image.id}`).addClass('cover_image');
+                        $(`button#cover-${data.new_cover_image.id}`).text('Cover Photo');
+                    }
+                },
+                error: function (error) {
+                    $('#propertyImagesProgress').hide();
                 }
             });
         }
         function cover_image(id){
+            $('#propertyImagesProgress').show();
             var prop_id={{$property_details->id}};
             var url = window.location.protocol + "//" + window.location.host + "/update_cover_image/"+id+"/"+prop_id;
             $.ajax({
                 "type": "get",
                 "url" : url,
                 success: function(data) {
-                    location.reload();
+                    $('button.cover_image').prop('disabled', false);
+                    $('button.cover_image').removeClass('cover_image');
+                    $('button.cover_image').text('Make Cover Photo');
+                    $(`button#cover-${id}`).prop('disabled', true);
+                    $(`button#cover-${id}`).addClass('cover_image');
+                    $(`button#cover-${id}`).text('Cover Photo');
+                    $('#propertyImagesProgress').hide();
+                },
+                error: function (error) {
+                    $('#propertyImagesProgress').hide();
                 }
             });
         }

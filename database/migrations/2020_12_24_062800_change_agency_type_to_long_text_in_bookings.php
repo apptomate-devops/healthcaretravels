@@ -15,7 +15,7 @@ class ChangeAgencyTypeToLongTextInBookings extends Migration
     {
         Schema::table('property_booking', function (Blueprint $table) {
             //
-            $table->longText('name_of_agency')->change();
+            //            $table->integer('name_of_agency')->change();
         });
     }
 
@@ -28,7 +28,6 @@ class ChangeAgencyTypeToLongTextInBookings extends Migration
     {
         Schema::table('property_booking', function (Blueprint $table) {
             //
-            $table->string('name_of_agency')->change();
         });
     }
 }

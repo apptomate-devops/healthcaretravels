@@ -401,7 +401,7 @@ class UserController extends BaseController
             $reg = EmailConfig::where('type', TEMPLATE_VERIFICATION)->first();
             $mail_data = [
                 'token' => $token,
-                'name' => $check->first_name . ' ' . $check->last_name,
+                'name' => Helper::get_user_display_name($check),
                 'email' => $check->email,
                 'url' => $verify_url,
                 'text' => isset($reg->message) ? $reg->message : '',
@@ -801,7 +801,7 @@ class UserController extends BaseController
 
                 $mail_data = [
                     'token' => $check->auth_token,
-                    'name' => $check->first_name . ' ' . $check->last_name,
+                    'name' => Helper::get_user_display_name($check),
                     'email' => $check->email,
                     'url' => $verify_url,
                     'text' => isset($reg->message) ? $reg->message : '',

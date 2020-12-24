@@ -65,7 +65,7 @@ class Helper
         $booking = $payment->booking;
         $is_owner = boolval($payment->is_owner);
         $user = $is_owner ? $booking->owner : $booking->traveler;
-        $name = $user->first_name . ' ' . $user->last_name;
+        $name = Helper::get_user_display_name($user);
         $fundingSourceDetails = null;
         $subjectDate = Carbon::now()->format('m/d');
         $amount = self::get_payable_amount($payment, $is_owner);
@@ -581,7 +581,7 @@ class Helper
                         ]),
                     );
                     $mail_data = [
-                        'name' => $user->first_name . ' ' . $user->last_name,
+                        'name' => Helper::get_user_display_name($user),
                         'property_link' => url('/') . 'property/' . $property_id,
                         'availability_calendar' => url('/') . 'ical/' . $property_id,
                     ];
@@ -1214,11 +1214,13 @@ class Helper
 
     public static function handleBookingEmails($to, $subject, $view, $data, $bookingId)
     {
+        Logger::info('sending payemnt reminder for iD' . $bookingId);
         Helper::setConstantsHelper();
         $booking = DB::table('property_booking')
             ->where('id', $bookingId)
             ->first();
-        if ($booking->status != 8) {
+        Logger::info('sending payemnt reminder email' . json_encode($booking));
+        if ($booking && $booking->status != 8) {
             Helper::send_custom_email($to, $subject, $view, $data, null, null);
         }
         return;

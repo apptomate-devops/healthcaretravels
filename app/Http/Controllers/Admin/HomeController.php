@@ -780,7 +780,7 @@ class HomeController extends BaseController
                 ->update(['profile_image' => 0]);
             $reg = $this->emailConfig->where('type', TEMPLATE_REMOVE_PROFILE_IMAGE)->first();
             $mail_data = [
-                'name' => $user->first_name . ' ' . $user->last_name,
+                'name' => Helper::get_user_display_name($user),
                 'email' => $user->email,
                 'text' => isset($reg->message) ? $reg->message : '',
             ];

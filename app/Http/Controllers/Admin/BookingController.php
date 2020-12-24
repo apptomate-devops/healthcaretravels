@@ -67,9 +67,9 @@ class BookingController extends BaseController
         if ($booking->cancelled_by == 'Admin') {
             $cancelled_by = 'Admin';
         } elseif ($booking->cancelled_by == $owner->id) {
-            $cancelled_by = $owner->first_name . ' ' . $owner->last_name;
+            $cancelled_by = \App\Helper\Helper::get_user_display_name($owner);
         } else {
-            $cancelled_by = $traveler->first_name . ' ' . $traveler->last_name;
+            $cancelled_by = \App\Helper\Helper::get_user_display_name($traveler);
         }
         $lastPaidByTraveler = null;
         $lastPaidToOwner = null;

@@ -2657,7 +2657,7 @@ class PropertyController extends BaseController
             ->first();
 
         $mail_data = [
-            'name' => $user->first_name . ' ' . $user->last_name,
+            'name' => Helper::get_user_display_name($user),
             'property_link' => BASE_URL . 'property/' . $request->property_id,
             'availability_calendar' => BASE_URL . 'ical/' . $request->property_id,
         ];

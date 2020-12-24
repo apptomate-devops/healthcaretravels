@@ -65,7 +65,7 @@ class Helper
         $booking = $payment->booking;
         $is_owner = boolval($payment->is_owner);
         $user = $is_owner ? $booking->owner : $booking->traveler;
-        $name = $user->first_name . ' ' . $user->last_name;
+        $name = Helper::get_user_display_name($user);
         $fundingSourceDetails = null;
         $subjectDate = Carbon::now()->format('m/d');
         $amount = self::get_payable_amount($payment, $is_owner);
@@ -581,7 +581,7 @@ class Helper
                         ]),
                     );
                     $mail_data = [
-                        'name' => $user->first_name . ' ' . $user->last_name,
+                        'name' => Helper::get_user_display_name($user),
                         'property_link' => url('/') . 'property/' . $property_id,
                         'availability_calendar' => url('/') . 'ical/' . $property_id,
                     ];

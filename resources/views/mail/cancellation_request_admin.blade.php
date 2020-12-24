@@ -12,11 +12,11 @@
              {{$booking_id}}
         </a>
         <br>
-        <b>Owner Name:</b> {{$owner->first_name . ' ' . $owner->last_name}}
+        <b>Owner Name:</b> {{Helper::get_user_display_name($owner)}}
         <br>
         <b>Owner Email:</b> {{$owner->email}}
         <br>
-        <b>Traveler Name:</b> {{$traveler->first_name . ' ' . $traveler->last_name}}
+        <b>Traveler Name:</b> {{Helper::get_user_display_name($traveler)}}
         <br>
         <b>Traveler Email:</b> {{$traveler->email}}
         <br>

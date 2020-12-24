@@ -31,85 +31,61 @@
             mapTypeId: 'roadmap'
         });
 
-        var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
-        var icons = {
-            test: {
-                icon: "{{MAP_MARKER_ICON}}"
-            }
+        var markerIcon = {
+            path: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z',
+            fillColor: '#e25a00',
+            fillOpacity: 0.95,
+            scale: 3,
+            strokeColor: '#fff',
+            strokeWeight: 3,
+            anchor: new google.maps.Point(12, 24)
         };
 
-         var markerIcon = {
-                path: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z',
-                fillColor: '#e25a00',
-                fillOpacity: 0.95,
-                scale: 3,
-                strokeColor: '#fff',
-                strokeWeight: 3,
-                anchor: new google.maps.Point(12, 24)
-            };
 
-
-                var markers  = [
+        var markers  = [
                 @if(count($hospitals)!=0)
-                    <?php $val = 0; ?>
-                    @foreach($hospitals as $key=>$hospital)
-                            <?php $val++; ?>
-                        {property_details:'<div style="background: white;width: 405px;padding-left: 2px;padding-bottom: 5px;    border-radius: 10px;"><div>@if(isset($hospital['image_url']) != "")<img src="{{$hospital['image_url']}}" style="width: 400px;height:250px">@endif</div><div><h4 style="font-size: 22px;font-weight: bold;padding-left: 5px;">{{$hospital['name']}}</h4></div><div><p style="font-size: 15px;font-weight: 600;width: 400px;padding-left: 5px;"><i class="fa fa-map-marker"></i>{{$hospital['address']}} </p></div> <div style="font-size: 15px;font-weight: 600;width: 400px;padding-left: 5px;" >Phone :{{$hospital['display_phone']}} <br><br> {{$hospital['distance']}}  </div></div>', provider_id: "{{ 1 }}",name: '',type: 0, lat: {{$hospital['lat']? $hospital['lat'] : 0.0 }}, lng: {{$hospital['lang']? $hospital['lang'] : 0.0}} } @if($val <= count($hospitals)) , @endif
+                <?php $val = 0; ?>
+                @foreach($hospitals as $key=>$hospital)
+                <?php $val++; ?>
+            {property_details:'<div style="background: white;width: 405px;padding-left: 2px;padding-bottom: 5px;    border-radius: 10px;"><div>@if(isset($hospital['image_url']) != "")<img src="{{$hospital['image_url']}}" style="width: 400px;height:250px">@endif</div><div><h4 style="font-size: 22px;font-weight: bold;padding-left: 5px;">{{$hospital['name']}}</h4></div><div><p style="font-size: 15px;font-weight: 600;width: 400px;padding-left: 5px;"><i class="fa fa-map-marker"></i>{{$hospital['address']}} </p></div> <div style="font-size: 15px;font-weight: 600;width: 400px;padding-left: 5px;" >Phone :{{$hospital['display_phone']}} <br><br> {{$hospital['distance']}}  </div></div>', provider_id: "{{ 1 }}",name: '',type: 0, lat: {{$hospital['lat']? $hospital['lat'] : 0.0 }}, lng: {{$hospital['lang']? $hospital['lang'] : 0.0}} } @if($val <= count($hospitals)) , @endif
 
 
-                    @endforeach
+                @endforeach
                 @endif
                 @if($pets_allowed == 1)
-                    @if(count($pet_place)!=0)
-                            <?php $value = 0; ?>
-                         @foreach($pet_place as $pet)
-                                 <?php $value++; ?>
-                            {property_details:'<div style="background: white;width: 405px;padding-left: 2px;padding-bottom: 5px;    border-radius: 10px;"><div>@if(isset($pet['image_url']) != "")<img src="{{$pet['image_url']}}" style="width: 400px;height:250px">@endif</div><div><h4 style="font-size: 22px;font-weight: bold;padding-left: 5px;">{{$pet['name']}}</h4></div><div><p style="font-size: 15px;font-weight: 600;width: 400px;padding-left: 5px;"><i class="fa fa-map-marker"></i>{{$pet['address']}} </p></div> <div style="font-size: 15px;font-weight: 600;width: 400px;padding-left: 5px;" >Phone :{{$pet['display_phone']}} <br><br> {{$pet['distance']}}  </div></div>', provider_id: "{{ 1 }}",name: '',type: 1, lat: {{$pet['lat']?$pet['lat']:40.238856 }}, lng: {{$pet['lang']?$pet['lang']:-101.909323}} }@if($value < count($pet_place)) , @endif
+                @if(count($pet_place)!=0)
+                <?php $value = 0; ?>
+                @foreach($pet_place as $pet)
+                <?php $value++; ?>
+            {property_details:'<div style="background: white;width: 405px;padding-left: 2px;padding-bottom: 5px;    border-radius: 10px;"><div>@if(isset($pet['image_url']) != "")<img src="{{$pet['image_url']}}" style="width: 400px;height:250px">@endif</div><div><h4 style="font-size: 22px;font-weight: bold;padding-left: 5px;">{{$pet['name']}}</h4></div><div><p style="font-size: 15px;font-weight: 600;width: 400px;padding-left: 5px;"><i class="fa fa-map-marker"></i>{{$pet['address']}} </p></div> <div style="font-size: 15px;font-weight: 600;width: 400px;padding-left: 5px;" >Phone :{{$pet['display_phone']}} <br><br> {{$pet['distance']}}  </div></div>', provider_id: "{{ 1 }}",name: '',type: 1, lat: {{$pet['lat']?$pet['lat']:40.238856 }}, lng: {{$pet['lang']?$pet['lang']:-101.909323}} }@if($value < count($pet_place)) , @endif
 
-                        @endforeach
-                    @endif
-                @endif
-    ];
-
-
-    console.log(markers);
-    var mapIcons = [
-         'https://cdn3.iconfinder.com/data/icons/medical-3-1/512/hospital_place-512.png',
-
-    ];
-
-    var latitude = 40.238856;
-    var longitude = -101.909323;
-    function initMaps() {
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: new google.maps.LatLng({{$lat}},{{$lng}}),
-            zoom: 5,
-            icon :  markerIcon
-        });
-    }
-
-       marker = new google.maps.Marker({
-                position: {lat: {{$lat?$lat:0.0}}, lng: {{$lng?$lng:0.0}}},
-                map: map,
-                icon: markerIcon,
+            @endforeach
+            @endif
+            @endif
+        ];
+        function initMaps() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: new google.maps.LatLng({{$lat}},{{$lng}}),
+                zoom: 5,
+                icon: '/storage/public/marker-blue.png'
             });
+        }
 
+        marker = new google.maps.Marker({
+            position: {lat: {{$lat?$lat:0.0}}, lng: {{$lng?$lng:0.0}}},
+            map: map,
+            icon: '/storage/public/marker-blue.png',
+        });
 
-   console.log("latitude");
-   console.log(latitude);
-   console.log("longitude");
-   console.log(longitude);
+        var yelp_icons =[
+            '/storage/public/map_hospital.png',
+            '/storage/public/map_pets.png',
+        ];
 
-var yelp_icons =[
-         'https://healthcaretravels.com/public/icons/map_hospital.png',
-         'https://healthcaretravels.com/public/icons/map_pets.png',
-
-    ];
-
-    var infoWindow = new google.maps.InfoWindow(), marker, i;
-var i=0;
+        var infoWindow = new google.maps.InfoWindow(), marker, i;
+        var i=0;
         markers.forEach( function(element, index) {
-             console.log(element);
+            console.log(element);
             var url = "/admin/provider/details/"
 
             marker = new google.maps.Marker({
@@ -121,20 +97,16 @@ var i=0;
             });
 
 
-   google.maps.event.addListener(marker, 'click', (function(marker, i) {
-            return function() {
-                infoWindow.setContent(markers[i]['property_details']);
-                infoWindow.open(map, marker);
-            }
-        })(marker, i));
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                return function() {
+                    infoWindow.setContent(markers[i]['property_details']);
+                    infoWindow.open(map, marker);
+                }
+            })(marker, i));
 
-
-    i++;
+            i++;
         });
 
-
-
-console.log(infoWindow);
 
 
     }
@@ -144,19 +116,3 @@ console.log(infoWindow);
 </script>
 </body>
 </html>
-<!--
- var features = [
-            {
-                position: new google.maps.LatLng({{$lat}},{{$lng}}),
-                type: 'test'
-            }
-        ];
-
-        // Create markers.
-        features.forEach(function(feature) {
-            var marker = new google.maps.Marker({
-                position: feature.position,
-                icon: icons[feature.type].icon,
-                map: map
-            });
-        }); -->

@@ -169,6 +169,17 @@
     border-radius: 3px;
     display: none;
 }
+input.price_int + i.price {
+    position: absolute;
+    display: block;
+    pointer-events: none;
+    width: 30px;
+    font-size: 17px;
+    top: 16px;
+    left: 5px;
+    font-style: normal;
+    text-align: center;
+}
 @media (max-width: 992px) {
 
     .map-width, .search_container {

@@ -814,7 +814,7 @@ class BaseController extends ConstantsController
         $traveler = $booking->traveler;
         $property = $booking->property;
         $propertyTitle = $property->title;
-        $travelerName = $traveler->first_name . " " . $traveler->last_name;
+        $travelerName = Helper::get_user_display_name($traveler);
         $accountName = null;
         $timeSplit = Helper::get_time_split($property->check_out);
         $scheduler_date = Carbon::parse($booking->end_date);
@@ -852,6 +852,13 @@ class BaseController extends ConstantsController
                 if ($mailing_date->gt(now())) {
                     $mailDelay = $mailing_date->diffInSeconds(now());
                 }
+                Logger::info(
+                    'scheduling payment reminder email for travelller' .
+                        $traveler->email .
+                        'for booking id' .
+                        $booking->id,
+                );
+                Logger::info('$mailDelay ' . $mailDelay);
                 $this->send_scheduled_email(
                     $traveler->email,
                     'automatic-payment',
@@ -863,7 +870,7 @@ class BaseController extends ConstantsController
             }
         }
         $chat_data = Helper::start_chat_handler($traveler->id, $property->id, $request);
-        $owner_name = $owner->first_name . " " . $owner->last_name;
+        $owner_name = Helper::get_user_display_name($owner);
         $owner_mail_data = [
             'name' => $owner_name,
             'propertyName' => $property->title,

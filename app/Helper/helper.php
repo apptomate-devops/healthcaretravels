@@ -65,7 +65,7 @@ class Helper
         $booking = $payment->booking;
         $is_owner = boolval($payment->is_owner);
         $user = $is_owner ? $booking->owner : $booking->traveler;
-        $name = $user->first_name . ' ' . $user->last_name;
+        $name = Helper::get_user_display_name($user);
         $fundingSourceDetails = null;
         $subjectDate = Carbon::now()->format('m/d');
         $amount = self::get_payable_amount($payment, $is_owner);
@@ -116,8 +116,8 @@ class Helper
         $booking = $payment->booking;
         $fundingSource = $booking->funding_source;
         if (in_array($booking->status, [4, 8])) {
-            Logger::info('Property booking was canceled: ' . $booking_id . ' :: paymentCycle: ' . $payment_cycle);
-            return ['success' => false, 'message' => 'Property Booking was canceled'];
+            Logger::info('Property booking was cancelled: ' . $booking_id . ' :: paymentCycle: ' . $payment_cycle);
+            return ['success' => false, 'message' => 'Property Booking was cancelled'];
         }
         try {
             // Processing first payment cycle from user's side
@@ -219,30 +219,32 @@ class Helper
         $scheduled_payments = [];
 
         foreach ($all_scheduled_payments as $payment) {
-            $day = Carbon::parse($payment['due_date'])->format('F d, Y');
+            if ($payment['payment_cycle'] == 1) {
+                // For Initial Payment
+                $pay_now = $payment['total_amount'] + $payment['service_tax'];
+                $day = 'On Approval';
+                $service_fee_label = 'Service Fee';
+            } else {
+                $day = Carbon::parse($payment['due_date'])->format('F d, Y');
+                $service_fee_label = 'Processing Fee';
+            }
 
             if (isset($payment['is_partial_days'])) {
                 $partialDayCount = $payment['is_partial_days'];
                 $partial_monthly_rate = round(($payment['monthly_rate'] * $partialDayCount) / 30);
                 $neat_price = $partial_monthly_rate + $payment['service_tax']; // consider price for remaining days
                 $section = [
-                    $partialDayCount . ' Days' => $partial_monthly_rate,
-                    $payment['payment_cycle'] == 1 ? 'Service Fee' : 'Processing Fee' => $payment['service_tax'],
+                    $payment['payment_cycle'] == 1 ? '1 Month' : $partialDayCount . ' Days' => $partial_monthly_rate,
+                    $service_fee_label => $payment['service_tax'],
                 ];
             } else {
                 $months++;
                 $neat_price = $payment['monthly_rate'] + $payment['service_tax']; // consider price for full month
                 $section = [
-                    $months . ' Month' => $payment['monthly_rate'],
-                    $payment['payment_cycle'] == 1 ? 'Service Fee' : 'Processing Fee' => $payment['service_tax'],
+                    '1 Month' => $payment['monthly_rate'],
+                    $service_fee_label => $payment['service_tax'],
                 ];
-                if ($payment['payment_cycle'] == 1) {
-                    // For Initial Payment
-                    $day = 'On Approval';
-                    $pay_now = $payment['total_amount'] + $payment['service_tax'];
-                }
             }
-
             $neat_amount = $neat_amount + $neat_price;
 
             array_push($scheduled_payments, [
@@ -254,13 +256,13 @@ class Helper
 
         $total_price = $neat_amount + $booking->cleaning_fee + $booking->security_deposit;
 
-        if (count($all_scheduled_payments) == 1) {
-            $pay_now = $total_price;
-        }
-
-        $day_count_label = $months . ' month' . ($months > 1 ? 's' : '');
-        if ($partialDayCount) {
-            $day_count_label = $day_count_label . ', ' . $partialDayCount . ' day' . ($partialDayCount > 1 ? 's' : '');
+        $day_count_label = '1 Month';
+        if ($months > 0) {
+            $day_count_label = $months . ' month' . ($months > 1 ? 's' : '');
+            if ($partialDayCount) {
+                $day_count_label =
+                    $day_count_label . ', ' . $partialDayCount . ' day' . ($partialDayCount > 1 ? 's' : '');
+            }
         }
 
         return [
@@ -300,6 +302,9 @@ class Helper
         $processedAt = $type . '_deposit_processed_at';
         $confirmedAt = $type . '_deposit_confirmed_at';
         $failedAt = $type . '_deposit_failed_at';
+        if (in_array($booking->status, [4, 8])) {
+            return 'Cancelled';
+        }
         if ($booking->$confirmedAt) {
             return 'Completed';
         }
@@ -330,7 +335,7 @@ class Helper
             case PAYMENT_FAILED:
                 return 'Failed';
             case PAYMENT_CANCELED:
-                return 'Canceled';
+                return 'Cancelled';
             default:
                 return 'Pending';
         }
@@ -499,7 +504,7 @@ class Helper
         $booking->status = 8;
         $booking->auto_canceled = 1;
         $booking->save();
-        return ['success' => true, 'message' => 'Booking request was canceled successfully'];
+        return ['success' => true, 'message' => 'Booking request was cancelled successfully'];
     }
     public static function handleOwnerReminderForBooking($id)
     {
@@ -511,7 +516,7 @@ class Helper
         // Send email only if booking request is pending for approval
         if ($booking->status == 1) {
             $owner = $booking->owner;
-            $owner_name = $owner->first_name . " " . $owner->last_name;
+            $owner_name = Helper::get_user_display_name($owner);
             $property = $booking->property;
             $property_img = DB::table('property_images')
                 ->where('property_images.client_id', '=', CLIENT_ID)
@@ -576,7 +581,7 @@ class Helper
                         ]),
                     );
                     $mail_data = [
-                        'name' => $user->first_name . ' ' . $user->last_name,
+                        'name' => Helper::get_user_display_name($user),
                         'property_link' => url('/') . 'property/' . $property_id,
                         'availability_calendar' => url('/') . 'ical/' . $property_id,
                     ];
@@ -608,10 +613,15 @@ class Helper
         if ($lastMonthRenew->day < $start_date->day) {
             $lastMonthRenew->subMonth();
         }
-        $lastMonthRenew->day = $start_date->day;
+
+        if (checkdate($lastMonthRenew->month, $start_date->day, $lastMonthRenew->year)) {
+            $lastMonthRenew->day = $start_date->day;
+        } else {
+            $lastMonthRenew = $lastMonthRenew->endOfMonth();
+        }
         $partialDays = $end_date->diffInDays($lastMonthRenew);
         // Getting total payment Cycles
-        $totalCycles = $start_date->diffInMonths($end_date);
+        $totalCycles = $end_date->diffInMonths($start_date);
         $isPartial = $partialDays > 0;
         if ($isPartial) {
             $totalCycles++;
@@ -653,10 +663,10 @@ class Helper
                 }
             } else {
                 $data['total_amount'] = round($data['monthly_rate']);
-                $scheduler_date->addMonth();
-                $data['due_date'] = $scheduler_date;
+                $next_scheduler_date = $scheduler_date->copy()->addMonthsNoOverflow($i - 1);
+                $data['due_date'] = $next_scheduler_date;
                 if ($is_owner) {
-                    $dd = Carbon::parse($scheduler_date->toDateTimeString())->addHours(48);
+                    $dd = Carbon::parse($next_scheduler_date->toDateTimeString())->addHours(48);
                     $data['due_date'] = $dd;
                 }
             }
@@ -1204,11 +1214,13 @@ class Helper
 
     public static function handleBookingEmails($to, $subject, $view, $data, $bookingId)
     {
+        Logger::info('sending payemnt reminder for iD' . $bookingId);
         Helper::setConstantsHelper();
         $booking = DB::table('property_booking')
             ->where('id', $bookingId)
             ->first();
-        if ($booking->status != 8) {
+        Logger::info('sending payemnt reminder email' . json_encode($booking));
+        if ($booking && $booking->status != 8) {
             Helper::send_custom_email($to, $subject, $view, $data, null, null);
         }
         return;

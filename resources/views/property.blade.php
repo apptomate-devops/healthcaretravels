@@ -52,7 +52,7 @@
                                 </font></font>
                             </span>
                             @if($data->verified==1)
-                                <span class="property-badge" style="background-color: green">
+                                <span class="property-badge" style="background-color: #0983b8">
                                     <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
                                         Verified
                                     </font></font>
@@ -293,7 +293,7 @@
                     @endif
 
                     <br>
-                    <h3 class="desc-headline">
+                    <h3 class="desc-headline" id="house_rules">
                         <font style="vertical-align: inherit;">
                             <font style="vertical-align: inherit;">House Rules</font>
                         </font>
@@ -769,9 +769,9 @@
                                     @if (isset($data->is_disable) && $data->is_disable == 1)
                                         <center><h4 class="margin-top-30">This Property is disabled</h4></center>
                                     @elseif(!Session::get('user_id'))
-                                        <button onclick="location.href='{{BASE_URL}}login';" class="button fullwidth margin-top-5">
+                                        <a href="{{url('/')}}/login" class="button fullwidth margin-top-5">
                                             Login to Book
-                                        </button>
+                                        </a>
                                     @else
                                         <button disabled id="btn_book_now" class="button fullwidth mt-10 booking_button">
                                             Book Now
@@ -816,8 +816,7 @@
 
                                     @if($property->verified==1)
                                         <div class="listing-badges">
-                                            <span class="featured" style="background-color: {{$property->verified==1?'green':''}}"> {{$property->verified==1?'Verified':''}}</span>
-
+                                            <span class="featured verified">Verified</span>
                                         </div>
                                     @endif
 
@@ -1086,14 +1085,11 @@
             var calenderConfig = {
                 minDate: new Date(),
                 opens: 'center',
-                minSpan: {
-                    "days": ({{$data->min_days ?? 30}} + 1)
-                },
                 autoUpdateInput: false,
                 autoApply: true,
             }
             // Book Now: Date Range Picker
-            $('input[id="booking_date_range_picker"], input[id="chat_date_range_picker"]').daterangepicker({
+            $('input[id="booking_date_range_picker"]').daterangepicker({
                 ...calenderConfig,
                 isInvalidDate: function(date){
                     var dc = moment();
@@ -1106,9 +1102,29 @@
                     return disableDates.includes(date.format('YYYY-MM-DD'));
                 }
             });
-            // Book Now: Date Range Picker
+            // Chat now: Date Range Picker
+            $('input[id="chat_date_range_picker"]').daterangepicker({
+                ...calenderConfig,
+                minSpan: {
+                    "days": ({{$data->min_days ?? 30}} + 1)
+                },
+                isInvalidDate: function(date){
+                    var dc = moment();
+                    dc.add(7, 'days');
+                    // Blocking next 7 days for payment security on owner side
+                    if (dc > date) {
+                        return true;
+                    }
+                    var disableDates = <?php echo json_encode($booked_dates); ?>;
+                    return disableDates.includes(date.format('YYYY-MM-DD'));
+                }
+            });
+            // Search: Date Range Picker
             $('input[id="search_date_range_picker"]').daterangepicker({
                 ...calenderConfig,
+                minSpan: {
+                    "days": ({{$data->min_days ?? 30}} + 1)
+                },
                 isInvalidDate: function(date){
                     var dc = moment();
                     dc.add(7, 'days');
@@ -1139,8 +1155,8 @@
 
             // Chat with host: Date Range Picker
             $('input[id="search_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
-                $('input[id="search_date_range_picker"][name="check_in"]').val(picker.startDate.format('MM/DD/YYYY'));
-                $('input[id="search_date_range_picker"][name="check_out"]').val(picker.endDate.format('MM/DD/YYYY'));
+                $('input[id="search_date_range_picker"][name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
+                $('input[id="search_date_range_picker"][name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
                 $('#request-chat').prop('disabled', false);
             });
 
@@ -1182,7 +1198,7 @@
 
                     }
                     if (data.status == 'FAILED' && data.status_code == 1) {
-                        $(".alert").html(data.message || "Please review the house rules for Minimum days stay.");
+                        $(".alert").html(data.message || "Please review the <a href='' onclick='scroll_to_house_rules();' style='color: white; text-decoration-line: underline;'>house rules</a> for minimum days stay.");
                         $(".alert").show();
                         $("#table_body").html("");
                         $("#pricing_details").hide();
@@ -1267,6 +1283,12 @@
     </script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script>
+        function scroll_to_house_rules() {
+            event.preventDefault();
+            event.stopPropagation();
+            $(window).scrollTop($('#house_rules').offset().top-500);
+            return false;
+        }
         $("#share").click(function(){
             var aux = document.createElement("input");
             aux.setAttribute("value",window.location.protocol + "//" + window.location.host + "/property/{{$data->property_id}}");

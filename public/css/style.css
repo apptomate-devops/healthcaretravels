@@ -181,6 +181,7 @@ span.required {
 }
 button[disabled], html input[disabled] {
     opacity: 0.7;
+    cursor: not-allowed !important;
 }
 
 /* tabs nav ==========*/
@@ -4510,7 +4511,7 @@ button.fs-map-btn.button {
 }
 
 .listing-badges .featured {
-    background-color: #66676b;
+    background-color: #e08716 !important;
     float: left;
     transform: rotate(-45deg);
     left: -67px;
@@ -4521,7 +4522,9 @@ button.fs-map-btn.button {
     font-size: 12.5px;
     margin: 0;
 }
-
+.listing-badges .featured.verified {
+    background-color: #0983b8 !important;
+}
 span.like-icon {
     color: #fff;
     font-size: 24px;
@@ -9259,6 +9262,14 @@ img.mfp-img {
     margin: 16px;
     min-height: 100px;
 }
+.dropzone .dz-preview.dz-error {
+    background: linear-gradient(to bottom, #be2626, #a92222) !important;
+    padding: 5px;
+    border-radius: 20px;
+}
+.dropzone .dz-preview.dz-error .dz-remove {
+    color: white;
+}
 
 .dropzone .dz-preview:hover {
     z-index: 1000;
@@ -9370,6 +9381,7 @@ img.mfp-img {
     transition: all 0.3s;
     display: block;
     z-index: 10;
+    background-color: #eee !important;
 }
 
 .dropzone .dz-preview .dz-image img {
@@ -10574,8 +10586,8 @@ mark.color {
 }
 
 .plan.featured .listing-badges .featured {
-    background: #fff;
-    color: #66676b;
+    background: #0983b8 !important;
+    color: #fff;
 }
 
 .ui-accordion .ui-accordion-header,

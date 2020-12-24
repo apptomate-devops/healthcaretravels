@@ -4,7 +4,7 @@
         A new user just submitted their registration information. Please review their uploads and approve/deny their profile in the admin portal.
     </div>
     <div style="padding-top: 5px;">
-        Name: {{$username}}
+        Name: {{$user_name}}
     </div>
     <div style="padding-top: 5px;">
         User Type: {{$type}}

@@ -10,6 +10,7 @@ use App\Models\PropertyBlocking;
 use App\Services\Logger;
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Facades\File;
 use Session;
 use App\Models\Users;
 use App\Models\Propertyamenties;
@@ -266,7 +267,8 @@ class PropertyController extends BaseController
         if ($weeks['total'] < $property_details->min_days) {
             return response()->json([
                 'status' => 'FAILED',
-                'message' => 'Please review the house rules for Minimum days stay.',
+                'message' =>
+                    "Please review the <a href='' onclick='scroll_to_house_rules();' style='color: white; text-decoration-line: underline;'>house rules</a> for minimum days stay.",
                 'status_code' => ONE,
             ]);
         }
@@ -462,16 +464,31 @@ class PropertyController extends BaseController
 
     public function delete_property_image($id)
     {
-        $data = DB::table('property_images')
-            ->where('id', $id)
-            ->first();
-
-        //$file_name = 'data/'.$property_id.'.json';
-        //unlink($data->image_url);
-        DB::table('property_images')
-            ->where('id', $id)
-            ->delete();
-        return response()->json(['status' => 'SUCCESS']);
+        $new_cover_image = false;
+        try {
+            $data = DB::table('property_images')
+                ->where('id', $id)
+                ->first();
+            DB::table('property_images')
+                ->where('id', $id)
+                ->delete();
+            if ($data->is_cover) {
+                $new_cover_image = DB::table('property_images')
+                    ->where('property_id', $data->property_id)
+                    ->first();
+                DB::table('property_images')
+                    ->where('id', $new_cover_image->id)
+                    ->update(['is_cover' => 1]);
+            }
+            unlink(storage_path(str_replace('storage', 'app', $data->image_url)));
+            return response()->json([
+                'status' => 'SUCCESS',
+                'file_path' => $data->image_url,
+                'new_cover_image' => $new_cover_image,
+            ]);
+        } catch (\Exception $ex) {
+            Logger::error('Error deleting property image' . $ex->getMessage());
+        }
     }
 
     public function favorites(Request $request)
@@ -789,7 +806,6 @@ class PropertyController extends BaseController
             ->leftjoin('property_list', 'property_list.id', '=', 'property_booking.property_id')
             ->leftjoin('users', 'users.id', '=', 'property_booking.traveller_id')
             ->select(
-                'users.username',
                 'users.first_name',
                 'users.last_name',
                 'property_list.title',
@@ -909,7 +925,7 @@ class PropertyController extends BaseController
         $incomplete_bookings = [];
         foreach ($data as $datum) {
             $traveller = DB::select(
-                "SELECT first_name, last_name, username, id FROM users WHERE client_id = CLIENT_ID AND id = $datum->owner_id LIMIT 1",
+                "SELECT first_name, last_name, id FROM users WHERE client_id = CLIENT_ID AND id = $datum->owner_id LIMIT 1",
             );
             $image = DB::table('property_images')
                 ->where('client_id', CLIENT_ID)
@@ -1183,6 +1199,10 @@ class PropertyController extends BaseController
 
             $payment['is_cleared'] = $payment['is_cleared'] ?? 0;
             $payment['status'] = $payment['status'] ?? 0;
+            if (in_array($booking->status, [4, 8])) {
+                // booking is cancelled or denied
+                $payment['status'] = 4;
+            }
             $cleaning_fee_entry = array_merge([], $payment);
             $security_deposit_entry = array_merge([], $payment);
             $service_tax_entry = array_merge([], $payment);
@@ -1382,7 +1402,6 @@ class PropertyController extends BaseController
                 'property_list.*',
                 'users.first_name',
                 'users.last_name',
-                'users.username',
                 'users.profile_image',
                 'users.device_token',
                 'property_images.image_url',
@@ -1524,7 +1543,6 @@ class PropertyController extends BaseController
                 'property_list.property_size',
                 'users.first_name',
                 'users.last_name',
-                'users.username',
                 'users.profile_image',
                 'property_list.id as property_id',
                 'property_list.verified',
@@ -1735,7 +1753,7 @@ class PropertyController extends BaseController
         $pet_details = PetInformation::where('booking_id', $booking_id)->first();
         $data->role_id = $traveller->role_id;
         $data->traveller_profile_image = $traveller->profile_image;
-        $data->traveller_name = $traveller->username;
+        $data->traveller_name = Helper::get_user_display_name($traveller);
         $data->owner_role_id = $owner->role_id;
         $data->owner_profile_image = $owner->profile_image;
         $data->owner_name = Helper::get_user_display_name($owner);
@@ -2644,7 +2662,7 @@ class PropertyController extends BaseController
             ->first();
 
         $mail_data = [
-            'name' => $user->first_name . ' ' . $user->last_name,
+            'name' => Helper::get_user_display_name($user),
             'property_link' => BASE_URL . 'property/' . $request->property_id,
             'availability_calendar' => BASE_URL . 'ical/' . $request->property_id,
         ];
@@ -2798,8 +2816,8 @@ class PropertyController extends BaseController
             ->where('role_id', $bookingEmailType)
             ->first();
 
-        $owner_name = $owner->first_name . " " . $owner->last_name;
-        $traveler_name = $traveller->first_name . " " . $traveller->last_name;
+        $owner_name = Helper::get_user_display_name($owner);
+        $traveler_name = Helper::get_user_display_name($traveller);
 
         Helper::send_booking_message(
             $owner_name,
@@ -3021,6 +3039,14 @@ class PropertyController extends BaseController
                 $property->property_images = $pd;
             }
 
+            // check if any existing or future bookings
+            $current_property_bookings = DB::table('property_booking')
+                ->where('property_booking.client_id', CLIENT_ID)
+                ->where('property_booking.property_id', '=', $property->propertyId)
+                ->where('property_booking.status', '=', 2)
+                ->whereDate('property_booking.end_date', '>=', Carbon::now())
+                ->count();
+            $property->delete_not_allowed = (bool) $current_property_bookings > 0;
             $properties_near[] = $property;
         }
 
@@ -3081,7 +3107,7 @@ class PropertyController extends BaseController
             ->where('client_id', CLIENT_ID)
             ->where('id', $user_id)
             ->first();
-        $username = Helper::get_user_display_name($user);
+        $user_name = Helper::get_user_display_name($user);
         $check = DB::table('property_list')
             ->where('client_id', CLIENT_ID)
             ->where('id', $id)
@@ -3102,7 +3128,7 @@ class PropertyController extends BaseController
             ->update(['is_disable' => $disable]);
         $mail_email = $this->get_email($check->user_id);
         $mail_data = [
-            'username' => $username,
+            'user_name' => $user_name,
             'content' => $content,
         ];
         $this->send_email($mail_email, 'mail.custom-email', $mail_data);
@@ -3121,6 +3147,18 @@ class PropertyController extends BaseController
                 ->where('client_id', '=', CLIENT_ID)
                 ->where('id', '=', $property_id)
                 ->update(['status' => 0]);
+
+            DB::table('property_booking')
+                ->where('property_booking.client_id', CLIENT_ID)
+                ->where('property_booking.property_id', '=', $property_id)
+                ->where('property_booking.status', '=', 1)
+                ->update(['status' => 4]);
+
+            DB::table('property_booking')
+                ->where('property_booking.client_id', CLIENT_ID)
+                ->where('property_booking.property_id', '=', $property_id)
+                ->where('property_booking.status', '=', 0)
+                ->delete();
             //        $data = DB::table('property_list')
             //            ->join('users', 'users.id', '=', 'property_list.user_id')
             //            ->where('property_list.client_id', CLIENT_ID)
@@ -3278,7 +3316,7 @@ class PropertyController extends BaseController
 
             // TODO: send email to user
 
-            $name = $user->first_name . " " . $user->last_name;
+            $name = Helper::get_user_display_name($user);
 
             $title = $mail_traveler->title ?? APP_BASE_NAME . "Cancellation Request";
             $subject = $mail_traveler->subject ?? "Your Cancellation Request";
@@ -3294,7 +3332,7 @@ class PropertyController extends BaseController
             // TODO: send email to other user
 
             $other_user_mail_data = [
-                'name' => $other_user->first_name . " " . $other_user->last_name,
+                'name' => Helper::get_user_display_name($other_user),
                 'title' => $property->title,
                 'requested_by' => $is_owner ? 'host' : 'traveler',
                 'check_in' => date('m-d-Y', strtotime($bookingModel->start_date)),

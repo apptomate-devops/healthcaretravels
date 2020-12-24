@@ -44,11 +44,12 @@
 
                 <div class="agent-avatar">
 
-                    <img src="{{($user->profile_image!=' ')?$user->profile_image:'https://img.freepik.com/free-icon/man-dark-avatar_318-9118.jpg?size=338&ext=jpg'}}" alt="" height="100px" width="100px">
-                    <div class="listing-badges" style="float:left">
-                                    <span class="featured" style="background-color: {{$user->is_verified==1?'green':''}}"> {{$user->is_verified==1?'Verified':'Not Verified'}}</span>
-
-                                </div>
+                    <img src="{{$user->profile_image}}" class="user-icon" alt="" height="100px" width="100px">
+                    @if($user->is_verified==1)
+                        <div class="listing-badges" style="float:left; right: -15px;">
+                            <span class="featured verified"> {{$user->is_verified==1?'Verified':'Not Verified'}}</span>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="agent-content">
@@ -137,10 +138,9 @@
                             </div>
                            @if($property->verified==1)
                                 <div class="listing-badges">
-                                    <span class="featured" style="background-color: {{$property->verified==1?'green':''}}"> {{$property->verified==1?'Verified':''}}</span>
-
+                                    <span class="featured verified">Verified</span>
                                 </div>
-                                @endif
+                            @endif
 
                             <div class="listing-carousel">
                                 @if(count($property->images) != 0)

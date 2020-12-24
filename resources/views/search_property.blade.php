@@ -91,10 +91,16 @@
                             </div>
                             <div class="col-lg-5 col-md-4 col-sm-4">
                                 <div class="check-in-out-wrapper">
-                                    <input type="text" class="price_int" placeholder="$ Min" name="minprice" id="minprice"
-                                           value="@if(isset($request_data['minprice'])){{$request_data['minprice']}}@endif">
-                                    <input type="text" class="price_int" placeholder="$ Max" name="maxprice" id="maxprice"
-                                           value="@if(isset($request_data['maxprice'])){{$request_data['maxprice']}}@endif">
+                                    <div style="position: relative">
+                                        <input type="text" class="price_int" placeholder="Min" name="minprice" id="minprice"
+                                               value="@if(isset($request_data['minprice'])){{$request_data['minprice']}}@endif">
+                                        <i class="price">$</i>
+                                    </div>
+                                    <div style="position: relative">
+                                        <input type="text" class="price_int" placeholder="Max" name="maxprice" id="maxprice"
+                                               value="@if(isset($request_data['maxprice'])){{$request_data['maxprice']}}@endif">
+                                        <i class="price">$</i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -162,9 +168,7 @@
                                        class="listing-img-container">
                                         @if($property->verified==1)
                                             <div class="listing-badges">
-                                                                <span class="featured"
-                                                                      style="background-color: {{$property->verified==1?'#ff5468':''}}"> {{$property->verified==1?'Verified':''}}</span>
-
+                                                <span class="featured verified">Verified</span>
                                             </div>
                                         @endif
                                         <div class="listing-img-content">

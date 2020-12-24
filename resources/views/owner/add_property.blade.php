@@ -256,6 +256,7 @@
             var marker = new google.maps.Marker({
                 position: myLatlng,
                 title: address,
+                icon: '/storage/public/marker-blue.png',
             });
             marker.setMap(map);
 

@@ -159,7 +159,7 @@
                             <input id="checked_in_yes" name="checked_in" type="checkbox" value="1">
                             <label for="checked_in_yes">Yes</label>
 
-                            <input id="checked_in_no" name="checked_in" type="checkbox" value="0" checked>
+                            <input id="checked_in_no" name="checked_in" type="checkbox" value="0">
                             <label for="checked_in_no">No</label>
                         </div>
                     </div>

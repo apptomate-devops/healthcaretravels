@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\GuestsInformation;
+use App\Models\PetInformation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\PropertyController;
@@ -32,6 +33,7 @@ class BookingController extends BaseController
             ->leftJoin('users as owner', 'owner.id', '=', 'property_booking.owner_id')
             ->leftJoin('users as traveller', 'traveller.id', '=', 'property_booking.traveller_id')
             ->leftJoin('property_list as property', 'property.id', '=', 'property_booking.property_id')
+            ->where('property_booking.status', '!=', '0')
             ->orderBy('property_booking.id', 'desc')
             ->paginate(100);
 
@@ -60,6 +62,7 @@ class BookingController extends BaseController
     {
         $booking = PropertyBooking::find($request->id);
         $guest_info = GuestsInformation::where('booking_id', $booking->booking_id)->get();
+        $pet_info = PetInformation::where('booking_id', $booking->booking_id)->first();
         $booking->agency = implode(", ", array_filter([$booking->name_of_agency, $booking->other_agency])); // Booking Agency
         $owner = $booking->owner;
         $traveler = $booking->traveler;
@@ -146,6 +149,7 @@ class BookingController extends BaseController
                 'hasPaymentsInProcessing',
                 'canPaymentsCanceled',
                 'guest_info',
+                'pet_info',
             ),
         );
     }

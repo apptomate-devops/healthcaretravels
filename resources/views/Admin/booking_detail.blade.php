@@ -45,6 +45,18 @@
             <div class="details">Contract starts on: <span>{{date('m-d-Y', strtotime($booking->contract_start_date))}}</span></div>
             <div class="details">Contract ends on: <span>{{date('m-d-Y', strtotime($booking->contract_end_date))}}</span></div>
             <br>
+            @if($pet_info)
+            <div class="details"><b>Pet Details</b></div>
+            <div class="details">Name: <span>{{$pet_info->pet_name ?? '-'}}</span></div>
+            <div class="details">Breed: <span>{{$pet_info->pet_breed ?? '-'}}</span></div>
+            <div class="details">Weight (lb): <span>{{$pet_info->pet_weight ?? '-'}}</span></div>
+            <div class="details">
+                <a href="{{$pet_info->pet_image}}" target="_blank">
+                    <img src="{{$pet_info->pet_image}}" alt="" style="height: 70px; width: 70px; margin-top: 5px;">
+                </a>
+            </div>
+            <br>
+            @endif
             <div class="details"><b>Submitted By: </b><span>{{$cancelled_by}}</span></div>
             <div class="details"><b>Cancellation Status: </b><span>{{$booking->cancellation_requested == 3 ? 'In Progress' : ($booking->cancellation_requested == 2 ? 'Completed' : 'Pending') }}</span></div>
             <div class="details"><b>Cancellation Reason: </b><span>{{$booking->cancellation_reason}}</span></div>

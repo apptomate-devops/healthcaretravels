@@ -124,7 +124,7 @@
                             <td>{{$pet_details->pet_weight}}</td>
                             <td>
                                 <a href="{{$pet_details->pet_image}}" target="_blank">
-                                    <img src="{{$pet_details->pet_image}}" alt="">
+                                    <img src="{{$pet_details->pet_image}}" alt="" style="height: 70px; width: 70px;">
                                 </a>
                             </td>
                         </tr>

@@ -2927,7 +2927,7 @@ class PropertyController extends BaseController
         if (!$pet_detail) {
             $pet_detail = new PetInformation();
         }
-        if ($request->is_pet_travelling) {
+        if ($request->pet_name) {
             $petImage = $this->base_image_upload($request, 'pet_image', 'pets');
             $pet_detail->booking_id = $request->booking_id;
             $pet_detail->pet_name = $request->pet_name;

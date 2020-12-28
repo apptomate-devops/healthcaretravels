@@ -57,11 +57,13 @@
             </div>
             <br>
             @endif
-            <div class="details"><b>Submitted By: </b><span>{{$cancelled_by}}</span></div>
-            <div class="details"><b>Cancellation Status: </b><span>{{$booking->cancellation_requested == 3 ? 'In Progress' : ($booking->cancellation_requested == 2 ? 'Completed' : 'Pending') }}</span></div>
-            <div class="details"><b>Cancellation Reason: </b><span>{{$booking->cancellation_reason}}</span></div>
-            <div class="details"><b>Explanation: </b><span>{{$booking->cancellation_explanation}}</span></div>
-            <div class="details"><b>Has the traveler checked into this property?: </b><span>{{$booking->already_checked_in ? 'Yes' : 'No'}}</span></div>
+            @if($booking->cancellation_reason)
+                <div class="details"><b>Submitted By: </b><span>{{$cancelled_by}}</span></div>
+                <div class="details"><b>Cancellation Status: </b><span>{{$booking->cancellation_requested == 3 ? 'In Progress' : ($booking->cancellation_requested == 2 ? 'Completed' : 'Pending') }}</span></div>
+                <div class="details"><b>Cancellation Reason: </b><span>{{$booking->cancellation_reason}}</span></div>
+                <div class="details"><b>Explanation: </b><span>{{$booking->cancellation_explanation}}</span></div>
+                <div class="details"><b>Has the traveler checked into this property?: </b><span>{{$booking->already_checked_in ? 'Yes' : 'No'}}</span></div>
+            @endif
             <div class="details"><b>Start Date: </b><span>{{date('m-d-Y',strtotime($booking->start_date))}}</span></div>
             <div class="details"><b>End Date: </b><span>{{date('m-d-Y',strtotime($booking->end_date))}}</span></div>
             <div class="details"><b>Status: </b><span>@if($booking->status == 1)

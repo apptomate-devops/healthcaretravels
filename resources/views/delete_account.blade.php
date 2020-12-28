@@ -27,7 +27,7 @@
                             <li>Your property and booking details will be deleted permanently.
                             <li>We will verify your identity for security purposes before accepting the deletion request.</li>
                             <li>You can’t reactivate, recover any data, or regain access to your account once it’s deleted.</li>
-                            <li>Any reservations/bookings you currently have as a Property Owner, Co-Host or a Traveler will automatically be cancelled.</li>
+                            <li>Any reservations/bookings you currently have as a Property Owner, Co-Host or a Traveler will automatically be canceled.</li>
                             <li>Instead of deleting certain data, we may de-identify or disassociate it, such that it no longer appears associated with you. Some information, such as your reviews and messages you sent to other users, may still be visible to others.</li>
                             <li>We’ll start working on your deletion request after we receive it, but some of your data may remain in our systems if we are legally required, or while we are legally permitted, to retain it.</li>
                         </ul>

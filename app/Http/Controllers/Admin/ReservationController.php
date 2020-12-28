@@ -172,8 +172,8 @@ class ReservationController extends BaseController
         $traveller = $bookingModel->traveler;
         $property = $bookingModel->property;
 
-        $title = APP_BASE_NAME . "Admin cancelled booking";
-        $subject = "Booking Cancelled";
+        $title = APP_BASE_NAME . "Admin canceled booking";
+        $subject = "Booking Canceled";
         $mail_data = [
             'property_title' => $property->title,
             'check_in' => date('m-d-Y', strtotime($data->start_date)),
@@ -187,7 +187,7 @@ class ReservationController extends BaseController
 
         return back()->with([
             'success_cancel_booking' => true,
-            'successMessage' => 'Booking cancelled Successfully!!!',
+            'successMessage' => 'Booking canceled Successfully!!!',
         ]);
     }
 

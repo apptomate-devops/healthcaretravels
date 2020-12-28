@@ -188,7 +188,7 @@ class BookingController extends BaseController
         }
         return back()->with([
             'success_cancel_booking' => true,
-            'successMessage' => 'Processing payments are been cancelled',
+            'successMessage' => 'Processing payments are been canceled',
         ]);
     }
 

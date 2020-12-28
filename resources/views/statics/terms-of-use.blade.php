@@ -448,9 +448,9 @@
                             to the Host by HCT Payments pursuant to the Payments Terms.</p>
                         <p>&nbsp;</p>
                         <p>If a Host cancels a confirmed booking, the Guest will receive a full refund of the Total Fees
-                            for such booking and HCT may publish an automated review on the Listing cancelled by the
-                            Host indicating that a booking was cancelled. In addition, HCT may (i) keep the calendar for
-                            the Listing unavailable or blocked for the dates of the cancelled booking, and/or (ii)
+                            for such booking and HCT may publish an automated review on the Listing canceled by the
+                            Host indicating that a booking was canceled. In addition, HCT may (i) keep the calendar for
+                            the Listing unavailable or blocked for the dates of the canceled booking, and/or (ii)
                             impose a cancellation fee, unless the Host has a valid reason for cancelling the booking
                             pursuant to<a href="https://healthcaretravels.com/policies"> HCT’s Extenuating Circumstances
                                 Policy</a> or has legitimate concerns about the Traveler’s behavior.</p>

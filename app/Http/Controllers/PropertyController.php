@@ -404,7 +404,7 @@ class PropertyController extends BaseController
             DB::table('property_booking')
                 ->where('booking_id', $id)
                 ->update(['status' => 8]);
-            return response()->json(['status' => 'SUCCESS', 'message' => 'Booking Cancelled successfully!']);
+            return response()->json(['status' => 'SUCCESS', 'message' => 'Booking Canceled successfully!']);
         } catch (\Exception $e) {
             return response()->json(['status' => 'FAILED', 'message' => $e->getMessage()]);
         }
@@ -870,7 +870,7 @@ class PropertyController extends BaseController
                 ];
 
                 $title = $request->status == 2 ? 'Owner confirms booking' : 'Owner cancels booking';
-                $subject = $request->status == 2 ? 'Booking Confirmed' : 'Booking Cancelled';
+                $subject = $request->status == 2 ? 'Booking Confirmed' : 'Booking Canceled';
 
                 // Traveler email
                 $this->send_custom_email($traveler->email, $subject, 'mail.accepted_booking', $mail_data, $title);
@@ -1200,7 +1200,7 @@ class PropertyController extends BaseController
             $payment['is_cleared'] = $payment['is_cleared'] ?? 0;
             $payment['status'] = $payment['status'] ?? 0;
             if (in_array($booking->status, [4, 8])) {
-                // booking is cancelled or denied
+                // booking is canceled or denied
                 $payment['status'] = 4;
             }
             $cleaning_fee_entry = array_merge([], $payment);

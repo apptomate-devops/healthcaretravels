@@ -168,25 +168,23 @@
                     <br>
                 @elseif($data->status == 8)
                     <div style="text-align: center;margin-top: 30px;">
-                        Your booking has been cancelled.
+                        Your booking has been canceled
                     </div>
                     <br>
                 @endif
-                <div >
+{{--                <div>--}}
+{{--                    <center>--}}
+{{--                        @if($data->payment_done == 1)--}}
+{{--                            <span class="txt-green">Payment Done</span><br>--}}
+{{--                        @else--}}
+{{--                            <span class="txt-red">Not Paid</span><br>--}}
+{{--                        @endif--}}
+{{--                    </center>--}}
 
-                    <center>
-                        @if($data->payment_done == 1)
-                            <span class="txt-green">Payment Done</span><br>
-                        @else
-                            <span class="txt-red">Not Paid</span><br>
-                        @endif
-                        {{-- TODO: need to add pay now button here --}}
-                    </center>
-
-                    @if(isset($_GET['id']))
-                        <button class="button" onclick="document.location.href='{{BASE_URL}}owner/payment-success?id={{$data->booking_id}}';" style="margin-bottom: 80px;">Pay Now</button>
-                    @endif
-                </div>
+{{--                    @if(isset($_GET['id']))--}}
+{{--                        <button class="button" onclick="document.location.href='{{BASE_URL}}owner/payment-success?id={{$data->booking_id}}';" style="margin-bottom: 80px;">Pay Now</button>--}}
+{{--                    @endif--}}
+{{--                </div>--}}
 
             </div>
 

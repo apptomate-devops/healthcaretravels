@@ -167,7 +167,7 @@
                 <a href="{{url('admin/cancelledpayment')}}">
                     <i class="la la-money"></i>
                     <span class="menu-title" data-i18n="nav.dash.main">
-                   Cancelled Payments
+                   Canceled Payments
                 </span>
                 </a>
             </li>

@@ -70,7 +70,7 @@
                     host, you have 4 cancellation options to choose from when listing your short-term property. Click
                     here to review the options to select from. Please keep in mind, travelers will also review your
                     cancellation policy selected for your listing that may be a determining factor whether they make a
-                    reservation with you or not. Travel assignments can be cancelled at anytime.</p>
+                    reservation with you or not. Travel assignments can be canceled at anytime.</p>
 
                 <h4>Deposit</h4><br>
                 <p>If you are requesting the traveler to make a security deposit, Health Care Travels will hold all

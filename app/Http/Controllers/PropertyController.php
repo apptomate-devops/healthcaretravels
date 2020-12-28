@@ -1208,6 +1208,8 @@ class PropertyController extends BaseController
             $service_tax_entry = array_merge([], $payment);
             $is_partial_days_payment = boolval($payment['is_partial_days'] ?? 0);
             $neat_rate = $payment['monthly_rate'];
+            $service_fee_label = $payment['payment_cycle'] == 1 ? 'Service Fee' : 'Processing Fee';
+
             if ($is_partial_days_payment) {
                 $neat_rate = round(($payment['monthly_rate'] * $payment['is_partial_days']) / 30);
             }
@@ -1215,7 +1217,12 @@ class PropertyController extends BaseController
                 $payment['amount'] = self::format_amount($neat_rate - $payment['service_tax']);
                 $grand_total = $grand_total + $payment['total_amount'] - $payment['service_tax'];
                 $payment['covering_range'] =
-                    "Covering " . $payment['covering_range'] . ", Minus $" . $payment['service_tax'] . " fee";
+                    "Covering " .
+                    $payment['covering_range'] .
+                    ", Minus $" .
+                    $payment['service_tax'] .
+                    ' ' .
+                    $service_fee_label;
 
                 if ($payment['payment_cycle'] == 1) {
                     $cleaning_fee_entry['name'] = 'Cleaning Fee';
@@ -1251,7 +1258,7 @@ class PropertyController extends BaseController
                 }
 
                 $service_tax_entry['due_date'] = $payment['due_date'];
-                $service_tax_entry['name'] = $payment['payment_cycle'] == 1 ? 'Service Fee' : 'Processing Fee';
+                $service_tax_entry['name'] = $service_fee_label;
                 $service_tax_entry['amount'] = self::format_amount($payment['service_tax'], '-');
                 $service_tax_entry['is_cleared'] = $payment['is_cleared'];
                 $service_tax_entry['status'] = $payment['status'];

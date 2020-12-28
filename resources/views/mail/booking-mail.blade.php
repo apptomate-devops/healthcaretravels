@@ -4,7 +4,7 @@
         Hi {{$name}},
     </div>
     <div style="padding-top: 5px;">
-        A user requested to booking <strong>{{$property->title}}</strong> for <strong>{{$data->start_date}}</strong> to <strong>{{$data->end_date}}</strong>. Please visit the
+        A user requested to booking <strong>{{$property->title}}</strong> for <strong>{{date('m-d-Y', strtotime($data->start_date))}}</strong> to <strong>{{date('m-d-Y', strtotime($data->end_date))}}</strong>. Please visit the
         <a href="{{URL('/')}}/owner/my-bookings">Your Bookings</a> page on Health Care Travels to view more details.
     </div>
     <div style="padding-top: 5px;">

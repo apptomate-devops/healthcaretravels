@@ -165,7 +165,7 @@
                             <button class="button" >Invoice sent</button><br><br>
 
                         @elseif($data->status == 4)
-                            <button class="button" >Request Declined by you</button>
+                            <div>Request Declined by you</div>>
                             <br>
                             <span style="font-weight: bold; color: #e78016">{{$data->deny_reason ?? ''}}</span>
                             <br><br>

@@ -152,7 +152,7 @@
                     <br>
                 @elseif($data->status == 2)
                     @if($data->cancellation_requested == 1)
-                        <div style="text-align: center; font-size: 18px; font-weight: bold;">Cancellation Pending</div>
+                            <div style="text-align: center">Cancellation Pending</div>
                     @else
                         <div style="text-align: center;margin-top: 30px;">
                             <button class="button" onclick="location.href='{{BASE_URL}}request_cancellation/{{$data->booking_id}}';">Request Cancellation</button>
@@ -161,7 +161,7 @@
                     @endif
                 @elseif($data->status == 4)
                     <div style="text-align: center;margin-top: 30px;">
-                        <button class="button">Request Denied by Owner</button>
+                        <div>Request Denied by Owner</div>>
                         <br>
                         <span style="font-weight: bold; color: #e78016">{{$data->deny_reason ?? ''}}</span>
                     </div>

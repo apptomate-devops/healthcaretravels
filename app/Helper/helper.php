@@ -816,15 +816,16 @@ class Helper
             ->first();
 
         if ($owner && $owner->email != "0") {
-            $content = $message;
-
-            $data = ['username' => Helper::get_user_display_name($owner), 'content' => $content];
-
-            $subject = "Enquiry for Your Property";
-            $title = $traveler->username . " sends Enquiry for Your Property";
+            $owner_link = BASE_URL . 'owner/chat/' . $chat_id . '?fb-key=personal_chat&fbkey=personal_chat';
+            $data = [
+                'name' => Helper::get_user_display_name($owner),
+                'traveler_name' => Helper::get_user_display_name($traveler),
+                'owner_link' => $owner_link,
+            ];
+            $subject = "You have a message from " . Helper::get_user_display_name($traveler);
+            $title = "New Message from " . Helper::get_user_display_name($traveler);
             $owner_mail = $owner->email;
-            $mail_data = ['username' => $owner->username, 'content' => $content];
-            Helper::send_custom_email($owner_mail, $subject, 'mail.custom-email', $data, 'Payment Processed');
+            Helper::send_custom_email($owner_mail, $subject, 'mail.new-message-email', $data, $title);
         }
 
         return redirect()->intended('/traveler/chat/' . $chat_id . '?fb-key=personal_chat&fbkey=personal_chat');

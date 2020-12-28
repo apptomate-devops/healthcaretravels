@@ -1781,15 +1781,18 @@ class PropertyController extends BaseController
     public function traveller_fire_chat($id, Request $request)
     {
         $user_id = $request->session()->get('user_id');
-
         if (!$user_id) {
             return redirect('/');
         }
 
+        $property = DB::table('personal_chat')
+            ->where([['id', '=', $id], ['traveller_id', '=', $user_id]])
+            ->first();
+        if (empty($property)) {
+            return view('general_error', ['message' => 'We can’t find the property chat you’re looking for.']);
+        }
+
         if ($request->fbkey == "personal_chat") {
-            $property = DB::table('personal_chat')
-                ->where([['id', '=', $id], ['traveller_id', '=', $user_id]])
-                ->first();
             if (!isset($property)) {
                 error_log('..');
                 return redirect('/');

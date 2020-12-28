@@ -315,7 +315,7 @@ authorize your Payment Method a nominal amount, to verify your Payment Method, o
 authenticate your account via a third-party payment service provider to verify your Payment Method.
 </p>
                         <p>
-                            8.3 If a requested booking is cancelled either because it is not accepted by the property owner or
+                            8.3 If a requested booking is canceled either because it is not accepted by the property owner or
 you cancel the booking request before it is accepted by the property owner, any amounts collected
 by Health Care Travels Payments will be refunded to you, and any pre-authorization of your
 Payment Method will be released (if applicable). The timing to receive the refund or for the
@@ -694,7 +694,7 @@ Travels Payments' reasonable satisfaction.</p>
                         <p>20.6 If you are a Property Owner and we take any of the measures described in this Section we may
 refund your Travelers in full for any and all confirmed bookings, irrespective of preexisting
 cancellation policies, and you will not be entitled to any compensation for pending or confirmed
-bookings that were cancelled.</p>
+bookings that were canceled.</p>
                         <p>20.7 If your access to or use of the Payment Services has been limited or this Agreement has been
 terminated by us, you may not register a new Health Care Travels Account or attempt to access and
 use the Payment Services through other an Health Care Travels Account of another User.</p>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\GuestsInformation;
+use App\Models\PetInformation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\PropertyController;
@@ -32,6 +33,7 @@ class BookingController extends BaseController
             ->leftJoin('users as owner', 'owner.id', '=', 'property_booking.owner_id')
             ->leftJoin('users as traveller', 'traveller.id', '=', 'property_booking.traveller_id')
             ->leftJoin('property_list as property', 'property.id', '=', 'property_booking.property_id')
+            ->where('property_booking.status', '!=', '0')
             ->orderBy('property_booking.id', 'desc')
             ->paginate(100);
 
@@ -59,18 +61,26 @@ class BookingController extends BaseController
     public function booking_details(Request $request)
     {
         $booking = PropertyBooking::find($request->id);
+        if ($booking->status == 0) {
+            return view('general_error', ['message' => 'Booking you are looking for does not exists!']);
+        }
         $guest_info = GuestsInformation::where('booking_id', $booking->booking_id)->get();
+        $pet_info = PetInformation::where('booking_id', $booking->booking_id)->first();
         $booking->agency = implode(", ", array_filter([$booking->name_of_agency, $booking->other_agency])); // Booking Agency
         $owner = $booking->owner;
         $traveler = $booking->traveler;
         $property = $booking->property;
-        if ($booking->cancelled_by == 'Admin') {
-            $cancelled_by = 'Admin';
+
+        if ($booking->auto_canceled) {
+            $cancelled_by = 'Health Care Travels Automation';
+        } elseif ($booking->cancelled_by == 'Admin') {
+            $cancelled_by = 'Health Care Travels';
         } elseif ($booking->cancelled_by == $owner->id) {
             $cancelled_by = \App\Helper\Helper::get_user_display_name($owner);
         } else {
             $cancelled_by = \App\Helper\Helper::get_user_display_name($traveler);
         }
+
         $lastPaidByTraveler = null;
         $lastPaidToOwner = null;
         $travelerPaymentInProcessing = null;
@@ -146,6 +156,7 @@ class BookingController extends BaseController
                 'hasPaymentsInProcessing',
                 'canPaymentsCanceled',
                 'guest_info',
+                'pet_info',
             ),
         );
     }
@@ -188,7 +199,7 @@ class BookingController extends BaseController
         }
         return back()->with([
             'success_cancel_booking' => true,
-            'successMessage' => 'Processing payments are been cancelled',
+            'successMessage' => 'Processing payments are been canceled',
         ]);
     }
 

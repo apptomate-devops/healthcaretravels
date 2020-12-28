@@ -404,7 +404,7 @@ class PropertyController extends BaseController
             DB::table('property_booking')
                 ->where('booking_id', $id)
                 ->update(['status' => 8]);
-            return response()->json(['status' => 'SUCCESS', 'message' => 'Booking Cancelled successfully!']);
+            return response()->json(['status' => 'SUCCESS', 'message' => 'Booking Canceled successfully!']);
         } catch (\Exception $e) {
             return response()->json(['status' => 'FAILED', 'message' => $e->getMessage()]);
         }
@@ -870,7 +870,7 @@ class PropertyController extends BaseController
                 ];
 
                 $title = $request->status == 2 ? 'Owner confirms booking' : 'Owner cancels booking';
-                $subject = $request->status == 2 ? 'Booking Confirmed' : 'Booking Cancelled';
+                $subject = $request->status == 2 ? 'Booking Confirmed' : 'Booking Canceled';
 
                 // Traveler email
                 $this->send_custom_email($traveler->email, $subject, 'mail.accepted_booking', $mail_data, $title);
@@ -1200,7 +1200,7 @@ class PropertyController extends BaseController
             $payment['is_cleared'] = $payment['is_cleared'] ?? 0;
             $payment['status'] = $payment['status'] ?? 0;
             if (in_array($booking->status, [4, 8])) {
-                // booking is cancelled or denied
+                // booking is canceled or denied
                 $payment['status'] = 4;
             }
             $cleaning_fee_entry = array_merge([], $payment);
@@ -1208,6 +1208,8 @@ class PropertyController extends BaseController
             $service_tax_entry = array_merge([], $payment);
             $is_partial_days_payment = boolval($payment['is_partial_days'] ?? 0);
             $neat_rate = $payment['monthly_rate'];
+            $service_fee_label = $payment['payment_cycle'] == 1 ? 'Service Fee' : 'Processing Fee';
+
             if ($is_partial_days_payment) {
                 $neat_rate = round(($payment['monthly_rate'] * $payment['is_partial_days']) / 30);
             }
@@ -1215,7 +1217,12 @@ class PropertyController extends BaseController
                 $payment['amount'] = self::format_amount($neat_rate - $payment['service_tax']);
                 $grand_total = $grand_total + $payment['total_amount'] - $payment['service_tax'];
                 $payment['covering_range'] =
-                    "Covering " . $payment['covering_range'] . ", Minus $" . $payment['service_tax'] . " fee";
+                    "Covering " .
+                    $payment['covering_range'] .
+                    ", Minus $" .
+                    $payment['service_tax'] .
+                    ' ' .
+                    $service_fee_label;
 
                 if ($payment['payment_cycle'] == 1) {
                     $cleaning_fee_entry['name'] = 'Cleaning Fee';
@@ -1251,7 +1258,7 @@ class PropertyController extends BaseController
                 }
 
                 $service_tax_entry['due_date'] = $payment['due_date'];
-                $service_tax_entry['name'] = $payment['payment_cycle'] == 1 ? 'Service Fee' : 'Processing Fee';
+                $service_tax_entry['name'] = $service_fee_label;
                 $service_tax_entry['amount'] = self::format_amount($payment['service_tax'], '-');
                 $service_tax_entry['is_cleared'] = $payment['is_cleared'];
                 $service_tax_entry['status'] = $payment['status'];
@@ -1774,15 +1781,18 @@ class PropertyController extends BaseController
     public function traveller_fire_chat($id, Request $request)
     {
         $user_id = $request->session()->get('user_id');
-
         if (!$user_id) {
             return redirect('/');
         }
 
+        $property = DB::table('personal_chat')
+            ->where([['id', '=', $id], ['traveller_id', '=', $user_id]])
+            ->first();
+        if (empty($property)) {
+            return view('general_error', ['message' => 'We can’t find the property chat you’re looking for.']);
+        }
+
         if ($request->fbkey == "personal_chat") {
-            $property = DB::table('personal_chat')
-                ->where([['id', '=', $id], ['traveller_id', '=', $user_id]])
-                ->first();
             if (!isset($property)) {
                 error_log('..');
                 return redirect('/');
@@ -2920,7 +2930,7 @@ class PropertyController extends BaseController
         if (!$pet_detail) {
             $pet_detail = new PetInformation();
         }
-        if ($request->is_pet_travelling) {
+        if ($request->pet_name) {
             $petImage = $this->base_image_upload($request, 'pet_image', 'pets');
             $pet_detail->booking_id = $request->booking_id;
             $pet_detail->pet_name = $request->pet_name;

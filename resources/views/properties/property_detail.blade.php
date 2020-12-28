@@ -199,7 +199,7 @@
                                                     @elseif($data->bookingStatus == 8)
                                                         <tr class="editable-fields">
                                                             <td colspan="2">
-                                                                <div style="margin-top: 30px; color: #e08716;">This booking has been cancelled.</div>
+                                                                <div style="margin-top: 30px; color: #e08716;">This booking has been canceled.</div>
                                                             </td>
                                                         </tr>
                                                     @endif

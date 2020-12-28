@@ -124,7 +124,7 @@
                             <td>{{$pet_details->pet_weight}}</td>
                             <td>
                                 <a href="{{$pet_details->pet_image}}" target="_blank">
-                                    <img src="{{$pet_details->pet_image}}" alt="">
+                                    <img src="{{$pet_details->pet_image}}" alt="" style="height: 70px; width: 70px;">
                                 </a>
                             </td>
                         </tr>
@@ -170,7 +170,10 @@
                             <span style="font-weight: bold; color: #e78016">{{$data->deny_reason ?? ''}}</span>
                             <br><br>
                         @elseif($data->status == 8)
-                            <button class="button" >Your booking has been cancelled.</button><br><br>
+                            <div style="text-align: center;margin-top: 30px;">
+                                Your booking has been canceled
+                            </div>
+                            <br><br>
                         @endif
                     </center>
                 </div>

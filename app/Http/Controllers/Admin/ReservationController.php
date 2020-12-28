@@ -81,9 +81,9 @@ class ReservationController extends BaseController
         if ($booking->cancelled_by == 'Admin') {
             $cancelled_by = 'Admin';
         } elseif ($booking->cancelled_by == $owner->id) {
-            $cancelled_by = $owner->first_name . ' ' . $owner->last_name;
+            $cancelled_by = \App\Helper\Helper::get_user_display_name($owner);
         } else {
-            $cancelled_by = $traveler->first_name . ' ' . $traveler->last_name;
+            $cancelled_by = \App\Helper\Helper::get_user_display_name($traveler);
         }
         return view(
             'Admin.cancellation_request_details',
@@ -172,8 +172,8 @@ class ReservationController extends BaseController
         $traveller = $bookingModel->traveler;
         $property = $bookingModel->property;
 
-        $title = APP_BASE_NAME . "Admin cancelled booking";
-        $subject = "Booking Cancelled";
+        $title = APP_BASE_NAME . "Admin canceled booking";
+        $subject = "Booking Canceled";
         $mail_data = [
             'property_title' => $property->title,
             'check_in' => date('m-d-Y', strtotime($data->start_date)),
@@ -187,7 +187,7 @@ class ReservationController extends BaseController
 
         return back()->with([
             'success_cancel_booking' => true,
-            'successMessage' => 'Booking cancelled Successfully!!!',
+            'successMessage' => 'Booking canceled Successfully!!!',
         ]);
     }
 

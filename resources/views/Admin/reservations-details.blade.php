@@ -260,7 +260,7 @@
                                     @endif
                                     @if($data->booking_status == 4)
                                         <div class="col-md-5 col-sm-12 text-center">
-                                            <button type="button" class="btn btn-info btn-lg my-1"> Request Cancelled by
+                                            <button type="button" class="btn btn-info btn-lg my-1"> Request Canceled by
                                                 owner
                                             </button>
                                         </div>

@@ -10,6 +10,7 @@ use App\Models\PropertyBlocking;
 use App\Services\Logger;
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Facades\File;
 use Session;
 use App\Models\Users;
 use App\Models\Propertyamenties;
@@ -403,7 +404,7 @@ class PropertyController extends BaseController
             DB::table('property_booking')
                 ->where('booking_id', $id)
                 ->update(['status' => 8]);
-            return response()->json(['status' => 'SUCCESS', 'message' => 'Booking Cancelled successfully!']);
+            return response()->json(['status' => 'SUCCESS', 'message' => 'Booking Canceled successfully!']);
         } catch (\Exception $e) {
             return response()->json(['status' => 'FAILED', 'message' => $e->getMessage()]);
         }
@@ -463,16 +464,31 @@ class PropertyController extends BaseController
 
     public function delete_property_image($id)
     {
-        $data = DB::table('property_images')
-            ->where('id', $id)
-            ->first();
-
-        //$file_name = 'data/'.$property_id.'.json';
-        //unlink($data->image_url);
-        DB::table('property_images')
-            ->where('id', $id)
-            ->delete();
-        return response()->json(['status' => 'SUCCESS']);
+        $new_cover_image = false;
+        try {
+            $data = DB::table('property_images')
+                ->where('id', $id)
+                ->first();
+            DB::table('property_images')
+                ->where('id', $id)
+                ->delete();
+            if ($data->is_cover) {
+                $new_cover_image = DB::table('property_images')
+                    ->where('property_id', $data->property_id)
+                    ->first();
+                DB::table('property_images')
+                    ->where('id', $new_cover_image->id)
+                    ->update(['is_cover' => 1]);
+            }
+            unlink(storage_path(str_replace('storage', 'app', $data->image_url)));
+            return response()->json([
+                'status' => 'SUCCESS',
+                'file_path' => $data->image_url,
+                'new_cover_image' => $new_cover_image,
+            ]);
+        } catch (\Exception $ex) {
+            Logger::error('Error deleting property image' . $ex->getMessage());
+        }
     }
 
     public function favorites(Request $request)
@@ -854,7 +870,7 @@ class PropertyController extends BaseController
                 ];
 
                 $title = $request->status == 2 ? 'Owner confirms booking' : 'Owner cancels booking';
-                $subject = $request->status == 2 ? 'Booking Confirmed' : 'Booking Cancelled';
+                $subject = $request->status == 2 ? 'Booking Confirmed' : 'Booking Canceled';
 
                 // Traveler email
                 $this->send_custom_email($traveler->email, $subject, 'mail.accepted_booking', $mail_data, $title);
@@ -1184,7 +1200,7 @@ class PropertyController extends BaseController
             $payment['is_cleared'] = $payment['is_cleared'] ?? 0;
             $payment['status'] = $payment['status'] ?? 0;
             if (in_array($booking->status, [4, 8])) {
-                // booking is cancelled or denied
+                // booking is canceled or denied
                 $payment['status'] = 4;
             }
             $cleaning_fee_entry = array_merge([], $payment);
@@ -1192,6 +1208,8 @@ class PropertyController extends BaseController
             $service_tax_entry = array_merge([], $payment);
             $is_partial_days_payment = boolval($payment['is_partial_days'] ?? 0);
             $neat_rate = $payment['monthly_rate'];
+            $service_fee_label = $payment['payment_cycle'] == 1 ? 'Service Fee' : 'Processing Fee';
+
             if ($is_partial_days_payment) {
                 $neat_rate = round(($payment['monthly_rate'] * $payment['is_partial_days']) / 30);
             }
@@ -1199,7 +1217,12 @@ class PropertyController extends BaseController
                 $payment['amount'] = self::format_amount($neat_rate - $payment['service_tax']);
                 $grand_total = $grand_total + $payment['total_amount'] - $payment['service_tax'];
                 $payment['covering_range'] =
-                    "Covering " . $payment['covering_range'] . ", Minus $" . $payment['service_tax'] . " fee";
+                    "Covering " .
+                    $payment['covering_range'] .
+                    ", Minus $" .
+                    $payment['service_tax'] .
+                    ' ' .
+                    $service_fee_label;
 
                 if ($payment['payment_cycle'] == 1) {
                     $cleaning_fee_entry['name'] = 'Cleaning Fee';
@@ -1235,7 +1258,7 @@ class PropertyController extends BaseController
                 }
 
                 $service_tax_entry['due_date'] = $payment['due_date'];
-                $service_tax_entry['name'] = $payment['payment_cycle'] == 1 ? 'Service Fee' : 'Processing Fee';
+                $service_tax_entry['name'] = $service_fee_label;
                 $service_tax_entry['amount'] = self::format_amount($payment['service_tax'], '-');
                 $service_tax_entry['is_cleared'] = $payment['is_cleared'];
                 $service_tax_entry['status'] = $payment['status'];
@@ -1758,15 +1781,18 @@ class PropertyController extends BaseController
     public function traveller_fire_chat($id, Request $request)
     {
         $user_id = $request->session()->get('user_id');
-
         if (!$user_id) {
             return redirect('/');
         }
 
+        $property = DB::table('personal_chat')
+            ->where([['id', '=', $id], ['traveller_id', '=', $user_id]])
+            ->first();
+        if (empty($property)) {
+            return view('general_error', ['message' => 'We can’t find the property chat you’re looking for.']);
+        }
+
         if ($request->fbkey == "personal_chat") {
-            $property = DB::table('personal_chat')
-                ->where([['id', '=', $id], ['traveller_id', '=', $user_id]])
-                ->first();
             if (!isset($property)) {
                 error_log('..');
                 return redirect('/');
@@ -2646,7 +2672,7 @@ class PropertyController extends BaseController
             ->first();
 
         $mail_data = [
-            'name' => $user->first_name . ' ' . $user->last_name,
+            'name' => Helper::get_user_display_name($user),
             'property_link' => BASE_URL . 'property/' . $request->property_id,
             'availability_calendar' => BASE_URL . 'ical/' . $request->property_id,
         ];
@@ -2904,7 +2930,7 @@ class PropertyController extends BaseController
         if (!$pet_detail) {
             $pet_detail = new PetInformation();
         }
-        if ($request->is_pet_travelling) {
+        if ($request->pet_name) {
             $petImage = $this->base_image_upload($request, 'pet_image', 'pets');
             $pet_detail->booking_id = $request->booking_id;
             $pet_detail->pet_name = $request->pet_name;
@@ -3023,6 +3049,14 @@ class PropertyController extends BaseController
                 $property->property_images = $pd;
             }
 
+            // check if any existing or future bookings
+            $current_property_bookings = DB::table('property_booking')
+                ->where('property_booking.client_id', CLIENT_ID)
+                ->where('property_booking.property_id', '=', $property->propertyId)
+                ->where('property_booking.status', '=', 2)
+                ->whereDate('property_booking.end_date', '>=', Carbon::now())
+                ->count();
+            $property->delete_not_allowed = (bool) $current_property_bookings > 0;
             $properties_near[] = $property;
         }
 
@@ -3123,6 +3157,18 @@ class PropertyController extends BaseController
                 ->where('client_id', '=', CLIENT_ID)
                 ->where('id', '=', $property_id)
                 ->update(['status' => 0]);
+
+            DB::table('property_booking')
+                ->where('property_booking.client_id', CLIENT_ID)
+                ->where('property_booking.property_id', '=', $property_id)
+                ->where('property_booking.status', '=', 1)
+                ->update(['status' => 4]);
+
+            DB::table('property_booking')
+                ->where('property_booking.client_id', CLIENT_ID)
+                ->where('property_booking.property_id', '=', $property_id)
+                ->where('property_booking.status', '=', 0)
+                ->delete();
             //        $data = DB::table('property_list')
             //            ->join('users', 'users.id', '=', 'property_list.user_id')
             //            ->where('property_list.client_id', CLIENT_ID)

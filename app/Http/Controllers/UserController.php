@@ -401,7 +401,7 @@ class UserController extends BaseController
             $reg = EmailConfig::where('type', TEMPLATE_VERIFICATION)->first();
             $mail_data = [
                 'token' => $token,
-                'name' => $check->first_name . ' ' . $check->last_name,
+                'name' => Helper::get_user_display_name($check),
                 'email' => $check->email,
                 'url' => $verify_url,
                 'text' => isset($reg->message) ? $reg->message : '',
@@ -801,7 +801,7 @@ class UserController extends BaseController
 
                 $mail_data = [
                     'token' => $check->auth_token,
-                    'name' => $check->first_name . ' ' . $check->last_name,
+                    'name' => Helper::get_user_display_name($check),
                     'email' => $check->email,
                     'url' => $verify_url,
                     'text' => isset($reg->message) ? $reg->message : '',
@@ -1280,11 +1280,14 @@ class UserController extends BaseController
             return redirect('/login')->with('error', 'Session timeout login again');
         }
         $client_id = $this->get_client_id();
-        $complete_url = " ";
-        $update = DB::table('users')
-            ->where('client_id', '=', $client_id)
-            ->where('id', '=', $user_id)
-            ->update(['profile_image' => ' ']);
+        $update_user = Users::find($user_id);
+        if ($update_user) {
+            if ($update_user->profile_image) {
+                unlink(storage_path(str_replace('storage', 'app', $update_user->profile_image)));
+            }
+            $update_user->profile_image = null;
+            $update_user->save();
+        }
         $request->session()->put('profile_image', ' ');
         return redirect('profile');
     }

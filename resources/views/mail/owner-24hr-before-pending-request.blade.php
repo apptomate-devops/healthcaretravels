@@ -6,7 +6,7 @@
     <div style="padding-top: 5px;">
         You have a pending booking request that will be automatically closed in 24 hours. Please approve or deny the booking request on the <a href="{{URL('/')}}/owner/my-bookings">Your Bookings</a> page on Health Care Travels.
         <br>
-        Requested for: <h2><b>{{$property->title}}</b></h2> for <strong>{{$data->start_date}}</strong> to <strong>{{$data->end_date}}</strong>
+        Requested for: <h2><b>{{$property->title}}</b></h2> for <strong>{{date('m-d-Y', strtotime($data->start_date))}}</strong> to <strong>{{date('m-d-Y', strtotime($data->end_date))}}</strong>
     </div>
     <div style="padding-top: 5px;">
         <div class="panel payments-listing payment_list_right">
@@ -24,7 +24,7 @@
                             </div>
                         </div>
                         <div>
-                            <strong>{{$data->start_date}}</strong> to <strong>{{$data->end_date}}</strong>
+                            <strong>{{date('m-d-Y', strtotime($data->start_date))}}</strong> to <strong>{{date('m-d-Y', strtotime($data->end_date))}}</strong>
                         </div>
                         <hr>
                         <section id="billing-summary" class="billing-summary">

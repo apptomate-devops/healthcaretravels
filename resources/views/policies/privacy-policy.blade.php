@@ -102,7 +102,7 @@
                             software, to administer our Platform and to gather demographic information. Our third party
                             advertising partners may also provide us with aggregate, but not individual, reports that
                             will tell us how many ads were presented and clicked upon at our Platform, your search
-                            queries on the Platform, booking history (including bookings cancelled or inquired about),
+                            queries on the Platform, booking history (including bookings canceled or inquired about),
                             details of transactions you carry out through our Platform and of the fulfillment of your
                             reservations, service used and manner of usage, google maps of listing location, log data to
                             the Platform, transaction history &nbsp;.</p>

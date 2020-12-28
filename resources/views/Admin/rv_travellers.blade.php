@@ -101,17 +101,7 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                @if($traveller->gender =! '0')
-                                                @if ($traveller->gender == '1')
-                                                Male
-                                                @elseif($traveller->gender == '2')
-                                                Female
-                                                @else
-                                                {{$traveller->gender}}
-                                                @endif
-                                                @else
-                                                <center>-</center>
-                                                @endif
+                                                <center>{{$traveller->gender ?? '-'}}</center>
                                             </td>
                                             <td>
                                                 @if($traveller->date_of_birth!='0')

@@ -90,8 +90,10 @@
                                                 Approved
                                                 @elseif($booking->status == 3)
                                                 Completed
+                                                @elseif($booking->status == 4)
+                                                Denied
                                                 @else
-                                                Cancelled
+                                                Canceled
                                                 @endif
                                             </td>
                                             <td>

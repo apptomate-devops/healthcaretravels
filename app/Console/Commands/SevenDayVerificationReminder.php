@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Helper\Helper;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use App\Services\Logger;
@@ -52,7 +53,7 @@ class SevenDayVerificationReminder extends Command
         foreach ($users as $user) {
             Logger::info('User data found: ' . $user->email);
             $data = [
-                'name' => $user->first_name . ' ' . $user->last_name,
+                'name' => Helper::get_user_display_name($user),
                 'email' => $user->email,
                 'text' => $reg->message,
                 'BASE_URL' => config('app.url') . '/',

@@ -104,19 +104,7 @@
                                                 <center>-</center>@endif
                                             </td>
                                             <td>
-                                                <center>
-                                                    @if($traveller->gender=!'0')
-                                                    @if ($traveller->gender == '1')
-                                                    Male
-                                                    @elseif($traveller->gender == '2')
-                                                    Female
-                                                    @else
-                                                    {{$traveller->gender}}
-                                                    @endif
-                                                    @else
-                                                    -
-                                                    @endif
-                                                </center>
+                                                <center>{{$traveller->gender ?? '-'}}</center>
                                             </td>
                                             <td>
                                                 <center>

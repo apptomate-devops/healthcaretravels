@@ -302,7 +302,7 @@ class PaymentController extends BaseController
                             $traveller->email,
                             'Security Deposit Return',
                             'mail.security-deposit-refund',
-                            ['name' => $traveller->first_name . ' ' . $traveller->last_name],
+                            ['name' => \App\Helper\Helper::get_user_display_name($traveller)],
                             'Payment Processed',
                         );
                     } elseif ($booking->cancellation_refund_transfer_id == $resourceId) {

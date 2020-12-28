@@ -228,70 +228,70 @@
 
 
 <script>
-    function lsTest() {
-        var test = 'test';
-        try {
-            localStorage.setItem(test, test);
-            localStorage.removeItem(test);
-            return true;
-        } catch (e) {
-            return false;
-        }
-    }
+    // function lsTest() {
+    //     var test = 'test';
+    //     try {
+    //         localStorage.setItem(test, test);
+    //         localStorage.removeItem(test);
+    //         return true;
+    //     } catch (e) {
+    //         return false;
+    //     }
+    // }
+    //
+    // // listen to storage event
+    // window.addEventListener('storage', function (event) {
+    //     // do what you want on logout-event
+    //     if (event.key == 'logout-event') {
+    //         //alert('Received logout event! Insert logout script here.');
+    //         window.location = window.location.protocol + "//" + window.location.host;
+    //     }
+    // }, false);
+    //
+    // $(document).ready(function () {
+    //     if (lsTest()) {
+    //         $('#logout').on('click', function () {
+    //             // change logout-event and therefore send an event
+    //             localStorage.setItem('logout-event', 'logout' + Math.random());
+    //             return true;
+    //         });
+    //     } else {
+    //         // setInterval or setTimeout
+    //     }
+    //
+    //     var searchSelect = $('.search-container select, .search_container select');
+    //     searchSelect.each(function (e) {
+    //         if(!$(this).val()) {
+    //             searchSelect.addClass('has-placeholder');
+    //         }
+    //     })
+    //     searchSelect.change(function() {
+    //         $(this).removeClass('has-placeholder');
+    //     });
+    // });
 
-    // listen to storage event
-    window.addEventListener('storage', function (event) {
-        // do what you want on logout-event
-        if (event.key == 'logout-event') {
-            //alert('Received logout event! Insert logout script here.');
-            window.location = window.location.protocol + "//" + window.location.host;
-        }
-    }, false);
-
-    $(document).ready(function () {
-        if (lsTest()) {
-            $('#logout').on('click', function () {
-                // change logout-event and therefore send an event
-                localStorage.setItem('logout-event', 'logout' + Math.random());
-                return true;
-            });
-        } else {
-            // setInterval or setTimeout
-        }
-
-        var searchSelect = $('.search-container select, .search_container select');
-        searchSelect.each(function (e) {
-            if(!$(this).val()) {
-                searchSelect.addClass('has-placeholder');
-            }
-        })
-        searchSelect.change(function() {
-            $(this).removeClass('has-placeholder');
-        });
-    });
-
-    function signOut() {
-        //alert("logout");
-        window.localStorage.setItem('logged_in', false)
-        // FB.logout(function(response) {
-        //     // Person is now logged out
-        //     console.log('User signed out.'+response);
-
-        // });
-        // var auth2 = gapi.auth2.getAuthInstance();
-        // auth2.signOut().then(function () {
-        //     console.log('User signed out.');
-
-        // });
-
-        // FB.logout(function(response) {
-        //     // Person is now logged out
-        //     console.log('User signed out.'+response);
-
-
-        // });
-
-    }
+    // function signOut() {
+    //     //alert("logout");
+    //     window.localStorage.setItem('logged_in', false)
+    //     // FB.logout(function(response) {
+    //     //     // Person is now logged out
+    //     //     console.log('User signed out.'+response);
+    //
+    //     // });
+    //     // var auth2 = gapi.auth2.getAuthInstance();
+    //     // auth2.signOut().then(function () {
+    //     //     console.log('User signed out.');
+    //
+    //     // });
+    //
+    //     // FB.logout(function(response) {
+    //     //     // Person is now logged out
+    //     //     console.log('User signed out.'+response);
+    //
+    //
+    //     // });
+    //
+    // }
 
 
     function initMap() {

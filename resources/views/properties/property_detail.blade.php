@@ -157,7 +157,7 @@
                                                         </tr>
                                                     @endif
                                                     @if(in_array($data->bookingStatus, [0, 1]))
-                                                        @if(\Carbon\Carbon::parse($data->start_date)->diffInDays(\Carbon\Carbon::now()) >= 7)
+                                                        @if(\Carbon\Carbon::now()->diffInDays(\Carbon\Carbon::parse($data->start_date), false) >= 7)
                                                             @if(Session::get('user_id'))
                                                                 <tr class="editable-fields">
                                                                     <td colspan="2">

@@ -85,11 +85,11 @@
                     </tr>
                 </table>
                 <div>The selected account will be used to process any future payments for this booking.</div>
-                    @if(in_array($data->status, [2, 3]))
-                        <div class="text-right">
-                            <a target="_blank" href="{{BASE_URL}}invoice/{{$data->booking_id}}" class="margin-top-40 button border">Print Invoice</a>
-                        </div>
-                    @endif
+                @if(in_array($data->status, [2, 3]))
+                    <div class="text-right">
+                        <a target="_blank" href="{{BASE_URL}}invoice/{{$data->booking_id}}" class="margin-top-40 button border">Print Invoice</a>
+                    </div>
+                @endif
                 @if(count($guest_info) > 0)
                     <h2>Guest Information</h2>
                     <table class="table table-striped">
@@ -152,7 +152,7 @@
                     <br>
                 @elseif($data->status == 2)
                     @if($data->cancellation_requested == 1)
-                            <div style="text-align: center">Cancellation Pending</div>
+                        <div style="text-align: center">Cancellation Pending</div>
                     @else
                         <div style="text-align: center;margin-top: 30px;">
                             <button class="button" onclick="location.href='{{BASE_URL}}request_cancellation/{{$data->booking_id}}';">Request Cancellation</button>
@@ -161,30 +161,32 @@
                     @endif
                 @elseif($data->status == 4)
                     <div style="text-align: center;margin-top: 30px;">
-                        <div>Request Denied by Owner</div>>
+                        <div>Request Denied by Owner</div>
                         <br>
                         <span style="font-weight: bold; color: #e78016">{{$data->deny_reason ?? ''}}</span>
                     </div>
                     <br>
                 @elseif($data->status == 8)
-                    <div style="text-align: center;margin-top: 30px;">
-                        Your booking has been canceled
-                    </div>
+                    <center>
+                        <button class="button" style="text-align: center;margin-top: 30px; pointer-events: none;">
+                            Your booking has been canceled
+                        </button>
+                    </center>
                     <br>
                 @endif
-{{--                <div>--}}
-{{--                    <center>--}}
-{{--                        @if($data->payment_done == 1)--}}
-{{--                            <span class="txt-green">Payment Done</span><br>--}}
-{{--                        @else--}}
-{{--                            <span class="txt-red">Not Paid</span><br>--}}
-{{--                        @endif--}}
-{{--                    </center>--}}
+                {{--                <div>--}}
+                {{--                    <center>--}}
+                {{--                        @if($data->payment_done == 1)--}}
+                {{--                            <span class="txt-green">Payment Done</span><br>--}}
+                {{--                        @else--}}
+                {{--                            <span class="txt-red">Not Paid</span><br>--}}
+                {{--                        @endif--}}
+                {{--                    </center>--}}
 
-{{--                    @if(isset($_GET['id']))--}}
-{{--                        <button class="button" onclick="document.location.href='{{BASE_URL}}owner/payment-success?id={{$data->booking_id}}';" style="margin-bottom: 80px;">Pay Now</button>--}}
-{{--                    @endif--}}
-{{--                </div>--}}
+                {{--                    @if(isset($_GET['id']))--}}
+                {{--                        <button class="button" onclick="document.location.href='{{BASE_URL}}owner/payment-success?id={{$data->booking_id}}';" style="margin-bottom: 80px;">Pay Now</button>--}}
+                {{--                    @endif--}}
+                {{--                </div>--}}
 
             </div>
 

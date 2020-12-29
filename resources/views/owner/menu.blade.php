@@ -137,7 +137,7 @@
             <i class="sl sl-icon-star"></i> Favorites </a></li>
 
     <li><a href="{{url('/')}}/traveler/my-reservations" {{{ (Request::is('traveler/my-reservations') ? 'class=current' : '') }}}>
-            <i class="sl sl-icon-credit-card"></i> My Trips</a><i class="fa fa-bell" id="traveler_trips"></i></li>
+            <i class="sl sl-icon-credit-card"></i> My Trips</a><i class="fa fa-bell" id="traveler_trips" style="display: none;"></i></li>
 
     @if(Auth::user()->default_funding_source)
         <li>
@@ -183,7 +183,7 @@
             <i class="sl sl-icon-star"></i> Favorites </a></li>
 
     <li><a href="{{url('/')}}/traveler/my-reservations" {{{ (Request::is('traveler/my-reservations') ? 'class=current' : '') }}}>
-            <i class="sl sl-icon-credit-card"></i> My Trips</a><i class="fa fa-bell" id="agency_trips"></i></li>
+            <i class="sl sl-icon-credit-card"></i> My Trips</a><i class="fa fa-bell" id="agency_trips" style="display: none;"></i></li>
 
     @if(Auth::user()->default_funding_source)
         <li>

@@ -162,17 +162,17 @@
                                 <br>
                             @endif
                         @elseif($data->status == 3)
-                            <button class="button" >Invoice sent</button><br><br>
+                            <div class="button" >Invoice sent</div><br><br>
 
                         @elseif($data->status == 4)
-                            <div>Request Declined by you</div>>
+                            <div>Request Declined by you</div>
                             <br>
                             <span style="font-weight: bold; color: #e78016">{{$data->deny_reason ?? ''}}</span>
                             <br><br>
                         @elseif($data->status == 8)
-                            <div style="text-align: center;margin-top: 30px;">
+                            <button class="button" style="text-align: center;margin-top: 30px; pointer-events: none;">
                                 Your booking has been canceled
-                            </div>
+                            </button>
                             <br><br>
                         @endif
                     </center>

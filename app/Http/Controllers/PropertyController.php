@@ -1222,7 +1222,7 @@ class PropertyController extends BaseController
                     ", Minus $" .
                     $payment['service_tax'] .
                     ' ' .
-                    $service_fee_label;
+                    strtolower($service_fee_label);
 
                 if ($payment['payment_cycle'] == 1) {
                     $cleaning_fee_entry['name'] = 'Cleaning Fee';

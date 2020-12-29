@@ -32,7 +32,7 @@
 
             <div class="col-md-8">
                 <div class="booking-details">
-                    <form action="{{url('/')}}/owner/chat-with-traveler" method="post" >
+                    <form action="{{url('/')}}/chat-with-traveler" method="post" >
                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                         <input type="hidden" name="check_in" value="{{$data->start_date}}">
                         <input type="hidden" name="check_out" value="{{$data->end_date}}">

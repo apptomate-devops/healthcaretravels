@@ -47,10 +47,9 @@ class UnreadMessageCount
      */
     public function handle($request, Closure $next)
     {
-        $ignore_urls = ['logout'];
-        $isIgnored = in_array($request->path(), $ignore_urls);
+        $is_logout_path = strpos($request->path(), 'logout');
         $is_public_ical_path = strpos($request->path(), 'ical/');
-        if (!$isIgnored && !$is_public_ical_path) {
+        if ($is_logout_path === false && $is_public_ical_path === false) {
             $user_id = $request->session()->get('user_id');
             $this->request = $request;
             $unread_data = [

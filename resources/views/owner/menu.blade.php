@@ -68,11 +68,11 @@
             </a>
         </li>
 
-        <li>
-            <a href="{{url('/')}}/owner/transaction-history" {{{ (Request::is('owner/transaction-history') ? 'class=current' : '') }}}>
-                <i class="sl sl-icon-note"></i> Transaction History
-            </a>
-        </li>
+{{--        <li>--}}
+{{--            <a href="{{url('/')}}/owner/transaction-history" {{{ (Request::is('owner/transaction-history') ? 'class=current' : '') }}}>--}}
+{{--                <i class="sl sl-icon-note"></i> Transaction History--}}
+{{--            </a>--}}
+{{--        </li>--}}
         @if(Auth::user()->default_funding_source)
             <li>
                 <a href="{{url('/')}}/payment-options" {{{ (Request::is('/payment-options') ? 'class=current' : '') }}}>

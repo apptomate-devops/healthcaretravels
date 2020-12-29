@@ -1331,7 +1331,7 @@ class PropertyController extends BaseController
         $travellerId = $request->traveller_id;
         $propertyId = $request->property_id;
         $user_id = $request->session()->get('user_id');
-        $chat_with = $user_id === $travellerId ? 'traveler' : 'owner';
+        $chat_with = $user_id == $travellerId ? 'traveler' : 'owner';
         if ($travellerId && $propertyId) {
             $chat_data = Helper::start_chat_handler($travellerId, $propertyId, $request);
             $chat_url = "{$request->getSchemeAndHttpHost()}/{$chat_with}/chat/{$chat_data['chat_id']}?fb-key=personal_chat&fbkey=personal_chat";
@@ -1409,6 +1409,7 @@ class PropertyController extends BaseController
                 'property_list.*',
                 'users.first_name',
                 'users.last_name',
+                'users.role_id',
                 'users.profile_image',
                 'users.device_token',
                 'property_images.image_url',
@@ -2941,7 +2942,7 @@ class PropertyController extends BaseController
         } else {
             $pet_detail->delete();
         }
-        return redirect()->intended('/owner/reservations/' . $booking->booking_id);
+        return redirect()->intended('/traveler/single-reservation/' . $booking->booking_id);
     }
 
     public function update_property($property_id)

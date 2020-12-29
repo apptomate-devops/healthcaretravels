@@ -30,7 +30,7 @@
                     <div style="font-weight: bold; color: #e08716; margin-bottom: 15px;">Your request has been sent to the property owner. We'll let you know when your request is approved. In the mean time, feel free to start a chat with the property owner to say hello!</div>
                 @endif
                 <div class="booking-details">
-                    <form action="{{url('/')}}/owner/chat-with-traveler" method="post" >
+                    <form action="{{url('/')}}/chat-with-traveler" method="post" >
                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                         <input type="hidden" name="check_in" value="{{$data->start_date}}">
                         <input type="hidden" name="check_out" value="{{$data->end_date}}">

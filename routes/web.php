@@ -136,6 +136,7 @@ Route::middleware(['LoginCheck'])->group(function () {
 
         // Traveller
         Route::get('/traveler/my-reservations', 'PropertyController@reservations');
+        Route::get('/traveler/single-reservation/{id}', 'PropertyController@single_reservations');
         Route::GET('/traveler/inbox', 'PropertyController@inbox_traveller');
         Route::GET('/traveler/favorites', 'PropertyController@favorites');
         Route::get('/traveler/chat/{id}', 'PropertyController@traveller_fire_chat');
@@ -168,16 +169,14 @@ Route::middleware(['LoginCheck'])->group(function () {
         Route::POST('/owner/add-new-property/7', 'PropertyController@property_next7');
         Route::get('/owner/payment-method', 'OwnerController@payment_method_index');
         Route::GET('/owner/my-bookings', 'OwnerController@my_bookings');
-        Route::GET('/owner/bookings', 'OwnerController@my_bookings');
         Route::GET('/owner/single-booking/{id}', 'PropertyController@single_booking');
-        Route::POST('/owner/chat-with-traveler', 'PropertyController@chat_with_traveler');
-        Route::get('/owner/reservations', 'PropertyController@reservations');
-        Route::get('/owner/reservations/{id}', 'PropertyController@single_reservations');
+        //        Route::get('/owner/reservations', 'PropertyController@reservations');
+        //        Route::get('/owner/reservations/{id}', 'PropertyController@single_reservations');
         Route::POST('/owner/property/file-upload/{cover_id?}', 'PropertyController@property_image_upload');
         Route::POST('/owner-update-booking', 'PropertyController@owner_update_booking');
         Route::get('/owner/update-property/{id}', 'PropertyController@update_property');
-        Route::GET('/disable-property/{id}', 'PropertyController@disable_property');
-        Route::GET('/delete-property/{id}', 'PropertyController@delete_property');
+        Route::GET('/owner/disable-property/{id}', 'PropertyController@disable_property');
+        Route::GET('/owner/delete-property/{id}', 'PropertyController@delete_property');
         Route::GET('/payment-default/{id}', 'OwnerController@payment_default');
         Route::GET('/owner/calender', 'OwnerController@calender');
         Route::POST('/owner/upload-calender', 'OwnerController@upload_calender');
@@ -186,6 +185,10 @@ Route::middleware(['LoginCheck'])->group(function () {
         // Payment and Invoices
         Route::GET('/payment-options', 'PaymentController@get_payment_options');
         Route::GET('/invoice/{id}', 'PDF_Controller@invoice');
+
+        // general routes
+
+        Route::POST('/chat-with-traveler', 'PropertyController@chat_with_traveler');
     });
 });
 

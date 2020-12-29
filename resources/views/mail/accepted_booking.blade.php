@@ -72,7 +72,7 @@
                     </div>
                 </div>
                 <div class="total_amount" style="flex: 1; display: inline-block; width: 100%; max-width: 400px; margin-top: 10px;color: white; background-color: #e78016; font-weight: bold; padding: 10px; text-align: center;">
-                    <a href="{{URL('/')}}/owner/reservations/{{$booking_id}}" style="color: white" target="_blank">
+                    <a href="{{URL('/')}}/traveler/single-reservation/{{$booking_id}}" style="color: white" target="_blank">
                         View Stay
                     </a>
                 </div>

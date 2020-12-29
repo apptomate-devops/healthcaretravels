@@ -143,12 +143,12 @@
                                     <li><a href="{{url('/')}}/owner/my-properties" class="not-verified-block"><i class="sl sl-icon-home"></i> My Properties</a></li>
                                     <li><a href="{{url('/')}}/owner/add-property" class="not-verified-block"><i class="sl sl-icon-plus"></i> Add Property</a></li>
 {{--                                    @if(Session::get('role_id') == 1)--}}
-                                    <li><a href="{{url('/')}}/owner/bookings"><i class="sl sl-icon-basket"></i> Bookings</a></li>
+                                    <li><a href="{{url('/')}}/owner/my-bookings"><i class="sl sl-icon-basket"></i> Bookings</a></li>
                                     {{-- <li><a href="{{url('/')}}/owner/reservations"><i class="sl sl-icon-credit-card"></i> My Trips</a></li> --}}
                                     <li><a href="{{url('/')}}/owner/calender"><i class="sl sl-icon-credit-card"></i> Calender</a></li>
 {{--                                    @endif--}}
                                     <li><a href="{{url('/')}}/owner/inbox" class="not-verified-block" style="position:relative"><i class="fa fa-inbox"></i> <span id="unread_chat_badge_inbox"><span class="unread_chat_badge_inbox"></span></span> Inbox</a></li>
-                                    <li><a href="{{url('/')}}/owner/invoices"><i class="sl sl-icon-note"></i> Transaction History </a></li>
+{{--                                    <li><a href="{{url('/')}}/owner/invoices"><i class="sl sl-icon-note"></i> Transaction History </a></li>--}}
                                     @if(Auth::user()->default_funding_source)
                                         <li>
                                             <a href="{{url('/')}}/payment-options" class="not-verified-block">

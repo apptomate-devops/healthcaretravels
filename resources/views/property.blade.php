@@ -1169,6 +1169,7 @@
         });
         function get_price() {
             var id = "{{$property_id}}";
+            var user_role_id = '{{$data->role_id}}';
             var booking_id = $('#booking_id').val();
             var from_date =$('input[id="booking_date_range_picker"][name="check_in"]').val();
             var to_date = $('input[id="booking_date_range_picker"][name="check_out"]').val();
@@ -1180,6 +1181,15 @@
 
             $('.guest').show();
             if(!id || !from_date || !to_date || !guest_count) {
+                return;
+            }
+            debugger
+            if (["1","4"].includes(user_role_id)) {
+                $(".alert").html("Sorry, you need to create a traveler account to stay at other properties.").show();
+                $("#table_body").html("");
+                $("#pricing_details").hide();
+                $('.booking_button').attr('disabled',true);
+                $('.booking_button').css('background','lightgrey');
                 return;
             }
             var url = '/get-property-price?property_id='+id+"&check_in="+from_date+"&check_out="+to_date+"&guest_count="+guest_count+"&booking_id="+booking_id;

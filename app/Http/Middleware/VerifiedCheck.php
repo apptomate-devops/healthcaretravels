@@ -27,6 +27,17 @@ class VerifiedCheck
                 'title' => 'Oops!',
             ]);
         }
+        $is_owner_route = strpos($request->path(), 'owner/');
+        if ($is_owner_route !== false) {
+            $role_id = $request->session()->get('role_id');
+            if (!in_array($role_id, [1, 4])) {
+                return response()->view('general_error', [
+                    'message' => 'You must be owner/co-host to access this feature.',
+                    'hideImage' => true,
+                    'title' => 'Oops!',
+                ]);
+            }
+        }
         return $next($request);
     }
 }

@@ -27,12 +27,24 @@ class VerifiedCheck
                 'title' => 'Oops!',
             ]);
         }
+
+        $role_id = $request->session()->get('role_id');
+
         $is_owner_route = strpos($request->path(), 'owner/');
+        $is_traveler_route = strpos($request->path(), 'traveler/');
         if ($is_owner_route !== false) {
-            $role_id = $request->session()->get('role_id');
             if (!in_array($role_id, [1, 4])) {
                 return response()->view('general_error', [
-                    'message' => 'You must be owner/co-host to access this feature.',
+                    'message' => 'Sorry, you are not able to access this feature.',
+                    'hideImage' => true,
+                    'title' => 'Oops!',
+                ]);
+            }
+        }
+        if ($is_traveler_route !== false) {
+            if (!in_array($role_id, [0, 2, 3])) {
+                return response()->view('general_error', [
+                    'message' => 'Sorry, you are not able to access this feature.',
                     'hideImage' => true,
                     'title' => 'Oops!',
                 ]);

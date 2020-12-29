@@ -1169,7 +1169,7 @@
         });
         function get_price() {
             var id = "{{$property_id}}";
-            var user_role_id = '{{$data->role_id}}';
+            var user_role_id = '{{$current_user->role_id}}';
             var booking_id = $('#booking_id').val();
             var from_date =$('input[id="booking_date_range_picker"][name="check_in"]').val();
             var to_date = $('input[id="booking_date_range_picker"][name="check_out"]').val();

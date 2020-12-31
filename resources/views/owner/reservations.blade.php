@@ -48,7 +48,7 @@
                                             <div><b>Owner</b><a href="/owner-profile/{{$booking->owner_id}}"> {{$booking->owner_name}} </a></div>
                                             <div><b>Check-in</b> {{$booking->start_date}}</div>
                                             <div><b>Check-out</b> {{$booking->end_date}}</div>
-                                            <div><b>Booking ID</b><a href="/owner/reservations/{{$booking->booking_id}}"> {{$booking->booking_id}} </a></div>
+                                            <div><b>Booking ID</b><a href="/traveler/single-reservation/{{$booking->booking_id}}"> {{$booking->booking_id}} </a></div>
                                         </div>
                                     </td>
                                     <td class="expire-date">
@@ -58,7 +58,7 @@
                                 </span>
                                     </td>
                                     <td colspan="2" class="action" style="width: 1%">
-                                        <button class="button" onclick="document.location.href='{{BASE_URL}}owner/reservations/{{$booking->booking_id}}';" style="min-width: 200px;">
+                                        <button class="button" onclick="document.location.href='{{BASE_URL}}traveler/single-reservation/{{$booking->booking_id}}';" style="min-width: 200px;">
                                             View Details
                                         </button>
                                         @if($booking->bookStatus == 1)
@@ -98,7 +98,7 @@
                                             <div><b>Owner</b><a href="/owner-profile/{{$booking->owner_id}}"> {{$booking->owner_name}} </a></div>
                                             <div><b>Check-in</b> {{$booking->start_date}}</div>
                                             <div><b>Check-out</b> {{$booking->end_date}}</div>
-                                            <div><b>Booking ID</b><a href="/owner/reservations/{{$booking->booking_id}}"> {{$booking->booking_id}} </a></div>
+                                            <div><b>Booking ID</b><a href="/traveler/single-reservation/{{$booking->booking_id}}"> {{$booking->booking_id}} </a></div>
                                         </div>
                                     </td>
                                     <td colspan="2" class="action" style="width: 1%">

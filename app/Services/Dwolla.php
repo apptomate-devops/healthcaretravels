@@ -343,7 +343,7 @@ class Dwolla
         try {
             $transfer = $this->transfersApi->update(
                 [
-                    'status' => 'cancelled',
+                    'status' => 'canceled',
                 ],
                 $transferUrl,
             );

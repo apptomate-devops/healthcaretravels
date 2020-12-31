@@ -116,8 +116,8 @@ class Helper
         $booking = $payment->booking;
         $fundingSource = $booking->funding_source;
         if (in_array($booking->status, [4, 8])) {
-            Logger::info('Property booking was cancelled: ' . $booking_id . ' :: paymentCycle: ' . $payment_cycle);
-            return ['success' => false, 'message' => 'Property Booking was cancelled'];
+            Logger::info('Property booking was canceled: ' . $booking_id . ' :: paymentCycle: ' . $payment_cycle);
+            return ['success' => false, 'message' => 'Property Booking was canceled'];
         }
         try {
             // Processing first payment cycle from user's side
@@ -177,8 +177,8 @@ class Helper
             ->where('param', 'service_tax')
             ->first();
         $service_tax = $service_tax_row->value;
-        $cleaning_fee = $property_details->cleaning_fee;
-        $security_deposit = $property_details->security_deposit;
+        $cleaning_fee = (int) $property_details->cleaning_fee;
+        $security_deposit = (int) $property_details->security_deposit;
 
         $property_details->start_date = $check_in;
         $property_details->end_date = $check_out;
@@ -211,6 +211,7 @@ class Helper
     public static function get_months_and_days($booking)
     {
         $all_scheduled_payments = Helper::generate_booking_payments($booking);
+
         $months = 0;
         $pay_now = 0;
         $neat_amount = 0;
@@ -221,7 +222,7 @@ class Helper
         foreach ($all_scheduled_payments as $payment) {
             if ($payment['payment_cycle'] == 1) {
                 // For Initial Payment
-                $pay_now = $payment['total_amount'] + $payment['service_tax'];
+                $pay_now = (int) $payment['total_amount'] + (int) $payment['service_tax'];
                 $day = 'On Approval';
                 $service_fee_label = 'Service Fee';
             } else {
@@ -231,21 +232,21 @@ class Helper
 
             if (isset($payment['is_partial_days'])) {
                 $partialDayCount = $payment['is_partial_days'];
-                $partial_monthly_rate = round(($payment['monthly_rate'] * $partialDayCount) / 30);
-                $neat_price = $partial_monthly_rate + $payment['service_tax']; // consider price for remaining days
+                $partial_monthly_rate = round(((int) $payment['monthly_rate'] * $partialDayCount) / 30);
+                $neat_price = $partial_monthly_rate + (int) $payment['service_tax']; // consider price for remaining days
                 $section = [
                     $payment['payment_cycle'] == 1 ? '1 Month' : $partialDayCount . ' Days' => $partial_monthly_rate,
-                    $service_fee_label => $payment['service_tax'],
+                    $service_fee_label => (int) $payment['service_tax'],
                 ];
             } else {
                 $months++;
-                $neat_price = $payment['monthly_rate'] + $payment['service_tax']; // consider price for full month
+                $neat_price = (int) $payment['monthly_rate'] + (int) $payment['service_tax']; // consider price for full month
                 $section = [
-                    '1 Month' => $payment['monthly_rate'],
-                    $service_fee_label => $payment['service_tax'],
+                    '1 Month' => (int) $payment['monthly_rate'],
+                    $service_fee_label => (int) $payment['service_tax'],
                 ];
             }
-            $neat_amount = $neat_amount + $neat_price;
+            $neat_amount = (int) $neat_amount + (int) $neat_price;
 
             array_push($scheduled_payments, [
                 'day' => $day,
@@ -254,7 +255,7 @@ class Helper
             ]);
         }
 
-        $total_price = $neat_amount + $booking->cleaning_fee + $booking->security_deposit;
+        $total_price = $neat_amount + (int) $booking->cleaning_fee + (int) $booking->security_deposit;
 
         $day_count_label = '1 Month';
         if ($months > 0) {
@@ -303,7 +304,7 @@ class Helper
         $confirmedAt = $type . '_deposit_confirmed_at';
         $failedAt = $type . '_deposit_failed_at';
         if (in_array($booking->status, [4, 8])) {
-            return 'Cancelled';
+            return 'Canceled';
         }
         if ($booking->$confirmedAt) {
             return 'Completed';
@@ -335,7 +336,7 @@ class Helper
             case PAYMENT_FAILED:
                 return 'Failed';
             case PAYMENT_CANCELED:
-                return 'Cancelled';
+                return 'Canceled';
             default:
                 return 'Pending';
         }
@@ -362,7 +363,7 @@ class Helper
             case 4:
                 return 'Denied';
             case 8:
-                return 'Cancelled';
+                return 'Canceled';
             default:
                 return '';
         }
@@ -489,6 +490,20 @@ class Helper
         return $res;
     }
 
+    public static function handleIncompleteBookingRequests($booking_id)
+    {
+        $booking = PropertyBooking::where('booking_id', $booking_id)->first();
+        if (empty($booking)) {
+            Logger::error('Booking does not exist: ' . $booking_id);
+            return ['success' => false, 'message' => 'Booking does not exist!'];
+        }
+        if ($booking->status == 0) {
+            // delete booking
+            $booking->delete();
+            Logger::info('Booking request is deleted: ' . $booking_id);
+        }
+        return ['success' => true, 'message' => 'Booking request is deleted!'];
+    }
     public static function handleAutoCancelForBooking($id)
     {
         $booking = PropertyBooking::find($id);
@@ -504,7 +519,7 @@ class Helper
         $booking->status = 8;
         $booking->auto_canceled = 1;
         $booking->save();
-        return ['success' => true, 'message' => 'Booking request was cancelled successfully'];
+        return ['success' => true, 'message' => 'Booking request was canceled successfully'];
     }
     public static function handleOwnerReminderForBooking($id)
     {
@@ -631,17 +646,17 @@ class Helper
         for ($i = 1; $i <= $totalCycles; $i += 1) {
             $data = [
                 'payment_cycle' => $i,
-                'service_tax' => SERVICE_TAX_SECOND,
+                'service_tax' => (int) SERVICE_TAX_SECOND,
                 'partial_days' => $partialDays,
                 'booking_id' => $booking->booking_id, // Represents booking id used all over the application
                 'booking_row_id' => $booking->id, // Represents primary key id of booking table
-                'cleaning_fee' => $booking->cleaning_fee,
-                'security_deposit' => $booking->security_deposit,
-                'monthly_rate' => $booking->monthly_rate,
+                'cleaning_fee' => (int) $booking->cleaning_fee,
+                'security_deposit' => (int) $booking->security_deposit,
+                'monthly_rate' => (int) $booking->monthly_rate,
                 'is_owner' => $is_owner,
             ];
             if ($i == 1) {
-                $data['service_tax'] = SERVICE_TAX;
+                $data['service_tax'] = (int) SERVICE_TAX;
                 $data['total_amount'] = round(
                     $data['monthly_rate'] + $data['cleaning_fee'] + $data['security_deposit'],
                 );
@@ -658,7 +673,7 @@ class Helper
                 } else {
                     // Setting agency server tax if traveller is an agency
                     if ($booking->role_id == 2) {
-                        $data['service_tax'] = AGENCY_SERVICE_TAX;
+                        $data['service_tax'] = (int) AGENCY_SERVICE_TAX;
                     }
                 }
             } else {
@@ -816,15 +831,16 @@ class Helper
             ->first();
 
         if ($owner && $owner->email != "0") {
-            $content = $message;
-
-            $data = ['username' => Helper::get_user_display_name($owner), 'content' => $content];
-
-            $subject = "Enquiry for Your Property";
-            $title = $traveler->username . " sends Enquiry for Your Property";
+            $owner_link = BASE_URL . 'owner/chat/' . $chat_id . '?fb-key=personal_chat&fbkey=personal_chat';
+            $data = [
+                'name' => Helper::get_user_display_name($owner),
+                'traveler_name' => Helper::get_user_display_name($traveler),
+                'owner_link' => $owner_link,
+            ];
+            $subject = "You have a message from " . Helper::get_user_display_name($traveler);
+            $title = "New Message from " . Helper::get_user_display_name($traveler);
             $owner_mail = $owner->email;
-            $mail_data = ['username' => $owner->username, 'content' => $content];
-            Helper::send_custom_email($owner_mail, $subject, 'mail.custom-email', $data, 'Payment Processed');
+            Helper::send_custom_email($owner_mail, $subject, 'mail.new-message-email', $data, $title);
         }
 
         return redirect()->intended('/traveler/chat/' . $chat_id . '?fb-key=personal_chat&fbkey=personal_chat');

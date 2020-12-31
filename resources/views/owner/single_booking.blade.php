@@ -32,7 +32,7 @@
 
             <div class="col-md-8">
                 <div class="booking-details">
-                    <form action="{{url('/')}}/owner/chat-with-traveler" method="post" >
+                    <form action="{{url('/')}}/chat-with-traveler" method="post" >
                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                         <input type="hidden" name="check_in" value="{{$data->start_date}}">
                         <input type="hidden" name="check_out" value="{{$data->end_date}}">
@@ -124,7 +124,7 @@
                             <td>{{$pet_details->pet_weight}}</td>
                             <td>
                                 <a href="{{$pet_details->pet_image}}" target="_blank">
-                                    <img src="{{$pet_details->pet_image}}" alt="">
+                                    <img src="{{$pet_details->pet_image}}" alt="" style="height: 70px; width: 70px;">
                                 </a>
                             </td>
                         </tr>
@@ -162,15 +162,18 @@
                                 <br>
                             @endif
                         @elseif($data->status == 3)
-                            <button class="button" >Invoice sent</button><br><br>
+                            <div class="button" >Invoice sent</div><br><br>
 
                         @elseif($data->status == 4)
-                            <button class="button" >Request Declined by you</button>
+                            <div>Request Declined by you</div>
                             <br>
                             <span style="font-weight: bold; color: #e78016">{{$data->deny_reason ?? ''}}</span>
                             <br><br>
                         @elseif($data->status == 8)
-                            <button class="button" >Your booking has been cancelled.</button><br><br>
+                            <button class="button" style="text-align: center;margin-top: 30px; pointer-events: none;">
+                                Your booking has been canceled
+                            </button>
+                            <br><br>
                         @endif
                     </center>
                 </div>

@@ -157,27 +157,35 @@
                                                         </tr>
                                                     @endif
                                                     @if(in_array($data->bookingStatus, [0, 1]))
-                                                        @if(Session::get('user_id'))
+                                                        @if(\Carbon\Carbon::now()->diffInDays(\Carbon\Carbon::parse($data->start_date), false) >= 7)
+                                                            @if(Session::get('user_id'))
+                                                                <tr class="editable-fields">
+                                                                    <td colspan="2">
+                                                                        <label class="checkbox-container">
+                                                                            I agree to the <a href="{{BASE_URL}}/terms-of-use" target="_blank">Terms of Use</a>, <a href="{{BASE_URL}}/privacy-policy" target="_blank">Privacy Policy</a>, <a href="{{BASE_URL}}/policies" target="_blank">Policies</a>, <a href="{{BASE_URL}}/payment-terms" target="_blank">Payment Terms</a>, <a href="{{BASE_URL}}/non-discrimination-policy" target="_blank">Nondiscrimination Policy</a> and <a href="{{URL('/')}}/cancellationpolicy">Cancellation Policy</a>.
+                                                                            <input type="checkbox" required name="terms" id="terms">
+                                                                            <span class="checkmark"></span>
+                                                                        </label>
+                                                                    </td>
+                                                                </tr>
+                                                            @endif
                                                             <tr class="editable-fields">
                                                                 <td colspan="2">
-                                                                    <label class="checkbox-container">
-                                                                        I agree to the <a href="{{BASE_URL}}/terms-of-use" target="_blank">Terms of Use</a>, <a href="{{BASE_URL}}/privacy-policy" target="_blank">Privacy Policy</a>, <a href="{{BASE_URL}}/policies" target="_blank">Policies</a>, <a href="{{BASE_URL}}/payment-terms" target="_blank">Payment Terms</a>, <a href="{{BASE_URL}}/non-discrimination-policy" target="_blank">Nondiscrimination Policy</a> and <a href="{{URL('/')}}/cancellationpolicy">Cancellation Policy</a>.
-                                                                        <input type="checkbox" required name="terms" id="terms">
-                                                                        <span class="checkmark"></span>
-                                                                    </label>
+                                                                    <button id="requestBooking" class="btn btn-default btn-block bg-orange" disabled>Request Booking</button>
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="editable-fields" id="total_amount">
+                                                                <td colspan="2">
+                                                                    <div class="total_amount total_amount_gray">You won't be charged until the property owner confirms your request</div>
+                                                                </td>
+                                                            </tr>
+                                                        @else
+                                                            <tr class="editable-fields">
+                                                                <td colspan="2">
+                                                                    <div style="margin-top: 30px; color: #e08716; text-align: center;">This booking has been expired. Please try to book again with new dates.</div>
                                                                 </td>
                                                             </tr>
                                                         @endif
-                                                        <tr class="editable-fields">
-                                                            <td colspan="2">
-                                                                <button id="requestBooking" class="btn btn-default btn-block bg-orange" disabled>Request Booking</button>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="editable-fields" id="total_amount">
-                                                            <td colspan="2">
-                                                                <div class="total_amount total_amount_gray">You won't be charged until the property owner confirms your request</div>
-                                                            </td>
-                                                        </tr>
                                                     @elseif($data->bookingStatus == 2)
                                                         <tr class="editable-fields">
                                                             <td colspan="2">
@@ -199,7 +207,7 @@
                                                     @elseif($data->bookingStatus == 8)
                                                         <tr class="editable-fields">
                                                             <td colspan="2">
-                                                                <div style="margin-top: 30px; color: #e08716;">This booking has been cancelled.</div>
+                                                                <div style="margin-top: 30px; color: #e08716;">This booking has been canceled.</div>
                                                             </td>
                                                         </tr>
                                                     @endif

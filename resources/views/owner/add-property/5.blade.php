@@ -148,7 +148,6 @@
                 success: function(data) {
                     $(`div#cover-img-${id}`).remove();
                     $('#propertyImagesProgress').hide();
-                    debugger
                     if(data.new_cover_image && data.new_cover_image.id) {
                         $(`button#cover-${data.new_cover_image.id}`).prop('disabled', true);
                         $(`button#cover-${data.new_cover_image.id}`).addClass('cover_image');

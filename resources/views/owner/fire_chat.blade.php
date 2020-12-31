@@ -545,13 +545,13 @@
         });
     }
 </script>
-<script>
-    function onLoad() {
-        gapi.load('auth2', function() {
-            gapi.auth2.init({client_id: "420688223951-frk2eoqelgts1eqetnopugscuqsgkui7.apps.googleusercontent.com" });
-        });
-    }
-</script>
-<script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+{{--<script>--}}
+{{--    function onLoad() {--}}
+{{--        gapi.load('auth2', function() {--}}
+{{--            gapi.auth2.init({client_id: "420688223951-frk2eoqelgts1eqetnopugscuqsgkui7.apps.googleusercontent.com" });--}}
+{{--        });--}}
+{{--    }--}}
+{{--</script>--}}
+{{--<script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>--}}
 
 @endsection

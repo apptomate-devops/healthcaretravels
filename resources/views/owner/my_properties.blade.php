@@ -69,11 +69,11 @@
                                     </a>
 
                                     @if($property->propertyStatus == 0)
-                                        <a href="{{BASE_URL}}disable-property/{{$property->propertyId}}" class="delete" title="Enable Property">
+                                        <a href="{{BASE_URL}}owner/disable-property/{{$property->propertyId}}" class="delete" title="Enable Property">
                                             <img src="{{BASE_URL}}action_icons/enable24.png" />
                                         </a>
                                     @else
-                                        <a href="{{BASE_URL}}disable-property/{{$property->propertyId}}" class="delete" title="Disable Property">
+                                        <a href="{{BASE_URL}}owner/disable-property/{{$property->propertyId}}" class="delete" title="Disable Property">
                                             <img src="{{BASE_URL}}action_icons/disable24.png" />
                                         </a>
                                     @endif
@@ -144,7 +144,7 @@
             var val = $("#delete_property_id").val();
             $.ajax({
                 "type": "get",
-                "url" : `{{BASE_URL}}delete-property/${val}`,
+                "url" : `{{BASE_URL}}owner/delete-property/${val}`,
                 success: function(data) {
                     $('#addDetailsProgress').hide();
                     if(data.status=="SUCCESS"){

@@ -28,7 +28,7 @@
                     <input type="text" name="to_date" id="date_range_picker" placeholder="End Date" autocomplete="off"/>
                     <div class="search-container">
                         <button class="button" id="search" style="width: 120px;" >Search</button>
-                        <a href="/owner/bookings" disabled>Clear Dates</a>
+                        <a href="/owner/my-bookings" disabled>Clear Dates</a>
                     </div>
                 </div>
                 <table class="manage-table responsive-table" style="border-spacing: 0 1em;" id="booking_table">
@@ -171,7 +171,7 @@
             }else{
                 start_date_elem.css('border','solid 2px grey');
                 end_date_elem.css('border','solid 2px grey');
-                var url = window.location.protocol + "//" + window.location.host +'/owner/bookings?start_date='+start_date+"&end_date="+end_date;
+                var url = window.location.protocol + "//" + window.location.host +'/owner/my-bookings?start_date='+start_date+"&end_date="+end_date;
                 window.location = url;
             }
         });

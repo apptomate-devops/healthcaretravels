@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessIncompleteRequests;
 use App\Jobs\ProcessOwnerReminder;
 use App\Jobs\ProcessPropertyUpdateEmail;
 use App\Models\AmenitiesList;
@@ -10,7 +11,6 @@ use App\Models\PropertyBlocking;
 use App\Services\Logger;
 use Illuminate\Http\Request;
 use DB;
-use Illuminate\Support\Facades\File;
 use Session;
 use App\Models\Users;
 use App\Models\Propertyamenties;
@@ -88,10 +88,10 @@ class PropertyController extends BaseController
             $insert_booking['owner_id'] = $property_details->user_id;
             $insert_booking['is_instant'] = $property_details->is_instant;
             // Add deposit amount and traveler cut
-            $insert_booking['traveler_cut'] = $property_details->security_deposit;
-            $insert_booking['monthly_rate'] = $property_details->monthly_rate;
-            $insert_booking['security_deposit'] = $property_details->security_deposit;
-            $insert_booking['cleaning_fee'] = $property_details->cleaning_fee;
+            $insert_booking['traveler_cut'] = (int) $property_details->security_deposit;
+            $insert_booking['monthly_rate'] = (int) $property_details->monthly_rate;
+            $insert_booking['security_deposit'] = (int) $property_details->security_deposit;
+            $insert_booking['cleaning_fee'] = (int) $property_details->cleaning_fee;
             //            $insert_booking['status'] = ONE;
             $insert_booking['booking_id'] = $request->booking_id ?? $this->generate_random_string();
 
@@ -105,7 +105,7 @@ class PropertyController extends BaseController
             $property_booking_id = $property_booking->id;
             $weeks = $this->get_weekend_count($check_in, $check_out);
             $weeks['total'] = $weeks['total'] - 1;
-            $single_day_fare = $property_details->monthly_rate / 30;
+            $single_day_fare = (int) $property_details->monthly_rate / 30;
 
             $booking_price = [];
             $booking_price['client_id'] = CLIENT_ID;
@@ -119,14 +119,17 @@ class PropertyController extends BaseController
                 ->where('param', 'service_tax')
                 ->first();
             $total_price =
-                $price + $property_details->cleaning_fee + $property_details->security_deposit + $service_tax->value;
+                $price +
+                (int) $property_details->cleaning_fee +
+                (int) $property_details->security_deposit +
+                (int) $service_tax->value;
 
-            $booking_price['service_tax'] = $service_tax->value;
+            $booking_price['service_tax'] = (int) $service_tax->value;
             $booking_price['initial_pay'] = 0; // TODO: check with $due_now;
             $booking_price['total_amount'] = round($total_price, 2);
             $booking_price['temp_amount'] = 0; // TODO: $pricing_config->price_per_weekend;
             $booking_price['week_end_days'] = $week_end_days;
-            $booking_price['security_deposit'] = $property_details->security_deposit;
+            $booking_price['security_deposit'] = (int) $property_details->security_deposit;
             $booking_price['weekend_fare'] = 0; // TODO: $pricing_config->price_per_weekend;
 
             DB::table('property_booking_price')->insert($booking_price);
@@ -135,6 +138,12 @@ class PropertyController extends BaseController
                 ->orderBy('id', 'desc')
                 ->first();
             $insert_data->calc_price = $price;
+
+            // Delete incomplete requests
+            $hrs_after_request = now('UTC')->addHours(24);
+            ProcessIncompleteRequests::dispatch($booking_id)
+                ->delay($hrs_after_request)
+                ->onQueue(GENERAL_QUEUE);
 
             return redirect()->intended('/booking_detail/' . $booking_id);
         } else {
@@ -404,7 +413,7 @@ class PropertyController extends BaseController
             DB::table('property_booking')
                 ->where('booking_id', $id)
                 ->update(['status' => 8]);
-            return response()->json(['status' => 'SUCCESS', 'message' => 'Booking Cancelled successfully!']);
+            return response()->json(['status' => 'SUCCESS', 'message' => 'Booking Canceled successfully!']);
         } catch (\Exception $e) {
             return response()->json(['status' => 'FAILED', 'message' => $e->getMessage()]);
         }
@@ -870,7 +879,7 @@ class PropertyController extends BaseController
                 ];
 
                 $title = $request->status == 2 ? 'Owner confirms booking' : 'Owner cancels booking';
-                $subject = $request->status == 2 ? 'Booking Confirmed' : 'Booking Cancelled';
+                $subject = $request->status == 2 ? 'Booking Confirmed' : 'Booking Canceled';
 
                 // Traveler email
                 $this->send_custom_email($traveler->email, $subject, 'mail.accepted_booking', $mail_data, $title);
@@ -1200,7 +1209,7 @@ class PropertyController extends BaseController
             $payment['is_cleared'] = $payment['is_cleared'] ?? 0;
             $payment['status'] = $payment['status'] ?? 0;
             if (in_array($booking->status, [4, 8])) {
-                // booking is cancelled or denied
+                // booking is canceled or denied
                 $payment['status'] = 4;
             }
             $cleaning_fee_entry = array_merge([], $payment);
@@ -1208,6 +1217,8 @@ class PropertyController extends BaseController
             $service_tax_entry = array_merge([], $payment);
             $is_partial_days_payment = boolval($payment['is_partial_days'] ?? 0);
             $neat_rate = $payment['monthly_rate'];
+            $service_fee_label = $payment['payment_cycle'] == 1 ? 'Service Fee' : 'Processing Fee';
+
             if ($is_partial_days_payment) {
                 $neat_rate = round(($payment['monthly_rate'] * $payment['is_partial_days']) / 30);
             }
@@ -1215,7 +1226,12 @@ class PropertyController extends BaseController
                 $payment['amount'] = self::format_amount($neat_rate - $payment['service_tax']);
                 $grand_total = $grand_total + $payment['total_amount'] - $payment['service_tax'];
                 $payment['covering_range'] =
-                    "Covering " . $payment['covering_range'] . ", Minus $" . $payment['service_tax'] . " fee";
+                    "Covering " .
+                    $payment['covering_range'] .
+                    ", Minus $" .
+                    $payment['service_tax'] .
+                    ' ' .
+                    strtolower($service_fee_label);
 
                 if ($payment['payment_cycle'] == 1) {
                     $cleaning_fee_entry['name'] = 'Cleaning Fee';
@@ -1251,7 +1267,7 @@ class PropertyController extends BaseController
                 }
 
                 $service_tax_entry['due_date'] = $payment['due_date'];
-                $service_tax_entry['name'] = $payment['payment_cycle'] == 1 ? 'Service Fee' : 'Processing Fee';
+                $service_tax_entry['name'] = $service_fee_label;
                 $service_tax_entry['amount'] = self::format_amount($payment['service_tax'], '-');
                 $service_tax_entry['is_cleared'] = $payment['is_cleared'];
                 $service_tax_entry['status'] = $payment['status'];
@@ -1324,7 +1340,7 @@ class PropertyController extends BaseController
         $travellerId = $request->traveller_id;
         $propertyId = $request->property_id;
         $user_id = $request->session()->get('user_id');
-        $chat_with = $user_id === $travellerId ? 'traveler' : 'owner';
+        $chat_with = $user_id == $travellerId ? 'traveler' : 'owner';
         if ($travellerId && $propertyId) {
             $chat_data = Helper::start_chat_handler($travellerId, $propertyId, $request);
             $chat_url = "{$request->getSchemeAndHttpHost()}/{$chat_with}/chat/{$chat_data['chat_id']}?fb-key=personal_chat&fbkey=personal_chat";
@@ -1774,15 +1790,18 @@ class PropertyController extends BaseController
     public function traveller_fire_chat($id, Request $request)
     {
         $user_id = $request->session()->get('user_id');
-
         if (!$user_id) {
             return redirect('/');
         }
 
+        $property = DB::table('personal_chat')
+            ->where([['id', '=', $id], ['traveller_id', '=', $user_id]])
+            ->first();
+        if (empty($property)) {
+            return view('general_error', ['message' => 'We can’t find the property chat you’re looking for.']);
+        }
+
         if ($request->fbkey == "personal_chat") {
-            $property = DB::table('personal_chat')
-                ->where([['id', '=', $id], ['traveller_id', '=', $user_id]])
-                ->first();
             if (!isset($property)) {
                 error_log('..');
                 return redirect('/');
@@ -1828,7 +1847,7 @@ class PropertyController extends BaseController
                 ->where('client_id', '=', CLIENT_ID)
                 ->where('id', $property->owner_id)
                 ->first();
-            //dd($owner->id);
+
             return view('traveller.fire_chat', [
                 'owner' => $owner,
                 'traveller' => $traveller,
@@ -2920,7 +2939,7 @@ class PropertyController extends BaseController
         if (!$pet_detail) {
             $pet_detail = new PetInformation();
         }
-        if ($request->is_pet_travelling) {
+        if ($request->pet_name) {
             $petImage = $this->base_image_upload($request, 'pet_image', 'pets');
             $pet_detail->booking_id = $request->booking_id;
             $pet_detail->pet_name = $request->pet_name;
@@ -2931,7 +2950,7 @@ class PropertyController extends BaseController
         } else {
             $pet_detail->delete();
         }
-        return redirect()->intended('/owner/reservations/' . $booking->booking_id);
+        return redirect()->intended('/traveler/single-reservation/' . $booking->booking_id);
     }
 
     public function update_property($property_id)

@@ -45,8 +45,8 @@
             </li>
             <li>
                 <a href="{{url('/')}}/owner/my-bookings" {{{ (Request::is('owner/my-bookings') ? 'class=current not-verified-block' : 'class=not-verified-block') }}}>
-                    <i class="sl sl-icon-basket"></i> Booking Requests
-                </a><i class="fa fa-bell" id="owner_booking"></i>
+                    <i class="sl sl-icon-basket"></i> Bookings
+                </a><i class="fa fa-bell" id="owner_booking" style="display: none;"></i>
             </li>
         @endif
         <li>
@@ -68,11 +68,11 @@
             </a>
         </li>
 
-        <li>
-            <a href="{{url('/')}}/owner/transaction-history" {{{ (Request::is('owner/transaction-history') ? 'class=current' : '') }}}>
-                <i class="sl sl-icon-note"></i> Transaction History
-            </a>
-        </li>
+{{--        <li>--}}
+{{--            <a href="{{url('/')}}/owner/transaction-history" {{{ (Request::is('owner/transaction-history') ? 'class=current' : '') }}}>--}}
+{{--                <i class="sl sl-icon-note"></i> Transaction History--}}
+{{--            </a>--}}
+{{--        </li>--}}
         @if(Auth::user()->default_funding_source)
             <li>
                 <a href="{{url('/')}}/payment-options" {{{ (Request::is('/payment-options') ? 'class=current' : '') }}}>
@@ -137,7 +137,7 @@
             <i class="sl sl-icon-star"></i> Favorites </a></li>
 
     <li><a href="{{url('/')}}/traveler/my-reservations" {{{ (Request::is('traveler/my-reservations') ? 'class=current' : '') }}}>
-            <i class="sl sl-icon-credit-card"></i> My Trips</a><i class="fa fa-bell" id="traveler_trips"></i></li>
+            <i class="sl sl-icon-credit-card"></i> My Trips</a><i class="fa fa-bell" id="traveler_trips" style="display: none;"></i></li>
 
     @if(Auth::user()->default_funding_source)
         <li>
@@ -183,7 +183,7 @@
             <i class="sl sl-icon-star"></i> Favorites </a></li>
 
     <li><a href="{{url('/')}}/traveler/my-reservations" {{{ (Request::is('traveler/my-reservations') ? 'class=current' : '') }}}>
-            <i class="sl sl-icon-credit-card"></i> My Trips</a><i class="fa fa-bell" id="agency_trips"></i></li>
+            <i class="sl sl-icon-credit-card"></i> My Trips</a><i class="fa fa-bell" id="agency_trips" style="display: none;"></i></li>
 
     @if(Auth::user()->default_funding_source)
         <li>

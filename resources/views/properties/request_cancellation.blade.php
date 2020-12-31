@@ -12,10 +12,10 @@
             @endif
             <div class="row">
                 @if($booking->cancellation_requested == 3)
-                    <h3>We have cancelled your request for this booking</h3>
+                    <h3>We have canceled your request for this booking</h3>
                     <div>Status: Cancellation In Progress</div>
                 @elseif($booking->cancellation_requested == 2)
-                    <h3>We have cancelled your request for this booking</h3>
+                    <h3>We have canceled your request for this booking</h3>
                     <div>Status: Cancellation Completed</div>
                 @elseif ($booking->cancellation_requested == 1)
                     <h3>You have requested to cancel this booking</h3>

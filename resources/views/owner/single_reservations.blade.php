@@ -30,7 +30,7 @@
                     <div style="font-weight: bold; color: #e08716; margin-bottom: 15px;">Your request has been sent to the property owner. We'll let you know when your request is approved. In the mean time, feel free to start a chat with the property owner to say hello!</div>
                 @endif
                 <div class="booking-details">
-                    <form action="{{url('/')}}/owner/chat-with-traveler" method="post" >
+                    <form action="{{url('/')}}/chat-with-traveler" method="post" >
                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                         <input type="hidden" name="check_in" value="{{$data->start_date}}">
                         <input type="hidden" name="check_out" value="{{$data->end_date}}">
@@ -85,11 +85,11 @@
                     </tr>
                 </table>
                 <div>The selected account will be used to process any future payments for this booking.</div>
-                    @if(in_array($data->status, [2, 3]))
-                        <div class="text-right">
-                            <a target="_blank" href="{{BASE_URL}}invoice/{{$data->booking_id}}" class="margin-top-40 button border">Print Invoice</a>
-                        </div>
-                    @endif
+                @if(in_array($data->status, [2, 3]))
+                    <div class="text-right">
+                        <a target="_blank" href="{{BASE_URL}}invoice/{{$data->booking_id}}" class="margin-top-40 button border">Print Invoice</a>
+                    </div>
+                @endif
                 @if(count($guest_info) > 0)
                     <h2>Guest Information</h2>
                     <table class="table table-striped">
@@ -128,7 +128,7 @@
                             <td>{{$pet_details->pet_weight}}</td>
                             <td>
                                 <a href="{{$pet_details->pet_image}}" target="_blank">
-                                    <img src="{{$pet_details->pet_image}}" alt="">
+                                    <img src="{{$pet_details->pet_image}}" alt="" style="height: 70px; width: 70px;">
                                 </a>
                             </td>
                         </tr>
@@ -152,7 +152,7 @@
                     <br>
                 @elseif($data->status == 2)
                     @if($data->cancellation_requested == 1)
-                        <div style="text-align: center; font-size: 18px; font-weight: bold;">Cancellation Pending</div>
+                        <div style="text-align: center">Cancellation Pending</div>
                     @else
                         <div style="text-align: center;margin-top: 30px;">
                             <button class="button" onclick="location.href='{{BASE_URL}}request_cancellation/{{$data->booking_id}}';">Request Cancellation</button>
@@ -161,32 +161,32 @@
                     @endif
                 @elseif($data->status == 4)
                     <div style="text-align: center;margin-top: 30px;">
-                        <button class="button">Request Denied by Owner</button>
+                        <div>Request Denied by Owner</div>
                         <br>
                         <span style="font-weight: bold; color: #e78016">{{$data->deny_reason ?? ''}}</span>
                     </div>
                     <br>
                 @elseif($data->status == 8)
-                    <div style="text-align: center;margin-top: 30px;">
-                        Your booking has been cancelled.
-                    </div>
+                    <center>
+                        <button class="button" style="text-align: center;margin-top: 30px; pointer-events: none;">
+                            Your booking has been canceled
+                        </button>
+                    </center>
                     <br>
                 @endif
-                <div >
+                {{--                <div>--}}
+                {{--                    <center>--}}
+                {{--                        @if($data->payment_done == 1)--}}
+                {{--                            <span class="txt-green">Payment Done</span><br>--}}
+                {{--                        @else--}}
+                {{--                            <span class="txt-red">Not Paid</span><br>--}}
+                {{--                        @endif--}}
+                {{--                    </center>--}}
 
-                    <center>
-                        @if($data->payment_done == 1)
-                            <span class="txt-green">Payment Done</span><br>
-                        @else
-                            <span class="txt-red">Not Paid</span><br>
-                        @endif
-                        {{-- TODO: need to add pay now button here --}}
-                    </center>
-
-                    @if(isset($_GET['id']))
-                        <button class="button" onclick="document.location.href='{{BASE_URL}}owner/payment-success?id={{$data->booking_id}}';" style="margin-bottom: 80px;">Pay Now</button>
-                    @endif
-                </div>
+                {{--                    @if(isset($_GET['id']))--}}
+                {{--                        <button class="button" onclick="document.location.href='{{BASE_URL}}owner/payment-success?id={{$data->booking_id}}';" style="margin-bottom: 80px;">Pay Now</button>--}}
+                {{--                    @endif--}}
+                {{--                </div>--}}
 
             </div>
 

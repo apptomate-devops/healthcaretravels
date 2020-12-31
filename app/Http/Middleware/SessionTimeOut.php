@@ -26,7 +26,7 @@ class SessionTimeOut
     {
         $isIgnored = in_array($request->path(), $this->ignoreURLs);
         $is_public_ical_path = strpos($request->path(), 'ical/');
-        if (!$isIgnored && !$is_public_ical_path && Auth::check()) {
+        if (!$isIgnored && $is_public_ical_path === false && Auth::check()) {
             if (!$request->session()->has('lastActivityTime')) {
                 $request->session()->put('lastActivityTime', new DateTime());
             }

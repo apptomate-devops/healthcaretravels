@@ -42,14 +42,30 @@
             <div class="details">Name: <span>{{$booking->recruiter_name}}</span></div>
             <div class="details">Phone: <span>{{$booking->recruiter_phone_number}}</span></div>
             <div class="details">Email: <span>{{$booking->recruiter_email}}</span></div>
-            <div class="details">Contract starts on: <span>{{date('m-d-Y', strtotime($booking->contract_start_date))}}</span></div>
-            <div class="details">Contract ends on: <span>{{date('m-d-Y', strtotime($booking->contract_end_date))}}</span></div>
+            <div class="details">Contract starts on: <span>{{$booking->contract_start_date ? date('m-d-Y', strtotime($booking->contract_start_date)) : '-'}}</span></div>
+            <div class="details">Contract ends on: <span>{{$booking->contract_end_date ? date('m-d-Y', strtotime($booking->contract_end_date)) : '-'}}</span></div>
             <br>
-            <div class="details"><b>Submitted By: </b><span>{{$cancelled_by}}</span></div>
-            <div class="details"><b>Cancellation Status: </b><span>{{$booking->cancellation_requested == 3 ? 'In Progress' : ($booking->cancellation_requested == 2 ? 'Completed' : 'Pending') }}</span></div>
-            <div class="details"><b>Cancellation Reason: </b><span>{{$booking->cancellation_reason}}</span></div>
-            <div class="details"><b>Explanation: </b><span>{{$booking->cancellation_explanation}}</span></div>
-            <div class="details"><b>Has the traveler checked into this property?: </b><span>{{$booking->already_checked_in ? 'Yes' : 'No'}}</span></div>
+            @if($pet_info)
+            <div class="details"><b>Pet Details</b></div>
+            <div class="details">Name: <span>{{$pet_info->pet_name ?? '-'}}</span></div>
+            <div class="details">Breed: <span>{{$pet_info->pet_breed ?? '-'}}</span></div>
+            <div class="details">Weight (lb): <span>{{$pet_info->pet_weight ?? '-'}}</span></div>
+            <div class="details">
+                <a href="{{$pet_info->pet_image}}" target="_blank">
+                    <img src="{{$pet_info->pet_image}}" alt="" style="height: 70px; width: 70px; margin-top: 5px;">
+                </a>
+            </div>
+            <br>
+            @endif
+            @if($booking->cancellation_requested)
+                <div class="details"><b>Submitted By: </b><span>{{$cancelled_by}}</span></div>
+                <div class="details"><b>Cancellation Status: </b><span>{{$booking->cancellation_requested == 3 ? 'In Progress' : ($booking->cancellation_requested == 2 ? 'Completed' : 'Pending') }}</span></div>
+                <div class="details"><b>Cancellation Reason: </b><span>{{$booking->cancellation_reason}}</span></div>
+                <div class="details"><b>Explanation: </b><span>{{$booking->cancellation_explanation}}</span></div>
+                <div class="details"><b>Has the traveler checked into this property?: </b><span>{{$booking->already_checked_in ? 'Yes' : 'No'}}</span></div>
+            @elseif($booking->status == 8)
+                <div class="details"><b>Submitted By: </b><span>{{$cancelled_by}}</span></div>
+            @endif
             <div class="details"><b>Start Date: </b><span>{{date('m-d-Y',strtotime($booking->start_date))}}</span></div>
             <div class="details"><b>End Date: </b><span>{{date('m-d-Y',strtotime($booking->end_date))}}</span></div>
             <div class="details"><b>Status: </b><span>@if($booking->status == 1)
@@ -61,7 +77,7 @@
             @elseif($booking->status == 4)
                 Denied
             @else
-                Cancelled
+                Canceled
             @endif</span></div>
 
         </div>
@@ -147,7 +163,7 @@
                             <input id="checked_in_yes" name="checked_in" type="checkbox" value="1">
                             <label for="checked_in_yes">Yes</label>
 
-                            <input id="checked_in_no" name="checked_in" type="checkbox" value="0" checked>
+                            <input id="checked_in_no" name="checked_in" type="checkbox" value="0">
                             <label for="checked_in_no">No</label>
                         </div>
                     </div>

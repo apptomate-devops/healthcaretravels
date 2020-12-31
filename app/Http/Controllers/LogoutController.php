@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Logger;
 use Illuminate\Http\Request;
 use Session;
 use Auth;
@@ -10,11 +11,15 @@ class LogoutController extends Controller
 {
     public function logout(Request $request)
     {
-        if (Auth::check()) {
-            Auth::logout();
+        try {
+            if (Auth::check()) {
+                Auth::logout();
+            }
+            $request->session()->flush();
+            return redirect('/');
+        } catch (\Exception $ex) {
+            Logger::error('Error trying logout' . $ex->getMessage());
         }
-        $request->session()->flush();
-        return redirect('/');
     }
 
     public function is_user_active(Request $request)

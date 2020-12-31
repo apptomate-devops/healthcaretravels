@@ -95,15 +95,15 @@
                                                     @endif
 
                                                     @if($booking->booking_status == 4)
-                                                        Owner Cancelled Request
+                                                        Owner Canceled Request
                                                     @endif
 
                                                     @if($booking->booking_status == 5)
-                                                        Owner cancelled
+                                                        Owner canceled
                                                     @endif
 
                                                     @if($booking->booking_status == 6)
-                                                            Traveler Cancelled
+                                                            Traveler Canceled
                                                     @endif
 
                                                     @if($booking->booking_status == 7)

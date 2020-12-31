@@ -48,31 +48,31 @@
                     <i class="sl sl-icon-basket"></i> Bookings
                 </a><i class="fa fa-bell" id="owner_booking" style="display: none;"></i>
             </li>
+            <li>
+                <a href="{{url('/')}}/owner/favorites" {{{ (Request::is('owner/favorites') ? 'class=current' : '') }}}>
+                    <i class="sl sl-icon-star"></i> Favorites
+                </a>
+            </li>
+
+            <li>
+                <a href="{{url('/')}}/owner/inbox" {{{ (Request::is('owner/inbox') ? 'class=current not-verified-block' : 'class=not-verified-block') }}}>
+                    <i class="fa fa-inbox"></i> My Inbox
+                </a>
+            </li>
+        @else
+            <li>
+                <a href="{{url('/')}}/traveler/favorites" {{{ (Request::is('traveler/favorites') ? 'class=current' : '') }}}>
+                    <i class="sl sl-icon-star"></i> Favorites
+                </a>
+            </li>
+
+            <li>
+                <a href="{{url('/')}}/traveler/inbox" {{{ (Request::is('traveler/inbox') ? 'class=current not-verified-block' : 'class=not-verified-block') }}}>
+                    <i class="fa fa-inbox"></i> My Inbox
+                </a>
+            </li>
         @endif
-        <li>
-            <a href="{{url('/')}}/owner/favorites" {{{ (Request::is('owner/favorites') ? 'class=current' : '') }}}>
-                <i class="sl sl-icon-star"></i> Favorites
-            </a>
-        </li>
 
-
-        {{--  <li>
-            <a href="{{url('/')}}/owner/reservations" {{{ (Request::is('owner/reservations') ? 'class=current' : '') }}}>
-               <i class="sl sl-icon-credit-card"></i> My Trips
-            </a>
-        </li> --}}
-
-        <li>
-            <a href="{{url('/')}}/owner/inbox" {{{ (Request::is('owner/inbox') ? 'class=current not-verified-block' : 'class=not-verified-block') }}}>
-                <i class="fa fa-inbox"></i> My Inbox
-            </a>
-        </li>
-
-{{--        <li>--}}
-{{--            <a href="{{url('/')}}/owner/transaction-history" {{{ (Request::is('owner/transaction-history') ? 'class=current' : '') }}}>--}}
-{{--                <i class="sl sl-icon-note"></i> Transaction History--}}
-{{--            </a>--}}
-{{--        </li>--}}
         @if(Auth::user()->default_funding_source)
             <li>
                 <a href="{{url('/')}}/payment-options" {{{ (Request::is('/payment-options') ? 'class=current' : '') }}}>
@@ -80,12 +80,6 @@
                 </a>
             </li>
         @endif
-
-{{--        <li>--}}
-{{--            <a href="{{url('/')}}/owner/special_price" {{{ (Request::is('/owner/special_price') ? 'class=current' : '') }}}>--}}
-{{--                <i class="sl sl-icon-star"></i>  Special Pricing--}}
-{{--            </a>--}}
-{{--        </li>--}}
 
     </ul>
 

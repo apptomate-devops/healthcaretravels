@@ -114,7 +114,7 @@
 <br><br>
 <div class="col-md-12">
     <center>
-        <div class="copyrights">© {{date('Y')}} Health Care Travels. All Rights Reserved.</div>
+        <div class="copyrights">© {{date('Y')}} {{APP_BASE_NAME}}. All Rights Reserved.</div>
     </center>
 
 </div>

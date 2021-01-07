@@ -1265,7 +1265,7 @@ class Helper
     {
         $displayName = $user->first_name;
         if (!empty($user->last_name)) {
-            $displayName .= " " . $user->last_name[0] . ".";
+            $displayName .= " " . $user->last_name[0];
         }
         return ucwords($displayName);
     }

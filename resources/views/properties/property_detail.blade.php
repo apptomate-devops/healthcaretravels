@@ -339,7 +339,7 @@
                                     <hr>
                                 @endif
                                 <div class="form-row form-row-wide" id="agency_show">
-                                    <label for="agency_name">Agency you work for:</label>
+                                    <label for="agency_name"><b>Agency you work for this assignment:</b></label>
                                     <p class="register-info">Select the agency you are traveling with for this assignment.</p>
                                     <span class="autocomplete-select"></span>
                                     <p id="agency_error" class="error-text" style="display: none;">Select at least 1 agency</p>
@@ -508,11 +508,11 @@
         }
 
         function initPureSelect(agencies, selected) {
-            var selected_agencies = "{{$traveller->name_of_agency}}";
-            selected_agencies = selected_agencies ? selected_agencies.split(',') : [];
-            if (selected) {
-                selected_agencies = selected;
-            }
+            var selected_agencies = '';
+            {{--selected_agencies = selected_agencies ? selected_agencies.split(',') : [];--}}
+            {{--if (selected) {--}}
+            {{--    selected_agencies = selected;--}}
+            {{--}--}}
             var mappedData = agencies.map(a => ({
                 label: a.name,
                 value: a.name
@@ -521,7 +521,7 @@
             var autocomplete = new SelectPure(".autocomplete-select", {
                 options: mappedData,
                 value: selected_agencies,
-                multiple: true,
+                multiple: false,
                 autocomplete: true,
                 icon: "fa fa-times",
                 placeholder: "Select Agencies",
@@ -556,6 +556,7 @@
                 return true;
             }
             $('#agency_error').show();
+            $(window).scrollTop($('#agency_error').offset().top-500);
             return false
         }
 

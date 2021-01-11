@@ -834,7 +834,10 @@ class PropertyController extends BaseController
             ->where('property_images.property_id', '=', $booking->property_id)
             ->orderBy('is_cover', 'DESC')
             ->first();
-        $cover_img = BASE_URL . ltrim($property_img->image_url, '/');
+        $cover_img = null;
+        if ($property_img) {
+            $cover_img = BASE_URL . ltrim($property_img->image_url, '/');
+        }
 
         $user_id = $request->session()->get('user_id');
 
@@ -1305,6 +1308,10 @@ class PropertyController extends BaseController
                 ->first();
             if (empty($data)) {
                 return view('general_error', ['message' => 'We can’t find the booking you’re looking for.']);
+            }
+            $user_id = $request->session()->get('user_id');
+            if ($user_id !== $data->owner_id) {
+                return view('general_error', ['message' => 'Invalid access']);
             }
             $bookingModel = PropertyBooking::find($data->id);
             $owner = $bookingModel->owner;
@@ -2791,8 +2798,7 @@ class PropertyController extends BaseController
         }
         if ($request->name_of_agency) {
             $booking->name_of_agency = $request->name_of_agency;
-        }
-        if ($request->other_agency) {
+        } elseif ($request->other_agency) {
             $booking->other_agency = $request->other_agency;
         }
         $owner = $booking->owner;

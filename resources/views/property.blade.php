@@ -1183,7 +1183,6 @@
             if(!id || !from_date || !to_date || !guest_count) {
                 return;
             }
-            debugger
             if (["1","4"].includes(user_role_id)) {
                 $(".alert").html("Sorry, property owners are not permitted to book stays at other properties.").show();
                 $("#table_body").html("");

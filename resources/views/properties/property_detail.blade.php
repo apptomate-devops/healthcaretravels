@@ -257,7 +257,7 @@
                                                     </h4>
                                                 </div>
                                                 <div id="guest-collapse{{$i+1}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="guest-heading-{{$i+1}}">
-                                                    <div class="panel-body" style="position: relative;">
+                                                    <div class="panel-body" style="position: relative; padding: @if($i==0) 50px 15px 15px @else 15px @endif;">
                                                         <input name="guest_id[]" type="hidden" value="{{$guest_data->id ?? ''}}">
                                                         <div class="control-group cc-first-name col-md-6">
                                                             <label class="control-label" for="credit-card-first-name">
@@ -295,7 +295,7 @@
                                                             </select>
                                                         </div>
                                                         @if($i == 0)
-                                                            <div onclick="add_my_info();" class="btn bg-orange" style="position: absolute; bottom: 0; right: 10px; margin-bottom: 20px; width: auto;">Add my info</div>
+                                                            <div onclick="add_my_info();" class="btn bg-orange" style="position: absolute; top: 10px; right: 10px; margin-bottom: 20px; width: auto;">Add My Info</div>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -495,8 +495,9 @@
 
         function add_my_info(key) {
             var traveller = <?php echo json_encode($traveller); ?>;
+            var occupation = traveller.occupation == 'Other' ? 'Other - '+traveller.other_occupation : traveller.occupation;
             $('#name_0').val(`${traveller.first_name} ${traveller.last_name}`);
-            $('#occupation_0').val(traveller.occupation);
+            $('#occupation_0').val(occupation);
             $('#phone_0').val(traveller.phone);
             $('#email_0').val(traveller.email);
             $('#age_0').val('Adult');

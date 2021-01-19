@@ -187,7 +187,7 @@
                         <h4 class="modal-title"><b><span style="color:red">Warning</span></b></h4>
                     </div>
                     <div class="modal-body">
-                        Do you want to cancel this Booking Request?
+                        Do you want to decline this Booking Request?
                         <br>
                     </div>
                     <div class="modal-footer">

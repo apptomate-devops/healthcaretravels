@@ -373,7 +373,7 @@ class Helper
             case 3:
                 return 'Ended';
             case 4:
-                return 'Denied';
+                return 'Declined';
             case 8:
                 return 'Canceled';
             default:

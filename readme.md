@@ -73,7 +73,7 @@ We have multiple environments:
 #### make use of git feature branch with following steps:
 1. Create a branch from develop branch for your ticket/feature.
 2. Add all the related commits to that branch.
-3. Raise a RP against develop branch and merge it.
+3. Raise a PR against develop branch and merge it.
 4. QA the ticket on testing server when testing server is updated.
 5. QA the ticket on staging server when staging server is updated.
 6. Failed tickets should be fixed again in the same branch and pushed to develop and if the ticket failed on staging it should also be pushed to staging branch.

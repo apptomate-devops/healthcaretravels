@@ -44,9 +44,9 @@
                                             <tr>
                                                 <td>{{$key + 1}}</td>
                                                 <td>{{$booking->booking_id}}</td>
-                                                <td>{{$booking->owner_first_name . ' ' . $booking->owner_last_name}}</td>
-                                                <td>{{$booking->traveller_first_name . ' ' . $booking->traveller_last_name}}</td>
-                                                <td>{{$booking->cancelled_by == 'Admin' ? 'Admin' : $booking->requester_first_name . ' ' . $booking->requester_last_name}}</td>
+                                                <td>{{Helper::get_user_display_name($booking, 'owner_')}}</td>
+                                                <td>{{Helper::get_user_display_name($booking, 'traveller_')}}</td>
+                                                <td>{{$booking->cancelled_by == 'Admin' ? 'Admin' : Helper::get_user_display_name($booking, 'requester_')}}</td>
                                                 <td>{{$booking->cancellation_requested == 3 ? 'In Progress' : ($booking->cancellation_requested == 2 ? 'Resolved' : 'Pending')}}</td>
                                                 <td>
                                                     <a href="{{url('admin/bookings/')}}/{{$booking->id}}">

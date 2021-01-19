@@ -257,7 +257,7 @@
                                                     </h4>
                                                 </div>
                                                 <div id="guest-collapse{{$i+1}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="guest-heading-{{$i+1}}">
-                                                    <div class="panel-body" style="position: relative;">
+                                                    <div class="panel-body" style="position: relative; padding: @if($i==0) 50px 15px 15px @else 15px @endif;">
                                                         <input name="guest_id[]" type="hidden" value="{{$guest_data->id ?? ''}}">
                                                         <div class="control-group cc-first-name col-md-6">
                                                             <label class="control-label" for="credit-card-first-name">
@@ -295,7 +295,7 @@
                                                             </select>
                                                         </div>
                                                         @if($i == 0)
-                                                            <div onclick="add_my_info();" class="btn bg-orange" style="position: absolute; bottom: 0; right: 10px; margin-bottom: 20px; width: auto;">Add my info</div>
+                                                            <div onclick="add_my_info();" class="btn bg-orange" style="position: absolute; top: 10px; right: 10px; margin-bottom: 20px; width: auto;">Add My Info</div>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -339,7 +339,7 @@
                                     <hr>
                                 @endif
                                 <div class="form-row form-row-wide" id="agency_show">
-                                    <label for="agency_name">Agency you work for:</label>
+                                    <label for="agency_name"><b>Agency you work for this assignment:</b></label>
                                     <p class="register-info">Select the agency you are traveling with for this assignment.</p>
                                     <span class="autocomplete-select"></span>
                                     <p id="agency_error" class="error-text" style="display: none;">Select at least 1 agency</p>
@@ -495,8 +495,9 @@
 
         function add_my_info(key) {
             var traveller = <?php echo json_encode($traveller); ?>;
+            var occupation = traveller.occupation == 'Other' ? 'Other - '+traveller.other_occupation : traveller.occupation;
             $('#name_0').val(`${traveller.first_name} ${traveller.last_name}`);
-            $('#occupation_0').val(traveller.occupation);
+            $('#occupation_0').val(occupation);
             $('#phone_0').val(traveller.phone);
             $('#email_0').val(traveller.email);
             $('#age_0').val('Adult');
@@ -508,11 +509,11 @@
         }
 
         function initPureSelect(agencies, selected) {
-            var selected_agencies = "{{$traveller->name_of_agency}}";
-            selected_agencies = selected_agencies ? selected_agencies.split(',') : [];
-            if (selected) {
-                selected_agencies = selected;
-            }
+            var selected_agencies = '';
+            {{--selected_agencies = selected_agencies ? selected_agencies.split(',') : [];--}}
+            {{--if (selected) {--}}
+            {{--    selected_agencies = selected;--}}
+            {{--}--}}
             var mappedData = agencies.map(a => ({
                 label: a.name,
                 value: a.name
@@ -521,7 +522,7 @@
             var autocomplete = new SelectPure(".autocomplete-select", {
                 options: mappedData,
                 value: selected_agencies,
-                multiple: true,
+                multiple: false,
                 autocomplete: true,
                 icon: "fa fa-times",
                 placeholder: "Select Agencies",
@@ -556,6 +557,7 @@
                 return true;
             }
             $('#agency_error').show();
+            $(window).scrollTop($('#agency_error').offset().top-500);
             return false
         }
 

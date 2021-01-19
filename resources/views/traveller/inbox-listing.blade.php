@@ -35,9 +35,9 @@
                     <tr>
                         <td class="title-container" style="position: relative;">
                             @if($property->owner->profile_image != null)
-                            <img style="border-radius: 11px;object-fit:contain;" src="{{$property->owner->profile_image}}" alt="">
+                            <img class="rounded" src="{{$property->owner->profile_image}}" alt="">
                             @else
-                            <img style="border-radius: 11px;object-fit:contain;" src="{{STATIC_IMAGE}}" alt="">
+                            <img class="rounded" src="/user_profile_default.png" alt="">
                             @endif
                             @if(isset($property->has_unread_message) && $property->has_unread_message)
                             <span class="unread_message_badge"></span>
@@ -65,9 +65,9 @@
                         <td class="title-container" style="position: relative;">
 
                             @if($property->owner->profile_image != null)
-                            <img style="border-radius: 11px;object-fit:contain;" src="{{$property->owner->profile_image}}" alt="">
+                            <img class="rounded" src="{{$property->owner->profile_image}}" alt="">
                             @else
-                            <img style="border-radius: 11px;object-fit:contain;" src="{{STATIC_IMAGE}}" alt="">
+                            <img class="rounded" src="/user_profile_default.png" alt="">
                             @endif
                             @if(isset($property->has_unread_message) && $property->has_unread_message)
                             <span class="unread_message_badge"></span>
@@ -94,9 +94,9 @@
                         <td class="title-container" style="position: relative;">
 
                             @if($property->owner->profile_image != null)
-                            <img style="border-radius: 11px;object-fit:contain;" src="{{$property->owner->profile_image}}" alt="">
+                            <img class="rounded" src="{{$property->owner->profile_image}}" alt="">
                             @else
-                            <img style="border-radius: 11px;object-fit:contain;" src="{{STATIC_IMAGE}}" alt="">
+                            <img class="rounded" src="/user_profile_default.png" alt="">
                             @endif
                             @if(isset($property->has_unread_message) && $property->has_unread_message)
                             <span class="unread_message_badge"></span>
@@ -127,11 +127,11 @@
 <style>
     .unread_message_badge {
         position: absolute;
-        bottom: 40px;
+        bottom: 47px;
         height: 10px;
         background-color: red;
         width: 10px;
-        left: 150px;
+        left: 100px;
         border-radius: 50%;
     }
 

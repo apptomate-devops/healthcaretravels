@@ -68,15 +68,14 @@
                                         <img src="{{BASE_URL}}action_icons/24d.png" />
                                     </a>
 
-                                    @if($property->propertyStatus == 0)
-                                        <a href="{{BASE_URL}}owner/disable-property/{{$property->propertyId}}" class="delete" title="Enable Property">
+                                    <a href="{{BASE_URL}}owner/disable-property/{{$property->propertyId}}" class="delete" @if($property->is_disable == ONE) title="Enable Property" @else title="Disable Property" @endif>
+                                        @if($property->is_disable == ONE)
                                             <img src="{{BASE_URL}}action_icons/enable24.png" />
-                                        </a>
-                                    @else
-                                        <a href="{{BASE_URL}}owner/disable-property/{{$property->propertyId}}" class="delete" title="Disable Property">
+                                        @else
                                             <img src="{{BASE_URL}}action_icons/disable24.png" />
-                                        </a>
-                                    @endif
+                                        @endif
+                                    </a>
+
 
 
                                 </td>

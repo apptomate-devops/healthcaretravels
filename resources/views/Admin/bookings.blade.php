@@ -72,10 +72,10 @@
                                                 {{$booking->property_title}}
                                             </td>
                                             <td>
-                                                {{$booking->owner_first_name}} {{$booking->owner_last_name}}
+                                                {{Helper::get_user_display_name($booking, 'owner_')}}
                                             </td>
                                             <td>
-                                                {{$booking->traveller_first_name}} {{$booking->traveller_last_name}}
+                                                {{Helper::get_user_display_name($booking, 'traveller_')}}
                                             </td>
                                             <td>
                                                 {{date('m-d-Y',strtotime($booking->start_date))}}
@@ -91,7 +91,7 @@
                                                 @elseif($booking->status == 3)
                                                 Completed
                                                 @elseif($booking->status == 4)
-                                                Denied
+                                                    Declined
                                                 @else
                                                 Canceled
                                                 @endif

@@ -36,9 +36,9 @@
                     <td class="title-container" style="position: relative;">
 
                         @if($property->traveller->profile_image != null)
-                        <img style="border-radius: 11px;object-fit:contain;" src="{{$property->traveller->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt="">
+                        <img class="rounded" src="{{$property->traveller->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt="">
                         @else
-                        <img style="border-radius: 11px;object-fit:contain;" src="/user_profile_default.png" alt="">
+                        <img class="rounded" src="/user_profile_default.png" alt="">
                         @endif
                         @if(isset($property->has_unread_message) && $property->has_unread_message)
                         <span class="unread_message_badge"></span>
@@ -66,9 +66,9 @@
                     <td class="title-container" style="position: relative;">
 
                         @if($property->traveller->profile_image != null)
-                        <img style="border-radius: 11px;object-fit:contain;" src="{{$property->traveller->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt="">
+                        <img class="rounded" src="{{$property->traveller->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt="">
                         @else
-                        <img style="border-radius: 11px;object-fit:contain;" src="/user_profile_default.png" alt="">
+                        <img class="rounded" src="/user_profile_default.png" alt="">
                         @endif
                         @if(isset($property->has_unread_message) && $property->has_unread_message)
                         <span class="unread_message_badge"></span>
@@ -96,9 +96,9 @@
                     <td class="title-container" style="position: relative;">
 
                         @if($property->traveller->profile_image != null)
-                        <img style="border-radius: 11px;object-fit:contain;" src="{{$property->traveller->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt="">
+                        <img class="rounded" src="{{$property->traveller->profile_image}}" onerror="this.onerror=null;this.src='/user_profile_default.png';" alt="">
                         @else
-                        <img style="border-radius: 11px;object-fit:contain;" src="/user_profile_default.png" alt="">
+                        <img class="rounded" src="/user_profile_default.png" alt="">
                         @endif
                         @if(isset($property->has_unread_message) && $property->has_unread_message)
                         <span class="unread_message_badge"></span>
@@ -131,11 +131,11 @@
 <style>
     .unread_message_badge {
         position: absolute;
-        bottom: 40px;
+        bottom: 47px;
         height: 10px;
         background-color: red;
         width: 10px;
-        left: 150px;
+        left: 100px;
         border-radius: 50%;
     }
 

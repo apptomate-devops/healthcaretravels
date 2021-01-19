@@ -196,7 +196,7 @@
     $('input[id="dob"]').datepicker({
         format: 'mm/dd/yyyy',
         autoclose: true,
-        startDate: new Date('01/01/1990'),
+        startDate: new Date(new Date().getFullYear() - 100, 0, 1), // 100 years back
         endDate: new Date(),
     }).on('changeDate', function(event) {
         let today = new Date();

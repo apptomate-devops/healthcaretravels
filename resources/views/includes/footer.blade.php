@@ -95,7 +95,7 @@ if(!defined("APP_BASE_NAME")) {
         <!-- Copyright -->
         <div class="row">
             <div class="col-md-12">
-                <div class="copyrights">© 2020 {{APP_BASE_NAME}}. All Rights Reserved.</div>
+                <div class="copyrights">© {{date('Y')}} {{APP_BASE_NAME}}. All Rights Reserved.</div>
             </div>
         </div>
     </div>

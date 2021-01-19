@@ -161,7 +161,7 @@
                     @endif
                 @elseif($data->status == 4)
                     <div style="text-align: center;margin-top: 30px;">
-                        <div>Request Denied by Owner</div>
+                        <div>Request Declined by Owner</div>
                         <br>
                         <span style="font-weight: bold; color: #e78016">{{$data->deny_reason ?? ''}}</span>
                     </div>

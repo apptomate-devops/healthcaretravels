@@ -122,7 +122,7 @@ class ReservationController extends BaseController
             Logger::info('Transfer of refund success for booking: ' . $booking->booking_id);
             $booking->cancellation_refund_transfer_id = basename($transferDetails);
             $booking->cancellation_refund_processed_at = Carbon::now()->toDateTimeString();
-            $booking->cancellation_refund_status = PAYMENT_INIT;
+            $booking->cancellation_refund_status = PAYMENT_SUCCESS;
             $booking->save();
             // TODO: add emails for cancellation refund success.
             return ['success' => true, 'message' => 'Cancellation refund payment has been processed successfully!'];

@@ -322,10 +322,22 @@ class Helper
     {
         $status = $payment['status'];
         $is_owner = $payment['is_owner'];
-        if ($is_owner && !$fromAdmin) {
-            $dd = Carbon::parse($payment['due_date']);
-            if (now()->gt($dd) && $status < PAYMENT_INIT) {
-                return 'Processing';
+        if ($fromAdmin) {
+            $booking_details = PropertyBooking::find($payment['booking_row_id']);
+            if (in_array($booking_details->status, [4, 8])) {
+                // booking is canceled or denied
+                $status = 4;
+            }
+            //            if($booking_details->cancellation_requested == 2) {
+            //                  TODO; cancellation refund status display
+            //                $status = $booking_details->cancellation_refund_status;
+            //            }
+        } else {
+            if ($is_owner) {
+                $dd = Carbon::parse($payment['due_date']);
+                if (now()->gt($dd) && $status < PAYMENT_INIT) {
+                    return 'Processing';
+                }
             }
         }
         switch ($status) {
@@ -361,7 +373,7 @@ class Helper
             case 3:
                 return 'Ended';
             case 4:
-                return 'Denied';
+                return 'Declined';
             case 8:
                 return 'Canceled';
             default:
@@ -1261,11 +1273,17 @@ class Helper
         return $utc_date;
     }
 
-    public static function get_user_display_name($user)
+    public static function get_user_display_name($user, $prefix = false)
     {
-        $displayName = $user->first_name;
-        if (!empty($user->last_name)) {
-            $displayName .= " " . $user->last_name[0] . ".";
+        $first_name_key = 'first_name';
+        $last_name_key = 'last_name';
+        if ($prefix) {
+            $first_name_key = $prefix . $first_name_key;
+            $last_name_key = $prefix . $last_name_key;
+        }
+        $displayName = $user->$first_name_key;
+        if (!empty($user->$last_name_key)) {
+            $displayName .= " " . $user->$last_name_key[0];
         }
         return ucwords($displayName);
     }

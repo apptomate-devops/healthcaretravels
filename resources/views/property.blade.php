@@ -1169,7 +1169,11 @@
         });
         function get_price() {
             var id = "{{$property_id}}";
-            var user_role_id = '{{$current_user->role_id}}';
+            var current_user = <?php echo json_encode($current_user); ?>;
+            var user_role_id = null;
+            if(current_user) {
+                user_role_id = current_user.role_id;
+            }
             var booking_id = $('#booking_id').val();
             var from_date =$('input[id="booking_date_range_picker"][name="check_in"]').val();
             var to_date = $('input[id="booking_date_range_picker"][name="check_out"]').val();
@@ -1183,9 +1187,8 @@
             if(!id || !from_date || !to_date || !guest_count) {
                 return;
             }
-            debugger
-            if (["1","4"].includes(user_role_id)) {
-                $(".alert").html("Sorry, you need to create a traveler account to stay at other properties.").show();
+            if (user_role_id && [1, 4].includes(user_role_id)) {
+                $(".alert").html("Sorry, property owners are not permitted to book stays at other properties.").show();
                 $("#table_body").html("");
                 $("#pricing_details").hide();
                 $('.booking_button').attr('disabled',true);

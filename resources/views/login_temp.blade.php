@@ -83,8 +83,8 @@
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
                             <input type="hidden" name="client_id" value="{{$constants['client_id']}}">
                             <p class="form-row form-row-wide">
-                                <label for="username">Email Address:
-                                    <input type="email" class="input-text" name="username" id="username" placeholder="Email Address" required />
+                                <label for="user_email">Email Address:
+                                    <input type="email" class="input-text {{ Session::has('email_error') ? 'form-error' : ''}}" name="user_email" id="user_email" placeholder="Email Address" required value="{{Session::get('email')}}" />
                                 </label>
                             </p>
                             <p class="form-row form-row-wide">
@@ -554,7 +554,7 @@
     function rememberEmail() {
         var isRememberChecked = $('#remember-email-check').is(':checked');
         if (isRememberChecked) {
-            var loginUserEmail = $('#username').val();
+            var loginUserEmail = $('#user_email').val();
             setEmailInStorage(loginUserEmail);
         } else {
             setEmailInStorage('');
@@ -564,10 +564,10 @@
         var storageEmail = getEmailFromStorage();
         if (storageEmail) {
             if (isInitialLoad) {
-                $('#username').val(storageEmail);
+                $('#user_email').val(storageEmail);
                 $('#password').val('');
             } else {
-                var loginUserEmail = $('#username').val();
+                var loginUserEmail = $('#user_email').val();
                 if (loginUserEmail != storageEmail) {
                     setEmailInStorage('');
                 }

@@ -24,8 +24,8 @@
 
             <div class="col-md-8">
                 <div class="check-in-out-wrapper">
-                    <input type="text" name="from_date" id="date_range_picker" placeholder="Start Date" autocomplete="off"/>
-                    <input type="text" name="to_date" id="date_range_picker" placeholder="End Date" autocomplete="off"/>
+                    <input type="text" name="from_date" id="search_booking_range_picker" placeholder="Start Date" autocomplete="off"/>
+                    <input type="text" name="to_date" id="search_booking_range_picker" placeholder="End Date" autocomplete="off"/>
                     <div class="search-container">
                         <button class="button" id="search" style="width: 120px;" >Search</button>
                         <a href="/owner/my-bookings" disabled>Clear Dates</a>
@@ -133,9 +133,25 @@
 
         </div>
     </div>
+    @include('includes.scripts')
     <script type="text/javascript">
-        var start_date_elem =  $('#date_range_picker[name="from_date"]');
-        var end_date_elem =  $('#date_range_picker[name="to_date"]');
+        // Date Range Picker
+        $('input[id="search_booking_range_picker"]').daterangepicker({
+            autoUpdateInput: false,
+            autoApply: true,
+        });
+
+        $('input[id="search_booking_range_picker"]').keydown(function (e) {
+            e.preventDefault();
+            return false;
+        });
+
+        $('input[id="search_booking_range_picker"]').on('apply.daterangepicker', function(ev, picker) {
+            $('input[name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
+            $('input[name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
+        });
+        var start_date_elem =  $('#search_booking_range_picker[name="from_date"]');
+        var end_date_elem =  $('#search_booking_range_picker[name="to_date"]');
 
         $(document).ready(function () {
             const urlParams = new URLSearchParams(window.location.search);

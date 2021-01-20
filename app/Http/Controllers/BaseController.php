@@ -470,7 +470,10 @@ class BaseController extends ConstantsController
         $date = strtotime($last_message->date);
         $last_message->date = date('m/d/Y', $date);
         $last_message->time = date('h:i a', $date);
-        return $last_message;
+        return [
+            'last_message' => $last_message,
+            'last_message_date_time' => $date,
+        ];
     }
 
     public function image_upload($width, $height, $image)

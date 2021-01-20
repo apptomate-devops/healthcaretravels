@@ -643,7 +643,10 @@ class PropertyController extends BaseController
             ) {
                 $request_chat->has_unread_message = true;
             }
-            $request_chat->last_message = $this->get_firebase_last_message('request_chat', $request_chat, $user_id);
+
+            $last_message = $this->get_firebase_last_message('request_chat', $request_chat, $user_id);
+            $request_chat->last_message = $last_message['last_message'];
+            $request_chat->last_message_date_time = $last_message['last_message_date_time'];
         }
 
         $instant_chats = DB::table('instant_chat')
@@ -672,7 +675,10 @@ class PropertyController extends BaseController
             ) {
                 $request_chat->has_unread_message = true;
             }
-            $request_chat->last_message = $this->get_firebase_last_message('instant_chat', $request_chat, $user_id);
+
+            $last_message = $this->get_firebase_last_message('instant_chat', $request_chat, $user_id);
+            $request_chat->last_message = $last_message['last_message'];
+            $request_chat->last_message_date_time = $last_message['last_message_date_time'];
         }
         // echo $user_id;
         $personal_chats = DB::table('personal_chat')
@@ -704,17 +710,26 @@ class PropertyController extends BaseController
                 $request_chat->has_unread_message = true;
             }
             $last_message = $this->get_firebase_last_message('personal_chat', $request_chat, $user_id);
-            $request_chat->last_message = $last_message;
+            $request_chat->last_message = $last_message['last_message'];
+            $request_chat->last_message_date_time = $last_message['last_message_date_time'];
         }
 
         $results = [];
-        $results[] = $request_chats;
-        $results[] = $instant_chats;
-        $results[] = $personal_chats;
+        $results[] = $this->sort_array_by_date($request_chats);
+        $results[] = $this->sort_array_by_date($instant_chats);
+        $results[] = $this->sort_array_by_date($personal_chats);
 
         return view('owner.my-inbox', ['properties' => $results]);
     }
 
+    public function sort_array_by_date($array)
+    {
+        $sorted_array = $array->toArray();
+        usort($sorted_array, function ($a, $b) {
+            return $b->last_message_date_time <=> $a->last_message_date_time;
+        });
+        return $sorted_array;
+    }
     public function inbox_traveller(Request $request)
     {
         $user_id = $request->session()->get('user_id');
@@ -743,7 +758,10 @@ class PropertyController extends BaseController
             ) {
                 $request_chat->has_unread_message = true;
             }
-            $request_chat->last_message = $this->get_firebase_last_message('request_chat', $request_chat, $user_id);
+
+            $last_message = $this->get_firebase_last_message('request_chat', $request_chat, $user_id);
+            $request_chat->last_message = $last_message['last_message'];
+            $request_chat->last_message_date_time = $last_message['last_message_date_time'];
         }
 
         $instant_chats = DB::table('instant_chat')
@@ -768,7 +786,10 @@ class PropertyController extends BaseController
             ) {
                 $request_chat->has_unread_message = true;
             }
-            $request_chat->last_message = $this->get_firebase_last_message('instant_chat', $request_chat, $user_id);
+
+            $last_message = $this->get_firebase_last_message('instant_chat', $request_chat, $user_id);
+            $request_chat->last_message = $last_message['last_message'];
+            $request_chat->last_message_date_time = $last_message['last_message_date_time'];
         }
 
         $personal_chats = DB::table('personal_chat')
@@ -795,13 +816,14 @@ class PropertyController extends BaseController
                 $request_chat->has_unread_message = true;
             }
             $last_message = $this->get_firebase_last_message('personal_chat', $request_chat, $user_id);
-            $request_chat->last_message = $last_message;
+            $request_chat->last_message = $last_message['last_message'];
+            $request_chat->last_message_date_time = $last_message['last_message_date_time'];
         }
 
         $results = [];
-        $results[] = $request_chats;
-        $results[] = $instant_chats;
-        $results[] = $personal_chats;
+        $results[] = $this->sort_array_by_date($request_chats);
+        $results[] = $this->sort_array_by_date($instant_chats);
+        $results[] = $this->sort_array_by_date($personal_chats);
 
         $f_result = $results[0];
 

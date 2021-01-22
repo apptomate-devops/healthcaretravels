@@ -3022,6 +3022,8 @@ class PropertyController extends BaseController
                         $booking->already_checked_in = 1;
                         $booking->save();
                     }
+                    $message = 'Thanks for confirming you are checked in. Enjoy your stay. -Health Care Travels';
+                    $this->sendTwilioMessage($phone_number, $message);
                     Logger::info("SUCCESS: Traveler successfully check-in.");
                     return $response;
                 } else {

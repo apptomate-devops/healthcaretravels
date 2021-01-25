@@ -86,12 +86,18 @@
                                 <label for="user_email">Email Address:
                                     <input type="email" class="input-text {{ Session::has('email_error') ? 'form-error' : ''}}" name="user_email" id="user_email" placeholder="Email Address" required value="{{Session::get('email')}}" />
                                 </label>
-                            </p>
+                                @if(Session::has('error') && Session::has('email_error'))
+                                    <p class="error-text">{{Session::get('email_error')}}</p>
+                                @endif
+                                </p>
                             <p class="form-row form-row-wide">
                                 <label for="password">Password:
                                     <input class="input-text" type="password" name="password" id="password" placeholder="Password" required />
                                 </label>
-                            </p>
+                                    @if(Session::has('error') && Session::has('password_error'))
+                                        <p class="error-text">{{Session::get('password_error')}}</p>
+                                    @endif
+                                    </p>
                             <div class="checkboxes in-row password-checkbox">
                                 <input id="show_password" name="show_password" type="checkbox" onclick="togglePassword('password')">
                                 <label for="show_password">Show Password</label>

@@ -5131,7 +5131,7 @@ section.fullwidth.border-bottom {
 .property-slider .item {
     height: 600px;
     position: relative;
-    background-size: cover;
+    background-size: contain;
     background-repeat: no-repeat;
     background-position: 50%;
     border-radius: 3px;
@@ -5326,6 +5326,7 @@ section.fullwidth.border-bottom {
 
 .property-slider-nav .item img {
     border-radius: 3px;
+    object-fit: cover;
 }
 
 .property-slider-nav .item:before {

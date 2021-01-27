@@ -911,13 +911,19 @@ class BaseController extends ConstantsController
             $end_delay = $end_date_with_padding->diffInSeconds($current_date);
         }
 
+        // Send email to traveler 72 hours before checkin
+        $start_date_72_hr_with_padding = $start_date->copy()->subDays(3);
+        if ($start_date_72_hr_with_padding->gt($current_date)) {
+            $start_delay_72_hr = $start_date_72_hr_with_padding->diffInSeconds($current_date);
+        }
+
         $subject = 'Your Booking is Starting Soon';
         $this->send_scheduled_email(
             $owner->email,
             'owner-24hr-before-checkin',
             $subject,
             $owner_mail_data,
-            $start_delay,
+            $start_delay_72_hr,
             $booking->id,
         );
         $subject = 'Your Booking at ' . $propertyTitle . ' is Ending';
@@ -939,12 +945,6 @@ class BaseController extends ConstantsController
             'propertyZip' => $property->zip_code,
             'contact' => "{$request->getSchemeAndHttpHost()}/traveler/chat/{$chat_data['chat_id']}?fb-key=personal_chat&fbkey=personal_chat",
         ];
-
-        // Send email to traveler 72 hours before checkin
-        $start_date_72_hr_with_padding = $start_date->copy()->subDays(3);
-        if ($start_date_72_hr_with_padding->gt($current_date)) {
-            $start_delay_72_hr = $start_date_72_hr_with_padding->diffInSeconds($current_date);
-        }
 
         $subject = 'Your Stay at ' . $propertyTitle;
         $this->send_scheduled_email(

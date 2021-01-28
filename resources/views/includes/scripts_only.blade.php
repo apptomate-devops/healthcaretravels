@@ -6,15 +6,15 @@
 <script type="text/javascript" src="{{URL::asset('scripts/chosen.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/magnific-popup.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/owl.carousel.min.js') }}"></script>
-<script type="text/javascript" src="{{URL::asset('scripts/rangeSlider.js') }}"></script>
+{{--<script type="text/javascript" src="{{URL::asset('scripts/rangeSlider.js') }}"></script>--}}
 <script type="text/javascript" src="{{URL::asset('scripts/sticky-kit.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/slick.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/mmenu.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/tooltips.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/masonry.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/custom.js') }}"></script>
-<script type="text/javascript" src="{{URL::asset('js/bootstrap-datepicker.min.js') }}"></script>
-<script type="text/javascript" src="{{URL::asset('js/caleran.min.js') }}"></script>
+{{--<script type="text/javascript" src="{{URL::asset('js/bootstrap-datepicker.min.js') }}"></script>--}}
+{{--<script type="text/javascript" src="{{URL::asset('js/caleran.min.js') }}"></script>--}}
 
 <script type="text/javascript" src="{{URL::asset('scripts/my-library.js') }}"></script>
 

@@ -781,7 +781,7 @@ class Helper
             $chat_id = DB::table('personal_chat')->insertGetId($ins_data);
         }
 
-        $property_link = '<a href="' . url('/') . '/property/' . $property_id . '">';
+        $property_link = '<a target="_blank" href="' . url('/') . '/property/' . $property_id . '">';
 
         $message = "Enquiry sent for ";
         $message .= $property_link . $property_detail->title;

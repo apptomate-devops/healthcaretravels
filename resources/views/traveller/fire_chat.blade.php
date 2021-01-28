@@ -28,6 +28,11 @@
         max-height: 500px;
     }
 
+    .ng-binding a {
+        color: white;
+        text-decoration-line: underline;
+    }
+
     .text-white {
         color: white;
     }
@@ -57,6 +62,7 @@
 <!-- themes -->
 {{-- <link rel="stylesheet" href="{{ URL::asset('assets/css/themes/themes_combined.min.css') }}" media="all"> --}}
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-sanitize.min.js"></script>
 <script src="https://code.angularjs.org/1.4.4/angular-route.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
@@ -129,7 +135,7 @@
                                     </div>
                                     <ul class="chat_message">
                                         <li>
-                                            <div ng-bind-html="<% message.message %>"></div>
+                                            <div ng-bind-html="message.message"></div>
                                             <span class="chat_message_time">
                                                     <% message.date | chatDate %>
                                                 </span>
@@ -149,7 +155,7 @@
                                     </div>
                                     <ul class="chat_message">
                                         <li>
-                                            <div ng-bind-html="<% message.message %>"></div>
+                                            <div ng-bind-html="message.message"></div>
                                             <span class="chat_message_time">
                                                     <% message.date | chatDate %>
                                                 </span>
@@ -322,7 +328,7 @@
 
 
 
-    var app = angular.module('myApp', ['firebase'], function($interpolateProvider) {
+    var app = angular.module('myApp', ['firebase', 'ngSanitize'], function($interpolateProvider) {
         $interpolateProvider.startSymbol('<%');
         $interpolateProvider.endSymbol('%>');
     });
@@ -389,8 +395,6 @@
                     message.read = true;
                     updates['/' + node_name + '/' + request_id + '/' + messageId] = message;
                 }
-                var htmlObject = document.createElement('div');
-                htmlObject.innerHTML = message.message;
             });
             if (Object.keys(updates).length > 0) {
                 firebase.database().ref().update(updates);

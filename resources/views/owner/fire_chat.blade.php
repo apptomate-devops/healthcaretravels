@@ -25,6 +25,11 @@
         max-height: 500px;
     }
 
+    .ng-binding a {
+        color: white;
+        text-decoration-line: underline;
+    }
+
     .text-white {
         color: white;
     }
@@ -54,6 +59,7 @@
 <!-- themes -->
 {{-- <link rel="stylesheet" href="{{ URL::asset('assets/css/themes/themes_combined.min.css') }}" media="all"> --}}
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-sanitize.min.js"></script>
 <script src="https://code.angularjs.org/1.4.4/angular-route.min.js"></script>
 
 <!-- Firebase -->
@@ -128,12 +134,10 @@
                                     </div>
                                     <ul class="chat_message">
                                         <li>
-                                            <p>
-                                                <%message.message%>
-                                                <span class="chat_message_time">
-                                                    <% message.date | chatDate %>
-                                                </span>
-                                            </p>
+                                            <div ng-bind-html="message.message"></div>
+                                            <span class="chat_message_time">
+                                                <% message.date | chatDate %>
+                                            </span>
                                         </li>
 
                                     </ul>
@@ -150,12 +154,10 @@
                                     </div>
                                     <ul class="chat_message">
                                         <li>
-                                            <p>
-                                                <%message.message%>
-                                                <span class="chat_message_time">
-                                                    <% message.date | chatDate %>
-                                                </span>
-                                            </p>
+                                            <div ng-bind-html="message.message"></div>
+                                            <span class="chat_message_time">
+                                                <% message.date | chatDate %>
+                                            </span>
                                         </li>
 
                                     </ul>
@@ -322,7 +324,7 @@
         return re.test(text);
     }
 
-    var app = angular.module('myApp', ['firebase'], function($interpolateProvider) {
+    var app = angular.module('myApp', ['firebase', 'ngSanitize'], function($interpolateProvider) {
         $interpolateProvider.startSymbol('<%');
         $interpolateProvider.endSymbol('%>');
     });

@@ -24,8 +24,8 @@
 
             <div class="col-md-8">
                 <div class="check-in-out-wrapper">
-                    <input type="text" name="from_date" id="search_booking_range_picker" placeholder="Start Date" autocomplete="off"/>
-                    <input type="text" name="to_date" id="search_booking_range_picker" placeholder="End Date" autocomplete="off"/>
+                    <input type="text" name="from_date" id="search_booking_range_picker" placeholder="Start Date - End Date" autocomplete="off"/>
+{{--                    <input type="text" name="to_date" id="search_booking_range_picker" placeholder="End Date" autocomplete="off"/>--}}
                     <div class="search-container">
                         <button class="button" id="search" style="width: 120px;" >Search</button>
                         <a href="/owner/my-bookings" disabled>Clear Dates</a>
@@ -147,18 +147,18 @@
         });
 
         $('input[id="search_booking_range_picker"]').on('apply.daterangepicker', function(ev, picker) {
-            $('input[name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
-            $('input[name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
+            $('input[name="from_date"]').val(`${picker.startDate.format('MM/DD/YYYY')} - ${picker.endDate.format('MM/DD/YYYY')}`);
+            // $('input[name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
         });
-        var start_date_elem =  $('#search_booking_range_picker[name="from_date"]');
-        var end_date_elem =  $('#search_booking_range_picker[name="to_date"]');
+        var date_elem =  $('#search_booking_range_picker[name="from_date"]');
 
         $(document).ready(function () {
             const urlParams = new URLSearchParams(window.location.search);
             const start_date = urlParams.get('start_date');
             const end_date = urlParams.get('end_date');
-            start_date_elem.val(start_date);
-            end_date_elem.val(end_date);
+            if(start_date && end_date) {
+                date_elem.val(`${start_date} - ${end_date}`);
+            }
         })
         function reservation_completed(id){
             var r = confirm("Are you sure this reservation is completed?");
@@ -177,17 +177,14 @@
         }
 
         $("#search").click(function(){
-            var start_date =  start_date_elem.val();
-            var end_date =  end_date_elem.val();
-
-            if(!start_date || !end_date){
-                start_date_elem.css({'border-width': '2px', 'border-color': start_date ? 'gray' : 'red'});
-                end_date_elem.css({'border-width': '2px', 'border-color': end_date ? 'gray' : 'red'});
+            var date_range = date_elem.val();
+            if(!date_range) {
+                date_elem.css({'border-width': '2px', 'border-color': 'red'});
                 return false;
             }else{
-                start_date_elem.css('border','solid 2px grey');
-                end_date_elem.css('border','solid 2px grey');
-                var url = window.location.protocol + "//" + window.location.host +'/owner/my-bookings?start_date='+start_date+"&end_date="+end_date;
+                date_range = date_range.split(' - ');
+                date_elem.css('border','solid 2px grey');
+                var url = window.location.protocol + "//" + window.location.host +'/owner/my-bookings?start_date='+date_range[0]+"&end_date="+date_range[1];
                 window.location = url;
             }
         });

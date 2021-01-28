@@ -165,34 +165,6 @@
 </script>
 
 <script>
-    // Date Range Picker
-    $('input[id="date_range_picker"]').daterangepicker({
-        minDate: new Date(),
-        maxSpan: {
-            "days": 30
-        },
-        autoUpdateInput: false,
-        autoApply: true,
-        isInvalidDate: function(date){
-            var dc = moment();
-            dc.add(7, 'days');
-            // Blocking next 7 days for payment security on owner side
-            if (dc > date) {
-                return true;
-            }
-        }
-    });
-
-    $('input[id="date_range_picker"]').keydown(function (e) {
-        e.preventDefault();
-        return false;
-    });
-
-    $('input[id="date_range_picker"]').on('apply.daterangepicker', function(ev, picker) {
-        $('input[name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
-        $('input[name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
-    });
-
     $('input[id="dob"]').datepicker({
         format: 'mm/dd/yyyy',
         autoclose: true,

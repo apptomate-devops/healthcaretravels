@@ -12,10 +12,7 @@
                     <div class="col-md-3">
                         <div class="check-in-out-wrapper">
                             <input type="text" name="from_date"
-                                   placeholder="Check in"
-                                   id="search_date_range_picker" autocomplete="off"/>
-                            <input type="text" name="to_date"
-                                   placeholder="Check out"
+                                   placeholder="Check in - Check Out"
                                    id="search_date_range_picker" autocomplete="off"/>
                         </div>
                     </div>
@@ -93,7 +90,7 @@
                                         <a><h3 id="contact_host"><span class="property-badge"  id="chat_host">Message Host</span></h3></a>
                                     @endif
                                 @else
-                                    <button style="background: transparent;border: 0;" onclick="$('#request-chat').click()"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8">Login to Chat</span></h3></button>
+                                    <a class="button" style="background: transparent;border: 0;" href="{{url('/')}}/login"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8">Login to Chat</span></h3></a>
                                 @endif
                             </div>
 
@@ -720,20 +717,21 @@
                                 <div id="check_in_div" class="p-0">
                                     <div class="form-group">
                                         <!-- Date input -->
-                                        <label class="control-label" for="check_in_date">Check In</label>
-                                        <input name="check_in" required value="@if(count($session)!=0) {{$session['fromDate']}} @endif" id="booking_date_range_picker" placeholder="Check In date" type="text" autocomplete="off">
-                                    </div>
-                                </div>
-                                <div id="check_out_div" class="p-0">
-                                    <div class="form-group">
-                                        <!-- Date input -->
-                                        <label class="control-label" for="check_out_date">Check Out</label>
-                                        <input name="check_out" value="@if(count($session)!=0) {{$session['toDate']}} @endif"  required id="booking_date_range_picker" placeholder="Check Out date" type="text" autocomplete="off" >
+                                        <label class="control-label" for="check_in_date">Check In - Check Out</label>
+                                        <input name="check_in" required value="@if(count($session)!=0) {{$session['fromDate']}} @endif" id="booking_date_range_picker" placeholder="Check In - Check out" type="text" autocomplete="off">
 
                                         <input name="property_id" type="hidden" value="{{$property_id}}" >
                                         <input id="booking_id" name="booking_id" type="hidden">
                                     </div>
                                 </div>
+{{--                                <div id="check_out_div" class="p-0">--}}
+{{--                                    <div class="form-group">--}}
+{{--                                        <!-- Date input -->--}}
+{{--                                        <label class="control-label" for="check_out_date">Check Out</label>--}}
+{{--                                        <input name="check_out" value="@if(count($session)!=0) {{$session['toDate']}} @endif"  required id="booking_date_range_picker" placeholder="Check Out date" type="text" autocomplete="off" >--}}
+
+{{--                                    </div>--}}
+{{--                                </div>--}}
                                 <input type="hidden" id="guest" name="guest_count">
                                 <select required onchange="get_price();" class="chosen-select-no-single validate" id="current_guest_count" >
                                     <option selected disabled>Guests</option>
@@ -906,25 +904,25 @@
                     {{--  <a href="{{BASE_URL}}create_chat/{{$property_id}}" target="_blank"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8" >Message Host</span></h3></a> --}}
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-8">
                                     <div class="form-group">
-                                        <label class="control-label" for="chat_from_date">Check In</label>
+                                        <label class="control-label" for="chat_from_date">Check In - Check out</label>
                                         <input type="text" name="check_in"
-                                               placeholder="Check in"
+                                               placeholder="Check in - Check out"
                                                id="chat_date_range_picker" autocomplete="off"/>
 {{--                                        <input name="check_in" id="chat_from_date" placeholder="Check In date"  type="text" style="width: 273px;" >--}}
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="control-label" for="date">Check Out</label>
-                                        <input type="text" name="check_out"
-                                               placeholder="Check out"
-                                               id="chat_date_range_picker" autocomplete="off"/>
+{{--                                <div class="col-sm-6">--}}
+{{--                                    <div class="form-group">--}}
+{{--                                        <label class="control-label" for="date">Check Out</label>--}}
+{{--                                        <input type="text" name="check_out"--}}
+{{--                                               placeholder="Check out"--}}
+{{--                                               id="chat_date_range_picker" autocomplete="off"/>--}}
 {{--                                        <input name="check_out"  id="chat_to_date"  placeholder="Check Out date" type="text" style="width: 273px;" >--}}
-                                        <input name="property_id" type="hidden" value="{{$property_id}}" >
-                                    </div>
-                                </div>
+{{--                                        <input name="property_id" type="hidden" value="{{$property_id}}" >--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
                             </div>
                             <div class="text-center" style="font-size:1.2rem;">
                                 Optional: Add check-in/check-out dates to give the property owner more information about your inquiry.
@@ -1064,11 +1062,11 @@
             // Edit Property Booking
             var booking_details = <?php echo json_encode($booking_details); ?>;
             if(booking_details) {
+                debugger
                 $('#booking_id').val(booking_details.booking_id);
                 var start = moment(booking_details.start_date, "YYYY-MM-DD").format("MM/DD/YYYY")
                 var end = moment(booking_details.end_date, "YYYY-MM-DD").format("MM/DD/YYYY")
-                $('input[id="booking_date_range_picker"][name="check_in"]').val(start);
-                $('input[id="booking_date_range_picker"][name="check_out"]').val(end);
+                $('input[id="booking_date_range_picker"][name="check_in"]').val(`${start} - ${end}`);
                 $('#current_guest_count').val(booking_details.guest_count);
                 get_price();
             }
@@ -1141,22 +1139,19 @@
                 return false;
             })
             $('input[id="booking_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
-                $('input[id="booking_date_range_picker"][name="check_in"]').val(picker.startDate.format('MM/DD/YYYY'));
-                $('input[id="booking_date_range_picker"][name="check_out"]').val(picker.endDate.format('MM/DD/YYYY'));
+                $('input[id="booking_date_range_picker"][name="check_in"]').val(`${picker.startDate.format('MM/DD/YYYY')} - ${picker.endDate.format('MM/DD/YYYY')}`);
                 get_price();
             });
 
             // Chat with host: Date Range Picker
             $('input[id="chat_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
-                $('input[id="chat_date_range_picker"][name="check_in"]').val(picker.startDate.format('MM/DD/YYYY'));
-                $('input[id="chat_date_range_picker"][name="check_out"]').val(picker.endDate.format('MM/DD/YYYY'));
+                $('input[id="chat_date_range_picker"][name="check_in"]').val(`${picker.startDate.format('MM/DD/YYYY')} - ${picker.endDate.format('MM/DD/YYYY')}`);
                 $('#request-chat').prop('disabled', false);
             });
 
-            // Chat with host: Date Range Picker
+            // seafrch property: Date Range Picker
             $('input[id="search_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
-                $('input[id="search_date_range_picker"][name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
-                $('input[id="search_date_range_picker"][name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
+                $('input[id="search_date_range_picker"][name="from_date"]').val(`${picker.startDate.format('MM/DD/YYYY')} - ${picker.endDate.format('MM/DD/YYYY')}`);
                 $('#request-chat').prop('disabled', false);
             });
 
@@ -1175,8 +1170,14 @@
                 user_role_id = current_user.role_id;
             }
             var booking_id = $('#booking_id').val();
-            var from_date =$('input[id="booking_date_range_picker"][name="check_in"]').val();
-            var to_date = $('input[id="booking_date_range_picker"][name="check_out"]').val();
+            debugger
+            var dateString =$('input[id="booking_date_range_picker"][name="check_in"]').val();
+            var from_date, to_date;
+            if(dateString) {
+                var dates = dateString.split(' - ');
+                from_date = dates[0];
+                to_date = dates[1];
+            }
             var guestCount = parseInt($("#current_guest_count").val());
             var guest_count =isNaN(guestCount) ? 0 : guestCount;
             var totalguestcount=parseInt($('#total_guest_count').val());
@@ -1380,21 +1381,21 @@
                 if($(window).scrollTop() > boxPosition && !isFixed){
                     $(".tempClass").css({position:"fixed", top: "70px" ,bottom:'55px', left:"900px"});
                     $(".agent-widget").addClass('is-fixed');
-                    $("#check_in_div").addClass('col-md-6');
-                    $("#check_out_div").addClass('col-md-6');
+                    $("#check_in_div").addClass('col-md-12');
+                    // $("#check_out_div").addClass('col-md-6');
                 }else if($(window).scrollTop() < boxPosition){
                     $(".tempClass").css({position:"static"});
                     $(".agent-widget").removeClass('is-fixed');
-                    $("#check_in_div").removeClass('col-md-6');
-                    $("#check_out_div").removeClass('col-md-6');
+                    $("#check_in_div").removeClass('col-md-12');
+                    // $("#check_out_div").removeClass('col-md-6');
                 }
 
                 if(boxPosition1 < $(window).scrollTop())
                 {
                     $(".tempClass").css({position:"static"});
                     $(".agent-widget").removeClass('is-fixed');
-                    $("#check_in_div").removeClass('col-md-6');
-                    $("#check_out_div").removeClass('col-md-6');
+                    $("#check_in_div").removeClass('col-md-12');
+                    // $("#check_out_div").removeClass('col-md-6');
                 }
             });
         }

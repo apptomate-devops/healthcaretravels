@@ -373,11 +373,8 @@
                                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                                         <div class="check-in-out-wrapper">
                                             <input type="text" name="from_date"
-                                                   placeholder="Check in"
-                                                   id="home_date_range_picker" autocomplete="off" style="border-width: 0 1px 0 0;"/>
-                                            <input type="text" name="to_date"
-                                                   placeholder="Check out"
-                                                   id="home_date_range_picker" autocomplete="off" style="border-width: 0;"/>
+                                                   placeholder="Check in - Check out"
+                                                   id="home_date_range_picker" autocomplete="off"  style="text-align: left;"/>
                                         </div>
                                     </div>
                                     <div class="col-md-2 col-sm-2 col-xs-12 text-center">
@@ -808,8 +805,7 @@
     $('input[id="home_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
         var is_valid = check_valid_date_range(picker.startDate, picker.endDate)
         if(is_valid) {
-            $('input[id="home_date_range_picker"][name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
-            $('input[id="home_date_range_picker"][name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
+            $('input[id="home_date_range_picker"][name="from_date"]').val(`${picker.startDate.format('MM/DD/YYYY')} - ${picker.endDate.format('MM/DD/YYYY')}`);
         }
     });
 

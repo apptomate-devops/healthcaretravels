@@ -764,7 +764,7 @@ class Helper
             ->where('client_id', CLIENT_ID)
             ->where('owner_id', $property_detail->user_id)
             ->where('traveller_id', $traveler_id)
-            ->where('property_id', $property_id)
+            //            ->where('property_id', $property_id)
             ->where('owner_visible', 1)
             ->first();
 
@@ -773,16 +773,19 @@ class Helper
                 ->where('client_id', CLIENT_ID)
                 ->where('owner_id', $chat_check->owner_id)
                 ->where('traveller_id', $chat_check->traveller_id)
-                ->where('property_id', $property_id)
+                //                ->where('property_id', $property_id)
                 ->where('owner_visible', 1)
                 ->first();
             $chat_id = $chat_get->id;
         } else {
             $chat_id = DB::table('personal_chat')->insertGetId($ins_data);
         }
+
+        $property_link = '<a href="' . url('/') . '/property/' . $property_id . '">';
+
         $message = "Enquiry sent for ";
-        $message .= $property_detail->title;
-        $message .= ", Property ID :" . $property_id;
+        $message .= $property_link . $property_detail->title;
+        $message .= ", Property ID :" . $property_id . "</a>";
         if (isset($request) && $request->check_in) {
             $message .=
                 " on " .
@@ -831,6 +834,7 @@ class Helper
         }
 
         $data = Helper::start_chat_handler($user_id, $property_id, $request);
+
         $chat_id = $data['chat_id'];
         $message = $data['message'];
         $property_detail = $data['property_detail'];

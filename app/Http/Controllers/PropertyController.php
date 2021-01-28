@@ -40,10 +40,14 @@ class PropertyController extends BaseController
         if (!$user_id) {
             $request->session()->put('propertyId', $request->property_id);
             $request->session()->put('fromDate', $request->check_in);
-            $request->session()->put('toDate', $request->check_out);
+            //            $request->session()->put('toDate', $request->check_out);
             $request->session()->put('guest_count', $request->guest_count);
             return redirect()->intended('login');
         }
+        $dateString = explode(" - ", $request->check_in);
+        $request->check_in = date('Y-m-d', strtotime($dateString[0]));
+        $request->check_out = date('Y-m-d', strtotime($dateString[1]));
+
         $check_in = date('Y-m-d', strtotime($request->check_in));
         $check_out = date('Y-m-d', strtotime($request->check_out));
 
@@ -446,6 +450,9 @@ class PropertyController extends BaseController
 
     public function create_chat($property_id, Request $request)
     {
+        $dateString = explode(" - ", $request->check_in);
+        $request->check_in = date('Y-m-d', strtotime($dateString[0]));
+        $request->check_out = date('Y-m-d', strtotime($dateString[1]));
         return Helper::start_chat($property_id, $request);
     }
 
@@ -1078,12 +1085,11 @@ class PropertyController extends BaseController
 
             // TODO: instant booking, flexible cancellation, enhanced cleaning pool, no kids, no pets filter
 
-            $from = strtotime($request->from_date);
-            $to = strtotime($request->to_date);
             $query_blocking = [];
-            if ($from && $to) {
-                $fromDate = date('Y-m-d', $from);
-                $toDate = date('Y-m-d', $to);
+            if ($request->from_date) {
+                $dateString = explode(" - ", $request->from_date);
+                $fromDate = date('Y-m-d', strtotime($dateString[0]));
+                $toDate = date('Y-m-d', strtotime($dateString[1]));
                 $property_blocking_obj = new PropertyBlocking();
                 $property_booking_obj = new PropertyBooking();
 
@@ -2803,6 +2809,13 @@ class PropertyController extends BaseController
     {
         $booking = PropertyBooking::where('booking_id', $request->booking_id)->first();
 
+        if (empty($booking)) {
+            return back()->withErrors(['No booking found.']);
+        }
+        if (empty($request->funding_source)) {
+            return back()->withErrors(['Funding source required.']);
+        }
+
         if ($request->recruiter_name) {
             $booking->recruiter_name = $request->recruiter_name;
         }
@@ -2813,16 +2826,19 @@ class PropertyController extends BaseController
             $booking->recruiter_email = $request->recruiter_email;
         }
         if ($request->contract_start_date) {
-            $booking->contract_start_date = date('Y-m-d', strtotime($request->contract_start_date));
+            $dateString = explode(" - ", $request->contract_start_date);
+            $booking->contract_start_date = date('Y-m-d', strtotime($dateString[0]));
+            $booking->contract_end_date = date('Y-m-d', strtotime($dateString[1]));
         }
-        if ($request->contract_end_date) {
-            $booking->contract_end_date = date('Y-m-d', strtotime($request->contract_end_date));
-        }
+        //        if ($request->contract_end_date) {
+        //            $booking->contract_end_date = date('Y-m-d', strtotime($request->contract_end_date));
+        //        }
         if ($request->name_of_agency) {
             $booking->name_of_agency = $request->name_of_agency;
         } elseif ($request->other_agency) {
             $booking->other_agency = $request->other_agency;
         }
+
         $owner = $booking->owner;
         $traveller = $booking->traveler;
         $property = $booking->property;

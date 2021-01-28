@@ -90,12 +90,12 @@
                         </div>
                         <h3 class="md-card-toolbar-heading-text large">
                             <span class="uk-text-muted">Chat with</span>
-                            <a href="#">{{Helper::get_user_display_name($owner)}}</a>
-                            @if(isset($property))
-                            , <a href="/property/{{$property->id}}">
-                                {{$property->title}}
-                            </a>
-                            @endif
+                            <a href="{{url('/')}}/owner-profile/{{$owner->id}}">{{Helper::get_user_display_name($owner)}}</a>
+{{--                            @if(isset($property))--}}
+{{--                            , <a href="/property/{{$property->id}}">--}}
+{{--                                {{$property->title}}--}}
+{{--                            </a>--}}
+{{--                            @endif--}}
                         </h3>
                     </div>
                 </div>
@@ -129,12 +129,10 @@
                                     </div>
                                     <ul class="chat_message">
                                         <li>
-                                            <p>
-                                                <%message.message%>
-                                                <span class="chat_message_time">
+                                            <div ng-bind-html="<% message.message %>"></div>
+                                            <span class="chat_message_time">
                                                     <% message.date | chatDate %>
                                                 </span>
-                                            </p>
                                         </li>
 
                                     </ul>
@@ -151,14 +149,10 @@
                                     </div>
                                     <ul class="chat_message">
                                         <li>
-                                            <p>
-                                                <%message.message%>
-                                                <span class="chat_message_time">
+                                            <div ng-bind-html="<% message.message %>"></div>
+                                            <span class="chat_message_time">
                                                     <% message.date | chatDate %>
                                                 </span>
-
-                                            </p>
-
                                         </li>
 
                                     </ul>
@@ -395,6 +389,8 @@
                     message.read = true;
                     updates['/' + node_name + '/' + request_id + '/' + messageId] = message;
                 }
+                var htmlObject = document.createElement('div');
+                htmlObject.innerHTML = message.message;
             });
             if (Object.keys(updates).length > 0) {
                 firebase.database().ref().update(updates);

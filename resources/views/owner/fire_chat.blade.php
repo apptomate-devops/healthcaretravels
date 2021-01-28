@@ -95,11 +95,11 @@
                         <h3 class="md-card-toolbar-heading-text large">
                             <span class="uk-text-muted">Chat with</span>
                             <a href="#">{{Helper::get_user_display_name($traveller)}}</a>
-                            @if(isset($property))
-                            , <a href="/property/{{$property->id}}">
-                                {{$property->title}}
-                            </a>
-                            @endif
+{{--                            @if(isset($property))--}}
+{{--                            , <a href="/property/{{$property->id}}">--}}
+{{--                                {{$property->title}}--}}
+{{--                            </a>--}}
+{{--                            @endif--}}
                         </h3>
                     </div>
                 </div>

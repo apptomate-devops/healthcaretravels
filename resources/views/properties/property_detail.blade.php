@@ -257,7 +257,7 @@
                                                     </h4>
                                                 </div>
                                                 <div id="guest-collapse{{$i+1}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="guest-heading-{{$i+1}}">
-                                                    <div class="panel-body" style="position: relative; padding: @if($i==0) 50px 15px 15px @else 15px @endif;">
+                                                    <div class="panel-body" style="position: relative; padding: @if($i==0) 60px 15px 15px @else 15px @endif;">
                                                         <input name="guest_id[]" type="hidden" value="{{$guest_data->id ?? ''}}">
                                                         <div class="control-group cc-first-name col-md-6">
                                                             <label class="control-label" for="credit-card-first-name">
@@ -295,7 +295,7 @@
                                                             </select>
                                                         </div>
                                                         @if($i == 0)
-                                                            <div onclick="add_my_info();" class="btn bg-orange" style="position: absolute; top: 10px; right: 10px; margin-bottom: 20px; width: auto;">Add My Info</div>
+                                                            <div onclick="add_my_info();" class="btn bg-orange" style="position: absolute; top: 10px; left: 30px; width: auto;">Add My Info</div>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -367,28 +367,28 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="control-group cc-first-name col-md-4">
+                                        <div class="control-group cc-first-name col-md-6">
                                             <label class="control-label" for="recruiter_phone_number">
                                                 Recruiter Phone Number
                                             </label>
                                             <input class="masked_phone_us" id="recruiter_phone_number" name="recruiter_phone_number" type="text" value="{{$data->recruiter_phone_number ?? ''}}" required>
                                         </div>
-                                        <div class="control-group cc-first-name col-md-4">
+                                        <div class="control-group cc-first-name col-md-6">
                                             <label class="control-label" for="contract_start_date">
-                                                Contract Start Date
+                                                Contract Start Date - Contract End Date
                                             </label>
                                             <input type="text" name="contract_start_date"
-                                                   placeholder="mm/dd/yyyy"
+                                                   placeholder="mm/dd/yyyy - mm/dd/yyyy"
                                                    id="contract_date_range_picker" autocomplete="off" required/>
                                         </div>
-                                        <div class="control-group cc-first-name col-md-4">
-                                            <label class="control-label" for="contract_end_date">
-                                                Contract End Date
-                                            </label>
-                                            <input type="text" name="contract_end_date"
-                                                   placeholder="mm/dd/yyyy"
-                                                   id="contract_date_range_picker" autocomplete="off" required/>
-                                        </div>
+{{--                                        <div class="control-group cc-first-name col-md-4">--}}
+{{--                                            <label class="control-label" for="contract_end_date">--}}
+{{--                                                Contract End Date--}}
+{{--                                            </label>--}}
+{{--                                            <input type="text" name="contract_end_date"--}}
+{{--                                                   placeholder="mm/dd/yyyy"--}}
+{{--                                                   id="contract_date_range_picker" autocomplete="off" required/>--}}
+{{--                                        </div>--}}
                                     </div>
                                 </div>
                                 <div>
@@ -446,8 +446,8 @@
             if(bookingData.contract_start_date && bookingData.contract_start_date !='0000-00-00' && bookingData.contract_end_date != '0000-00-00') {
                 var start = moment(bookingData.contract_start_date, "YYYY-MM-DD").format("MM/DD/YYYY")
                 var end = moment(bookingData.contract_end_date, "YYYY-MM-DD").format("MM/DD/YYYY")
-                $('input[id="contract_date_range_picker"][name="contract_start_date"]').val(start);
-                $('input[id="contract_date_range_picker"][name="contract_end_date"]').val(end);
+                $('input[id="contract_date_range_picker"][name="contract_start_date"]').val(`${start} - ${end}`);
+                // $('input[id="contract_date_range_picker"][name="contract_end_date"]').val(end);
             }
 
             $('input[id="contract_date_range_picker"]').daterangepicker({
@@ -460,8 +460,8 @@
                 return false;
             });
             $('input[id="contract_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
-                $('input[id="contract_date_range_picker"][name="contract_start_date"]').val(picker.startDate.format('MM/DD/YYYY'));
-                $('input[id="contract_date_range_picker"][name="contract_end_date"]').val(picker.endDate.format('MM/DD/YYYY'));
+                $('input[id="contract_date_range_picker"][name="contract_start_date"]').val(`${picker.startDate.format('MM/DD/YYYY')} - ${picker.endDate.format('MM/DD/YYYY')}`);
+                // $('input[id="contract_date_range_picker"][name="contract_end_date"]').val(picker.endDate.format('MM/DD/YYYY'));
             });
         });
 

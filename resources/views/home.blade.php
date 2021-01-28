@@ -540,8 +540,8 @@
                                                            class="featured-places img-box"
                                                            @if($i==0 || $i==4 || $i==11 || $i==15 || $i==5) style="height: 525px;"
                                                            @endif @if($i==3 || $i==7 || $i==8 ||$i==12) style="height: 250px;"
-                                                            @endif>
-                                                            <img src="{{$category->image_url}}" height="100%" width="100%" style="object-fit: cover">
+                                                            @endif data-background-image="{{$category->image_url}}">
+{{--                                                            <img src="{{$category->image_url}}" height="100%" width="100%" style="object-fit: cover">--}}
                                                             <!-- Badge -->
                                                             <div class="listing-badges">
                                                                 <span class="featured">Featured</span>

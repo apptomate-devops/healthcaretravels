@@ -87,7 +87,7 @@
                             <div class="sub-price">
                                 @if(Session::get('user_id'))
                                     @if($data->user_id != Session::get('user_id'))
-                                        <a><h3 id="contact_host"><span class="property-badge"  id="chat_host">Message Host</span></h3></a>
+                                        <a><h3 id="contact_host"><span class="property-badge" id="chat_host">Message Host</span></h3></a>
                                     @endif
                                 @else
                                     <a class="button" style="background: transparent;border: 0;" href="{{url('/')}}/login"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8">Login to Chat</span></h3></a>
@@ -875,7 +875,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="copy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade in" id="copy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -892,7 +892,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1062,7 +1062,6 @@
             // Edit Property Booking
             var booking_details = <?php echo json_encode($booking_details); ?>;
             if(booking_details) {
-                debugger
                 $('#booking_id').val(booking_details.booking_id);
                 var start = moment(booking_details.start_date, "YYYY-MM-DD").format("MM/DD/YYYY")
                 var end = moment(booking_details.end_date, "YYYY-MM-DD").format("MM/DD/YYYY")
@@ -1170,7 +1169,6 @@
                 user_role_id = current_user.role_id;
             }
             var booking_id = $('#booking_id').val();
-            debugger
             var dateString =$('input[id="booking_date_range_picker"][name="check_in"]').val();
             var from_date, to_date;
             if(dateString) {

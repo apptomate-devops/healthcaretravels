@@ -5327,6 +5327,7 @@ section.fullwidth.border-bottom {
 .property-slider-nav .item img {
     border-radius: 3px;
     object-fit: cover;
+    width: 100%;
 }
 
 .property-slider-nav .item:before {

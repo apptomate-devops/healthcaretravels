@@ -5827,6 +5827,16 @@ body .bookmarks-table td.action a.delete i {
     margin-right: 3px;
 }
 
+td.action a.icons .tooltiptext {
+    width: max-content;
+    background-color: black !important;
+    padding: 2px 8px;
+    top: 24px !important;
+    left: 7px;
+    font-size: 14px;
+    pointer-events: none;
+}
+
 .keywords,
 .alert-name {
     width: 18%

@@ -59,7 +59,7 @@
                     <div class="denied-details">
                         <b class="info-text" style="color: red; font-size: 18px;">One or more verification fields were denied:</b>
                         @foreach ($documents as $d)
-                            <br><b class="info-text" style="color: red; font-size: 18px;">{{ucfirst(str_replace("_"," ",$d->document_type))}}: {{$d->reason}}</b>
+                            <br><b class="info-text" style="color: red; font-size: 18px;">{{\App\Helper\Helper::get_document_name($d->document_type)}}: {{$d->reason}}</b>
                         @endforeach
 
                     </div>
@@ -120,7 +120,7 @@
                                         <input type="file" name="traveler_contract_id" id="traveler_contract_id" data-field-group="traveler_contract_id" class="form-control" accept="{{$filtypes}}" />
                                     </div>
                                     <div class="col-md-6">
-                                        <label>Work Badge </label>
+                                        <label>Work Badge ID</label>
                                         <input type="file" name="work_badge_id" id="work_badge_id" data-field-group="work_badge_id" class="form-control" accept="{{$filtypes}}" />
                                     </div>
                                     <div class="col-md-12" style="margin-top: 40px;">
@@ -185,7 +185,7 @@
                                             {{--                                        @endif--}}
                                         </div>
                                         <div class="col-md-6">
-                                            <label>Work Badge </label>
+                                            <label>Work Badge ID</label>
                                             <input type="file" name="work_badge_id" id="work_badge_id" data-field-group="work_badge_id" class="form-control" accept="{{$filtypes}}" />
                                             @if(isset($WORK_BADGE_ID->document_type))
                                                 <a href="{{$WORK_BADGE_ID->document_url}}" target="_blank" style="float: right;">view</a>
@@ -193,7 +193,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label>Travel Contract </label>
+                                        <label>Travel Contract ID</label>
                                         <input type="file" name="travel_contract_id" id="travel_contract_id" data-field-group="travel_contract_id" class="form-control" accept="{{$filtypes}}" />
                                         @if(isset($TRAVEL_CONTRACT_ID->document_type))
                                             <a href="{{$TRAVEL_CONTRACT_ID->document_url}}" target="_blank" style="float: right;">view</a>

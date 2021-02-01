@@ -24,7 +24,7 @@
 
             <div class="col-md-8">
                 <div class="check-in-out-wrapper">
-                    <input type="text" name="from_date" id="search_booking_range_picker" placeholder="Start Date - End Date" autocomplete="off"/>
+                    <input type="text" name="from_date" id="search_booking_range_picker" placeholder="Check in - Check out" autocomplete="off"/>
 {{--                    <input type="text" name="to_date" id="search_booking_range_picker" placeholder="End Date" autocomplete="off"/>--}}
                     <div class="search-container">
                         <button class="button" id="search" style="width: 120px;" >Search</button>

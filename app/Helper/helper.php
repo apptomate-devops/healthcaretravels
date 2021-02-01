@@ -1277,6 +1277,20 @@ class Helper
         return $utc_date;
     }
 
+    public static function get_document_name($document)
+    {
+        $doc_name = $document;
+        if ($document == 'GOVERNMENT_ID') {
+            $doc_name = "GOVERNMENT ID/DRIVER'S LICENSE/PASSPORT";
+        } elseif ($document == 'LICENSE_CERTIFICATION_WEBSITE') {
+            $doc_name = 'CERTIFIED TRAVELER WEBSITE';
+        } elseif ($document == 'TRAVELER_LICENSE') {
+            $doc_name = 'CERTIFIED TRAVELER LICENSE';
+        } elseif ($document == 'CO-HOSTING_AGREEMENT_ID') {
+            $doc_name = 'CO-HOST AGREEMENT FORM';
+        }
+        return ucfirst(str_replace("_", " ", $doc_name));
+    }
     public static function get_user_display_name($user, $prefix = false)
     {
         $first_name_key = 'first_name';

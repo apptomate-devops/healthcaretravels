@@ -235,6 +235,7 @@
                                     <div class="col-sm-12">
                                         <h2>Billing Information</h2>
                                         To complete this booking, you will need your bank account login details and bank account number, and routing number. Select the add account details button below and set up your account details by logging in and answer any questions that are required to verify your identity. You will not be charged until the property owner confirms your request. Bookings are confirmed on a first come first serve basis. Please review this listing in its entirety and the selected cancellation policy before booking. To change or add a new bank account visit the "My Payment Options" tab in your account. To check the status of your booking please visit the "My Trips" tab in your account.<br><br>
+                                        <b>Please Note</b><br>
                                         Make sure your account is Up-To-Date and Complete including the (About Me) in your profile. This allows property owners to approve your stay quicker. If you have any questions or concerns email <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com</a>.
                                         <p></p>
                                     </div>

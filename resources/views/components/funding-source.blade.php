@@ -17,7 +17,8 @@ $hasDwollaAccount = isset($user->dwolla_customer);
         <div class="checkboxes mt-10" id="policy_accept_field">
             <input id="dwolla_policy_accept" type="checkbox" name="dwolla_policy_accept">
             <label for="dwolla_policy_accept">
-                By checking and selecting {{$buttonText}} below, I agree to the <a href="{{BASE_URL}}/terms-of-use" target="_blank">Terms of Use</a>, <a href="{{BASE_URL}}/privacy-policy" target="_blank">Privacy Policy</a>, <a href="{{BASE_URL}}/policies" target="_blank">Policies</a>, <a href="{{BASE_URL}}/payment-terms" target="_blank">Payment Terms</a>, <a href="{{BASE_URL}}/non-discrimination-policy" target="_blank">Nondiscrimination Policy</a> and <a href="{{URL('/')}}/cancellationpolicy">Cancellation Policy</a>.
+                By entering your bank details below you understand and agree this is your bank account and matches with the HCT user profile on this account and the verification documents submitted to use the platform.
+{{--                By checking and selecting {{$buttonText}} below, I agree to the <a href="{{BASE_URL}}/terms-of-use" target="_blank">Terms of Use</a>, <a href="{{BASE_URL}}/privacy-policy" target="_blank">Privacy Policy</a>, <a href="{{BASE_URL}}/policies" target="_blank">Policies</a>, <a href="{{BASE_URL}}/payment-terms" target="_blank">Payment Terms</a>, <a href="{{BASE_URL}}/non-discrimination-policy" target="_blank">Nondiscrimination Policy</a> and <a href="{{URL('/')}}/cancellationpolicy">Cancellation Policy</a>.--}}
                 <p class="error-text-accept" style="display: none">Policy must be agreed</p>
             </label>
         </div>

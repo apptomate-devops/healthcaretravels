@@ -322,7 +322,7 @@
     <!-- Banner data-background="/home.jpg"
       ================================================== -->
 
-    <div class="parallax home-slide" data-background="/storage/public/HomePage/background_blur_crop.jpeg" data-color="#36383e" data-color-opacity="0.5"
+    <div class="parallax home-slide" data-background="/storage/public/HomePage/background_blur_crop.webp" data-color="#36383e" data-color-opacity="0.5"
          data-img-width="1200" data-img-height="1000">
         <div class="container">
             <div class="row">

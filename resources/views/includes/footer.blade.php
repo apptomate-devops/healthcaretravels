@@ -32,7 +32,7 @@ if(!defined("APP_BASE_NAME")) {
         <div class="row">
             <div class="col-md-5 col-sm-6">
                 <div>
-                    <img class="footer-logo" src="{{url('/')}}/healthcaretravel.png" alt="">
+                    <img class="footer-logo" src="/storage/public/HomePage/healthcaretravel.webp" alt="">
                     <div class="hidden-md hidden-sm hidden-lg" style="float: right;">
                         <script type="text/javascript" src="https://sealserver.trustwave.com/seal.js?style=invert&code=396d793c4b3e43848064dce5b52f8e79"></script>
                     </div>

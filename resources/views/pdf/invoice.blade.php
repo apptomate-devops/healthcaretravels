@@ -14,7 +14,7 @@
 <body onload="window.print()">
 <div id="logo" style="margin-top: 30px;">
     <center>
-        <a href="{{url('/')}}"><img src="/storage/public/HomePage/healthcaretravel.png" alt="" width="100"></a>
+        <a href="{{url('/')}}"><img src="/storage/public/HomePage/healthcaretravel.webp" alt="" width="100"></a>
         <br>
         <br>
         <b><span class="data">

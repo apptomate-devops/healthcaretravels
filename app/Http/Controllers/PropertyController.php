@@ -330,6 +330,7 @@ class PropertyController extends BaseController
             ->select(
                 'property_booking.status as bookingStatus',
                 'property_list.*',
+                'property_list.cancellation_policy as property_cancellation_policy',
                 'property_booking.*',
                 'property_images.*',
             )
@@ -387,7 +388,9 @@ class PropertyController extends BaseController
         $data = (object) array_merge((array) $data, (array) $booking_price);
 
         $funding_sources = $this->dwolla->getFundingSourcesForCustomer($traveller->dwolla_customer);
-
+        if (!$data->cancellation_policy) {
+            $data->cancellation_policy = $data->property_cancellation_policy;
+        }
         return view('properties.property_detail', [
             'data' => $data,
             'guests' => $guests,

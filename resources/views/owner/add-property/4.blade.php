@@ -160,8 +160,8 @@
 
                                         <div class="col-md-6">
                                             <h5>Cancellation Policy<span class="required">*</span></h5>
-                                            <select class="chosen-select-no-single validate" id="cancellation_policy" name="cancellation_policy" required>
-                                                <option label=""></option>
+                                            <select class="chosen-select-no-single validate" id="cancellation_policy" name="cancellation_policy" required data-placeholder="Select Cancellation policy">
+                                                <option label="Select Cancellation policy" value="" disabled selected></option>
                                                 <option value="Flexible">Flexible</option>
                                                 <option value="Moderate">Moderate</option>
                                                 <option value="Strict">Strict</option>
@@ -352,21 +352,6 @@
 
     </script>
     <script type="text/javascript">
-        $('.date_picker').datepicker({});
-        var date = new Date();
-        //date.setDate(date.getDate()-1);
-        $('#from_date').datepicker({
-            startDate: date
-        });
-
-        function set_to_date() {
-            // body...
-            var from_date = $('#from_date').val();
-            $('#to_date').datepicker({
-                startDate: from_date
-            });
-        }
-
         <?php if (isset($price->weekend_days)) {
             $value = explode(',', $price->weekend_days);
             foreach ($value as $v) { ?>
@@ -393,9 +378,9 @@
             }
         });
 
-        $("#cancellation_policy").val("{{isset($property_details->cancellation_policy)?$property_details->cancellation_policy:''}}");
-{{--        $("#booking_type").val("{{isset($property_details->is_instant)?$property_details->is_instant:''}}");--}}
-<!--        $("#cleaning_fee_type").val("{{isset($price->cleaning_fee_type)?$price->cleaning_fee_type:''}}");-->
+        if("{{isset($property_details->cancellation_policy)}}") {
+            $("#cancellation_policy").val("{{$property_details->cancellation_policy}}");
+        }
 
     </script>
     </body>{{-- https://maps.googleapis.com/maps/api/js?libraries=places&#038;language=en&#038;key=AIzaSyBWoWfqptSqcHj_tAT3khy2jjj7fuANNaM&#038;ver=1.0 --}}

@@ -2873,7 +2873,7 @@ class PropertyController extends BaseController
         $booking->check_in = $property_details->check_in;
         $booking->check_out = $property_details->check_out;
         $booking_price = (object) Helper::get_price_details($booking, $booking->start_date, $booking->end_date);
-
+        $payment_summary_owner = $this->get_payment_summary($booking, 1);
         $bookingEmailType = $booking->is_instant ?? 0;
         if ($bookingEmailType != 0 || $bookingEmailType != 1) {
             $bookingEmailType = 0;
@@ -2932,6 +2932,7 @@ class PropertyController extends BaseController
             'cover_img' => $cover_img,
             'data' => $booking,
             'booking_price' => $booking_price,
+            'payment_summary_owner' => $payment_summary_owner,
         ];
 
         $title = isset($welcome->title) ? $welcome->title : 'New booking from - ' . APP_BASE_NAME;

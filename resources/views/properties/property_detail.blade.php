@@ -347,7 +347,7 @@
                                     <div id="add_another_agency" class="add-another" onclick="add_another_agency(true)" style="cursor: pointer;">Can't find it? Add it here.</div>
                                     <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
                                     <label for="other_agency_name" id="other_agency_name" style="display: none;">Other Agency:</label>
-                                    <input type="text" style="display: none;" class="input-text validate" name="other_agency" id="other_agency" value="{{$traveller->other_agency}}" placeholder="Other agency" autocomplete="off">
+                                    <input type="text" style="display: none;" class="input-text validate" name="other_agency" id="other_agency" placeholder="Other agency" autocomplete="off">
                                     <div style="display: none;" id="other_agency_cancel" class="add-another" onclick="add_another_agency()" style="cursor: pointer;">Cancel</div>
                                 </div>
                                 <hr>
@@ -425,10 +425,6 @@
             });
 
             load_agencies();
-            var otherAgencies = "{{$traveller->other_agency}}";
-            if(otherAgencies) {
-                add_another_agency(true, otherAgencies);
-            }
 
             var pet_details = "{{isset($pet_details)}}" ? 1 : 0;
             change_pet_travelling(pet_details);

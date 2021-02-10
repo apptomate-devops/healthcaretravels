@@ -54,7 +54,7 @@
                     {{Helper::get_user_display_name($owner)}} confirmed your booking at {{$property_title}} for {{$start_date}} to {{$end_date}}. Please visit the <a href="{{URL('/')}}/traveler/my-reservations">My Trips</a> page on Health Care Travels to view more details. Note that the address and check-in details will be available to you 72 hours before your stay.
                     <br>
                     <br>
-                    Please check your inbox for another email regarding your first housing payment.
+                    You will receive an email when your payment is being processed.
                 </div>
 {{--                <div>--}}
 {{--                    @if($owner->profile_image && $owner->profile_image != ' ')--}}

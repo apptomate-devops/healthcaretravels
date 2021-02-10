@@ -771,21 +771,6 @@
 
     </script>
     <script type="text/javascript">
-        $('.date_picker').datepicker({});
-        var date = new Date();
-        //date.setDate(date.getDate()-1);
-        $('#from_date').datepicker({
-            startDate: date
-        });
-
-        function set_to_date() {
-            // body...
-            var from_date = $('#from_date').val();
-            $('#to_date').datepicker({
-                startDate: from_date
-            });
-        }
-
         $('#property_size').on('keypress', function(event) {
             var regex = new RegExp("^[0-9+]$");
             var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);

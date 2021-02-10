@@ -29,7 +29,7 @@
                                 <tr class="expandable" id="neat_amount">
                                     <td class="name pos-rel" >
                                                                 <span class="lang-chang-label">
-                                                                    {{$booking_price->count_label}}
+                                                                    {{$booking_price->count_label}} (incl. service fees)
                                                                 </span>
                                         <span class='tooltips'><i style="color:black"  class='fa fa-question-circle'></i><span style="color: white!important" class='tooltiptext'>The cost of your stay including applicable fees</span></span>
                                     </td>

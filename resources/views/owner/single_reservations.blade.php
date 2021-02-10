@@ -85,6 +85,9 @@
                     </tr>
                 </table>
                 <div>The selected account will be used to process any future payments for this booking.</div>
+                <div>
+                    <b>Cancellation Policy: <a href="{{URL('/')}}/cancellationpolicy" class="cancel-policy-link" target="_blank">{{$data->cancellation_policy}} </a></b>
+                </div>
                 @if(in_array($data->status, [2, 3]))
                     <div class="text-right">
                         <a target="_blank" href="{{BASE_URL}}invoice/{{$data->booking_id}}" class="margin-top-40 button border">Print Invoice</a>

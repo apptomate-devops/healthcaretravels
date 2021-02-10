@@ -220,7 +220,7 @@ class BaseController extends ConstantsController
     {
         try {
             Mail::send($view_name, $data, function ($message) use ($email) {
-                $message->from('gotocva@gmail.com', 'Mail from ' . APP_BASE_NAME);
+                $message->from(GENERAL_MAIL, config('mail.from.name'));
                 $message->to($email);
                 $message->subject('Mail from ' . APP_BASE_NAME);
             });
@@ -233,7 +233,7 @@ class BaseController extends ConstantsController
     {
         try {
             Mail::send($view_name, $data, function ($message) use ($email, $subject) {
-                $message->from('gotocva@gmail.com', 'Mail from ' . APP_BASE_NAME);
+                $message->from(GENERAL_MAIL, config('mail.from.name'));
                 $message->to($email);
                 $message->subject($subject);
             });
@@ -275,7 +275,7 @@ class BaseController extends ConstantsController
     {
         try {
             Mail::send($view_name, $data, function ($message) use ($email, $subject) {
-                $message->from('gotocva@gmail.com', "Mail from " . APP_BASE_NAME);
+                $message->from(GENERAL_MAIL, config('mail.from.name'));
                 $message->to($email);
                 $message->subject($subject);
             });

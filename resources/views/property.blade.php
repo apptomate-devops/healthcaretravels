@@ -714,7 +714,7 @@
                                     <div class="clearfix"></div>
                                 </div>
 
-                                <div id="check_in_div" class="p-0">
+                                <div id="check_in_div" class="p-0" style="width: 65%; display: inline-block;">
                                     <div class="form-group">
                                         <!-- Date input -->
                                         <label class="control-label" for="check_in_date">Check In - Check Out</label>
@@ -724,22 +724,16 @@
                                         <input id="booking_id" name="booking_id" type="hidden">
                                     </div>
                                 </div>
-{{--                                <div id="check_out_div" class="p-0">--}}
-{{--                                    <div class="form-group">--}}
-{{--                                        <!-- Date input -->--}}
-{{--                                        <label class="control-label" for="check_out_date">Check Out</label>--}}
-{{--                                        <input name="check_out" value="@if(count($session)!=0) {{$session['toDate']}} @endif"  required id="booking_date_range_picker" placeholder="Check Out date" type="text" autocomplete="off" >--}}
-
-{{--                                    </div>--}}
-{{--                                </div>--}}
                                 <input type="hidden" id="guest" name="guest_count">
-                                <select required onchange="get_price();" class="chosen-select-no-single validate" id="current_guest_count" >
-                                    <option selected disabled>Guests</option>
-                                    @for($i=1;$i<=$data->total_guests;$i++)
-                                        <option value="{{$i}}">{{$i}} Guest{{$i > 1 ? 's' : ''}}</option>
-                                    @endfor
-
-                                </select>
+                                <div id="guest_div" class="p-0" style="width: 30%; margin-left: 3%; display: inline-block;">
+                                    <label class="control-label" for="guests">Guests</label>
+                                    <select required onchange="get_price();" class="chosen-select-no-single validate" id="current_guest_count" >
+                                        <option selected disabled>Guests</option>
+                                        @for($i=1;$i<=$data->total_guests;$i++)
+                                            <option value="{{$i}}">{{$i}}</option>
+                                        @endfor
+                                    </select>
+                                </div>
 
                                 <div id="guest_details"></div>
 
@@ -1379,21 +1373,18 @@
                 if($(window).scrollTop() > boxPosition && !isFixed){
                     $(".tempClass").css({position:"fixed", top: "70px" ,bottom:'55px', left:"900px"});
                     $(".agent-widget").addClass('is-fixed');
-                    $("#check_in_div").addClass('col-md-12');
-                    // $("#check_out_div").addClass('col-md-6');
+                    $("#check_in_div input[name='check_in'], #guest_div a.chosen-single span").css({'font-size': '15px'});
                 }else if($(window).scrollTop() < boxPosition){
                     $(".tempClass").css({position:"static"});
                     $(".agent-widget").removeClass('is-fixed');
-                    $("#check_in_div").removeClass('col-md-12');
-                    // $("#check_out_div").removeClass('col-md-6');
+                    $("#check_in_div input[name='check_in'], #guest_div a.chosen-single span").css({'font-size': '12px'});
                 }
 
                 if(boxPosition1 < $(window).scrollTop())
                 {
                     $(".tempClass").css({position:"static"});
                     $(".agent-widget").removeClass('is-fixed');
-                    $("#check_in_div").removeClass('col-md-12');
-                    // $("#check_out_div").removeClass('col-md-6');
+                    $("#check_in_div input[name='check_in']").css({'font-size': '15px'});
                 }
             });
         }

@@ -140,7 +140,14 @@
         </div>
         <div class="card-content card-body-padding">
             @if($booking->cancellation_requested == 2)
-                <h5><b>Cancellation is completed for this booking</b></h5>
+                <div class="deposit-form-wrapper">
+                    <div class="details"><b>{{$cancelled_by}}</b> stopped processing payments on {{Helper::get_local_date_time($booking->cancellation_refund_processed_at, 'm/d/Y H:i a')}}</div>
+                    <div class="details"><b>{{$cancelled_by}}</b> cancelled booking on {{Helper::get_local_date_time($booking->cancellation_refund_processed_at, 'm/d/Y H:i a')}}</div>
+                    <div class="details"><b>Refund issued:</b> $ {{$booking->cancellation_refund_amount}}</div>
+                    <div class="details"><b>Cancellation Reason: </b><span>{{$booking->cancellation_reason}}</span></div>
+                    <div class="details"><b>Cancellation Explanation: </b><span>{{$booking->cancellation_explanation}}</span></div>
+                    <div class="details"><b>Traveler Checked in: (Y/N): </b><span>{{$booking->already_checked_in ? 'Yes' : 'No'}}</span></div>
+                </div>
             @elseif($booking->cancellation_requested == 3)
                 <h5><b>Cancellation is in Process for this booking</b></h5>
             @else

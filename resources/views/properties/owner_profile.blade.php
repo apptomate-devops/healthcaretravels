@@ -123,7 +123,7 @@
 
         <!-- Carousel -->
         <div class="col-md-12">
-            <div class="carousel">
+            <div class="carousel" style="background-color: white; max-height: 530px; overflow-y: hidden;">
 
                 <!-- Listing Item -->
                 @foreach($properties as $property)
@@ -174,9 +174,9 @@
                             </div>
 
                             <ul class="listing-features">
-                                <li>Guests <span>{{$property->total_guests}}</span></li>
-                                <li>Bedrooms <span>{{$property->bed_count}}</span></li>
-                                <li>Bathrooms <span>{{$property->bathroom_count}}</span></li>
+                                <li>Guests <span>{{$property->total_guests ? $property->total_guests : 0}}</span></li>
+                                <li>Bedrooms <span>{{$property->bed_count ? $property->bed_count : 0}}</span></li>
+                                <li>Bathrooms <span>{{$property->bathroom_count ? $property->bathroom_count : 0}}</span></li>
                             </ul>
                         </div>
 

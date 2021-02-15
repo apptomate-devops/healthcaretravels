@@ -339,8 +339,12 @@ class OwnerController extends BaseController
             return view('general_error', ['message' => 'We can’t find the profile you’re looking for.']);
         }
         $properties = DB::table('property_list')
-            ->join('property_room', 'property_room.property_id', '=', 'property_list.id')
+            ->leftjoin('property_room', 'property_room.property_id', '=', 'property_list.id')
             ->where('property_list.is_disable', '=', ZERO)
+            ->where('property_list.client_id', '=', CLIENT_ID)
+            ->where('property_list.property_status', '=', 1)
+            ->where('property_list.status', '=', 1)
+            ->where('property_list.is_complete', '=', ACTIVE)
             ->where('property_list.user_id', $id)
             ->get();
         $current_date = date('Y-m-d H:i:s');

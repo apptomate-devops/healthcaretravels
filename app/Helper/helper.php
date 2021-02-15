@@ -783,7 +783,7 @@ class Helper
 
         $property_link = '<a target="_blank" href="' . url('/') . '/property/' . $property_id . '">';
 
-        $message = "Enquiry sent for ";
+        $message = "Inquiry sent for ";
         $message .= $property_link . $property_detail->title;
         $message .= ", Property ID :" . $property_id . "</a>";
         if (isset($request) && $request->check_in) {
@@ -802,7 +802,7 @@ class Helper
         $values['sent_by'] = $traveler_id;
         $values['property_id'] = $property_id;
         $values['date'] = $date_fmt;
-        $values['message'] = "Hi, " . $message;
+        $values['message'] = $message;
         $values['header'] = ONE;
         $postdata = json_encode($values);
         $header = [];

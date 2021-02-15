@@ -1305,7 +1305,7 @@ class PropertyController extends BaseController
                 $service_tax_entry['amount'] = self::format_amount($payment['service_tax'], '-');
                 $service_tax_entry['is_cleared'] = $payment['is_cleared'];
                 $service_tax_entry['status'] = $payment['status'];
-                $service_tax_entry['covering_range'] = 'One-time charge';
+                $service_tax_entry['covering_range'] = 'Auto-draft charge';
                 array_push($scheduled_payments, $service_tax_entry);
             }
             array_push($scheduled_payments, $payment);

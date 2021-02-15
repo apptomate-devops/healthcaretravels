@@ -472,7 +472,7 @@ class BaseController extends ConstantsController
         $last_message->time = date('h:i a', $date);
 
         // remove property link from message
-        if (strpos($last_message->message, 'Enquiry sent for') !== false) {
+        if (strpos($last_message->message, 'Inquiry sent for') !== false) {
             $last_message->message = preg_replace('/<\/?a[^>]*>/', '', $last_message->message);
         }
         return [

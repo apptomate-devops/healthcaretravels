@@ -346,7 +346,16 @@ class OwnerController extends BaseController
             ->where('property_list.status', '=', 1)
             ->where('property_list.is_complete', '=', ACTIVE)
             ->where('property_list.user_id', $id)
+            ->select(
+                'property_list.*',
+                'property_room.property_size',
+                'property_room.bathroom_count',
+                'property_room.bedroom_count',
+                'property_room.bed_count',
+                'property_room.common_spaces',
+            )
             ->get();
+
         $current_date = date('Y-m-d H:i:s');
 
         $avg_rating = DB::select(
@@ -360,7 +369,7 @@ class OwnerController extends BaseController
             $property->diff = $diff->days;
 
             $property->images = DB::table('property_images')
-                ->where('property_id', $property->property_id)
+                ->where('property_id', $property->id)
                 ->orderBy('is_cover', 'desc')
                 ->get();
         }

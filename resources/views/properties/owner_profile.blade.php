@@ -130,7 +130,7 @@
                 <div class="carousel-item">
                     <div class="listing-item">
 
-                        <a href="{{url('/')}}/property/{{$property->property_id}}" class="listing-img-container">
+                        <a href="{{url('/')}}/property/{{$property->id}}" class="listing-img-container">
 
                             <div class="listing-img-content">
                                 <span class="listing-price">${{$property->monthly_rate}} /Month</span>
@@ -162,7 +162,7 @@
 
                             <div class="listing-title">
                                 <h4>
-                                    <a href="{{url('/')}}/property/{{$property->property_id}}">
+                                    <a href="{{url('/')}}/property/{{$property->id}}">
                                         {{$property->title}}
                                     </a>
                                 </h4>

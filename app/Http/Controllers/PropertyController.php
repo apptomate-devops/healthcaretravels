@@ -239,7 +239,7 @@ class PropertyController extends BaseController
                     '>submitted a request</a> for these dates.<br>Try a different date range or visit <a style="color: white;text-decoration-line: underline;" href=' .
                     $my_trips_url .
                     '>My Trips</a> page to view your submitted request.',
-                'status_code' => ZERO,
+                'status_code' => ONE,
                 'request_already_exists' => ONE,
                 'request_data' => $isValidRequest['requestAlreadyExists'],
             ]);

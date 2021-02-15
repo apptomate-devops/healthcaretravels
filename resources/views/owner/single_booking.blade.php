@@ -147,6 +147,16 @@
                 <div>
                     <center>
                         @if($data->status == 1)
+                            <br>
+                            <div style="text-align: left;">
+                                To accept this booking request, please add/select the bank account that you wish for Health Care Travels to send your Payout(s) and/or Collect Payment(s) for this booking. You will need your bank account login details and bank account number, and routing number. To add banking details, select the add account details button below and set up your account details by logging in and answer any questions that are required to verify your identity. To change or add a new bank account visit the "Payment Options" tab in your account. To check the status of your booking please visit the "Bookings" tab in your account. Payouts are issued once the traveler has safely checked in.
+                                <br>
+                                <br>
+                                <b>Please Note</b>
+                                <br>
+                                Make sure your account is Up-To-Date and Complete including the (About Me) in your profile. If you have any questions or concerns email <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com</a>.
+                                <p></p>
+                            </div>
                             @component('components.funding-source', ['funding_sources' => $funding_sources, 'user' => $owner])
                             @endcomponent
 

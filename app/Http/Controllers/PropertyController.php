@@ -1252,6 +1252,7 @@ class PropertyController extends BaseController
             $is_partial_days_payment = boolval($payment['is_partial_days'] ?? 0);
             $neat_rate = $payment['monthly_rate'];
             $service_fee_label = $payment['payment_cycle'] == 1 ? 'Service Fee' : 'Processing Fee';
+            $service_fee_details_label = $payment['payment_cycle'] == 1 ? 'One-time charge' : 'Auto-draft charge';
 
             if ($is_partial_days_payment) {
                 $neat_rate = round(($payment['monthly_rate'] * $payment['is_partial_days']) / 30);
@@ -1305,7 +1306,7 @@ class PropertyController extends BaseController
                 $service_tax_entry['amount'] = self::format_amount($payment['service_tax'], '-');
                 $service_tax_entry['is_cleared'] = $payment['is_cleared'];
                 $service_tax_entry['status'] = $payment['status'];
-                $service_tax_entry['covering_range'] = 'Auto-draft charge';
+                $service_tax_entry['covering_range'] = $service_fee_details_label;
                 array_push($scheduled_payments, $service_tax_entry);
             }
             array_push($scheduled_payments, $payment);

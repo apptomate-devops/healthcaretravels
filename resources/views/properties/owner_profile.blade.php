@@ -117,13 +117,13 @@
 <div class="container">
     <div class="row">
 
-        <div class="col-md-12">
+        <div class="col-md-12" style="background-color: white; max-height: 660px; overflow-y: hidden;">
             <h3 class="headline margin-bottom-25 margin-top-65">{{ucfirst($user->first_name)}}'s Properties</h3>
         </div>
 
         <!-- Carousel -->
         <div class="col-md-12">
-            <div class="carousel" style="background-color: white; max-height: 530px; overflow-y: hidden;">
+            <div class="carousel">
 
                 <!-- Listing Item -->
                 @foreach($properties as $property)

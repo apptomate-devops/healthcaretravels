@@ -87,7 +87,7 @@
 
                                 <div class="row with-forms">
                                     <div class="col-md-6">
-                                        <h5>Property Sq. Ft.<span class="required">*</span></h5>
+                                        <h5>Property sq ft<span class="required">*</span></h5>
                                         <input class="search-field validate" type="text" value="{{isset($property_data->property_size)?$property_data->property_size:''}}" id="property_size" name="property_size"/>
                                     </div>
 

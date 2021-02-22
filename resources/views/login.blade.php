@@ -456,10 +456,6 @@
         if(has_errors && !email_opt) {
             $('#email_opt').prop('checked', false)
         }
-        let dob_value = "{{Session::get('dob')}}";
-        if (dob_value) {
-            on_dob_change(dob_value);
-        }
 
         let address_line_2 = "{{Session::get('address_line_2')}}";
         if (address_line_2) {
@@ -475,6 +471,14 @@
         if (occupation) {
             add_another_occupation(true);
         }
+
+        // TODO: Re-enable registration forms by removing the temp route
+        if("{{APP_ENV}}" === "beta") {
+            $("select#user_type option[value='1']").attr("selected","selected");
+            $("select#user_type").css({"pointer-events": "none"});
+            $("select#user_type").trigger("change");
+        }
+
     })
 
     let addressFields = [];

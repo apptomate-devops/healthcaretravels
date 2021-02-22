@@ -210,7 +210,7 @@
                     @else
                     <a href="/login" class="sign-in">
                         <img src="/icons/login.png" alt="Login" class="sign-in-icon" style="height: 20px; width: 20px; margin-right: 10px;">
-                        <span>Log In / Register</span>
+                        <span>Log In / Sign Up</span>
                     </a>
                     @endif
                 </div>

@@ -62,7 +62,7 @@
 
                 <ul class="tabs-nav">
                     <li id="login_tab"><a href="#tab1">Log In</a></li>
-                    <li id="register_tab"><a href="#tab2">Register</a></li>
+                    <li id="register_tab"><a href="#tab2">Sign Up</a></li>
                 </ul>
 
                 <div class="tabs-container alt">

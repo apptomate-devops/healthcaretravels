@@ -75,4 +75,16 @@ return [
         'contact_list_rv_traveler' => env('SENDGRID_RV_TRAVELER'),
         'contact_list_co_host' => env('SENDGRID_COHOST'),
     ],
+
+    // We need to provide default values to validate types
+    'firebase' => [
+        'database_url' => env('FIREBASE_DATABASE_URL'),
+        'project_id' => env('FIREBASE_PROJECT_ID'),
+        'private_key_id' => env('FIREBASE_PRIVATE_KEY_ID'),
+        // replacement needed to get a multiline private key from .env
+        'private_key' => str_replace("\\n", "\n", env('FIREBASE_PRIVATE_KEY')),
+        'client_email' => env('FIREBASE_CLIENT_EMAIL'),
+        'client_id' => env('FIREBASE_CLIENT_ID'),
+        'client_x509_cert_url' => env('FIREBASE_CLIENT_x509_CERT_URL'),
+    ],
 ];

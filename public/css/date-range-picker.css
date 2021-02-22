@@ -222,11 +222,13 @@
     color: #999;
     cursor: not-allowed;
     text-decoration: line-through;
+    text-decoration-color: #282828;
 }
 
 .daterangepicker select.monthselect, .daterangepicker select.yearselect {
+    display: inline-block;
     font-size: 12px;
-    padding: 1px;
+    padding: 5px;
     height: auto;
     margin: 0;
     cursor: default;
@@ -234,7 +236,7 @@
 
 .daterangepicker select.monthselect {
     margin-right: 2%;
-    width: 56%;
+    width: 50%;
 }
 
 .daterangepicker select.yearselect {

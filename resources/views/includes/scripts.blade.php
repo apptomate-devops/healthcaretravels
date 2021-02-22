@@ -1,15 +1,15 @@
 <script type="text/javascript" src="{{URL::asset('scripts/chosen.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/magnific-popup.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/owl.carousel.min.js') }}"></script>
-<script type="text/javascript" src="{{URL::asset('scripts/rangeSlider.js') }}"></script>
+{{--<script type="text/javascript" src="{{URL::asset('scripts/rangeSlider.js') }}"></script>--}}
 <script type="text/javascript" src="{{URL::asset('scripts/sticky-kit.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/slick.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/mmenu.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/tooltips.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/masonry.min.js') }}"></script>
 <script type="text/javascript" src="{{URL::asset('scripts/custom.js') }}"></script>
-<script type="text/javascript" src="{{URL::asset('js/bootstrap-datepicker.min.js') }}"></script>
-<script type="text/javascript" src="{{URL::asset('js/caleran.min.js') }}"></script>
+{{--<script type="text/javascript" src="{{URL::asset('js/bootstrap-datepicker.min.js') }}"></script>--}}
+{{--<script type="text/javascript" src="{{URL::asset('js/caleran.min.js') }}"></script>--}}
 <script type="text/javascript" src="{{URL::asset('scripts/my-library.js') }}"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
@@ -165,42 +165,17 @@
 </script>
 
 <script>
-    // Date Range Picker
-    $('input[id="date_range_picker"]').daterangepicker({
-        minDate: new Date(),
-        maxSpan: {
-            "days": 30
-        },
+    $('input[id="dob"]').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        maxDate: new Date(),
+        opens: 'center',
         autoUpdateInput: false,
         autoApply: true,
-        isInvalidDate: function(date){
-            var dc = moment();
-            dc.add(7, 'days');
-            // Blocking next 7 days for payment security on owner side
-            if (dc > date) {
-                return true;
-            }
-        }
-    });
-
-    $('input[id="date_range_picker"]').keydown(function (e) {
-        e.preventDefault();
-        return false;
-    });
-
-    $('input[id="date_range_picker"]').on('apply.daterangepicker', function(ev, picker) {
-        $('input[name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
-        $('input[name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
-    });
-
-    $('input[id="dob"]').datepicker({
-        format: 'mm/dd/yyyy',
-        autoclose: true,
-        startDate: new Date(new Date().getFullYear() - 100, 0, 1), // 100 years back
-        endDate: new Date(),
-    }).on('changeDate', function(event) {
+    }, function(start) {
+        $('input[id="dob"]').val(moment(start).format('MM/DD/YYYY'));
         let today = new Date();
-        let birthDate = new Date(event.date);
+        let birthDate = new Date(start);
         let age = today.getFullYear() - birthDate.getFullYear();
         let m = today.getMonth() - birthDate.getMonth();
         if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
@@ -213,6 +188,7 @@
         }
     });
 </script>
+
 @include('includes.mask')
 <style type="text/css">
     .uploading {
@@ -220,7 +196,6 @@
         background-color: #e78016;
         border-color: #ffffff;
     }
-
 </style>
 
 
@@ -298,8 +273,6 @@
         @if(Request::path()=='owner/add-property')
         dragMap();
             @endif
-        var input = document.getElementById('pac-input');
-        var autocomplete = new google.maps.places.Autocomplete(input);
 
         google.maps.event.addDomListener(window, 'load', function () {
             var places = new google.maps.places.Autocomplete(document.getElementById('pac-input'));
@@ -550,9 +523,9 @@
 <script>
 
     function onLoad() {
-        gapi.load('auth2', function () {
-            gapi.auth2.init({client_id: "420688223951-frk2eoqelgts1eqetnopugscuqsgkui7.apps.googleusercontent.com" });
-        });
+        // gapi.load('auth2', function () {
+        //     gapi.auth2.init({client_id: "420688223951-frk2eoqelgts1eqetnopugscuqsgkui7.apps.googleusercontent.com" });
+        // });
     }
 
     function show_snackbar(message) {

@@ -40,10 +40,14 @@ class PropertyController extends BaseController
         if (!$user_id) {
             $request->session()->put('propertyId', $request->property_id);
             $request->session()->put('fromDate', $request->check_in);
-            $request->session()->put('toDate', $request->check_out);
+            //            $request->session()->put('toDate', $request->check_out);
             $request->session()->put('guest_count', $request->guest_count);
             return redirect()->intended('login');
         }
+        $dateString = explode(" - ", $request->check_in);
+        $request->check_in = date('Y-m-d', strtotime($dateString[0]));
+        $request->check_out = date('Y-m-d', strtotime($dateString[1]));
+
         $check_in = date('Y-m-d', strtotime($request->check_in));
         $check_out = date('Y-m-d', strtotime($request->check_out));
 
@@ -235,7 +239,7 @@ class PropertyController extends BaseController
                     '>submitted a request</a> for these dates.<br>Try a different date range or visit <a style="color: white;text-decoration-line: underline;" href=' .
                     $my_trips_url .
                     '>My Trips</a> page to view your submitted request.',
-                'status_code' => ZERO,
+                'status_code' => ONE,
                 'request_already_exists' => ONE,
                 'request_data' => $isValidRequest['requestAlreadyExists'],
             ]);
@@ -326,6 +330,7 @@ class PropertyController extends BaseController
             ->select(
                 'property_booking.status as bookingStatus',
                 'property_list.*',
+                'property_list.cancellation_policy as property_cancellation_policy',
                 'property_booking.*',
                 'property_images.*',
             )
@@ -383,7 +388,9 @@ class PropertyController extends BaseController
         $data = (object) array_merge((array) $data, (array) $booking_price);
 
         $funding_sources = $this->dwolla->getFundingSourcesForCustomer($traveller->dwolla_customer);
-
+        if (!$data->cancellation_policy) {
+            $data->cancellation_policy = $data->property_cancellation_policy;
+        }
         return view('properties.property_detail', [
             'data' => $data,
             'guests' => $guests,
@@ -446,6 +453,9 @@ class PropertyController extends BaseController
 
     public function create_chat($property_id, Request $request)
     {
+        $dateString = explode(" - ", $request->check_in);
+        $request->check_in = date('Y-m-d', strtotime($dateString[0]));
+        $request->check_out = date('Y-m-d', strtotime($dateString[1]));
         return Helper::start_chat($property_id, $request);
     }
 
@@ -643,7 +653,10 @@ class PropertyController extends BaseController
             ) {
                 $request_chat->has_unread_message = true;
             }
-            $request_chat->last_message = $this->get_firebase_last_message('request_chat', $request_chat, $user_id);
+
+            $last_message = $this->get_firebase_last_message('request_chat', $request_chat, $user_id);
+            $request_chat->last_message = $last_message['last_message'];
+            $request_chat->last_message_date_time = $last_message['last_message_date_time'];
         }
 
         $instant_chats = DB::table('instant_chat')
@@ -672,7 +685,10 @@ class PropertyController extends BaseController
             ) {
                 $request_chat->has_unread_message = true;
             }
-            $request_chat->last_message = $this->get_firebase_last_message('instant_chat', $request_chat, $user_id);
+
+            $last_message = $this->get_firebase_last_message('instant_chat', $request_chat, $user_id);
+            $request_chat->last_message = $last_message['last_message'];
+            $request_chat->last_message_date_time = $last_message['last_message_date_time'];
         }
         // echo $user_id;
         $personal_chats = DB::table('personal_chat')
@@ -704,17 +720,26 @@ class PropertyController extends BaseController
                 $request_chat->has_unread_message = true;
             }
             $last_message = $this->get_firebase_last_message('personal_chat', $request_chat, $user_id);
-            $request_chat->last_message = $last_message;
+            $request_chat->last_message = $last_message['last_message'];
+            $request_chat->last_message_date_time = $last_message['last_message_date_time'];
         }
 
         $results = [];
-        $results[] = $request_chats;
-        $results[] = $instant_chats;
-        $results[] = $personal_chats;
+        $results[] = $this->sort_array_by_date($request_chats);
+        $results[] = $this->sort_array_by_date($instant_chats);
+        $results[] = $this->sort_array_by_date($personal_chats);
 
         return view('owner.my-inbox', ['properties' => $results]);
     }
 
+    public function sort_array_by_date($array)
+    {
+        $sorted_array = $array->toArray();
+        usort($sorted_array, function ($a, $b) {
+            return $b->last_message_date_time <=> $a->last_message_date_time;
+        });
+        return $sorted_array;
+    }
     public function inbox_traveller(Request $request)
     {
         $user_id = $request->session()->get('user_id');
@@ -743,7 +768,10 @@ class PropertyController extends BaseController
             ) {
                 $request_chat->has_unread_message = true;
             }
-            $request_chat->last_message = $this->get_firebase_last_message('request_chat', $request_chat, $user_id);
+
+            $last_message = $this->get_firebase_last_message('request_chat', $request_chat, $user_id);
+            $request_chat->last_message = $last_message['last_message'];
+            $request_chat->last_message_date_time = $last_message['last_message_date_time'];
         }
 
         $instant_chats = DB::table('instant_chat')
@@ -768,7 +796,10 @@ class PropertyController extends BaseController
             ) {
                 $request_chat->has_unread_message = true;
             }
-            $request_chat->last_message = $this->get_firebase_last_message('instant_chat', $request_chat, $user_id);
+
+            $last_message = $this->get_firebase_last_message('instant_chat', $request_chat, $user_id);
+            $request_chat->last_message = $last_message['last_message'];
+            $request_chat->last_message_date_time = $last_message['last_message_date_time'];
         }
 
         $personal_chats = DB::table('personal_chat')
@@ -795,13 +826,14 @@ class PropertyController extends BaseController
                 $request_chat->has_unread_message = true;
             }
             $last_message = $this->get_firebase_last_message('personal_chat', $request_chat, $user_id);
-            $request_chat->last_message = $last_message;
+            $request_chat->last_message = $last_message['last_message'];
+            $request_chat->last_message_date_time = $last_message['last_message_date_time'];
         }
 
         $results = [];
-        $results[] = $request_chats;
-        $results[] = $instant_chats;
-        $results[] = $personal_chats;
+        $results[] = $this->sort_array_by_date($request_chats);
+        $results[] = $this->sort_array_by_date($instant_chats);
+        $results[] = $this->sort_array_by_date($personal_chats);
 
         $f_result = $results[0];
 
@@ -1056,12 +1088,11 @@ class PropertyController extends BaseController
 
             // TODO: instant booking, flexible cancellation, enhanced cleaning pool, no kids, no pets filter
 
-            $from = strtotime($request->from_date);
-            $to = strtotime($request->to_date);
             $query_blocking = [];
-            if ($from && $to) {
-                $fromDate = date('Y-m-d', $from);
-                $toDate = date('Y-m-d', $to);
+            if ($request->from_date) {
+                $dateString = explode(" - ", $request->from_date);
+                $fromDate = date('Y-m-d', strtotime($dateString[0]));
+                $toDate = date('Y-m-d', strtotime($dateString[1]));
                 $property_blocking_obj = new PropertyBlocking();
                 $property_booking_obj = new PropertyBooking();
 
@@ -1221,6 +1252,7 @@ class PropertyController extends BaseController
             $is_partial_days_payment = boolval($payment['is_partial_days'] ?? 0);
             $neat_rate = $payment['monthly_rate'];
             $service_fee_label = $payment['payment_cycle'] == 1 ? 'Service Fee' : 'Processing Fee';
+            $service_fee_details_label = $payment['payment_cycle'] == 1 ? 'One-time charge' : 'Auto-draft charge';
 
             if ($is_partial_days_payment) {
                 $neat_rate = round(($payment['monthly_rate'] * $payment['is_partial_days']) / 30);
@@ -1274,7 +1306,7 @@ class PropertyController extends BaseController
                 $service_tax_entry['amount'] = self::format_amount($payment['service_tax'], '-');
                 $service_tax_entry['is_cleared'] = $payment['is_cleared'];
                 $service_tax_entry['status'] = $payment['status'];
-                $service_tax_entry['covering_range'] = 'One-time charge';
+                $service_tax_entry['covering_range'] = $service_fee_details_label;
                 array_push($scheduled_payments, $service_tax_entry);
             }
             array_push($scheduled_payments, $payment);
@@ -2781,6 +2813,13 @@ class PropertyController extends BaseController
     {
         $booking = PropertyBooking::where('booking_id', $request->booking_id)->first();
 
+        if (empty($booking)) {
+            return back()->withErrors(['No booking found.']);
+        }
+        if (empty($request->funding_source)) {
+            return back()->withErrors(['Funding source required.']);
+        }
+
         if ($request->recruiter_name) {
             $booking->recruiter_name = $request->recruiter_name;
         }
@@ -2791,16 +2830,19 @@ class PropertyController extends BaseController
             $booking->recruiter_email = $request->recruiter_email;
         }
         if ($request->contract_start_date) {
-            $booking->contract_start_date = date('Y-m-d', strtotime($request->contract_start_date));
+            $dateString = explode(" - ", $request->contract_start_date);
+            $booking->contract_start_date = date('Y-m-d', strtotime($dateString[0]));
+            $booking->contract_end_date = date('Y-m-d', strtotime($dateString[1]));
         }
-        if ($request->contract_end_date) {
-            $booking->contract_end_date = date('Y-m-d', strtotime($request->contract_end_date));
-        }
+        //        if ($request->contract_end_date) {
+        //            $booking->contract_end_date = date('Y-m-d', strtotime($request->contract_end_date));
+        //        }
         if ($request->name_of_agency) {
             $booking->name_of_agency = $request->name_of_agency;
         } elseif ($request->other_agency) {
             $booking->other_agency = $request->other_agency;
         }
+
         $owner = $booking->owner;
         $traveller = $booking->traveler;
         $property = $booking->property;
@@ -2832,7 +2874,7 @@ class PropertyController extends BaseController
         $booking->check_in = $property_details->check_in;
         $booking->check_out = $property_details->check_out;
         $booking_price = (object) Helper::get_price_details($booking, $booking->start_date, $booking->end_date);
-
+        $payment_summary_owner = $this->get_payment_summary($booking, 1);
         $bookingEmailType = $booking->is_instant ?? 0;
         if ($bookingEmailType != 0 || $bookingEmailType != 1) {
             $bookingEmailType = 0;
@@ -2891,6 +2933,7 @@ class PropertyController extends BaseController
             'cover_img' => $cover_img,
             'data' => $booking,
             'booking_price' => $booking_price,
+            'payment_summary_owner' => $payment_summary_owner,
         ];
 
         $title = isset($welcome->title) ? $welcome->title : 'New booking from - ' . APP_BASE_NAME;
@@ -3000,6 +3043,8 @@ class PropertyController extends BaseController
                         $booking->already_checked_in = 1;
                         $booking->save();
                     }
+                    $message = 'Thanks for confirming you are checked in. Enjoy your stay. -Health Care Travels';
+                    $this->sendTwilioMessage($phone_number, $message);
                     Logger::info("SUCCESS: Traveler successfully check-in.");
                     return $response;
                 } else {

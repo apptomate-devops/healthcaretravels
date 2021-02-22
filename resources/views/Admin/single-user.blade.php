@@ -279,8 +279,7 @@
                                 <div class="col-md-4">
                                     <figure class="card card-img-top border-grey border-lighten-2" itemprop="associatedMedia" itemscope="" itemtype="http://schema.org/ImageObject">
                                         <div class="card-body px-0">
-                                            <h4 class="card-title"> {{ucfirst(str_replace("_"," ",$d->document_type))}}</h4>
-
+                                            <h4 class="card-title"> {{Helper::get_document_name($d->document_type)}}</h4>
                                         </div>
                                         {{-- <a href="{{$d->document_url}}" target="_blank" itemprop="contentUrl"
                                         data-size="480x360">

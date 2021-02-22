@@ -25,6 +25,11 @@
         max-height: 500px;
     }
 
+    .ng-binding a {
+        color: white;
+        text-decoration-line: underline;
+    }
+
     .text-white {
         color: white;
     }
@@ -54,6 +59,7 @@
 <!-- themes -->
 {{-- <link rel="stylesheet" href="{{ URL::asset('assets/css/themes/themes_combined.min.css') }}" media="all"> --}}
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-sanitize.min.js"></script>
 <script src="https://code.angularjs.org/1.4.4/angular-route.min.js"></script>
 
 <!-- Firebase -->
@@ -95,11 +101,11 @@
                         <h3 class="md-card-toolbar-heading-text large">
                             <span class="uk-text-muted">Chat with</span>
                             <a href="#">{{Helper::get_user_display_name($traveller)}}</a>
-                            @if(isset($property))
-                            , <a href="/property/{{$property->id}}">
-                                {{$property->title}}
-                            </a>
-                            @endif
+{{--                            @if(isset($property))--}}
+{{--                            , <a href="/property/{{$property->id}}">--}}
+{{--                                {{$property->title}}--}}
+{{--                            </a>--}}
+{{--                            @endif--}}
                         </h3>
                     </div>
                 </div>
@@ -128,12 +134,10 @@
                                     </div>
                                     <ul class="chat_message">
                                         <li>
-                                            <p>
-                                                <%message.message%>
-                                                <span class="chat_message_time">
-                                                    <% message.date | chatDate %>
-                                                </span>
-                                            </p>
+                                            <div ng-bind-html="message.message"></div>
+                                            <span class="chat_message_time">
+                                                <% message.date | chatDate %>
+                                            </span>
                                         </li>
 
                                     </ul>
@@ -150,12 +154,10 @@
                                     </div>
                                     <ul class="chat_message">
                                         <li>
-                                            <p>
-                                                <%message.message%>
-                                                <span class="chat_message_time">
-                                                    <% message.date | chatDate %>
-                                                </span>
-                                            </p>
+                                            <div ng-bind-html="message.message"></div>
+                                            <span class="chat_message_time">
+                                                <% message.date | chatDate %>
+                                            </span>
                                         </li>
 
                                     </ul>
@@ -190,7 +192,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -322,7 +324,7 @@
         return re.test(text);
     }
 
-    var app = angular.module('myApp', ['firebase'], function($interpolateProvider) {
+    var app = angular.module('myApp', ['firebase', 'ngSanitize'], function($interpolateProvider) {
         $interpolateProvider.startSymbol('<%');
         $interpolateProvider.endSymbol('%>');
     });

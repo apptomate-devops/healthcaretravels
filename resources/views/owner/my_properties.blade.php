@@ -60,27 +60,36 @@
 
 
                                 <td class="action">
-                                    <a href="{{url('/')}}/owner/update-property/{{$property->propertyId}}" >
-                                        <img src="{{BASE_URL}}action_icons/edit24.png" title="Edit" />
+                                    <a class="icons" href="{{url('/')}}/owner/update-property/{{$property->propertyId}}" >
+                                        <span class='tooltips'>
+                                            <img src="{{BASE_URL}}action_icons/edit24.png" />
+                                            <span class='tooltiptext'>Edit</span>
+                                        </span>
                                     </a>
                                     {{-- <a href="{{BASE_URL}}delete-property/{{$property->propertyId}}" class="delete"  id="delete" title="Delete"> --}}
-                                    <a class="delete" @if($property->delete_not_allowed) onclick="delete_property_not_allowed_alert();" @else onclick="delete_property({{$property->id}});" @endif id="delete" title="Delete">
+                                    <a class="icons delete" @if($property->delete_not_allowed) onclick="delete_property_not_allowed_alert();" @else onclick="delete_property({{$property->id}});" @endif id="delete">
+                                        <span class='tooltips'>
                                         <img src="{{BASE_URL}}action_icons/24d.png" />
+                                            <span class='tooltiptext'>Delete</span>
+                                        </span>
                                     </a>
 
-                                    @if($property->propertyStatus == 0)
-                                        <a href="{{BASE_URL}}owner/disable-property/{{$property->propertyId}}" class="delete" title="Enable Property">
-                                            <img src="{{BASE_URL}}action_icons/enable24.png" />
-                                        </a>
-                                    @else
-                                        <a href="{{BASE_URL}}owner/disable-property/{{$property->propertyId}}" class="delete" title="Disable Property">
-                                            <img src="{{BASE_URL}}action_icons/disable24.png" />
-                                        </a>
-                                    @endif
+                                    <a href="{{BASE_URL}}owner/disable-property/{{$property->propertyId}}" class="icons delete">
+                                        <span class='tooltips'>
+                                            @if($property->is_disable == ONE)
+                                                <img src="{{BASE_URL}}action_icons/enable24.png" />
+                                                <span class='tooltiptext'>Enable Property</span>
+                                            @else
+                                                <img src="{{BASE_URL}}action_icons/disable24.png" />
+                                                <span class='tooltiptext'>Disable Property</span>
+                                            @endif
+                                        </span>
+                                    </a>
+
 
 
                                 </td>
-                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -98,7 +107,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="modal fade" id="deleteNotAllowed" tabindex="-1" role="dialog" aria-labelledby="deleteNotAllowedLabel" aria-hidden="true">
+                                <div class="modal fade in" id="deleteNotAllowed" tabindex="-1" role="dialog" aria-labelledby="deleteNotAllowedLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">

@@ -117,7 +117,7 @@
 <div class="container">
     <div class="row">
 
-        <div class="col-md-12">
+        <div class="col-md-12" style="background-color: white; max-height: 660px; overflow-y: hidden;">
             <h3 class="headline margin-bottom-25 margin-top-65">{{ucfirst($user->first_name)}}'s Properties</h3>
         </div>
 
@@ -130,7 +130,7 @@
                 <div class="carousel-item">
                     <div class="listing-item">
 
-                        <a href="{{url('/')}}/property/{{$property->property_id}}" class="listing-img-container">
+                        <a href="{{url('/')}}/property/{{$property->id}}" class="listing-img-container">
 
                             <div class="listing-img-content">
                                 <span class="listing-price">${{$property->monthly_rate}} /Month</span>
@@ -162,7 +162,7 @@
 
                             <div class="listing-title">
                                 <h4>
-                                    <a href="{{url('/')}}/property/{{$property->property_id}}">
+                                    <a href="{{url('/')}}/property/{{$property->id}}">
                                         {{$property->title}}
                                     </a>
                                 </h4>
@@ -174,9 +174,9 @@
                             </div>
 
                             <ul class="listing-features">
-                                <li>Guests <span>{{$property->total_guests}}</span></li>
-                                <li>Bedrooms <span>{{$property->bed_count}}</span></li>
-                                <li>Bathrooms <span>{{$property->bathroom_count}}</span></li>
+                                <li>Guests <span>{{$property->total_guests ? $property->total_guests : 0}}</span></li>
+                                <li>Bedrooms <span>{{$property->bed_count ? $property->bed_count : 0}}</span></li>
+                                <li>Bathrooms <span>{{$property->bathroom_count ? $property->bathroom_count : 0}}</span></li>
                             </ul>
                         </div>
 
@@ -192,7 +192,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">

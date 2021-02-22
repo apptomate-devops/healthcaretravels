@@ -322,7 +322,7 @@
     <!-- Banner data-background="/home.jpg"
       ================================================== -->
 
-    <div class="parallax home-slide" data-background="/storage/public/HomePage/background_blur_crop.jpeg" data-color="#36383e" data-color-opacity="0.5"
+    <div class="parallax home-slide" data-background="/storage/public/HomePage/background_blur_crop.webp" data-color="#36383e" data-color-opacity="0.5"
          data-img-width="1200" data-img-height="1000">
         <div class="container">
             <div class="row">
@@ -373,11 +373,8 @@
                                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                                         <div class="check-in-out-wrapper">
                                             <input type="text" name="from_date"
-                                                   placeholder="Check in"
-                                                   id="home_date_range_picker" autocomplete="off" style="border-width: 0 1px 0 0;"/>
-                                            <input type="text" name="to_date"
-                                                   placeholder="Check out"
-                                                   id="home_date_range_picker" autocomplete="off" style="border-width: 0;"/>
+                                                   placeholder="Check in - Check out"
+                                                   id="home_date_range_picker" autocomplete="off"  style="text-align: left;"/>
                                         </div>
                                     </div>
                                     <div class="col-md-2 col-sm-2 col-xs-12 text-center">
@@ -543,8 +540,8 @@
                                                            class="featured-places img-box"
                                                            @if($i==0 || $i==4 || $i==11 || $i==15 || $i==5) style="height: 525px;"
                                                            @endif @if($i==3 || $i==7 || $i==8 ||$i==12) style="height: 250px;"
-                                                            @endif>
-                                                            <img src="{{$category->image_url}}" height="100%" width="100%" style="object-fit: cover">
+                                                            @endif data-background-image="{{$category->image_url}}">
+{{--                                                            <img src="{{$category->image_url}}" height="100%" width="100%" style="object-fit: cover">--}}
                                                             <!-- Badge -->
                                                             <div class="listing-badges">
                                                                 <span class="featured">Featured</span>
@@ -808,8 +805,7 @@
     $('input[id="home_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
         var is_valid = check_valid_date_range(picker.startDate, picker.endDate)
         if(is_valid) {
-            $('input[id="home_date_range_picker"][name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
-            $('input[id="home_date_range_picker"][name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
+            $('input[id="home_date_range_picker"][name="from_date"]').val(`${picker.startDate.format('MM/DD/YYYY')} - ${picker.endDate.format('MM/DD/YYYY')}`);
         }
     });
 

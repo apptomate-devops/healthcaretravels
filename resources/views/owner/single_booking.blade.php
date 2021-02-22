@@ -80,6 +80,9 @@
                     @endforeach
                 </table>
                 <div>The selected account will be used to process any future deposits for this booking.</div>
+                <div>
+                    <b>Cancellation Policy: <a href="{{URL('/')}}/cancellationpolicy" class="cancel-policy-link" target="_blank">{{$data->cancellation_policy}} </a></b>
+                </div>
                 @if(in_array($data->status, [2, 3]))
                     <div class="text-right">
                         <a target="_blank" href="{{BASE_URL}}invoice/{{$data->booking_id}}" class="margin-top-40 button border">Print Invoice</a>
@@ -144,6 +147,16 @@
                 <div>
                     <center>
                         @if($data->status == 1)
+                            <br>
+                            <div style="text-align: left;">
+                                To accept this booking request, please add/select the bank account that you wish for Health Care Travels to send your Payout(s) and/or Collect Payment(s) for this booking. You will need your bank account login details and bank account number, and routing number. To add banking details, select the add account details button below and set up your account details by logging in and answer any questions that are required to verify your identity. To change or add a new bank account visit the "Payment Options" tab in your account. To check the status of your booking please visit the "Bookings" tab in your account. Payouts are issued once the traveler has safely checked in.
+                                <br>
+                                <br>
+                                <b>Please Note</b>
+                                <br>
+                                Make sure your account is Up-To-Date and Complete including the (About Me) in your profile. If you have any questions or concerns email <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com</a>.
+                                <p></p>
+                            </div>
                             @component('components.funding-source', ['funding_sources' => $funding_sources, 'user' => $owner])
                             @endcomponent
 
@@ -179,7 +192,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -187,7 +200,7 @@
                         <h4 class="modal-title"><b><span style="color:red">Warning</span></b></h4>
                     </div>
                     <div class="modal-body">
-                        Do you want to cancel this Booking Request?
+                        Do you want to decline this Booking Request?
                         <br>
                     </div>
                     <div class="modal-footer">

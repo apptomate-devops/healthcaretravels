@@ -234,8 +234,9 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <h2>Billing Information</h2>
-                                        To complete this booking, you will need your bank account login details and bank account number and routing number. Select the add account details button below and setup your account details by logging in and answer any questions that are required to verify your identify.  You will not be charged until the property owner confirms your request. Bookings are confirmed on a first come first serve basis. Please review this listing in its entirety and the selected cancellation policy prior to booking. To change or add new bank account visit "My Payment Options" tab in your account. To check the status of your booking visit "My Trips" tab in your account.<br><br>
-                                        *Please Note: Make sure your account is Up-To-Date and Complete including the (About Me) in your profile. This allows property owners to approve your stay quicker. If you have any questions or concerns email <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com</a>
+                                        To complete this booking, you will need your bank account login details and bank account number, and routing number. Select the add account details button below and set up your account details by logging in and answer any questions that are required to verify your identity. You will not be charged until the property owner confirms your request. Bookings are confirmed on a first come first serve basis. Please review this listing in its entirety and the selected cancellation policy before booking. To change or add a new bank account visit the "My Payment Options" tab in your account. To check the status of your booking please visit the "My Trips" tab in your account.<br><br>
+                                        <b>Please Note</b><br>
+                                        Make sure your account is Up-To-Date and Complete including the (About Me) in your profile. This allows property owners to approve your stay quicker. If you have any questions or concerns email <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com</a>.
                                         <p></p>
                                     </div>
                                 </div>
@@ -257,7 +258,7 @@
                                                     </h4>
                                                 </div>
                                                 <div id="guest-collapse{{$i+1}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="guest-heading-{{$i+1}}">
-                                                    <div class="panel-body" style="position: relative; padding: @if($i==0) 50px 15px 15px @else 15px @endif;">
+                                                    <div class="panel-body" style="position: relative; padding: @if($i==0) 60px 15px 15px @else 15px @endif;">
                                                         <input name="guest_id[]" type="hidden" value="{{$guest_data->id ?? ''}}">
                                                         <div class="control-group cc-first-name col-md-6">
                                                             <label class="control-label" for="credit-card-first-name">
@@ -295,7 +296,7 @@
                                                             </select>
                                                         </div>
                                                         @if($i == 0)
-                                                            <div onclick="add_my_info();" class="btn bg-orange" style="position: absolute; top: 10px; right: 10px; margin-bottom: 20px; width: auto;">Add My Info</div>
+                                                            <div onclick="add_my_info();" class="btn bg-orange" style="position: absolute; top: 10px; left: 30px; width: auto;">Add My Info</div>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -346,7 +347,7 @@
                                     <div id="add_another_agency" class="add-another" onclick="add_another_agency(true)" style="cursor: pointer;">Can't find it? Add it here.</div>
                                     <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
                                     <label for="other_agency_name" id="other_agency_name" style="display: none;">Other Agency:</label>
-                                    <input type="text" style="display: none;" class="input-text validate" name="other_agency" id="other_agency" value="{{$traveller->other_agency}}" placeholder="Other agency" autocomplete="off">
+                                    <input type="text" style="display: none;" class="input-text validate" name="other_agency" id="other_agency" placeholder="Other agency" autocomplete="off">
                                     <div style="display: none;" id="other_agency_cancel" class="add-another" onclick="add_another_agency()" style="cursor: pointer;">Cancel</div>
                                 </div>
                                 <hr>
@@ -367,28 +368,28 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="control-group cc-first-name col-md-4">
+                                        <div class="control-group cc-first-name col-md-6">
                                             <label class="control-label" for="recruiter_phone_number">
                                                 Recruiter Phone Number
                                             </label>
                                             <input class="masked_phone_us" id="recruiter_phone_number" name="recruiter_phone_number" type="text" value="{{$data->recruiter_phone_number ?? ''}}" required>
                                         </div>
-                                        <div class="control-group cc-first-name col-md-4">
+                                        <div class="control-group cc-first-name col-md-6">
                                             <label class="control-label" for="contract_start_date">
-                                                Contract Start Date
+                                                Contract Start Date - Contract End Date
                                             </label>
                                             <input type="text" name="contract_start_date"
-                                                   placeholder="mm/dd/yyyy"
+                                                   placeholder="mm/dd/yyyy - mm/dd/yyyy"
                                                    id="contract_date_range_picker" autocomplete="off" required/>
                                         </div>
-                                        <div class="control-group cc-first-name col-md-4">
-                                            <label class="control-label" for="contract_end_date">
-                                                Contract End Date
-                                            </label>
-                                            <input type="text" name="contract_end_date"
-                                                   placeholder="mm/dd/yyyy"
-                                                   id="contract_date_range_picker" autocomplete="off" required/>
-                                        </div>
+{{--                                        <div class="control-group cc-first-name col-md-4">--}}
+{{--                                            <label class="control-label" for="contract_end_date">--}}
+{{--                                                Contract End Date--}}
+{{--                                            </label>--}}
+{{--                                            <input type="text" name="contract_end_date"--}}
+{{--                                                   placeholder="mm/dd/yyyy"--}}
+{{--                                                   id="contract_date_range_picker" autocomplete="off" required/>--}}
+{{--                                        </div>--}}
                                     </div>
                                 </div>
                                 <div>
@@ -424,10 +425,6 @@
             });
 
             load_agencies();
-            var otherAgencies = "{{$traveller->other_agency}}";
-            if(otherAgencies) {
-                add_another_agency(true, otherAgencies);
-            }
 
             var pet_details = "{{isset($pet_details)}}" ? 1 : 0;
             change_pet_travelling(pet_details);
@@ -446,8 +443,8 @@
             if(bookingData.contract_start_date && bookingData.contract_start_date !='0000-00-00' && bookingData.contract_end_date != '0000-00-00') {
                 var start = moment(bookingData.contract_start_date, "YYYY-MM-DD").format("MM/DD/YYYY")
                 var end = moment(bookingData.contract_end_date, "YYYY-MM-DD").format("MM/DD/YYYY")
-                $('input[id="contract_date_range_picker"][name="contract_start_date"]').val(start);
-                $('input[id="contract_date_range_picker"][name="contract_end_date"]').val(end);
+                $('input[id="contract_date_range_picker"][name="contract_start_date"]').val(`${start} - ${end}`);
+                // $('input[id="contract_date_range_picker"][name="contract_end_date"]').val(end);
             }
 
             $('input[id="contract_date_range_picker"]').daterangepicker({
@@ -460,8 +457,8 @@
                 return false;
             });
             $('input[id="contract_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
-                $('input[id="contract_date_range_picker"][name="contract_start_date"]').val(picker.startDate.format('MM/DD/YYYY'));
-                $('input[id="contract_date_range_picker"][name="contract_end_date"]').val(picker.endDate.format('MM/DD/YYYY'));
+                $('input[id="contract_date_range_picker"][name="contract_start_date"]').val(`${picker.startDate.format('MM/DD/YYYY')} - ${picker.endDate.format('MM/DD/YYYY')}`);
+                // $('input[id="contract_date_range_picker"][name="contract_end_date"]').val(picker.endDate.format('MM/DD/YYYY'));
             });
         });
 

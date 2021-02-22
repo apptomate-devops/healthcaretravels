@@ -61,6 +61,7 @@ class SevenDayVerificationReminder extends Command
             ];
             try {
                 Mail::send('mail.verification-reminder', $data, function ($message) use ($user, $reg) {
+                    $message->from(GENERAL_MAIL, config('mail.from.name'));
                     $message->to($user->email);
                     $message->subject($reg->subject);
                 });

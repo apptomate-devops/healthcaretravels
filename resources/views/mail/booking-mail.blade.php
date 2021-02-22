@@ -29,18 +29,38 @@
                                 <h4>Payment Details</h4>
                                 <tr class="expandable" id="neat_amount" style="font-weight: bold;">
                                     <td class="name pos-rel" >
-                                                                <span class="lang-chang-label">
-                                                                    {{$booking_price->count_label}}
-                                                                </span>
-                                        <span class='tooltips'><i style="color:black"  class='fa fa-question-circle'></i><span style="color: white!important" class='tooltiptext'>The cost of your stay including applicable fees</span></span>
+                                           <span class="lang-chang-label">
+                                               {{$booking_price->count_label}} (incl. service fees)
+                                           </span>
                                     </td>
                                     <td class="val text-right">
-                                        $ {{$booking_price->neat_amount}}
+{{--                                        deducted cleaning fees form grand total to display neat price for owner --}}
+                                        $ {{$payment_summary_owner['grand_total'] - $booking_price->cleaning_fee}}
+                                    </td>
+                                </tr>
+                                <tr class="expandable" id="neat_amount" style="font-weight: bold;">
+                                    <td class="name pos-rel" >
+                                           <span class="lang-chang-label">
+                                               Cleaning Fee
+                                           </span>
+                                    </td>
+                                    <td class="val text-right">
+                                        $ {{$booking_price->cleaning_fee}}
+                                    </td>
+                                </tr>
+
+                                <tr class="expandable" id="neat_amount" style="font-weight: bold;">
+                                    <td class="name pos-rel" >
+                                        <b><span class="lang-chang-label">Total Payout</span></b>
+                                    </td>
+                                    <td class="val text-right">
+                                        <b>$ {{$payment_summary_owner['grand_total']}}</b>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
                         </section>
+                        <div>HCT will hold a security deposit from this traveler of $ {{$booking_price->security_deposit}}</div>
                         <hr>
                         <div>
                             Cancellation Policy: <a href="{{URL('/')}}/cancellationpolicy" class="cancel-policy-link" target="_blank">{{$property->cancellation_policy}} </a>

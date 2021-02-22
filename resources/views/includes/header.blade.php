@@ -26,7 +26,7 @@
                 </div>
                 <!-- Logo -->
                 <div id="logo">
-                    <a href="/"><img src="/storage/public/HomePage/healthcaretravel.png" alt=""></a>
+                    <a href="/"><img src="/storage/public/HomePage/healthcaretravel.webp" alt=""></a>
                 </div>
                 <nav id="navigation" class="style-2">
                     <ul id="responsive">

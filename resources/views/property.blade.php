@@ -12,10 +12,7 @@
                     <div class="col-md-3">
                         <div class="check-in-out-wrapper">
                             <input type="text" name="from_date"
-                                   placeholder="Check in"
-                                   id="search_date_range_picker" autocomplete="off"/>
-                            <input type="text" name="to_date"
-                                   placeholder="Check out"
+                                   placeholder="Check in - Check Out"
                                    id="search_date_range_picker" autocomplete="off"/>
                         </div>
                     </div>
@@ -89,11 +86,11 @@
                             </div>
                             <div class="sub-price">
                                 @if(Session::get('user_id'))
-                                    @if($data->user_id != Session::get('user_id'))
-                                        <a><h3 id="contact_host"><span class="property-badge"  id="chat_host">Message Host</span></h3></a>
+                                    @if($data->user_id != Session::get('user_id') && !in_array(Session::get('user_role_id'), [1, 4]))
+                                        <a><h3 id="contact_host"><span class="property-badge" id="chat_host">Message Host</span></h3></a>
                                     @endif
                                 @else
-                                    <button style="background: transparent;border: 0;" onclick="$('#request-chat').click()"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8">Login to Chat</span></h3></button>
+                                    <a class="button" style="background: transparent;border: 0;" href="{{url('/')}}/login"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8">Login to Chat</span></h3></a>
                                 @endif
                             </div>
 
@@ -717,31 +714,26 @@
                                     <div class="clearfix"></div>
                                 </div>
 
-                                <div id="check_in_div" class="p-0">
+                                <div id="check_in_div" class="p-0" style="width: 65%; display: inline-block;">
                                     <div class="form-group">
                                         <!-- Date input -->
-                                        <label class="control-label" for="check_in_date">Check In</label>
-                                        <input name="check_in" required value="@if(count($session)!=0) {{$session['fromDate']}} @endif" id="booking_date_range_picker" placeholder="Check In date" type="text" autocomplete="off">
-                                    </div>
-                                </div>
-                                <div id="check_out_div" class="p-0">
-                                    <div class="form-group">
-                                        <!-- Date input -->
-                                        <label class="control-label" for="check_out_date">Check Out</label>
-                                        <input name="check_out" value="@if(count($session)!=0) {{$session['toDate']}} @endif"  required id="booking_date_range_picker" placeholder="Check Out date" type="text" autocomplete="off" >
+                                        <label class="control-label" for="check_in_date">Check In - Check Out</label>
+                                        <input name="check_in" required value="@if(count($session)!=0) {{$session['fromDate']}} @endif" id="booking_date_range_picker" placeholder="Check In - Check out" type="text" autocomplete="off">
 
                                         <input name="property_id" type="hidden" value="{{$property_id}}" >
                                         <input id="booking_id" name="booking_id" type="hidden">
                                     </div>
                                 </div>
                                 <input type="hidden" id="guest" name="guest_count">
-                                <select required onchange="get_price();" class="chosen-select-no-single validate" id="current_guest_count" >
-                                    <option selected disabled>Guests</option>
-                                    @for($i=1;$i<=$data->total_guests;$i++)
-                                        <option value="{{$i}}">{{$i}} Guest{{$i > 1 ? 's' : ''}}</option>
-                                    @endfor
-
-                                </select>
+                                <div id="guest_div" class="p-0" style="width: 30%; margin-left: 3%; display: inline-block;">
+                                    <label class="control-label" for="guests">Guests</label>
+                                    <select required onchange="get_price();" class="chosen-select-no-single validate" id="current_guest_count" >
+                                        <option selected disabled>Guests</option>
+                                        @for($i=1;$i<=$data->total_guests;$i++)
+                                            <option value="{{$i}}">{{$i}}</option>
+                                        @endfor
+                                    </select>
+                                </div>
 
                                 <div id="guest_details"></div>
 
@@ -877,7 +869,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="copy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade in" id="copy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -894,7 +886,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -906,28 +898,35 @@
                     {{--  <a href="{{BASE_URL}}create_chat/{{$property_id}}" target="_blank"><h3 id="contact_host"><span class="property-badge" style="background-color: #0983b8" >Message Host</span></h3></a> --}}
                             <input type="hidden" name="_token" value="{{csrf_token()}}">
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-8">
                                     <div class="form-group">
-                                        <label class="control-label" for="chat_from_date">Check In</label>
+                                        <label class="control-label" for="chat_from_date">Check In - Check out</label>
                                         <input type="text" name="check_in"
-                                               placeholder="Check in"
+                                               placeholder="Check in - Check out"
                                                id="chat_date_range_picker" autocomplete="off"/>
 {{--                                        <input name="check_in" id="chat_from_date" placeholder="Check In date"  type="text" style="width: 273px;" >--}}
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="control-label" for="date">Check Out</label>
-                                        <input type="text" name="check_out"
-                                               placeholder="Check out"
-                                               id="chat_date_range_picker" autocomplete="off"/>
+{{--                                <div class="col-sm-6">--}}
+{{--                                    <div class="form-group">--}}
+{{--                                        <label class="control-label" for="date">Check Out</label>--}}
+{{--                                        <input type="text" name="check_out"--}}
+{{--                                               placeholder="Check out"--}}
+{{--                                               id="chat_date_range_picker" autocomplete="off"/>--}}
 {{--                                        <input name="check_out"  id="chat_to_date"  placeholder="Check Out date" type="text" style="width: 273px;" >--}}
-                                        <input name="property_id" type="hidden" value="{{$property_id}}" >
-                                    </div>
-                                </div>
+{{--                                        <input name="property_id" type="hidden" value="{{$property_id}}" >--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
                             </div>
-                            <div class="text-center" style="font-size:1.2rem;">
+                            <div style="font-size:1.2rem;">
                                 Optional: Add check-in/check-out dates to give the property owner more information about your inquiry.
+                            </div>
+                            <div id="request_chat_loading" class="loading style-2" style="display: none;">
+                                <div class="loading-wheel"></div>
+                            </div>
+                            <div id="request_chat_error" style="margin-top: 10px; display: none;">
+                                <b style="font-size:1.8rem; color: red;">Warning: </b>
+                                <div class="error-details" style="font-size:1.2rem;">You already have an approved/requested booking during this time. Please visit <a href="{{url('/')}}/traveler/my-reservations">my trips</a> page for more info or continue to request to chat.</div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -1067,8 +1066,7 @@
                 $('#booking_id').val(booking_details.booking_id);
                 var start = moment(booking_details.start_date, "YYYY-MM-DD").format("MM/DD/YYYY")
                 var end = moment(booking_details.end_date, "YYYY-MM-DD").format("MM/DD/YYYY")
-                $('input[id="booking_date_range_picker"][name="check_in"]').val(start);
-                $('input[id="booking_date_range_picker"][name="check_out"]').val(end);
+                $('input[id="booking_date_range_picker"][name="check_in"]').val(`${start} - ${end}`);
                 $('#current_guest_count').val(booking_details.guest_count);
                 get_price();
             }
@@ -1141,23 +1139,20 @@
                 return false;
             })
             $('input[id="booking_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
-                $('input[id="booking_date_range_picker"][name="check_in"]').val(picker.startDate.format('MM/DD/YYYY'));
-                $('input[id="booking_date_range_picker"][name="check_out"]').val(picker.endDate.format('MM/DD/YYYY'));
+                $('input[id="booking_date_range_picker"][name="check_in"]').val(`${picker.startDate.format('MM/DD/YYYY')} - ${picker.endDate.format('MM/DD/YYYY')}`);
                 get_price();
             });
 
             // Chat with host: Date Range Picker
             $('input[id="chat_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
-                $('input[id="chat_date_range_picker"][name="check_in"]').val(picker.startDate.format('MM/DD/YYYY'));
-                $('input[id="chat_date_range_picker"][name="check_out"]').val(picker.endDate.format('MM/DD/YYYY'));
+                $('input[id="chat_date_range_picker"][name="check_in"]').val(`${picker.startDate.format('MM/DD/YYYY')} - ${picker.endDate.format('MM/DD/YYYY')}`);
+                get_price(true);
                 $('#request-chat').prop('disabled', false);
             });
 
-            // Chat with host: Date Range Picker
+            // search property: Date Range Picker
             $('input[id="search_date_range_picker"]').on('apply.daterangepicker', function (ev, picker) {
-                $('input[id="search_date_range_picker"][name="from_date"]').val(picker.startDate.format('MM/DD/YYYY'));
-                $('input[id="search_date_range_picker"][name="to_date"]').val(picker.endDate.format('MM/DD/YYYY'));
-                $('#request-chat').prop('disabled', false);
+                $('input[id="search_date_range_picker"][name="from_date"]').val(`${picker.startDate.format('MM/DD/YYYY')} - ${picker.endDate.format('MM/DD/YYYY')}`);
             });
 
             var aboutHeight = $('#head_scroll').height();
@@ -1167,116 +1162,151 @@
                 $('#show_less').hide();
             }
         });
-        function get_price() {
+        function get_price(is_request_chat = false) {
             var id = "{{$property_id}}";
-            var user_role_id = '{{$current_user->role_id}}';
+            var current_user = <?php echo json_encode($current_user); ?>;
+            var user_role_id = null;
+            if(current_user) {
+                user_role_id = current_user.role_id;
+            }
             var booking_id = $('#booking_id').val();
-            var from_date =$('input[id="booking_date_range_picker"][name="check_in"]').val();
-            var to_date = $('input[id="booking_date_range_picker"][name="check_out"]').val();
+            var dateString = null;
+            if(is_request_chat) {
+                dateString = $('input[id="chat_date_range_picker"][name="check_in"]').val();
+            } else {
+                dateString = $('input[id="booking_date_range_picker"][name="check_in"]').val();
+            }
+            var from_date, to_date;
+            if(dateString) {
+                var dates = dateString.split(' - ');
+                from_date = dates[0];
+                to_date = dates[1];
+            }
             var guestCount = parseInt($("#current_guest_count").val());
             var guest_count =isNaN(guestCount) ? 0 : guestCount;
             var totalguestcount=parseInt($('#total_guest_count').val());
             totalguestcount = isNaN(totalguestcount) ? 0 : totalguestcount;
             guest_count = isNaN(guest_count) ? 0 : guest_count;
 
+            if(is_request_chat) { guest_count = 1; } // just to ignore the field, set the static value
+
             $('.guest').show();
             if(!id || !from_date || !to_date || !guest_count) {
                 return;
             }
-            if (["1","4"].includes(user_role_id)) {
+            if (!is_request_chat && user_role_id && [1, 4].includes(user_role_id)) {
                 $(".alert").html("Sorry, property owners are not permitted to book stays at other properties.").show();
                 $("#table_body").html("");
                 $("#pricing_details").hide();
                 $('.booking_button').attr('disabled',true);
                 $('.booking_button').css('background','lightgrey');
                 return;
+            } else {
+                $('#request_chat_loading').show();
             }
             var url = '/get-property-price?property_id='+id+"&check_in="+from_date+"&check_out="+to_date+"&guest_count="+guest_count+"&booking_id="+booking_id;
             $.ajax({
                 "type": "get",
                 "url" : url,
                 success: function(data) {
-                    // console.log("room ",data);
-                    if (data.status == 'FAILED' && data.status_code == 0) {
-                        $(".alert").html(data.message || "Sorry! This property is not available during all of your selected dates. Try changing your dates or finding another property.");
-                        $(".alert").show();
-                        $("#table_body").html("");
-                        $("#pricing_details").hide();
-                        $('.booking_button').attr('disabled',true);
-                        $('.booking_button').css('background','lightgrey');
-
-                    }
-                    if (data.status == 'FAILED' && data.status_code == 1) {
-                        $(".alert").html(data.message || "Please review the <a href='' onclick='scroll_to_house_rules();' style='color: white; text-decoration-line: underline;'>house rules</a> for minimum days stay.");
-                        $(".alert").show();
-                        $("#table_body").html("");
-                        $("#pricing_details").hide();
-                        $('.booking_button').attr('disabled',true);
-                        $('.booking_button').css('background','lightgrey');
-
-                    }
-
-                    if(data.status == 'SUCCESS'){
-                        $(".alert").html("");
-                        $(".alert").hide();
-                        $("#pricing_details").show();
-
-                        $('.booking_button').attr('disabled',false);
-                        $('.booking_button').css('background','#0983b8');
-                        $("#pricing_details").show();
-                    }
-
-                    console.log("Set favourite success ====:"+JSON.stringify(data));
-
-                    if(data.data) {
-                        var scheduled_payments = data.data.scheduled_payments;
-
-                        var tr_data="";
-
-                        tr_data +="<tr class='expandable' id='neat_amount'><td> "+data.data.count_label+" &nbsp;&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>The cost of your stay including applicable fees.</span></span></td><td class='val'> $ "+ data.data.neat_amount +"</td></tr>";
-
-                        scheduled_payments.forEach((e, i) => {
-                            tr_data +="<tr class='expandable payment_sections' id='section_"+i+"' onclick='toggle_sub_section("+i+");'><td> "+e.day+" &nbsp;</td><td class='val'> $ "+ e.price +"</td></tr>";
-                            Object.keys(e.section).forEach((key, index) => {
-                                tr_data +="<tr class='payment_sub_sections sub_sections_"+i+"'><td> "+key+" "+(index === 1 ? "<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext' style='font-weight: bold;'>This fee helps us run our platform and offer our services.</span></span>" : "")+" </td><td class='val'> $ "+ e.section[key] +"</td></tr>";
-                            })
-                        });
-
-                        tr_data +="<tr class='row_border row_border_top'><td>Cleaning Fee&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Decided by the property owner to clean after your stay.</span></span></td><td>$ "+data.data.cleaning_fee+"</td></tr>";
-                        tr_data +="<tr class='row_border'><td>Deposit&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>If property owner reports no damage, your deposit will be returned 72 hours after your stay.</span></span></td><td>$ "+data.data.security_deposit+"</td></tr>";
-                        tr_data +="<tr><td>Total Cost&nbsp;</td><td><b  id='total_booking_price'>$ "+data.data.total_price+"</b></td></tr>";
-
-                        if(data.data.no_extra_guest==1){
-                            if(totalguestcount < guest_count){
-                                $('.booking_button').attr('disabled',true);
-                                $('.booking_button').css('background','lightgrey');
-                            }else{
-                                $('.booking_button').attr('disabled',false);
-                                $('.booking_button').css('background','#{{BASE_COLOR}}');
-                            }
-                            // document.getElementById('guest_count').value=totalguestcount;
-                            $('#guest').val(totalguestcount);
-                            $("#guest_alert").html(" * Only "+totalguestcount+ " Guests Allowed");
-                            $("#guest_alert").show();
-                        }else{
-                            $("#guest_alert").hide();
-                            $('#guest').val(guest_count);
+                    if(is_request_chat) {
+                        $('#request_chat_loading').hide();
+                        if (data.status == 'FAILED' && data.status_code == 0) {
+                            $('#request_chat_error .error-details').html("Sorry! This property is not available during all of your selected dates. Try changing your dates or finding another property.");
+                            $('#request_chat_error').show();
                         }
-                        $("#table_body").html(tr_data);
+                        if (data.status == 'FAILED' && data.status_code == 1) {
+                            var link = window.location.origin + '/traveler/my-reservations';
+                            $('#request_chat_error .error-details').html(`You already have an approved/requested booking during this time. Please visit <a href="${link}">my trips</a> page for more info or continue to request to chat.`);
+                            $('#request_chat_error').show();
+                        }
 
-                        $('.pay-caption').text(`Pay on approval: $${data.data.pay_now}, Total: $${data.data.total_price}`);
+                        if(data.status == 'SUCCESS') {
+                            $('#request_chat_error').hide();
+                        }
+                    } else {
+                        // console.log("room ",data);
+                        if (data.status == 'FAILED' && data.status_code == 0) {
+                            $(".alert").html(data.message || "Sorry! This property is not available during all of your selected dates. Try changing your dates or finding another property.");
+                            $(".alert").show();
+                            $("#table_body").html("");
+                            $("#pricing_details").hide();
+                            $('.booking_button').attr('disabled',true);
+                            $('.booking_button').css('background','lightgrey');
 
-                        $('#neat_amount').click(function (e) {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            if($(this).hasClass('active')) {
-                                $('.payment_sub_sections').removeClass('active');
-                                $('.payment_sections').removeClass('expanded');
-                            } else {
+                        }
+                        if (data.status == 'FAILED' && data.status_code == 1) {
+                            $(".alert").html(data.message || "Please review the <a href='' onclick='scroll_to_house_rules();' style='color: white; text-decoration-line: underline;'>house rules</a> for minimum days stay.");
+                            $(".alert").show();
+                            $("#table_body").html("");
+                            $("#pricing_details").hide();
+                            $('.booking_button').attr('disabled',true);
+                            $('.booking_button').css('background','lightgrey');
+
+                        }
+
+                        if(data.status == 'SUCCESS'){
+                            $(".alert").html("");
+                            $(".alert").hide();
+                            $("#pricing_details").show();
+
+                            $('.booking_button').attr('disabled',false);
+                            $('.booking_button').css('background','#0983b8');
+                            $("#pricing_details").show();
+                        }
+
+                        console.log("Set favourite success ====:"+JSON.stringify(data));
+
+                        if(data.data) {
+                            var scheduled_payments = data.data.scheduled_payments;
+
+                            var tr_data="";
+
+                            tr_data +="<tr class='expandable' id='neat_amount'><td> "+data.data.count_label+" &nbsp;&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>The cost of your stay including applicable fees.</span></span></td><td class='val'> $ "+ data.data.neat_amount +"</td></tr>";
+
+                            scheduled_payments.forEach((e, i) => {
+                                tr_data +="<tr class='expandable payment_sections' id='section_"+i+"' onclick='toggle_sub_section("+i+");'><td> "+e.day+" &nbsp;</td><td class='val'> $ "+ e.price +"</td></tr>";
+                                Object.keys(e.section).forEach((key, index) => {
+                                    tr_data +="<tr class='payment_sub_sections sub_sections_"+i+"'><td> "+key+" "+(index === 1 ? "<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext' style='font-weight: bold;'>This fee helps us run our platform and offer our services.</span></span>" : "")+" </td><td class='val'> $ "+ e.section[key] +"</td></tr>";
+                                })
+                            });
+
+                            tr_data +="<tr class='row_border row_border_top'><td>Cleaning Fee&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>Decided by the property owner to clean after your stay.</span></span></td><td>$ "+data.data.cleaning_fee+"</td></tr>";
+                            tr_data +="<tr class='row_border'><td>Deposit&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>If property owner reports no damage, your deposit will be returned 72 hours after your stay.</span></span></td><td>$ "+data.data.security_deposit+"</td></tr>";
+                            tr_data +="<tr><td>Total Cost&nbsp;</td><td><b  id='total_booking_price'>$ "+data.data.total_price+"</b></td></tr>";
+
+                            if(data.data.no_extra_guest==1){
+                                if(totalguestcount < guest_count){
+                                    $('.booking_button').attr('disabled',true);
+                                    $('.booking_button').css('background','lightgrey');
+                                }else{
+                                    $('.booking_button').attr('disabled',false);
+                                    $('.booking_button').css('background','#{{BASE_COLOR}}');
+                                }
+                                // document.getElementById('guest_count').value=totalguestcount;
+                                $('#guest').val(totalguestcount);
+                                $("#guest_alert").html(" * Only "+totalguestcount+ " Guests Allowed");
+                                $("#guest_alert").show();
+                            }else{
+                                $("#guest_alert").hide();
+                                $('#guest').val(guest_count);
                             }
-                            $('.payment_sections').toggleClass('active');
-                            $(this).toggleClass('active');
-                        });
+                            $("#table_body").html(tr_data);
+
+                            $('.pay-caption').text(`Pay on approval: $${data.data.pay_now}, Total: $${data.data.total_price}`);
+
+                            $('#neat_amount').click(function (e) {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                if($(this).hasClass('active')) {
+                                    $('.payment_sub_sections').removeClass('active');
+                                    $('.payment_sections').removeClass('expanded');
+                                } else {
+                                }
+                                $('.payment_sections').toggleClass('active');
+                                $(this).toggleClass('active');
+                            });
+                        }
                     }
                 },
                 error: function (e) {
@@ -1290,7 +1320,7 @@
         };
         $("#pricing_details").hide();
     </script>
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+{{--    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>--}}
     <script>
         function scroll_to_house_rules() {
             event.preventDefault();
@@ -1376,21 +1406,18 @@
                 if($(window).scrollTop() > boxPosition && !isFixed){
                     $(".tempClass").css({position:"fixed", top: "70px" ,bottom:'55px', left:"900px"});
                     $(".agent-widget").addClass('is-fixed');
-                    $("#check_in_div").addClass('col-md-6');
-                    $("#check_out_div").addClass('col-md-6');
+                    $("#check_in_div input[name='check_in'], #guest_div a.chosen-single span").css({'font-size': '15px'});
                 }else if($(window).scrollTop() < boxPosition){
                     $(".tempClass").css({position:"static"});
                     $(".agent-widget").removeClass('is-fixed');
-                    $("#check_in_div").removeClass('col-md-6');
-                    $("#check_out_div").removeClass('col-md-6');
+                    $("#check_in_div input[name='check_in'], #guest_div a.chosen-single span").css({'font-size': '12px'});
                 }
 
                 if(boxPosition1 < $(window).scrollTop())
                 {
                     $(".tempClass").css({position:"static"});
                     $(".agent-widget").removeClass('is-fixed');
-                    $("#check_in_div").removeClass('col-md-6');
-                    $("#check_out_div").removeClass('col-md-6');
+                    $("#check_in_div input[name='check_in']").css({'font-size': '15px'});
                 }
             });
         }

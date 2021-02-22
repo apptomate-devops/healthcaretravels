@@ -220,7 +220,7 @@ class BaseController extends ConstantsController
     {
         try {
             Mail::send($view_name, $data, function ($message) use ($email) {
-                $message->from('gotocva@gmail.com', 'Mail from ' . APP_BASE_NAME);
+                $message->from(GENERAL_MAIL, config('mail.from.name'));
                 $message->to($email);
                 $message->subject('Mail from ' . APP_BASE_NAME);
             });
@@ -233,7 +233,7 @@ class BaseController extends ConstantsController
     {
         try {
             Mail::send($view_name, $data, function ($message) use ($email, $subject) {
-                $message->from('gotocva@gmail.com', 'Mail from ' . APP_BASE_NAME);
+                $message->from(GENERAL_MAIL, config('mail.from.name'));
                 $message->to($email);
                 $message->subject($subject);
             });
@@ -275,7 +275,7 @@ class BaseController extends ConstantsController
     {
         try {
             Mail::send($view_name, $data, function ($message) use ($email, $subject) {
-                $message->from('gotocva@gmail.com', "Mail from " . APP_BASE_NAME);
+                $message->from(GENERAL_MAIL, config('mail.from.name'));
                 $message->to($email);
                 $message->subject($subject);
             });
@@ -470,7 +470,15 @@ class BaseController extends ConstantsController
         $date = strtotime($last_message->date);
         $last_message->date = date('m/d/Y', $date);
         $last_message->time = date('h:i a', $date);
-        return $last_message;
+
+        // remove property link from message
+        if (strpos($last_message->message, 'Inquiry sent for') !== false) {
+            $last_message->message = preg_replace('/<\/?a[^>]*>/', '', $last_message->message);
+        }
+        return [
+            'last_message' => $last_message,
+            'last_message_date_time' => $date,
+        ];
     }
 
     public function image_upload($width, $height, $image)
@@ -908,13 +916,19 @@ class BaseController extends ConstantsController
             $end_delay = $end_date_with_padding->diffInSeconds($current_date);
         }
 
+        // Send email to traveler 72 hours before checkin
+        $start_date_72_hr_with_padding = $start_date->copy()->subDays(3);
+        if ($start_date_72_hr_with_padding->gt($current_date)) {
+            $start_delay_72_hr = $start_date_72_hr_with_padding->diffInSeconds($current_date);
+        }
+
         $subject = 'Your Booking is Starting Soon';
         $this->send_scheduled_email(
             $owner->email,
             'owner-24hr-before-checkin',
             $subject,
             $owner_mail_data,
-            $start_delay,
+            $start_delay_72_hr,
             $booking->id,
         );
         $subject = 'Your Booking at ' . $propertyTitle . ' is Ending';
@@ -936,12 +950,6 @@ class BaseController extends ConstantsController
             'propertyZip' => $property->zip_code,
             'contact' => "{$request->getSchemeAndHttpHost()}/traveler/chat/{$chat_data['chat_id']}?fb-key=personal_chat&fbkey=personal_chat",
         ];
-
-        // Send email to traveler 72 hours before checkin
-        $start_date_72_hr_with_padding = $start_date->copy()->subDays(3);
-        if ($start_date_72_hr_with_padding->gt($current_date)) {
-            $start_delay_72_hr = $start_date_72_hr_with_padding->diffInSeconds($current_date);
-        }
 
         $subject = 'Your Stay at ' . $propertyTitle;
         $this->send_scheduled_email(

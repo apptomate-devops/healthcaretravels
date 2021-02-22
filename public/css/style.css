@@ -412,7 +412,7 @@ button[disabled], html input[disabled] {
 }
 
 .weight-lb:after {
-    content: 'lb';
+    content: 'lb(s)';
     position: absolute;
     top: 38px;
     right: 23px;
@@ -5131,7 +5131,7 @@ section.fullwidth.border-bottom {
 .property-slider .item {
     height: 600px;
     position: relative;
-    background-size: cover;
+    background-size: contain;
     background-repeat: no-repeat;
     background-position: 50%;
     border-radius: 3px;
@@ -5326,6 +5326,8 @@ section.fullwidth.border-bottom {
 
 .property-slider-nav .item img {
     border-radius: 3px;
+    object-fit: cover;
+    width: 100%;
 }
 
 .property-slider-nav .item:before {
@@ -5824,6 +5826,16 @@ body .bookmarks-table td.action a.delete i {
     left: 0;
     top: 0;
     margin-right: 3px;
+}
+
+td.action a.icons .tooltiptext {
+    width: max-content;
+    background-color: black !important;
+    padding: 2px 8px;
+    top: 24px !important;
+    left: 7px;
+    font-size: 14px;
+    pointer-events: none;
 }
 
 .keywords,

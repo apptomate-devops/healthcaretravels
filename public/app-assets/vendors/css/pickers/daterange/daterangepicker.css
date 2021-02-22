@@ -120,7 +120,8 @@
   .daterangepicker td.disabled, .daterangepicker option.disabled {
     color: #999;
     cursor: not-allowed;
-    text-decoration: line-through; }
+    text-decoration: line-through;
+    text-decoration-color: #282828; }
   .daterangepicker select.monthselect, .daterangepicker select.yearselect {
     font-size: 12px;
     padding: 1px;

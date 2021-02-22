@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Logger;
 use Closure;
 use DB;
 
@@ -11,32 +12,40 @@ class UnreadMessageCount
 
     public function get_unread_chat_count($key, $id)
     {
-        $user_id = $this->request->session()->get('user_id');
-        $unread_count = 0;
-        $unread_message_data = [];
-        if (empty($key) || empty($id)) {
-            return [
+        try {
+            $user_id = $this->request->session()->get('user_id');
+            $unread_count = 0;
+            $unread_message_data = [];
+            if (empty($key) || empty($id)) {
+                return [
+                    'unread_message_data' => $unread_message_data,
+                    'unread_count' => $unread_count,
+                ];
+            }
+            if (defined('FB_URL')) {
+                $data = file_get_contents(FB_URL . $key . "/" . $id . "/.json");
+                $data = json_decode($data);
+                $data = (array) $data;
+                foreach ($data as $message) {
+                    if ($message->sent_by != $user_id && property_exists($message, 'read') && $message->read == false) {
+                        $unread_count++;
+                        $unread_message_data = ['message_id' => $id, 'message_key' => $key];
+                        break;
+                    }
+                }
+            }
+            $data = [
                 'unread_message_data' => $unread_message_data,
                 'unread_count' => $unread_count,
             ];
+            return $data;
+        } catch (\Exception $ex) {
+            Logger::error('Error getting unread messages' . $ex->getMessage());
+            return [
+                'unread_message_data' => [],
+                'unread_count' => 0,
+            ];
         }
-        if (defined('FB_URL')) {
-            $data = file_get_contents(FB_URL . $key . "/" . $id . "/.json");
-            $data = json_decode($data);
-            $data = (array) $data;
-            foreach ($data as $message) {
-                if ($message->sent_by != $user_id && property_exists($message, 'read') && $message->read == false) {
-                    $unread_count++;
-                    $unread_message_data = ['message_id' => $id, 'message_key' => $key];
-                    break;
-                }
-            }
-        }
-        $data = [
-            'unread_message_data' => $unread_message_data,
-            'unread_count' => $unread_count,
-        ];
-        return $data;
     }
     /**
      * Handle an incoming request.

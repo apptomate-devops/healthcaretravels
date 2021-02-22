@@ -87,7 +87,7 @@
 
                                 <div class="row with-forms">
                                     <div class="col-md-6">
-                                        <h5>Property sqft.<span class="required">*</span></h5>
+                                        <h5>Property sq ft<span class="required">*</span></h5>
                                         <input class="search-field validate" type="text" value="{{isset($property_data->property_size)?$property_data->property_size:''}}" id="property_size" name="property_size"/>
                                     </div>
 
@@ -771,21 +771,6 @@
 
     </script>
     <script type="text/javascript">
-        $('.date_picker').datepicker({});
-        var date = new Date();
-        //date.setDate(date.getDate()-1);
-        $('#from_date').datepicker({
-            startDate: date
-        });
-
-        function set_to_date() {
-            // body...
-            var from_date = $('#from_date').val();
-            $('#to_date').datepicker({
-                startDate: from_date
-            });
-        }
-
         $('#property_size').on('keypress', function(event) {
             var regex = new RegExp("^[0-9+]$");
             var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);

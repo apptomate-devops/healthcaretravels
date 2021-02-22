@@ -17,7 +17,7 @@ class HomeCategorySeeder extends Seeder
             ],
             [
                 'location' => 'Nevada',
-                'image_url' => '/storage/public/HomePage/Nevada.png',
+                'image_url' => '/storage/public/HomePage/Nevada.webp',
                 'lat' => 38.8026,
                 'lng' => -116.4194,
             ],
@@ -28,7 +28,7 @@ class HomeCategorySeeder extends Seeder
             ],
             [
                 'location' => 'New York',
-                'image_url' => '/storage/public/HomePage/NewYork.png',
+                'image_url' => '/storage/public/HomePage/NewYork.webp',
                 'lat' => 40.7128,
                 'lng' => -74.006,
             ],
@@ -39,7 +39,7 @@ class HomeCategorySeeder extends Seeder
             ],
             [
                 'location' => 'Oregon',
-                'image_url' => '/storage/public/HomePage/Oregon.png',
+                'image_url' => '/storage/public/HomePage/Oregon.webp',
                 'lat' => 43.8041,
                 'lng' => -120.5542,
             ],
@@ -50,7 +50,7 @@ class HomeCategorySeeder extends Seeder
             ],
             [
                 'location' => 'New Jersey',
-                'image_url' => '/storage/public/HomePage/NewJersey.png',
+                'image_url' => '/storage/public/HomePage/NewJersey.webp',
                 'lat' => 40.0583,
                 'lng' => -74.4057,
             ],
@@ -61,7 +61,7 @@ class HomeCategorySeeder extends Seeder
             ],
             [
                 'location' => 'Texas',
-                'image_url' => '/storage/public/HomePage/Texas.png',
+                'image_url' => '/storage/public/HomePage/Texas.webp',
                 'lat' => 31.9686,
                 'lng' => -99.9018,
             ],
@@ -72,7 +72,7 @@ class HomeCategorySeeder extends Seeder
             ],
             [
                 'location' => 'Arizona',
-                'image_url' => '/storage/public/HomePage/Arizona.png',
+                'image_url' => '/storage/public/HomePage/Arizona.webp',
                 'lat' => 34.0489,
                 'lng' => -111.0937,
             ],
@@ -83,7 +83,7 @@ class HomeCategorySeeder extends Seeder
             ],
             [
                 'location' => 'South Dakota',
-                'image_url' => '/storage/public/HomePage/SouthDakota.png',
+                'image_url' => '/storage/public/HomePage/SouthDakota.webp',
                 'lat' => 43.9695,
                 'lng' => -99.9018,
             ],
@@ -94,7 +94,7 @@ class HomeCategorySeeder extends Seeder
             ],
             [
                 'location' => 'California',
-                'image_url' => '/storage/public/HomePage/California.png',
+                'image_url' => '/storage/public/HomePage/California.webp',
                 'lat' => 36.7783,
                 'lng' => -119.4179,
             ],

@@ -58,7 +58,7 @@
                 <div class="office-address">
                     <h3>Our Office</h3>
                     <ul>
-                    <?php echo str_replace(',', ',<br />', CLIENT_ADDRESS); ?>
+                    <?php echo str_replace(',  ', ',<br />', CLIENT_ADDRESS); ?>
 
                     <!-- <li>Health Care Travels</li>
 					<li>PO BOX 14565</li>

@@ -4,7 +4,7 @@ if(!defined("CONTACT_CONTENT")) {
     define("CONTACT_CONTENT", "Health Care Travels is committed to delivering a high level of expertise, customer service, and attention to detail to the market of accommodation booking.");
 }
 if(!defined("CLIENT_ADDRESS")) {
-    define("CLIENT_ADDRESS", "Health Care Travels,  7075 Fm 1960 Rd West STE 1010,  Houston, Texas 77069,  United States");
+    define("CLIENT_ADDRESS", "Health Care Travels,  7075 FM 1960 Rd West STE 1010,  Houston, Texas 77069,  United States");
 }
 if(!defined("CLIENT_MAIL")) {
     define("CLIENT_MAIL", "info@healthcaretravels.com");

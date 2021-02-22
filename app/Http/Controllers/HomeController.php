@@ -403,9 +403,7 @@ class HomeController extends BaseController
         $data = [
             'content' =>
                 'You have successfully changed your password. If you feel this message is in error and you did not request a password change email ​' .
-                SUPPORT_MAIL .
-                ' or call us at ' .
-                CLIENT_PHONE,
+                SUPPORT_MAIL,
             'user_name' => $user_name,
         ];
         $title = 'Your Password Changed Successfully';

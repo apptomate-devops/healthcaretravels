@@ -160,7 +160,7 @@ class ReservationController extends BaseController
             'cancellation_requested' => 2,
             'cancellation_reason' => $request->cancellation_reason,
             'cancellation_explanation' => $request->cancellation_explanation,
-            'cancelled_by' => 'Admin',
+            //            'cancelled_by' => 'Admin',
             'already_checked_in' => $request->checked_in,
             'status' => 8,
         ]);

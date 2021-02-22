@@ -535,7 +535,7 @@ class UserController extends BaseController
 
     public function register_user(Request $request)
     {
-        $name = $request->username;
+        //$name = $request->username;
         $fname = $request->first_name;
         $lname = $request->last_name;
         $mail = $request->email;
@@ -558,7 +558,7 @@ class UserController extends BaseController
         ];
 
         $rules = [
-            'username' => 'required|unique:users,username',
+            // 'username' => 'required|unique:users,username',
             'first_name' => 'required',
             'last_name' => 'required',
             'ethnicity' => 'required',
@@ -605,7 +605,7 @@ class UserController extends BaseController
 
         if ($validator->fails()) {
             return back()
-                ->with('username', $name)
+                // ->with('username', $name)
                 ->with('fname', $fname)
                 ->with('lname', $lname)
                 ->with('ethnicity', $request->ethnicity)
@@ -656,7 +656,7 @@ class UserController extends BaseController
         $insert = DB::table('users')->insert([
             'client_id' => $request->client_id,
             'role_id' => $role_id,
-            'username' => $request->username,
+            // 'username' => $request->username,
             'email' => $request->email,
             'password' => $password,
             'first_name' => $request->first_name,

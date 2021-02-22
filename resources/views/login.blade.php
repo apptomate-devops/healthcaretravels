@@ -143,12 +143,12 @@
                                 {!! $errors->first('user_type', '<p class="error-text">:message</p>') !!}
                             </p>
 
-                            <p class="form-row form-row-wide" id="username2_field" style="display: none;">
+                            <!-- <p class="form-row form-row-wide" id="username2_field" style="display: none;">
                                 <label for="username2 required">Username:
                                     <input type="text" class="input-text validate {{ $errors->has('username') ? 'form-error' : ''}}" name="username" id="username2" value="{{Session::get('username')}}" placeholder="Username" autocomplete="off" required />
                                 </label>
                                 {!! $errors->first('username', '<p class="error-text">:message</p>') !!}
-                            </p>
+                            </p> -->
 
                             <p class="form-row form-row-wide" id="email_field" style="display: none;">
                                 <label for="email2">

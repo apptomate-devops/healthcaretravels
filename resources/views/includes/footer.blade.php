@@ -102,7 +102,7 @@ if(!defined("APP_BASE_NAME")) {
 
 </div>
 <!-- Facebook Pixel Code -->
-<script>
+<!-- <script>
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
         n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -118,5 +118,5 @@ if(!defined("APP_BASE_NAME")) {
     <img height="1" width="1"
          src="https://www.facebook.com/tr?id=193582665302375&ev=PageView
 &noscript=1"/>
-</noscript>
+</noscript> -->
 <!-- End Facebook Pixel Code -->

@@ -6,7 +6,7 @@ use App\Helper\Helper;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
-use App\Models\BecomeScout;
+// use App\Models\BecomeScout;
 use App\Models\RequestRoommate;
 use App\Models\PropertyList;
 use App\Models\EmailConfig;
@@ -26,10 +26,10 @@ class HomeController extends BaseController
         return view('statics.ambassador');
     }
 
-    public function scout()
-    {
-        return view('scout');
-    }
+    // public function scout()
+    // {
+    //     return view('scout');
+    // }
     public function cancellation_policy()
     {
         return view('policies.cancellationpolicy');
@@ -307,23 +307,23 @@ class HomeController extends BaseController
         return view('statics.rv_professional');
     }
 
-    public function save_become_a_scout(Request $request)
-    {
-        $new = new BecomeScout();
-        $new->email = $request->email;
-        $new->phone = $request->phone_no;
-        $new->firstname = $request->firstname;
-        $new->lastname = $request->lastname;
-        $new->days = implode(',', $request->days);
-        $new->is_take_photo = $request->take_photo;
-        $new->city = $request->city;
-        $new->state = $request->state;
-        $new->miles = $request->miles;
-        $new->information_check_allows = $request->information_check_allows;
-        $new->save();
+    // public function save_become_a_scout(Request $request)
+    // {
+    //     $new = new BecomeScout();
+    //     $new->email = $request->email;
+    //     $new->phone = $request->phone_no;
+    //     $new->firstname = $request->firstname;
+    //     $new->lastname = $request->lastname;
+    //     $new->days = implode(',', $request->days);
+    //     $new->is_take_photo = $request->take_photo;
+    //     $new->city = $request->city;
+    //     $new->state = $request->state;
+    //     $new->miles = $request->miles;
+    //     $new->information_check_allows = $request->information_check_allows;
+    //     $new->save();
 
-        return back()->with('success', 'Your information has been saved.');
-    }
+    //     return back()->with('success', 'Your information has been saved.');
+    // }
 
     public function save_request_roommate(Request $request)
     {

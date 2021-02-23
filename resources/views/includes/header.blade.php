@@ -48,11 +48,11 @@
                                         Become An Ambassador
                                     </a>
                                 </li>
-                                <li class="text-center">
+                                <!-- <li class="text-center">
                                     <a href="/scout">
                                         Become A Scout
                                     </a>
-                                </li>
+                                </li> -->
                                 <li class="text-center">
                                     <a href="/partner">
                                         Partner

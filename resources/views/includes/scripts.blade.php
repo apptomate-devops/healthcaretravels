@@ -309,7 +309,7 @@
         var longitude = -95.2464395;
 
         var infowindow = new google.maps.InfoWindow({
-            content: '<div class="contact_map" style="top: 55px;margin-bottom: 8px;"><center><h2 style="color:orange">Health Care Travels</h2><h4> 7075 Fm 1960 Rd W,</h4><h4>Houston, Texas 77069, </h4><h4> United States Suite 1010</h4><center></div>'
+            content: '<div class="contact_map" style="top: 55px;margin-bottom: 8px;"><center><h2 style="color:orange">Health Care Travels</h2><h4> 7075 FM 1960 Rd West STE 1010,</h4><h4>Houston, Texas 77069, </h4><h4> United States</h4><center></div>'
         });
 
         var uluru = {lat: latitude, lng: longitude};

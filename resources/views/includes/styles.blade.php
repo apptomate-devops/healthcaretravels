@@ -35,8 +35,8 @@
 {{--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>--}}
 {{--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>--}}
 {{--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/locales/bootstrap-datepicker.tr.min.js"></script>--}}
-{{--<link rel="stylesheet" href="{{ URL::asset('css/bootstrap-timepicker.min.css') }}">--}}
-{{--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>--}}
+<link rel="stylesheet" href="{{ URL::asset('css/bootstrap-timepicker.min.css') }}">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
 
 <link rel="stylesheet" href="{{URL::asset('css/caleran.min.css')}}">
 {{--<!-- <script type="text/javascript" src="{{URL::asset('js/moment.min.js')}}"></script> -->--}}

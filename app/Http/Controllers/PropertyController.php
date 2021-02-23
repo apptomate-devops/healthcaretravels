@@ -2795,10 +2795,10 @@ class PropertyController extends BaseController
         Logger::info('Current date now: ' . Carbon::now());
         Logger::info('check_in_date_time: ' . $check_in_date_time);
         ProcessAutoCancel::dispatch($booking->id)
-            ->delay($scheduler_date)
+            ->delay(Helper::get_utc_time_user($scheduler_date))
             ->onQueue(GENERAL_QUEUE);
         ProcessOwnerReminder::dispatch($booking->id)
-            ->delay($owner_reminder_email)
+            ->delay(Helper::get_utc_time_user($owner_reminder_email))
             ->onQueue(GENERAL_QUEUE);
     }
 

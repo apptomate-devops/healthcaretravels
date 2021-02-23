@@ -48,7 +48,7 @@
             var maximumImages = 20 - $('.dz-default.dz-message').attr("data-property-images-count");
             if(maximumImages <= 0) {
                 $(".dz-hidden-input").prop("disabled",true);
-                $(".dz-default.dz-message").html('You have already uploaded maximum images. No more images allowed');
+                $(".dz-default.dz-message").html('You have already uploaded the maximum number of images');
             }
             function continue_upload() {
                 fileDropzone.options.autoProcessQueue = true;

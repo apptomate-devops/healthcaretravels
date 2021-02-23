@@ -69,11 +69,9 @@
                             <div class="submit-section">
                                 <div class="row with-forms" style="padding: 0 15px;">
                                     <form action="{{BASE_URL}}owner/property/file-upload" method="post" enctype="multipart/form-data" class="dropzone" id="property-image">
+                                        <input type="hidden" name="_token" value="{{csrf_token()}}">
                                         <div  class="dz-default dz-message" data-property-images-count="{{count($property_images)}}">
-                                            <span>
-                                                <input type="hidden" name="_token" value="{{csrf_token()}}">
-                                                <i class="sl sl-icon-plus"></i> Click here to upload
-                                            </span>
+                                            <span><i class="sl sl-icon-plus"></i> Click here to upload</span>
                                         </div>
                                     </form>
                                     <p>Add up to 20 images of your property. Check out our <a href="{{BASE_URL}}eye-catching-photos" target="_blank">article</a> on how to take great photos.</p>
@@ -148,6 +146,9 @@
                 success: function(data) {
                     $(`div#cover-img-${id}`).remove();
                     $('#propertyImagesProgress').hide();
+                    debugger
+                    $(".dz-hidden-input").prop("disabled",false);
+                    $(".dz-default.dz-message").html('<span><i class="sl sl-icon-plus"></i> Click here to upload</span>');
                     if(data.new_cover_image && data.new_cover_image.id) {
                         $(`button#cover-${data.new_cover_image.id}`).prop('disabled', true);
                         $(`button#cover-${data.new_cover_image.id}`).addClass('cover_image');

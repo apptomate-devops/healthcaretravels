@@ -44,7 +44,7 @@
                         <span class="unread_message_badge"></span>
                         @endif
                         <div class="title">
-                            <h4><a href="#">{{Helper::get_user_display_name($property->traveller)}}</a></h4>
+                            <h4><a href="{{BASE_URL}}owner-profile/{{$property->traveller->id}}">{{Helper::get_user_display_name($property->traveller)}}</a></h4>
                             <span> {{$property->last_message->username}}: {{$property->last_message->message}} </span><br/>
                             <span> {{$property->last_message->status}} {{Helper::get_local_date_time(\Carbon\Carbon::parse($property->last_message->date . ' ' . $property->last_message->time), 'H:i a m-d-Y')}} </span>
                         </div>
@@ -74,7 +74,7 @@
                         <span class="unread_message_badge"></span>
                         @endif
                         <div class="title">
-                            <h4><a href="#">{{Helper::get_user_display_name($property->traveller)}}</a></h4>
+                            <h4><a  href="{{BASE_URL}}owner-profile/{{$property->traveller->id}}">{{Helper::get_user_display_name($property->traveller)}}</a></h4>
                             <span> {{$property->last_message->username}}: {{$property->last_message->message}} </span><br/>
                             <span> {{$property->last_message->status}} {{Helper::get_local_date_time(\Carbon\Carbon::parse($property->last_message->date . ' ' . $property->last_message->time), 'H:i a m-d-Y')}} </span>
                         </div>
@@ -104,7 +104,7 @@
                         <span class="unread_message_badge"></span>
                         @endif
                         <div class="title">
-                            <h4><a href="#">{{Helper::get_user_display_name($property->traveller)}}</a></h4>
+                            <h4><a href="{{BASE_URL}}owner-profile/{{$property->traveller->id}}">{{Helper::get_user_display_name($property->traveller)}}</a></h4>
                             <span> {{$property->last_message->username}}: {{$property->last_message->message}} </span><br/>
                             <span> {{$property->last_message->status}} {{Helper::get_local_date_time(\Carbon\Carbon::parse($property->last_message->date . ' ' . $property->last_message->time), 'H:i a m-d-Y')}} </span>
                         </div>

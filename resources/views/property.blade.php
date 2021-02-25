@@ -57,7 +57,7 @@
                             @endif
                             @if($data->pets_allowed == 1)
                                 <span>
-                                    <img src="{{BASE_URL}}action_icons/Paw.png" />
+                                    <img src="/storage/public/HomePage/Paw.webp" />
                                 </span>
                             @endif
                         </h2>
@@ -838,7 +838,7 @@
                                         </a>
                                         @if($property->pets_allowed == 1)
                                             <div style="float: right;" title="Pets Allowed">
-                                                <img src="{{BASE_URL}}action_icons/Paw.png" />
+                                                <img src="/storage/public/HomePage/Paw.webp" />
                                             </div>
                                         @endif
                                     </div>

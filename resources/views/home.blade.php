@@ -479,7 +479,7 @@
                                             </a>
                                             @if($property->pets_allowed == 1)
                                                 <div style="float: right;" title="Pets Allowed">
-                                                    <img src="/storage/public/HomePage/Paw.png"/>
+                                                    <img src="/storage/public/HomePage/Paw.webp"/>
                                                 </div>
                                             @endif
                                         </div>

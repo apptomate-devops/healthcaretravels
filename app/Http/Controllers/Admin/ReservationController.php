@@ -146,21 +146,23 @@ class ReservationController extends BaseController
     public function booking_cancellation_admin(Request $request)
     {
         $data = PropertyBooking::where('booking_id', $request->booking_id)->first();
+        $cancelled_by = 'Admin';
+        if ($data->cancelled_by) {
+            $cancelled_by = $data->cancelled_by;
+        }
         if (empty($data)) {
             return back()->with([
                 'success_cancel_booking' => false,
                 'errorMessage' => 'Booking you are looking for does not exists!',
             ]);
         }
-
         $refund_amount = $request->refund_amount;
         $this->process_cancellation_refund($data, $refund_amount);
-
         PropertyBooking::where('booking_id', $request->booking_id)->update([
             'cancellation_requested' => 2,
             'cancellation_reason' => $request->cancellation_reason,
             'cancellation_explanation' => $request->cancellation_explanation,
-            //            'cancelled_by' => 'Admin',
+            'cancelled_by' => $cancelled_by,
             'already_checked_in' => $request->checked_in,
             'status' => 8,
         ]);

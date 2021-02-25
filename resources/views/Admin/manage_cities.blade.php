@@ -114,7 +114,7 @@
                             </fieldset>
                             <fieldset class="form-group floating-label-form-group">
                                 <label for="email">Image</label>
-                                <input type="file" class="form-control" id="file" required name="file"
+                                <input type="file" class="form-control" id="file" @if(!$d->image_url) required @endif name="file"
                                        placeholder="Image">
                                 <br>
                                 <img src="{{$d->image_url}}" width="75px" width="75px">

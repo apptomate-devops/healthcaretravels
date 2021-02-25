@@ -66,7 +66,10 @@ class BookingController extends BaseController
         }
         $guest_info = GuestsInformation::where('booking_id', $booking->booking_id)->get();
         $pet_info = PetInformation::where('booking_id', $booking->booking_id)->first();
-        $booking->agency = implode(", ", array_filter([$booking->name_of_agency, $booking->other_agency])); // Booking Agency
+        $booking->agency = implode(
+            ", ",
+            array_filter([$booking->name_of_agency, $booking->other_agency ? 'Other - ' . $booking->other_agency : '']),
+        ); // Booking Agency
         $owner = $booking->owner;
         $traveler = $booking->traveler;
         $property = $booking->property;

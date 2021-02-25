@@ -15,7 +15,7 @@
         You can now view your public listing by clicking <a href="{{$property_link}}">here</a> and share by clicking this share bottom found on your listing.
         <br>
         Paste the copied code on Facebook, Twitter or send by email.
-        <img src="/storage/public/copy-code.png">
+        <img src="{{$BASE_URL ?? BASE_URL}}storage/public/copy-code.png">
         <br>
         <br>
         Congratulations!"

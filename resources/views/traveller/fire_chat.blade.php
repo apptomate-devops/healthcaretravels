@@ -25,7 +25,7 @@
     }
 
     #chat {
-        max-height: 500px;
+        max-height: 50vh;
     }
 
     .ng-binding a {
@@ -363,6 +363,7 @@
         }, function(newValue) {
             $scope.messages.$loaded(function(newValue) {
                 $('#chat_box_wrapper').show();
+                $("#chat_box_wrapper #chat").animate({ scrollTop: $(document).height() }, 1);
                 $scope.markAsRead(newValue);
             });
             $scope.messages.$watch(function(newValue) {
@@ -398,7 +399,7 @@
             });
             if (Object.keys(updates).length > 0) {
                 firebase.database().ref().update(updates);
-                $('.unread_chat_badge').hide();
+                $('.unread_chat_badge, .unread_chat_badge_inbox').hide();
             }
             return;
         }
@@ -424,6 +425,7 @@
 
         document.addEventListener('keydown', function(event) {
             if (event.keyCode === 13 && document.getElementById('send_msg').style.display != 'none') {
+                $("#chat_box_wrapper #chat").animate({ scrollTop: $(document).height() + 100 }, 1000);
                 $scope.addMessage();
             }
         });

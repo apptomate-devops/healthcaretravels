@@ -22,7 +22,7 @@
     }
 
     #chat {
-        max-height: 500px;
+        max-height: 50vh;
     }
 
     .ng-binding a {
@@ -100,7 +100,7 @@
                         </div>
                         <h3 class="md-card-toolbar-heading-text large">
                             <span class="uk-text-muted">Chat with</span>
-                            <a href="#">{{Helper::get_user_display_name($traveller)}}</a>
+                            <a href="{{url('/')}}/owner-profile/{{$traveller->id}}">{{Helper::get_user_display_name($traveller)}}</a>
 {{--                            @if(isset($property))--}}
 {{--                            , <a href="/property/{{$property->id}}">--}}
 {{--                                {{$property->title}}--}}
@@ -356,6 +356,7 @@
         }, function(newValue) {
             $scope.messages.$loaded(function(newValue) {
                 $('#chat_box_wrapper').show();
+                $("#chat_box_wrapper #chat").animate({ scrollTop: $(document).height() }, 1);
                 $scope.markAsRead(newValue);
             });
             $scope.messages.$watch(function(newValue) {
@@ -390,7 +391,7 @@
             });
             if (Object.keys(updates).length > 0) {
                 firebase.database().ref().update(updates);
-                $('.unread_chat_badge').hide();
+                $('.unread_chat_badge, .unread_chat_badge_inbox').hide();
             }
             return;
         }
@@ -444,6 +445,7 @@
 
         document.addEventListener('keydown', function(event) {
             if (event.keyCode === 13 && document.getElementById('send_msg').style.display != 'none') {
+                $("#chat_box_wrapper #chat").animate({ scrollTop: $(document).height() + 100 }, 1000);
                 $scope.addMessage();
             }
         });

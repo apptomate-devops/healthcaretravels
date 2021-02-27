@@ -131,12 +131,13 @@
                                 <label for="user_type required">Account Type:
                                     <select type="text" class="input-text validate {{ $errors->has('user_type') ? 'form-error' : ''}}" onchange="get_form(this.value)" name="user_type" id="user_type" autocomplete="off">
                                         <option label="" selected>Select Account Type</option>
-
-                                        <option value="2" @if(Session::get('type')=="2" ) selected @endif>Agency</option>
-                                        <option value="4" @if(Session::get('type')=="4" ) selected @endif>Co-Host</option>
                                         <option value="0" @if(Session::get('type')=="0" ) selected @endif>Healthcare Traveler</option>
                                         <option value="1" @if(Session::get('type')=="1" ) selected @endif>Property Owner</option>
-                                        <option value="3" @if(Session::get('type')=="3" ) selected @endif>RV Healthcare Traveler</option>
+                                        @if(APP_ENV != 'beta')
+                                            <option value="2" @if(Session::get('type')=="2" ) selected @endif>Agency</option>
+                                            <option value="4" @if(Session::get('type')=="4" ) selected @endif>Co-Host</option>
+                                            <option value="3" @if(Session::get('type')=="3" ) selected @endif>RV Healthcare Traveler</option>
+                                        @endif
 
                                     </select>
                                 </label>
@@ -470,13 +471,6 @@
         let occupation = "{{Session::get('other_occupation')}}";
         if (occupation) {
             add_another_occupation(true);
-        }
-
-        // TODO: Re-enable registration forms by removing the temp route
-        if("{{APP_ENV}}" === "beta") {
-            $("select#user_type option[value='1']").attr("selected","selected");
-            $("select#user_type").css({"pointer-events": "none"});
-            $("select#user_type").trigger("change");
         }
 
     })

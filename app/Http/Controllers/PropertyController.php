@@ -895,7 +895,6 @@ class PropertyController extends BaseController
                         $payment,
                     );
                 }
-                $paymentRes = $this->process_booking_payment($booking->booking_id, 1);
                 $bookingModel = PropertyBooking::find($booking->id);
 
                 // SEND MAIL TO TRAVELLER/OWNER AS SOON AS BOOKING ACCEPTED
@@ -921,6 +920,8 @@ class PropertyController extends BaseController
                 // Owner email
                 $mail_data['mail_to'] = 'owner';
                 $this->send_custom_email($owner->email, $subject, 'mail.accepted_booking', $mail_data, $title);
+
+                $paymentRes = $this->process_booking_payment($booking->booking_id, 1);
 
                 $this->schedule_payments_and_emails_for_booking($bookingModel, $request);
 

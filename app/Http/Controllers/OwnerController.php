@@ -238,25 +238,24 @@ class OwnerController extends BaseController
             ->update(['owner_notify' => 0]);
         $data = DB::table('property_booking')
             ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
-            ->where('property_booking.owner_id', $request->session()->get('user_id'));
+            ->where('property_booking.owner_id', $request->session()->get('user_id'))
+            ->where('property_booking.status', '!=', 0);
         if ($from && $to) {
             $fromDate = date('Y-m-d', $from);
             $toDate = date('Y-m-d', $to);
 
             $data->whereRaw(
-                'property_booking.start_date between "' .
+                '(property_booking.start_date between "' .
                     $fromDate .
                     '" and "' .
                     $toDate .
-                    '" OR
-                             property_booking.end_date between "' .
+                    '" OR property_booking.end_date between "' .
                     $fromDate .
                     '" and "' .
                     $toDate .
-                    '" OR
-                             "' .
+                    '" OR "' .
                     $fromDate .
-                    '" between property_booking.start_date and property_booking.end_date',
+                    '" between property_booking.start_date and property_booking.end_date)',
             );
             // TODO: check if date should fall between selected range then change line to (property_booking.start_date <= $fromDate AND property_booking.end_date >= $toDate)
             //            $data->whereBetween('property_booking.start_date', [$from, $to]);

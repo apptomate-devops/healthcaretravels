@@ -345,7 +345,7 @@
     }
 
     var map;
-        @if(Request::path()=='properties')
+        @if(Request::path()=='properties' && !empty($properties))
     var markers = [
                 @foreach($properties as $propmap)
             {

@@ -52,6 +52,7 @@
                     <div>Check-in: <span>{{date('m-d-Y',strtotime($data->start_date))}}</span></div>
                     <div>Check-out: <span>{{date('m-d-Y',strtotime($data->end_date))}}</span></div>
                     <div>Guests: <span>{{$data->guest_count}}</span></div>
+                    <div>Cancellation Policy: <span><a href="{{URL('/')}}/cancellationpolicy" class="cancel-policy-link" target="_blank">{{$data->cancellation_policy}} </a></span></div>
                     <div>Total Earnings: <span>{{\App\Http\Controllers\PropertyController::format_amount($total_earning)}}</span></div>
                 </div>
 
@@ -80,9 +81,6 @@
                     @endforeach
                 </table>
                 <div>The selected account will be used to process any future deposits for this booking.</div>
-                <div>
-                    <b>Cancellation Policy: <a href="{{URL('/')}}/cancellationpolicy" class="cancel-policy-link" target="_blank">{{$data->cancellation_policy}} </a></b>
-                </div>
                 @if(in_array($data->status, [2, 3]))
                     <div class="text-right">
                         <a target="_blank" href="{{BASE_URL}}invoice/{{$data->booking_id}}" class="margin-top-40 button border">Print Invoice</a>

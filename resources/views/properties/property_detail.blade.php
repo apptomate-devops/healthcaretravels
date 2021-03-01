@@ -79,7 +79,7 @@
                                                     <tr class="expandable" id="neat_amount">
                                                         <td class="name pos-rel" >
                                                                 <span class="lang-chang-label">
-                                                                    {{$data->count_label}}
+                                                                    {{$data->count_label}} (incl. service fees)
                                                                 </span>
                                                             <span class='tooltips'><i style="color:black"  class='fa fa-question-circle'></i><span style="color: white!important" class='tooltiptext'>The cost of your stay including applicable fees</span></span>
                                                         </td>
@@ -343,12 +343,12 @@
                                     <label for="agency_name"><b>Agency you work for this assignment:</b></label>
                                     <p class="register-info">Select the agency you are traveling with for this assignment.</p>
                                     <span class="autocomplete-select"></span>
-                                    <p id="agency_error" class="error-text" style="display: none;">Select at least 1 agency</p>
                                     <div id="add_another_agency" class="add-another" onclick="add_another_agency(true)" style="cursor: pointer;">Can't find it? Add it here.</div>
                                     <input type="hidden" name="name_of_agency" id="name_of_agency" value="">
                                     <label for="other_agency_name" id="other_agency_name" style="display: none;">Other Agency:</label>
                                     <input type="text" style="display: none;" class="input-text validate" name="other_agency" id="other_agency" placeholder="Other agency" autocomplete="off">
                                     <div style="display: none;" id="other_agency_cancel" class="add-another" onclick="add_another_agency()" style="cursor: pointer;">Cancel</div>
+                                    <p id="agency_error" class="error-text" style="display: none;">Select at least 1 agency</p>
                                 </div>
                                 <hr>
                                 <h2 style="margin-bottom: 20px;">Recruiter Details</h2>
@@ -475,12 +475,15 @@
         function add_another_agency(show = false, value = '') {
             if(show) {
                 $('#add_another_agency').hide();
+                $('#agency_show .autocomplete-select').hide();
                 $('#other_agency').show();
                 $('#other_agency').attr('required', true);
                 $('#other_agency_cancel').show();
                 $('#other_agency_name').show();
                 $('#other_agency').val(value);
+                agencyAutoComplete.reset();
             } else {
+                $('#agency_show .autocomplete-select').show();
                 $('#add_another_agency').show();
                 $('#other_agency').hide();
                 $('#other_agency').attr('required', false);
@@ -522,7 +525,7 @@
                 multiple: false,
                 autocomplete: true,
                 icon: "fa fa-times",
-                placeholder: "Select Agencies",
+                placeholder: "Select Agency",
                 onChange: function (e) {
                     $('#agency_error').hide();
                 }

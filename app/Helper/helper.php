@@ -807,6 +807,7 @@ class Helper
         $values['date'] = $date_fmt;
         $values['message'] = $message;
         $values['header'] = ONE;
+        $values['read'] = false;
         $postdata = json_encode($values);
         $header = [];
         $header[] = 'Content-Type: application/json';

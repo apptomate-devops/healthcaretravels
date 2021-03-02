@@ -442,7 +442,7 @@ class BaseController extends ConstantsController
     public function get_firebase_last_message($key, $request_chat, $user_id)
     {
         $id = $request_chat->id;
-        $data = file_get_contents(FB_URL . $key . "/" . $id . "/.json");
+        $data = file_get_contents(FB_URL . $key . "/" . $id . ".json");
         $data = json_decode($data);
         $data = (array) $data;
 

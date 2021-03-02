@@ -10,6 +10,21 @@ class UnreadMessageCount
 {
     private $request;
 
+    public static function date_compare($a, $b)
+    {
+        if (gettype($a->date) == "string") {
+            $t1 = strtotime($a->date);
+        } else {
+            $t1 = strtotime($a->date->date);
+        }
+        if (gettype($b->date) == "string") {
+            $t2 = strtotime($b->date);
+        } else {
+            $t2 = strtotime($b->date->date);
+        }
+        return $t1 - $t2;
+    }
+
     public function get_unread_chat_count($key, $id)
     {
         try {
@@ -23,9 +38,11 @@ class UnreadMessageCount
                 ];
             }
             if (defined('FB_URL')) {
-                $data = file_get_contents(FB_URL . $key . "/" . $id . "/.json");
+                $data = file_get_contents(FB_URL . $key . "/" . $id . ".json");
                 $data = json_decode($data);
                 $data = (array) $data;
+                usort($data, [$this, 'date_compare']);
+
                 foreach ($data as $message) {
                     if ($message->sent_by != $user_id && property_exists($message, 'read') && $message->read == false) {
                         $unread_count++;

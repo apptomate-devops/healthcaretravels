@@ -386,7 +386,7 @@
                 delete message.$priority;
                 if (message.sent_by != '{{$owner->id}}' && !message.read) {
                     message.read = true;
-                    updates['/' + node_name + '/' + request_id + '/' + messageId] = message;
+                    updates['/' + '{{APP_ENV}}' + '-' + node_name + '/' + request_id + '/' + messageId] = message;
                 }
             });
             if (Object.keys(updates).length > 0) {

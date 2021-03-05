@@ -1,4 +1,4 @@
-@extends('layout.master') @section('title',$data->title) @section('main_content')
+@extends('layout.master') @section('title',$data->title . ' | ' . APP_BASE_NAME) @section('main_content')
     <link rel="stylesheet" href="{{ URL::asset('css/property.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('css/pricing_details.css') }}">
     <div id="titlebar" class="property-titlebar margin-bottom-0">

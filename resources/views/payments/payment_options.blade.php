@@ -1,6 +1,6 @@
 @extends('layout.master')
 @section('title')
-    {{APP_BASE_NAME}} | Payment Options
+    Payment Options | {{APP_BASE_NAME}}
 @endsection
 @section('main_content')
     <link rel="stylesheet" href="{{ URL::asset('css/payments.css') }}">

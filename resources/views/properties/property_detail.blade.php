@@ -1,7 +1,7 @@
 <?php
 //echo json_encode($data);exit;
 ?>
-@extends('layout.master') @section('title',$data->title) @section('main_content')
+@extends('layout.master') @section('title',$data->title . ' | ' . APP_BASE_NAME) @section('main_content')
     <link rel="stylesheet" href="{{ URL::asset('css/select-pure.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('css/bookings.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('css/pricing_details.css') }}">

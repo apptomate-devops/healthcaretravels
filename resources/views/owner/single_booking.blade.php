@@ -1,5 +1,6 @@
 @extends('layout.master')
-@section('title',APP_BASE_NAME.' | Owner Account | My Bookings page')
+@section('title')
+    Owner Account | My Bookings page | {{APP_BASE_NAME}}
 @section('main_content')
     <link rel="stylesheet" href="{{ URL::asset('css/bookings.css') }}">
     <style>

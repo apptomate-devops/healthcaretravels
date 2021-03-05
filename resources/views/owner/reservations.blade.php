@@ -1,6 +1,6 @@
 @extends('layout.master')
 @section('title')
-    {{APP_BASE_NAME}} | Owner Account | My Bookings page
+    Traveler Account | My Reservations page | {{APP_BASE_NAME}}
 @endsection
 @section('main_content')
     <link rel="stylesheet" href="{{ URL::asset('css/reservations.css') }}">

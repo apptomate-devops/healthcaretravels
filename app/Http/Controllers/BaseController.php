@@ -185,15 +185,16 @@ class BaseController extends ConstantsController
         return $data;
     }
 
-    public function base_image_upload_with_key($request, $key)
+    public function base_image_upload_with_key($request, $key, $path = '')
     {
-        // var_dump($request->$key);exit; keepers_logo.png
-        $image = $request->$key;
-        //$imageName = $request->file($key)->getClientOriginalName();
-        $ext = $image->getClientOriginalExtension();
-        $imageName = self::generate_random_string() . '.' . $ext;
-        $request->file($key)->move('public/uploads/', $imageName);
-        return $image_url = "public/uploads/" . $imageName;
+        $file = $request->file($key);
+        if ($file) {
+            $ext = $file->getClientOriginalExtension();
+            $imageName = self::generate_random_string() . '.' . $ext;
+            $path = $file->storeAs($path, $imageName);
+            return '/storage/' . $path;
+        }
+        return '';
     }
 
     public function base_image_upload_with_keys($request, $key)
@@ -442,7 +443,7 @@ class BaseController extends ConstantsController
     public function get_firebase_last_message($key, $request_chat, $user_id)
     {
         $id = $request_chat->id;
-        $data = file_get_contents(FB_URL . $key . "/" . $id . ".json");
+        $data = file_get_contents(FB_URL . APP_ENV . '-' . $key . "/" . $id . ".json");
         $data = json_decode($data);
         $data = (array) $data;
 

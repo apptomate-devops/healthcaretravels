@@ -1,4 +1,4 @@
-@extends('layout.master') @section('title','Profile') @section('main_content')
+@extends('layout.master') @section('title') Property | {{APP_BASE_NAME}} @section('main_content')
     <style>
         .img_btn {
             position: absolute;
@@ -144,13 +144,14 @@
                 "type": "get",
                 "url" : url,
                 success: function(data) {
-                    $(`div#cover-img-${id}`).remove();
+                    // $(`div#cover-img-${id}`).remove();
+                    // if(data.new_cover_image && data.new_cover_image.id) {
+                    //     $(`button#cover-${data.new_cover_image.id}`).prop('disabled', true);
+                    //     $(`button#cover-${data.new_cover_image.id}`).addClass('cover_image');
+                    //     $(`button#cover-${data.new_cover_image.id}`).text('Cover Photo');
+                    // }
                     $('#propertyImagesProgress').hide();
-                    if(data.new_cover_image && data.new_cover_image.id) {
-                        $(`button#cover-${data.new_cover_image.id}`).prop('disabled', true);
-                        $(`button#cover-${data.new_cover_image.id}`).addClass('cover_image');
-                        $(`button#cover-${data.new_cover_image.id}`).text('Cover Photo');
-                    }
+                    window.location.reload()
                 },
                 error: function (error) {
                     $('#propertyImagesProgress').hide();

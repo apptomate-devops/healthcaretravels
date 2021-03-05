@@ -1,6 +1,6 @@
 @extends('layout.master_copy')
 @section('title')
-    {{APP_BASE_NAME}} | Property Listing
+    Property Listing | {{APP_BASE_NAME}}
 @endsection
 
 <link rel="stylesheet" href="{{ URL::asset('css/listing_search.css') }}">

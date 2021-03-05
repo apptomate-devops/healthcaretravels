@@ -1,4 +1,8 @@
-@extends('layout.master') @section('title','Health Care Travels') @section('main_content')
+@extends('layout.master')
+@section('title')
+    Policy | {{APP_BASE_NAME}}
+@endsection
+@section('main_content')
 
     <div class="container" style="margin-top: 35px;">
         <div class="content_wrapper  row ">

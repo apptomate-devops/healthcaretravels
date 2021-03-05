@@ -1,4 +1,4 @@
-@extends('layout.master') @section('title','Profile') @section('main_content')
+@extends('layout.master') @section('title') Property | {{APP_BASE_NAME}} @section('main_content')
     <link rel="stylesheet" href="{{ URL::asset('css/property.css') }}">
     <input type="hidden" value="0" id="start_date_hidden"/>
     <div class="container add-calendar">

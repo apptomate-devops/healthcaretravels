@@ -812,7 +812,7 @@ class Helper
         $header = [];
         $header[] = 'Content-Type: application/json';
         $current_time = time();
-        $url = FB_URL . PERSONAL_CHAT . '/' . $chat_id . '/' . $current_time . '.json';
+        $url = FB_URL . APP_ENV . '-' . PERSONAL_CHAT . '/' . $chat_id . '/' . $current_time . '.json';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);

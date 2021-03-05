@@ -1,6 +1,6 @@
 @extends('layout.master')
 @section('title')
-    {{APP_BASE_NAME}} Owner Profile
+    Account Verification | {{APP_BASE_NAME}}
 @endsection
 
 @section('main_content')

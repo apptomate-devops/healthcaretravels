@@ -1,7 +1,7 @@
 @extends('layout.master')
 @section('title')
 
-{{APP_BASE_NAME}} | Owner Account | My Bookings page
+Owner Account | My Bookings page | {{APP_BASE_NAME}}
 
 @endsection
 @section('main_content')

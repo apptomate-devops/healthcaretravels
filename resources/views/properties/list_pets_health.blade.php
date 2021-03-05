@@ -1,7 +1,11 @@
 <?php
 //echo json_encode($data);exit;
 ?>
-@extends('layout.master') @section('title','Healthcare Travels') @section('main_content')
+@extends('layout.master')
+@section('title')
+    Policy | {{APP_BASE_NAME}}
+@endsection
+@section('main_content')
 <style type="text/css">
   div::-webkit-scrollbar {
     width: 12px;

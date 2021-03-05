@@ -1,5 +1,7 @@
 @extends('layout.master')
-@section('title','Owner Profile')
+@section('title')
+    Owner Profile | {{APP_BASE_NAME}}
+@endsection
 @section('main_content')
 
 <div id="titlebar">

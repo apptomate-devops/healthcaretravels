@@ -1,4 +1,4 @@
-@extends('layout.master') @section('title','Profile') @section('main_content')
+@extends('layout.master') @section('title') Property | {{APP_BASE_NAME}} @section('main_content')
     <link rel="stylesheet" href="{{ URL::asset('css/property.css') }}">
 
 
@@ -69,7 +69,7 @@
                                         <div class="col-md-6">
                                             <h5>Monthly Rate (USD)<span class="required">*</span></h5>
                                             {{--                                            <p class="caption-text">Booking prices will be calculated based on this rate, starting at a minimum of 30 days.</p>--}}
-                                            <p class="caption-text">Pay outs will reflect: <br>(1) a service fee of $50 for the 1st month of a traveler's stay <br>(2) a processing fee of $10 for the remaining months of the stay.</p>
+                                            <p class="caption-text">Pay outs will reflect: <br>(1) a service fee of $50 for the 1st month of a traveler's stay <br>(2) a processing fee of $10 for the remaining months of the stay</p>
                                             <div style="position: relative">
                                                 <input class="search-field validate price_int" type="text" name="monthly_rate" id="monthly_rate" value="{{isset($property_details->monthly_rate)?$property_details->monthly_rate:''}}" autocomplete="off"/>
                                                 <i class="price">$</i>

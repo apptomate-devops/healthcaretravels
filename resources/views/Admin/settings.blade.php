@@ -1,6 +1,6 @@
 @extends('Admin.Layout.master')
 
-@section('title') Admin @endsection
+@section('title') {{APP_BASE_NAME}} - Admin @endsection
 {{--Keepers Admin--}}
 @section('content')
 

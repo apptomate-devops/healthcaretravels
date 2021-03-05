@@ -38,13 +38,14 @@ class UnreadMessageCount
                 ];
             }
             if (defined('FB_URL')) {
-                $data = file_get_contents(FB_URL . $key . "/" . $id . ".json");
+                $data = file_get_contents(FB_URL . APP_ENV . '-' . $key . "/" . $id . ".json");
                 $data = json_decode($data);
                 $data = (array) $data;
                 usort($data, [$this, 'date_compare']);
 
                 foreach ($data as $message) {
                     if ($message->sent_by != $user_id && property_exists($message, 'read') && $message->read == false) {
+                        Logger::info('unread message' . json_encode($message));
                         $unread_count++;
                         $unread_message_data = ['message_id' => $id, 'message_key' => $key];
                         break;

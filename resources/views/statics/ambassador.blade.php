@@ -1,4 +1,8 @@
-@extends('layout.master') @section('title','Become an Ambassador') @section('main_content')
+@extends('layout.master')
+@section('title')
+    Become an Ambassador | {{APP_BASE_NAME}}
+@endsection
+@section('main_content')
     <style type="text/css">
         li {
             display: list-item;

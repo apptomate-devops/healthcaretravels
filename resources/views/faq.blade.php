@@ -1,4 +1,4 @@
-@extends('layout.master') @section('title','Health Care Travels') @section('main_content')
+@extends('layout.master') @section('title') FAQ | {{APP_BASE_NAME}} @section('main_content')
 
     <style type="text/css">
         .border {

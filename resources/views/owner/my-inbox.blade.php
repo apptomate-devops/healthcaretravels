@@ -1,5 +1,6 @@
 @extends('layout.master')
-@section('title','Inbox')
+@section('title')
+    Inbox | {{APP_BASE_NAME}}
 @section('main_content')
 
 

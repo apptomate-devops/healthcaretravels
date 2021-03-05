@@ -1,5 +1,6 @@
 @extends('layout.master')
-@section('title','Profile')
+@section('title')
+    My Properties | {{APP_BASE_NAME}}
 @section('main_content')
 
 

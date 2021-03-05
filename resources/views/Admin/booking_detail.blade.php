@@ -1,6 +1,8 @@
 @extends('Admin.Layout.master')
 
-@section('title') Booking Detail @endsection
+@section('title')
+    Booking Details | {{APP_BASE_NAME}}
+@endsection
 
 @section('content')
     <div class="content-header row">

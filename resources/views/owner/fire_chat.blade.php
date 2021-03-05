@@ -1,7 +1,7 @@
 <?php date_default_timezone_set(USER_DEFAULT_TIMEZONE); ?>
 @extends('layout.master')
 @section('title')
-{{APP_BASE_NAME}} Chat
+ Chat | {{APP_BASE_NAME}}
 @endsection
 
 @section('main_content')
@@ -348,7 +348,7 @@
         var node_name = url.searchParams.get("fb-key");
 
         //var node_name = 'instant_chat';
-        var chats = new Firebase('{{FB_URL}}' + node_name + '/' + request_id);
+        var chats = new Firebase('{{FB_URL}}' + '{{APP_ENV}}' + '-' + node_name + '/' + request_id);
         $scope.messages = $firebaseArray(chats);
 
         $scope.$watch(function() {
@@ -365,7 +365,7 @@
         })
         $scope.userid = '{{$owner->id}}';
         $scope.removeProduct = function(id) {
-            var ref = new Firebase('{{FB_URL}}' + node_name + '/' + request_id + '/' + id);
+            var ref = new Firebase('{{FB_URL}}' + '{{APP_ENV}}' + '-' + node_name + '/' + request_id + '/' + id);
             var product = $firebaseObject(ref)
             product.$remove();
         };
@@ -397,7 +397,7 @@
         }
 
         $scope.addMessage = function() {
-            var ref = new Firebase('{{FB_URL}}' + node_name + '/' + request_id);
+            var ref = new Firebase('{{FB_URL}}' + '{{APP_ENV}}' + '-' + node_name + '/' + request_id);
             var message = $scope.messageSend;
             var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             var status = re.test(message);

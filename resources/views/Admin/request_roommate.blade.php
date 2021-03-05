@@ -1,6 +1,6 @@
 @extends('Admin.Layout.master')
 
-@section('title')  Rentals Slew Admin @endsection
+@section('title')  {{APP_BASE_NAME}} - Admin @endsection
 
 @section('content')
 
@@ -262,7 +262,7 @@
 
     @extends('Admin.Layout.master')
 
-@section('title')  Rentals Slew Admin @endsection
+@section('title')  {{APP_BASE_NAME}} - Admin @endsection
 
 @section('content')
 

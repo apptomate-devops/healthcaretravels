@@ -322,7 +322,7 @@ class HomeController extends BaseController
         }
 
         if ($request->file) {
-            $cities->image_url = $this->base_image_upload_with_key($request, 'file');
+            $cities->image_url = $this->base_image_upload_with_key($request, 'file', 'public/HomePage');
         } else {
             $cities->image_url = $request->image_url;
         }

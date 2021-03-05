@@ -1,7 +1,7 @@
 <?php date_default_timezone_set(USER_DEFAULT_TIMEZONE); ?>
 @extends('layout.master')
 @section('title')
-{{APP_BASE_NAME}} Chat
+ Chat | {{APP_BASE_NAME}}
 @endsection
 
 @section('main_content')
@@ -352,7 +352,7 @@
         var node_name = url.searchParams.get("fb-key");
 
         //var node_name = 'instant_chat';
-        var chats = new Firebase('{{FB_URL}}' + node_name + '/' + request_id);
+        var chats = new Firebase('{{FB_URL}}' + '{{APP_ENV}}' + '-' + node_name + '/' + request_id);
         $scope.messages = $firebaseArray(chats);
 
         if ($scope.messages) {
@@ -380,7 +380,7 @@
 
         $scope.userid = '{{$traveller_id}}';
         $scope.removeProduct = function(id) {
-            var ref = new Firebase('{{FB_URL}}' + node_name + '/' + request_id + '/' + id);
+            var ref = new Firebase('{{FB_URL}}' + '{{APP_ENV}}' + '-' + node_name + '/' + request_id + '/' + id);
             var product = $firebaseObject(ref)
             product.$remove();
         };
@@ -405,7 +405,8 @@
         }
 
         $scope.addMessage = function() {
-            var ref = new Firebase('{{FB_URL}}' + node_name + '/' + request_id);
+            debugger
+            var ref = new Firebase('{{FB_URL}}' + '{{APP_ENV}}' + '-' + node_name + '/' + request_id);
             // {"date":"13/03/2018 10:33:38","message":"Hi bubblu Enquiry sent for Sunset Cave Hosue 2guests,
             // -","owner_id":73,"property_id":"2","sent_by":"37","traveller_id":"37"}
             var product = $firebaseArray(ref);
@@ -413,7 +414,7 @@
                 message: $scope.messageSend,
                 sent_by: $scope.userid,
                 owner_id: $scope.userid,
-                traveller_id: 1,
+                traveller_id: '{{$traveller_id}}',
                 property_id: 1,
                 date: new Date().toUTCString(),
                 read: false,

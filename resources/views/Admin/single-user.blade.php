@@ -21,7 +21,7 @@
         background: red
     }
 </style>
-@section('title') Rentals Slew Admin @endsection
+@section('title') {{APP_BASE_NAME}} - Admin @endsection
 
 @section('content')
     <div class="card">

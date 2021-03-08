@@ -1,4 +1,8 @@
-@extends('layout.master') @section('title','Eye Catching Photos') @section('main_content')
+@extends('layout.master')
+@section('title')
+    Eye Catching Photos | {{APP_BASE_NAME}}
+@endsection
+@section('main_content')
 
 
     <div class="container" style="margin-top: 35px;">

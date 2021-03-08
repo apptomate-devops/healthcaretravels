@@ -2,7 +2,7 @@
 <head>
     <!-- Basic Page Needs
       ================================================== -->
-    <title>{{APP_BASE_NAME}} | Home Page</title>
+    <title>Home Page | {{APP_BASE_NAME}}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="{{ URL::asset('css/listing_search.css') }}">
@@ -479,7 +479,7 @@
                                             </a>
                                             @if($property->pets_allowed == 1)
                                                 <div style="float: right;" title="Pets Allowed">
-                                                    <img src="/storage/public/HomePage/Paw.png"/>
+                                                    <img src="/storage/public/HomePage/Paw.webp"/>
                                                 </div>
                                             @endif
                                         </div>

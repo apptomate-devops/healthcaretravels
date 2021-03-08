@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title',$property->title)
+@section('title',$property->title . ' | ' . APP_BASE_NAME)
 @section('main_content')
     <link rel="stylesheet" href="{{ URL::asset('css/select-pure.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('css/bookings.css') }}">

@@ -1,8 +1,8 @@
 <?php date_default_timezone_set(USER_DEFAULT_TIMEZONE); ?>
-@extends('layout.master')
 @section('title')
-{{APP_BASE_NAME}} Chat
+    Chat | {{APP_BASE_NAME}}
 @endsection
+@extends('layout.master')
 
 @section('main_content')
 
@@ -22,7 +22,7 @@
     }
 
     #chat {
-        max-height: 500px;
+        max-height: 50vh;
     }
 
     .ng-binding a {
@@ -100,7 +100,7 @@
                         </div>
                         <h3 class="md-card-toolbar-heading-text large">
                             <span class="uk-text-muted">Chat with</span>
-                            <a href="#">{{Helper::get_user_display_name($traveller)}}</a>
+                            <a href="{{url('/')}}/owner-profile/{{$traveller->id}}">{{Helper::get_user_display_name($traveller)}}</a>
 {{--                            @if(isset($property))--}}
 {{--                            , <a href="/property/{{$property->id}}">--}}
 {{--                                {{$property->title}}--}}
@@ -348,7 +348,7 @@
         var node_name = url.searchParams.get("fb-key");
 
         //var node_name = 'instant_chat';
-        var chats = new Firebase('{{FB_URL}}' + node_name + '/' + request_id);
+        var chats = new Firebase('{{FB_URL}}' + '{{APP_ENV}}' + '-' + node_name + '/' + request_id);
         $scope.messages = $firebaseArray(chats);
 
         $scope.$watch(function() {
@@ -356,6 +356,7 @@
         }, function(newValue) {
             $scope.messages.$loaded(function(newValue) {
                 $('#chat_box_wrapper').show();
+                $("#chat_box_wrapper #chat").animate({ scrollTop: $(document).height() }, 1);
                 $scope.markAsRead(newValue);
             });
             $scope.messages.$watch(function(newValue) {
@@ -364,7 +365,7 @@
         })
         $scope.userid = '{{$owner->id}}';
         $scope.removeProduct = function(id) {
-            var ref = new Firebase('{{FB_URL}}' + node_name + '/' + request_id + '/' + id);
+            var ref = new Firebase('{{FB_URL}}' + '{{APP_ENV}}' + '-' + node_name + '/' + request_id + '/' + id);
             var product = $firebaseObject(ref)
             product.$remove();
         };
@@ -385,18 +386,18 @@
                 delete message.$priority;
                 if (message.sent_by != '{{$owner->id}}' && !message.read) {
                     message.read = true;
-                    updates['/' + node_name + '/' + request_id + '/' + messageId] = message;
+                    updates['/' + '{{APP_ENV}}' + '-' + node_name + '/' + request_id + '/' + messageId] = message;
                 }
             });
             if (Object.keys(updates).length > 0) {
                 firebase.database().ref().update(updates);
-                $('.unread_chat_badge').hide();
+                $('.unread_chat_badge, .unread_chat_badge_inbox').hide();
             }
             return;
         }
 
         $scope.addMessage = function() {
-            var ref = new Firebase('{{FB_URL}}' + node_name + '/' + request_id);
+            var ref = new Firebase('{{FB_URL}}' + '{{APP_ENV}}' + '-' + node_name + '/' + request_id);
             var message = $scope.messageSend;
             var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             var status = re.test(message);
@@ -444,6 +445,7 @@
 
         document.addEventListener('keydown', function(event) {
             if (event.keyCode === 13 && document.getElementById('send_msg').style.display != 'none') {
+                $("#chat_box_wrapper #chat").animate({ scrollTop: $(document).height() + 100 }, 1000);
                 $scope.addMessage();
             }
         });

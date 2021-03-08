@@ -1,5 +1,8 @@
-
-@extends('layout.master') @section('title','Health Care Travels') @section('main_content')
+@section('title')
+    Delete Account | {{APP_BASE_NAME}}
+@endsection
+@extends('layout.master')
+@section('main_content')
 
     <div class="container" style="margin-top: 35px;">
         <div class="content_wrapper  row ">

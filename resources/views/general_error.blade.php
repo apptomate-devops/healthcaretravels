@@ -1,4 +1,8 @@
-@extends('layout.master') @section('title','Health Care Travels') @section('main_content')
+@section('title')
+    Error
+@endsection
+@extends('layout.master')
+@section('main_content')
 
 
 <div class="container" style="margin-top: 35px;">

@@ -1,4 +1,8 @@
-@extends('layout.master') @section('title','Profile') @section('main_content')
+@section('title')
+    Property | {{APP_BASE_NAME}}
+@endsection
+@extends('layout.master')
+@section('main_content')
     <style>
         .img_btn {
             position: absolute;
@@ -144,16 +148,14 @@
                 "type": "get",
                 "url" : url,
                 success: function(data) {
-                    $(`div#cover-img-${id}`).remove();
+                    // $(`div#cover-img-${id}`).remove();
+                    // if(data.new_cover_image && data.new_cover_image.id) {
+                    //     $(`button#cover-${data.new_cover_image.id}`).prop('disabled', true);
+                    //     $(`button#cover-${data.new_cover_image.id}`).addClass('cover_image');
+                    //     $(`button#cover-${data.new_cover_image.id}`).text('Cover Photo');
+                    // }
                     $('#propertyImagesProgress').hide();
-                    debugger
-                    $(".dz-hidden-input").prop("disabled",false);
-                    $(".dz-default.dz-message").html('<span><i class="sl sl-icon-plus"></i> Click here to upload</span>');
-                    if(data.new_cover_image && data.new_cover_image.id) {
-                        $(`button#cover-${data.new_cover_image.id}`).prop('disabled', true);
-                        $(`button#cover-${data.new_cover_image.id}`).addClass('cover_image');
-                        $(`button#cover-${data.new_cover_image.id}`).text('Cover Photo');
-                    }
+                    window.location.reload()
                 },
                 error: function (error) {
                     $('#propertyImagesProgress').hide();

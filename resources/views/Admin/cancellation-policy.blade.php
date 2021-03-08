@@ -1,6 +1,5 @@
+@section('title')  {{APP_BASE_NAME}} - Admin @endsection
 @extends('Admin.Layout.master')
-
-@section('title')  Rentals Slew Admin @endsection
 
 @section('content')
 

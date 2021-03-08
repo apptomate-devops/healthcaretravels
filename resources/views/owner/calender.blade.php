@@ -1,7 +1,7 @@
-@extends('layout.master')
 @section('title')
-    Owner calender | {{APP_BASE_NAME}}
+    Calender | {{APP_BASE_NAME}}
 @endsection
+@extends('layout.master')
 @section('main_content')
     <style>
         .card {

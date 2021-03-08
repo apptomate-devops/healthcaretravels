@@ -369,9 +369,12 @@ class Helper
                 if ($now->between($booking_starts_on, $booking_ends_on)) {
                     return 'Happening Now';
                 }
+                if ($now->isAfter($booking_ends_on)) {
+                    return 'Completed';
+                }
                 return 'Approved';
             case 3:
-                return 'Ended';
+                return 'Completed'; // not updating status on completing the booking
             case 4:
                 return 'Declined';
             case 8:
@@ -804,10 +807,12 @@ class Helper
         $values['date'] = $date_fmt;
         $values['message'] = $message;
         $values['header'] = ONE;
+        $values['read'] = false;
         $postdata = json_encode($values);
         $header = [];
         $header[] = 'Content-Type: application/json';
-        $url = FB_URL . PERSONAL_CHAT . '/' . $chat_id . '/start.json';
+        $current_time = time();
+        $url = FB_URL . APP_ENV . '-' . PERSONAL_CHAT . '/' . $chat_id . '/' . $current_time . '.json';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);

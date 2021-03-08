@@ -1,4 +1,8 @@
-@extends('layout.master') @section('title','Events') @section('main_content')
+@extends('layout.master')
+@section('title')
+    Events | {{APP_BASE_NAME}}
+@endsection
+@section('main_content')
     <style type="text/css">
         li {
             display: list-item;

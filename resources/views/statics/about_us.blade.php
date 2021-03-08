@@ -1,4 +1,8 @@
-@extends('layout.master') @section('title','Health Care Travels') @section('main_content')
+@extends('layout.master')
+@section('title')
+    About Us | {{APP_BASE_NAME}}
+@endsection
+@section('main_content')
 
 
     <div class="container" style="margin-top: 35px;">

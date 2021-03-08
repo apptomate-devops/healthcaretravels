@@ -1,9 +1,5 @@
+@section('title') {{APP_BASE_NAME}} - Admin @endsection
 @extends('Admin.Layout.master')
-
-@section('title')
-    {{APP_BASE_NAME}} Admin
-@endsection
-
 @section('content')
 
     <style type="text/css">

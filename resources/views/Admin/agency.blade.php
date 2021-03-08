@@ -1,7 +1,5 @@
+@section('title') {{APP_BASE_NAME}} - Admin @endsection
 @extends('Admin.Layout.master')
-
-@section('title') Health Care Travels Admin @endsection
-
 @section('content')
 
 <style type="text/css">

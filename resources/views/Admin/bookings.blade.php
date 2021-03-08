@@ -1,6 +1,7 @@
+@section('title')
+    Property Booking | {{APP_BASE_NAME}}
+@endsection
 @extends('Admin.Layout.master')
-
-@section('title') Property Booking @endsection
 
 @section('content')
 

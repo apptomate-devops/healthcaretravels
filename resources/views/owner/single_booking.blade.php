@@ -1,5 +1,7 @@
-@extends('layout.master')
-@section('title',APP_BASE_NAME.' | Owner Account | My Bookings page')
+@section('title')
+    Owner Account | My Bookings page | {{APP_BASE_NAME}}
+@endsection
+    @extends('layout.master')
 @section('main_content')
     <link rel="stylesheet" href="{{ URL::asset('css/bookings.css') }}">
     <style>
@@ -52,6 +54,7 @@
                     <div>Check-in: <span>{{date('m-d-Y',strtotime($data->start_date))}}</span></div>
                     <div>Check-out: <span>{{date('m-d-Y',strtotime($data->end_date))}}</span></div>
                     <div>Guests: <span>{{$data->guest_count}}</span></div>
+                    <div>Cancellation Policy: <span><a href="{{URL('/')}}/cancellationpolicy" class="cancel-policy-link" target="_blank">{{$data->cancellation_policy}} </a></span></div>
                     <div>Total Earnings: <span>{{\App\Http\Controllers\PropertyController::format_amount($total_earning)}}</span></div>
                 </div>
 
@@ -80,9 +83,6 @@
                     @endforeach
                 </table>
                 <div>The selected account will be used to process any future deposits for this booking.</div>
-                <div>
-                    <b>Cancellation Policy: <a href="{{URL('/')}}/cancellationpolicy" class="cancel-policy-link" target="_blank">{{$data->cancellation_policy}} </a></b>
-                </div>
                 @if(in_array($data->status, [2, 3]))
                     <div class="text-right">
                         <a target="_blank" href="{{BASE_URL}}invoice/{{$data->booking_id}}" class="margin-top-40 button border">Print Invoice</a>
@@ -165,7 +165,21 @@
                             <br><br>
 
                         @elseif($data->status == 2)
-                            @if($data->cancellation_requested == 1)
+                            <br>
+                            <div style="text-align: left;">
+                                To accept this booking request, please add/select the bank account that you wish for Health Care Travels to send your Payout(s) and/or Collect Payment(s) for this booking. You will need your bank account login details and bank account number, and routing number. To add banking details, select the add account details button below and set up your account details by logging in and answer any questions that are required to verify your identity. To change or add a new bank account visit the "Payment Options" tab in your account. To check the status of your booking please visit the "Bookings" tab in your account. Payouts are issued once the traveler has safely checked in.
+                                <br>
+                                <br>
+                                <b>Please Note</b>
+                                <br>
+                                Make sure your account is Up-To-Date and Complete including the (About Me) in your profile. If you have any questions or concerns email <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com</a>.
+                                <p></p>
+                            </div>
+                            @component('components.funding-source', ['funding_sources' => $funding_sources, 'user' => $owner])
+                            @endcomponent
+
+                        <br>
+                        @if($data->cancellation_requested == 1)
                                 <div style="text-align: center">Cancellation Pending</div>
                             @else
                                 <b>Request Accepted</b>
@@ -216,18 +230,51 @@
 
     <script type="text/javascript">
         $(document).ready(function (e) {
+            var ownerFundingSourceForBooking = "{{$data->owner_funding_source}}";
             var defaultFundingSource = "{{$owner->default_funding_source}}";
-            $('#fundingSource').val(defaultFundingSource);
+            $('#fundingSource').val(ownerFundingSourceForBooking || defaultFundingSource);
             if($('#fundingSource').val()) {
                 $('#acceptRequest').attr('disabled',false);
             }
 
             $('#fundingSource').change(function (e) {
-                if($('#fundingSource').val()) {
+                var fs = $('#fundingSource').val();
+                if(fs && fs !== "Select Account") {
                     $('#acceptRequest').attr('disabled',false);
+                    if(fs !== ownerFundingSourceForBooking) {
+                        updateFundingSourceForBooking(fs)
+                    }
                 }
+
             });
         });
+        function updateFundingSourceForBooking(funding_source) {
+            var data = {
+                booking_id: '{{$data->booking_id}}',
+                funding_source,
+                _token: '{{ csrf_token() }}',
+            };
+            $('#update_status_loading').show();
+            var url = "{{BASE_URL}}owner/update_owner_funding_source_for_booking";
+            $.ajax({
+                url,
+                type: "POST",
+                data,
+                json: true,
+                success: function(response, textStatus, jqXHR) {
+                    if(response.success) {
+                        window.location.reload()
+                    } else {
+                        $('#update_status_loading').hide();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    $('#update_status_loading').hide();
+                    console.log((errorThrown));
+                }
+            });
+        };
+
     </script>
     <script type="text/javascript">
         function owner_cancel_booking() {

@@ -1,9 +1,8 @@
 <?php date_default_timezone_set(USER_DEFAULT_TIMEZONE); ?>
-@extends('layout.master')
 @section('title')
-{{APP_BASE_NAME}} Chat
+    Chat | {{APP_BASE_NAME}}
 @endsection
-
+@extends('layout.master')
 @section('main_content')
 
 <style type="text/css">
@@ -25,7 +24,7 @@
     }
 
     #chat {
-        max-height: 500px;
+        max-height: 50vh;
     }
 
     .ng-binding a {
@@ -352,7 +351,7 @@
         var node_name = url.searchParams.get("fb-key");
 
         //var node_name = 'instant_chat';
-        var chats = new Firebase('{{FB_URL}}' + node_name + '/' + request_id);
+        var chats = new Firebase('{{FB_URL}}' + '{{APP_ENV}}' + '-' + node_name + '/' + request_id);
         $scope.messages = $firebaseArray(chats);
 
         if ($scope.messages) {
@@ -363,6 +362,7 @@
         }, function(newValue) {
             $scope.messages.$loaded(function(newValue) {
                 $('#chat_box_wrapper').show();
+                $("#chat_box_wrapper #chat").animate({ scrollTop: $(document).height() }, 1);
                 $scope.markAsRead(newValue);
             });
             $scope.messages.$watch(function(newValue) {
@@ -379,7 +379,7 @@
 
         $scope.userid = '{{$traveller_id}}';
         $scope.removeProduct = function(id) {
-            var ref = new Firebase('{{FB_URL}}' + node_name + '/' + request_id + '/' + id);
+            var ref = new Firebase('{{FB_URL}}' + '{{APP_ENV}}' + '-' + node_name + '/' + request_id + '/' + id);
             var product = $firebaseObject(ref)
             product.$remove();
         };
@@ -393,18 +393,19 @@
                 delete message.$priority;
                 if (message.sent_by != '{{$traveller_id}}' && !message.read) {
                     message.read = true;
-                    updates['/' + node_name + '/' + request_id + '/' + messageId] = message;
+                    updates['/' + '{{APP_ENV}}' + '-' + node_name + '/' + request_id + '/' + messageId] = message;
                 }
             });
             if (Object.keys(updates).length > 0) {
                 firebase.database().ref().update(updates);
-                $('.unread_chat_badge').hide();
+                $('.unread_chat_badge, .unread_chat_badge_inbox').hide();
             }
             return;
         }
 
         $scope.addMessage = function() {
-            var ref = new Firebase('{{FB_URL}}' + node_name + '/' + request_id);
+            debugger
+            var ref = new Firebase('{{FB_URL}}' + '{{APP_ENV}}' + '-' + node_name + '/' + request_id);
             // {"date":"13/03/2018 10:33:38","message":"Hi bubblu Enquiry sent for Sunset Cave Hosue 2guests,
             // -","owner_id":73,"property_id":"2","sent_by":"37","traveller_id":"37"}
             var product = $firebaseArray(ref);
@@ -412,7 +413,7 @@
                 message: $scope.messageSend,
                 sent_by: $scope.userid,
                 owner_id: $scope.userid,
-                traveller_id: 1,
+                traveller_id: '{{$traveller_id}}',
                 property_id: 1,
                 date: new Date().toUTCString(),
                 read: false,
@@ -424,6 +425,7 @@
 
         document.addEventListener('keydown', function(event) {
             if (event.keyCode === 13 && document.getElementById('send_msg').style.display != 'none') {
+                $("#chat_box_wrapper #chat").animate({ scrollTop: $(document).height() + 100 }, 1000);
                 $scope.addMessage();
             }
         });

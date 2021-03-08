@@ -1,7 +1,7 @@
-@extends('layout.master')
 @section('title')
-Request Roommate | {{APP_BASE_NAME}}
+    Request Roommate | {{APP_BASE_NAME}}
 @endsection
+@extends('layout.master')
 @section('main_content')
 
 <div class="container" style="margin-top: 35px;">

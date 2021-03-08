@@ -4,6 +4,6 @@
     Hi {{$name}},
 </div>
 <div style="padding-top: 5px;">
-    {{$travelerName}}'s stay at your property {{$propertyName}} ending in 24 hours. Please be sure to <a href="{{$contact}}">contact the traveler</a> to do a walk-through of the home before you leave. If you find any damage, be sure to contact us immediately.
+    Your guest {{$travelerName}} at {{$propertyName}} has a check out in 24 hours. Please be sure to visit the property within 48 hours after your guest has checked out. If you find any damage(s), be sure to contact us immediately at <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com</a>.
 </div>
 @endsection

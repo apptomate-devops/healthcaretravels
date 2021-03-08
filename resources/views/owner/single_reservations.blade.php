@@ -1,7 +1,7 @@
-@extends('layout.master')
 @section('title')
-    {{APP_BASE_NAME}} | Owner Account | My Bookings page
+    Traveler Account | My Reservation page | {{APP_BASE_NAME}}
 @endsection
+@extends('layout.master')
 @section('main_content')
     @php
         $payment_error_message = 'Please add a new account or contact support';
@@ -50,6 +50,7 @@
                     <div>Check-in: <span>{{date('m-d-Y',strtotime($data->start_date))}}</span></div>
                     <div>Check-out: <span>{{date('m-d-Y',strtotime($data->end_date))}}</span></div>
                     <div>Guests: <span>{{$data->guest_count}}</span></div>
+                    <div>Cancellation Policy: <span><a href="{{URL('/')}}/cancellationpolicy" class="cancel-policy-link" target="_blank">{{$data->cancellation_policy}} </a></span></div>
                     <div>Total Due: <span>{{\App\Http\Controllers\PropertyController::format_amount($total_payment)}} (*incl. $ {{$data->security_deposit}} security deposit)</span></div>
                 </div>
                 <table class="pricing-table responsive-table">
@@ -85,9 +86,6 @@
                     </tr>
                 </table>
                 <div>The selected account will be used to process any future payments for this booking.</div>
-                <div>
-                    <b>Cancellation Policy: <a href="{{URL('/')}}/cancellationpolicy" class="cancel-policy-link" target="_blank">{{$data->cancellation_policy}} </a></b>
-                </div>
                 @if(in_array($data->status, [2, 3]))
                     <div class="text-right">
                         <a target="_blank" href="{{BASE_URL}}invoice/{{$data->booking_id}}" class="margin-top-40 button border">Print Invoice</a>
@@ -154,6 +152,13 @@
                     </div>
                     <br>
                 @elseif($data->status == 2)
+                    <br>
+                    @if($data->funding_source_name)
+                            <div style="text-align: center">
+                                Your account <b>{{$data->funding_source_name}}</b> will be used for all housing payments.
+                            </div>
+                    @endif
+                    <br>
                     @if($data->cancellation_requested == 1)
                         <div style="text-align: center">Cancellation Pending</div>
                     @else

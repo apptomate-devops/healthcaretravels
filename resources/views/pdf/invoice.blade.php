@@ -104,7 +104,7 @@
         </th>
         <th colspan="4" style="width: 0;background-color: #FFF;border-bottom: 1px solid #000;">
             <p style="color: #000;font-size: 35px;">
-                <b>{{\App\Http\Controllers\PropertyController::format_amount($data->grand_total)}}</b>
+                <b>{{'$' . abs($data->grand_total)}}</b>
             </p>
         </th>
 

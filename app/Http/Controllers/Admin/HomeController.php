@@ -307,7 +307,7 @@ class HomeController extends BaseController
     {
         $cities = HomeListing::find($request->id);
 
-        if (count($cities) == 0) {
+        if (!$cities) {
             $cities = new HomeListing();
         }
         $cities->client_id = CLIENT_ID;
@@ -322,11 +322,10 @@ class HomeController extends BaseController
         }
 
         if ($request->file) {
-            $cities->image_url = $this->base_image_upload_with_key($request, 'file');
+            $cities->image_url = $this->base_image_upload_with_key($request, 'file', 'public/HomePage');
         } else {
             $cities->image_url = $request->image_url;
         }
-        // print_r($cities);exit;
         $cities->save();
 
         return back()->with('success', 'Cities updated successfully');

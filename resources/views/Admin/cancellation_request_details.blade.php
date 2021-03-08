@@ -31,11 +31,11 @@
                                     <br>
                                     <div class="details"><b>Owner</b></div>
                                     <div class="details">Name: <span>{{\App\Helper\Helper::get_user_display_name($owner)}}</span></div>
-                                    <div class="details">Username: <span>{{$owner->username}}</span></div>
+                                    <!-- <div class="details">Username: <span>{{$owner->username}}</span></div> -->
                                     <div class="details">Email: <span>{{$owner->email}}</span></div>
                                     <div class="details"><b>Traveler</b></div>
                                     <div class="details">Name: <span>{{\App\Helper\Helper::get_user_display_name($traveler)}}</span></div>
-                                    <div class="details">Username: <span>{{$traveler->username}}</span></div>
+                                    <!-- <div class="details">Username: <span>{{$traveler->username}}</span></div> -->
                                     <div class="details">Email: <span>{{$traveler->email}}</span></div>
                                     <br>
                                     <div class="details"><b>Submitted By: </b><span>{{$cancelled_by}}</span></div>

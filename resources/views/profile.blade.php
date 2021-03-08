@@ -60,8 +60,8 @@
                                 <div style="border:2px solid #0983b8;color:#0983b8;padding: 15px;width: 100%"><b>Your account has been verified</b></div><br>
                             @endif
 
-                            <label>Username</label>
-                            <input value="{{$user_detail->username}}" type="text" name="username" required="" disabled>
+                            <!-- <label>Username</label>
+                            <input value="{{$user_detail->username}}" type="text" name="username" required="" disabled> -->
 
                             <label>First Name</label>
                             <input value="{{Session::get('first_name') ?? $user_detail->first_name}}" type="text" name="first_name" placeholder="First Name" required>
@@ -199,7 +199,7 @@
 
                             <label>About Me</label>
                             <p class="register-info">Please do not add any personal contact information for your privacy and safety</p>
-                            <textarea name="about" id="about" cols="30" rows="10">{{Session::get('about_me') ?? $user_detail->about_me}}</textarea>
+                            <textarea name="about_me" id="about_me" cols="30" rows="10">{{Session::get('about_me') ?? $user_detail->about_me}}</textarea>
 
                             <div class="enable-auth-checkbox">
                                 <input type="checkbox" name="enable_two_factor_auth" id="enable_two_factor_auth" @if("{$user_detail->enable_two_factor_auth}" == 1) checked @endif>

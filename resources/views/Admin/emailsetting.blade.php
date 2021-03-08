@@ -108,14 +108,14 @@
                                                        name="Encryption" placeholder="Encryption" value="tls">
                                             </div>
                                         </div>
-                                        <div class="form-group row">
+                                        <!-- <div class="form-group row">
                                             <label class="col-md-3 label-control" for="eventRegInput5">Username</label>
                                             <div class="col-md-9">
                                                 <input type="tel" id="eventRegInput5" class="form-control"
                                                        name="Username" placeholder="Username"
                                                        value="username@gmail.com">
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div class="form-group row">
                                             <label class="col-md-3 label-control" for="eventRegInput5">Password</label>
                                             <div class="col-md-9">

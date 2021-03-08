@@ -33,7 +33,7 @@
                 <a class="btn btn-default btn-danger" href="{{BASE_URL}}admin/remove_profile_image/{{$data->id}}"><span style="height:29px">Click here to Remove Profile Image</span></a>
             @endif
             <div class="card-body">
-                <h4 class="card-title"><span class="field-label">Username:</span>{{$data->username}}</h4>
+                <!-- <h4 class="card-title"><span class="field-label">Username:</span>{{$data->username}}</h4> -->
                 <h6 class="card-subtitle text-muted"><span class="field-label">Name:</span>{{$data->first_name ?? ''}} {{$data->last_name ?? ''}}</h6>
                 <br>
                 <h6 class="card-subtitle text-muted"><span class="field-label">Type:</span>

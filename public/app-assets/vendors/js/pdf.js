@@ -4775,7 +4775,7 @@ var parseURL = function (url, input, stateOverride, base) {
   case RELATIVE:
    url.scheme = base.scheme;
    if (char == EOF) {
-    url.username = base.username;
+   // url.username = base.username;
     url.password = base.password;
     url.host = base.host;
     url.port = base.port;
@@ -4784,7 +4784,7 @@ var parseURL = function (url, input, stateOverride, base) {
    } else if (char == '/' || char == '\\' && isSpecial(url)) {
     state = RELATIVE_SLASH;
    } else if (char == '?') {
-    url.username = base.username;
+   // url.username = base.username;
     url.password = base.password;
     url.host = base.host;
     url.port = base.port;
@@ -4792,7 +4792,7 @@ var parseURL = function (url, input, stateOverride, base) {
     url.query = '';
     state = QUERY;
    } else if (char == '#') {
-    url.username = base.username;
+   // url.username = base.username;
     url.password = base.password;
     url.host = base.host;
     url.port = base.port;
@@ -4801,7 +4801,7 @@ var parseURL = function (url, input, stateOverride, base) {
     url.fragment = '';
     state = FRAGMENT;
    } else {
-    url.username = base.username;
+   // url.username = base.username;
     url.password = base.password;
     url.host = base.host;
     url.port = base.port;
@@ -4817,7 +4817,7 @@ var parseURL = function (url, input, stateOverride, base) {
    } else if (char == '/') {
     state = AUTHORITY;
    } else {
-    url.username = base.username;
+   // url.username = base.username;
     url.password = base.password;
     url.host = base.host;
     url.port = base.port;

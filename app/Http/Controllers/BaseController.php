@@ -457,11 +457,11 @@ class BaseController extends ConstantsController
             }
         }
 
-        if ($last_message->sent_by == $request_chat->owner->id) {
-            $last_message->username = Helper::get_user_display_name($request_chat->owner);
-        } else {
-            $last_message->username = Helper::get_user_display_name($request_chat->traveller);
-        }
+        // if ($last_message->sent_by == $request_chat->owner->id) {
+        //     $last_message->username = Helper::get_user_display_name($request_chat->owner);
+        // } else {
+        //     $last_message->username = Helper::get_user_display_name($request_chat->traveller);
+        // }
         if ($last_message->sent_by == $user_id) {
             $last_message->status = 'Sent';
         } else {

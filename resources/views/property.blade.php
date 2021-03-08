@@ -240,6 +240,12 @@
                             </font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{$data->pets_allowed ? 'Yes' : 'No'}}</font></font></span>
                         </li>
 
+                        <li>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">STR Permit Number :</font>
+                            </font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{$data->str_permit_number}}</font></font></span>
+                        </li>
+
                     </ul>
 
                     @if(!in_array($data->room_type, ['Entire Place', 'RV Parking']))

@@ -284,6 +284,13 @@
                                 {!! $errors->first('languages_known', '<p class="error-text">:message</p>') !!}
                             </p>
 
+                            <p class="form-row form-row-wide" id="about_me_field" style="display: none">
+                                <label for="about_me">About Me: </label>
+                                    <textarea name="about_me" class="input-text validate {{ $errors->has('about_me') ? 'form-error' : ''}}" id="about_me" cols="30" rows="10">{{Session::get('about_me')}}</textarea>
+                                    <!-- <input type="text" class="input-text validate {{ $errors->has('about_me') ? 'form-error' : ''}}" value="{{Session::get('about_me')}}" name="about_me" placeholder="Please Describe yourself" id="about_me" required /> -->
+                                {!! $errors->first('about_me', '<p class="error-text">: </p>') !!}
+                            </p>
+
                             <p class="form-row form-row-wide" id="occupation_field" style="display: none;">
                                 <label for="occupation">Occupation:
                                     <select class="input-text validate" autocomplete="off" name="occupation" id="occupation" onchange="on_occupation_change(this);">
@@ -505,6 +512,7 @@
                 $('#dob_field').show();
                 $('#gender_field').show();
                 $('#languages_field').show();
+                $('#about_me_field').show();
                 $('#occupation_field').show();
                 $('#add_another_occupation').show();
                 $('#other_occupation').hide();
@@ -552,6 +560,7 @@
                 $('#dob_field').show();
                 $('#gender_field').show();
                 $('#languages_field').show();
+                $('#about_me_field').show();
                 $('#occupation_field').hide();
                 $('#add_another_occupation').hide();
                 $('#other_occupation').hide();
@@ -597,6 +606,7 @@
                 $('#dob_field').show();
                 $('#gender_field').show();
                 $('#languages_field').show();
+                $('#about_me_field').show();
                 $('#occupation_field').hide();
                 $('#add_another_occupation').hide();
                 $('#other_occupation').hide();
@@ -644,6 +654,7 @@
                 $('#dob_field').hide();
                 $('#gender_field').hide();
                 $('#languages_field').hide();
+                $('#about_me_field').hide();
                 $('#occupation_field').hide();
                 $('#add_another_occupation').hide();
                 $('#other_occupation').hide();

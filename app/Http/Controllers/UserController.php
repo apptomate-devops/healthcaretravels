@@ -565,6 +565,7 @@ class UserController extends BaseController
             'dob' => 'required',
             'gender' => 'required',
             'languages_known' => 'required',
+            'about_me' => 'required',
             //            'email_opt' => 'accepted',
             'policy_accept' => 'accepted',
         ];
@@ -620,6 +621,7 @@ class UserController extends BaseController
                 ->with('name_of_agency', $request->name_of_agency)
                 ->with('other_agency', $request->other_agency)
                 ->with('languages_known', $request->languages_known)
+                ->with('about_me', $request->about_me)
                 ->with('tax_home', $request->tax_home)
                 ->with('address', $request->address)
                 ->with('address_line_2', $request->address_line_2)
@@ -664,6 +666,7 @@ class UserController extends BaseController
             'date_of_birth' => Carbon::createFromFormat('m/d/Y', $request->dob)->toDateString(),
             'gender' => $request->gender,
             'languages_known' => $request->languages_known,
+            'about_me' => $request->about_me,
             'occupation' => $request->occupation,
             'other_occupation' => $request->other_occupation,
             'name_of_agency' => $request->name_of_agency,
@@ -1173,6 +1176,7 @@ class UserController extends BaseController
             'dob' => 'required',
             'gender' => 'required',
             'languages_known' => 'required',
+            'about_me' => 'required',
         ];
         if ($user->role_id == "1" || $user->role_id == "4") {
             // Owner or Co-Host
@@ -1202,6 +1206,7 @@ class UserController extends BaseController
                 ->with('date_of_birth', $request->dob)
                 ->with('gender', $request->gender)
                 ->with('languages_known', $request->languages_known)
+                ->with('about_me', $request->about_me)
                 ->with('occupation', $request->occupation)
                 ->with('other_occupation', $request->other_occupation)
                 ->with('name_of_agency', $request->name_of_agency)
@@ -1233,6 +1238,7 @@ class UserController extends BaseController
                 'date_of_birth' => Carbon::createFromFormat('m/d/Y', $request->dob)->toDateString(),
                 'gender' => $request->gender,
                 'languages_known' => $request->languages_known,
+                'about_me' => $request->about_me,
                 'occupation' => $request->occupation,
                 'other_occupation' => $request->other_occupation,
                 'name_of_agency' => $request->name_of_agency,
@@ -1248,7 +1254,6 @@ class UserController extends BaseController
                 'work_title' => $request->work_title,
                 'website' => $request->website,
                 'enable_two_factor_auth' => isset($request->enable_two_factor_auth) ? 1 : 0,
-                'about_me' => $request->about,
             ]);
 
         return back()->with('success', 'Profile updated successfully');

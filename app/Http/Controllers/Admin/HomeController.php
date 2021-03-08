@@ -196,7 +196,7 @@ class HomeController extends BaseController
                     ->first();
                 $rating = PropertyRating::where('user_id', $value->user_id)->avg('rating');
                 $arr = [];
-                $arr['username'] = $user->username;
+                // $arr['username'] = $user->username;
                 $arr['rating'] = $rating;
                 array_push($array, $arr);
             }
@@ -220,7 +220,7 @@ class HomeController extends BaseController
                     ->first();
                 $rating = PropertyRating::where('user_id', $user->id)->avg('rating');
                 $arr = [];
-                $arr['username'] = $user->username;
+                //  $arr['username'] = $user->username;
                 $arr['rating'] = $rating;
                 array_push($array, $arr);
             }
@@ -503,7 +503,7 @@ class HomeController extends BaseController
                 "users.first_name",
                 "users.last_name",
                 "users.phone",
-                "users.username",
+                // "users.username",
                 "users.gender",
                 "users.date_of_birth",
                 "users.is_verified",

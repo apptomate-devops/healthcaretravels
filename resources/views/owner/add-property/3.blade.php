@@ -104,7 +104,18 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-12"><br><br>
+                                <h3>STR Permit Number :</h3>
+                                <div class="error-text" id="pets_allowed_error" style="display: none;">This field is required</div>
+                                <div class="checkboxes in-row">
 
+                                    <input id="pet_yes" name="pets_allowed" type="checkbox" value="1" >
+                                    <label for="pet_yes" >Yes</label>
+
+                                    <input id="pet_no" name="pets_allowed" type="checkbox" value="0" >
+                                    <label for="pet_no" value="1">No</label>
+                                </div>
+                            </div>
 
                             <div class="text-center">
 

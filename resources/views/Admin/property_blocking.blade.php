@@ -1,7 +1,5 @@
+@section('title') {{APP_BASE_NAME}} - Admin @endsection
 @extends('Admin.Layout.master')
-
-@section('title')  {{APP_BASE_NAME}} - Admin @endsection
-
 @section('content')
     <link rel="stylesheet" type="text/css"
           href="https://pixinvent.com/modern-admin-clean-bootstrap-4-dashboard-html-template/app-assets/css/plugins/animate/animate.min.css">

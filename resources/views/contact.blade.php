@@ -1,5 +1,8 @@
-
-@extends('layout.master') @section('title') Contact | {{APP_BASE_NAME}}  @section('main_content')
+@section('title')
+    Contact | {{APP_BASE_NAME}}
+@endsection
+@extends('layout.master')
+@section('main_content')
     <!-- Header Container / End -->
     <script src='https://www.google.com/recaptcha/api.js'></script>
     <!-- <div class="g-recaptcha" data-sitekey="6LcxpKsUAAAAAHONGIDAR-CG_mGX1HJWVdO7rZzO"></div> -->

@@ -1,4 +1,8 @@
-@extends('layout.master') @section('title') FAQ | {{APP_BASE_NAME}} @section('main_content')
+@section('title')
+    FAQ | {{APP_BASE_NAME}}
+@endsection
+@extends('layout.master')
+@section('main_content')
 
     <style type="text/css">
         .border {

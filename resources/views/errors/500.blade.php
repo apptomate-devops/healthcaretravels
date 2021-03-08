@@ -1,4 +1,4 @@
-@extends('layout.master') @section('title') Error | {{APP_BASE_NAME}} @section('main_content')
+@extends('layout.master') @section('title') Error @section('main_content')
 
 <div class="container" style="margin-top: 35px;">
 	<div class="row">

@@ -1,7 +1,7 @@
-@extends('layout.master')
 @section('title')
-     Traveler Account | My Reservation page | {{APP_BASE_NAME}}
+    Traveler Account | My Reservation page | {{APP_BASE_NAME}}
 @endsection
+@extends('layout.master')
 @section('main_content')
     @php
         $payment_error_message = 'Please add a new account or contact support';

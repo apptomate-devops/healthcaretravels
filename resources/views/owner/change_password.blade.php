@@ -1,6 +1,7 @@
-@extends('layout.master')
 @section('title')
     Change password | {{APP_BASE_NAME}}
+@endsection
+@extends('layout.master')
 @section('main_content')
 
 

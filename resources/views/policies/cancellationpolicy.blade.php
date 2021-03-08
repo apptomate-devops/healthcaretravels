@@ -1,8 +1,7 @@
-@extends('layout.master')
-
 @section('title')
     Policy | {{APP_BASE_NAME}}
 @endsection
+@extends('layout.master')
 @section('main_content')
 
 

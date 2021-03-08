@@ -1,4 +1,8 @@
-@extends('layout.master') @section('title') Property | {{APP_BASE_NAME}} @section('main_content')
+@section('title')
+    Property | {{APP_BASE_NAME}}
+@endsection
+@extends('layout.master')
+@section('main_content')
     <link rel="stylesheet" href="{{ URL::asset('css/property.css') }}">
     <div class="container add-property">
         <div class="row">

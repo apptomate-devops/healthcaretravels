@@ -1,6 +1,8 @@
-@extends('layout.master')
 @section('title')
     Favourite properties | {{APP_BASE_NAME}}
+@endsection
+@extends('layout.master')
+
 @section('main_content')
     <style>
         .show {

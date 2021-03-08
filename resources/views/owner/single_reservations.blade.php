@@ -152,6 +152,13 @@
                     </div>
                     <br>
                 @elseif($data->status == 2)
+                    <br>
+                    @if($data->funding_source_name)
+                            <div style="text-align: center">
+                                Your account <b>{{$data->funding_source_name}}</b> will be used for all housing payments.
+                            </div>
+                    @endif
+                    <br>
                     @if($data->cancellation_requested == 1)
                         <div style="text-align: center">Cancellation Pending</div>
                     @else

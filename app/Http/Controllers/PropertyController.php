@@ -1375,6 +1375,28 @@ class PropertyController extends BaseController
         }
     }
 
+    public function update_owner_funding_source(Request $request)
+    {
+        $booking = PropertyBooking::where('booking_id', $request->booking_id)->first();
+        Logger::info(json_encode($booking));
+        if (empty($booking)) {
+            Logger::error('Booking does not exist: ' . $request->booking_id);
+            return ['success' => false, 'message' => 'Booking does not exist!'];
+        }
+        if ($booking->owner_funding_source === $request->funding_source) {
+            Logger::error('no need to update');
+            return ['success' => false, 'message' => 'no need to update'];
+        }
+        try {
+            $booking->owner_funding_source = $request->funding_source;
+            $booking->save();
+        } catch (\Exception $ex) {
+            Logger::error('Error scheduling failed payments. EX: ' . $ex->getMessage());
+            return response()->json(['success' => false, 'message' => 'error updating booking']);
+        }
+        return response()->json(['success' => true, 'message' => 'Booking updated successfully!']);
+    }
+
     public function chat_with_traveler(Request $request)
     {
         $travellerId = $request->traveller_id;
@@ -1816,6 +1838,13 @@ class PropertyController extends BaseController
         $data->agency = implode(", ", array_filter([$data->name_of_agency, $data->other_agency])); // Booking Agency
 
         $payment_summary = $this->get_payment_summary($data);
+        $data->funding_source_name = '';
+        if ($data->funding_source) {
+            $fundingSourceDetails = $this->dwolla->getFundingSourceDetails($data->funding_source);
+            if ($fundingSourceDetails) {
+                $data->funding_source_name = $fundingSourceDetails->name;
+            }
+        }
 
         return view('owner.single_reservations', [
             'data' => $data,

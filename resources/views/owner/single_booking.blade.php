@@ -164,7 +164,21 @@
                             <br><br>
 
                         @elseif($data->status == 2)
-                            @if($data->cancellation_requested == 1)
+                            <br>
+                            <div style="text-align: left;">
+                                To accept this booking request, please add/select the bank account that you wish for Health Care Travels to send your Payout(s) and/or Collect Payment(s) for this booking. You will need your bank account login details and bank account number, and routing number. To add banking details, select the add account details button below and set up your account details by logging in and answer any questions that are required to verify your identity. To change or add a new bank account visit the "Payment Options" tab in your account. To check the status of your booking please visit the "Bookings" tab in your account. Payouts are issued once the traveler has safely checked in.
+                                <br>
+                                <br>
+                                <b>Please Note</b>
+                                <br>
+                                Make sure your account is Up-To-Date and Complete including the (About Me) in your profile. If you have any questions or concerns email <a href="mailto:support@healthcaretravels.com">support@healthcaretravels.com</a>.
+                                <p></p>
+                            </div>
+                            @component('components.funding-source', ['funding_sources' => $funding_sources, 'user' => $owner])
+                            @endcomponent
+
+                        <br>
+                        @if($data->cancellation_requested == 1)
                                 <div style="text-align: center">Cancellation Pending</div>
                             @else
                                 <b>Request Accepted</b>
@@ -215,18 +229,51 @@
 
     <script type="text/javascript">
         $(document).ready(function (e) {
+            var ownerFundingSourceForBooking = "{{$data->owner_funding_source}}";
             var defaultFundingSource = "{{$owner->default_funding_source}}";
-            $('#fundingSource').val(defaultFundingSource);
+            $('#fundingSource').val(ownerFundingSourceForBooking || defaultFundingSource);
             if($('#fundingSource').val()) {
                 $('#acceptRequest').attr('disabled',false);
             }
 
             $('#fundingSource').change(function (e) {
-                if($('#fundingSource').val()) {
+                var fs = $('#fundingSource').val();
+                if(fs && fs !== "Select Account") {
                     $('#acceptRequest').attr('disabled',false);
+                    if(fs !== ownerFundingSourceForBooking) {
+                        updateFundingSourceForBooking(fs)
+                    }
                 }
+
             });
         });
+        function updateFundingSourceForBooking(funding_source) {
+            var data = {
+                booking_id: '{{$data->booking_id}}',
+                funding_source,
+                _token: '{{ csrf_token() }}',
+            };
+            $('#update_status_loading').show();
+            var url = "{{BASE_URL}}owner/update_owner_funding_source_for_booking";
+            $.ajax({
+                url,
+                type: "POST",
+                data,
+                json: true,
+                success: function(response, textStatus, jqXHR) {
+                    if(response.success) {
+                        window.location.reload()
+                    } else {
+                        $('#update_status_loading').hide();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    $('#update_status_loading').hide();
+                    console.log((errorThrown));
+                }
+            });
+        };
+
     </script>
     <script type="text/javascript">
         function owner_cancel_booking() {

@@ -534,6 +534,7 @@
         }
 
         $('#requestBooking').click(function (event) {
+            debugger
             $(".panel-body input[required],select[required]").each(function() {
                 if (!$(this).val()) {
                     $(".panel-collapse.in").removeClass("in");
@@ -551,8 +552,9 @@
         });
 
         function validate_submit() {
-            $('#name_of_agency').val(agencyAutoComplete.value());
-            if ($('#other_agency').val() || (agencyAutoComplete.value().length && agencyAutoComplete.value().length)) {
+            var agency_val = agencyAutoComplete.value();
+            $('#name_of_agency').val(agency_val);
+            if ($('#other_agency').val() || agency_val) {
                 $('#request_booking_loading').show();
                 return true;
             }

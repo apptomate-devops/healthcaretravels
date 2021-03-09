@@ -1272,7 +1272,7 @@ class PropertyController extends BaseController
                 if ($payment['payment_cycle'] == 1) {
                     $cleaning_fee_entry['name'] = 'Cleaning Fee';
                     $cleaning_fee_entry['amount'] = self::format_amount($booking->cleaning_fee);
-                    $cleaning_fee_entry['covering_range'] = '';
+                    $cleaning_fee_entry['covering_range'] = 'One-time charge';
                     array_push($scheduled_payments, $cleaning_fee_entry);
                 }
             } else {

@@ -100,7 +100,18 @@
                                                             <tr class="payment_sub_sections sub_sections_{{$i}}">
                                                                 <td class="name">
                                                                     {{$key}}
-                                                                    @if(strpos($key, 'Fee'))<span class='tooltips'><i style="color:black" class='fa fa-question-circle'></i><span class='tooltiptext' style="color: white!important; font-weight: bold;">This fee helps us run our platform and offer our services</span></span>@endif
+                                                                    @if(strpos($key, 'Fee'))
+                                                                        <span class='tooltips'>
+                                                                            <i style="color:black" class='fa fa-question-circle'></i>
+                                                                            <span class='tooltiptext' style="color: white!important; font-weight: bold;">
+                                                                                 @if($key === 'Service Fee')
+                                                                                    This fee helps us run our platform and offer our services
+                                                                                @else
+                                                                                    This fee is to cover monthly auto-payment from your account
+                                                                                @endif
+                                                                            </span>
+                                                                        </span>
+                                                                    @endif
                                                                 </td>
                                                                 <td class="val text-right">
                                                                     $ {{$value}}
@@ -382,14 +393,14 @@
                                                    placeholder="mm/dd/yyyy - mm/dd/yyyy"
                                                    id="contract_date_range_picker" autocomplete="off" required/>
                                         </div>
-{{--                                        <div class="control-group cc-first-name col-md-4">--}}
-{{--                                            <label class="control-label" for="contract_end_date">--}}
-{{--                                                Contract End Date--}}
-{{--                                            </label>--}}
-{{--                                            <input type="text" name="contract_end_date"--}}
-{{--                                                   placeholder="mm/dd/yyyy"--}}
-{{--                                                   id="contract_date_range_picker" autocomplete="off" required/>--}}
-{{--                                        </div>--}}
+                                        {{--                                        <div class="control-group cc-first-name col-md-4">--}}
+                                        {{--                                            <label class="control-label" for="contract_end_date">--}}
+                                        {{--                                                Contract End Date--}}
+                                        {{--                                            </label>--}}
+                                        {{--                                            <input type="text" name="contract_end_date"--}}
+                                        {{--                                                   placeholder="mm/dd/yyyy"--}}
+                                        {{--                                                   id="contract_date_range_picker" autocomplete="off" required/>--}}
+                                        {{--                                        </div>--}}
                                     </div>
                                 </div>
                                 <div>
@@ -510,14 +521,14 @@
 
         function initPureSelect(agencies, selected) {
             var selected_agencies = '';
-            {{--selected_agencies = selected_agencies ? selected_agencies.split(',') : [];--}}
-            {{--if (selected) {--}}
-            {{--    selected_agencies = selected;--}}
-            {{--}--}}
+                {{--selected_agencies = selected_agencies ? selected_agencies.split(',') : [];--}}
+                {{--if (selected) {--}}
+                {{--    selected_agencies = selected;--}}
+                {{--}--}}
             var mappedData = agencies.map(a => ({
-                label: a.name,
-                value: a.name
-            }));
+                    label: a.name,
+                    value: a.name
+                }));
             $('.autocomplete-select').empty();
             var autocomplete = new SelectPure(".autocomplete-select", {
                 options: mappedData,

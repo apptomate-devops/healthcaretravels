@@ -1266,10 +1266,13 @@
 
                             tr_data +="<tr class='expandable' id='neat_amount'><td> "+data.data.count_label+" &nbsp;&nbsp;<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext'>The cost of your stay including applicable fees.</span></span></td><td class='val'> $ "+ data.data.neat_amount +"</td></tr>";
 
+                            function getToolTipText(key) {
+                                return key == 'Service Fee ' ? 'This fee helps us run our platform and offer our services.' : 'This fee is to cover monthly auto-payment from your account'
+                            }
                             scheduled_payments.forEach((e, i) => {
                                 tr_data +="<tr class='expandable payment_sections' id='section_"+i+"' onclick='toggle_sub_section("+i+");'><td> "+e.day+" &nbsp;</td><td class='val'> $ "+ e.price +"</td></tr>";
                                 Object.keys(e.section).forEach((key, index) => {
-                                    tr_data +="<tr class='payment_sub_sections sub_sections_"+i+"'><td> "+key+" "+(index === 1 ? "<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext' style='font-weight: bold;'>This fee helps us run our platform and offer our services.</span></span>" : "")+" </td><td class='val'> $ "+ e.section[key] +"</td></tr>";
+                                    tr_data +="<tr class='payment_sub_sections sub_sections_"+i+"'><td> "+key+" "+(index === 1 ? "<span class='tooltips'><i class='fa fa-question-circle'></i><span class='tooltiptext' style='font-weight: bold;'>" + getToolTipText(key) + "</span></span>" : "")+" </td><td class='val'> $ "+ e.section[key] +"</td></tr>";
                                 })
                             });
 

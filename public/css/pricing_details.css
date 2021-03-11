@@ -70,3 +70,8 @@
 .payment_sub_sections.active {
     display: revert;
 }
+.tooltips .tooltiptext {
+    top: -35px !important;
+    line-height: 22px;
+    padding: 5px !important;
+}

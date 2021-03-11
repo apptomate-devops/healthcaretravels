@@ -18,6 +18,6 @@
         <img src="{{$BASE_URL ?? BASE_URL}}storage/public/copy-code.png">
         <br>
         <br>
-        Congratulations!"
+        Congratulations!
     </div>
 @endsection

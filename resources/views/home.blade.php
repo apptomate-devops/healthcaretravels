@@ -306,6 +306,198 @@
             }
         }
 
+
+                    *,
+            *::before,
+            *::after {
+            box-sizing: border-box;
+            }
+
+            body {
+            margin: 0;
+            padding: 0;
+            background-color: #1C2325;
+            color: #eee;
+            }
+
+            .outer-wrapper {
+            width: 100%;
+            margin: 0px auto;
+            height: 240px;
+            }
+
+            .s-wrap {
+            margin-bottom: 50px;
+            padding-bottom: 55%;
+            position: relative;
+            border: 10px solid #fff;
+            background-color: #efefe8;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            height: 240px;
+            width: auto;
+            }
+            .s-wrap > input {
+            display: none;
+            }
+            .s-wrap .s-content {
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 500%;
+            height: 100%;
+            font-size: 0;
+            list-style: none;
+            transition: transform 1s;
+            height: auto;
+            margin-top: -8px;
+            }
+            .s-wrap .s-item {
+            display: inline-block;
+            width: 20%;
+            height: 100%;
+            background-repeat: no-repeat;
+            background-size: cover;
+            }
+
+            .s-type-1 .s-control {
+            z-index:100;
+            position: absolute;
+            bottom: 18px;
+            left: 50%;
+            text-align: center;
+            transform: translateX(-50%);
+            transition-timing-function: ease-out;
+            }
+
+            .s-type-1 .s-control > label[class^="s-c-"] {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin-right: 10px;
+            border-radius: 50%;
+            border: 1px solid #999;
+            background-color: #efefe8;
+            cursor: pointer;
+            }
+            .s-type-1 .s-nav label {
+            display: none;
+            position: absolute;
+            top: 50%;
+            padding: 5px 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            }
+            .s-type-1 .s-nav label::before, .s-type-1 .s-nav label::after {
+            content: "";
+            display: block;
+            width: 8px;
+            height: 24px;
+            background-color: #fff;
+            }
+            .s-type-1 .s-nav label::before {
+            margin-bottom: -12px;
+            }
+            .s-type-1 .s-nav label.left {
+            left: 20px;
+            }
+            .s-type-1 .s-nav label.left::before {
+            transform: rotate(45deg);
+            }
+            .s-type-1 .s-nav label.left::after {
+            transform: rotate(-45deg);
+            }
+            .s-type-1 .s-nav label.right {
+            right: 20px;
+            }
+            .s-type-1 .s-nav label.right::before {
+            transform: rotate(-45deg);
+            }
+            .s-type-1 .s-nav label.right::after {
+            transform: rotate(45deg);
+            }
+            .s-type-1 #s-1:checked ~ .s-content {
+            transform: translateX(0%);
+            }
+            .s-type-1 #s-1:checked ~ .s-control .s-c-1 {
+            background-color: #333;
+            }
+            .s-type-1 #s-1:checked ~ .s-nav .s-nav-1 {
+            display: block;
+            }
+            .s-type-1 #s-2:checked ~ .s-content {
+            transform: translateX(-20%);
+            }
+            .s-type-1 #s-2:checked ~ .s-control .s-c-2 {
+            background-color: #333;
+            }
+            .s-type-1 #s-2:checked ~ .s-nav .s-nav-2 {
+            display: block;
+            }
+            .s-type-1 #s-3:checked ~ .s-content {
+            transform: translateX(-40%);
+            }
+            .s-type-1 #s-3:checked ~ .s-control .s-c-3 {
+            background-color: #333;
+            }
+            .s-type-1 #s-3:checked ~ .s-nav .s-nav-3 {
+            display: block;
+            }
+            .s-type-1 #s-4:checked ~ .s-content {
+            transform: translateX(-60%);
+            }
+            .s-type-1 #s-4:checked ~ .s-control .s-c-4 {
+            background-color: #333;
+            }
+            .s-type-1 #s-4:checked ~ .s-nav .s-nav-4 {
+            display: block;
+            }
+            .s-type-1 #s-5:checked ~ .s-content {
+            transform: translateX(-80%);
+            }
+            .s-type-1 #s-5:checked ~ .s-control .s-c-5 {
+            background-color: #333;
+            }
+            .s-type-1 #s-5:checked ~ .s-nav .s-nav-5 {
+            display: block;
+            }
+
+            @keyframes slider-animation {
+            0%,
+            7% {
+            transform: translateX(0%);
+            }
+            12.5%,
+            19.5% {
+            transform: translateX(-20%);
+            }
+            25%,
+            32% {
+            transform: translateX(-40%);
+            }
+            37.5%,
+            44.5% {
+            transform: translateX(-60%);
+            }
+            50%,
+            57% {
+            transform: translateX(-80%);
+            }
+            62.5%,
+            69.5% {
+            transform: translateX(-60%);
+            }
+            75%,
+            82% {
+            transform: translateX(-40%);
+            }
+            87.5%,
+            94.5% {
+            transform: translateX(-20%);
+            }
+
     </style>
 
 </head>
@@ -458,10 +650,40 @@
                                         </div>
 
                                         <!-- <div class="listing-carousel"> -->
-                                        <div style="max-height: 240px;min-height: 240px;">
+                                        <!-- <div style="max-height: 240px;min-height: 240px;">
                                             <img style="max-height: 240px;min-height: 240px;"
                                                  src="{{$property->image_url}}" alt="">
-                                        </div>
+                                        </div> -->
+
+                                        @if(count($property->property_images) > 1)
+
+                                            <div class="outer-wrapper">
+                                            <div class="s-wrap s-type-1" role="slider">
+                                            @foreach($property->property_images as $prop_image)
+                                            <input type="radio" id="s-{{ $loop->index + 1 }}" name="slider-control"
+                                            {!! ($loop->index + 1 === 1) ? "checked='checked'" : "" !!} >
+                                            @endforeach
+                                            <ul class="s-content">
+                                            @foreach($property->property_images as $prop_image)
+                                            <li class="s-item s-item-{{ $loop->index + 1 }}">
+                                            <img src="{{$prop_image->image_url}}" alt="No Data" style="height: 220px;" />
+                                            </li>
+                                            @endforeach
+                                            </ul>
+                                            <div class="s-control">
+                                            @foreach($property->property_images as $prop_image)
+                                            <label class="s-c-{{ $loop->index + 1 }}" for="s-{{ $loop->index + 1 }}"></label>
+                                            @endforeach
+                                            </div>
+                                            </div>
+                                            </div>
+
+                                            @else
+                                            <div style="max-height: 240px;min-height: 240px;">
+                                            <img style="max-height: 240px;min-height: 240px;"
+                                            src="{{$property->image_url}}" alt="">
+                                            </div>
+                                            @endif
 
                                         <!-- </div> -->
 

@@ -185,6 +185,12 @@ class HomeController extends BaseController
             } else {
                 $property->image_url = STATIC_IMAGE;
             }
+            $property_images_list = DB::table('property_images')
+                ->where('property_images.client_id', '=', CLIENT_ID)
+                ->where('property_images.property_id', '=', $property->property_id)
+                ->orderBy('property_images.sort', 'asc')
+                ->get();
+            $property->property_images = $property_images_list;
         }
         $categories = DB::select(
             "SELECT A.image_url,A.title,A.lat,A.lng FROM `home_listings` A, `home_category` B WHERE A.category_id = B.id",

@@ -52,6 +52,14 @@
                                 </div>
                             </div>
 
+                            <div class="row with-forms container">
+                                <div class="col-md-6">
+                                    <h5>STR Permit Number</h5>
+                                    <input class="search-field" type="text" value="{{isset($property_data->str_permit_number)?$property_data->str_permit_number:''}}"  id="value" name="str_permit_number" />
+                                </div>
+                            </div>
+
+
                             <div class="col-md-12 form-row">
                                 <h3>Trash Pickup Days: </h3>
                                 <div class="checkboxes in-row" id="trash_days">
@@ -97,19 +105,6 @@
 
                             <div class="col-md-12"><br><br>
                                 <h3>Pets Allowed<span class="required">*</span> :</h3>
-                                <div class="error-text" id="pets_allowed_error" style="display: none;">This field is required</div>
-                                <div class="checkboxes in-row">
-
-                                    <input id="pet_yes" name="pets_allowed" type="checkbox" value="1" >
-                                    <label for="pet_yes" >Yes</label>
-
-                                    <input id="pet_no" name="pets_allowed" type="checkbox" value="0" >
-                                    <label for="pet_no" value="1">No</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12"><br><br>
-                                <h3>STR Permit Number :</h3>
                                 <div class="error-text" id="pets_allowed_error" style="display: none;">This field is required</div>
                                 <div class="checkboxes in-row">
 

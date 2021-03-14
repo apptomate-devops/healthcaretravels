@@ -568,6 +568,9 @@
             case '/':
                 initHomeSearchInput();
                 break;
+            case 'rental_analysis':
+                initHomeSearchInput();
+                break;
             case 'contact':
                 contact_map();
                 break;

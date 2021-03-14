@@ -4,7 +4,6 @@
     @extends('layout.master')
 @section('main_content')
 
-
     <div class="container" style="margin-top: 35px;">
         <div class="row">
 
@@ -23,6 +22,24 @@
             </div>
 
             <div class="col-md-8">
+            
+               <span id="errMsg"></span>
+
+                <!-- <div class="row">
+                
+                        @if(Session::has('success'))
+                            <div class="alert alert-success">
+                                <h4 style="text-align:center;">{{ Session::get('success') }}</h4>
+                            </div>
+                        @endif
+
+                        @if(Session::has('error'))
+                            <div class="alert alert-danger">
+                                <h4 style="text-align:center;">{{ Session::get('error') }}</h4>
+                            </div>
+                        @endif
+
+                </div> -->
                 <input type="hidden" id="delete_property_id" />
                 <!-- Item #1 -->
                 @if($properties != NULL && count($properties) != 0)
@@ -162,6 +179,11 @@
                         window.location.reload();
                     } else {
                         console.log('Error Deleting property');
+                        $('#errMsg').css('color','red');
+                        $('#errMsg').css('font-weight','bold');
+                        $('#errMsg').css('font-size',17);
+                        $('#errMsg').html('* '+ data.message);
+                        $('#errMsg').css('display','block');
                     }
                 },
                 error: function (e) {

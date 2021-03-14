@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 // use App\Models\BecomeScout;
+use App\Models\RentalAnalysis;
 use App\Models\RequestRoommate;
 use App\Models\PropertyList;
 use App\Models\EmailConfig;
@@ -311,6 +312,33 @@ class HomeController extends BaseController
     public function rv_professional()
     {
         return view('statics.rv_professional');
+    }
+
+    public function covid()
+    {
+        return view('statics.covid');
+    }
+
+    public function rental_analysis()
+    {
+        return view('statics.rental_analysis');
+    }
+
+    public function save_rental_analysis(Request $request)
+    {
+        $new = new RentalAnalysis();
+        $new->address = $request->address;
+        $new->lat = $request->lat;
+        $new->lng = $request->lng;
+        $new->bedrooms = $request->bedrooms;
+        $new->baths = $request->baths;
+        $new->email = $request->email;
+        $new->name = $request->name;
+        $new->phone_number = $request->phone_number;
+        $new->i_am_interested_in = $request->i_am_interested_in;
+        $new->save();
+
+        return back()->with('success', 'Your information has been saved.');
     }
 
     // public function save_become_a_scout(Request $request)

@@ -70,8 +70,8 @@ class Handler extends ExceptionHandler
         if (!defined("GOOGLE_MAPS_API_KEY")) {
             define("GOOGLE_MAPS_API_KEY", config("services.google.maps_api_key"));
         }
-        return response()->view('errors.500');
-        // return parent::render($request, $exception);
+        //return response()->view('errors.500');
+        return parent::render($request, $exception);
     }
 
     /**

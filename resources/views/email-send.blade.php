@@ -2,7 +2,7 @@
 <head>
 <!-- Basic Page Needs
 ================================================== -->
-<title>Register / Login | {{APP_BASE_NAME}}</title>
+<title>Sign Up / Login | {{APP_BASE_NAME}}</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="google-signin-client_id" content="386426447902-4r69c89sditkvcfqikt0led8fe4g4q7v.apps.googleusercontent.com">

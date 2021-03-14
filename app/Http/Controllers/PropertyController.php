@@ -3239,21 +3239,25 @@ class PropertyController extends BaseController
     public function delete_property($property_id, Request $request)
     {
         try {
+            if (
+                DB::table('property_booking')
+                    ->where('property_booking.client_id', CLIENT_ID)
+                    ->where('property_booking.property_id', '=', $property_id)
+                    ->whereIn('property_booking.status', [1, 2])
+                    ->count() > 0
+            ) {
+                return response()->json([
+                    'status' => 'FAILED',
+                    'message' => 'Your property has bookings please cancel the Bookings first!',
+                    'status_code' => ZERO,
+                ]);
+            }
+
             $file_name = 'data/' . $property_id . '.json';
             if (file_exists($file_name)) {
                 unlink($file_name);
             }
             Logger::info('delete property for id' . $property_id);
-
-            if (
-                DB::table('property_booking')
-                    ->where('property_booking.client_id', CLIENT_ID)
-                    ->where('property_booking.property_id', '=', $property_id)
-                    ->where('property_booking.status', '=', 1)
-                    ->count() > 0
-            ) {
-                return view('general_error', ['message' => 'Cannot delete your property has bookings!']);
-            }
 
             DB::table('property_list')
                 ->where('client_id', '=', CLIENT_ID)
@@ -3266,11 +3270,11 @@ class PropertyController extends BaseController
             //     ->where('property_booking.status', '=', 1)
             //     ->update(['status' => 4]);
 
-            DB::table('property_booking')
-                ->where('property_booking.client_id', CLIENT_ID)
-                ->where('property_booking.property_id', '=', $property_id)
-                ->where('property_booking.status', '=', 0)
-                ->delete();
+            // DB::table('property_booking')
+            //     ->where('property_booking.client_id', CLIENT_ID)
+            //     ->where('property_booking.property_id', '=', $property_id)
+            //     ->where('property_booking.status', '=', 0)
+            //     ->delete();
 
             //        $data = DB::table('property_list')
             //            ->join('users', 'users.id', '=', 'property_list.user_id')

@@ -3,15 +3,27 @@
 @endsection
 @extends('layout.master')
 @section('main_content')
-
     <div class="container" style="margin-top: 35px;">
         <div class="content_wrapper  row ">
 
             <div id="post" class="row  post-2328 page type-page status-publish hentry">
-                <div class="col-md-12 breadcrumb_container"><ol class="breadcrumb">
-                        <li><a href="{{url('/')}}">Home</a></li><li class="active">Delete My Account</li></ol></div>    <div class=" col-md-12 ">
-
-
+                <div class="col-md-12 breadcrumb_container">
+                    <ol class="breadcrumb">
+                        <li><a href="{{url('/')}}">Home</a></li><li class="active">Delete My Account</li>
+                    </ol>
+                    @if(Session::has('success'))
+                    <div class="alert alert-success">
+                        <h4>{{ Session::get('success') }}</h4>
+                    </div>
+                    @endif
+                        <div class="alert alert-danger">
+                            <span>
+                                Error in uploading calender events
+                            </span>
+                </div>
+                </div>  
+               
+                    <div class=" col-md-12 ">
 
                     <div class="loader-inner ball-pulse" id="internal-loader">
                         <div class="double-bounce1"></div>
@@ -21,6 +33,7 @@
                     <div id="listing_ajax_container">
 
                     </div>
+
                     <div class="single-content">
                         <h1 class="entry-title single-title">Delete My Account</h1>
 

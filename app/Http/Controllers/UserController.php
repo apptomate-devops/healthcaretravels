@@ -24,6 +24,20 @@ class UserController extends BaseController
 
     public function account_delete_process(Request $request)
     {
+        if (
+            DB::table('property_list')
+                ->where('user_id', $request->user_id)
+                ->where('status', 1)
+        ) {
+            return back()->with('success', 'Password reset link sent to your email');
+            //return view('delete_account')->with('error', 'We can’t find the profile you’re looking for.');
+        }
+
+        // DB::table('property_list')
+        //     ->where('user_id', $request->user_id)
+        //     ->where('status', '=', 0)
+        //     ->delete();
+
         // TODO: handle soft delete, handle logout from all sessions when account is deleted.
         DB::table('users')
             ->where('id', $request->user_id)

@@ -110,6 +110,16 @@
                                         Contact Us
                                     </a>
                                 </li>
+                                <li class="text-center">
+                                    <a href="/rental_analysis">
+                                        Rental Analysis
+                                    </a>
+                                </li>
+                                <li class="text-center">
+                                    <a href="/covid">
+                                        COVID 19
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     </ul>

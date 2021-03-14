@@ -240,6 +240,7 @@ class OwnerController extends BaseController
             ->join('property_list', 'property_list.id', '=', 'property_booking.property_id')
             ->where('property_booking.owner_id', $request->session()->get('user_id'))
             ->where('property_booking.status', '!=', 0);
+
         if ($from && $to) {
             $fromDate = date('Y-m-d', $from);
             $toDate = date('Y-m-d', $to);
